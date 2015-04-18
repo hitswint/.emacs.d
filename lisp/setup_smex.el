@@ -1,0 +1,17 @@
+;; ======================smex==========================
+;; (add-to-list 'load-path "~/.emacs.d/smex")
+(require 'smex)
+(global-set-key (kbd "M-X") (lambda ()
+                              (interactive)
+                              (or (boundp 'smex-cache)
+                                  (smex-initialize))
+                              (global-set-key (kbd "M-X") 'smex)
+                              (smex)))
+(global-set-key (kbd "C-x M-x") (lambda ()
+                                  (interactive)
+                                  (or (boundp 'smex-cache)
+                                      (smex-initialize))
+                                  (global-set-key (kbd "C-x M-x") 'smex-major-mode-commands)
+                                  (smex-major-mode-commands)))
+;; ======================smex==========================
+(provide 'setup_smex)

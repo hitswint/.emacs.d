@@ -1,0 +1,51 @@
+# -*- mode: snippet -*-
+# contributor: Mads D. Kristensen <madsdk@gmail.com>
+# contributor : Song Qiang <tsiangsung@gmail.com>
+# key: article
+# group: skeleton
+# name: \documentclass{article} ...
+# --
+\documentclass[11pt]{ctexart}
+\usepackage[top=1in,bottom=1in,left=0.8in,right=0.8in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,subfigure,url,xspace,booktabs,tikz,float}
+\newcommand{\eg}{e.g.,\xspace}
+\newcommand{\bigeg}{E.g.,\xspace}
+\newcommand{\etal}{\textit{et~al.\xspace}}
+\newcommand{\etc}{etc.\@\xspace}
+\newcommand{\ie}{i.e.,\xspace}
+\newcommand{\bigie}{I.e.,\xspace}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}
+\usepackage{hypernat}
+\renewcommand{\citet}[1]{\textsuperscript{\cite{#1}}}
+\usepackage[]{caption}
+\captionsetup{font={small,it}}
+\usepackage{comment}
+% \usepackage[]{ctex}
+% \usepackage[]{xeCJK}
+% \setmainfont{Times New Roman}
+% \setsansfont{Times New Roman}
+% \usefonttheme[onlymath]{serif}
+% \setCJKmainfont{SimSun}
+\newcommand{\song}{\CJKfamily{zhsong}}
+\newcommand{\hei}{\CJKfamily{zhhei}}
+\newcommand{\kai}{\CJKfamily{zhkai}}
+\newcommand{\fang}{\CJKfamily{zhfs}}
+\newcommand{\li}{\CJKfamily{zhli}}
+\newcommand{\you}{\CJKfamily{zhyou}}
+\newcommand{\erhao}{\zihao{2}}
+\newcommand{\xiaoer}{\fontsize{18pt}{\baselineskip}\selectfont}
+\newcommand{\sihao}{\zihao{4}}
+\newcommand{\xiaosi}{\fontsize{12pt}{\baselineskip}\selectfont}
+\newcommand{\wuhao}{\zihao{5}}
+\newcommand{\xiaowu}{\fontsize{9pt}{\baselineskip}\selectfont}
+\newcommand{\liuhao}{\zihao{6}}
+
+\title{${1:title}}
+\author{${2:Guiqiang Wang}}
+
+\begin{document}
+\maketitle
+\tableofcontents
+$0
+\end{document}

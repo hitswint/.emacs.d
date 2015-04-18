@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# key : article
+# name : article
+# --
+#+LATEX_CLASS: org-article
+#+TITLE: ${1:$$(unless yas/modified-p (file-name-base (buffer-name)))}
+#+AUTHOR: ${2:Guiqiang Wang}
+$0

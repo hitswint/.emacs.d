@@ -1,0 +1,190 @@
+# -*- mode: snippet -*-
+# key: gp
+# name: gnuplot
+# --
+set term pngcairo enh font "simsun,16"
+datafile = "${1:$$(unless yas/modified-p (file-name-base (buffer-name)))}.data"
+set output "$1.png" # set title "$1"
+set xlabel "${2:}(${3:})" # 同时有上下标,a^@b_c
+set ylabel "${4:}(${5:{/Symbol \260}C})"
+${6:#}set y2label "${7:}(${8:{/Symbol \260}C})"
+q=0
+# set multiplot # layout 2,2
+set xrange [:]
+set yrange [:]
+$6set y2range [:]
+set xtics nomirror
+unset x2tics
+set ytics nomirror
+unset y2tics
+$6set y2tics
+set xtics font "Times New Roman,12"
+set ytics font "Times New Roman,12"
+$6set y2tics font "Times New Roman,12"
+# set xtics ("1" 1, "2" 2, "3" 3) # set xtics 8,0.1,9
+set key reverse Left # horizontal
+# set key off
+set border
+plot $0
+
+# ===========================================Annotation============================================
+# Term Multiplot Tic Key Border Arrow Label Histogram Contour Plot
+# ===========================================t;TERM==================================================
+# monochrome # color
+# font "Times-Roman,14"
+# font "AR PL UKai CN,14"
+# set term post eps enh solid font "simsun,18"
+# set term epslatex color standalone solid
+# set term pdfcairo enh
+# set term png enh small
+# set term jpeg enh small
+# eps格式比较清晰，而且可以解决简单的公式和符号问题，但是无法解决输入中文的问题；png可以很好的解决中文输入的问题，也可以解决公式和符号的解决方法；pdf格式的文件在word中插入有问题，转成其他格式后清晰度不好；epslatex也是一种pdf方式，可以最大程度的解决公式、符号和中文输入的问题，但是输出为pdf，插入有问题。
+# ===========================================t;TERM==================================================
+# ========================================m;MULTIPLOT==============================================
+# 没有layout时多图重叠
+# set size 1,1
+# set size square               # 做3d图时
+# set size ratio 2
+# 设定图的起点，即零坐标的位置
+# set origin 0.2,0.4
+# set lmargin at screen 0.03
+# set rmargin at screen 0.85
+# set bmargin at screen 0.08
+# set tmargin at screen 0.96
+# unset tics
+# 以图片为背景
+# plot "map.png" binary filetype=png w rgbimage
+# ========================================m;MULTIPLOT================================================
+# ========================================t;TIC====================================================
+# set xtics format "%.2f"               #小数点后两位
+# set ytics format "%.0f"               #整数
+# set xtics 1.0                 #主刻度的宽度为1.0,ytics
+# set mxtics 3                  #每个主刻度下面划分三个分刻度,mytics
+# 设定zero坐标轴，类似于热负荷延续时间图
+# set xzeroaxis lt -1
+# set yzeroaxis
+# 改变xy轴文字的位置，set {x|y}label，后面加offset options
+# set xlabel offset 0,1
+# set ylabel offset 1,0
+# ========================================t;TIC======================================================
+# ========================================k;KEY====================================================
+# set key right top
+# set key at screen 0.5,0.5
+# set key maxrows 3             # maxcols
+# set key font ",15"
+# set key box width 1.2 height 1.2 spacing 2.2
+# ========================================k;KEY======================================================
+# ========================================b;BORDER=================================================
+# unset border       # 没有边框
+# set border 11      # 11代表1+2+8,就是显示下左右边框
+# set border 1 linetype 2 # 1 2 4 8分别代表下左上右四个边框
+# set border 2 linetype 2 # 1 2 4 8分别代表下左上右四个边框
+# set grid , unset grid # 设定网格
+# ========================================b;BORDER===================================================
+# ========================================a;ARROW==================================================
+# 不加graph，就是按实际坐标来设定，加了坐标轴按照坐标轴比例来做。如果把 to 换成 rto，第二个坐标就表示相对位置而不是绝对坐标。
+# nohead, head, backhead, heads # 分别表示：没有箭头，箭头在终点，箭头在起点，双向都有箭头。
+# size <length>,<angle>,<backangle>
+# size 10,15,60
+# 箭头风格filled, empty, nofilled
+# uset arrow 1                              #系统会按添加顺序给箭头编号，去掉箭头1
+# ========================================a;ARROW====================================================
+# ========================================l;LABEL==================================================
+# center还可以是right和left
+# set label q=q+1 point pt 6 ps 2 at 1,1 center
+# Greek letter
+# {/Symbol a}，其中希腊字母与英文字母的对应关系如下
+# A       Alpha   N       Nu      a       alpha   n       nu
+# B       Beta    O       Omicron b       beta    o       omicron
+# C       Chi     P       Pi      c       chi     p       pi
+# D       Delta   Q       Theta   d       delta   q       theta
+# E       Epsilon R       Rho     e       epsilon r       rho
+# F       Phi     S       Sigma   f       phi     s       sigma
+# G       Gamma   T       Tau     g       gamma   t       tau
+# H       Eta     U       Upsilon h       eta     u       upsilon
+# I       iota    W       Omega   i       iota    w       omega
+# K       Kappa   X       Xi      k       kappa   x       xi
+# L       Lambda  Y       Psi     l       lambda  y       psi
+# M       Mu      Z       Zeta    m       mu      z       zeta
+# ========================================l;LABEL====================================================
+# =========================================h;HISTOGRAM=============================================
+# ===============histogram=================
+# set style data histogram
+# set style histogram clustered gap 2
+# set style histogram rowstacked        # 叠加显示柱状，或者columnstacked
+# set style fill solid 0.4 border
+# set style fill transparent pattern 1 border
+# set style fill transparent solid 0.4 noborder
+# plot datafile using 2:xticlabels(1) title columnheader(2),\
+# ===============histogram=================
+# ===============impluses==================
+# plot datafile every using 1:2 with imp lw 50,\
+# ===============impluses==================
+# ================boxes====================
+# with boxes fs [pattern | solid]       # boxerrorbars
+# 下面(3)代表宽度，pattern 1和solid 0.5代表填充风格，
+# fs pattern 1 lt 1 # fs solid 0.5 lt 3
+# pattern:1.交叉线；2.更细的交叉线；3.solid；4.斜线；5.反方向的斜线；6.更细的斜线；7.更细的反方线斜线；8.空白
+# ================boxes====================
+# =========================================h;HISTOGRAM===============================================
+# ========================================c;CONTOUR================================================
+# set object q=q+1 rectangle from 1,1 to 1,1 fillcolor rgb "red" fillstyle transparent solid 0.5 front # behind
+# set dgrid3d splines
+# set hidden3d
+# set contour base
+# unset surface
+# set view map
+# set cntrparam levels discrete 1,2,3,4,5,6,7,8,9,10
+# splot datafile with lines title ""
+# ========================================c;CONTOUR==================================================
+# ========================================p;PLOT=====================================================
+# 用epslatex时在{Enthalpy}和{Temperature}之前加一个空格
+# with lines points linespoints boxes boxerrorbars
+# linetype linewidth linecolor pointtype pointsize :线型和点型
+# linetype 1: 红色 2：绿色 3:蓝色 4：粉红 5：青色 6：黄色 7：深绿或者黑色 8：褐色 9：灰色 0:虚线 -1:黑色
+# pointtype 1：横线一点 2：横线一叉，3 ：横线星子号 4：横线一方块（空心） 5：横线一方块（实心） 6：横线一圆圈（空心） 7：横线一圆圈（实心）8：横线一三角（空心头向上） 9：横线一三角（实心头向上） 10： 横线一三角 （空心头向下） 11： 横线一三角（实心头向下） 12：横线一菱形（空心） 13：横线一菱形（实心）
+# set style line 1 linetype 2 linewidth 1 pointsize 2 pointtype 4,plot "data" using 1:2 with linespoints linestyle 1 # 自定义linestyle
+# 在数据前面加?代表消除这个数据。
+# 数据中间加入空行，将数据分成几个block，blocks用index标定，从index 0开始，可以在datafile后面加index 0,index 1来画一个block或者index 0:1来画多个block。
+# 修改数据用using 1:($n*2)，1:(sqrt($n))，1:(log($n))等来表示，$n代表第n列的数据。
+# every I:J:K:L:M:N
+# I     Line increment                          every 2       plot every 2 line
+# J     Data block increment                    every ::3     plot from the 3-rd lines
+# K     The first line                          every ::3::5  plot from the 3-rd to 5-th lines
+# L     The first data block                    every ::0::0  plot the first line only
+# M     The last line                           every 2::::6  plot the 1,3,5,7-th lines
+# N     The last data block                     every :2      plot every 2 data block
+# every :::5::8         plot from 5-th to 8-th data blocks
+# 行数和block数都是从0开始的
+# 下面是using后面的数据选项
+# Data Format                   Column             using        with
+# (X,Y) data                     X Y               1:2          lines, points, steps, linespoints, boxes, etc
+# Y has an error of dY           X Y dY            1:2:3        yerrorbars
+# X has an error of dX           X Y dX            1:2:3        xerrorbars
+# Y has an error of dY, and
+# X has an error of dX           X Y dX dY         1:2:3:4      xyerrorbars
+# Y has a range of [Y1,Y2]       X Y Y1 Y2         1:2:3:4      yerrorbars
+# X has a range of [X1,X2]       X Y X1 X2         1:2:3:4      xerrorbars
+# Y has a range of [Y1,Y2], and
+# X has a range of [X1,X2]       X Y X1 X2 Y1 Y2   1:2:3:4:5:6  xyerrorbars
+# 根据时间画图
+# set xdata time                        # 设定x轴为时间
+# set timefmt "%Y-%m-%d"                # 设定输入时间的格式
+# set format x "%b/%a"          # 设定输出时间的格式
+# 格式：data       timefmt            comment
+# 2004/4/6        %Y/%m/%d        2004/04/06 works well
+# December/96     %B/%y           warning if mis-spelled
+# 2004/Jan        %Y/%b           3-letters abbreviation
+# 1970/240        %Y/%j           "%j" is a day of the year (1-365)
+# 02:45:03        %H:%M:%S        "%H", 24-hour
+# 1076909172      %s              seconts since 1/1/1970 00:00
+# 数据平滑
+# smooth csplines # 样条插值，曲线必通过数据点
+# smooth bezier   # 曲线拟合，曲线未必通过数据点
+# 其他选项: unique, frequency, cumulative, cnormal, kdensity, acsplines, sbezier
+# 消除边界上的数据点
+# set clip points                 # 消除边界上的点，
+# set noclip one                  # 消除穿过边界的线，对于一个点在边界外
+# set noclip two                  # 消除穿过边界的线，对于多个点在边界外
+# ========================================p;PLOT=====================================================
+# ===========================================Annotation============================================

@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# key: tikz
+# name: TikZ picture in centered figure
+# group: tikz
+# --
+\begin{figure}[htbp]
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+\centering
+\begin{tikzpicture}
+$0
+\end{tikzpicture}
+\caption{${1:caption}}
+\label{fig:${2:$$(unless yas/modified-p (make-temp-name ""))}}
+\end{figure}

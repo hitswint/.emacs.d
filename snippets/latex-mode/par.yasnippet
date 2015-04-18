@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# contributor : Mads D. Kristensen <madsdk@gmail.com>
+# key: par
+# group: sections
+# name : \paragraph
+# --
+\paragraph{${1:name}}
+\label{sec:${2:$$(unless yas/modified-p (make-temp-name ""))}}
+$0

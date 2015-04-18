@@ -1,0 +1,31 @@
+# -*- mode: snippet -*-
+# contributor: swint
+# key: outline
+# group: skeleton
+# name: outline
+# --
+\section*{}
+\begin{frame}
+\frametitle{${1:outline}}
+\tableofcontents[section=1,hidesubsections]
+\end{frame}
+\AtBeginSection[]
+{
+\frame<handout:0>
+{
+\frametitle{$1}
+\tableofcontents[currentsection,hideallsubsections]
+}
+}
+\AtBeginSubsection[]
+{
+\frame<handout:0>
+{
+\frametitle{$1}
+\tableofcontents[sectionstyle=show/hide,subsectionstyle=show/shaded/hide]
+}
+}
+\newcommand<>{\highlighton}[1]{%
+\alt#2{\structure{#1}}{{#1}}
+}
+\newcommand{\icon}[1]{\pgfimage[height=1em]{#1}}

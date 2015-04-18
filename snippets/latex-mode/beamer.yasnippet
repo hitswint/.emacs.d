@@ -1,0 +1,79 @@
+# -*- mode: snippet -*-
+# contributor: Claudio Marforio <marforio@gmail.com>
+# key: beamer
+# group: skeleton
+# name: \documentclass{beamer} ...
+# --
+\documentclass[11pt]{beamer}
+% [xcolor=dvipsnames]
+\usepackage{graphicx,subfigure,url,booktabs,tikz,float}
+\usepackage{amsmath,amssymb}
+\DeclareGraphicsRule{*}{mps}{*}{}
+\usepackage{subfigure}
+\usepackage{xmpmulti}
+\usepackage{colortbl,dcolumn}
+\usepackage{thumbpdf}
+\usepackage{wasysym}
+\usepackage{ucs}
+\usepackage[utf8]{inputenc}
+\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage{verbatim}
+\usepackage{xeCJK}
+% \setmainfont{Times New Roman}
+\setsansfont{Times New Roman}
+\setCJKmainfont{SimSun}
+\usefonttheme[onlymath]{serif}
+% \usepackage{times}
+\newcommand{\song}{\CJKfamily{zhsong}}
+\newcommand{\hei}{\CJKfamily{zhhei}}
+\newcommand{\kai}{\CJKfamily{zhkai}}
+\newcommand{\fang}{\CJKfamily{zhfs}}
+\newcommand{\li}{\CJKfamily{zhli}}
+\newcommand{\you}{\CJKfamily{zhyou}}
+\newcommand{\erhao}{\zihao{2}}
+\newcommand{\xiaoer}{\fontsize{18pt}{\baselineskip}\selectfont}
+\newcommand{\sihao}{\zihao{4}}
+\newcommand{\xiaosi}{\fontsize{12pt}{\baselineskip}\selectfont}
+\newcommand{\wuhao}{\zihao{5}}
+\newcommand{\xiaowu}{\fontsize{9pt}{\baselineskip}\selectfont}
+\newcommand{\liuhao}{\zihao{6}}
+\usepackage[]{caption}
+\captionsetup{font={small,it}}
+\usepackage{comment}
+\usetheme{${1:theme}}
+
+\title{${2:Title}}
+\subtitle{${3:}}
+\author{${4:Guiqiang Wang}}
+\institute{${5:SJZU}}
+\date{\today}
+
+\begin{document}
+\maketitle
+\section*{}
+\begin{frame}
+\frametitle{outline}
+\tableofcontents[section=1,hidesubsections]
+\end{frame}
+\AtBeginSection[]
+{
+\frame<handout:0>
+{
+\frametitle{outline}
+\tableofcontents[currentsection,hideallsubsections]
+}
+}
+\AtBeginSubsection[]
+{
+\frame<handout:0>
+{
+\frametitle{outline}
+\tableofcontents[sectionstyle=show/hide,subsectionstyle=show/shaded/hide]
+}
+}
+\newcommand<>{\highlighton}[1]{%
+\alt#2{\structure{#1}}{{#1}}
+}
+\newcommand{\icon}[1]{\pgfimage[height=1em]{#1}}
+$0
+\end{document}

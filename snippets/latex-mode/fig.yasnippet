@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# contributor : Mads D. Kristensen <madsdk@gmail.com>
+# group: environments
+# name : \begin{figure} ... \end{figure}
+# key : fig
+# --
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.5\linewidth]{ pic$0}
+\caption{${1:caption}}
+\label{fig:${2:$$(unless yas/modified-p (make-temp-name ""))}}
+\end{figure}

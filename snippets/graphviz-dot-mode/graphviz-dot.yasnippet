@@ -1,0 +1,42 @@
+# -*- mode: snippet -*-
+# key: gd
+# name: graphviz-dot
+# --
+digraph G
+{
+        ${1://}rankdir=LR;
+        edge [fontname="SimSun"];
+        node [shape=box, fontname="SimSun", fontsize="", fontcolor="", fillcolor="white", style=rounded];
+        // node [shape=plaintext,height=0,width=0,fixedsize=true];
+        n1 [label="${2:}"];
+        n2 [label="${3:}"];
+        n3 [label="${4:}"];
+        n4 [label="${5:}"];
+        n5 [label="${6:}"];
+        n6 [label="${7:}"];
+        n7 [label="${8:}"];
+        n8 [label="${9:}"];
+        n9 [label="${10:}"];
+        n${11:} -> n${12:} [];
+        n${13:} -> n${14:} [];
+        n${15:} -> n${16:} [];
+        n${17:} -> n${18:} [];
+        n${19:} -> n${20:} [];
+        n${21:} -> n${22:} [];
+        n${23:} -> n${24:} [];
+        n${25:} -> n${26:} [];
+        n${27:} -> n${28:} [];
+        n${29:} -> n${30:} [];
+}
+
+// 输出: -Tpng -Tps
+// GRAPH 参数: size="," rankdir=LR|RL|BT rotate=90 ratio= newrank=true,上述参数仅能用于最顶级的digraph，不能用于subgraph
+// EDGE 参数: minlen=(最小长度) weight=(线宽) decorate(从edge向label连线)
+// constraint=false 使edge不遵守rank的限制，使edge不破坏node的排列
+// label 参数: \n \l \r 分别代表新的一行，中间、左侧、右侧 \T \H \E \G 分别代表尾点、头点、连接和图的名字
+// node [label="<n1> left|<n2> middle|<n3> right"];shape必须用record
+// 可以通过e,s,w,n,ne,se,sw,nw指定节点的连接位置，如n:e从东边连接n节点
+// 直接连接到子图上，先输入compound = true，然后通过lhead和ltail来连接，如:
+// b -> f [lhead=cluster_1]
+// c -> d [lhead=cluster_1, ltail=cluster_0]
+// 不同的subgraph之间对齐节点，需要在digraph后加入newrank=true;，然后将{rank=same; n1; n2}写到subgraph外。

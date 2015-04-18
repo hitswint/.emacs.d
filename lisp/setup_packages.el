@@ -1,0 +1,229 @@
+;; ======================文件加密===================================
+(require 'epa-file)
+;;(epa-file-enable)
+(setenv "GPG_AGENT_INFO" nil)
+(setq epa-file-cache-passphrase-for-symmetric-encryption t)
+(setq epa-file-inhibit-auto-save nil)
+;; ======================文件加密===================================
+;; ====================multiple-cursors============================
+;; (add-to-list 'load-path "~/.emacs.d/multiple-cursors")
+(require 'multiple-cursors)
+;; (global-set-key (kbd "C-M-;") 'set-rectangular-region-anchor)
+(global-set-key (kbd "C-M-,") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-M-.") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-c C-0") 'mc/edit-lines)
+(global-set-key (kbd "C-c C-9") 'mc/mark-all-like-this)
+(global-set-key (kbd "C-c C-8") 'mc/insert-numbers)
+;; mc/i:mc/insert-numbers: Insert increasing numbers for each cursor, top to bottom.
+;; mc/sort-regions: Sort the marked regions alphabetically.
+;; mc/reverse-regions: Reverse the order of the marked regions.
+;; messages中会出现Error during redisplay: (error Lisp nesting exceeds `max-lisp-eval-depth')的错误。
+;; ====================multiple-cursors============================
+;; ====================expand-region=========================
+;; (add-to-list 'load-path "~/.emacs.d/expand-region")
+(require 'expand-region)
+(global-set-key (kbd "C-M-;") 'er/expand-region)
+;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end。
+;; emacs不是真正的假死，C-g会恢复。
+;; ====================expand-region=========================
+;; ==================回收站=======================
+;; (add-to-list 'load-path "~/.emacs.d/trashcan")
+(require 'trashcan)
+;; ==================回收站=======================
+;; ==================undo-tree===================
+;; (add-to-list 'load-path "~/.emacs.d/undo-tree/")
+(require 'undo-tree)
+(global-undo-tree-mode)
+(add-hook 'undo-tree-mode-hook
+          '(lambda ()
+             (define-key undo-tree-map (kbd "M-_") nil)))
+(global-set-key (kbd "C-/") 'undo)
+(global-set-key (kbd "C-M-/") 'undo-tree-redo)
+;; ==================undo-tree===================
+;; ==================breadcrumb==================
+;; (add-to-list 'load-path "~/.emacs.d/breadcrumb/")
+(require 'breadcrumb)
+(global-set-key (kbd "C-c C-/") 'bc-set)
+(global-set-key (kbd "C-c C-,") 'bc-previous)
+(global-set-key (kbd "C-c C-.") 'bc-next)
+;; 删除breadcrumb.el源文件中(message "breadcrumb bookmark is set for the current position.")，使bc-set不出现提示。
+;; (global-set-key (kbd "C-c /") 'bc-list) ;; C-x M-j for the bookmark menu list
+;; (global-set-key (kbd "C-c /") 'bc-local-previous) ;; M-up-arrow for local previous
+;; (global-set-key (kbd "C-c /") 'bc-local-next)     ;; M-down-arrow for local next
+;; (global-set-key (kbd "C-c /") 'bc-goto-current) ;; C-c j for jump to current bookmark
+;; ==================breadcrumb==================
+;; ==================auto-mark===================
+;; (add-to-list 'load-path "~/.emacs.d/auto-mark")
+(require 'auto-mark)
+(global-auto-mark-mode 1)
+;; 会导致(void-variable last-command-char)错误
+;; (when (require 'auto-mark nil t)
+;;   (setq auto-mark-command-class-alist
+;;         '((anything . anything)
+;;           (goto-line . jump)
+;;           (indent-for-tab-command . ignore)
+;;           (undo . ignore)))
+;;   (setq auto-mark-command-classifiers
+;;         (list (lambda (command)
+;;                 (if (and (eq command 'self-insert-command)
+;;                          (eq last-command-char ? ))
+;;                     'ignore))))
+;;   (global-auto-mark-mode 1))
+(defun jump-to-mark ()
+  (interactive)
+  (set-mark-command 1))
+(global-set-key (kbd "M-m") 'jump-to-mark)
+;; ==================auto-mark===================
+;; =================visible-mark=================
+;; (add-to-list 'load-path "~/.emacs.d/visible-mark")
+(require 'visible-mark)
+(global-visible-mark-mode 1)
+;; 下面的代码增加一个桔黄色的mark，显示灰色和桔黄色两个mark
+(setq visible-mark-max 2)
+(defface my-visible-mark-face-2
+  '((t (:background "#666666" ;; :foreground "white"
+                    )))
+  "Face for the mark."
+  :group 'visible-mark)
+(setq visible-mark-faces '(visible-mark-active my-visible-mark-face-2))
+;; =================visible-mark=================
+;; =================smooth-scrolling=================
+;; (add-to-list 'load-path "~/.emacs.d/smooth-scrolling")
+(require 'smooth-scrolling)
+;; =================smooth-scrolling=================
+;; ====================ace-jump-buffer========================
+;; (add-to-list 'load-path "~/.emacs.d/ace-jump-buffer")
+;; 放弃ace-jump-buffer
+(require 'ace-jump-buffer)
+(global-set-key (kbd "C-c ,") 'ace-jump-buffer)
+;; ====================ace-jump-buffer========================
+;; ;; =====================unicad=====================
+;; lin中不会出现乱码，不需要，这个包会拖慢启动速度
+;; (add-to-list 'load-path "~/.emacs.d/unicad/")
+;; (require 'unicad)
+;; ;; 解决关emacs时保存.session的编码问题
+;; (setq session-save-file-coding-system 'utf-8)
+;; ;; set default encoding to utf-8
+;; (setq-default buffer-file-coding-system 'utf-8)
+;; ;; set writing buffer default to utf-8, or emacs always show encoding problem when saving files.
+;; (setq save-buffer-coding-system 'utf-8)
+;; (setq coding-system-for-write 'utf-8)
+;; ;; =====================unicad=====================
+;; =====================popwin======================
+;; (add-to-list 'load-path "~/.emacs.d/popwin")
+(require 'popwin)
+(popwin-mode 1)
+;; =====================popwin======================
+;; =====================anchored-transpose======================
+;; (add-to-list 'load-path "~/.emacs.d/anchored-transpose")
+(require 'anchored-transpose)
+(global-set-key [?\C-x ?t] 'anchored-transpose)
+(autoload 'anchored-transpose "anchored-transpose" nil t)
+;; First select the entire phrase and type C-x t. Then select the anchor phrase and type C-x t again. You’re done!
+;; 首先选择整个区域，然后选择锚点，锚点两侧的内容交换
+;; You can select the anchor phrase first followed by the phrase to be transposed if more convenient. Or select the 2 phrases independently. If you select 2 overlapping sections it ignores the overlap and swaps the non-overlapping sections. It even supports SecondarySelection. Somehow it can always tell what you want ;-)
+;; 另外，可以分别选择两部分交换的内容
+;; =====================anchored-transpose======================
+;; =====================God-mode======================
+;; (add-to-list 'load-path "~/.emacs.d/god-mode")
+(require 'god-mode)
+(global-set-key (kbd "<escape>") 'god-local-mode)
+;; (global-set-key (kbd "<escape>") 'god-mode-all)
+(defun my-update-cursor ()
+  (setq cursor-type (if (or god-local-mode buffer-read-only)
+                        'bar
+                      'box)))
+(add-hook 'god-mode-enabled-hook 'my-update-cursor)
+(add-hook 'god-mode-disabled-hook 'my-update-cursor)
+(add-to-list 'god-exempt-major-modes 'dired-mode)
+;; =====================God-mode======================
+;; =====================elisp-slime-nav======================
+;; (add-to-list 'load-path "~/.emacs.d/cl-lib")
+;; (add-to-list 'load-path "~/.emacs.d/elisp-slime-nav")
+(define-key 'help-command (kbd "C-l") 'find-library)
+(define-key 'help-command (kbd "C-f") 'find-function)
+(define-key 'help-command (kbd "C-k") 'find-function-on-key)
+(define-key 'help-command (kbd "C-v") 'find-variable)
+(require 'cl-lib)
+(require 'elisp-slime-nav)
+(dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
+  (add-hook hook 'elisp-slime-nav-mode))
+(define-key elisp-slime-nav-mode-map (kbd "C-x C-,") 'elisp-slime-nav-find-elisp-thing-at-point)
+(define-key elisp-slime-nav-mode-map (kbd "C-x C-.") 'pop-tag-mark)
+(define-key elisp-slime-nav-mode-map (kbd "C-x C-/") 'elisp-slime-nav-describe-elisp-thing-at-point)
+(define-key elisp-slime-nav-mode-map (kbd "M-.") nil)
+(define-key elisp-slime-nav-mode-map (kbd "M-,") nil)
+(define-key elisp-slime-nav-mode-map (kbd "C-c C-d d") nil)
+(define-key elisp-slime-nav-mode-map (kbd "C-c C-d C-d") nil)
+;; =====================elisp-slime-nav======================
+;; ===================diredful======================
+;; (add-to-list 'load-path "~/.emacs.d/diredful")
+(require 'diredful)
+;; ===================diredful======================
+;; ===================drag stuff====================
+;; (add-to-list 'load-path "~/.emacs.d/drag-stuff")
+(require 'drag-stuff)
+(add-hook 'dired-mode-hook 'drag-stuff-mode)
+(add-hook 'octave-mode-hook 'drag-stuff-mode)
+(add-hook 'org-mode-hook 'drag-stuff-mode)
+(add-hook 'gnuplot-mode-hook 'drag-stuff-mode)
+(add-hook 'emacs-lisp-mode-hook 'drag-stuff-mode)
+(add-hook 'c-mode-hook 'drag-stuff-mode)
+(add-hook 'graphviz-dot-mode-hook 'drag-stuff-mode)
+(add-hook 'LaTeX-mode-hook 'drag-stuff-mode)
+;; 重新定义drag-stuff.el文件中的 drag-stuff-define-keys 函数，取消关于 M+方向键 的快捷键定义。
+(defun drag-stuff-define-keys ()
+  "Defines keys for `drag-stuff-mode'."
+  (define-key drag-stuff-mode-map (drag-stuff--kbd 'up) nil)
+  (define-key drag-stuff-mode-map (drag-stuff--kbd 'down) nil)
+  (define-key drag-stuff-mode-map (drag-stuff--kbd 'right) nil)
+  (define-key drag-stuff-mode-map (drag-stuff--kbd 'left) nil))
+(define-key drag-stuff-mode-map (kbd "M-P") 'drag-stuff-up)
+(define-key drag-stuff-mode-map (kbd "M-N") 'drag-stuff-down)
+(define-key drag-stuff-mode-map (kbd "M-B") 'drag-stuff-left)
+(define-key drag-stuff-mode-map (kbd "M-F") 'drag-stuff-right)
+;; ===================drag stuff====================
+;; ===================popup-kill-ring====================
+;; (add-to-list 'load-path "~/.emacs.d/popup-kill-ring")
+(require 'popup)
+(require 'pos-tip)
+;; (pos-tip-w32-max-width-height)   ; Maximize frame temporarily
+;; (pos-tip-w32-max-width-height t) ; Keep frame maximized
+(require 'popup-kill-ring)
+(global-set-key "\M-y" 'popup-kill-ring) ; For example.
+(setq popup-kill-ring-interactive-insert t)
+;; ===================popup-kill-ring====================
+;; ===================highlight-symbol====================
+;; (add-to-list 'load-path "~/.emacs.d/highlight-symbol")
+(require 'highlight-symbol)
+(global-set-key (kbd "C-c h") 'highlight-symbol-at-point)
+;; (global-set-key (kbd "M-s M-n") 'highlight-symbol-next)
+;; (global-set-key (kbd "M-s M-p") 'highlight-symbol-prev)
+;; (global-set-key (kbd "M-s M-%") 'highlight-symbol-query-replace)
+;; ===================highlight-symbol====================
+;; ===================elmacro====================
+;; 需要先打开elmacro-mode，然后F3/F4录制宏
+;; 然后使用elmacro-show-last-macro来将操作转换为elisp
+;; ===================elmacro====================
+;; ===================hungry-delete====================
+(require 'hungry-delete)
+(global-hungry-delete-mode)
+(add-hook 'wdired-mode-hook
+          (lambda ()
+            (setq hungry-delete-mode nil)))
+;; ===================hungry-delete====================
+;; ===================imenu-anywhere====================
+;; elpa安装imenu-anywhere
+;; imenu-anywhere与imenu额区别在于，前者包括所有打开的相同mode的buffer，而后者只限于当前buffer。
+;; 但是imenu-anywhere在初次使用时经常失效，没有结果。
+(global-set-key (kbd "M-s i") 'helm-imenu)
+(global-set-key (kbd "M-s C-i") 'helm-imenu-anywhere)
+;; ===================imenu-anywhere====================
+;; ===================pdf-tools=================
+;; 放弃使用，添加的注释跟okular类似，将注释的内容另存为一份文件，只有在emacs中才能看到。
+;; (pdf-tools-install)
+;; (define-key doc-view-mode-map (kbd "M-s i") 'helm-imenu)
+;; (add-hook 'doc-view-mode-hook 'pdf-annot-minor-mode)
+;; (add-hook 'doc-view-mode-hook 'pdf-outline-minor-mode)
+;; ===================pdf-tools=================
+(provide 'setup_packages)
