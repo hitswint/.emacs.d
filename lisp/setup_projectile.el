@@ -7,15 +7,18 @@
 ;; 设置切换project的默认操作
 ;; (setq projectile-switch-project-action 'projectile-dired)
 (setq projectile-switch-project-action 'helm-projectile)
-(global-set-key (kbd "M-'") 'swint-helm-projectile)
-(global-set-key (kbd "M-s M-'") 'projectile-remove-known-project)
+;; home(~/)加入git版本控制，导致projectile缓存home下的所有文件
+(setq projectile-ignored-projects '("~/")) ;将~/加入忽略列表
 (defun swint-helm-projectile ()
   (interactive)
-  (if (projectile-project-p)
-      (helm-projectile)
-    (progn
+  (if (or
+       (not (projectile-project-p))
+       (string-equal (projectile-project-root) "/home/swint/")) ;当前buffer不在project下或者在home project下时
       (projectile-switch-project nil)
-      )))
+    (helm-projectile)
+    ))
+(global-set-key (kbd "M-'") 'swint-helm-projectile)
+(global-set-key (kbd "M-s M-'") 'projectile-remove-known-project)
 ;; M-s p s g 为projectile-grep，出现find错误。使用helm-grep，不输入任何文件就是对整个文件夹进行grep，加C-u就是递归搜索。
 ;; 在helm-projectile中C-d为打开project的根目录。
 ;; C-c p f         Display a list of all files in the project. With a prefix argument it will clear the cache first.
@@ -59,5 +62,5 @@
 ;; 会导致ido无法忽略带星号的buffer
 ;; (require 'persp-projectile)
 ;; (define-key projectile-mode-map (kbd "s-s") 'projectile-persp-switch-project)
-;; ================persp-PROJECTILE================
+;; ================persp-projectile================
 (provide 'setup_projectile)
