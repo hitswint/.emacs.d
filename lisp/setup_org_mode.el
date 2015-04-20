@@ -418,7 +418,13 @@ depending on the last command issued."
 ;;  '(org-refile-targets
 ;;    (quote
 ;;     (("Gtd-task.org" :maxlevel . 1)("Gtd-project.org" :maxlevel . 1) ("Gtd-maybe.org":maxlevel . 1) ("Gtd-done-aborted.org":maxlevel . 1)))))
-(global-set-key (kbd "C-c M-,") 'org-mobile-pull)
+(defun swint-org-mobile-pull ()
+  "Operate on multiple PCs"
+  (interactive)
+  (insert-file-contents "~/Nutstore-mobileorg/task.org" nil nil nil t)
+  (org-mobile-pull)
+  (org-mobile-push))
+(global-set-key (kbd "C-c M-,") 'swint-org-mobile-pull)
 (global-set-key (kbd "C-c M-.") 'org-mobile-push)
 ;; =================mobileorg===============
 ;; =======================org输出doc=============================
