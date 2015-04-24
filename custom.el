@@ -13,6 +13,7 @@
  '(dirtree-windata (quote (frame left 0.3 delete)))
  '(display-time-mode nil)
  '(emms-lyrics-display-on-modeline nil)
+ '(helm-bibtex-format-citation-functions (quote ((org-mode . helm-bibtex-format-citation-ebib) (latex-mode . swint-helm-bibtex-format-citation-cite) (markdown-mode . helm-bibtex-format-citation-pandoc-citeproc) (default . helm-bibtex-format-citation-default))))
  '(helm-buffer-details-flag nil)
  '(helm-completing-read-handlers-alist (quote ((describe-function . helm-completing-read-symbols) (describe-variable . helm-completing-read-symbols) (debug-on-entry . helm-completing-read-symbols) (find-function . helm-completing-read-symbols) (find-tag . helm-completing-read-with-cands-in-buffer) (ffap-alternate-file) (tmm-menubar) (find-file) (org-annotate-file) (swint-org-annotate-file) (dired-do-copy) (iswitchb-buffer) (dirtree) (dired-create-directory))))
  '(helm-external-programs-associations (quote (("rmvb" . "mplayer") ("mp4" . "mplayer") ("pptx" . "wpp") ("ppt" . "wpp") ("xlsx" . "et") ("xls" . "et") ("docx" . "wps") ("doc" . "wps") ("pdf" . "llpp"))))
@@ -56,7 +57,8 @@
  '(sml/shorten-mode-string "")
  '(sml/theme (quote dark))
  '(sml/use-projectile-p (quote before-prefixes))
- '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
+ '(uniquify-buffer-name-style (quote forward) nil (uniquify))
+ '(zotelo-translator-charsets (quote ((BibTeX . "Unicode") (Default . "Unicode")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -80,7 +82,7 @@
  '(iswitchb-current-match ((t (:foreground "yellow" :weight bold))))
  '(iswitchb-single-match ((t (:foreground "DeepSkyBlue1" :weight bold))))
  '(persp-selected-face ((t (:inherit sml/filename :foreground "cyan" :weight bold))))
- '(preview-reference-face ((t (:background "white"))) t)
+ '(preview-reference-face ((t (:background "white"))))
  '(rainbow-delimiters-depth-1-face ((t (:foreground "yellow"))))
  '(rainbow-delimiters-depth-2-face ((t (:foreground "green"))))
  '(rainbow-delimiters-depth-3-face ((t (:foreground "DeepSkyBlue1"))))

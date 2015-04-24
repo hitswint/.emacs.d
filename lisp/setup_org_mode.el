@@ -146,10 +146,10 @@ depending on the last command issued."
 \\newcommand{\\etc}{etc.\@\\xspace}
 \\newcommand{\\ie}{i.e.,\\xspace}
 \\newcommand{\\bigie}{I.e.,\\xspace}
-\\usepackage[numbers,sort&compress]{natbib}
+\\usepackage[super,square,sort&compress]{natbib}
 \\usepackage{hyperref}
 \\usepackage{hypernat}
-\\renewcommand{\\citet}[1]{\\textsuperscript{\\cite{#1}}}
+% \\renewcommand{\\citet}[1]{\\textsuperscript{\\cite{#1}}}
 % \\usepackage[]{ctex}
 % \\usepackage[]{xeCJK}
 % \\setmainfont{Times New Roman}

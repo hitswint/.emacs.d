@@ -261,4 +261,29 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
     (cl-loop for (predicate . regexp) in pat
              always (funcall predicate (pinyin-initials-string-match regexp str)))))
 ;; =======================helm-pinyin==============================
+;; =======================helm-bibtex==============================
+(setq helm-bibtex-bibliography "./literature.bib")
+;; (zotelo-translator-charsets (quote ((BibTeX . "Unicode") (Default . "Unicode"))))
+;; 设置.bib文件的编码格式，否则出现乱码
+(defvar helm-source-bibtex
+  '((name                                      . "BibTeX entries")
+    (init                                      . helm-bibtex-init)
+    (candidates                                . helm-bibtex-candidates)
+    (filtered-candidate-transformer            . helm-bibtex-candidates-formatter)
+    (action . (("Insert citation"              . helm-bibtex-insert-citation)
+               ("Open PDF file (if present)"   . helm-bibtex-open-pdf)
+               ("Open URL or DOI in browser"   . helm-bibtex-open-url-or-doi)
+               ("Insert reference"             . helm-bibtex-insert-reference)
+               ("Insert BibTeX key"            . helm-bibtex-insert-key)
+               ("Insert BibTeX entry"          . helm-bibtex-insert-bibtex)
+               ("Attach PDF to email"          . helm-bibtex-add-PDF-attachment)
+               ("Edit notes"                   . helm-bibtex-edit-notes)
+               ("Show entry"                   . helm-bibtex-show-entry))))
+  "Source for searching in BibTeX files.")
+;; 因为没有使用xpdf索引pdf文件，无法直接打开pdf文件。设置insert-citation为默认选项
+(defun swint-helm-bibtex-format-citation-cite (keys)
+  "Formatter for LaTeX citation macro."
+  (format "\\citep{%s}" (s-join ", " keys)))
+;; 重新定义插入citation命令为\citep{}，快捷键定义在setup_latex.el中。
+;; =======================helm-bibtex==============================
 (provide 'setup_helm)

@@ -62,6 +62,7 @@
             (define-key orgtbl-mode-map (kbd "C-c |") 'org-table-create-or-convert-from-region)
             (define-key LaTeX-mode-map (kbd "C-c C-x C-p") 'preview-at-point)
             (define-key LaTeX-mode-map (kbd "C-c C-x p") 'preview-clearout-buffer)
+            (define-key LaTeX-mode-map (kbd "C-c C-x b") 'helm-bibtex)
             (define-key LaTeX-mode-map (kbd "C-c RET") nil)
             (define-key LaTeX-mode-map (kbd "C-c C-j") nil)
             (define-key LaTeX-mode-map (kbd "C-c C-i") nil)
