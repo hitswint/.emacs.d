@@ -226,4 +226,13 @@
 ;; (add-hook 'doc-view-mode-hook 'pdf-annot-minor-mode)
 ;; (add-hook 'doc-view-mode-hook 'pdf-outline-minor-mode)
 ;; ===================pdf-tools=================
+;; ================fcitx.el=================
+;; https://github.com/cute-jumper/fcitx.el
+(require 'fcitx)
+(fcitx-prefix-keys-add "M-s")
+(fcitx-default-setup)
+(fcitx-M-x-turn-on)
+(fcitx-shell-command-turn-on)
+(fcitx-eval-expression-turn-on)
+;; ================fcitx.el=================
 (provide 'setup_packages)
