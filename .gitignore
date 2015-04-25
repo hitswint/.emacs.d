@@ -1,0 +1,16 @@
+/.emacs.bmk
+/.emacs.desktop.lock
+/.mc-lists.el
+/.org-id-locations
+/.projectile
+/.session
+/ac-comphist.dat
+/auto-save-list/
+/elpa/
+/emacs-desktop
+/emms/
+/helm-adaptive-history
+/image-dired/
+/projectile-bookmarks.eld
+/projectile.cache
+/tramp
