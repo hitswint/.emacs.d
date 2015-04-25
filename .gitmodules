@@ -1,0 +1,3 @@
+[submodule "site-lisp/fcitx.el"]
+	path = site-lisp/fcitx.el
+	url = git@github.com:cute-jumper/fcitx.el.git
