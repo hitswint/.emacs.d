@@ -162,8 +162,8 @@ clobbering sucessive entries."
   (with-current-buffer (find-file swint-org-annotate-file-storage-file)
     (unless (org-mode)
       (org-mode))
+    (widen)                             ;交换上下两句，解决无法显示已建注释
     (goto-char (point-min))
-    (widen)
     (when swint-org-annotate-file-always-open
       (show-all))
     (unless (search-forward-regexp

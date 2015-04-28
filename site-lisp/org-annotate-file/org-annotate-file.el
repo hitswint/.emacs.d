@@ -85,10 +85,10 @@ after the 60th with '...'"
 (defun org-annotate-file (&optional filename)
   "Put a section for the current file into your annotation file"
   (interactive "FFile to annotate: ")
-  ; if a file is specified, bypass the check for error when no file
+                                        ; if a file is specified, bypass the check for error when no file
   (if filename
-     (org-annotate-file-show-section filename)
-     (progn
+      (org-annotate-file-show-section filename)
+    (progn
       (error-if-no-file)
       (org-annotate-file-show-section))))
 
@@ -103,7 +103,7 @@ show the relevant section"
   (let* ((line (buffer-substring-no-properties (point-at-bol) (point-at-eol)))
          (filename (if (stringp buffer-or-file)
                        buffer-or-file
-                       (get-filename buffer-or-file (buffer-file-name))))
+                     (get-filename buffer-or-file (buffer-file-name))))
          (link (get-link buffer-or-file))
          (search-link (org-make-link-string
                        (concat "file:" filename "::" line)
@@ -120,8 +120,8 @@ show the relevant section"
   (abbreviate-file-name (or (buffer-file-name) buffer)))
 
 (defun get-link (filename)
-  ; TODO make this handle non-file links
-  ; like docview: or html: links.
+                                        ; TODO make this handle non-file links
+                                        ; like docview: or html: links.
   (org-store-link (point-at-bol)))
 
 (defun org-annotate-file-add-upper-level (link)
@@ -140,7 +140,7 @@ show the relevant section"
   "Safely positions cursor for a new entry."
   (goto-char (point-max))
   (unless (equal (char-before) 10)
-        (newline)))
+    (newline)))
 
 (defun put-cursor-in-annotation ()
   "After a link is inserted, position cursor with newlines to avoid
@@ -159,18 +159,18 @@ clobbering sucessive entries."
     (show-annotations filename link)))
 
 (defun show-annotations (filename link)
-    (with-current-buffer (find-file org-annotate-file-storage-file)
-      (unless (org-mode)
-        (org-mode))
-      (goto-char (point-min))
-      (widen)
-      (when org-annotate-file-always-open
-        (show-all))
-      (unless (search-forward-regexp
-               (concat "^* " (regexp-quote link)) nil t)
-        (org-annotate-file-add-upper-level link))
-      (beginning-of-line)
-      (org-narrow-to-subtree)))
+  (with-current-buffer (find-file org-annotate-file-storage-file)
+    (unless (org-mode)
+      (org-mode))
+    (widen)                           ;交换上下两句，解决无法显示已建注释
+    (goto-char (point-min))
+    (when org-annotate-file-always-open
+      (show-all))
+    (unless (search-forward-regexp
+             (concat "^* " (regexp-quote link)) nil t)
+      (org-annotate-file-add-upper-level link))
+    (beginning-of-line)
+    (org-narrow-to-subtree)))
 
 (provide 'org-annotate-file)
 ;;; org-annotate-file.el ends here
