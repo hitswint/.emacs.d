@@ -74,6 +74,9 @@
 (require 'swint-org-annotate-file)
 (setq swint-org-annotate-file-storage-file "./annotated.org")
 (global-set-key (kbd "C-c C-l") 'swint-org-annotate-file)
+;; Display annotated files with mark
+;; 未加到dired的相关hook中，而是集成到revert-buffer命令中
+(require 'dired-x-annotated)
 ;; ======================org标注工具=============================
 ;; ==============显示两周的agenda==================
 (setq org-agenda-span 14)
