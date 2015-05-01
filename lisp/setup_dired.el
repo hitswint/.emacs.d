@@ -18,6 +18,8 @@
 ;; 在dired对mark的多个文件内容进行查找
 (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
 (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
+;; 将annotated显示加hook放在前面，使其出现在dired-after-readin-hook中函数列表最后，进而最后生效。
+(add-hook 'dired-after-readin-hook 'dired-k--highlight)
 ;; ==========默认文件夹排在最前面==============
 (defun sof/dired-sort ()
   "Dired sort hook to list directories first."

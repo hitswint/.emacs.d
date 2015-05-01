@@ -13,8 +13,6 @@
   :group 'dired)
 
 (defun dired-k--highlight ()
-  ;; (interactive)
-  ;; (revert-buffer nil t)
   (save-excursion
     (let ((curbuf (current-buffer))
           (stats (dired-k--parse-annotated-status)))
@@ -65,14 +63,9 @@
         (let ((files-status (make-hash-table :test 'equal))
               (status 'annotated))
           (while (search-forward-regexp
-                  ;; (concat "^* \\[\\[.*\\]\\]" )
                   (concat "^* " org-bracket-link-regexp) nil t)
             (puthash (car (last (split-string (substring-no-properties (nth 4 (org-heading-components)) 7 -2) "\\]\\[file:") 1)) status files-status))
           files-status))))
 
-(define-key dired-mode-map "g" '(lambda ()
-                                  (interactive)
-                                  (revert-buffer)
-                                  (dired-k--highlight)))
 (provide 'dired-x-annotated)
 ;;; dired-x-annotated.el ends here
