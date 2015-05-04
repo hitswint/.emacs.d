@@ -1,0 +1,9 @@
+out_to_console yes
+out_to_x no
+background no
+update_interval 1
+total_run_times 0
+use_spacer none
+# $mpd_elapsed/$mpd_length-${mpd_title 15}-$mpd_status-${mpd_bar 5,180}-$mpd_artist-$mpd_album-$mpd_percent
+TEXT
+${if_mpd_playing}$mpd_smart⊹$mpd_elapsed/$mpd_length$endif ⎮ ${cpu}⊹${memperc}⊹${exec amixer get Master | egrep -o "[0-9]+%" | head -1 | egrep -o "[0-9]*"}⊹${battery_percent} ⎮ ${time %m/%d⊹%A⊹%H:%M}
