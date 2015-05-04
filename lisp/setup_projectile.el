@@ -7,16 +7,24 @@
 ;; 设置切换project的默认操作
 ;; (setq projectile-switch-project-action 'projectile-dired)
 (setq projectile-switch-project-action 'helm-projectile)
-;; home(~/)加入git版本控制，导致projectile缓存home下的所有文件
-(setq projectile-ignored-projects '("~/")) ;将~/加入忽略列表
+;; ;; home(~/)加入git版本控制，导致projectile缓存home下的所有文件
+;; (setq projectile-ignored-projects '("~/")) ;将~/加入忽略列表
+;; (defun swint-helm-projectile ()
+;;   (interactive)
+;;   (if (or
+;;        (not (projectile-project-p))
+;;        (string-equal (projectile-project-root) "/home/swint/")) ;当前buffer不在project下或者在home project下时
+;;       (projectile-switch-project nil)
+;;     (helm-projectile)
+;;     ))
+;; 将home下设置文件放到.emacs.d/backups中，取消home project
 (defun swint-helm-projectile ()
   (interactive)
-  (if (or
-       (not (projectile-project-p))
-       (string-equal (projectile-project-root) "/home/swint/")) ;当前buffer不在project下或者在home project下时
+  (if (projectile-project-p)
+      (helm-projectile)
+    (progn
       (projectile-switch-project nil)
-    (helm-projectile)
-    ))
+      )))
 (global-set-key (kbd "M-'") 'swint-helm-projectile)
 (global-set-key (kbd "M-s M-'") 'projectile-remove-known-project)
 ;; M-s p s g 为projectile-grep，出现find错误。使用helm-grep，不输入任何文件就是对整个文件夹进行grep，加C-u就是递归搜索。
