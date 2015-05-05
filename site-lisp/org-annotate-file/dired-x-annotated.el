@@ -14,11 +14,11 @@
 
 (defun dired-k--highlight ()
   (save-excursion
-    (let ((curbuf (current-buffer))
-          (stats (dired-k--parse-annotated-status)))
-      (if (file-exists-p swint-org-annotate-file-storage-file)
-          (funcall 'dired-k--highlight-annotated-file stats curbuf))
-      )))
+    (if (and (file-exists-p swint-org-annotate-file-storage-file)
+             (not (equal (buffer-name) "org"))) ;org文件夹下不显示annotated文件
+        (let ((curbuf (current-buffer))
+              (stats (dired-k--parse-annotated-status)))
+          (funcall 'dired-k--highlight-annotated-file stats curbuf)))))
 
 (defun dired-k--highlight-annotated-file (stats buf)
   (with-current-buffer buf
