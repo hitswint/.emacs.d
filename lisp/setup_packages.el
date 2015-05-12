@@ -234,5 +234,6 @@
 (fcitx-M-x-turn-on)
 (fcitx-shell-command-turn-on)
 (fcitx-eval-expression-turn-on)
+(fcitx-aggressive-minibuffer-turn-on)
 ;; ================fcitx.el=================
 (provide 'setup_packages)
