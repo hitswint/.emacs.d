@@ -234,6 +234,7 @@
 (fcitx-M-x-turn-on)
 (fcitx-shell-command-turn-on)
 (fcitx-eval-expression-turn-on)
-(fcitx-aggressive-minibuffer-turn-on)
+;; (fcitx-aggressive-minibuffer-turn-on)
+;; 会导致tramp问题，使需要在minibuffer输入密码时hang
 ;; ================fcitx.el=================
 (provide 'setup_packages)

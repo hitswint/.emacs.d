@@ -58,4 +58,22 @@
   (goto-char (point-min))
   (kill-line 1))
 ;; ====================stardict=====================
+;; ===================bing-dict=====================
+(require 'bing-dict)
+(defun swint-bing-dict-brief (&optional word)
+  (interactive)
+  (let ((keyword (or word (read-string
+                           "Search Bing dict: "
+                           (if (use-region-p)
+                               (buffer-substring-no-properties
+                                (region-beginning) (region-end))
+                             (thing-at-point 'word))))))
+    (url-retrieve (concat "http://www.bing.com/dict/search?q="
+                          (url-hexify-string keyword))
+                  'bing-dict-brief-cb
+                  `(,(decode-coding-string keyword 'utf-8))
+                  t
+                  t)))
+(global-set-key (kbd "C-M-@") 'swint-bing-dict-brief)
+;; ===================bing-dict=====================
 (provide 'setup_stardict)

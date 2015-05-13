@@ -82,7 +82,7 @@
  '(iswitchb-current-match ((t (:foreground "yellow" :weight bold))))
  '(iswitchb-single-match ((t (:foreground "DeepSkyBlue1" :weight bold))))
  '(persp-selected-face ((t (:inherit sml/filename :foreground "cyan" :weight bold))))
- '(preview-reference-face ((t (:background "white"))))
+ '(preview-reference-face ((t (:background "white"))) t)
  '(rainbow-delimiters-depth-1-face ((t (:foreground "yellow"))))
  '(rainbow-delimiters-depth-2-face ((t (:foreground "green"))))
  '(rainbow-delimiters-depth-3-face ((t (:foreground "DeepSkyBlue1"))))
