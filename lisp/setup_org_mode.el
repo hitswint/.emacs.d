@@ -71,13 +71,13 @@
 (setq org-annotate-file-storage-file "~/org/annotated.org")
 (global-set-key (kbd "C-x C-l") 'org-annotate-file)
 (define-key dired-mode-map (kbd "C-x C-l") '(lambda () (interactive)
-                                              (org-annotate-file (abbreviate-file-name (dired-get-filename)))()))
+                                              (org-annotate-file (abbreviate-file-name (dired-get-filename)))))
 ;; 新建swint-org-annotate-file.el用于局部注释
 (require 'swint-org-annotate-file)
 (setq swint-org-annotate-file-storage-file "./annotated.org")
 (global-set-key (kbd "C-c C-l") 'swint-org-annotate-file)
 (define-key dired-mode-map (kbd "C-c C-l") '(lambda () (interactive)
-                                              (swint-org-annotate-file (abbreviate-file-name (dired-get-filename)))()))
+                                              (swint-org-annotate-file (abbreviate-file-name (dired-get-filename)))))
 ;; Display annotated files with mark
 (require 'dired-x-annotated)
 ;; ======================org标注工具=============================
