@@ -46,7 +46,8 @@
                (while (re-search-forward "*** Collins Cobuild English Dictionary " nil t)
                  (hide-entry))          ;隐藏柯林斯辞典选项
                ))
-           (goto-char (point-min))))))))
+           (goto-char (point-min))))))
+    (swint-bing-dict-brief word)))
 (defun yasdcv--output-cleaner:common ()
   ;; 从yasdcv借来的函数
   (goto-char (point-min))
@@ -74,6 +75,17 @@
                   `(,(decode-coding-string keyword 'utf-8))
                   t
                   t)))
-(global-set-key (kbd "C-M-@") 'swint-bing-dict-brief)
+(defun youdao-sample-sentences ()
+  (interactive)
+  (let ((word (if mark-active
+                  (buffer-substring-no-properties (region-beginning) (region-end))
+                (current-word nil t))))
+    (setq word (read-string (format "Sample Sentences for (default %s): " word)
+                            nil nil word))
+    (browse-url
+     (concat "http://dict.youdao.com/search?le=eng&q=lj%3A"
+             word
+             "&keyfrom=dict.top"))))
+(global-set-key (kbd "C-M-@") 'youdao-sample-sentences)
 ;; ===================bing-dict=====================
 (provide 'setup_stardict)

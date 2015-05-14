@@ -35,6 +35,8 @@
              (define-key w3m-mode-map [(meta \s)] nil)
              (define-key w3m-mode-map [(meta \n)] nil)
              (define-key w3m-mode-map [(\q)] 'w3m-delete-buffer)
+             (define-key w3m-mode-map [(\Q)] '(lambda () (interactive)
+                                                (w3m-quit 1)))
              (define-key w3m-mode-map (kbd "C-c o") 'w3m-open-site-current-session)
              (define-key w3m-mode-map (kbd "C-c t") 'w3m-open-site-new-session)
              (define-key w3m-mode-map (kbd "C-o b") '(lambda () (interactive)
