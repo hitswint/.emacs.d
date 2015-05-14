@@ -45,9 +45,12 @@
                (indent-region (point-min) (point-max))
                (while (re-search-forward "*** Collins Cobuild English Dictionary " nil t)
                  (hide-entry))          ;隐藏柯林斯辞典选项
-               ))
-           (goto-char (point-min))))))
-    (swint-bing-dict-brief word)))
+               ))))))
+    (goto-char (point-min))
+    (insert (concat "*** Bing Dict" " (" word ")\n"))
+    (indent-for-tab-command)
+    (swint-bing-dict-brief word)
+    ))
 (defun yasdcv--output-cleaner:common ()
   ;; 从yasdcv借来的函数
   (goto-char (point-min))
@@ -61,6 +64,34 @@
 ;; ====================stardict=====================
 ;; ===================bing-dict=====================
 (require 'bing-dict)
+(defvar swint-bing-dict-result nil)
+(defun swint-bing-dict-brief-cb (status keyword)
+  (set-buffer-multibyte t)
+  (bing-dict--delete-response-header)
+  (condition-case nil
+      (if (bing-dict--has-result-p)
+          (if (bing-dict--definitions-exist-p)
+              (let ((query-word (propertize keyword 'face 'font-lock-keyword-face))
+                    (pronunciation (bing-dict--pronunciation))
+                    (short-exps (mapconcat 'identity (bing-dict--definitions)
+                                           (propertize " | "
+                                                       'face
+                                                       'font-lock-builtin-face))))
+                (with-current-buffer "*sdcv*"
+                  (goto-char (point-max))
+                  (insert (concat pronunciation short-exps))))
+            (with-current-buffer "*sdcv*"
+              (goto-char (point-max))
+              (insert (concat (propertize (bing-dict--machine-translation)
+                                          'face
+                                          'font-lock-doc-face)))))
+        (with-current-buffer "*sdcv*"
+          (goto-char (point-max))
+          (insert "No results")))
+    (error
+     (with-current-buffer "*sdcv*"
+       (goto-char (point-max))
+       (insert "No results")))))
 (defun swint-bing-dict-brief (&optional word)
   (interactive)
   (let ((keyword (or word (read-string
@@ -71,7 +102,7 @@
                              (thing-at-point 'word))))))
     (url-retrieve (concat "http://www.bing.com/dict/search?q="
                           (url-hexify-string keyword))
-                  'bing-dict-brief-cb
+                  'swint-bing-dict-brief-cb
                   `(,(decode-coding-string keyword 'utf-8))
                   t
                   t)))
