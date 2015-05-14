@@ -101,4 +101,5 @@
  '(sml/projectile ((t (:foreground "green" :weight bold))))
  '(sml/read-only ((t (:inherit sml/not-modified :foreground "gray50"))))
  '(visible-mark-active ((((class color) (background dark)) (:background "maroon" :foreground "white"))))
+ '(w3m-bold ((t (:foreground "red" :weight bold))))
  '(window-numbering-face ((t (:background "dark magenta" :foreground "white"))) t))
