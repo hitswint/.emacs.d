@@ -188,7 +188,6 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
         (setq ace-jump-search-tree (cons 'branch (cdr node)))
         (swint-ace-jump-update-overlay-in-search-tree ace-jump-search-tree
                                                       ace-jump-mode-move-keys)
-
         ;; this is important, we need remove the subtree first before
         ;; do delete, we set the child nodes to nil
         (setf (cdr node) nil)
