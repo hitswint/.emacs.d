@@ -56,15 +56,12 @@
   (if (file-exists-p swint-org-annotate-file-storage-file)
       (with-temp-buffer
         (insert-file swint-org-annotate-file-storage-file)
-        (unless (org-mode)
-          (org-mode))
-        (widen)
         (goto-char (point-min))
         (let ((files-status (make-hash-table :test 'equal))
               (status 'annotated))
           (while (search-forward-regexp
-                  (concat "^* " org-bracket-link-regexp) nil t)
-            (puthash (car (last (split-string (substring-no-properties (nth 4 (org-heading-components)) 7 -2) "\\]\\[file:") 1)) status files-status))
+                  (concat "^* " "\\[\\[file:") nil t)
+            (puthash (car (last (split-string (buffer-substring (line-beginning-position) (- (line-end-position) 2)) "\\[file:") 1)) status files-status))
           files-status))))
 
 (provide 'dired-x-annotated)
