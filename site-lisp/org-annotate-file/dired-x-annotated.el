@@ -55,7 +55,7 @@
 (defun dired-k--parse-annotated-status ()
   (if (file-exists-p swint-org-annotate-file-storage-file)
       (with-temp-buffer
-        (insert-file swint-org-annotate-file-storage-file)
+        (insert-file-contents swint-org-annotate-file-storage-file)
         (goto-char (point-min))
         (let ((files-status (make-hash-table :test 'equal))
               (status 'annotated))
