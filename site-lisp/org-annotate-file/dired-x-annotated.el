@@ -64,5 +64,37 @@
             (puthash (car (last (split-string (buffer-substring (line-beginning-position) (- (line-end-position) 2)) "\\[file:") 1)) status files-status))
           files-status))))
 
+(defsubst hash-table-keys (hash-table)
+  "Return a list of keys in HASH-TABLE."
+  (let ((keys '()))
+    (maphash (lambda (k _v) (push k keys)) hash-table)
+    keys))
+
+(defun dired-k--previous-annotated-file ()
+  "Goto previous annotated file"
+  (interactive)
+  (goto-char (- (line-beginning-position) 1))
+  (let ((file-name-annotated (hash-table-keys (dired-k--parse-annotated-status))))
+    (setq result (car file-name-annotated))
+    (dotimes (i (- (length file-name-annotated) 1))
+      (setq result (concat result "\\|" (nth (+ i 1) file-name-annotated))))
+    (if (not (re-search-backward (concat "\\\(" result "\\\)") nil t))
+        (progn (goto-char (point-max))
+               (dired-k--previous-annotated-file))
+      (smart-beginning-of-line))))
+
+(defun dired-k--next-annotated-file ()
+  "Goto next annotated file"
+  (interactive)
+  (goto-char (+ (line-end-position) 1))
+  (let ((file-name-annotated (hash-table-keys (dired-k--parse-annotated-status))))
+    (setq result (car file-name-annotated))
+    (dotimes (i (- (length file-name-annotated) 1))
+      (setq result (concat result "\\|" (nth (+ i 1) file-name-annotated))))
+    (if (not (re-search-forward (concat "\\\(" result "\\\)") nil t))
+        (progn (goto-char (point-min))
+               (dired-k--next-annotated-file))
+      (smart-beginning-of-line))))
+
 (provide 'dired-x-annotated)
 ;;; dired-x-annotated.el ends here

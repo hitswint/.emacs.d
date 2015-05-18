@@ -20,6 +20,8 @@
 (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
 ;; 将annotated显示加hook放在前面，使其出现在dired-after-readin-hook中函数列表最后，进而最后生效。
 (add-hook 'dired-after-readin-hook 'dired-k--highlight)
+(define-key dired-mode-map (kbd "C-c C-p") 'dired-k--previous-annotated-file)
+(define-key dired-mode-map (kbd "C-c C-n") 'dired-k--next-annotated-file)
 ;; ==========默认文件夹排在最前面==============
 (defun sof/dired-sort ()
   "Dired sort hook to list directories first."
