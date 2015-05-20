@@ -64,11 +64,11 @@
             (puthash (car (last (split-string (buffer-substring (line-beginning-position) (- (line-end-position) 2)) "\\[file:") 1)) status files-status))
           files-status))))
 
-(defsubst hash-table-keys (hash-table)
-  "Return a list of keys in HASH-TABLE."
-  (let ((keys '()))
-    (maphash (lambda (k _v) (push k keys)) hash-table)
-    keys))
+;; (defsubst hash-table-keys (hash-table)
+;;   "Return a list of keys in HASH-TABLE."
+;;   (let ((keys '()))
+;;     (maphash (lambda (k _v) (push k keys)) hash-table)
+;;     keys))
 
 (defun dired-k--previous-annotated-file ()
   "Goto previous annotated file"

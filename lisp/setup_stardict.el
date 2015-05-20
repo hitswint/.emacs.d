@@ -28,7 +28,7 @@
     (set-buffer (get-buffer-create "*sdcv*"))
     (buffer-disable-undo)
     (erase-buffer)
-    (let ((process (start-process-shell-command "sdcv" "*sdcv*" "sdcv" "-n" word)))
+    (let ((process (start-process-shell-command "sdcv" "*sdcv*" "sdcv" "-n --data-dir ~/.stardict/dict" word)))
       (set-process-sentinel
        process
        (lambda (process signal)

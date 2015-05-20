@@ -38,7 +38,6 @@
 (setq user-settings-dir
       (concat user-emacs-directory "users/" user-login-name))
 ;; Set up load path
-(add-to-list 'load-path user-emacs-directory)
 (add-to-list 'load-path site-lisp-dir)
 (add-to-list 'load-path lisp-dir)
 (add-to-list 'load-path defuns-dir)

@@ -228,12 +228,12 @@
 ;; ===================pdf-tools=================
 ;; ================fcitx.el=================
 ;; https://github.com/cute-jumper/fcitx.el
-(require 'fcitx)
-(fcitx-prefix-keys-add "M-s")
-(fcitx-default-setup)
-(fcitx-M-x-turn-on)
-(fcitx-shell-command-turn-on)
-(fcitx-eval-expression-turn-on)
+;; (require 'fcitx)
+;; (fcitx-prefix-keys-add "M-s")
+;; (fcitx-default-setup)
+;; (fcitx-M-x-turn-on)
+;; (fcitx-shell-command-turn-on)
+;; (fcitx-eval-expression-turn-on)
 ;; (fcitx-aggressive-minibuffer-turn-on)
 ;; 会导致tramp问题，使需要在minibuffer输入密码时hang
 ;; ================fcitx.el=================
