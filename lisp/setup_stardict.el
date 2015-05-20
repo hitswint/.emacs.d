@@ -37,7 +37,6 @@
              (setq kid-sdcv-window-configuration (current-window-configuration))
              ;; (split-horizontally-not-vertically) ;改变窗口分割方式，一个窗口时，横向分割；多个窗口时，纵向分割。
              ;; 但是同时有其他程序和emacs时不适用，注释掉，并删除这个函数。
-             (split-window-horizontally)
              (switch-to-buffer-other-window "*sdcv*")
              (when (featurep 'org)
                (yasdcv--output-cleaner:common)
