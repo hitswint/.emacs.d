@@ -17,16 +17,7 @@
 ;;       (projectile-switch-project nil)
 ;;     (helm-projectile)
 ;;     ))
-;; 将home下设置文件放到.emacs.d/backups中，取消home project
-(defun swint-helm-projectile ()
-  (interactive)
-  (if (projectile-project-p)
-      (helm-projectile)
-    (progn
-      (projectile-switch-project nil)
-      )))
-(global-set-key (kbd "M-'") 'swint-helm-projectile)
-(global-set-key (kbd "M-s M-'") 'projectile-remove-known-project)
+(global-set-key (kbd "M-'") 'helm-projectile)
 ;; M-s p s g 为projectile-grep，出现find错误。使用helm-grep，不输入任何文件就是对整个文件夹进行grep，加C-u就是递归搜索。
 ;; 在helm-projectile中C-d为打开project的根目录。
 ;; C-c p f         Display a list of all files in the project. With a prefix argument it will clear the cache first.
