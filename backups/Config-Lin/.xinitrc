@@ -10,7 +10,7 @@ export XMODIFIERS="@im=fcitx"
 
 fcitx
 
-export MATLAB_JAVA=/usr/lib/jvm/java-1.6.0-openjdk-amd64/jre
+export MATLAB_JAVA=/usr/lib/jvm/java-7-openjdk-amd64/jre
 export _JAVA_AWT_WM_NONREPARENTING=1
 
 conky | while true; read line; do xsetroot -name "$line"; done &
