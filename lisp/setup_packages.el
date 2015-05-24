@@ -237,4 +237,8 @@
 ;; (fcitx-aggressive-minibuffer-turn-on)
 ;; 会导致tramp问题，使需要在minibuffer输入密码时hang
 ;; ================fcitx.el=================
+;; ================wicd-mode=================
+(require 'wicd-mode)
+(global-set-key (kbd "C-c w") 'wicd)
+;; ================wicd-mode=================
 (provide 'setup_packages)
