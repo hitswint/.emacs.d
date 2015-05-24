@@ -1,4 +1,5 @@
 ;; ==============Proced==============
+(require 'proced)
 (global-set-key (kbd "C-M-<backspace>") 'proced)
 (define-key proced-mode-map (kbd "q") 'kill-buffer-and-window)
 ;; Proced自动更新，10秒
