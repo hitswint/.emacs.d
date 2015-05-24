@@ -240,5 +240,6 @@
 ;; ================wicd-mode=================
 (require 'wicd-mode)
 (global-set-key (kbd "C-c w") 'wicd)
+(define-key wicd-mode-map (kbd "q") 'kill-buffer-and-window)
 ;; ================wicd-mode=================
 (provide 'setup_packages)

@@ -1,12 +1,6 @@
 ;; ==============Proced==============
 (global-set-key (kbd "C-M-<backspace>") 'proced)
-(add-hook 'proced-mode-hook
-          (lambda ()
-            (define-key proced-mode-map (kbd "q") '(lambda ()
-                                                     (interactive)
-                                                     (kill-this-buffer)
-                                                     (delete-window)
-                                                     ))))
+(define-key proced-mode-map (kbd "q") 'kill-buffer-and-window)
 ;; Proced自动更新，10秒
 (defun proced-settings ()
   (proced-toggle-auto-update 1))
