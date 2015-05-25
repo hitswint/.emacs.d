@@ -5,11 +5,18 @@
 (require 'dired-x)
 (require 'dired-details)
 (dired-details-install)
+;; =============Auto-revert-mode=============
 ;; Auto refresh buffers
 (global-auto-revert-mode 1)
 ;; Also auto refresh dired, but be quiet about it
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)
+;; dired-k--highlight会使auto-revert-mode出错
+;; 在dired-mode中禁用auto-revert-mode
+(setq global-auto-revert-ignore-modes '(dired-mode))
+;; 使用dired-mode自带的auto-revert
+(setq dired-auto-revert-buffer t)
+;; =============Auto-revert-mode=============
 (put 'dired-find-alternate-file 'disabled nil)
 ;; 让dired显示文件大小
 (setq dired-listing-switches "-alh")
