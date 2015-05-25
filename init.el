@@ -95,6 +95,7 @@
 (require 'setup_smex)
 (require 'setup_stardict)
 (require 'setup_w3m)
+(require 'setup_wicd)
 (require 'setup_windows)
 (require 'setup_rainbow_delimiters)
 (require 'setup_auto_complete)

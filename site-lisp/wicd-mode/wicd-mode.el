@@ -411,28 +411,28 @@ manage network connections. See also the command `wicd'."
 
 ;; Run a hook when scan is finished
 
-(dbus-register-signal
- :system
- wicd-dbus-name
- (wicd-dbus-path :wireless)
- (wicd-dbus-name :wireless)
- "SendEndScanSignal"
- (lambda ()
-   (setq wicd-wireless-scanning nil)
-   (run-hooks 'wicd-wireless-scan-hook)))
+;; (dbus-register-signal
+;;  :system
+;;  wicd-dbus-name
+;;  (wicd-dbus-path :wireless)
+;;  (wicd-dbus-name :wireless)
+;;  "SendEndScanSignal"
+;;  (lambda ()
+;;    (setq wicd-wireless-scanning nil)
+;;    (run-hooks 'wicd-wireless-scan-hook)))
 
-(dbus-register-signal
- :system
- wicd-dbus-name
- (wicd-dbus-path :wireless)
- (wicd-dbus-name :wireless)
- "SendStartScanSignal"
- (lambda ()
-   (setq wicd-wireless-scanning t)
-   (with-current-buffer (wicd-buffer)
-     (let (buffer-read-only)
-       (erase-buffer)
-       (insert "Scanning…\n")))))
+;; (dbus-register-signal
+;;  :system
+;;  wicd-dbus-name
+;;  (wicd-dbus-path :wireless)
+;;  (wicd-dbus-name :wireless)
+;;  "SendStartScanSignal"
+;;  (lambda ()
+;;    (setq wicd-wireless-scanning t)
+;;    (with-current-buffer (wicd-buffer)
+;;      (let (buffer-read-only)
+;;        (erase-buffer)
+;;        (insert "Scanning…\n")))))
 
 (defvar wicd-wireless-connected nil
   "Id of the currently-connected network.")
@@ -442,16 +442,16 @@ manage network connections. See also the command `wicd'."
   (setq wicd-wireless-connected (wicd-wireless-connected))
   (wicd-wireless-display))
 
-(dbus-register-signal
- :system
- wicd-dbus-name
- (wicd-dbus-path :daemon)
- (wicd-dbus-name :daemon)
- "ConnectResultsSent"
- (lambda (s)
-   (message "Connexion " s)
-   (when (string= s "success")
-     (wicd-wireless-emphase-network))))
+;; (dbus-register-signal
+;;  :system
+;;  wicd-dbus-name
+;;  (wicd-dbus-path :daemon)
+;;  (wicd-dbus-name :daemon)
+;;  "ConnectResultsSent"
+;;  (lambda (s)
+;;    (message "Connexion " s)
+;;    (when (string= s "success")
+;;      (wicd-wireless-emphase-network))))
 
 (provide 'wicd-mode)
 ;;; wicd-mode.el ends here
