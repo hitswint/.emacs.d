@@ -241,5 +241,12 @@
 (require 'wicd-mode)
 (global-set-key (kbd "C-c w") 'wicd)
 (define-key wicd-mode-map (kbd "q") 'kill-buffer-and-window)
+;; 解决wicd关闭后仍然存在*Wicd*的问题
+(defun wicd-wireless-display ()
+  "Redisplay wireless network list."
+  (interactive)
+  (if (buffer-live-p (get-buffer wicd-buffer-name))
+      (with-current-buffer wicd-buffer-name
+        (tabulated-list-print))))
 ;; ================wicd-mode=================
 (provide 'setup_packages)
