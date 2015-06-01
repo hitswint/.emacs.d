@@ -33,40 +33,49 @@
 (setq helm-locate-create-db-command "updatedb -l 0 -o ~/.swint-locate.db -U ~/")
 (setq helm-locate-command "locate -b -i %s -r %s -d ~/.swint-locate.db")
 ;; ==================helm-dired-buffer====================
-(defun swint-helm-dired-buffer-list ()
-  "Return the current list of dired buffers.
-Currently visible buffers are put at the end of the list."
-  (iswitchb-make-buflist nil))
+(defun swint-helm-dired-buffers-list--init ()
+  ;; Issue #51 Create the list before `helm-buffer' creation.
+  (setq swint-helm-dired-buffers-list-cache (iswitchb-make-buflist nil))
+  (let ((result (cl-loop for b in swint-helm-dired-buffers-list-cache
+                         maximize (length b) into len-buf
+                         maximize (length (with-current-buffer b
+                                            (symbol-name major-mode)))
+                         into len-mode
+                         finally return (cons len-buf len-mode))))
+    (unless (default-value 'helm-buffer-max-length)
+      (helm-set-local-variable 'helm-buffer-max-length (car result)))
+    (unless (default-value 'helm-buffer-max-len-mode)
+      (helm-set-local-variable 'helm-buffer-max-len-mode (cdr result)))))
 (defclass swint-helm-dired-source-buffers (helm-source-sync helm-type-buffer)
-  ((init :initform (lambda ()
-                     ;; Issue #51 Create the list before `helm-buffer' creation.
-                     (setq helm-buffers-list-cache (swint-helm-dired-buffer-list))
-                     (let ((result (cl-loop for b in helm-buffers-list-cache
-                                            maximize (length b) into len-buf
-                                            maximize (length (with-current-buffer b
-                                                               (symbol-name major-mode)))
-                                            into len-mode
-                                            finally return (cons len-buf len-mode))))
-                       (unless helm-buffer-max-length
-                         (setq helm-buffer-max-length (car result)))
-                       (unless helm-buffer-max-len-mode
-                         ;; If a new buffer is longer that this value
-                         ;; this value will be updated
-                         (setq helm-buffer-max-len-mode (cdr result))))))
-   (candidates :initform helm-buffers-list-cache)
+  ((buffer-list
+    :initarg :buffer-list
+    :initform #'helm-buffer-list
+    :custom function
+    :documentation
+    "  A function with no arguments to create buffer list.")
+   (init :initform 'swint-helm-dired-buffers-list--init)
+   (candidates :initform swint-helm-dired-buffers-list-cache)
    (matchplugin :initform nil)
-   (match :initform 'helm-buffers-list--match-fn)
+   (match :initform 'helm-buffers-match-function)
    (persistent-action :initform 'helm-buffers-list-persistent-action)
+   (resume :initform (lambda ()
+                       (run-with-idle-timer
+                        0.1 nil (lambda ()
+                                  (with-helm-buffer
+                                    (helm-force-update))))))
    (keymap :initform helm-buffer-map)
    (volatile :initform t)
    (mode-line :initform helm-buffer-mode-line-string)
    (persistent-help
     :initform
     "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
-(defvar swint-helm-dired-source-buffers-list (helm-make-source "Dired Buffers" 'swint-helm-dired-source-buffers))
-(defun swint-helm-dired-buffers ()
-  "Preconfigured `helm-dired-buffers' to list dired buffers."
+(defvar swint-helm-dired-source-buffers-list nil)
+(defun swint-helm-dired-buffers-list ()
+  "Preconfigured `helm' to list buffers."
   (interactive)
+  (unless swint-helm-dired-source-buffers-list
+    (setq swint-helm-dired-source-buffers-list
+          (helm-make-source "Dired Buffers" 'swint-helm-dired-source-buffers)))
   (let ((helm-ff-transformer-show-only-basename nil))
     (helm :sources '(swint-helm-dired-source-buffers-list
                      swint-helm-source-recentf-directory
@@ -74,7 +83,7 @@ Currently visible buffers are put at the end of the list."
           :buffer "*helm dired buffers-swint*"
           :keymap helm-buffer-map
           :truncate-lines t)))
-(global-set-key (kbd "C-.") 'swint-helm-dired-buffers)
+(global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
 ;; ==================helm-dired-buffer====================
 ;; ==================helm-bookmarks====================
 (defcustom swint-helm-bookmarks-list
@@ -286,4 +295,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   (format "\\citep{%s}" (s-join ", " keys)))
 ;; 重新定义插入citation命令为\citep{}，快捷键定义在setup_latex.el中。
 ;; =======================helm-bibtex==============================
+;; =======================helm-unicode==============================
+(global-set-key (kbd "M-s m") 'helm-unicode)
+;; =======================helm-unicode==============================
 (provide 'setup_helm)

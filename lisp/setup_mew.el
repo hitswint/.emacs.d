@@ -37,7 +37,7 @@
 (setq mew-charset-m17n "utf-8")
 (setq mew-internal-utf-8p t)
 ;; html设置
-(require 'mew-w3m) ;需要w3m支持，看html邮件
+;; (require 'mew-w3m) ;需要w3m支持，看html邮件
 (setq mew-use-w3m-minor-mode t)
 (setq mew-w3m-auto-insert-image t)
 (setq w3m-default-display-inline-images t)

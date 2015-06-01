@@ -124,5 +124,6 @@
   (magit-run-git-async "remote" "add" "-f" remote url))
 ;; 使magit-add-remote默认以另一个窗口的buffer为remote
 ;; ==================初始化远程库和克隆远程库===================
+(setq magit-last-seen-setup-instructions "1.4.0")
 ;; =================================magit===============================
 (provide 'setup_magit)

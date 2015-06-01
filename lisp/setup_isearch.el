@@ -30,7 +30,7 @@
     swint-regexp))
 (defun isearch-function-with-pinyin ()
   "Wrap for Pinyin searching."
-  (if isearch-pinyin
+  (if pinyin-search-activated
       ;; Return the function to use for pinyin search
       `(lambda (string bound noerror)
          (funcall (if ,isearch-forward
@@ -41,7 +41,7 @@
     (isearch-search-fun-default)))
 (add-hook 'isearch-mode-end-hook
           (lambda ()
-            (setq isearch-pinyin nil)))
+            (setq pinyin-search-activated nil)))
 ;; ===================pinyin-search=====================
 ;; ==============extended isearch==================
 (defun symbol-name-at-point ()
