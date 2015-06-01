@@ -9,16 +9,50 @@
  '(anzu-search-threshold 1000)
  '(bs-default-configuration "files")
  '(cfs--current-profile-name "profile1" t)
- '(custom-safe-themes (quote ("6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default)))
+ '(custom-safe-themes
+   (quote
+    ("6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default)))
  '(dirtree-windata (quote (frame left 0.3 delete)))
  '(display-time-mode nil)
  '(emms-lyrics-display-on-modeline nil)
- '(helm-bibtex-format-citation-functions (quote ((org-mode . helm-bibtex-format-citation-ebib) (latex-mode . swint-helm-bibtex-format-citation-cite) (markdown-mode . helm-bibtex-format-citation-pandoc-citeproc) (default . helm-bibtex-format-citation-default))))
+ '(helm-bibtex-format-citation-functions
+   (quote
+    ((org-mode . helm-bibtex-format-citation-ebib)
+     (latex-mode . swint-helm-bibtex-format-citation-cite)
+     (markdown-mode . helm-bibtex-format-citation-pandoc-citeproc)
+     (default . helm-bibtex-format-citation-default))))
  '(helm-buffer-details-flag nil)
- '(helm-completing-read-handlers-alist (quote ((describe-function . helm-completing-read-symbols) (describe-variable . helm-completing-read-symbols) (debug-on-entry . helm-completing-read-symbols) (find-function . helm-completing-read-symbols) (find-tag . helm-completing-read-with-cands-in-buffer) (ffap-alternate-file) (tmm-menubar) (find-file) (org-annotate-file) (swint-org-annotate-file) (dired-do-copy) (iswitchb-buffer) (dirtree) (dired-create-directory))))
- '(helm-external-programs-associations (quote (("rmvb" . "mplayer") ("mp4" . "mplayer") ("pptx" . "wpp") ("ppt" . "wpp") ("xlsx" . "et") ("xls" . "et") ("docx" . "wps") ("doc" . "wps") ("pdf" . "llpp"))))
+ '(helm-completing-read-handlers-alist
+   (quote
+    ((describe-function . helm-completing-read-symbols)
+     (describe-variable . helm-completing-read-symbols)
+     (debug-on-entry . helm-completing-read-symbols)
+     (find-function . helm-completing-read-symbols)
+     (find-tag . helm-completing-read-with-cands-in-buffer)
+     (ffap-alternate-file)
+     (tmm-menubar)
+     (find-file)
+     (org-annotate-file)
+     (swint-org-annotate-file)
+     (dired-do-copy)
+     (iswitchb-buffer)
+     (dirtree)
+     (dired-create-directory))))
+ '(helm-external-programs-associations
+   (quote
+    (("rmvb" . "mplayer")
+     ("mp4" . "mplayer")
+     ("pptx" . "wpp")
+     ("ppt" . "wpp")
+     ("xlsx" . "et")
+     ("xls" . "et")
+     ("docx" . "wps")
+     ("doc" . "wps")
+     ("pdf" . "llpp"))))
  '(helm-ff-newfile-prompt-p nil)
- '(helm-projectile-sources-list (quote (helm-source-projectile-projects helm-source-projectile-files-list helm-source-projectile-buffers-list)))
+ '(helm-projectile-sources-list
+   (quote
+    (helm-source-projectile-projects helm-source-projectile-files-list helm-source-projectile-buffers-list)))
  '(helm-split-window-default-side (quote same))
  '(helm-truncate-lines nil)
  '(ido-auto-merge-delay-time 0.7)
@@ -26,7 +60,9 @@
  '(ido-default-file-method (quote raise-frame))
  '(ido-enable-flex-matching t)
  '(ido-file-extensions-order nil)
- '(ido-ignore-buffers (quote ("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Compile\\=Log\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*compilation\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\` " "\\`.english-words\\'" my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer)))
+ '(ido-ignore-buffers
+   (quote
+    ("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Compile\\=Log\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*compilation\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\` " "\\`.english-words\\'" my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer)))
  '(ido-separator "   ")
  '(ido-use-virtual-buffers nil)
  '(iswitchb-case t)
@@ -37,14 +73,21 @@
  '(matlab-fill-code nil)
  '(octave-auto-indent t)
  '(org-capture-bookmark nil)
- '(org-format-latex-options (quote (:foreground default :background default :scale 1.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))))
+ '(org-format-latex-options
+   (quote
+    (:foreground default :background default :scale 1.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
+		 ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(org-latex-default-figure-position "htbp")
  '(org-latex-image-default-width "1\\linewidth")
- '(org-latex-pdf-process (quote ("xelatex -interaction nonstopmode -output-directory %o %f")) t)
+ '(org-latex-pdf-process
+   (quote
+    ("xelatex -interaction nonstopmode -output-directory %o %f")) t)
  '(org-latex-remove-logfiles nil)
  '(persp-initial-frame-name "i")
  '(persp-modestring-dividers (quote ("" "" "")))
- '(preview-gs-options (quote ("-q" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4")))
+ '(preview-gs-options
+   (quote
+    ("-q" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4")))
  '(preview-transparent-color (quote (highlight :background)))
  '(read-buffer-function (quote persp-read-buffer))
  '(recentf-max-saved-items 50)
@@ -70,6 +113,7 @@
  '(diredp-compressed-file-suffix ((t (:foreground "#7b68ee"))) t)
  '(diredp-ignored-file-name ((t (:foreground "#aaaaaa"))) t)
  '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
+ '(helm-buffer-file ((t (:inherit font-lock-type-face))))
  '(helm-ff-directory ((t (:foreground "yellow" :weight bold))))
  '(helm-ff-dotted-directory ((t (:foreground "yellow" :weight bold))))
  '(helm-ff-file ((t (:foreground "white"))))
