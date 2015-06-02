@@ -135,7 +135,7 @@
 (defun swint-helm-dired-buffers-after-quit ()
   "List swint-helm-dired-buffers."
   (interactive)
-  (helm-run-after-quit #'(lambda () (swint-helm-dired-buffers))))
+  (helm-run-after-quit #'(lambda () (swint-helm-dired-buffers-list))))
 (defun swint-helm-mini-after-quit ()
   "List swint-helm-mini."
   (interactive)
@@ -148,13 +148,69 @@
   "List swint-helm-ff."
   (interactive)
   (helm-run-after-quit #'(lambda () (swint-helm-ff))))
+;; Fix bugs of helm-quit-and-find-file on dired buffer
+(defun swint-helm-quit-and-find-file ()
+  "Drop into `helm-find-files' from `helm'.
+If current selection is a buffer or a file, `helm-find-files'
+from its directory."
+  (interactive)
+  (require 'helm-grep)
+  (helm-run-after-quit
+   (lambda (f)
+     (if (file-exists-p f)
+         (helm-find-files-1 (file-name-directory f)
+                            (concat
+                             "^"
+                             (regexp-quote
+                              (if helm-ff-transformer-show-only-basename
+                                  (helm-basename f) f))))
+       (helm-find-files-1 f)))
+   (let* ((sel       (helm-get-selection))
+          (grep-line (and (stringp sel)
+                          (helm-grep-split-line sel)))
+          (bmk-name  (and (stringp sel)
+                          (not grep-line)
+                          (replace-regexp-in-string "\\`\\*" "" sel)))
+          (bmk       (and bmk-name (assoc bmk-name bookmark-alist)))
+          (buf       (helm-aif (get-buffer sel) (buffer-name it)))
+          (default-preselection (or (buffer-file-name helm-current-buffer)
+                                    default-directory)))
+     (cond
+      ;; Buffer.
+      (buf (or (buffer-file-name sel)
+               (car (rassoc (get-buffer buf) dired-buffers))
+               (and (with-current-buffer buf
+                      (eq major-mode 'org-agenda-mode))
+                    org-directory
+                    (expand-file-name org-directory))
+               (with-current-buffer buf default-directory)))
+      ;; Bookmark.
+      (bmk (helm-aif (bookmark-get-filename bmk)
+               (if (and ffap-url-regexp
+                        (string-match ffap-url-regexp it))
+                   it (expand-file-name it))
+             default-directory))
+      ((or (file-remote-p sel)
+           (file-exists-p sel))
+       (expand-file-name sel))
+      ;; Grep.
+      ((and grep-line (file-exists-p (car grep-line)))
+       (expand-file-name (car grep-line)))
+      ;; Occur.
+      (grep-line
+       (with-current-buffer (get-buffer (car grep-line))
+         (or (buffer-file-name) default-directory)))
+      ;; Url.
+      ((and ffap-url-regexp (string-match ffap-url-regexp sel)) sel)
+      ;; Default.
+      (t default-preselection)))))
 (define-key helm-find-files-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
 (define-key helm-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
 (define-key helm-map (kbd "C-'") 'swint-helm-bookmarks-after-quit)
 (define-key helm-map (kbd "C-,") 'swint-helm-mini-after-quit)
 (define-key helm-find-files-map (kbd "C-x C-f") 'swint-helm-ff-after-quit)
 (define-key helm-map (kbd "C-x C-f") 'swint-helm-ff-after-quit)
-(define-key helm-map (kbd "C-/") 'helm-quit-and-find-file)
+(define-key helm-map (kbd "C-/") 'swint-helm-quit-and-find-file)
 ;; ================在别的helm-buffer中运行helm命令==============
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x g") 'helm-do-grep) ;不是递归grep，加C-u为递归
@@ -165,7 +221,7 @@
 (define-key helm-map (kbd "C-l") 'helm-execute-persistent-action)
 (define-key helm-map (kbd "C-M-p") 'helm-previous-source)
 (define-key helm-map (kbd "C-M-n") 'helm-next-source)
-(define-key helm-buffer-map (kbd "C-M-k") 'helm-buffer-run-kill-persistent)
+(define-key helm-buffer-map (kbd "C-M-k") 'helm-buffer-run-kill-buffers)
 (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)
 (define-key helm-read-file-map (kbd "C-l") 'helm-execute-persistent-action)
 (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
