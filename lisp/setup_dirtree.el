@@ -4,13 +4,25 @@
 (require 'windata)
 (require 'dirtree)
 (autoload 'dirtree "dirtree" "Add directory to tree view" t)
-(global-set-key (kbd "C-c RET") 'dirtree)
-(fset 'dirtree-local
-      [?\C-c return return ?\c ?\C-a ?\M-f ?\M-b])
-(fset 'dirtree-home
-      [?\C-c return ?\C-a ?\C-f ?\C-f ?\C-k ?\C-m ?\C-n])
+;; 放弃使用键盘宏
+;; (fset 'dirtree-local
+;;       [?\C-c return return ?\c ?\C-a ?\M-f ?\M-b])
+;; (fset 'dirtree-home
+;;       [?\C-c return ?\C-a ?\C-f ?\C-f ?\C-k ?\C-m ?\C-n])
 (global-set-key (kbd "C-c C-j") 'dirtree-local)
 (global-set-key (kbd "C-c j") 'dirtree-home)
+(defun dirtree-local ()
+  (interactive)
+  (let* ((file buffer-file-name)
+         (dir (if file (file-name-directory file) default-directory))
+         (dirtree-buffer-name (if (eq major-mode 'dired-mode) (file-name-nondirectory (dired-get-filename)) (if file (file-name-nondirectory file) nil))))
+    (dirtree dir nil)
+    (if dirtree-buffer-name
+        (re-search-forward (concat " " dirtree-buffer-name) nil t))
+    (beginning-of-line)))
+(defun dirtree-home ()
+  (interactive)
+  (dirtree "~/" nil))
 (defun dirtree-shell-command ()
   "open file with external app"
   (interactive)
@@ -23,16 +35,6 @@
   (interactive)
   (kill-this-buffer)
   (delete-window))
-(defun dirtree-position ()
-  "go to the position of buffer"
-  (interactive)
-  (other-window 1)
-  (if (eq major-mode 'dired-mode)
-      (setq dirtree-buffer-name (file-name-base (dired-get-file-for-visit)))
-    (setq dirtree-buffer-name (buffer-name)))
-  (other-window 1)
-  (beginning-of-buffer)
-  (search-forward dirtree-buffer-name))
 (defun dirtree-switch-to-dirtree ()
   "kill this buffer and switch to other windows"
   (interactive)
@@ -67,7 +69,6 @@
              (define-key dirtree-mode-map (kbd "C-n") 'tree-mode-next-node)
              (define-key dirtree-mode-map "\C-j" 'dirtree-shell-command)
              (define-key dirtree-mode-map (kbd "q") 'dirtree-quit)
-             (define-key dirtree-mode-map (kbd "c") 'dirtree-position)
              (define-key dirtree-mode-map (kbd "i") 'tree-mode-toggle-expand)))
 (global-set-key (kbd "C-q") 'dirtree-exist-kill-this-buffer)
 ;; ==================dirtree=========================
