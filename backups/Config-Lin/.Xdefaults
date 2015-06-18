@@ -1,0 +1,15 @@
+!!=============================================================================
+!! RXVT-unicode setting
+!!=============================================================================
+Xft.dpi:96
+URxvt.background:black
+URxvt.foreground:white
+URxvt.colorBD:yellow
+URxvt.colorUL:green
+URxvt.multichar_encoding:utf-8
+URxvt.saveLines:10000
+URxvt.color12:DodgerBlue
+URxvt.menu:/etc/X11/rxvt.menu
+URxvt.preeditType:Root
+URxvt.scrollBar:False
+URxvt.font: -*-fixed-medium-r-*--18-*-*-*-*-*-iso10646-1,xft:WenQuanYi Bitmap Song:pixelsize=14:antialias=false

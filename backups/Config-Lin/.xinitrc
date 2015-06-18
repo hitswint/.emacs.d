@@ -17,4 +17,9 @@ conky | while true; read line; do xsetroot -name "$line"; done &
 
 wicd-client -t &
 
+xmodmap ~/.xmodmap
+# MPD daemon start (if no other user instance exists)
+# [ ! -s ~/.mpd/mpd.pid ] && mpd  # Fail to startup sometime
+[ ! -s ~/.mpd/mpd.pid ] ; mpd
+
 exec dwm

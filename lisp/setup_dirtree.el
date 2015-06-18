@@ -48,7 +48,8 @@
       (dirtree-switch-to-dirtree)
     (progn
       (bc-set)
-      (kill-this-buffer)
+      ;; (kill-this-buffer)             ;卸载slim后失效
+      (kill-buffer (current-buffer))
       (switch-to-buffer (car (swint-iswitchb-make-buflist nil)))
       (switch-to-buffer (car (swint-iswitchb-make-buflist nil)))
       ;; 下面不可行，如果当前buffer不显示在buflist中，那么会kill其他的buffer

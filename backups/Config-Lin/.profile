@@ -23,7 +23,3 @@ fi
 PATH=/usr/local/texlive/2012/bin/i386‐linux:$PATH; export PATH
 MANPATH=/usr/local/texlive/2012/texmf/doc/man:$MANPATH; export MANPATH
 INFOPATH=/usr/local/texlive/2012/texmf/doc/info:$INFOPATH; export INFOPATH
-xmodmap ~/.xmodmap
-# MPD daemon start (if no other user instance exists)
-# [ ! -s ~/.mpd/mpd.pid ] && mpd  # Fail to startup sometime
-[ ! -s ~/.mpd/mpd.pid ] ; mpd
