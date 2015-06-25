@@ -38,7 +38,7 @@
 ;; (setq matlab-shell-buffer-name "octave")
 ;; (defalias 'octave-shell 'matlab-shell)
 ;;使用octave-mode
-(autoload 'octave-mode "octave-mod" nil t)
+;; (autoload 'octave-mode "octave-mod" nil t) ;显示无法找到octave-mod
 (setq auto-mode-alist
       (cons '("\\.m$" . octave-mode) auto-mode-alist))
 (add-hook 'octave-mode-hook
