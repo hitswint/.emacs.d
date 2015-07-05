@@ -140,6 +140,7 @@
 ;; =====================elisp-slime-nav======================
 ;; (add-to-list 'load-path "~/.emacs.d/cl-lib")
 ;; (add-to-list 'load-path "~/.emacs.d/elisp-slime-nav")
+(global-set-key (kbd "C-M-'") 'help-for-help)
 (define-key 'help-command (kbd "C-l") 'find-library)
 (define-key 'help-command (kbd "C-f") 'find-function)
 (define-key 'help-command (kbd "C-k") 'find-function-on-key)
@@ -190,7 +191,7 @@
 ;; (pos-tip-w32-max-width-height)   ; Maximize frame temporarily
 ;; (pos-tip-w32-max-width-height t) ; Keep frame maximized
 (require 'popup-kill-ring)
-(global-set-key "\M-y" 'popup-kill-ring) ; For example.
+(global-set-key "\C-\M-y" 'popup-kill-ring) ; For example.
 (setq popup-kill-ring-interactive-insert t)
 ;; ===================popup-kill-ring====================
 ;; ===================highlight-symbol====================
