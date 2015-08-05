@@ -71,8 +71,8 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
      ;; more than one, we need to enter AceJump mode
      (t
       ;; make indirect buffer for those windows that show the same buffer
-      (setq ace-jump-recover-visual-area-list
-            (ace-jump-mode-make-indirect-buffer visual-area-list))
+      ;; (setq ace-jump-recover-visual-area-list
+      ;;       (ace-jump-mode-make-indirect-buffer visual-area-list))
       ;; create background for each visual area
       (if ace-jump-mode-gray-background
           (setq ace-jump-background-overlay-list

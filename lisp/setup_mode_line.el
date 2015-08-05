@@ -5,6 +5,7 @@
 ;; 设定theme为dark/light/respectful
 (sml/setup)
 (sml/apply-theme 'dark)
+(setq column-number-mode t)
 (add-to-list 'sml/replacer-regexp-list '("^~/Documents/MATLAB/" ":M:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/.emacs.d/" ":E:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/linux/" ":L:"))
@@ -68,4 +69,8 @@ want to use in the modeline *in lieu of* the original.")
 ;; Deal with the problems caused by using eval-print-last-sexp(C-j) in scratch buffer
 (define-key lisp-interaction-mode-map (kbd "C-j") nil)
 ;; =================Lisp Interaction mode===================
+;; ================nyan-mode=================
+(nyan-mode t)
+(setq nyan-bar-length 20)
+;; ================nyan-mode=================
 (provide 'setup_mode_line)
