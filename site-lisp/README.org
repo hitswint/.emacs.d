@@ -24,6 +24,8 @@
     package中新版本包与iswitchb不兼容。
   + matlab-emacs
     未包含在package中。
+  + mew-w3m
+    使mew支持html格式邮件。
   + mingus
     未包含在package中。
   + org
