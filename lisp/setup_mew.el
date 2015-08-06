@@ -37,8 +37,12 @@
 (setq mew-charset-m17n "utf-8")
 (setq mew-internal-utf-8p t)
 ;; html设置
-;; (require 'mew-w3m) ;需要w3m支持，看html邮件
+(require 'mew-w3m) ;需要w3m支持，看html邮件
 (setq mew-use-w3m-minor-mode t)
+(add-hook 'mew-message-hook 'mew-w3m-minor-mode-setter)
+(define-key mew-summary-mode-map "T" 'mew-w3m-view-inline-image)
+;; Press "T":Toggle the visibility of the images included its message only.
+;; Press "C-uT":Display the all images included its Text/Html part.
 (setq mew-w3m-auto-insert-image t)
 (setq w3m-default-display-inline-images t)
 (setq mew-prog-html '(mew-mime-text/html-w3m nil nil))
