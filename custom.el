@@ -76,7 +76,7 @@
  '(org-format-latex-options
    (quote
     (:foreground default :background default :scale 1.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
-		 ("begin" "$1" "$" "$$" "\\(" "\\["))))
+                 ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(org-latex-default-figure-position "htbp")
  '(org-latex-image-default-width "1\\linewidth")
  '(org-latex-pdf-process
@@ -102,7 +102,6 @@
  '(sml/position-percentage-format "")
  '(sml/projectile-replacement-format "[%s]")
  '(sml/shorten-mode-string "")
- '(sml/theme (quote dark))
  '(sml/use-projectile-p (quote before-prefixes))
  '(uniquify-buffer-name-style (quote forward) nil (uniquify))
  '(zotelo-translator-charsets (quote ((BibTeX . "Unicode") (Default . "Unicode")))))
@@ -124,6 +123,7 @@
  '(helm-grep-file ((t (:foreground "cyan"))))
  '(helm-selection ((t (:background "black" :underline t))))
  '(helm-visible-mark ((t (:foreground "DeepSkyBlue1"))))
+ '(highlight ((t (:background "black"))))
  '(ido-first-match ((t (:foreground "yellow" :weight bold))))
  '(ido-only-match ((((class color)) (:foreground "DeepSkyBlue1" :weight bold))))
  '(ido-subdir ((t (:foreground "green"))))

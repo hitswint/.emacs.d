@@ -4,7 +4,7 @@
 (require 'smart-mode-line)
 ;; 设定theme为dark/light/respectful
 (sml/setup)
-(sml/apply-theme 'dark)
+(sml/apply-theme nil)
 (setq column-number-mode t)
 (add-to-list 'sml/replacer-regexp-list '("^~/Documents/MATLAB/" ":M:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/.emacs.d/" ":E:"))
@@ -37,6 +37,8 @@
 (add-to-list 'sml/hidden-modes " MRev")
 (add-to-list 'sml/hidden-modes " OrgTbl")
 (add-to-list 'sml/hidden-modes " Isearch[拼音]")
+(add-to-list 'sml/hidden-modes " =>")
+(add-to-list 'sml/hidden-modes " Guide")
 ;; ================smart-mode-line===================
 ;; ====================abbrev-for-mode-line========================
 (defvar mode-line-cleaner-alist

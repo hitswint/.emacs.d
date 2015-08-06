@@ -24,12 +24,14 @@
   '(ac-math
     ace-jump-buffer
     ace-jump-mode
+    aggressive-indent
     anchored-transpose
     anzu
     async
     auto-complete
     auto-complete-auctex
     bing-dict
+    clean-aindent-mode
     dash
     dired-details
     dirtree
@@ -50,6 +52,7 @@
     gnuplot-mode
     god-mode
     graphviz-dot-mode
+    guide-key
     helm
     helm-bibtex
     helm-projectile
@@ -65,7 +68,9 @@
     let-alist
     magit
     math-symbol-lists
+    multifiles
     multiple-cursors
+    names
     nyan-mode
     outline-magic
     paredit
@@ -87,6 +92,7 @@
     smex
     smooth-scrolling
     switch-window
+    tangotango-theme
     tree-mode
     undo-tree
     visible-mark
@@ -94,7 +100,8 @@
     windata
     window-numbering
     yasnippet
-    zotelo)
+    zotelo
+    ztree)
   "A list of packages to ensure are installed at launch.")
 (defun prelude-packages-installed-p ()
   "Check if all packages in `prelude-packages' are installed."

@@ -109,14 +109,18 @@
 ;;   ;; Eventually, switch on this global filter for tabbars:
 ;;   (global-tabbar-on-dired-only-mode 1))
 ;; =========================tabbar================================
-;; ==================color setting===================
-;; (add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0/")
-(require 'color-theme)
-(setq color-theme-directory (concat user-emacs-directory "themes/")
-      color-theme-load-all-themes nil)
-(color-theme-initialize)
-;; (add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0/themes/")
-(color-theme-tangotango)
-;; (color-theme-tango-light)
-;; ==================color setting===================
+;; ==================color-theme===================
+;; 用于emacs23以下。
+;; ;; (add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0/")
+;; (require 'color-theme)
+;; (setq color-theme-directory (concat user-emacs-directory "themes/")
+;;       color-theme-load-all-themes nil)
+;; (color-theme-initialize)
+;; ;; (add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0/themes/")
+;; (color-theme-tangotango)
+;; ;; (color-theme-tango-light)
+;; ==================color-theme===================
+;; ==============tangotango-theme==============
+(load-theme 'tangotango t)
+;; ==============tangotango-theme==============
 (provide 'setup_appearance)

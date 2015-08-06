@@ -243,6 +243,8 @@ if point is at end of line , new-line-and-indent"
       (split-line)
       (indent-for-tab-command)))
    (t
-    (newline-and-indent))))
+    (progn (delete-horizontal-space t)  ;clean-aindent-mode重新定义了newline-and-indent
+           (newline nil t)
+           (indent-according-to-mode)))))
 (global-set-key (kbd "C-j") 'open-line-or-new-line-dep-pos)
 ;; ===============合并C-j和C-o===============

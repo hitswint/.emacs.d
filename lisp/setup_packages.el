@@ -238,4 +238,32 @@
 ;; (fcitx-aggressive-minibuffer-turn-on)
 ;; 会导致tramp问题，使需要在minibuffer输入密码时hang
 ;; ================fcitx.el=================
+;; ============aggressive-indent=============
+(global-aggressive-indent-mode 1)
+;; ============aggressive-indent=============
+;; ============clean-aindent-mode=============
+(clean-aindent-mode t)
+(setq clean-aindent-is-simple-indent t)
+(add-hook 'prog-mode-hook 'clean-aindent-mode)
+(define-key global-map (kbd "RET") 'newline-and-indent)
+;; RET：自动清除white space，光标停留在前一行indentation处。
+;; M-DEL：unindent，回到前一行indentation处。
+;; ============clean-aindent-mode=============
+;; ============multifiles=============
+(require 'multifiles)
+(global-set-key (kbd "C-c t") 'mf/mirror-region-in-multifile)
+;; ============multifiles=============
+;; ============ztree=============
+(require 'ztree-diff)
+(global-set-key (kbd "C-c z") 'ztree-diff)
+;; ============ztree=============
+;; ============guide-key=============
+(require 'guide-key)
+(setq guide-key/guide-key-sequence
+      '("M-s" "C-x 4"
+        (org-mode "C-c C-x")
+        ))
+(guide-key-mode 1)
+(setq guide-key/popup-window-position 'bottom)
+;; ============guide-key=============
 (provide 'setup_packages)

@@ -13,7 +13,7 @@
   + cl-lib
     需要保持低版本。
   + color-theme
-    package中包版本无更新。
+    package中包版本无更新，用于emacs23及之前的版本。
   + cycle-mini
     未包含在package中。
   + diredful

@@ -43,6 +43,7 @@
              (define-key org-mode-map (kbd "C-o") nil)
              (define-key org-mode-map (kbd "M-a") nil)
              (define-key org-mode-map (kbd "M-e") nil)
+             (define-key org-mode-map (kbd "RET") nil)
              (define-key org-mode-map (kbd "C-M-i") 'org-cycle)
              (define-key org-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
              (define-key org-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
