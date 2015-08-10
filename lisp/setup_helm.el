@@ -46,6 +46,19 @@
       (helm-set-local-variable 'helm-buffer-max-length (car result)))
     (unless (default-value 'helm-buffer-max-len-mode)
       (helm-set-local-variable 'helm-buffer-max-len-mode (cdr result)))))
+(defun swint-helm-dired-buffers-list--init/other-persps ()
+  ;; Issue #51 Create the list before `helm-buffer' creation.
+  (setq swint-helm-dired-buffers-list-cache/other-persps iswitchb-temp-buflist/other-persps)
+  (let ((result (cl-loop for b in swint-helm-dired-buffers-list-cache/other-persps
+                         maximize (length b) into len-buf
+                         maximize (length (with-current-buffer b
+                                            (symbol-name major-mode)))
+                         into len-mode
+                         finally return (cons len-buf len-mode))))
+    (unless (default-value 'helm-buffer-max-length)
+      (helm-set-local-variable 'helm-buffer-max-length (car result)))
+    (unless (default-value 'helm-buffer-max-len-mode)
+      (helm-set-local-variable 'helm-buffer-max-len-mode (cdr result)))))
 (defclass swint-helm-dired-source-buffers (helm-source-sync helm-type-buffer)
   ((buffer-list
     :initarg :buffer-list
@@ -69,15 +82,61 @@
    (persistent-help
     :initform
     "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
+(defclass swint-helm-dired-source-buffers/other-persps (helm-source-sync helm-type-buffer)
+  ((buffer-list
+    :initarg :buffer-list
+    :initform #'helm-buffer-list
+    :custom function
+    :documentation
+    "  A function with no arguments to create buffer list.")
+   (init :initform 'swint-helm-dired-buffers-list--init/other-persps)
+   (candidates :initform swint-helm-dired-buffers-list-cache/other-persps)
+   (matchplugin :initform nil)
+   (match :initform 'helm-buffers-match-function)
+   (persistent-action :initform 'helm-buffers-list-persistent-action)
+   (resume :initform (lambda ()
+                       (run-with-idle-timer
+                        0.1 nil (lambda ()
+                                  (with-helm-buffer
+                                    (helm-force-update))))))
+   (keymap :initform helm-buffer-map)
+   (volatile :initform t)
+   (mode-line :initform helm-buffer-mode-line-string)
+   (persistent-help
+    :initform
+    "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
 (defvar swint-helm-dired-source-buffers-list nil)
+(defvar swint-helm-dired-source-buffers-list/other-persps nil)
+(defun helm-switch-persp/buffer (buffer)
+  "helm-switch to persp/buffer simultaneously"
+  (cond
+   ((memq buffer (persp-buffers persp-curr))
+    (switch-to-buffer buffer))
+   ((memq buffer (persp-buffers (gethash "8" perspectives-hash)))
+    (progn (swint-persp-switch "8")
+           (switch-to-buffer buffer)))
+   ((memq buffer (persp-buffers (gethash "9" perspectives-hash)))
+    (progn (swint-persp-switch "9")
+           (switch-to-buffer buffer)))
+   ((memq buffer (persp-buffers (gethash "0" perspectives-hash)))
+    (progn (swint-persp-switch "0")
+           (switch-to-buffer buffer)))
+   (t
+    (progn (swint-persp-switch "i")
+           (switch-to-buffer buffer)))))
 (defun swint-helm-dired-buffers-list ()
   "Preconfigured `helm' to list buffers."
   (interactive)
   (unless swint-helm-dired-source-buffers-list
     (setq swint-helm-dired-source-buffers-list
           (helm-make-source "Dired Buffers" 'swint-helm-dired-source-buffers)))
+  (unless swint-helm-dired-source-buffers-list/other-persps
+    (progn (setq swint-helm-dired-source-buffers-list/other-persps
+                 (helm-make-source "Dired Buffers in other persps" 'swint-helm-dired-source-buffers/other-persps))
+           (helm-add-action-to-source "Switch to persp/buffer" 'helm-switch-persp/buffer swint-helm-dired-source-buffers-list/other-persps 0)))
   (let ((helm-ff-transformer-show-only-basename nil))
     (helm :sources '(swint-helm-dired-source-buffers-list
+                     swint-helm-dired-source-buffers-list/other-persps
                      swint-helm-source-recentf-directory
                      helm-source-buffer-not-found)
           :buffer "*helm dired buffers-swint*"
@@ -85,6 +144,66 @@
           :truncate-lines t)))
 (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
 ;; ==================helm-dired-buffer====================
+;; ==================helm-mini====================
+(defun helm-buffers-list--init/other-persps ()
+  ;; Issue #51 Create the list before `helm-buffer' creation.
+  (setq helm-buffers-list-cache/other-persps ido-temp-list/other-persps)
+  (let ((result (cl-loop for b in helm-buffers-list-cache/other-persps
+                         maximize (length b) into len-buf
+                         maximize (length (with-current-buffer b
+                                            (symbol-name major-mode)))
+                         into len-mode
+                         finally return (cons len-buf len-mode))))
+    (unless (default-value 'helm-buffer-max-length)
+      (helm-set-local-variable 'helm-buffer-max-length (car result)))
+    (unless (default-value 'helm-buffer-max-len-mode)
+      (helm-set-local-variable 'helm-buffer-max-len-mode (cdr result)))))
+(defclass helm-source-buffers/other-persps (helm-source-sync helm-type-buffer)
+  ((buffer-list
+    :initarg :buffer-list
+    :initform #'helm-buffer-list
+    :custom function
+    :documentation
+    "  A function with no arguments to create buffer list.")
+   (init :initform 'helm-buffers-list--init/other-persps)
+   (candidates :initform helm-buffers-list-cache/other-persps)
+   (matchplugin :initform nil)
+   (match :initform 'helm-buffers-match-function)
+   (persistent-action :initform 'helm-buffers-list-persistent-action)
+   (resume :initform (lambda ()
+                       (run-with-idle-timer
+                        0.1 nil (lambda ()
+                                  (with-helm-buffer
+                                    (helm-force-update))))))
+   (keymap :initform helm-buffer-map)
+   (volatile :initform t)
+   (mode-line :initform helm-buffer-mode-line-string)
+   (persistent-help
+    :initform
+    "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
+(defvar helm-source-buffers-list/other-persps nil)
+(defcustom swint-helm-mini-default-sources '(helm-source-buffers-list
+                                             helm-source-buffers-list/other-persps
+                                             swint-helm-source-recentf-file
+                                             helm-source-buffer-not-found)
+  "Default sources list used in `swint-helm-mini'."
+  :group 'helm-misc
+  :type '(repeat (choice symbol)))
+(defun swint-helm-mini ()
+  "Preconfigured `helm' lightweight version \(buffer -> recentf\)."
+  (interactive)
+  (require 'helm-files)
+  (unless helm-source-buffers-list
+    (setq helm-source-buffers-list
+          (helm-make-source "File Buffers" 'helm-source-buffers)))
+  (unless helm-source-buffers-list/other-persps
+    (progn (setq helm-source-buffers-list/other-persps
+                 (helm-make-source "File Buffers in other persps" 'helm-source-buffers/other-persps))
+           (helm-add-action-to-source "Switch to persp/buffer" 'helm-switch-persp/buffer helm-source-buffers-list/other-persps 0)))
+  (let ((helm-ff-transformer-show-only-basename nil))
+    (helm-other-buffer swint-helm-mini-default-sources "*helm mini-swint*")))
+(global-set-key (kbd "C-,") 'swint-helm-mini)
+;; ==================helm-mini====================
 ;; ==================helm-bookmarks====================
 (defcustom swint-helm-bookmarks-list
   '(helm-source-bookmarks)
@@ -98,24 +217,6 @@
     (helm-other-buffer swint-helm-bookmarks-list "*helm bookmarks-swint*")))
 (global-set-key (kbd "C-'") 'swint-helm-bookmarks)
 ;; ==================helm-bookmarks====================
-;; ==================helm-mini====================
-(defcustom swint-helm-mini-default-sources '(helm-source-buffers-list
-                                             swint-helm-source-recentf-file
-                                             helm-source-buffer-not-found)
-  "Default sources list used in `swint-helm-mini'."
-  :group 'helm-misc
-  :type '(repeat (choice symbol)))
-(defun swint-helm-mini ()
-  "Preconfigured `helm' lightweight version \(buffer -> recentf\)."
-  (interactive)
-  (require 'helm-files)
-  (unless helm-source-buffers-list
-    (setq helm-source-buffers-list
-          (helm-make-source "Buffers" 'helm-source-buffers)))
-  (let ((helm-ff-transformer-show-only-basename nil))
-    (helm-other-buffer swint-helm-mini-default-sources "*helm mini-swint*")))
-(global-set-key (kbd "C-,") 'swint-helm-mini)
-;; ==================helm-mini====================
 ;; ==================helm-find-file====================
 (defcustom swint-helm-ff-list
   '(helm-source-files-in-current-dir

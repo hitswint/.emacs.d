@@ -201,3 +201,10 @@ i.e. change right window to bottom, or change bottom window to right."
                    name (file-name-nondirectory new-name)))))))
 (global-set-key (kbd "C-x C-r") 'rename-current-buffer-file)
 ;; ====================重命名当前buffer======================
+;; ====================获得当前buffer的major-mode======================
+(defun buffer-mode (&optional buffer-or-name)
+  "Returns the major mode associated with a buffer.
+If buffer-or-name is nil return current buffer's mode."
+  (buffer-local-value 'major-mode
+                      (if buffer-or-name (get-buffer buffer-or-name) (current-buffer))))
+;; ====================获得当前buffer的major-mode======================

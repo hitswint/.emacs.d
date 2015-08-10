@@ -6,8 +6,9 @@
 ;;       (nconc (loop for i from ?a to ?z collect i)
 ;;              (loop for i from ?0 to ?9 collect i)
 ;;              (loop for i from ?A to ?Z collect i)))
-(global-set-key (kbd "C-c C-h") 'ace-jump-mode)
 (global-set-key (kbd "C-h") 'swint-ace-jump-char-mode)
+(global-set-key (kbd "C-c C-h") 'ace-jump-mode)
+(global-set-key (kbd "C-c h") 'ace-jump-line-mode)
 ;; C-u C-h ace-jume-char-mode; C-u C-u C-h ace-jump-line-mode
 ;; If you also use viper mode:
 ;; (define-key viper-vi-global-user-map (kbd "SPC") 'ace-jump-mode)
@@ -54,7 +55,7 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
           (not (every #'characterp ace-jump-mode-move-keys)))
       (error "[AceJump] Invalid move keys: check ace-jump-mode-move-keys"))
   ;; search candidate position
-  (let* ((visual-area-list (ace-jump-list-visual-area))
+  (let* ((visual-area-list (ace-jump-list-visual-area/exclude-pdf-view)) ;exclude pdf-view buffer
          (candidate-list (swint-ace-jump-search-candidate re-query-string visual-area-list)))
     (cond
      ;; cannot find any one
@@ -204,5 +205,13 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
      (t
       (ace-jump-done)
       (error "[AceJump] Internal error: tree node type is invalid")))))
+;; ace-jump-list-visual-area/exclude-pdf-view
+(defun ace-jump-list-visual-area/exclude-pdf-view ()
+  "Exclude pdf view area to improve performance."
+  (loop for f in (frame-list)
+        append (loop for w in (remove-if (lambda (x) (eq (buffer-mode (window-buffer x)) 'pdf-view-mode)) (window-list f))
+                     collect (make-aj-visual-area :buffer (window-buffer w)
+                                                  :window w
+                                                  :frame f))))
 ;; ====================ace-jump=========================
 (provide 'setup_ace_jump)

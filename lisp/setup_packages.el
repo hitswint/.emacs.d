@@ -197,10 +197,10 @@
 ;; ===================highlight-symbol====================
 ;; (add-to-list 'load-path "~/.emacs.d/highlight-symbol")
 (require 'highlight-symbol)
-(global-set-key (kbd "C-c h") 'highlight-symbol-at-point)
-;; (global-set-key (kbd "M-s M-n") 'highlight-symbol-next)
-;; (global-set-key (kbd "M-s M-p") 'highlight-symbol-prev)
-;; (global-set-key (kbd "M-s M-%") 'highlight-symbol-query-replace)
+(global-set-key (kbd "M-g h") 'highlight-symbol-at-point)
+(global-set-key (kbd "M-g n") 'highlight-symbol-next)
+(global-set-key (kbd "M-g p") 'highlight-symbol-prev)
+(global-set-key (kbd "M-g r") 'highlight-symbol-query-replace)
 ;; ===================highlight-symbol====================
 ;; ===================elmacro====================
 ;; 需要先打开elmacro-mode，然后F3/F4录制宏
@@ -220,13 +220,6 @@
 (global-set-key (kbd "M-s i") 'helm-imenu)
 (global-set-key (kbd "M-s C-i") 'helm-imenu-anywhere)
 ;; ===================imenu-anywhere====================
-;; ===================pdf-tools=================
-;; 放弃使用，添加的注释跟okular类似，将注释的内容另存为一份文件，只有在emacs中才能看到。
-;; (pdf-tools-install)
-;; (define-key doc-view-mode-map (kbd "M-s i") 'helm-imenu)
-;; (add-hook 'doc-view-mode-hook 'pdf-annot-minor-mode)
-;; (add-hook 'doc-view-mode-hook 'pdf-outline-minor-mode)
-;; ===================pdf-tools=================
 ;; ================fcitx.el=================
 ;; https://github.com/cute-jumper/fcitx.el
 (require 'fcitx)
@@ -260,10 +253,22 @@
 ;; ============guide-key=============
 (require 'guide-key)
 (setq guide-key/guide-key-sequence
-      '("M-s" "C-x 4"
+      '("M-s" "C-x 8"
         (org-mode "C-c C-x")
         ))
 (guide-key-mode 1)
 (setq guide-key/popup-window-position 'bottom)
 ;; ============guide-key=============
+;; ===================pdf-tools=================
+;; 添加的注释跟okular类似，将注释的内容另存为一份文件，只有在emacs中才能看到
+;; 上述注释为旧版本，新版本的pdf-tools已经可以将注释放在pdf文件本身之中了。
+(pdf-tools-install)
+(add-hook 'doc-view-mode-hook 'pdf-annot-minor-mode)
+(add-hook 'doc-view-mode-hook 'pdf-outline-minor-mode)
+(define-key pdf-view-mode-map (kbd "M-s i") 'helm-imenu)
+(define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
+(define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
+(define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
+(define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
+;; ===================pdf-tools=================
 (provide 'setup_packages)

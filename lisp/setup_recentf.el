@@ -28,10 +28,11 @@
                      (require 'recentf)
                      (recentf-mode 1)))
    (candidates :initform (lambda () (remove-if (lambda (x)
-                                                 (string-match-p ".*\/$"
-                                                                 x)
-                                                 ) recentf-list)
-                           ))
+                                                 (or (string-match-p ".*\/$" x)
+                                                     (member x (mapcar (lambda (xx)
+                                                                         (buffer-file-name (get-buffer xx)))
+                                                                       ido-temp-list/all-persps))))
+                                               recentf-list)))
    (pattern-transformer :initform 'helm-recentf-pattern-transformer)
    (match-part :initform (lambda (candidate)
                            (if (or helm-ff-transformer-show-only-basename
@@ -64,10 +65,12 @@ Set `recentf-max-saved-items' to a bigger value if default is too small.")
                      (require 'recentf)
                      (recentf-mode 1)))
    (candidates :initform (lambda () (remove-if-not (lambda (x)
-                                                     (string-match-p ".*\/$"
-                                                                     x)
-                                                     ) recentf-list)
-                           ))
+                                                     (and (string-match-p ".*\/$" x)
+                                                          (not (member x (mapcar (lambda (xx)
+                                                                                   (with-current-buffer xx
+                                                                                     (expand-file-name default-directory)))
+                                                                                 iswitchb-temp-buflist/all-persps)))))
+                                                   recentf-list)))
    (pattern-transformer :initform 'helm-recentf-pattern-transformer)
    (match-part :initform (lambda (candidate)
                            (if (or helm-ff-transformer-show-only-basename

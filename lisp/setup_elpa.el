@@ -76,6 +76,7 @@
     paredit
     paredit-everywhere
     parsebib
+    pdf-tools
     pinyin-search
     pkg-info
     popup
@@ -92,6 +93,7 @@
     smex
     smooth-scrolling
     switch-window
+    tablist
     tangotango-theme
     tree-mode
     undo-tree
