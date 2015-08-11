@@ -9,7 +9,7 @@
 (require 'window-numbering)
 (window-numbering-mode 1)
 ;; 当按键大于现有窗口数目时，选中最后一个窗口
-(defvar previously-selected-window
+(defvar previously-selected-window nil
   "previously-selected-window.")
 (defun select-window-by-number (i &optional arg)
   "Select window given number I by `window-numbering-mode'.
@@ -19,7 +19,7 @@ If prefix ARG is given, delete the window instead of selecting it."
         window)
     (if (and (>= i 0) (< i 10)
              (setq window (aref windows i)))
-        (setq window (aref windows i))
+        ()
       (setq window (aref windows (- (car window-numbering-left) 1))))
     (setq previously-selected-window (selected-window))
     (if arg
@@ -39,12 +39,11 @@ If prefix ARG is given, delete the window instead of selecting it."
         window)
     (if (and (>= i 0) (< i 10)
              (setq window (aref windows i)))
-        (setq window (aref windows i))
+        ()
       (setq window (aref windows (- (car window-numbering-left) 1))))
     (set-window-buffer (selected-window) (window-buffer window))
     (set-window-buffer window this-win)
-    (select-window window)
-    ))
+    (select-window window)))
 (dotimes (i 10)
   (eval `(defun ,(intern (format "transpose-window-%s" i)) (&optional arg)
            ,(format "Transpose the window with number %i." i)
@@ -61,7 +60,8 @@ If prefix ARG is given, delete the window instead of selecting it."
   (interactive)
   (let ((current-selected-window (selected-window)))
     (if (and
-         (memq previously-selected-window (append (car (gethash (selected-frame) window-numbering-table)) nil)) ;之前选择window在当前window列表中
+         (memq previously-selected-window (window-list) ;; (append (car (gethash (selected-frame) window-numbering-table)) nil)
+               ) ;之前选择window在当前window列表中
          (not (equal previously-selected-window (selected-window)))) ;之前选择window与当前window不同
         (select-window previously-selected-window)
       (other-window 1))
@@ -72,7 +72,8 @@ If prefix ARG is given, delete the window instead of selecting it."
   (let ((current-selected-window (selected-window))
         (this-win (window-buffer)))
     (if (and
-         (memq previously-selected-window (append (car (gethash (selected-frame) window-numbering-table)) nil)) ;之前选择window在当前window列表中
+         (memq previously-selected-window (window-list) ;; (append (car (gethash (selected-frame) window-numbering-table)) nil)
+               ) ;之前选择window在当前window列表中
          (not (equal previously-selected-window (selected-window)))) ;之前选择window与当前window不同
         (progn (set-window-buffer (selected-window) (window-buffer previously-selected-window))
                (set-window-buffer previously-selected-window this-win)
@@ -127,4 +128,36 @@ If prefix ARG is given, delete the window instead of selecting it."
 (global-set-key (kbd "M-s k") (ignore-error-wrapper 'swint-windmove-up))
 (global-set-key (kbd "M-s j") (ignore-error-wrapper 'swint-windmove-down))
 ;; =====================windmove=====================
+;; ====================三窗口设置=====================
+(defun split-window-3-horizontally (&optional arg)
+  "Split window into 3 while largest one is in horizon"
+  ;; (interactive "P")
+  (delete-other-windows)
+  (split-window-horizontally)
+  (if arg (other-window 1))
+  (split-window-vertically))
+(defun split-window-3-vertically (&optional arg)
+  "Split window into 3 while largest one is in vertical"
+  ;; (interactive "P")
+  (delete-other-windows)
+  (split-window-vertically)
+  (if arg (other-window 1))
+  (split-window-horizontally))
+(defun change-split-type-3-v (&optional arg)
+  "change 3 window style from horizon to vertical"
+  (interactive "P")
+  (change-split-type 'split-window-3-horizontally arg))
+(defun change-split-type-3-h (&optional arg)
+  "change 3 window style from vertical to horizon"
+  (interactive "P")
+  (change-split-type 'split-window-3-vertically arg))
+(defun change-split-type (split-fn &optional arg)
+  "Change 3 window style from horizontal to vertical and vice-versa"
+  (let ((bufList (mapcar 'window-buffer (window-list))))
+    (select-window (get-largest-window))
+    (funcall split-fn arg)
+    (mapcar* 'set-window-buffer (window-list) bufList)))
+(global-set-key (kbd "M-s ,") 'change-split-type-3-h)
+(global-set-key (kbd "M-s .") 'change-split-type-3-v)
+;; ====================三窗口设置=====================
 (provide 'setup_windows)

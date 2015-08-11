@@ -34,7 +34,7 @@
              (define-key org-mode-map (kbd "C-c C-b") 'org-beamer-select-environment)
              (define-key org-mode-map (kbd "C-c C-v") 'swint-org-open-export-pdf)
              (define-key org-mode-map (kbd "C-c i") 'my-org-open-at-point)
-             (define-key org-mode-map (kbd "C-c o") 'org-open-at-point)
+             (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (org-open-at-point t nil)))
              (define-key org-mode-map (kbd "C-c C-x C-p") 'org-preview-latex-fragment)
              (define-key org-mode-map (kbd "C-c C-i") nil)
              (define-key org-mode-map (kbd "C-c C-o") nil)

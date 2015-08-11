@@ -263,12 +263,17 @@
 ;; 添加的注释跟okular类似，将注释的内容另存为一份文件，只有在emacs中才能看到
 ;; 上述注释为旧版本，新版本的pdf-tools已经可以将注释放在pdf文件本身之中了。
 (pdf-tools-install)
-(add-hook 'doc-view-mode-hook 'pdf-annot-minor-mode)
-(add-hook 'doc-view-mode-hook 'pdf-outline-minor-mode)
+(add-hook 'pdf-view-mode-hook 'pdf-annot-minor-mode)
+(add-hook 'pdf-view-mode-hook 'pdf-outline-minor-mode)
+;; (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
+;; pdf-view-auto-slice-minor-mode 翻页自动切边。
+(add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
+;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。
 (define-key pdf-view-mode-map (kbd "M-s i") 'helm-imenu)
 (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
 (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
 (define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
 (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
+(define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save)
 ;; ===================pdf-tools=================
 (provide 'setup_packages)

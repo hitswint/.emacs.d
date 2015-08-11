@@ -11,18 +11,23 @@
   (local-set-key (kbd "SPC") 'scroll-up)
   (local-set-key (kbd "DEL") 'scroll-down)
   (local-set-key (kbd "d") 'kid-sdcv-to-buffer)
-  (local-set-key (kbd "q") '(lambda ()
-                              (interactive)
-                              (kill-buffer)
-                              (unless (null (cdr (window-list)))
-                                (delete-window))
-                              ))
+  (local-set-key (kbd "q") 'sdcv-quit)
   (run-hooks 'sdcv-mode-hook))
+(defun sdcv-quit ()
+  "Whether to close sdcv window based on current window number."
+  (interactive)
+  (if (> current-window-number 1)
+      (kill-buffer)
+    (progn (kill-buffer)
+           (unless (null (cdr (window-list)))
+             (delete-window)))))
+(defvar current-window-number nil)
 (defun kid-sdcv-to-buffer ()
   (interactive)
   (let ((word (if mark-active
                   (buffer-substring-no-properties (region-beginning) (region-end))
                 (current-word nil t))))
+    (setq current-window-number (length (window-list)))
     (setq word (read-string (format "Search the dictionary for (default %s): " word)
                             nil nil word))
     (set-buffer (get-buffer-create "*sdcv*"))
@@ -69,24 +74,26 @@
   (set-buffer-multibyte t)
   (bing-dict--delete-response-header)
   (condition-case nil
-      (if (bing-dict--has-machine-translation-p)
-          (with-current-buffer "*sdcv*"
-            (goto-char (point-max))
-            (insert (concat (propertize (bing-dict--machine-translation)
-                                        'face
-                                        'font-lock-doc-face))))
-        (let ((query-word (propertize keyword 'face 'font-lock-keyword-face))
-              (pronunciation (bing-dict--pronunciation))
-              (short-exps (mapconcat 'identity (bing-dict--definitions)
-                                     (propertize " | "
-                                                 'face
-                                                 'font-lock-builtin-face))))
-          (with-current-buffer "*sdcv*"
-            (goto-char (point-max))
-            (if short-exps
-                (insert (concat pronunciation short-exps))
-              (insert "No results")
-              ))))
+      (if (buffer-live-p (get-buffer "*sdcv*"))
+          (if (bing-dict--has-machine-translation-p)
+              (with-current-buffer "*sdcv*"
+                (goto-char (point-max))
+                (insert (concat (propertize (bing-dict--machine-translation)
+                                            'face
+                                            'font-lock-doc-face))))
+            (let ((query-word (propertize keyword 'face 'font-lock-keyword-face))
+                  (pronunciation (bing-dict--pronunciation))
+                  (short-exps (mapconcat 'identity (bing-dict--definitions)
+                                         (propertize " | "
+                                                     'face
+                                                     'font-lock-builtin-face))))
+              (with-current-buffer "*sdcv*"
+                (goto-char (point-max))
+                (if short-exps
+                    (insert (concat pronunciation short-exps))
+                  (insert "No results")
+                  ))))
+        (bing-dict-brief keyword))
     (error
      (with-current-buffer "*sdcv*"
        (goto-char (point-max))
