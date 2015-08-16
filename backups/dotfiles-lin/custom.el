@@ -8,7 +8,7 @@
  '(anzu-replace-to-string-separator " => ")
  '(anzu-search-threshold 1000)
  '(bs-default-configuration "files")
- '(cfs--current-profile-name "profile1" t)
+ '(cfs--current-profile-name "profile-lin" t)
  '(custom-safe-themes
    (quote
     ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default)))
@@ -76,7 +76,7 @@
  '(org-format-latex-options
    (quote
     (:foreground default :background default :scale 1.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
-                 ("begin" "$1" "$" "$$" "\\(" "\\["))))
+		 ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(org-latex-default-figure-position "htbp")
  '(org-latex-image-default-width "1\\linewidth")
  '(org-latex-pdf-process

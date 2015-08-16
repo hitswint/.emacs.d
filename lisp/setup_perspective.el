@@ -107,6 +107,8 @@ Has no effect when `persp-show-modestring' is nil."
 (defun swint-save-perspectives ()
   (with-temp-file
       swint-perspectives-saved-file
+    (when is-win
+      (insert ";;; -*- coding: utf-8; -*-\n"))
     (insert "(setq " "buffers-in-perspectives-8 '")
     (insert (prin1-to-string (remove nil (mapcar 'buffer-name (elt (gethash "8" perspectives-hash) 2)))))
     (insert ")\n")

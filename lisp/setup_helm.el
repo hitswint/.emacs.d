@@ -29,9 +29,18 @@
 ;; win上locate似乎搜索中文有问题，改用es。但是es似乎仍然搜索不了中文，而且会导致emacs死掉，放弃。
 ;; win上面的linux工具包括grep/locate/find都不能够搜索中文。
 ;; (setq helm-locate-command "es %s %s")
-;; 使用 updatedb -l 0 -o ~/.swint-locate.db -U ~/ 建立用户数据库。
-(setq helm-locate-create-db-command "updatedb -l 0 -o ~/.swint-locate.db -U ~/")
-(setq helm-locate-command "locate -b -i %s -r %s -d ~/.swint-locate.db")
+(cond
+ (is-lin
+  ;; 使用 updatedb -l 0 -o ~/.swint-locate.db -U ~/ 建立用户数据库。
+  (setq helm-locate-create-db-command "updatedb -l 0 -o ~/.swint-locate.db -U ~/")
+  (setq helm-locate-command "locate -b -i %s -r %s -d ~/.swint-locate.db"))
+ (is-win
+  ;; 下列的命令建立locate数据库的时候，会导致数据库中记录的文件路径名为/cygdrive/c/，这种路径名emacs无法识别。
+  ;; (setq helm-locate-create-db-command "updatedb --output=/cygdrive/c/Users/swint/.swint-locate.db --localpaths='/cygdrive/c/Users/swint/'")
+  ;; (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.swint-locate.db")
+  ;; 下面的命令建立locate数据库的时候，会导致cygwin警告ms dos path sytle，无妨，时间稍长；locate命令无法识别这种ms dos path sytle。
+  (setq helm-locate-create-db-command "updatedb --output=c:/Users/swint/.swint-locate.db --localpaths='c:/Users/swint/'")
+  (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.swint-locate.db")))
 ;; ==================helm-dired-buffer====================
 (defun swint-helm-dired-buffers-list--init ()
   ;; Issue #51 Create the list before `helm-buffer' creation.
@@ -325,7 +334,7 @@ from its directory."
 (global-set-key (kbd "C-x g") 'helm-do-grep) ;不是递归grep，加C-u为递归
 (global-set-key (kbd "C-c C-f") 'helm-locate)
 ;; (global-set-key (kbd "C-c C-f") 'helm-recentf)
-;; (global-set-key (kbd "C-j") 'helm-select-action)
+;; (define-key helm-map (kbd "C-j") 'helm-select-action)
 (define-key helm-map (kbd "C-;") 'helm-toggle-visible-mark)
 (define-key helm-map (kbd "C-l") 'helm-execute-persistent-action)
 (define-key helm-map (kbd "C-M-p") 'helm-previous-source)
@@ -337,13 +346,18 @@ from its directory."
 (define-key helm-read-file-map (kbd "C-h") 'helm-find-files-up-one-level)
 (define-key helm-find-files-map (kbd "M-U") 'helm-unmark-all)
 (define-key helm-find-files-map (kbd "M-t") 'helm-toggle-all-marks)
-(define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
-(define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
+
 (define-key helm-buffer-map (kbd "C-o") 'helm-buffer-switch-other-window)
 (define-key helm-find-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
 (define-key helm-generic-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
 (define-key helm-grep-map (kbd "C-o") 'helm-grep-run-other-window-action)
 (define-key helm-bookmark-map (kbd "C-o") 'helm-bookmark-run-jump-other-window)
+(when is-lin
+  (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
+  (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-externally))
+(when is-win
+  (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-with-default-tool)
+  (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-with-default-tool))
 ;; C-x c c helm-colors
 ;; helm-mini下：C-c C-d 从列表中删除，但实际不kill buffer；C-c d kill buffer同时不关闭helm buffer；M-D kill buffer同时关闭helm
 ;; helm-find-files-map下：

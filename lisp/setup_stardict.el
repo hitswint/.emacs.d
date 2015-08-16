@@ -30,27 +30,62 @@
     (setq current-window-number (length (window-list)))
     (setq word (read-string (format "Search the dictionary for (default %s): " word)
                             nil nil word))
+    (when is-win
+      (w32-shell-execute "open" "sdcv" (concat "--data-dir c:/Users/swint/.stardict " word " stardict")))
     (set-buffer (get-buffer-create "*sdcv*"))
     (buffer-disable-undo)
     (erase-buffer)
-    (let ((process (start-process-shell-command "sdcv" "*sdcv*" "sdcv" "-n --data-dir ~/.stardict/dict" word)))
-      (set-process-sentinel
-       process
-       (lambda (process signal)
-         (when (memq (process-status process) '(exit signal))
-           (unless (string= (buffer-name) "*sdcv*")
-             (setq kid-sdcv-window-configuration (current-window-configuration))
-             ;; (split-horizontally-not-vertically) ;改变窗口分割方式，一个窗口时，横向分割；多个窗口时，纵向分割。
-             ;; 但是同时有其他程序和emacs时不适用，注释掉，并删除这个函数。
-             (switch-to-buffer-other-window "*sdcv*")
-             (when (featurep 'org)
-               (yasdcv--output-cleaner:common)
-               (sdcv-mode)
-               (show-all)               ;显示所有outline
-               (indent-region (point-min) (point-max))
-               (while (re-search-forward "*** Collins Cobuild English Dictionary " nil t)
-                 (hide-entry))          ;隐藏柯林斯辞典选项
-               ))))))
+    (cond
+     (is-lin
+      (let ((process (start-process-shell-command "sdcv" "*sdcv*" "sdcv" "-n --data-dir ~/.stardict/dict" word)))
+        (set-process-sentinel
+         process
+         (lambda (process signal)
+           (when (memq (process-status process) '(exit signal))
+             (unless (string= (buffer-name) "*sdcv*")
+               (setq kid-sdcv-window-configuration (current-window-configuration))
+               ;; (split-horizontally-not-vertically) ;改变窗口分割方式，一个窗口时，横向分割；多个窗口时，纵向分割。
+               ;; 但是同时有其他程序和emacs时不适用，注释掉，并删除这个函数。
+               (switch-to-buffer-other-window "*sdcv*")
+               (when (featurep 'org)
+                 (yasdcv--output-cleaner:common)
+                 (sdcv-mode)
+                 (show-all)               ;显示所有outline
+                 (indent-region (point-min) (point-max))
+                 (while (re-search-forward "*** Collins Cobuild English Dictionary " nil t)
+                   (hide-entry))          ;隐藏柯林斯辞典选项
+                 )))))))
+     (is-win
+      ;; 在cygwin的shell中启动sdcv只能显示数目，无法显示结果。
+      ;; (let ((process
+      ;;        (start-process-shell-command
+      ;;         "sdcv" "*sdcv*" "sdcv" (concat "--data-dir c:/Users/swint/.stardict " word))
+      ;;        ))
+      ;;   (set-process-sentinel
+      ;;    process
+      ;;    (lambda (process signal)
+      ;;      (when (memq (process-status process) '(exit signal))
+      ;;        (unless (string= (buffer-name) "*sdcv*")
+      ;;          (setq kid-sdcv-window-configuration (current-window-configuration))
+      ;;          (switch-to-buffer-other-window "*sdcv*")
+      ;;          (when (featurep 'org)
+      ;;            (yasdcv--output-cleaner:common)
+      ;;            (sdcv-mode)
+      ;;            (show-all)               ;显示所有outline
+      ;;            (indent-region (point-min) (point-max))
+      ;;            (while (re-search-forward "*** Collins Cobuild English Dictionary " nil t)
+      ;;              (hide-entry))          ;隐藏柯林斯辞典选项
+      ;;            ))))))
+      (setq kid-sdcv-window-configuration (current-window-configuration))
+      (switch-to-buffer-other-window "*sdcv*")
+      (when (featurep 'org)
+        (yasdcv--output-cleaner:common)
+        (sdcv-mode)
+        (show-all)               ;显示所有outline
+        (indent-region (point-min) (point-max))
+        (while (re-search-forward "*** Collins Cobuild English Dictionary " nil t)
+          (hide-entry))          ;隐藏柯林斯辞典选项
+        )))
     (goto-char (point-min))
     (insert (concat "*** Bing Dict" " (" word ")\n"))
     (indent-for-tab-command)
@@ -65,7 +100,8 @@
   (while (re-search-forward "\n+" nil t)
     (replace-match "\n"))
   (goto-char (point-min))
-  (kill-line 1))
+  (when is-lin
+    (kill-line 1)))
 ;; ====================stardict=====================
 ;; ===================bing-dict=====================
 (require 'bing-dict)
@@ -121,7 +157,10 @@
                             nil nil word))
     (browse-url
      (concat "http://dict.youdao.com/search?le=eng&q=lj%3A"
-             word
+             (cond
+              (is-lin word)
+              ;; 解决w3m无法解析网址的问题
+              (is-win (w3m-url-encode-string word 'utf-8)))
              "&keyfrom=dict.top"))))
 (global-set-key (kbd "C-M-@") 'youdao-sample-sentences)
 ;; ===================bing-dict=====================

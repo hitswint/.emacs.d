@@ -206,6 +206,7 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
       (ace-jump-done)
       (error "[AceJump] Internal error: tree node type is invalid")))))
 ;; ace-jump-list-visual-area/exclude-pdf-view
+;; win中pdf-tools暂时不可用。
 (defun ace-jump-list-visual-area/exclude-pdf-view ()
   "Exclude pdf view area to improve performance."
   (loop for f in (frame-list)

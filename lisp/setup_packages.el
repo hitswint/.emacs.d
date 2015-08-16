@@ -97,18 +97,28 @@
 (require 'ace-jump-buffer)
 (global-set-key (kbd "C-c ,") 'ace-jump-buffer)
 ;; ====================ace-jump-buffer========================
-;; ;; =====================unicad=====================
+;; =====================unicad=====================
 ;; lin中不会出现乱码，不需要，这个包会拖慢启动速度
 ;; (add-to-list 'load-path "~/.emacs.d/unicad/")
-;; (require 'unicad)
-;; ;; 解决关emacs时保存.session的编码问题
-;; (setq session-save-file-coding-system 'utf-8)
-;; ;; set default encoding to utf-8
-;; (setq-default buffer-file-coding-system 'utf-8)
-;; ;; set writing buffer default to utf-8, or emacs always show encoding problem when saving files.
-;; (setq save-buffer-coding-system 'utf-8)
-;; (setq coding-system-for-write 'utf-8)
-;; ;; =====================unicad=====================
+(when is-win
+  (require 'unicad)
+  ;; 解决关emacs时保存.session的编码问题
+  (setq session-save-file-coding-system 'utf-8)
+  ;; set default encoding to utf-8
+  (setq-default buffer-file-coding-system 'utf-8)
+  ;; set writing buffer default to utf-8, or emacs always show encoding problem when saving files.
+  (setq save-buffer-coding-system 'utf-8)
+  (setq coding-system-for-write 'utf-8))
+;; =====================unicad=====================
+;; =====================everything======================
+;; (add-to-list 'load-path "~/.emacs.d/everything")
+(when is-win
+  (setq everything-ffap-integration nil) ;; to disable ffap integration
+  (setq everything-matchpath t)
+  (setq everything-cmd "c:/Program Files/Everything/es.exe") ;; to let everything.el know where to find es.exe
+  (require 'everything)
+  (global-set-key (kbd "C-x M-e") 'everything))
+;; =====================everything======================
 ;; =====================popwin======================
 ;; (add-to-list 'load-path "~/.emacs.d/popwin")
 (require 'popwin)
@@ -222,14 +232,16 @@
 ;; ===================imenu-anywhere====================
 ;; ================fcitx.el=================
 ;; https://github.com/cute-jumper/fcitx.el
-(require 'fcitx)
-(fcitx-prefix-keys-add "M-s")
-(fcitx-default-setup)
-(fcitx-M-x-turn-on)
-(fcitx-shell-command-turn-on)
-(fcitx-eval-expression-turn-on)
-;; (fcitx-aggressive-minibuffer-turn-on)
-;; 会导致tramp问题，使需要在minibuffer输入密码时hang
+(when is-lin
+  (require 'fcitx)
+  (fcitx-prefix-keys-add "M-s")
+  (fcitx-default-setup)
+  (fcitx-M-x-turn-on)
+  (fcitx-shell-command-turn-on)
+  (fcitx-eval-expression-turn-on)
+  ;; (fcitx-aggressive-minibuffer-turn-on)
+  ;; 会导致tramp问题，使需要在minibuffer输入密码时hang
+  )
 ;; ================fcitx.el=================
 ;; ============aggressive-indent=============
 (global-aggressive-indent-mode 1)
@@ -262,18 +274,19 @@
 ;; ===================pdf-tools=================
 ;; 添加的注释跟okular类似，将注释的内容另存为一份文件，只有在emacs中才能看到
 ;; 上述注释为旧版本，新版本的pdf-tools已经可以将注释放在pdf文件本身之中了。
-(pdf-tools-install)
-(add-hook 'pdf-view-mode-hook 'pdf-annot-minor-mode)
-(add-hook 'pdf-view-mode-hook 'pdf-outline-minor-mode)
-;; (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
-;; pdf-view-auto-slice-minor-mode 翻页自动切边。
-(add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
-;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。
-(define-key pdf-view-mode-map (kbd "M-s i") 'helm-imenu)
-(define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
-(define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
-(define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
-(define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
-(define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save)
+(when is-lin
+  (pdf-tools-install)
+  (add-hook 'pdf-view-mode-hook 'pdf-annot-minor-mode)
+  (add-hook 'pdf-view-mode-hook 'pdf-outline-minor-mode)
+  ;; (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
+  ;; pdf-view-auto-slice-minor-mode 翻页自动切边。
+  (add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
+  ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。
+  (define-key pdf-view-mode-map (kbd "M-s i") 'helm-imenu)
+  (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
+  (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
+  (define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
+  (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
+  (define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save))
 ;; ===================pdf-tools=================
 (provide 'setup_packages)

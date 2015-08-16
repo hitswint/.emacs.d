@@ -1,4 +1,4 @@
-;; ================================org-mode====================================
+;; ==================org-mode==========================
 ;; (add-to-list 'load-path "~/.emacs.d/org-8.2.1/lisp")
 ;; (setq load-path (cons "~/.emacs.d/org-8.2.1/lisp" load-path))
 (require 'org)
@@ -110,19 +110,24 @@
 (setq org-latex-to-pdf-process
       '("xelatex -interaction nonstopmode %f"
         "xelatex -interaction nonstopmode %f"))
-;; 生成pdf自动用llpp打开
-(add-hook 'org-mode-hook
-          '(lambda ()
-             (delete '("\\.pdf\\'" . default) org-file-apps)
-             (add-to-list 'org-file-apps '("\\.pdf\\'" . "llpp %s"))))
+(when is-lin
+  ;; 生成pdf自动用llpp打开
+  (add-hook 'org-mode-hook
+            '(lambda ()
+               (delete '("\\.pdf\\'" . default) org-file-apps)
+               (add-to-list 'org-file-apps '("\\.pdf\\'" . "llpp %s")))))
 (defun swint-org-open-export-pdf ()
   "Start a viewer without confirmation.
 The viewer is started either on region or master file,
 depending on the last command issued."
   (interactive)
-  (let ((output-file (concat (file-name-base (buffer-name)) ".pdf")))
+  (let ((output-file (cond
+                      (is-lin (concat (file-name-base (buffer-name)) ".pdf"))
+                      (is-win (concat (file-name-directory buffer-file-name) (file-name-base (buffer-name)) ".pdf")))))
     (if (file-exists-p output-file)
-        (async-shell-command-no-output-buffer-from-file output-file)
+        (cond
+         (is-lin (async-shell-command-no-output-buffer-from-file output-file))
+         (is-win (w32-browser output-file)))
       (message "Warning: No export pdf."))))
 ;; 原来的好像有问题
 ;; code执行免应答（Eval code without confirm）
@@ -259,6 +264,7 @@ depending on the last command issued."
          (plantuml . t)
          (latex . t))))
 (setq org-confirm-babel-evaluate nil)
+;; win中似乎不好使，应该是没装java
 ;; =======================org使用ditaa输出ascii图片==========================
 ;; ==============org中输入公式======================
 ;; (add-to-list 'load-path "~/.emacs.d/org-cdlatex-mode")
@@ -277,15 +283,31 @@ depending on the last command issued."
   directory and insert a link to this file."
   (interactive)
   ;; 将截图名字定义为buffer名字加日期
-  (setq filename
-        (concat (make-temp-name
-                 (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
-                         "_"
-                         (format-time-string "%Y%m%d_"))) ".png"))
-  (suspend-frame)
-  (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
-                                                              "\"" filename "\"" ))
-  )
+  (cond
+   (is-lin
+    (setq filename
+          (concat (make-temp-name
+                   (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+                           "_"
+                           (format-time-string "%Y%m%d_"))) ".png"))
+    (suspend-frame)
+    (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
+                                                                "\"" filename "\"" )))
+   (is-win
+    (setq filename
+          ;; 注释掉原来make-temp-name的方法，因为在win上对于某些prefix无法生成随机名字
+          ;; (concat (make-temp-name
+          ;;          (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+          ;;                  "_"
+          ;;                  (format-time-string "%Y%m%d_"))) ".png")
+          (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+                  "_"
+                  (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
+    ;; turn into path in windows type
+    (setq windows-filename
+          (replace-regexp-in-string "/" "\\" filename t t))
+    (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
+                                                                                  "/clippaste /convert=" windows-filename)))))
 (defun my-screenshot-local ()
   "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
@@ -295,15 +317,26 @@ depending on the last command issued."
       ()
     ;; 建立pic文件夹
     (dired-create-directory "./pic"))
-  (setq filename
-        (concat (make-temp-name
-                 (concat "./pic/" (file-name-base (buffer-name))
-                         "_"
-                         (format-time-string "%Y%m%d_"))) ".png"))
-  (suspend-frame)
-  (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
-                                                              "\"" filename "\"" ))
-  )
+  (cond
+   (is-lin
+    (setq filename
+          (concat (make-temp-name
+                   (concat "./pic/" (file-name-base (buffer-name))
+                           "_"
+                           (format-time-string "%Y%m%d_"))) ".png"))
+    (suspend-frame)
+    (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
+                                                                "\"" filename "\"" )))
+   (is-win
+    (setq filename
+          (concat "./pic/" (file-name-base (buffer-name))
+                  "_"
+                  (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
+    ;; turn into path in windows type
+    (setq windows-filename
+          (replace-regexp-in-string "/" "\\" filename t t))
+    (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
+                                                                                  "/clippaste /convert=" windows-filename)))))
 (global-set-key (kbd "C-c M-p") 'my-screenshot-local)
 (global-set-key (kbd "C-x M-p") 'my-screenshot)
 ;; ==============截图================
@@ -325,17 +358,29 @@ depending on the last command issued."
   directory and insert a link to this file."
   (interactive)
   ;; 将截图名字定义为buffer名字加日期
-  (setq filename
-        (concat (make-temp-name
-                 (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
-                         "_"
-                         (format-time-string "%Y%m%d_"))) ".png"))
-  (suspend-frame)
-  (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
-                                                              "\"" filename "\"" ))
+  (cond
+   (is-lin
+    (setq filename
+          (concat (make-temp-name
+                   (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+                           "_"
+                           (format-time-string "%Y%m%d_"))) ".png"))
+    (suspend-frame)
+    (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
+                                                                "\"" filename "\"" )))
+   (is-win
+    (setq filename
+          ;; 在org文件中显示图片只需要/Users/...，而不需要前面的c:
+          (concat "/Users/swint/org/annotated/" (file-name-base (buffer-name))
+                  "_"
+                  (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
+    ;; turn into path in windows type
+    (setq windows-filename
+          (replace-regexp-in-string "/" "\\" filename t t))
+    (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
+                                                                                  "/clippaste /convert=" windows-filename))))
   (insert (concat "[[" filename "]]"))
-  (org-display-inline-images)
-  )
+  (org-display-inline-images))
 (defun my-screenshot-org-local ()
   "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
@@ -345,64 +390,84 @@ depending on the last command issued."
       ()
     ;; 建立pic文件夹
     (dired-create-directory "./pic"))
-  (setq filename
-        (concat (make-temp-name
-                 (concat "./pic/" (file-name-base (buffer-name))
-                         "_"
-                         (format-time-string "%Y%m%d_"))) ".png"))
-  (suspend-frame)
-  (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
-                                                              "\"" filename "\"" ))
+  (cond
+   (is-lin
+    (setq filename
+          (concat (make-temp-name
+                   (concat "./pic/" (file-name-base (buffer-name))
+                           "_"
+                           (format-time-string "%Y%m%d_"))) ".png"))
+    (suspend-frame)
+    (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
+                                                                "\"" filename "\"" )))
+   (is-win
+    (setq filename
+          (concat "./pic/" (file-name-base (buffer-name))
+                  "_"
+                  (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
+    ;; turn into path in windows type
+    (setq windows-filename
+          (replace-regexp-in-string "/" "\\" filename t t))
+    (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
+                                                                                  "/clippaste /convert=" windows-filename))))
   (insert (concat "[[" filename "]]"))
-  (org-display-inline-images)
-  )
+  (org-display-inline-images))
 (add-hook 'org-mode-hook
           '(lambda ()
              (define-key org-mode-map (kbd "C-c p") 'my-screenshot-org-local)
              (define-key org-mode-map (kbd "C-x p") 'my-screenshot-org)
              ))
+;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p
 ;; org中打开和关闭图片显示(org-display-inline-images)和(org-remove-inline-images)，可以使用(org-toggle-inline-images)快捷键为C-c C-x C-v。
 ;; =================org插入截图====================
 ;; =================org中使用外部程序打开文件=================
-(defun my-org-open-at-point ()
-  (interactive)
-  (let ((org-file-apps '(("\\.pdf\\'" . "llpp %s")
-                         ("\\.djvu\\'" . "llpp %s")
-                         ("\\.png\\'" . "~/feh.sh %s")
-                         ("\\.jpg\\'" . "~/feh.sh %s")
-                         ("\\.bmp\\'" . "~/feh.sh %s")
-                         ("\\.jpeg\\'" . "~/feh.sh %s")
-                         ("\\.eps\\'" . "gv %s")
-                         ("\\.ps\\'" . "gv %s")
-                         ("\\.rmvb\\'" . "mplayer %s")
-                         ("\\.rm\\'" . "mplayer %s")
-                         ("\\.mp4\\'" . "mplayer %s")
-                         ("\\.avi\\'" . "mplayer %s")
-                         ("\\.flv\\'" . "mplayer %s")
-                         ("\\.f4v\\'" . "mplayer %s")
-                         ("\\.mpg\\'" . "mplayer %s")
-                         ("\\.mkv\\'" . "mplayer %s")
-                         ("\\.3gp\\'" . "mplayer %s")
-                         ("\\.wmv\\'" . "mplayer %s")
-                         ("\\.mov\\'" . "mplayer %s")
-                         ("\\.dat\\'" . "mplayer %s")
-                         ("\\.asf\\'" . "mplayer %s")
-                         ("\\.mpeg\\'" . "mplayer %s")
-                         ("\\.wma\\'" . "mplayer %s")
-                         ("\\.doc\\'" . "libreoffice %s")
-                         ("\\.ppt\\'" . "libreoffice %s")
-                         ("\\.xls\\'" . "libreoffice %s")
-                         ("\\.ods\\'" . "libreoffice %s")
-                         ("\\.odt\\'" . "libreoffice %s")
-                         ("\\.docx\\'" . "libreoffice %s")
-                         ("\\.pptx\\'" . "libreoffice %s")
-                         ("\\.xlsx\\'" . "libreoffice %s")
-                         ("\\.dxf\\'" . "librecad %s")
-                         ("\\.html\\'" . "firefox %s")
-                         ("\\.htm\\'" . "firefox %s")
-                         )))
-    (org-open-at-point)
-    ))
+(cond
+ (is-lin
+  (defun my-org-open-at-point ()
+    (interactive)
+    (let ((org-file-apps '(("\\.pdf\\'" . "llpp %s")
+                           ("\\.djvu\\'" . "llpp %s")
+                           ("\\.png\\'" . "~/feh.sh %s")
+                           ("\\.jpg\\'" . "~/feh.sh %s")
+                           ("\\.bmp\\'" . "~/feh.sh %s")
+                           ("\\.jpeg\\'" . "~/feh.sh %s")
+                           ("\\.eps\\'" . "gv %s")
+                           ("\\.ps\\'" . "gv %s")
+                           ("\\.rmvb\\'" . "mplayer %s")
+                           ("\\.rm\\'" . "mplayer %s")
+                           ("\\.mp4\\'" . "mplayer %s")
+                           ("\\.avi\\'" . "mplayer %s")
+                           ("\\.flv\\'" . "mplayer %s")
+                           ("\\.f4v\\'" . "mplayer %s")
+                           ("\\.mpg\\'" . "mplayer %s")
+                           ("\\.mkv\\'" . "mplayer %s")
+                           ("\\.3gp\\'" . "mplayer %s")
+                           ("\\.wmv\\'" . "mplayer %s")
+                           ("\\.mov\\'" . "mplayer %s")
+                           ("\\.dat\\'" . "mplayer %s")
+                           ("\\.asf\\'" . "mplayer %s")
+                           ("\\.mpeg\\'" . "mplayer %s")
+                           ("\\.wma\\'" . "mplayer %s")
+                           ("\\.doc\\'" . "libreoffice %s")
+                           ("\\.ppt\\'" . "libreoffice %s")
+                           ("\\.xls\\'" . "libreoffice %s")
+                           ("\\.ods\\'" . "libreoffice %s")
+                           ("\\.odt\\'" . "libreoffice %s")
+                           ("\\.docx\\'" . "libreoffice %s")
+                           ("\\.pptx\\'" . "libreoffice %s")
+                           ("\\.xlsx\\'" . "libreoffice %s")
+                           ("\\.dxf\\'" . "librecad %s")
+                           ("\\.html\\'" . "firefox %s")
+                           ("\\.htm\\'" . "firefox %s")
+                           )))
+      (org-open-at-point)
+      )))
+ (is-win
+  (defun my-org-open-at-point ()
+    (interactive)
+    (let (org-file-apps w32-browser)
+      (org-open-at-point)
+      ))))
 ;; =================org中使用外部程序打开文件=================
 ;; =================mobileorg===============
 ;; Set to the location of your Org files on your local system
@@ -436,6 +501,7 @@ depending on the last command issued."
 ;; =================mobileorg===============
 ;; =======================org输出doc=============================
 ;; 先生成odt文件(需要zip支持)，然后使用libreoffice转化成doc文件
+;; 在win上转doc格式路径名中不能有中文
 (setq org-odt-preferred-output-format "doc") ;v8
 (define-key org-mode-map (kbd "C-c C-S-e") 'org-odt-export-to-odt)
 ;; =======================org输出doc=============================
@@ -445,5 +511,5 @@ depending on the last command issued."
 (eval-after-load 'org
   '(setf org-highlight-latex-and-related '(latex))) ;高亮显示公式环境
 ;; =======================org-latex-preview======================
-;; ================================org-mode====================================
+;; ==================org-mode==========================
 (provide 'setup_org_mode)

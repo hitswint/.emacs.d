@@ -1,3 +1,17 @@
+;; ===============判断系统类型================
+(setq is-mac (equal system-type 'darwin))
+(setq is-win (equal system-type 'windows-nt))
+(setq is-lin (equal system-type 'gnu/linux))
+;;=========================windows设置==============================
+(when is-win
+  (setenv "HOME" "c:/Users/swint")
+  ;; (setenv "PATH" "c:/Users/swint/")
+  ;; 必须注销这行，因为会让latex失效。
+  ;; set the default file path
+  (setq default-directory "~/")
+  ;; 使emacs可以使用win键
+  (setq w32-lwindow-modifier 'super)
+  (run-with-idle-timer 0.0 nil 'w32-send-sys-command 61488))
 ;; =========================基本设置=================================
 (setq default-major-mode 'text-mode)    ;一打开就起用 text 模式。
 (global-font-lock-mode t)               ;语法高亮
@@ -11,13 +25,13 @@
 (mouse-avoidance-mode 'animate)         ;光标靠近鼠标指针时，让鼠标指针自动让开
 (require 'hl-line)                      ;光标所在行高亮
 (global-hl-line-mode t)
-(transient-mark-mode t)
+(transient-mark-mode t)                 ;高亮选中得区域
 (setq x-select-enable-clipboard t)      ;支持emacs和外部程序的粘贴
 (setq frame-title-format "Emacs@ %b")   ;在标题栏提示你目前在什么位置。
 (setq default-fill-column 80)           ;默认显示 80列就换行
 (setq inhibit-startup-message t)        ;禁用启动信息
 (setq visible-bell t)                   ;关闭烦人的出错时的提示声。
-(setq mouse-yank-at-point t)
+(setq mouse-yank-at-point t)            ;支持中键粘贴
 (setq kill-ring-max 200)                ;用一个很大的 kill ring
 (setq make-backup-files nil)            ;不产生备份文件,临时文件
 (setq-default make-backup-files nil)
@@ -56,6 +70,8 @@
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
 ;; ==================保存=================
+;; (when is-win
+;;   (require 'setup_language_env))
 (require 'setup_desktop_session)
 ;; ====================custom===================
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -95,11 +111,12 @@
 (require 'setup_smex)
 (require 'setup_stardict)
 (require 'setup_w3m)
-(require 'setup_wicd)
 (require 'setup_windows)
 (require 'setup_rainbow_delimiters)
 (require 'setup_auto_complete)
 (require 'setup_eshell)
 (require 'setup_yasnippet)
 (require 'setup_packages)
+(when is-lin
+  (require 'setup_wicd))
 ;; (eval-after-load 'ido '(require 'setup-ido))

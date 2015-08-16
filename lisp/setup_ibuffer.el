@@ -19,37 +19,59 @@
      (ibuffer-awhen (or (buffer-local-value 'buffer-file-name buf)
                         (buffer-local-value 'dired-directory buf))
        (string-match qualifier it))))
-(setq ibuffer-saved-filter-groups
-      (quote (("default"
-               ("CODING" (or
-                          (filename . "~/Documents")
-                          (filename . "~/Dropbox")
-                          (filename . "~/Nutstore")
-                          (filename . "~/.emacs.d")
-                          (filename . "/home/swint/Documents")
-                          (filename . "/home/swint/Dropbox")
-                          (filename . "/home/swint/Nutstore")
-                          (filename . "/home/swint/.emacs.d")
-                          ))
-               ("REFERENCE" (or
-                             (filename . "~/papers")
-                             (filename . "~/book")
-                             (filename . "~/linux")
-                             (filename . "/home/swint/papers")
-                             (filename . "/home/swint/book")
-                             (filename . "/home/swint/linux")
-                             ))
-               ("TEX" (or
-                       (filename . "~/tex")
-                       (filename . "~/Music")
-                       (filename . "~/Pictures")
-                       (filename . "~/myfile")
-                       (filename . "/home/swint/tex")
-                       (filename . "/home/swint/Music")
-                       (filename . "/home/swint/Pictures")
-                       (filename . "/home/swint/myfile")
-                       ))
-               ))))
+(when is-lin
+  (setq ibuffer-saved-filter-groups
+        (quote (("default"
+                 ("CODING" (or
+                            (filename . "~/Documents")
+                            (filename . "~/Dropbox")
+                            (filename . "~/Nutstore")
+                            (filename . "~/.emacs.d")
+                            (filename . "/home/swint/Documents")
+                            (filename . "/home/swint/Dropbox")
+                            (filename . "/home/swint/Nutstore")
+                            (filename . "/home/swint/.emacs.d")
+                            ))
+                 ("REFERENCE" (or
+                               (filename . "~/papers")
+                               (filename . "~/book")
+                               (filename . "~/linux")
+                               (filename . "/home/swint/papers")
+                               (filename . "/home/swint/book")
+                               (filename . "/home/swint/linux")
+                               ))
+                 ("TEX" (or
+                         (filename . "~/tex")
+                         (filename . "~/Music")
+                         (filename . "~/Pictures")
+                         (filename . "~/myfile")
+                         (filename . "/home/swint/tex")
+                         (filename . "/home/swint/Music")
+                         (filename . "/home/swint/Pictures")
+                         (filename . "/home/swint/myfile")
+                         ))
+                 )))))
+(when is-win
+  (setq ibuffer-saved-filter-groups
+        (quote (("default"
+                 ("CODING" (or
+                            (filename . "c:/Users/swint/Documents")
+                            (filename . "c:/Users/swint/Dropbox")
+                            (filename . "c:/Users/swint/Nutstore")
+                            (filename . "c:/Users/swint/.emacs.d")
+                            ))
+                 ("REFERENCE" (or
+                               (filename . "c:/Users/swint/papers")
+                               (filename . "c:/Users/swint/linux")
+                               (filename . "c:/Users/swint/book")
+                               ))
+                 ("TEX" (or
+                         (filename . "c:/Users/swint/tex")
+                         (filename . "c:/Users/swint/myfile")
+                         (filename . "c:/Users/swint/Music")
+                         (filename . "c:/Users/swint/Pictures")
+                         ))
+                 )))))
 (add-hook 'ibuffer-mode-hook
           (lambda ()
             (ibuffer-switch-to-saved-filter-groups "default")))

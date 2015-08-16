@@ -29,7 +29,17 @@
   (let ((widget (widget-at (1- (line-end-position))))
         file)
     (if (setq file (widget-get widget :file))
-        (async-shell-command-no-output-buffer-from-file file))))
+        (cond
+         (is-lin
+          (async-shell-command-no-output-buffer-from-file file))
+         (is-win
+          (progn
+            (if (and (or (string-equal (file-name-extension file) "doc")
+                         (string-equal (file-name-extension file) "docx"))
+                     (not (string-match "WINWORD.EXE" (concat (prin1-to-string (proced-process-attributes))))))
+                (progn (w32-shell-execute "open" "word")
+                       (sit-for 5)))
+            (w32-browser file)))))))
 (defun dirtree-quit ()
   "quit dirtree and delete window"
   (interactive)
@@ -48,8 +58,11 @@
       (dirtree-switch-to-dirtree)
     (progn
       (bc-set)
-      ;; (kill-this-buffer)             ;卸载slim后失效
-      (kill-buffer (current-buffer))
+      (cond
+       (is-lin
+        ;; (kill-this-buffer)             ;卸载slim后失效
+        (kill-buffer (current-buffer)))
+       (is-win (kill-this-buffer)))
       (switch-to-buffer (car (swint-iswitchb-make-buflist nil)))
       (switch-to-buffer (car (swint-iswitchb-make-buflist nil)))
       ;; 下面不可行，如果当前buffer不显示在buflist中，那么会kill其他的buffer

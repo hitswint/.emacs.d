@@ -1,4 +1,4 @@
-;; =============================================ido===============================================
+;; =========================ido===========================
 (require 'ido)
 (ido-mode t)
 ;; (global-set-key (kbd "C-,") 'ido-switch-buffer)
@@ -63,7 +63,7 @@
                     (insert "~/")
                   (call-interactively 'self-insert-command))))))
 ;; ====================ido-back-to-home===========================
-;; ==================ido-find-file:open-file-with-external-app=================
+;; ====ido-find-file:open-file-with-external-app=====
 (defvar ido-fallback-function nil "The fallback function that will be explicitly check and can be externally modified
 this variable is introduced to enhance ido-find-file functionality
 search (cond ...  ((eq ido-exit 'fallback) ... )) to see where it's used.
@@ -220,26 +220,47 @@ search (cond ...  ((eq ido-exit 'fallback) ... )) to see where it's used.
         (ido-record-work-directory)
         (ido-visit-buffer (find-file-noselect filename nil ido-find-literal) method))))))
 (add-hook 'ido-minibuffer-setup-hook 'ido-my-keys)
-(defun ido-my-keys ()
-  "My Keybindings for ido
+(when is-lin
+  (defun ido-my-keys ()
+    "My Keybindings for ido
 especially for extending ido-find-file functionality
 2013-08-04 Sunday 17:25:03"
-  (define-key ido-completion-map (kbd "RET") 'ido-exit-minibuffer) ;; for find-file
-  (define-key ido-completion-map (kbd "C-j") 'ido-magic-open-using-external-app))
-(defun ido-magic-open-using-external-app ()
-  "This should be used when ido-minibuffer is active"
-  (interactive)
-  ;;   (let ((i (length ido-text)))
-  ;;     (while (> i 0)
-  ;;       (push (aref ido-text (setq i (1- i))) unread-command-events)))
-  (setq ido-exit 'fallback)
-  (setq ido-fallback-function
-        '(lambda () (interactive)
-           (let ( (dir ido-current-directory)
-                  (file (car ido-matches) ))
-             (async-shell-command-no-output-buffer-from-file (concat dir file)))))
-  (exit-minibuffer))
-;; ==================ido-find-file:open-file-with-external-app=================
+    (define-key ido-completion-map (kbd "RET") 'ido-exit-minibuffer) ;; for find-file
+    (define-key ido-completion-map (kbd "C-j") 'ido-magic-open-using-external-app))
+  (defun ido-magic-open-using-external-app ()
+    "This should be used when ido-minibuffer is active"
+    (interactive)
+    ;;   (let ((i (length ido-text)))
+    ;;     (while (> i 0)
+    ;;       (push (aref ido-text (setq i (1- i))) unread-command-events)))
+    (setq ido-exit 'fallback)
+    (setq ido-fallback-function
+          '(lambda () (interactive)
+             (let ( (dir ido-current-directory)
+                    (file (car ido-matches) ))
+               (async-shell-command-no-output-buffer-from-file (concat dir file)))))
+    (exit-minibuffer)))
+(when is-win
+  (defun ido-my-keys ()
+    "My Keybindings for ido
+especially for extending ido-find-file functionality
+2013-08-04 Sunday 17:25:03"
+    (define-key ido-completion-map (kbd "RET") 'ido-exit-minibuffer) ;; for find-file
+    (define-key ido-completion-map (kbd "C-j") 'ido-magic-open-using-w32))
+  (defun ido-magic-open-using-w32 ()
+    "This should be used when ido-minibuffer is active"
+    (interactive)
+    ;;   (let ((i (length ido-text)))
+    ;;     (while (> i 0)
+    ;;       (push (aref ido-text (setq i (1- i))) unread-command-events)))
+    (setq ido-exit 'fallback)
+    (setq ido-fallback-function
+          '(lambda () (interactive)
+             (let ( (dir ido-current-directory)
+                    (file (car ido-matches) ))
+               (w32-shell-execute 1 (concat dir file)))))
+    (exit-minibuffer)))
+;; ====ido-find-file:open-file-with-external-app=====
 ;; =====================ido-ubiquitous===================
 ;; (add-to-list 'load-path "~/.emacs.d/ido-ubiquitous-1.7")
 ;; (defvar ido-cur-item nil)
@@ -265,10 +286,8 @@ especially for extending ido-find-file functionality
 (require 'ido-hacks nil t)
 (if (commandp 'flx-ido-mode)
     (flx-ido-mode 1))
-;; ido-at-point在lin上面因为版本问题无法使用elpa安装
-;; (add-to-list 'load-path "~/.emacs.d/ido-at-point")
 (require 'ido-at-point) ; unless installed from a package
 (ido-at-point-mode)
 ;; ==================flx-ido/ido-at-point/ido-hacks/ido-vertical-mode========================
-;; =============================================ido===============================================
+;; =========================ido===========================
 (provide 'setup_ido)

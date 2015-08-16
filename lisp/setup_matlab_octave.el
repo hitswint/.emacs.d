@@ -1,5 +1,17 @@
 ;; =========================MATLAB===============================
-;; 启用matlab-mode
+;; (setenv "PATH" (concat (getenv "PATH") "c:/Octave/Octave3.6.4_gcc4.6.2/bin/"))
+;; (setq exec-path (append exec-path '("c:/Octave/Octave3.6.4_gcc4.6.2/bin/")))
+;; (server-start)
+;; 使用mingw的octave，下列路径中有octave.exe
+(when is-win
+  (add-to-list 'exec-path "c:/Octave/Octave3.6.4_gcc4.6.2/bin/"))
+;; 使用cygwin安装octave，速度很快，但无法在emacs中启动。
+;; 由于inferior-octave-program为octave，而c:/cygwin64/bin中有octave-3.8.2.exe和octave，没有octave.exe
+;; 显示searching for program: permission denied, octave
+;; 修改inferior-octave-program的定义，找到该程序，但emacs冻结，没有效果，放弃使用。
+;; (add-to-list 'exec-path "c:/cygwin64/bin/")
+;; (setq inferior-octave-program "octave-3.8.2.exe")
+;; ===================matlab-mode==================
 ;; (setenv "PATH" (concat (getenv "PATH") "/usr/local/MATLAB/R2011b/bin/"))
 ;; (setq exec-path (append exec-path '("/usr/local/MATLAB/R2011b/bin/")))
 ;; (server-start)
@@ -25,7 +37,7 @@
 ;;              (define-key matlab-mode-map [(meta \q)] nil)
 ;;              (define-key matlab-mode-map [(control meta \e)] nil)
 ;;              )) ;取消C-h的快捷键
-;; =========================MATLAB===============================
+;; ===================matlab-mode==================
 ;; ======================octave==============================
 ;;使用matlab-mode编辑文件，使用octave运行程序
 ;; (setq auto-mode-alist (remq '("\\.m\\'" . objc-mode) auto-mode-alist))
@@ -55,7 +67,7 @@
               'comint-previous-input)
             (define-key inferior-octave-mode-map [down]
               'comint-next-input)))
-(setq octave-comment-start "%% ")        ;使用%注释
+(setq octave-comment-start "%% ")       ;使用%注释
 (setq octave-comment-char 37)           ;使用%注释
 (add-hook 'octave-mode-hook
           '(lambda ()

@@ -42,7 +42,6 @@
     epl
     expand-region
     f
-    fcitx
     flx
     flx-ido
     flycheck
@@ -76,7 +75,6 @@
     paredit
     paredit-everywhere
     parsebib
-    pdf-tools
     pinyin-search
     pkg-info
     popup
@@ -93,7 +91,6 @@
     smex
     smooth-scrolling
     switch-window
-    tablist
     tangotango-theme
     tree-mode
     undo-tree
@@ -118,7 +115,6 @@
   "Ensure PACKAGES are installed.
 Missing packages are installed automatically."
   (mapc #'prelude-require-package packages))
-(define-obsolete-function-alias 'prelude-ensure-module-deps 'prelude-require-packages)
 (defun prelude-install-packages ()
   "Install all packages listed in `prelude-packages'."
   (unless (prelude-packages-installed-p)
@@ -130,4 +126,11 @@ Missing packages are installed automatically."
     (prelude-require-packages prelude-packages)))
 ;; run package installation
 (prelude-install-packages)
+(cond
+ (is-lin (prelude-require-packages
+          '(fcitx
+            pdf-tools
+            tablist)))
+ (is-win (prelude-require-packages
+          '(w32-browser))))
 (provide 'setup_elpa)

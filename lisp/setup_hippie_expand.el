@@ -1,5 +1,5 @@
-;; ===============================hippie-expand====================================
-;; ===============打开.english-words方式进行补全===============
+;; ==============hippie-expand===================
+;; =======打开.english-words方式进行补全=========
 (find-file-noselect "~/.english-words")
 (setq hippie-expand-try-functions-list
       '(
@@ -14,7 +14,7 @@
         ;; try-complete-lisp-symbol-partially
         ;; try-complete-lisp-symbol
         ))
-;; ===============打开.english-words方式进行补全===============
+;; =======打开.english-words方式进行补全=========
 ;; ;; ================Flexible match expansion======================
 ;; 取消flex match，会造成匹配项过多
 ;; (defun try-expand-flexible-abbrev (old)
@@ -135,5 +135,5 @@
 ;;     ))
 ;; (global-set-key (kbd "M-/") 'hippie-expand)
 ;; ;; ===============Bin Chen写的补全单词，但无法使用ido界面==================
-;; ===============================hippie-expand====================================
+;; ==============hippie-expand===================
 (provide 'setup_hippie_expand)

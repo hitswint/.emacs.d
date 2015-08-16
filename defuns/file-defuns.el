@@ -18,3 +18,12 @@
       [?\C-x return ?r ?u ?t ?f ?- ?8 ?- ?u ?n ?i ?x ?\C-m ?y])
 (global-set-key (kbd "C-c u") 'swint-coding-system)
 ;; ===============改变文件编码==============
+;; ===============dos2unix===============
+(defun save-buffer-with-dos2unix ()
+  (interactive)
+  (let ((file-to-convert (file-name-nondirectory (buffer-file-name (current-buffer)))))
+    (save-buffer)
+    (shell-command (concat "dos2unix " file-to-convert))))
+(when is-win
+  (define-key emacs-lisp-mode-map (kbd "C-x C-s") 'save-buffer-with-dos2unix))
+;; ===============dos2unix===============

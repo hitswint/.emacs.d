@@ -2,17 +2,28 @@
 (rich-minority-mode 1)
 ;; (add-to-list 'load-path "~/.emacs.d/smart-mode-line/")
 (require 'smart-mode-line)
-;; 设定theme为dark/light/respectful
+;; 设定theme为dark/light/respectful/automatic
 (sml/setup)
 (sml/apply-theme nil)
 (setq column-number-mode t)
-(add-to-list 'sml/replacer-regexp-list '("^~/Documents/MATLAB/" ":M:"))
-(add-to-list 'sml/replacer-regexp-list '("^~/.emacs.d/" ":E:"))
-(add-to-list 'sml/replacer-regexp-list '("^~/linux/" ":L:"))
-(add-to-list 'sml/replacer-regexp-list '("^~/book/" ":B:"))
-(add-to-list 'sml/replacer-regexp-list '("^~/papers/" ":P:"))
-(add-to-list 'sml/replacer-regexp-list '("^~/org/" ":O:"))
-(add-to-list 'sml/replacer-regexp-list '("^~/tex/" ":T:"))
+(cond
+ (is-lin
+  (add-to-list 'sml/replacer-regexp-list '("^~/Documents/MATLAB/" ":M:"))
+  (add-to-list 'sml/replacer-regexp-list '("^~/.emacs.d/" ":E:"))
+  (add-to-list 'sml/replacer-regexp-list '("^~/linux/" ":L:"))
+  (add-to-list 'sml/replacer-regexp-list '("^~/book/" ":B:"))
+  (add-to-list 'sml/replacer-regexp-list '("^~/papers/" ":P:"))
+  (add-to-list 'sml/replacer-regexp-list '("^~/org/" ":O:"))
+  (add-to-list 'sml/replacer-regexp-list '("^~/tex/" ":T:")))
+ (is-win
+  (add-to-list 'sml/replacer-regexp-list '("^c:/Users/swint/Documents/MATLAB/" ":M:"))
+  (add-to-list 'sml/replacer-regexp-list '("^c:/Users/swint/.emacs.d/" ":E:"))
+  (add-to-list 'sml/replacer-regexp-list '("^c:/Users/swint/linux/" ":L:"))
+  (add-to-list 'sml/replacer-regexp-list '("^c:/Users/swint/book/" ":B:"))
+  (add-to-list 'sml/replacer-regexp-list '("^c:/Users/swint/papers/" ":P:"))
+  (add-to-list 'sml/replacer-regexp-list '("^c:/Users/swint/org/" ":O:"))
+  (add-to-list 'sml/replacer-regexp-list '("^c:/Users/swint/tex/" ":T:"))
+  (add-to-list 'sml/replacer-regexp-list '("^c:/Users/swint/" "~/"))))
 ;; only hide minor mode
 (add-to-list 'sml/hidden-modes " yas")
 (add-to-list 'sml/hidden-modes " iImg")

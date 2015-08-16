@@ -27,7 +27,8 @@
 (setq mew-cite-fields '("Date:"  "From:"))
 (setq mew-cite-format "On %s %s wrote:\n\n")
 ;; 密码设置
-(setq mew-use-master-passwd t)          ;使用主密码
+(when is-lin
+  (setq mew-use-master-passwd t))       ;使用主密码，win提示主密码错误
 (setq mew-use-cached-passwd t)
 (setq mew-passwd-timer-unit 60)
 (setq mew-passwd-lifetime 24)           ; timer-unit x 24 = 24 hours

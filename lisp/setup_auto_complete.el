@@ -27,6 +27,7 @@
 ;; 1. 去掉(init . LaTeX-math-mode)项，这样会导致有时ac失效。
 ;; 2. 定义如下函数代替原函数中的初始化，由(init . LaTeX-math-mode)变成(init . swint-latex-math-mode)。
 ;; 结果，frac输入有问题，放弃使用。
+;; win中不存在这个问题，没有修改，在tex中使用ac-auctex。
 ;; lin上emacs升级新版本之后解决上述问题，而ac-math在tex中自动补全选项有长有短，最后在tex中使用ac-auctex。
 ;; ============================ac-auctex=========================
 ;; =====================ac-math=========================
@@ -83,10 +84,12 @@
 ;; =========================auto-complete-octave=========================
 ;; ============================shell中使用============================
 ;; (add-to-list 'load-path "~/.emacs.d/readline-complete")
-(setq explicit-shell-file-name "bash")
-(setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash"))
+(when is-lin
+  (setq explicit-shell-file-name "bash")
+  (setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash")))
 ;; 下面这句会导致octave运行时emacs hang
-;;; prevent echoed commands from being printed (t)
+;; (setq comint-process-echoes t)
+;; prevent echoed commands from being printed (t)
 (setq comint-process-echoes nil)
 (require 'readline-complete)
 (add-to-list 'ac-modes 'shell-mode)

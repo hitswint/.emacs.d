@@ -83,7 +83,9 @@ If prefix ARG is given, delete the window instead of selecting it."
              (other-window 1)))
     (setq previously-selected-window current-selected-window)))
 (global-set-key (kbd "C-<tab>") 'select-previously-selected-window)
-(global-set-key (kbd "<C-S-iso-lefttab>") 'transpose-with-previously-selected-window)
+(cond
+ (is-lin (global-set-key (kbd "<C-S-iso-lefttab>") 'transpose-with-previously-selected-window))
+ (is-win (global-set-key (kbd "C-S-<tab>") 'transpose-with-previously-selected-window)))
 ;; =================window-numbering=================
 ;; =====================switch-window======================
 ;; (add-to-list 'load-path "~/.emacs.d/switch-window")

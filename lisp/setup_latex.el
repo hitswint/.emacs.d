@@ -22,6 +22,9 @@
 ;; ===========preview===============
 (set-default 'preview-scale-function 1.5)
 (setq preview-auto-cache-preamble t)
+(when is-win
+  (setq preview-image-type 'pnm)
+  (setq preview-gs-command "c:/Program Files (x86)/gs/gs9.09/bin/gswin32c.exe"))
 ;; C-c C-p C-p 如果有选中，则preview选中，如果无选中，则preview全部buffer
 ;; C-c C-p C-c C-b 取消buffer的preview
 ;; ===========preview===============
@@ -102,12 +105,12 @@
 ;; toc buffer使用这个frame的比例
 (setq reftex-tocc-split-windows-fraction 0.2)
 ;; ==========================reftex==============================
-;; ==========================auctex-latexmk==============================
+;; ===================auctex-latexmk=============================
 ;; 安装了texlive2009及更高的版本之后，默认就有latexmk，不用做任何改变。只需要加入.latexmkrc的配置文件和这个auctex-latexmk。
 ;; (add-to-list 'load-path "~/.emacs.d/auctex-latexmk")
 (require 'auctex-latexmk)
 (auctex-latexmk-setup)
-;; ==========================auctex-latexmk==============================
+;; ===================auctex-latexmk=============================
 ;; =================latex插入截图====================
 ;;1. suspend current emacs window
 ;;2. call scrot to capture the screen and save as a file in $HOME/.emacs.img/
@@ -117,16 +120,27 @@
   directory and insert a link to this file."
   (interactive)
   ;; 将截图名字定义为buffer名字加日期
-  (setq filename
-        (concat (make-temp-name
-                 (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
-                         "_"
-                         (format-time-string "%Y%m%d_"))) ".png"))
-  (suspend-frame)
-  (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
-                                                              "\"" filename "\"" ))
-  (insert filename)
-  )
+  (cond
+   (is-lin
+    (setq filename
+          (concat (make-temp-name
+                   (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+                           "_"
+                           (format-time-string "%Y%m%d_"))) ".png"))
+    (suspend-frame)
+    (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
+                                                                "\"" filename "\"" )))
+   (is-win
+    ;; turn into path in windows type
+    (setq filename
+          (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+                  "_"
+                  (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
+    (setq windows-filename
+          (replace-regexp-in-string "/" "\\" filename t t))
+    (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
+                                                                                  "/clippaste /convert=" windows-filename))))
+  (insert filename))
 (defun my-screenshot-tex-local ()
   "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
@@ -136,21 +150,33 @@
       ()
     ;; 建立pic文件夹
     (dired-create-directory "./pic"))
-  (setq filename
-        (concat (make-temp-name
-                 (concat "./pic/" (file-name-base (buffer-name))
-                         "_"
-                         (format-time-string "%Y%m%d_"))) ".png"))
-  (suspend-frame)
-  (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
-                                                              "\"" filename "\"" ))
-  (insert filename)
-  )
+  (cond
+   (is-lin
+    (setq filename
+          (concat (make-temp-name
+                   (concat "./pic/" (file-name-base (buffer-name))
+                           "_"
+                           (format-time-string "%Y%m%d_"))) ".png"))
+    (suspend-frame)
+    (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
+                                                                "\"" filename "\"" )))
+   (is-win
+    (setq filename
+          (concat  "./pic/" (file-name-base (buffer-name))
+                   "_"
+                   (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
+    ;; turn into path in windows type
+    (setq windows-filename
+          (replace-regexp-in-string "/" "\\" filename t t))
+    (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
+                                                                                  "/clippaste /convert=" windows-filename))))
+  (insert filename))
 (add-hook 'LaTeX-mode-hook
           '(lambda ()
              (define-key LaTeX-mode-map (kbd "C-c p") 'my-screenshot-tex-local)
              (define-key LaTeX-mode-map (kbd "C-c P") 'my-screenshot-tex)
              ))
+;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p
 ;; =================latex插入截图====================
 ;; ======================zotelo=============================
 ;; (add-to-list 'load-path "~/.emacs.d/zotelo")

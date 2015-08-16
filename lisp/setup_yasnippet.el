@@ -2,7 +2,7 @@
 ;; (add-to-list 'load-path "~/.emacs.d/yasnippet-0.6.1c")
 ;; (yas/load-directory "~/.emacs.d/yasnippet-0.6.1c/snippets")
 (require 'yasnippet) ;; not yasnippet-bundle
-;; (yas/initialize)
+;; (yas-initialize)
 (yas-global-mode 1)
 (yas-minor-mode 1)
 (setq yas-snippet-dirs

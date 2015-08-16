@@ -18,6 +18,8 @@
     未包含在package中。
   + diredful
     未包含在package中。
+  + everything
+    未采用package。
   + helm-pinyin
     已更改包。
   + ido-ubiquitous
@@ -40,5 +42,7 @@
     package中包版本无更新。
   + trashcan
     未包含在package中。
+  + unicad
+    未采用package。
   + wicd-mode
     未包含在package中。

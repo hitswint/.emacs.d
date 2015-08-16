@@ -7,6 +7,9 @@
 ;; 设置切换project的默认操作
 ;; (setq projectile-switch-project-action 'projectile-dired)
 (setq projectile-switch-project-action 'helm-projectile)
+(when is-win
+  ;; windows下的缓存方式从native改到alien，加快缓存速度
+  (setq projectile-indexing-method 'alien))
 ;; ;; home(~/)加入git版本控制，导致projectile缓存home下的所有文件
 ;; (setq projectile-ignored-projects '("~/")) ;将~/加入忽略列表
 ;; (defun swint-helm-projectile ()

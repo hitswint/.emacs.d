@@ -25,4 +25,8 @@
                    ;; ac-source-words-in-buffer
                    ;; ac-source-imenu
                    ))
+;; 让shell命令在windows下默认启用cygwin bash
+;; cmdproxy.exe则是windows自带命令行工具
+(when is-win
+  (setq explicit-shell-file-name "bash.exe"))
 (provide 'setup_eshell)

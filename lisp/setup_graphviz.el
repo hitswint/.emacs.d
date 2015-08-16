@@ -1,6 +1,8 @@
 ;; ====================graphviz-dot-mode=========================
 ;; (add-to-list 'load-path "~/.emacs.d/graphviz-dot-mode")
-;; (setenv "PATH" (concat "C:/Program Files/Graphviz2.30/bin;" (getenv "PATH")))
+(when is-win
+  ;; 注意：路径/bin 后面一定要有那个分号;，不用将路径加到环境变量中
+  (setenv "PATH" (concat "c:/Program Files (x86)/Graphviz2.36/bin;" (getenv "PATH"))))
 (load "graphviz-dot-mode.el" nil t t)
 (add-hook 'find-file-hook (lambda()
                             (if (string= "dot" (file-name-extension
@@ -22,9 +24,13 @@
 The viewer is started either on region or master file,
 depending on the last command issued."
   (interactive)
-  (let ((output-file (concat (file-name-base (buffer-name)) ".png")))
+  (let ((output-file (cond
+                      (is-lin (concat (file-name-base (buffer-name)) ".png"))
+                      (is-win (concat (file-name-directory buffer-file-name) (file-name-base (buffer-name)) ".png")))))
     (if (file-exists-p output-file)
-        (async-shell-command-no-output-buffer-from-file output-file)
+        (cond
+         (is-lin (async-shell-command-no-output-buffer-from-file output-file))
+         (is-win (w32-browser output-file)))
       (message "Warning: No export png."))))
 ;; ====================graphviz-dot-mode=========================
 (provide 'setup_graphviz)
