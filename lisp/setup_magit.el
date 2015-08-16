@@ -125,5 +125,14 @@
 ;; 使magit-add-remote默认以另一个窗口的buffer为remote
 ;; ==================初始化远程库和克隆远程库===================
 (setq magit-last-seen-setup-instructions "1.4.0")
+;; ==========使用git管理doc文件=============
+(defun swint-magit-diff-doc ()
+  (interactive)
+  (with-temp-file ".gitattributes"
+    (insert (concat "*.doc diff=word" "\n" "*.docx diff=wordx")))
+  (shell-command "git config diff.word.textconv catdoc")
+  (shell-command "git config diff.wordx.textconv docx2txt-git"))
+(define-key magit-status-mode-map (kbd "C-c d") 'swint-magit-diff-doc)
+;; ==========使用git管理doc文件=============
 ;; =================================magit===============================
 (provide 'setup_magit)

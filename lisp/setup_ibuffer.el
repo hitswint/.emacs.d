@@ -25,9 +25,11 @@
                           (filename . "~/Documents")
                           (filename . "~/Dropbox")
                           (filename . "~/Nutstore")
+                          (filename . "~/.emacs.d")
                           (filename . "/home/swint/Documents")
                           (filename . "/home/swint/Dropbox")
                           (filename . "/home/swint/Nutstore")
+                          (filename . "/home/swint/.emacs.d")
                           ))
                ("REFERENCE" (or
                              (filename . "~/papers")

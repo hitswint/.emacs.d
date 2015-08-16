@@ -103,7 +103,7 @@ Has no effect when `persp-show-modestring' is nil."
 ;; (add-hook 'desktop-after-read-hook 'swint-perspective)
 ;; ========放弃使用键盘宏分配buffers到perspective的做法=========
 ;; 使用lisp方式在emacs关闭时保存perspectives，开启时读取
-(setq  swint-perspectives-saved-file "~/.emacs.d/saved-perspectives.el")
+(setq swint-perspectives-saved-file "~/.emacs.d/saved-perspectives.el")
 (defun swint-save-perspectives ()
   (with-temp-file
       swint-perspectives-saved-file
