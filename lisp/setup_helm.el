@@ -1,5 +1,4 @@
 ;; =========================helm_lacarte=============================
-;; (add-to-list 'load-path "~/.emacs.d/lacarte")
 (require 'lacarte)
 (setq LaTeX-math-menu-unicode t)
 (global-set-key (kbd "C-c m") 'helm-insert-latex-math)
@@ -377,7 +376,6 @@ from its directory."
 ;; find file as root
 ;; ================helm================
 ;; ================helm-swoop================
-;; (add-to-list 'load-path "~/.emacs.d/helm-swoop")
 (require 'helm-swoop)
 (global-set-key (kbd "M-s M-s") 'helm-swoop)
 (global-set-key (kbd "M-s M-S") 'helm-swoop-back-to-last-point)
@@ -401,7 +399,6 @@ from its directory."
 ;; ================helm-swoop================
 ;; =======================helm-pinyin==============================
 ;; 让helm支持拼音头字母搜索
-;; (add-to-list 'load-path "~/.emacs.d/helm-pinyin")
 (load "iswitchb-pinyin")   ; 给iswitchb-mode添加按拼音首字母匹配的能力
 ;; 这个东西本身是给iswitchb增加拼音头字母搜索的，使用其中的pinyin-initials-string-match函数。
 ;; buffer 支持中文拼音首字母

@@ -1,5 +1,4 @@
 ;; ====================graphviz-dot-mode=========================
-;; (add-to-list 'load-path "~/.emacs.d/graphviz-dot-mode")
 (when is-win
   ;; 注意：路径/bin 后面一定要有那个分号;，不用将路径加到环境变量中
   (setenv "PATH" (concat "c:/Program Files (x86)/Graphviz2.36/bin;" (getenv "PATH"))))

@@ -1,5 +1,4 @@
 ;; ======================smex==========================
-;; (add-to-list 'load-path "~/.emacs.d/smex")
 (require 'smex)
 (global-set-key (kbd "M-X") (lambda ()
                               (interactive)

@@ -1,5 +1,4 @@
 ;; =======================rainbow-delimiters==========================
-;; (add-to-list 'load-path "~/.emacs.d/rainbow-delimiters")
 (require 'rainbow-delimiters)
 (add-hook 'dired-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'octave-mode-hook 'rainbow-delimiters-mode)

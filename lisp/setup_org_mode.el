@@ -1,6 +1,4 @@
 ;; ==================org-mode==========================
-;; (add-to-list 'load-path "~/.emacs.d/org-8.2.1/lisp")
-;; (setq load-path (cons "~/.emacs.d/org-8.2.1/lisp" load-path))
 (require 'org)
 (add-hook 'org-mode-hook 'turn-on-font-lock)
 (setq org-hide-leading-stars t)
@@ -66,7 +64,6 @@
       (lambda ()
         (substring (nth 4 (org-heading-components)) 0 0)))
 ;; ======================org标注工具=============================
-;; (add-to-list 'load-path "~/.emacs.d/org-annotate-file")
 ;; 原有org-annotate-file用于全局注释
 (require 'org-annotate-file)
 (setq org-annotate-file-storage-file "~/org/annotated.org")
@@ -267,7 +264,6 @@ depending on the last command issued."
 ;; win中似乎不好使，应该是没装java
 ;; =======================org使用ditaa输出ascii图片==========================
 ;; ==============org中输入公式======================
-;; (add-to-list 'load-path "~/.emacs.d/org-cdlatex-mode")
 (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
 ;; Environment templates can be inserted with C-c {.
 ;; The <TAB> key will do template expansion if the cursor is inside a LaTeX fragment1. For example, <TAB> will expand fr to \frac{}{} and position the cursor correctly inside the first brace. Another <TAB> will get you into the second brace. Even outside fragments, <TAB> will expand environment abbreviations at the beginning of a line. For example, if you write ‘equ’ at the beginning of a line and press <TAB>, this abbreviation will be expanded to an equation environment. To get a list of all abbreviations, type M-x cdlatex-command-help.

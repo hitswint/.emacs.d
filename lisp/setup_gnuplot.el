@@ -1,7 +1,6 @@
 ;; ===========================gnuplot=================================
 (when is-win
   (setq gnuplot-program "c:/Program Files (x86)/gnuplot/bin/gnuplot.exe"))
-;; (add-to-list 'load-path "~/.emacs.d/gnuplot")
 (require 'gnuplot-mode)
 ;; automatically open files ending with .gp or .gnuplot in gnuplot mode
 (setq auto-mode-alist

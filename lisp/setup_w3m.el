@@ -4,7 +4,6 @@
 ;; 还是不行，因为anything-config.el中居然默认修改w3m-command为/usr/bin/w3m，导致上述修改在重启后失效。
 ;; 修改anything-config.el中的(defvar w3m-command "/usr/bin/w3m")为(defvar w3m-command "c:/Program Files (x86)/w3m/w3m.exe")，问题解决。
 ;; 在lin上面通过elpa安装，在win上直接使用.emacs.d/w3m中下载的已经编译好的代码。
-;; (add-to-list 'load-path "~/.emacs.d/w3m")
 (require 'w3m)
 (setq w3m-use-form t)
 (setq w3m-tab-width 8)

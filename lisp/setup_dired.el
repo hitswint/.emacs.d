@@ -1,7 +1,6 @@
 ;;======================dired========================
 (setq dired-recursive-copies 'top)
 (setq dired-recursive-deletes 'top)
-;; (add-to-list 'load-path "~/.emacs.d/dired")
 (require 'dired-x)
 (require 'dired-details)
 (dired-details-install)
@@ -182,7 +181,6 @@
               (define-key dired-mode-map (kbd "<C-s-return>") 'urxvt-for-dired-file))))
  (is-win
   ;;=====================w32-browser======================
-  ;; (add-to-list 'load-path "~/.emacs.d/w32-browser")
   (require 'w32-browser)
   ;; (eval-after-load "dired"
   ;;   '(define-key dired-mode-map (kbd "TAB") (lambda ()

@@ -5,7 +5,6 @@
 (global-set-key (kbd "M-s /") 'winner-redo)
 ;; =================winner-mode=================
 ;; =================window-numbering=================
-;; (add-to-list 'load-path "~/.emacs.d/window-numbering")
 (require 'window-numbering)
 (window-numbering-mode 1)
 ;; 当按键大于现有窗口数目时，选中最后一个窗口
@@ -88,7 +87,6 @@ If prefix ARG is given, delete the window instead of selecting it."
  (is-win (global-set-key (kbd "C-S-<tab>") 'transpose-with-previously-selected-window)))
 ;; =================window-numbering=================
 ;; =====================switch-window======================
-;; (add-to-list 'load-path "~/.emacs.d/switch-window")
 (require 'switch-window)
 (global-set-key (kbd "C-x o") 'switch-window)
 ;; =====================switch-window======================

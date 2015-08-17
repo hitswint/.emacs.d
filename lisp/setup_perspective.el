@@ -1,5 +1,4 @@
 ;; ================================perspective====================================
-;; (add-to-list 'load-path "~/.emacs.d/perspective")
 (require 'perspective)
 (persp-mode)
 (global-set-key (kbd "C-c .") 'persp-switch)

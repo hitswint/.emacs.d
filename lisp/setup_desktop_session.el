@@ -1,5 +1,4 @@
 ;; =====================desktop-and-session========================
-;; (add-to-list 'load-path "~/.emacs.d/session")
 (require 'session)
 (add-hook 'after-init-hook 'session-initialize)
 (load "desktop")

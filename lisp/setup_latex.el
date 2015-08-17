@@ -7,7 +7,6 @@
   (outline-minor-mode 1))
 (add-hook 'TeX-mode-hook 'turn-on-outline-minor-mode)
 ;; (setq outline-minor-mode-prefix "\C-o") ;必须放在setup_anything_lacarte.el之前
-;; (add-to-list 'load-path "~/.emacs.d/outline-magic/")
 (add-hook 'outline-minor-mode-hook
           (lambda ()
             (require 'outline-magic)
@@ -107,7 +106,6 @@
 ;; ==========================reftex==============================
 ;; ===================auctex-latexmk=============================
 ;; 安装了texlive2009及更高的版本之后，默认就有latexmk，不用做任何改变。只需要加入.latexmkrc的配置文件和这个auctex-latexmk。
-;; (add-to-list 'load-path "~/.emacs.d/auctex-latexmk")
 (require 'auctex-latexmk)
 (auctex-latexmk-setup)
 ;; ===================auctex-latexmk=============================
@@ -179,7 +177,6 @@
 ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p
 ;; =================latex插入截图====================
 ;; ======================zotelo=============================
-;; (add-to-list 'load-path "~/.emacs.d/zotelo")
 (require 'zotelo)
 (add-hook 'TeX-mode-hook 'zotelo-minor-mode)
 ;; 使用方法，C-c z c建立bib文件，C-c z u更新bib文件，C-c [引用

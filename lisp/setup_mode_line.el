@@ -1,6 +1,5 @@
 ;; ================smart-mode-line===================
 (rich-minority-mode 1)
-;; (add-to-list 'load-path "~/.emacs.d/smart-mode-line/")
 (require 'smart-mode-line)
 ;; 设定theme为dark/light/respectful/automatic
 (sml/setup)

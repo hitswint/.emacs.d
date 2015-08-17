@@ -1,5 +1,4 @@
 ;; ==================dirtree=========================
-;; (add-to-list 'load-path "~/.emacs.d/dirtree")
 (require 'tree-mode)
 (require 'windata)
 (require 'dirtree)

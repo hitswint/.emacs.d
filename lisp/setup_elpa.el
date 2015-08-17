@@ -1,9 +1,4 @@
-;; (when
-;;     (load
-;;      (expand-file-name "~/.emacs.d/elpa/package.el"))
-;;   (package-initialize))
-;; 强制使用自己手动下载的低版本的package.el，在emacs23时使用。
-;; (add-to-list 'load-path "~/.emacs.d/elpa")
+;; ====================elpa=========================
 (require 'package)
 (setq package-archives '(("melpa" . "http://melpa.org/packages/")
                          ("gnu" . "http://elpa.gnu.org/packages/")
@@ -133,4 +128,5 @@ Missing packages are installed automatically."
             tablist)))
  (is-win (prelude-require-packages
           '(w32-browser))))
+;; ====================elpa=========================
 (provide 'setup_elpa)

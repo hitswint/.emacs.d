@@ -6,7 +6,6 @@
 (setq epa-file-inhibit-auto-save nil)
 ;; ======================文件加密===================================
 ;; ====================multiple-cursors============================
-;; (add-to-list 'load-path "~/.emacs.d/multiple-cursors")
 (require 'multiple-cursors)
 ;; (global-set-key (kbd "C-M-;") 'set-rectangular-region-anchor)
 (global-set-key (kbd "C-M-,") 'mc/mark-previous-like-this)
@@ -20,18 +19,15 @@
 ;; messages中会出现Error during redisplay: (error Lisp nesting exceeds `max-lisp-eval-depth')的错误。
 ;; ====================multiple-cursors============================
 ;; ====================expand-region=========================
-;; (add-to-list 'load-path "~/.emacs.d/expand-region")
 (require 'expand-region)
 (global-set-key (kbd "C-M-;") 'er/expand-region)
 ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end。
 ;; emacs不是真正的假死，C-g会恢复。
 ;; ====================expand-region=========================
 ;; ==================回收站=======================
-;; (add-to-list 'load-path "~/.emacs.d/trashcan")
 (require 'trashcan)
 ;; ==================回收站=======================
 ;; ==================undo-tree===================
-;; (add-to-list 'load-path "~/.emacs.d/undo-tree/")
 (require 'undo-tree)
 (global-undo-tree-mode)
 (add-hook 'undo-tree-mode-hook
@@ -41,7 +37,6 @@
 (global-set-key (kbd "C-M-/") 'undo-tree-redo)
 ;; ==================undo-tree===================
 ;; ==================breadcrumb==================
-;; (add-to-list 'load-path "~/.emacs.d/breadcrumb/")
 (require 'breadcrumb)
 (global-set-key (kbd "C-c C-/") 'bc-set)
 (global-set-key (kbd "C-c C-,") 'bc-previous)
@@ -53,7 +48,6 @@
 ;; (global-set-key (kbd "C-c /") 'bc-goto-current) ;; C-c j for jump to current bookmark
 ;; ==================breadcrumb==================
 ;; ==================auto-mark===================
-;; (add-to-list 'load-path "~/.emacs.d/auto-mark")
 (require 'auto-mark)
 (global-auto-mark-mode 1)
 ;; 会导致(void-variable last-command-char)错误
@@ -75,7 +69,6 @@
 (global-set-key (kbd "M-m") 'jump-to-mark)
 ;; ==================auto-mark===================
 ;; =================visible-mark=================
-;; (add-to-list 'load-path "~/.emacs.d/visible-mark")
 (require 'visible-mark)
 (global-visible-mark-mode 1)
 ;; 下面的代码增加一个桔黄色的mark，显示灰色和桔黄色两个mark
@@ -88,18 +81,15 @@
 (setq visible-mark-faces '(visible-mark-active my-visible-mark-face-2))
 ;; =================visible-mark=================
 ;; =================smooth-scrolling=================
-;; (add-to-list 'load-path "~/.emacs.d/smooth-scrolling")
 (require 'smooth-scrolling)
 ;; =================smooth-scrolling=================
 ;; ====================ace-jump-buffer========================
-;; (add-to-list 'load-path "~/.emacs.d/ace-jump-buffer")
 ;; 放弃ace-jump-buffer
 (require 'ace-jump-buffer)
 (global-set-key (kbd "C-c ,") 'ace-jump-buffer)
 ;; ====================ace-jump-buffer========================
 ;; =====================unicad=====================
 ;; lin中不会出现乱码，不需要，这个包会拖慢启动速度
-;; (add-to-list 'load-path "~/.emacs.d/unicad/")
 (when is-win
   (require 'unicad)
   ;; 解决关emacs时保存.session的编码问题
@@ -111,7 +101,6 @@
   (setq coding-system-for-write 'utf-8))
 ;; =====================unicad=====================
 ;; =====================everything======================
-;; (add-to-list 'load-path "~/.emacs.d/everything")
 (when is-win
   (setq everything-ffap-integration nil) ;; to disable ffap integration
   (setq everything-matchpath t)
@@ -120,12 +109,10 @@
   (global-set-key (kbd "C-x M-e") 'everything))
 ;; =====================everything======================
 ;; =====================popwin======================
-;; (add-to-list 'load-path "~/.emacs.d/popwin")
 (require 'popwin)
 (popwin-mode 1)
 ;; =====================popwin======================
 ;; =====================anchored-transpose======================
-;; (add-to-list 'load-path "~/.emacs.d/anchored-transpose")
 (require 'anchored-transpose)
 (global-set-key [?\C-x ?t] 'anchored-transpose)
 (autoload 'anchored-transpose "anchored-transpose" nil t)
@@ -135,7 +122,6 @@
 ;; 另外，可以分别选择两部分交换的内容
 ;; =====================anchored-transpose======================
 ;; =====================God-mode======================
-;; (add-to-list 'load-path "~/.emacs.d/god-mode")
 (require 'god-mode)
 (global-set-key (kbd "<escape>") 'god-local-mode)
 ;; (global-set-key (kbd "<escape>") 'god-mode-all)
@@ -148,8 +134,6 @@
 (add-to-list 'god-exempt-major-modes 'dired-mode)
 ;; =====================God-mode======================
 ;; =====================elisp-slime-nav======================
-;; (add-to-list 'load-path "~/.emacs.d/cl-lib")
-;; (add-to-list 'load-path "~/.emacs.d/elisp-slime-nav")
 (global-set-key (kbd "C-M-'") 'help-for-help)
 (define-key 'help-command (kbd "C-l") 'find-library)
 (define-key 'help-command (kbd "C-f") 'find-function)
@@ -168,11 +152,9 @@
 (define-key elisp-slime-nav-mode-map (kbd "C-c C-d C-d") nil)
 ;; =====================elisp-slime-nav======================
 ;; ===================diredful======================
-;; (add-to-list 'load-path "~/.emacs.d/diredful")
 (require 'diredful)
 ;; ===================diredful======================
 ;; ===================drag stuff====================
-;; (add-to-list 'load-path "~/.emacs.d/drag-stuff")
 (require 'drag-stuff)
 (add-hook 'dired-mode-hook 'drag-stuff-mode)
 (add-hook 'octave-mode-hook 'drag-stuff-mode)
@@ -195,7 +177,6 @@
 (define-key drag-stuff-mode-map (kbd "M-F") 'drag-stuff-right)
 ;; ===================drag stuff====================
 ;; ===================popup-kill-ring====================
-;; (add-to-list 'load-path "~/.emacs.d/popup-kill-ring")
 (require 'popup)
 (require 'pos-tip)
 ;; (pos-tip-w32-max-width-height)   ; Maximize frame temporarily
@@ -205,7 +186,6 @@
 (setq popup-kill-ring-interactive-insert t)
 ;; ===================popup-kill-ring====================
 ;; ===================highlight-symbol====================
-;; (add-to-list 'load-path "~/.emacs.d/highlight-symbol")
 (require 'highlight-symbol)
 (global-set-key (kbd "M-g h") 'highlight-symbol-at-point)
 (global-set-key (kbd "M-g n") 'highlight-symbol-next)

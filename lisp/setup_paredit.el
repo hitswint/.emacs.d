@@ -1,6 +1,5 @@
 ;; ==================paredit=========================
 ;; 在emacs-lisp中很有用，但对我用处不大
-;; (add-to-list 'load-path "~/.emacs.d/paredit/")
 (require 'paredit)
 (autoload 'enable-paredit-mode "paredit" t)
 (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
@@ -44,7 +43,6 @@
      ))
 ;; M-( M-) M-[ M-] M-{ M-} M-" M-S M-E M-A M-D C-) C-} C-( C-{ C-M-d C-M-u C-M-p C-M-n
 ;; 在其他mode中使用paredit
-;; (add-to-list 'load-path "~/.emacs.d/paredit-everywhere/")
 (require 'paredit-everywhere)
 (add-hook 'LaTeX-mode-hook 'paredit-everywhere-mode)
 (add-hook 'org-mode-hook 'paredit-everywhere-mode)

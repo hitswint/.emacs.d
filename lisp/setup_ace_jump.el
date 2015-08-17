@@ -1,5 +1,4 @@
 ;; ====================ace-jump=========================
-;; (add-to-list 'load-path "~/.emacs.d/ace-jump")
 (eval-after-load 'pinyin-search '(require 'ace-jump-mode))
 ;; (setq ace-jump-mode-gray-background nil)
 ;; (setq ace-jump-mode-move-keys

@@ -1,5 +1,4 @@
 ;; ==================yasnippet===================
-;; (add-to-list 'load-path "~/.emacs.d/yasnippet-0.6.1c")
 ;; (yas/load-directory "~/.emacs.d/yasnippet-0.6.1c/snippets")
 (require 'yasnippet) ;; not yasnippet-bundle
 ;; (yas-initialize)

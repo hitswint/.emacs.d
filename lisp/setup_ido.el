@@ -262,7 +262,6 @@ especially for extending ido-find-file functionality
     (exit-minibuffer)))
 ;; ====ido-find-file:open-file-with-external-app=====
 ;; =====================ido-ubiquitous===================
-;; (add-to-list 'load-path "~/.emacs.d/ido-ubiquitous-1.7")
 ;; (defvar ido-cur-item nil)
 ;; (defvar ido-default-item nil)
 ;; (defvar ido-cur-list nil)
