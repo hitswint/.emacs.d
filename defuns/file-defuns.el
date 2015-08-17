@@ -26,4 +26,5 @@
     (shell-command (concat "dos2unix " file-to-convert))))
 (when is-win
   (define-key emacs-lisp-mode-map (kbd "C-x C-s") 'save-buffer-with-dos2unix))
+(global-set-key (kbd "C-x M-s") 'save-buffer-with-dos2unix)
 ;; ===============dos2unix===============

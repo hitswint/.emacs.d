@@ -1,0 +1,1 @@
+My dotemacs used for both linux and windows.
