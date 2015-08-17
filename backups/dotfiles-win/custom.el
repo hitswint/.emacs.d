@@ -9,43 +9,43 @@
  '(anzu-search-threshold 1000)
  '(completion-cycle-threshold nil)
  '(custom-safe-themes
- (quote
-  ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default)))
+   (quote
+    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default)))
  '(dirtree-windata (quote (frame left 0.3 delete)))
  '(helm-bibtex-format-citation-functions
- (quote
-  ((org-mode . helm-bibtex-format-citation-ebib)
-   (latex-mode . swint-helm-bibtex-format-citation-cite)
-   (markdown-mode . helm-bibtex-format-citation-pandoc-citeproc)
-   (default . helm-bibtex-format-citation-default))))
+   (quote
+    ((org-mode . helm-bibtex-format-citation-ebib)
+     (latex-mode . swint-helm-bibtex-format-citation-cite)
+     (markdown-mode . helm-bibtex-format-citation-pandoc-citeproc)
+     (default . helm-bibtex-format-citation-default))))
  '(helm-buffer-details-flag nil)
  '(helm-completing-read-handlers-alist
- (quote
-  ((describe-function . helm-completing-read-symbols)
-   (describe-variable . helm-completing-read-symbols)
-   (debug-on-entry . helm-completing-read-symbols)
-   (find-function . helm-completing-read-symbols)
-   (find-tag . helm-completing-read-with-cands-in-buffer)
-   (ffap-alternate-file)
-   (tmm-menubar)
-   (iswitchb-buffer . ido)
-   (find-file . ido)
-   (org-annotate-file . ido)
-   (swint-org-annotate-file . ido)
-   (dired-do-copy . ido)
-   (dired-create-directory . ido)
-   (dirtree . ido))))
+   (quote
+    ((describe-function . helm-completing-read-symbols)
+     (describe-variable . helm-completing-read-symbols)
+     (debug-on-entry . helm-completing-read-symbols)
+     (find-function . helm-completing-read-symbols)
+     (find-tag . helm-completing-read-with-cands-in-buffer)
+     (ffap-alternate-file)
+     (tmm-menubar)
+     (iswitchb-buffer . ido)
+     (find-file . ido)
+     (org-annotate-file . ido)
+     (swint-org-annotate-file . ido)
+     (dired-do-copy . ido)
+     (dired-create-directory . ido)
+     (dirtree . ido))))
  '(helm-ff-newfile-prompt-p nil)
  '(helm-projectile-sources-list
- (quote
-  (helm-source-projectile-projects helm-source-projectile-files-list helm-source-projectile-buffers-list)))
+   (quote
+    (helm-source-projectile-projects helm-source-projectile-files-list helm-source-projectile-buffers-list)))
  '(helm-split-window-default-side (quote same))
  '(ibuffer-default-sorting-mode (quote major-mode))
  '(ido-auto-merge-delay-time 0.7)
  '(ido-enable-flex-matching t)
  '(ido-ignore-buffers
- (quote
-  ("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Compile\\=Log\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*compilation\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`.english-words\\'" my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer)))
+   (quote
+    ("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Compile\\=Log\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*compilation\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`.english-words\\'" my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer my-ignore-buffer)))
  '(ido-make-dir-list-hook nil)
  '(ido-separator "   ")
  '(iswitchb-case t)
@@ -65,15 +65,15 @@
  '(org-export-latex-image-default-option "width=1\\linewidth")
  '(org-export-pdf-remove-logfiles nil)
  '(org-format-latex-options
- (quote
-  (:foreground default :background default :scale 1.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
-	       ("begin" "$1" "$" "$$" "\\(" "\\["))))
+   (quote
+    (:foreground default :background default :scale 1.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
+		 ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(persp-initial-frame-name "i")
  '(persp-modestring-dividers (quote ("" "" "")))
  '(persp-show-modestring t)
  '(preview-gs-options
- (quote
-  ("-q" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4")))
+   (quote
+    ("-q" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4")))
  '(read-buffer-function (quote iswitchb-read-buffer))
  '(recentf-max-saved-items 50)
  '(scroll-bar-mode nil)
