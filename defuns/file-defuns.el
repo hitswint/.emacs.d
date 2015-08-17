@@ -22,8 +22,11 @@
 (defun save-buffer-with-dos2unix ()
   (interactive)
   (let ((file-to-convert (file-name-nondirectory (buffer-file-name (current-buffer)))))
-    (save-buffer)
-    (shell-command (concat "dos2unix " file-to-convert))))
+    (if (buffer-modified-p)
+        (progn (save-buffer)
+               (shell-command (concat "dos2unix " file-to-convert))
+               (revert-buffer nil t))
+      (save-buffer))))
 (when is-win
   (define-key emacs-lisp-mode-map (kbd "C-x C-s") 'save-buffer-with-dos2unix))
 (global-set-key (kbd "C-x M-s") 'save-buffer-with-dos2unix)

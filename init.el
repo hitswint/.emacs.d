@@ -38,9 +38,9 @@
 (delete-selection-mode t)
 (setq diary-file "~/org/journal.org.gpg") ;设置日记文件为加密文件
 ;; =================开启server================
-(require 'server)
-(unless (server-running-p)
-  (server-start))
+;; (require 'server)
+;; (unless (server-running-p)
+;;   (server-start))
 ;; ==================设置路径=================
 ;; Set path to dependencies
 (setq site-lisp-dir

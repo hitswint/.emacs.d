@@ -334,7 +334,7 @@ depending on the last command issued."
     (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
                                                                                   "/clippaste /convert=" windows-filename)))))
 (global-set-key (kbd "C-c M-p") 'my-screenshot-local)
-(global-set-key (kbd "C-x M-p") 'my-screenshot)
+(global-set-key (kbd "C-c M-P") 'my-screenshot)
 ;; ==============截图================
 ;; =================org插入截图====================
 ;;1. suspend current emacs window
@@ -367,7 +367,7 @@ depending on the last command issued."
    (is-win
     (setq filename
           ;; 在org文件中显示图片只需要/Users/...，而不需要前面的c:
-          (concat "/Users/swint/org/annotated/" (file-name-base (buffer-name))
+          (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
                   "_"
                   (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
     ;; turn into path in windows type
@@ -375,7 +375,7 @@ depending on the last command issued."
           (replace-regexp-in-string "/" "\\" filename t t))
     (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
                                                                                   "/clippaste /convert=" windows-filename))))
-  (insert (concat "[[" filename "]]"))
+  (insert (concat "[[" (abbreviate-file-name filename) "]]"))
   (org-display-inline-images))
 (defun my-screenshot-org-local ()
   "Take a screenshot into a unique-named file in the current buffer file
@@ -411,7 +411,7 @@ depending on the last command issued."
 (add-hook 'org-mode-hook
           '(lambda ()
              (define-key org-mode-map (kbd "C-c p") 'my-screenshot-org-local)
-             (define-key org-mode-map (kbd "C-x p") 'my-screenshot-org)
+             (define-key org-mode-map (kbd "C-c P") 'my-screenshot-org)
              ))
 ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p
 ;; org中打开和关闭图片显示(org-display-inline-images)和(org-remove-inline-images)，可以使用(org-toggle-inline-images)快捷键为C-c C-x C-v。
