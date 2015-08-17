@@ -262,11 +262,18 @@
   ;; pdf-view-auto-slice-minor-mode 翻页自动切边。
   (add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
   ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。
+  (define-key pdf-view-mode-map (kbd "C-c C-i") nil)
   (define-key pdf-view-mode-map (kbd "M-s i") 'helm-imenu)
   (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
   (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
   (define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
   (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
-  (define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save))
+  (define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save)
+  (define-key pdf-view-mode-map (kbd "C-x C-l") '(lambda () (interactive)
+                                                   (switch-to-buffer-other-window (current-buffer))
+                                                   (org-annotate-file (abbreviate-file-name (buffer-file-name)))))
+  (define-key pdf-view-mode-map (kbd "C-c C-l") '(lambda () (interactive)
+                                                   (switch-to-buffer-other-window (current-buffer))
+                                                   (swint-org-annotate-file (abbreviate-file-name (buffer-file-name))))))
 ;; ===================pdf-tools=================
 (provide 'setup_packages)
