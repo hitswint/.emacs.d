@@ -74,7 +74,9 @@
 ;;   (require 'setup_language_env))
 (require 'setup_desktop_session)
 ;; ====================custom===================
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(cond
+ (is-lin (setq custom-file (expand-file-name "custom-lin.el" user-emacs-directory)))
+ (is-win (setq custom-file (expand-file-name "custom-win.el" user-emacs-directory))))
 (load custom-file)
 ;; ====================setup===================
 (require 'setup_elpa)
