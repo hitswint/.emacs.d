@@ -8,26 +8,11 @@
 ;; ====================eval-expression=====================
 ;; ===============解决C-n卡顿的问题===============
 ;; 参考http://www.tuicool.com/articles/q6j263
-;; 牺牲了对图片的支持，换取换行速度，注释掉(message "%s" "executed?")。
-(defun line-move (arg &optional noerror to-end try-vscroll)
-  (unless (and auto-window-vscroll try-vscroll
-               ;; Only vscroll for single line moves
-               (= (abs arg) 1)
-               ;; But don't vscroll in a keyboard macro.
-               (not defining-kbd-macro)
-               (not executing-kbd-macro)
-               (line-move-partial arg noerror to-end)
-               )
-    ;; (message "%s" "executed?")
-    (set-window-vscroll nil 0 t)
-    (if (and line-move-visual
-             ;; Display-based column are incompatible with goal-column.
-             (not goal-column)
-             ;; When the text in the window is scrolled to the left,
-             ;; display-based motion doesn't make sense (because each
-             ;; logical line occupies exactly one screen line).
-             (not (> (window-hscroll) 0)))
-        (line-move-visual arg noerror)
-      (line-move-1 arg noerror to-end))))
-(global-set-key "\C-n" '(lambda () (interactive) (line-move 1 nil)))
+;; 作者说得并不对，问题在于next-line时需要自动调整窗口滚动的数值，进而对较高的行(图片)更好的查看。
+;; 两种解决方法：
+;; 1. 设置(next-line (&optional arg try-vscroll))中try-vscroll为nil。
+;; 2. 设置auto-window-vscroll为nil，C-p C-n都受影响。
+;; 下句牺牲对图片的支持，换取流畅的换行速度。
+(setq auto-window-vscroll nil)
+;; auto-window-vscroll: Non-nil means to automatically adjust `window-vscroll' to view tall lines.
 ;; ===============解决C-n卡顿的问题===============
