@@ -172,7 +172,7 @@
 (add-hook 'LaTeX-mode-hook
           '(lambda ()
              (define-key LaTeX-mode-map (kbd "C-c p") 'my-screenshot-tex-local)
-             (define-key LaTeX-mode-map (kbd "C-c P") 'my-screenshot-tex)
+             (define-key LaTeX-mode-map (kbd "C-x p") 'my-screenshot-tex)
              ))
 ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p
 ;; =================latex插入截图====================
