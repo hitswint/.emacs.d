@@ -106,7 +106,14 @@
   (setq everything-matchpath t)
   (setq everything-cmd "c:/Program Files/Everything/es.exe") ;; to let everything.el know where to find es.exe
   (require 'everything)
-  (global-set-key (kbd "C-x M-e") 'everything))
+  (global-set-key (kbd "C-c C-S-f") 'everything)
+  (global-set-key (kbd "C-c C-M-f") '(lambda () (interactive)
+                                       (w32-shell-execute
+                                        "open" "c:/Program Files/Everything/Everything.exe")))
+  (global-set-key (kbd "C-c M-f") '(lambda () (interactive)
+                                     (w32-shell-execute
+                                      "open" "c:/Program Files/Everything/Everything.exe"
+                                      (concat "-p " (expand-file-name default-directory))))))
 ;; =====================everything======================
 ;; =====================popwin======================
 (require 'popwin)
