@@ -282,13 +282,15 @@
   (define-key pdf-view-mode-map (kbd "C-c C-l") '(lambda () (interactive)
                                                    (dired-jump-other-window)
                                                    (swint-org-annotate-file (abbreviate-file-name (dired-get-filename)))))
-  (defun swint-pdf-history-goto-beginning ()
-    "Fix the bug of reverting to beginning of pdf after persp-switch."
-    (interactive)
-    (let ((pdf-buffers (remove-if-not (lambda (x) (eq (buffer-mode x) 'pdf-view-mode)) (persp-buffers persp-curr))))
-      (loop for pdf-buffer in pdf-buffers
-            do (with-current-buffer pdf-buffer
-                 (pdf-history-goto 0)))))
-  (add-hook 'persp-activated-hook 'swint-pdf-history-goto-beginning))
+  ;; Failed to fix the bug of pdf-view-mode.
+  ;; (defun swint-pdf-history-goto-beginning ()
+  ;;   "Fix the bug of reverting to beginning of pdf after persp-switch."
+  ;;   (interactive)
+  ;;   (let ((pdf-buffers (remove-if-not (lambda (x) (eq (buffer-mode x) 'pdf-view-mode)) (persp-buffers persp-curr))))
+  ;;     (loop for pdf-buffer in pdf-buffers
+  ;;           do (with-current-buffer pdf-buffer
+  ;;                (pdf-history-goto 0)))))
+  ;; (add-hook 'persp-activated-hook 'swint-pdf-history-goto-beginning)
+  )
 ;; ===================pdf-tools=================
 (provide 'setup_packages)
