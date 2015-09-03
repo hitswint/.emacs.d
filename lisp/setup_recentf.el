@@ -45,7 +45,6 @@
                                     c)))
    (keymap :initform helm-generic-files-map)
    (help-message :initform helm-generic-file-help-message)
-   (mode-line :initform helm-generic-file-mode-line-string)
    (action :initform (helm-actions-from-type-file))))
 (defvar swint-helm-source-recentf-file nil
   "See (info \"(emacs)File Conveniences\").
@@ -83,7 +82,6 @@ Set `recentf-max-saved-items' to a bigger value if default is too small.")
                                     c)))
    (keymap :initform helm-generic-files-map)
    (help-message :initform helm-generic-file-help-message)
-   (mode-line :initform helm-generic-file-mode-line-string)
    (action :initform (helm-actions-from-type-file))))
 (defvar swint-helm-source-recentf-directory nil
   "See (info \"(emacs)File Conveniences\").

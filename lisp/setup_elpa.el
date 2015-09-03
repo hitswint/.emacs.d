@@ -16,9 +16,9 @@
     (smp--delete-directory directory recursive)))
 ;; 借自prelude。
 (defvar prelude-packages
-  '(ac-math
-    ace-jump-buffer
+  '(ace-jump-buffer
     ace-jump-mode
+    ac-math
     aggressive-indent
     anchored-transpose
     anzu
@@ -40,8 +40,7 @@
     flx
     flx-ido
     flycheck
-    git-commit-mode
-    git-rebase-mode
+    git-commit
     git-timemachine
     gnuplot-mode
     god-mode
@@ -49,6 +48,7 @@
     guide-key
     helm
     helm-bibtex
+    helm-core
     helm-projectile
     helm-swoop
     helm-unicode
@@ -61,6 +61,7 @@
     lacarte
     let-alist
     magit
+    magit-popup
     math-symbol-lists
     multifiles
     multiple-cursors
@@ -93,6 +94,7 @@
     w3m
     windata
     window-numbering
+    with-editor
     yasnippet
     zotelo
     ztree)

@@ -86,7 +86,7 @@
                                     (helm-force-update))))))
    (keymap :initform helm-buffer-map)
    (volatile :initform t)
-   (mode-line :initform helm-buffer-mode-line-string)
+   (help-message :initform 'helm-buffer-help-message)
    (persistent-help
     :initform
     "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
@@ -109,7 +109,7 @@
                                     (helm-force-update))))))
    (keymap :initform helm-buffer-map)
    (volatile :initform t)
-   (mode-line :initform helm-buffer-mode-line-string)
+   (help-message :initform 'helm-buffer-help-message)
    (persistent-help
     :initform
     "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
@@ -161,6 +161,17 @@
 (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
 ;; ==================helm-dired-buffer====================
 ;; ==================helm-mini====================
+(defun helm-buffer-list ()
+  "Return the current list of buffers.
+Currently visible buffers are put at the end of the list.
+See `ido-make-buffer-list' for more infos."
+  (require 'ido)
+  (let ((ido-process-ignore-lists t)
+        ido-ignored-list
+        ;; 在原函数中注销下句，因为会导致ido忽略buffer的定义失效。
+        ;; ido-ignore-buffers
+        ido-use-virtual-buffers)
+    (ido-make-buffer-list nil)))
 (defun helm-buffers-list--init/other-persps ()
   ;; Issue #51 Create the list before `helm-buffer' creation.
   (setq helm-buffers-list-cache/other-persps ido-temp-list/other-persps)
@@ -193,7 +204,7 @@
                                     (helm-force-update))))))
    (keymap :initform helm-buffer-map)
    (volatile :initform t)
-   (mode-line :initform helm-buffer-mode-line-string)
+   (help-message :initform 'helm-buffer-help-message)
    (persistent-help
     :initform
     "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
@@ -401,7 +412,7 @@ from its directory."
 ;; 让helm支持拼音头字母搜索
 (load "iswitchb-pinyin")   ; 给iswitchb-mode添加按拼音首字母匹配的能力
 ;; 这个东西本身是给iswitchb增加拼音头字母搜索的，使用其中的pinyin-initials-string-match函数。
-;; buffer 支持中文拼音首字母
+;; 使buffer支持中文拼音首字母
 (defun helm-buffer--match-pattern (pattern candidate)
   (let ((fun (if (and helm-buffers-fuzzy-matching
                       (not (pinyin-initials-string-match "\\`\\^" pattern)))
@@ -411,40 +422,29 @@ from its directory."
         (not (pinyin-initials-string-match (funcall fun (substring pattern 1))
                                            candidate))
       (pinyin-initials-string-match (funcall fun pattern) candidate))))
-;; recentf 支持中文拼音首字母
-(defun helm-files-match-only-basename (candidate)
-  "Allow matching only basename of file when \" -b\" is added at end of pattern.
-If pattern contain one or more spaces, fallback to match-plugin
-even is \" -b\" is specified."
-  (let ((source (helm-get-current-source)))
-    (if (pinyin-initials-string-match "\\([^ ]*\\) -b\\'" helm-pattern)
-        (progn
-          (helm-attrset 'no-matchplugin nil source)
-          (pinyin-initials-string-match (match-string 1 helm-pattern)
-                                        (helm-basename candidate)))
-      ;; Disable no-matchplugin by side effect.
-      (helm-aif (assq 'no-matchplugin source)
-          (setq source (delete it source)))
-      (pinyin-initials-string-match
-       (replace-regexp-in-string " -b\\'" "" helm-pattern)
-       candidate))))
-;; helm-find-files 支持中文拼音首字母，但是会破坏搜索方式，使搜索结果过多。
+;; 使helm-find-files/recentf支持中文拼音首字母。
+;; 会破坏helm-find-files的搜索方式，匹配过多，另建swint-helm-ff。
 ;; 直接输入xx，会产生过多的匹配结果；xx后面加空格，以xx为起始字母；xx前面加空格，搜索结果正常。
-;; 搜索结果匹配不好，另建swint-helm-ff。
-(defun helm-mp-3-match (str &optional pattern)
+(cl-defun helm-mm-3-match (str &optional (pattern helm-pattern))
   "Check if PATTERN match STR.
 When PATTERN contain a space, it is splitted and matching is done
 with the several resulting regexps against STR.
 e.g \"bar foo\" will match \"foobar\" and \"barfoo\".
 Argument PATTERN, a string, is transformed in a list of
-cons cell with `helm-mp-3-get-patterns' if it contain a space.
+cons cell with `helm-mm-3-get-patterns' if it contain a space.
 e.g \"foo bar\"=>((identity . \"foo\") (identity . \"bar\")).
 Then each predicate of cons cell(s) is called with regexp of same
 cons cell against STR (a candidate).
 i.e (identity (string-match \"foo\" \"foo bar\")) => t."
-  (let ((pat (helm-mp-3-get-patterns (or pattern helm-pattern))))
+  (let ((pat (helm-mm-3-get-patterns pattern)))
     (cl-loop for (predicate . regexp) in pat
-             always (funcall predicate (pinyin-initials-string-match regexp str)))))
+             always (funcall predicate
+                             (condition-case _err
+                                 ;; FIXME: Probably do nothing when
+                                 ;; using fuzzy leaving the job
+                                 ;; to the fuzzy fn.
+                                 (pinyin-initials-string-match regexp str)
+                               (invalid-regexp nil))))))
 ;; =======================helm-pinyin==============================
 ;; =======================helm-bibtex==============================
 (setq helm-bibtex-bibliography "./literature.bib")
