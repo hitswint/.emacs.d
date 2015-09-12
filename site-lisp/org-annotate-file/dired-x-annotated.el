@@ -21,16 +21,12 @@
           (funcall 'dired-k--highlight-annotated-file stats curbuf)))))
 
 (defun dired-k--highlight-annotated-file (stats buf)
+  (require 'subr-x)                     ;Load definition of hash-table-keys
   (with-current-buffer buf
-    (save-excursion
-      (goto-char (point-min))
-      (dired-next-line 4)
-      (while (not (eobp))
-        (let ((filename (file-name-nondirectory (dired-get-filename nil t))))
-          (when filename
-            (dired-k--highlight-line filename stats))
-          (dired-next-line 1))
-        ))))
+    (let ((annotated-file-list (hash-table-keys stats)))
+      (loop for annotated-file in annotated-file-list
+            do (progn (dired-goto-file (concat (expand-file-name default-directory) annotated-file))
+                      (dired-k--highlight-line annotated-file stats))))))
 
 (defun dired-k--highlight-line (file stats)
   (let ((stat (gethash file stats 'not-annotated)))
