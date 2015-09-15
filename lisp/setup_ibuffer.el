@@ -25,11 +25,11 @@
                  ("CODING" (or
                             (filename . "~/Documents")
                             (filename . "~/Dropbox")
-                            (filename . "~/Nutstore-git")
+                            (filename . "~/Nutstore")
                             (filename . "~/.emacs.d")
                             (filename . "/home/swint/Documents")
                             (filename . "/home/swint/Dropbox")
-                            (filename . "/home/swint/Nutstore-git")
+                            (filename . "/home/swint/Nutstore")
                             (filename . "/home/swint/.emacs.d")
                             ))
                  ("REFERENCE" (or
@@ -57,7 +57,7 @@
                  ("CODING" (or
                             (filename . "c:/Users/swint/Documents")
                             (filename . "c:/Users/swint/Dropbox")
-                            (filename . "c:/Users/swint/Nutstore-git")
+                            (filename . "c:/Users/swint/Nutstore")
                             (filename . "c:/Users/swint/.emacs.d")
                             ))
                  ("REFERENCE" (or

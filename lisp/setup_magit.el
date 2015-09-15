@@ -102,28 +102,28 @@ by changing them to C:/*"
   (interactive)
   (cond
    (is-lin
-    (shell-command (concat "git clone ~/Nutstore-git/" (buffer-name (window-buffer (next-window))))))
+    (shell-command (concat "git clone ~/Nutstore/" (buffer-name (window-buffer (next-window))))))
    (is-win
-    (shell-command (concat "git clone file:///cygdrive/c/Users/swint/Nutstore-git/" (buffer-name (window-buffer (next-window))))))))
+    (shell-command (concat "git clone file:///cygdrive/c/Users/swint/Nutstore/" (buffer-name (window-buffer (next-window))))))))
 (defun magit-bare-init-remote ()
   (interactive)
   (cond
    (is-lin
-    (shell-command (concat "git --bare init ~/Nutstore-git/"  (buffer-name) ".git")))
+    (shell-command (concat "git --bare init ~/Nutstore/"  (buffer-name) ".git")))
    (is-win
-    (shell-command (concat "git --bare init /cygdrive/c/Users/swint/Nutstore-git/"  (buffer-name) ".git")))))
+    (shell-command (concat "git --bare init /cygdrive/c/Users/swint/Nutstore/"  (buffer-name) ".git")))))
 (global-set-key (kbd "C-c C-x ,") 'magit-clone-remote)
 (global-set-key (kbd "C-c C-x .") 'magit-bare-init-remote)
-;; clone操作需要打开两个窗口一个是目标位置一个是Nutstore-git中远程库
-;; init操作不需要打开两个窗口，远程库自动生成在Nutstore-git中
+;; clone操作需要打开两个窗口一个是目标位置一个是Nutstore中远程库
+;; init操作不需要打开两个窗口，远程库自动生成在Nutstore中
 (defun magit-remote-add (remote url)
   "Add the REMOTE and fetch it.
 \('git remote add REMOTE URL')."
   (interactive (list (read-string "Remote name: " "origin")
                      (read-string "Remote url: "
                                   (cond
-                                   (is-lin (concat "~/Nutstore-git/" (buffer-name (window-buffer (next-window)))))
-                                   (is-win (read-string "Remote url: " (concat "file:///cygdrive/c/Users/swint/Nutstore-git/" (buffer-name (window-buffer (next-window))))))))))
+                                   (is-lin (concat "~/Nutstore/" (buffer-name (window-buffer (next-window)))))
+                                   (is-win (read-string "Remote url: " (concat "file:///cygdrive/c/Users/swint/Nutstore/" (buffer-name (window-buffer (next-window))))))))))
   (magit-run-git-async "remote" "add" "-f" remote url))
 ;; 使magit-remote-add默认以另一个窗口的buffer为remote
 ;; ==================初始化远程库和克隆远程库===================
@@ -173,8 +173,9 @@ If the upstream isn't set, then read the remote branch."
                (message "swint-magit-push-current done.")
              (message "swint-magit-push-current failed"))))
        (helm-switch-persp/buffer "*webdav_sync*")))))
-(define-key magit-status-mode-map (kbd "C-c M-,") 'swint-magit-pull-current)
-(define-key magit-status-mode-map (kbd "C-c M-.") 'swint-magit-push-current)
+;; webdav_sync的同步方法不可靠，而且webdav的连接方式很慢。暂停使用。
+;; (define-key magit-status-mode-map (kbd "C-c M-,") 'swint-magit-pull-current)
+;; (define-key magit-status-mode-map (kbd "C-c M-.") 'swint-magit-push-current)
 ;; ==========使用webdav_sync同步文件============
 ;; =================================magit===============================
 (provide 'setup_magit)
