@@ -147,17 +147,16 @@ by changing them to C:/*"
      (lambda (process signal)
        (when (memq (process-status process) '(exit signal))
          (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                             (buffer-substring-no-properties (- (point-max) 6) (point-max))))
-               (swint-remote (nth 0 (magit-pull-read-args t)))
-               (swint-branch (nth 1 (magit-pull-read-args t)))
-               (swint-args (nth 2 (magit-pull-read-args t))))
+                                             (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
            (if (string-equal webdav_sync-process-output "Done.\n")
-               (progn (magit-run-git-async "pull" swint-args
-                                           (and (not (equal swint-remote (magit-get-remote)))
-                                                (not (equal swint-branch (magit-get-remote-branch)))
-                                                (list swint-remote swint-branch)))
+               (progn (with-current-buffer (car (get-buffers-matching-mode 'magit-status-mode))
+                        (magit-run-git-async "pull" (nth 2 (magit-pull-read-args t))
+                                             (and (not (equal (nth 0 (magit-pull-read-args t)) (magit-get-remote)))
+                                                  (not (equal (nth 1 (magit-pull-read-args t)) (magit-get-remote-branch)))
+                                                  (list (nth 0 (magit-pull-read-args t)) (nth 1 (magit-pull-read-args t))))))
                       (message "swint-magit-pull-current done."))
-             (message "swint-magit-pull-current failed"))))))))
+             (message "swint-magit-pull-current failed"))))
+       (helm-switch-persp/buffer "*webdav_sync*")))))
 (defun swint-magit-push-current (branch remote &optional remote-branch args)
   "Push the current branch to its upstream branch.
 If the upstream isn't set, then read the remote branch."
@@ -172,7 +171,8 @@ If the upstream isn't set, then read the remote branch."
                                              (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
            (if (string-equal webdav_sync-process-output "Done.\n")
                (message "swint-magit-push-current done.")
-             (message "swint-magit-push-current failed"))))))))
+             (message "swint-magit-push-current failed"))))
+       (helm-switch-persp/buffer "*webdav_sync*")))))
 (define-key magit-status-mode-map (kbd "C-c M-,") 'swint-magit-pull-current)
 (define-key magit-status-mode-map (kbd "C-c M-.") 'swint-magit-push-current)
 ;; ==========使用webdav_sync同步文件============
