@@ -489,11 +489,37 @@ depending on the last command issued."
 (defun swint-org-mobile-pull ()
   "Operate on multiple PCs"
   (interactive)
-  (insert-file-contents "~/Nutstore-mobileorg/task.org" nil nil nil t)
-  (org-mobile-pull)
-  (org-mobile-push))
-(global-set-key (kbd "C-c M-,") 'swint-org-mobile-pull)
-(global-set-key (kbd "C-c M-.") 'org-mobile-push)
+  (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d ~/Nutstore-mobileorg/")))
+    (set-process-sentinel
+     process
+     (lambda (process signal)
+       (when (memq (process-status process) '(exit signal))
+         (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
+                                             (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+           (if (string-equal webdav_sync-process-output "Done.\n")
+               (with-current-buffer "task.org"
+                 (insert-file-contents "~/Nutstore-mobileorg/task.org" nil nil nil t)
+                 (org-mobile-pull)
+                 (org-mobile-push)
+                 (message "swint-org-mobile-pull done."))
+             (message "swint-org-mobile-pull failed"))))))))
+(defun swint-org-mobile-push ()
+  "Operate on multiple PCs"
+  (interactive)
+  (with-current-buffer "task.org"
+    (org-mobile-push))
+  (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d ~/Nutstore-mobileorg/")))
+    (set-process-sentinel
+     process
+     (lambda (process signal)
+       (when (memq (process-status process) '(exit signal))
+         (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
+                                             (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+           (if (string-equal webdav_sync-process-output "Done.\n")
+               (message "swint-org-mobile-push done.")
+             (message "swint-org-mobile-push failed"))))))))
+(define-key org-mode-map (kbd "C-c M-,") 'swint-org-mobile-pull)
+(define-key org-mode-map (kbd "C-c M-.") 'swint-org-mobile-push)
 ;; =================mobileorg===============
 ;; =======================org输出doc=============================
 ;; 先生成odt文件(需要zip支持)，然后使用libreoffice转化成doc文件

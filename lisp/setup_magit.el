@@ -95,37 +95,37 @@ by changing them to C:/*"
 (eval-after-load "flyspell"
   '(define-key flyspell-mode-map (kbd "C-.") nil))
 (global-set-key (kbd "C-c g") 'magit-status)
-;; 在git add remote和git clone中需要使用cygwin的路径名称 file:///cygdrive/c/Users/swint/
+;; 在git remote add和git clone中需要使用cygwin的路径名称 file:///cygdrive/c/Users/swint/
 ;; 建立的远程仓库remote.git， 初始化时使用git --bare init，直接使用remote.git文件夹作为.git文件夹
 ;; ==================初始化远程库和克隆远程库===================
 (defun magit-clone-remote ()
   (interactive)
   (cond
    (is-lin
-    (shell-command (concat "git clone ~/Nutstore/" (buffer-name (window-buffer (next-window))))))
+    (shell-command (concat "git clone ~/Nutstore-git/" (buffer-name (window-buffer (next-window))))))
    (is-win
-    (shell-command (concat "git clone file:///cygdrive/c/Users/swint/Nutstore/" (buffer-name (window-buffer (next-window))))))))
+    (shell-command (concat "git clone file:///cygdrive/c/Users/swint/Nutstore-git/" (buffer-name (window-buffer (next-window))))))))
 (defun magit-bare-init-remote ()
   (interactive)
   (cond
    (is-lin
-    (shell-command (concat "git --bare init ~/Nutstore/"  (buffer-name) ".git")))
+    (shell-command (concat "git --bare init ~/Nutstore-git/"  (buffer-name) ".git")))
    (is-win
-    (shell-command (concat "git --bare init /cygdrive/c/Users/swint/Nutstore/"  (buffer-name) ".git")))))
+    (shell-command (concat "git --bare init /cygdrive/c/Users/swint/Nutstore-git/"  (buffer-name) ".git")))))
 (global-set-key (kbd "C-c C-x ,") 'magit-clone-remote)
 (global-set-key (kbd "C-c C-x .") 'magit-bare-init-remote)
-;; clone操作需要打开两个窗口一个是目标位置一个是Nutstore中远程库
-;; init操作不需要打开两个窗口，远程库自动生成在Nutstore中
-(defun magit-add-remote (remote url)
+;; clone操作需要打开两个窗口一个是目标位置一个是Nutstore-git中远程库
+;; init操作不需要打开两个窗口，远程库自动生成在Nutstore-git中
+(defun magit-remote-add (remote url)
   "Add the REMOTE and fetch it.
 \('git remote add REMOTE URL')."
   (interactive (list (read-string "Remote name: " "origin")
                      (read-string "Remote url: "
                                   (cond
-                                   (is-lin (concat "~/Nutstore/" (buffer-name (window-buffer (next-window)))))
-                                   (is-win (read-string "Remote url: " (concat "file:///cygdrive/c/Users/swint/Nutstore/" (buffer-name (window-buffer (next-window))))))))))
+                                   (is-lin (concat "~/Nutstore-git/" (buffer-name (window-buffer (next-window)))))
+                                   (is-win (read-string "Remote url: " (concat "file:///cygdrive/c/Users/swint/Nutstore-git/" (buffer-name (window-buffer (next-window))))))))))
   (magit-run-git-async "remote" "add" "-f" remote url))
-;; 使magit-add-remote默认以另一个窗口的buffer为remote
+;; 使magit-remote-add默认以另一个窗口的buffer为remote
 ;; ==================初始化远程库和克隆远程库===================
 (setq magit-last-seen-setup-instructions "1.4.0")
 ;; ==========使用git管理doc文件=============
@@ -137,5 +137,44 @@ by changing them to C:/*"
   (shell-command "git config diff.wordx.textconv docx2txt-git"))
 (define-key magit-status-mode-map (kbd "C-c d") 'swint-magit-diff-doc)
 ;; ==========使用git管理doc文件=============
+;; ==========使用webdav_sync同步文件============
+(defun swint-magit-pull-current (remote branch &optional args)
+  "Fetch and merge into current branch."
+  (interactive (magit-pull-read-args t))
+  (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-git/ -d ~/Nutstore-git/")))
+    (set-process-sentinel
+     process
+     (lambda (process signal)
+       (when (memq (process-status process) '(exit signal))
+         (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
+                                             (buffer-substring-no-properties (- (point-max) 6) (point-max))))
+               (swint-remote (nth 0 (magit-pull-read-args t)))
+               (swint-branch (nth 1 (magit-pull-read-args t)))
+               (swint-args (nth 2 (magit-pull-read-args t))))
+           (if (string-equal webdav_sync-process-output "Done.\n")
+               (progn (magit-run-git-async "pull" swint-args
+                                           (and (not (equal swint-remote (magit-get-remote)))
+                                                (not (equal swint-branch (magit-get-remote-branch)))
+                                                (list swint-remote swint-branch)))
+                      (message "swint-magit-pull-current done."))
+             (message "swint-magit-pull-current failed"))))))))
+(defun swint-magit-push-current (branch remote &optional remote-branch args)
+  "Push the current branch to its upstream branch.
+If the upstream isn't set, then read the remote branch."
+  (interactive (magit-push-read-args t t))
+  (magit-push branch remote remote-branch args)
+  (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-git/ -d ~/Nutstore-git/")))
+    (set-process-sentinel
+     process
+     (lambda (process signal)
+       (when (memq (process-status process) '(exit signal))
+         (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
+                                             (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+           (if (string-equal webdav_sync-process-output "Done.\n")
+               (message "swint-magit-push-current done.")
+             (message "swint-magit-push-current failed"))))))))
+(define-key magit-status-mode-map (kbd "C-c M-,") 'swint-magit-pull-current)
+(define-key magit-status-mode-map (kbd "C-c M-.") 'swint-magit-push-current)
+;; ==========使用webdav_sync同步文件============
 ;; =================================magit===============================
 (provide 'setup_magit)
