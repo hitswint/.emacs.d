@@ -224,5 +224,37 @@
   ;;     (if (file-exists-p file-name)
   ;;      (shell-command (format "\"%s\"" file-name) ))))
   ))
+;; ===================webdav_sync同步文件======================
+(defun swint-dired-webdav_sync-pull ()
+  "Sync files in webdav server to ~/Nutstore-sync."
+  (interactive)
+  (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d ~/Nutstore-sync/")))
+    (set-process-sentinel
+     process
+     (lambda (process signal)
+       (when (memq (process-status process) '(exit signal))
+         (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
+                                             (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+           (if (string-equal webdav_sync-process-output "Done.\n")
+               (message "swint-dired-webdav_sync-pull done.")
+             (message "swint-dired-webdav_sync-pull failed"))))
+       (helm-switch-persp/buffer "*webdav_sync*")))))
+(defun swint-dired-webdav_sync-push ()
+  "Sync files in ~/Nutstore-sync to webdav server."
+  (interactive)
+  (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d ~/Nutstore-sync/")))
+    (set-process-sentinel
+     process
+     (lambda (process signal)
+       (when (memq (process-status process) '(exit signal))
+         (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
+                                             (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+           (if (string-equal webdav_sync-process-output "Done.\n")
+               (message "swint-dired-webdav_sync-push done.")
+             (message "swint-dired-webdav_sync-push failed"))))
+       (helm-switch-persp/buffer "*webdav_sync*")))))
+(define-key dired-mode-map (kbd "C-x M-,") 'swint-dired-webdav_sync-pull)
+(define-key dired-mode-map (kbd "C-x M-.") 'swint-dired-webdav_sync-push)
+;; ===================webdav_sync同步文件======================
 ;;======================dired========================
 (provide 'setup_dired)

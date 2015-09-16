@@ -502,7 +502,8 @@ depending on the last command issued."
                  (org-mobile-pull)
                  (org-mobile-push)
                  (message "swint-org-mobile-pull done."))
-             (message "swint-org-mobile-pull failed"))))))))
+             (message "swint-org-mobile-pull failed"))))
+       (helm-switch-persp/buffer "*webdav_sync*")))))
 (defun swint-org-mobile-push ()
   "Operate on multiple PCs"
   (interactive)
@@ -517,7 +518,8 @@ depending on the last command issued."
                                              (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
            (if (string-equal webdav_sync-process-output "Done.\n")
                (message "swint-org-mobile-push done.")
-             (message "swint-org-mobile-push failed"))))))))
+             (message "swint-org-mobile-push failed"))))
+       (helm-switch-persp/buffer "*webdav_sync*")))))
 (define-key org-mode-map (kbd "C-c M-,") 'swint-org-mobile-pull)
 (define-key org-mode-map (kbd "C-c M-.") 'swint-org-mobile-push)
 ;; =================mobileorg===============
