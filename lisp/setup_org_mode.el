@@ -489,7 +489,9 @@ depending on the last command issued."
 (defun swint-org-mobile-pull ()
   "Operate on multiple PCs"
   (interactive)
-  (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d ~/Nutstore-mobileorg/")))
+  (let ((process (cond
+                  (is-lin (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d ~/Nutstore-mobileorg/"))
+                  (is-win (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=c:/Users/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar c:/Users/swint/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d c:/Users/swint/Nutstore-mobileorg/")))))
     (set-process-sentinel
      process
      (lambda (process signal)
@@ -509,7 +511,9 @@ depending on the last command issued."
   (interactive)
   (with-current-buffer "task.org"
     (org-mobile-push))
-  (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d ~/Nutstore-mobileorg/")))
+  (let ((process (cond
+                  (is-lin (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d ~/Nutstore-mobileorg/"))
+                  (is-win (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=c:/Users/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar c:/Users/swint/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d c:/Users/swint/Nutstore-mobileorg/")))))
     (set-process-sentinel
      process
      (lambda (process signal)

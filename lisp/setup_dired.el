@@ -228,7 +228,9 @@
 (defun swint-dired-webdav_sync-pull ()
   "Sync files in webdav server to ~/Nutstore-sync."
   (interactive)
-  (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d ~/Nutstore-sync/")))
+  (let ((process (cond
+                  (is-lin (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d ~/Nutstore-sync/"))
+                  (is-win (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=c:/Users/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar c:/Users/swint/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d c:/Users/swint/Nutstore-sync/")))))
     (set-process-sentinel
      process
      (lambda (process signal)
@@ -242,7 +244,9 @@
 (defun swint-dired-webdav_sync-push ()
   "Sync files in ~/Nutstore-sync to webdav server."
   (interactive)
-  (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d ~/Nutstore-sync/")))
+  (let ((process (cond
+                  (is-lin (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d ~/Nutstore-sync/"))
+                  (is-win (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=c:/Users/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar c:/Users/swint/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d c:/Users/swint/Nutstore-sync/")))))
     (set-process-sentinel
      process
      (lambda (process signal)
