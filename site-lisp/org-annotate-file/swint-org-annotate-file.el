@@ -57,8 +57,14 @@
 
 (require 'org)
 
-(defvar swint-org-annotate-file-storage-file "~/.org-annotate-file.org"
-  "File in which to keep annotations.")
+;; (defvar swint-org-annotate-file-storage-file "~/.org-annotate-file.org"
+;;   "File in which to keep annotations.")
+(defun swint-org-annotate-file-storage-file ()
+  "Modified from var to function"
+  (concat "~/org/annotated/annotated-["
+          (replace-regexp-in-string
+           "/" "_" (substring-no-properties (abbreviate-file-name default-directory) 1 -1))
+          "].org"))
 
 (defvar swint-org-annotate-file-add-search nil
   "If non-nil then add a link as a second level to the actual
@@ -109,7 +115,7 @@ show the relevant section"
                        (concat "file:" filename "::" line)
                        (swint-org-annotate-file-prettyfy-desc line))))
     (swint-show-annotations filename link)
-    (with-current-buffer (find-file swint-org-annotate-file-storage-file)
+    (with-current-buffer (find-file (swint-org-annotate-file-storage-file))
       ;; deal with a '::' search if need be
       (when swint-org-annotate-file-add-search
         (unless (search-forward-regexp
@@ -159,7 +165,7 @@ clobbering sucessive entries."
     (swint-show-annotations filename link)))
 
 (defun swint-show-annotations (filename link)
-  (with-current-buffer (find-file swint-org-annotate-file-storage-file)
+  (with-current-buffer (find-file (swint-org-annotate-file-storage-file))
     (unless (org-mode)
       (org-mode))
     (widen)                             ;交换上下两句，解决无法显示已建注释

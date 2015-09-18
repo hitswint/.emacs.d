@@ -14,7 +14,7 @@
 
 (defun dired-k--highlight ()
   (save-excursion
-    (if (and (file-exists-p swint-org-annotate-file-storage-file)
+    (if (and (file-exists-p (swint-org-annotate-file-storage-file))
              (not (equal (buffer-name) "org"))) ;org文件夹下不显示annotated文件
         (let ((curbuf (current-buffer))
               (stats (dired-k--parse-annotated-status)))
@@ -25,8 +25,9 @@
   (with-current-buffer buf
     (let ((annotated-file-list (hash-table-keys stats)))
       (loop for annotated-file in annotated-file-list
-            do (progn (dired-goto-file (concat (expand-file-name default-directory) annotated-file))
-                      (dired-k--highlight-line annotated-file stats))))))
+            do (if (file-exists-p annotated-file)
+                   (progn (dired-goto-file (concat (expand-file-name default-directory) annotated-file))
+                          (dired-k--highlight-line annotated-file stats)))))))
 
 (defun dired-k--highlight-line (file stats)
   (let ((stat (gethash file stats 'not-annotated)))
@@ -49,9 +50,9 @@
     ))
 
 (defun dired-k--parse-annotated-status ()
-  (if (file-exists-p swint-org-annotate-file-storage-file)
+  (if (file-exists-p (swint-org-annotate-file-storage-file))
       (with-temp-buffer
-        (insert-file-contents swint-org-annotate-file-storage-file)
+        (insert-file-contents (swint-org-annotate-file-storage-file))
         (goto-char (point-min))
         (let ((files-status (make-hash-table :test 'equal))
               (status 'annotated))

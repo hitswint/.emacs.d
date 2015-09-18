@@ -66,13 +66,12 @@
 ;; ======================org标注工具=============================
 ;; 原有org-annotate-file用于全局注释
 (require 'org-annotate-file)
-(setq org-annotate-file-storage-file "~/org/annotated.org")
+(setq org-annotate-file-storage-file "~/org/annotated/annotated.org")
 (global-set-key (kbd "C-x C-l") 'org-annotate-file)
 (define-key dired-mode-map (kbd "C-x C-l") '(lambda () (interactive)
                                               (org-annotate-file (abbreviate-file-name (dired-get-filename)))))
 ;; 新建swint-org-annotate-file.el用于局部注释
 (require 'swint-org-annotate-file)
-(setq swint-org-annotate-file-storage-file "./annotated.org")
 (global-set-key (kbd "C-c C-l") 'swint-org-annotate-file)
 (define-key dired-mode-map (kbd "C-c C-l") '(lambda () (interactive)
                                               (swint-org-annotate-file (abbreviate-file-name (dired-get-filename)))))
@@ -273,7 +272,7 @@ depending on the last command issued."
 ;; ==============org中输入公式======================
 ;; ==============截图================
 ;; 只截图，而不在文件中插入
-;; screenshot-local截图到./pic文件夹中，screenshot截图到home/swint/org/annotated文件夹中。
+;; screenshot-local截图到./pic文件夹中，screenshot截图到home/swint/org/pic文件夹中。
 (defun my-screenshot ()
   "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
@@ -283,7 +282,7 @@ depending on the last command issued."
    (is-lin
     (setq filename
           (concat (make-temp-name
-                   (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+                   (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
                            "_"
                            (format-time-string "%Y%m%d_"))) ".png"))
     (suspend-frame)
@@ -293,10 +292,10 @@ depending on the last command issued."
     (setq filename
           ;; 注释掉原来make-temp-name的方法，因为在win上对于某些prefix无法生成随机名字
           ;; (concat (make-temp-name
-          ;;          (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+          ;;          (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
           ;;                  "_"
           ;;                  (format-time-string "%Y%m%d_"))) ".png")
-          (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+          (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
                   "_"
                   (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
     ;; turn into path in windows type
@@ -358,7 +357,7 @@ depending on the last command issued."
    (is-lin
     (setq filename
           (concat (make-temp-name
-                   (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+                   (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
                            "_"
                            (format-time-string "%Y%m%d_"))) ".png"))
     (suspend-frame)
@@ -367,7 +366,7 @@ depending on the last command issued."
    (is-win
     (setq filename
           ;; 在org文件中显示图片只需要/Users/...，而不需要前面的c:
-          (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+          (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
                   "_"
                   (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
     ;; turn into path in windows type

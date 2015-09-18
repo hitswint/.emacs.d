@@ -122,7 +122,7 @@
    (is-lin
     (setq filename
           (concat (make-temp-name
-                   (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+                   (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
                            "_"
                            (format-time-string "%Y%m%d_"))) ".png"))
     (suspend-frame)
@@ -131,7 +131,7 @@
    (is-win
     ;; turn into path in windows type
     (setq filename
-          (concat (getenv "HOME") "/org/annotated/" (file-name-base (buffer-name))
+          (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
                   "_"
                   (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
     (setq windows-filename
