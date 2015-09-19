@@ -1,4 +1,4 @@
-;; dired-x-annotated.el --- Display annotated files with mark
+;; dired-x-annotated.el --- Display annotated files with mark.
 (defface dired-k-annotated
   '((t (:foreground "red" :weight bold)))
   "Face of modified file in git repository"

@@ -77,6 +77,8 @@
                                               (swint-org-annotate-file (abbreviate-file-name (dired-get-filename)))))
 ;; Display annotated files with mark
 (require 'dired-x-annotated)
+;; Sync annotated status as operating.
+(require 'dired-sync-annotated)
 ;; ======================org标注工具=============================
 ;; ==============显示两周的agenda==================
 (setq org-agenda-span 14)
