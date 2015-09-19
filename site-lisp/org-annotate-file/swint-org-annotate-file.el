@@ -63,7 +63,7 @@
   "Modified from var to function"
   (concat "~/org/annotated/annotated-["
           (replace-regexp-in-string
-           "/" "_" (substring-no-properties (abbreviate-file-name default-directory) 1 -1))
+           "/" "_" (substring-no-properties (abbreviate-file-name default-directory) 1))
           "].org"))
 
 (defvar swint-org-annotate-file-add-search nil

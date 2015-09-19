@@ -16,16 +16,16 @@
          (directory-files "~/org/annotated/" t
                           (concat "annotated-\\["
                                   (replace-regexp-in-string
-                                   "/" "_" (substring-no-properties (abbreviate-file-name from) 1))))))
+                                   "/" "_" (substring-no-properties (abbreviate-file-name from) 1)) "_"))))
     (cond
      ((member (file-name-nondirectory from) annotated-file-list)
       (let ((annotation-refile-from (concat "~/org/annotated/annotated-["
                                             (replace-regexp-in-string
-                                             "/" "_" (substring-no-properties (abbreviate-file-name (file-name-directory from)) 1 -1))
+                                             "/" "_" (substring-no-properties (abbreviate-file-name (file-name-directory from)) 1))
                                             "].org"))
             (annotation-refile-to (concat "~/org/annotated/annotated-["
                                           (replace-regexp-in-string
-                                           "/" "_" (substring-no-properties (abbreviate-file-name (file-name-directory to)) 1 -1))
+                                           "/" "_" (substring-no-properties (abbreviate-file-name (file-name-directory to)) 1))
                                           "].org")))
         (with-current-buffer (find-file annotation-refile-from)
           (widen)
@@ -50,10 +50,10 @@
                           (replace-regexp-in-string
                            (concat "annotated-\\["
                                    (replace-regexp-in-string
-                                    "/" "_" (substring-no-properties (abbreviate-file-name from) 1)))
+                                    "/" "_" (substring-no-properties (abbreviate-file-name from) 1)) "_")
                            (concat "annotated-["
                                    (replace-regexp-in-string
-                                    "/" "_" (substring-no-properties (abbreviate-file-name to) 1)))
+                                    "/" "_" (substring-no-properties (abbreviate-file-name to) 1)) "_")
                            annotation-storage-file)
                           ))))))
 
@@ -150,7 +150,7 @@
                     (directory-files "~/org/annotated/" t
                                      (concat "annotated-\\["
                                              (replace-regexp-in-string
-                                              "/" "_" (substring-no-properties (abbreviate-file-name (car file-renamed)) 1))))))
+                                              "/" "_" (substring-no-properties (abbreviate-file-name (car file-renamed)) 1)) "_"))))
 
                (cond
                 ((member (file-name-nondirectory file-renamed-old) annotated-file-list)
@@ -170,10 +170,10 @@
                                        (replace-regexp-in-string
                                         (concat "annotated-\\["
                                                 (replace-regexp-in-string
-                                                 "/" "_" (substring-no-properties (abbreviate-file-name file-renamed-old) 1)))
+                                                 "/" "_" (substring-no-properties (abbreviate-file-name file-renamed-old) 1)) "_")
                                         (concat "annotated-["
                                                 (replace-regexp-in-string
-                                                 "/" "_" (substring-no-properties (abbreviate-file-name file-renamed-new) 1)))
+                                                 "/" "_" (substring-no-properties (abbreviate-file-name file-renamed-new) 1)) "_")
                                         annotation-storage-file)
                                        ))))))))
 
@@ -202,7 +202,7 @@ non-empty directories is allowed."
                                  (directory-files "~/org/annotated/" t
                                                   (concat "annotated-\\["
                                                           (replace-regexp-in-string
-                                                           "/" "_" (substring-no-properties (abbreviate-file-name (car file-to-be-deleted)) 1))))))
+                                                           "/" "_" (substring-no-properties (abbreviate-file-name (car file-to-be-deleted)) 1)) "_"))))
 
                             (cond
                              ((member (file-name-nondirectory file-being-deleted) annotated-file-list)
