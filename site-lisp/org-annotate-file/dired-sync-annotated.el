@@ -40,7 +40,9 @@
           (replace-string
            (org-make-link-string (concat "file:" (file-name-nondirectory from)))
            (org-make-link-string (concat "file:" (file-name-nondirectory to))))
-          (save-buffer)
+          (if is-win
+              (save-buffer-with-dos2unix)
+            (save-buffer))
           (kill-buffer))))
      (annotation-storage-files
       (loop for annotation-storage-file in annotation-storage-files
@@ -158,7 +160,9 @@
                    (replace-string
                     (org-make-link-string (concat "file:" (file-name-nondirectory file-renamed-old)))
                     (org-make-link-string (concat "file:" (file-name-nondirectory file-renamed-new))))
-                   (save-buffer)
+                   (if is-win
+                       (save-buffer-with-dos2unix)
+                     (save-buffer))
                    (kill-buffer)))
                 (annotation-storage-files
                  (loop for annotation-storage-file in annotation-storage-files
@@ -207,7 +211,9 @@ non-empty directories is allowed."
                                        (goto-char (point-min))
                                        (search-forward (org-make-link-string (concat "file:" (file-name-nondirectory file-being-deleted))) nil t)
                                        (org-delete-entity-at-point)
-                                       (save-buffer)
+                                       (if is-win
+                                           (save-buffer-with-dos2unix)
+                                         (save-buffer))
                                        (kill-buffer))
                                      (unless (hash-table-keys (dired-k--parse-annotated-status))
                                        (delete-file (swint-org-annotate-file-storage-file)))))
