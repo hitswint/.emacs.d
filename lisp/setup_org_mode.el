@@ -31,8 +31,8 @@
              (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
              (define-key org-mode-map (kbd "C-c C-b") 'org-beamer-select-environment)
              (define-key org-mode-map (kbd "C-c C-v") 'swint-org-open-export-pdf)
-             (define-key org-mode-map (kbd "C-c i") 'my-org-open-at-point)
-             (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (org-open-at-point t nil)))
+             (define-key org-mode-map (kbd "C-c i") 'org-open-at-point-with-apps)
+             (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-org-open-at-point t)))
              (define-key org-mode-map (kbd "C-c C-x C-p") 'org-preview-latex-fragment)
              (define-key org-mode-map (kbd "C-c C-i") nil)
              (define-key org-mode-map (kbd "C-c C-o") nil)
@@ -418,9 +418,22 @@ depending on the last command issued."
 ;; org中打开和关闭图片显示(org-display-inline-images)和(org-remove-inline-images)，可以使用(org-toggle-inline-images)快捷键为C-c C-x C-v。
 ;; =================org插入截图====================
 ;; =================org中使用外部程序打开文件=================
+(defun swint-org-open-at-point (&optional in-emacs)
+  "Open annotated file if annotation storage file exists."
+  (interactive)
+  (let* ((annotated-file-link (org-get-heading))
+         (annotated-file (concat "~"
+                                 (if (string< "annotated-[" (file-name-nondirectory (buffer-file-name)))
+                                     (replace-regexp-in-string
+                                      "_" "/" (substring-no-properties (file-name-nondirectory (buffer-file-name)) 11 -5)))
+                                 (car (last (split-string (substring-no-properties annotated-file-link nil -2) "\\[file:") 1)))))
+    (if (and (org-at-heading-p)
+             (file-exists-p annotated-file))
+        (org-open-file annotated-file in-emacs)
+      (org-open-at-point in-emacs))))
 (cond
  (is-lin
-  (defun my-org-open-at-point ()
+  (defun org-open-at-point-with-apps ()
     (interactive)
     (let ((org-file-apps '(("\\.pdf\\'" . "llpp %s")
                            ("\\.djvu\\'" . "llpp %s")
@@ -457,13 +470,13 @@ depending on the last command issued."
                            ("\\.html\\'" . "firefox %s")
                            ("\\.htm\\'" . "firefox %s")
                            )))
-      (org-open-at-point)
+      (swint-org-open-at-point)
       )))
  (is-win
-  (defun my-org-open-at-point ()
+  (defun org-open-at-point-with-apps ()
     (interactive)
     (let (org-file-apps w32-browser)
-      (org-open-at-point)
+      (swint-org-open-at-point)
       ))))
 ;; =================org中使用外部程序打开文件=================
 ;; =================mobileorg===============

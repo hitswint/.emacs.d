@@ -50,7 +50,7 @@
   (dbus-unregister-object dbus-object-start-scan)
   (dbus-unregister-object dbus-object-connect))
 (add-hook 'wicd-mode-hook 'dbus-register-objects-for-wicd-mode)
-(global-set-key (kbd "C-c w") 'wicd)
+(global-set-key (kbd "C-M-$") 'wicd)
 (define-key wicd-mode-map (kbd "q") 'quit-wicd-mode)
 ;; ================wicd-mode=================
 (provide 'setup_wicd)
