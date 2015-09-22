@@ -225,7 +225,7 @@
   ;;      (shell-command (format "\"%s\"" file-name) ))))
   ))
 ;; ===================webdav_sync同步文件======================
-(defun swint-dired-webdav_sync-pull ()
+(defun swint-webdav-sync-down ()
   "Sync files in webdav server to ~/Nutstore-sync."
   (interactive)
   (let ((process (cond
@@ -238,10 +238,10 @@
          (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
                                              (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
            (if (string-equal webdav_sync-process-output "Done.\n")
-               (message "swint-dired-webdav_sync-pull done.")
-             (message "swint-dired-webdav_sync-pull failed"))))
+               (message "swint-webdav-sync-down done.")
+             (message "swint-webdav-sync-down failed"))))
        (helm-switch-persp/buffer "*webdav_sync*")))))
-(defun swint-dired-webdav_sync-push ()
+(defun swint-webdav-sync-up ()
   "Sync files in ~/Nutstore-sync to webdav server."
   (interactive)
   (let ((process (cond
@@ -254,11 +254,40 @@
          (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
                                              (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
            (if (string-equal webdav_sync-process-output "Done.\n")
-               (message "swint-dired-webdav_sync-push done.")
-             (message "swint-dired-webdav_sync-push failed"))))
+               (message "swint-webdav-sync-up done.")
+             (message "swint-webdav-sync-up failed"))))
        (helm-switch-persp/buffer "*webdav_sync*")))))
-(define-key dired-mode-map (kbd "C-x M-,") 'swint-dired-webdav_sync-pull)
-(define-key dired-mode-map (kbd "C-x M-.") 'swint-dired-webdav_sync-push)
+(defun swint-webdav-sync-bi ()
+  "Sync files in ~/Nutstore-sync to webdav server."
+  (interactive)
+  (let ((process (cond
+                  (is-lin (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -bi -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d ~/Nutstore-sync/"))
+                  (is-win (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=c:/Users/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar c:/Users/swint/.webdav_sync/webdav_sync1_1_4.jar -r -bi -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d c:/Users/swint/Nutstore-sync/")))))
+    (set-process-sentinel
+     process
+     (lambda (process signal)
+       (when (memq (process-status process) '(exit signal))
+         (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
+                                             (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+           (if (string-equal webdav_sync-process-output "Done.\n")
+               (message "swint-webdav-sync-bi done.")
+             (message "swint-webdav-sync-bi failed"))))
+       (helm-switch-persp/buffer "*webdav_sync*")))))
+(global-set-key (kbd "C-x M-,") 'swint-webdav-sync-down)
+(global-set-key (kbd "C-x M-.") 'swint-webdav-sync-up)
+(global-set-key (kbd "C-x M-/") 'swint-webdav-sync-bi)
 ;; ===================webdav_sync同步文件======================
+;; ===================unison====================
+(defun swint-unison-sync-backups ()
+  "Sync files in ~/Nutstore-sync to webdav server."
+  (interactive)
+  (let ((process (start-process-shell-command "unison" "*unison*" "unison Nutstore-backups")))
+    (set-process-sentinel
+     process
+     (lambda (process signal)
+       (when (memq (process-status process) '(exit signal))
+         (message "swint-unison-sync-backups done."))
+       (helm-switch-persp/buffer "*unison*")))))
+(global-set-key (kbd "C-c M-/") 'swint-unison-sync-backups)
 ;;======================dired========================
 (provide 'setup_dired)
