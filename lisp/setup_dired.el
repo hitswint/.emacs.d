@@ -281,7 +281,9 @@
 (defun swint-unison-sync-backups ()
   "Sync files in ~/Nutstore-sync to webdav server."
   (interactive)
-  (let ((process (start-process-shell-command "unison" "*unison*" "unison Nutstore-backups")))
+  (let ((process (cond
+                  (is-lin (start-process-shell-command "unison" "*unison*" "unison Nutstore-backups"))
+                  (is-win (start-process-shell-command "unison" "*unison*" "c:/cygwin64/bin/unison-2.40.exe Nutstore-backups")))))
     (set-process-sentinel
      process
      (lambda (process signal)
