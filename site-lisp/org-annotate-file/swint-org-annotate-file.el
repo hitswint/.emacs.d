@@ -61,10 +61,10 @@
 ;;   "File in which to keep annotations.")
 (defun swint-org-annotate-file-storage-file ()
   "Modified from var to function"
-  (concat "~/org/annotated/annotated-["
+  (concat "~/org/annotated/annotated-{"
           (replace-regexp-in-string
            "/" "_" (substring-no-properties (abbreviate-file-name default-directory) 1))
-          "].org"))
+          "}.org"))
 
 (defvar swint-org-annotate-file-add-search nil
   "If non-nil then add a link as a second level to the actual

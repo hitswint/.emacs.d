@@ -423,7 +423,7 @@ depending on the last command issued."
   (interactive)
   (let* ((annotated-file-link (org-get-heading))
          (annotated-file (concat "~"
-                                 (if (string-prefix-p "annotated-[" (file-name-nondirectory (buffer-file-name)))
+                                 (if (string-prefix-p "annotated-{" (file-name-nondirectory (buffer-file-name)))
                                      (replace-regexp-in-string
                                       "_" "/" (substring-no-properties (file-name-nondirectory (buffer-file-name)) 11 -5)))
                                  (car (last (split-string (substring-no-properties annotated-file-link nil -2) "\\[file:") 1)))))
