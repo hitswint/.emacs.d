@@ -14,19 +14,19 @@
                                  (hash-table-keys (dired-k--parse-annotated-status))))
         (annotation-storage-files
          (directory-files "~/org/annotated/" t
-                          (concat "annotated-{"
+                          (concat "annotated-("
                                   (replace-regexp-in-string
                                    "/" "_" (substring-no-properties (abbreviate-file-name from) 1)) "_"))))
     (cond
      ((member (file-name-nondirectory from) annotated-file-list)
-      (let ((annotation-refile-from (concat "~/org/annotated/annotated-{"
+      (let ((annotation-refile-from (concat "~/org/annotated/annotated-("
                                             (replace-regexp-in-string
                                              "/" "_" (substring-no-properties (abbreviate-file-name (file-name-directory from)) 1))
-                                            "}.org"))
-            (annotation-refile-to (concat "~/org/annotated/annotated-{"
+                                            ").org"))
+            (annotation-refile-to (concat "~/org/annotated/annotated-("
                                           (replace-regexp-in-string
                                            "/" "_" (substring-no-properties (abbreviate-file-name (file-name-directory to)) 1))
-                                          "}.org")))
+                                          ").org")))
         (with-current-buffer (find-file annotation-refile-from)
           (widen)
           (goto-char (point-min))
@@ -48,10 +48,10 @@
       (loop for annotation-storage-file in annotation-storage-files
             do (copy-file annotation-storage-file
                           (replace-regexp-in-string
-                           (concat "annotated-{"
+                           (concat "annotated-("
                                    (replace-regexp-in-string
                                     "/" "_" (substring-no-properties (abbreviate-file-name from) 1)) "_")
-                           (concat "annotated-{"
+                           (concat "annotated-("
                                    (replace-regexp-in-string
                                     "/" "_" (substring-no-properties (abbreviate-file-name to) 1)) "_")
                            annotation-storage-file)
@@ -148,7 +148,7 @@
                    (file-renamed-new (cdr file-renamed))
                    (annotation-storage-files
                     (directory-files "~/org/annotated/" t
-                                     (concat "annotated-{"
+                                     (concat "annotated-("
                                              (replace-regexp-in-string
                                               "/" "_" (substring-no-properties (abbreviate-file-name (car file-renamed)) 1)) "_"))))
 
@@ -168,10 +168,10 @@
                  (loop for annotation-storage-file in annotation-storage-files
                        do (rename-file annotation-storage-file
                                        (replace-regexp-in-string
-                                        (concat "annotated-{"
+                                        (concat "annotated-("
                                                 (replace-regexp-in-string
                                                  "/" "_" (substring-no-properties (abbreviate-file-name file-renamed-old) 1)) "_")
-                                        (concat "annotated-{"
+                                        (concat "annotated-("
                                                 (replace-regexp-in-string
                                                  "/" "_" (substring-no-properties (abbreviate-file-name file-renamed-new) 1)) "_")
                                         annotation-storage-file)
@@ -200,7 +200,7 @@ non-empty directories is allowed."
                        do (let ((file-being-deleted (car file-to-be-deleted))
                                 (annotation-storage-files
                                  (directory-files "~/org/annotated/" t
-                                                  (concat "annotated-{"
+                                                  (concat "annotated-("
                                                           (replace-regexp-in-string
                                                            "/" "_" (substring-no-properties (abbreviate-file-name (car file-to-be-deleted)) 1)) "_"))))
 
