@@ -12,11 +12,8 @@ by changing them to C:/*"
     (when (string-match "^/cygdrive/\\([a-z]\\)/\\(.*\\)" filename)
       (setq filename (concat (match-string 1 filename) ":/"
                              (match-string 2 filename)))))
-  ;; 解决win上git问题
+  ;; 解决win上git问题，但推送时，会出现"Not inside a Git repository"的错误。
   ;; 1. magit-toplevel会导致错误路径(c:/cygdrive/c/...)
-  ;; 2. ^{commint}会导致magit-insert-head-header错误
-  ;; 3. 上述两个问题解决后，可以打卡magit-status，可以拉取。
-  ;; 但推送时，会出现"Not inside a Git repository"的错误。
   (defun magit-toplevel (&optional file strict)
     (magit--with-safe-default-directory file
       (-if-let (cdup (magit-rev-parse-safe "--show-cdup"))
@@ -27,19 +24,21 @@ by changing them to C:/*"
             (if (magit-bare-repo-p)
                 gitdir
               (file-name-directory (directory-file-name gitdir))))))))
-  (defun magit-process-git-arguments (args)
-    (setq args (-flatten args))
-    (when (and (eq system-type 'windows-nt)
-               (let ((exec-path
-                      (list (file-name-directory magit-git-executable))))
-                 (executable-find "cygpath.exe")))
-      (setq args (--map (let* ((it (replace-regexp-in-string
-                                    "{\\([0-9]+\\)}" "\\\\{\\1\\\\}" it))
-                               (it (replace-regexp-in-string
-                                    "\\^{commit}" "^\\\\{commit\\\\}" it)))
-                          it)
-                        args)))
-    (append magit-git-global-arguments args)))
+  ;; 2. ^{commint}会导致magit-insert-head-header错误，官方已解决。
+  ;; (defun magit-process-git-arguments (args)
+  ;;   (setq args (-flatten args))
+  ;;   (when (and (eq system-type 'windows-nt)
+  ;;              (let ((exec-path
+  ;;                     (list (file-name-directory magit-git-executable))))
+  ;;                (executable-find "cygpath.exe")))
+  ;;     (setq args (--map (let* ((it (replace-regexp-in-string
+  ;;                                   "{\\([0-9]+\\)}" "\\\\{\\1\\\\}" it))
+  ;;                              (it (replace-regexp-in-string
+  ;;                                   "\\^{commit}" "^\\\\{commit\\\\}" it)))
+  ;;                         it)
+  ;;                       args)))
+  ;;   (append magit-git-global-arguments args))
+  )
 ;; Subtler highlight
 (set-face-background 'diff-file-header "#121212")
 (set-face-foreground 'diff-context "#666666")
