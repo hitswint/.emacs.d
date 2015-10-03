@@ -1,6 +1,4 @@
 ;; ================smart-mode-line===================
-(rich-minority-mode 1)
-(require 'smart-mode-line)
 ;; 设定theme为dark/light/respectful/automatic
 (sml/setup)
 (sml/apply-theme nil)
