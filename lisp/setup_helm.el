@@ -245,19 +245,16 @@ See `ido-make-buffer-list' for more infos."
 (global-set-key (kbd "C-'") 'swint-helm-bookmarks)
 ;; ==================helm-bookmarks====================
 ;; ==================helm-find-file====================
-(defcustom swint-helm-ff-list
-  '(helm-source-files-in-current-dir
-    ;; helm-source-locate
-    )
-  "Default sources list used in `swint-helm-ff'."
-  :type '(repeat (choice symbol))
-  :group 'helm-files)
-(defun swint-helm-ff ()
-  "Preconfigured `swint-helm-ff' for opening files."
+(defun swint-helm-find-files ()
+  "Preconfigured `helm' for opening files.
+Run all sources defined in `helm-for-files-preferred-list'."
   (interactive)
-  (let ((helm-ff-transformer-show-only-basename t))
-    (helm-other-buffer swint-helm-ff-list "*helm find file-swint*")))
-(global-set-key (kbd "C-x C-f") 'swint-helm-ff)
+  (helm--maybe-build-source 'helm-source-files-in-current-dir
+    'helm-build-files-in-current-dir-source)
+  (helm :sources '(helm-source-files-in-current-dir)
+        :ff-transformer-show-only-basename t
+        :buffer "*helm find files-swint*"))
+(global-set-key (kbd "C-x C-f") 'swint-helm-find-files)
 ;; ==================helm-find-file====================
 ;; ================在别的helm-buffer中运行helm命令==============
 (defun swint-helm-dired-buffers-after-quit ()
@@ -272,10 +269,10 @@ See `ido-make-buffer-list' for more infos."
   "List swint-helm-bookmarks."
   (interactive)
   (helm-run-after-quit #'(lambda () (swint-helm-bookmarks))))
-(defun swint-helm-ff-after-quit ()
-  "List swint-helm-ff."
+(defun swint-helm-find-files-after-quit ()
+  "List swint-helm-find-files."
   (interactive)
-  (helm-run-after-quit #'(lambda () (swint-helm-ff))))
+  (helm-run-after-quit #'(lambda () (swint-helm-find-files))))
 ;; Fix bugs of helm-quit-and-find-file on dired buffer
 (defun swint-helm-quit-and-find-file ()
   "Drop into `helm-find-files' from `helm'.
@@ -336,8 +333,8 @@ from its directory."
 (define-key helm-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
 (define-key helm-map (kbd "C-'") 'swint-helm-bookmarks-after-quit)
 (define-key helm-map (kbd "C-,") 'swint-helm-mini-after-quit)
-(define-key helm-find-files-map (kbd "C-x C-f") 'swint-helm-ff-after-quit)
-(define-key helm-map (kbd "C-x C-f") 'swint-helm-ff-after-quit)
+(define-key helm-find-files-map (kbd "C-x C-f") 'swint-helm-find-files-after-quit)
+(define-key helm-map (kbd "C-x C-f") 'swint-helm-find-files-after-quit)
 (define-key helm-map (kbd "C-/") 'swint-helm-quit-and-find-file)
 ;; ================在别的helm-buffer中运行helm命令==============
 (global-set-key (kbd "M-x") 'helm-M-x)
@@ -423,7 +420,7 @@ from its directory."
                                            candidate))
       (pinyin-initials-string-match (funcall fun pattern) candidate))))
 ;; 使helm-find-files/recentf支持中文拼音首字母。
-;; 会破坏helm-find-files的搜索方式，匹配过多，另建swint-helm-ff。
+;; 会破坏helm-find-files的搜索方式，匹配过多，另建swint-helm-find-files。
 ;; 直接输入xx，会产生过多的匹配结果；xx后面加空格，以xx为起始字母；xx前面加空格，搜索结果正常。
 (cl-defun helm-mm-3-match (str &optional (pattern helm-pattern))
   "Check if PATTERN match STR.
