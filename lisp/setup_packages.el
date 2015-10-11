@@ -294,13 +294,28 @@
   )
 ;; ===================pdf-tools=================
 ;; ==================doc-view-mode================
-;; doc文件默认使用soffice转换，需要安装libreoffice；也可以使用unoconv转换。win上失败。
-;; pdf文件使用gs转换成png，需要安装gs、dvipdf(随gs安装)和pdftotext(随xpdf安装)。win下看pdf时文件名不能包含中文。
-;; 默认的缓存文件夹为/tmp，使用doc-view-clear-cache清理。
+;; lin上使用soffice转换；win上使用unoconv转换。
+;; pdf文件使用gs转换成png。
+;; win下使用doc-view查看office和pdf文件时，文件名都不可以包含中文字符。
+;; 默认的缓存文件夹分别为/tmp和c:/Users/swint/AppData/Local/Temp，使用doc-view-clear-cache清理。
 (setq doc-view-continuous t)
 (define-key doc-view-mode-map (kbd "M-v") 'doc-view-scroll-down-or-previous-page)
 (define-key doc-view-mode-map (kbd "C-v") 'doc-view-scroll-up-or-next-page)
 (define-key doc-view-mode-map (kbd "C-p") '(lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
 (define-key doc-view-mode-map (kbd "C-n") '(lambda () (interactive) (doc-view-next-line-or-next-page 3)))
+(when is-win
+  ;; 使用libreoffice自带python.exe运行unoconv脚本。
+  (setq doc-view-odf->pdf-converter-program "c:/Program Files (x86)/LibreOffice 5/program/python.exe")
+  ;; 指定使用unoconv方法转换。
+  (setq doc-view-odf->pdf-converter-function 'doc-view-odf->pdf-converter-unoconv)
+  (defun doc-view-odf->pdf-converter-unoconv (odf callback)
+    "Convert ODF to PDF asynchronously and call CALLBACK when finished.
+The converted PDF is put into the current cache directory, and it
+is named like ODF with the extension turned to pdf."
+    (doc-view-start-process "odf->pdf" doc-view-odf->pdf-converter-program
+                            (list "c:/Program Files (x86)/unoconv/unoconv" "-f" "pdf" "-o"
+                                  ;; 修改下句，原函数会生成无base name文件。
+                                  (concat (doc-view--current-cache-dir) (file-name-base odf) ".pdf") odf)
+                            callback)))
 ;; ==================doc-view-mode================
 (provide 'setup_packages)
