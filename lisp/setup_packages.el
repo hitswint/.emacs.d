@@ -293,4 +293,14 @@
   ;; (add-hook 'persp-activated-hook 'swint-pdf-history-goto-beginning)
   )
 ;; ===================pdf-tools=================
+;; ==================doc-view-mode================
+;; doc文件默认使用soffice转换，需要安装libreoffice；也可以使用unoconv转换。win上失败。
+;; pdf文件使用gs转换成png，需要安装gs、dvipdf(随gs安装)和pdftotext(随xpdf安装)。win下看pdf时文件名不能包含中文。
+;; 默认的缓存文件夹为/tmp，使用doc-view-clear-cache清理。
+(setq doc-view-continuous t)
+(define-key doc-view-mode-map (kbd "M-v") 'doc-view-scroll-down-or-previous-page)
+(define-key doc-view-mode-map (kbd "C-v") 'doc-view-scroll-up-or-next-page)
+(define-key doc-view-mode-map (kbd "C-p") '(lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
+(define-key doc-view-mode-map (kbd "C-n") '(lambda () (interactive) (doc-view-next-line-or-next-page 3)))
+;; ==================doc-view-mode================
 (provide 'setup_packages)
