@@ -318,4 +318,28 @@ is named like ODF with the extension turned to pdf."
                                   (concat (doc-view--current-cache-dir) (file-name-base odf) ".pdf") odf)
                             callback)))
 ;; ==================doc-view-mode================
+;; =================total commander===============
+(when is-win
+  ;;===========使用tc打开当前文件夹===========
+  (global-set-key (kbd "C-x j") '(lambda ()
+                                   (interactive)
+                                   (w32-shell-execute
+                                    "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T \" " (expand-file-name default-directory)))))
+  ;;========使用lister直接浏览文件========
+  (define-key dired-mode-map (kbd "C-M-j") '(lambda ()
+                                              (interactive)
+                                              (w32-shell-execute
+                                               "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T /S=L \" " (dired-get-filename)))))
+  (defun helm-open-file-with-lister (_candidate)
+    "Opens a file with lister of total commander."
+    (w32-shell-execute
+     "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T /S=L \" " (expand-file-name _candidate))))
+  (defun helm-ff-run-open-file-with-lister ()
+    "Run Rename file action from `helm-source-find-files'."
+    (interactive)
+    (with-helm-alive-p
+      (helm-exit-and-execute-action 'helm-open-file-with-lister)))
+  (define-key helm-find-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
+  (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister))
+;; =================total commander===============
 (provide 'setup_packages)
