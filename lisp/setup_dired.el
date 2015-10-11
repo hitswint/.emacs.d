@@ -206,6 +206,11 @@
         (progn (w32-shell-execute "open" "word")
                (sit-for 5)))
     (w32-browser-open))
+  ;;==============使用total commander打开当前文件夹=================
+  (global-set-key (kbd "C-x j") '(lambda ()
+                                   (interactive)
+                                   (w32-shell-execute
+                                    "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T \" " (expand-file-name default-directory)))))
   ;;==============默认程序打开，但是emacs会冻结=================
   ;; (eval-after-load "dired"
   ;;   '(progn
