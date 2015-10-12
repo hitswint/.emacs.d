@@ -1,8 +1,8 @@
-;; ===============判断系统类型================
+;; ===================OS====================
 (setq is-mac (equal system-type 'darwin))
 (setq is-win (equal system-type 'windows-nt))
 (setq is-lin (equal system-type 'gnu/linux))
-;;=========================windows设置==============================
+;; ===================PATH==================
 (when is-win
   (setenv "HOME" "c:/Users/swint")
   ;; (setenv "PATH" "c:/Users/swint/")
@@ -12,34 +12,6 @@
   ;; 使emacs可以使用win键
   (setq w32-lwindow-modifier 'super)
   (run-with-idle-timer 0.0 nil 'w32-send-sys-command 61488))
-;; =========================基本设置=================================
-(setq default-major-mode 'text-mode)    ;一打开就起用 text 模式。
-(global-font-lock-mode t)               ;语法高亮
-(auto-image-file-mode t)                ;打开图片显示功能
-(fset 'yes-or-no-p 'y-or-n-p)           ;以 y/n代表 yes/no
-(global-linum-mode 0)
-(show-paren-mode t)                     ;显示括号匹配
-(tool-bar-mode 0)                       ;去掉那个大大的工具栏
-(menu-bar-mode 0)                       ;去掉菜单栏
-(scroll-bar-mode 0)                     ;去掉滚动条
-(mouse-avoidance-mode 'animate)         ;光标靠近鼠标指针时，让鼠标指针自动让开
-(require 'hl-line)                      ;光标所在行高亮
-(global-hl-line-mode t)
-(transient-mark-mode t)                 ;高亮选中得区域
-(setq x-select-enable-clipboard t)      ;支持emacs和外部程序的粘贴
-(setq frame-title-format "Emacs@ %b")   ;在标题栏提示你目前在什么位置。
-(setq default-fill-column 80)           ;默认显示 80列就换行
-(setq inhibit-startup-message t)        ;禁用启动信息
-(setq visible-bell t)                   ;关闭烦人的出错时的提示声。
-(setq mouse-yank-at-point t)            ;支持中键粘贴
-(setq kill-ring-max 200)                ;用一个很大的 kill ring
-(delete-selection-mode t)
-(setq diary-file "~/org/journal.org.gpg") ;设置日记文件为加密文件
-;; =================开启server================
-(require 'server)
-(unless (server-running-p)
-  (server-start))
-;; ==================设置路径=================
 ;; Set path to dependencies
 (setq site-lisp-dir
       (expand-file-name "site-lisp" user-emacs-directory))
@@ -63,13 +35,36 @@
 (dolist (file (directory-files defuns-dir t "\\w+"))
   (when (file-regular-p file)
     (load file)))
-;; ===========Backup和Autosave=============
+;; =================BASIC===================
+(setq default-major-mode 'text-mode)    ;一打开就起用 text 模式。
+(global-font-lock-mode t)               ;语法高亮
+(auto-image-file-mode t)                ;打开图片显示功能
+(fset 'yes-or-no-p 'y-or-n-p)           ;以 y/n代表 yes/no
+(global-linum-mode 0)
+(show-paren-mode t)                     ;显示括号匹配
+(tool-bar-mode 0)                       ;去掉那个大大的工具栏
+(menu-bar-mode 0)                       ;去掉菜单栏
+(scroll-bar-mode 0)                     ;去掉滚动条
+(mouse-avoidance-mode 'animate)         ;光标靠近鼠标指针时，让鼠标指针自动让开
+(require 'hl-line)                      ;光标所在行高亮
+(global-hl-line-mode t)
+(transient-mark-mode t)                 ;高亮选中得区域
+(setq x-select-enable-clipboard t)      ;支持emacs和外部程序的粘贴
+(setq frame-title-format "Emacs@ %b")   ;在标题栏提示你目前在什么位置。
+(setq default-fill-column 80)           ;默认显示 80列就换行
+(setq inhibit-startup-message t)        ;禁用启动信息
+(setq visible-bell t)                   ;关闭烦人的出错时的提示声。
+(setq mouse-yank-at-point t)            ;支持中键粘贴
+(setq kill-ring-max 200)                ;用一个很大的 kill ring
+(delete-selection-mode t)
+(setq diary-file "~/org/journal.org.gpg") ;设置日记文件为加密文件
+;; ============BACKUP-AUTOSAVE=============
 ;; 将backup和autosave文件都放在~/.emacs.d/.saves文件夹下。
-(setq backup-by-copying t		;don't clobber symlinks
+(setq backup-by-copying t               ;don't clobber symlinks
       delete-old-versions t
       kept-new-versions 6
       kept-old-versions 2
-      version-control t)		;use versioned backups
+      version-control t)                ;use versioned backups
 (defconst temp-files-save-dir
   (format "%s%s/" (expand-file-name user-emacs-directory) ".saves"))
 (setq backup-directory-alist
@@ -78,16 +73,20 @@
       `((".*" ,temp-files-save-dir t)))
 (setq tramp-backup-directory-alist backup-directory-alist)
 (setq auto-save-list-file-prefix temp-files-save-dir)
-;; ==================保存=================
+;; ================SERVER==================
+(require 'server)
+(unless (server-running-p)
+  (server-start))
+;; =================SAVE===================
 ;; (when is-win
 ;;   (require 'setup_language_env))
 (require 'setup_desktop_session)
-;; ====================custom===================
+;; =================CUSTOM=================
 (cond
  (is-lin (setq custom-file (expand-file-name "custom-lin.el" user-emacs-directory)))
  (is-win (setq custom-file (expand-file-name "custom-win.el" user-emacs-directory))))
 (load custom-file)
-;; ====================setup===================
+;; =================SETUP==================
 (require 'setup_elpa)
 (require 'setup_keybindings)
 (require 'setup_abbrev)
@@ -131,3 +130,4 @@
 (when is-lin
   (require 'setup_wicd))
 ;; (eval-after-load 'ido '(require 'setup-ido))
+;; =================END====================

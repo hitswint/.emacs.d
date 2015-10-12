@@ -206,5 +206,7 @@ Emacs buffers are those whose name starts with *."
   "Returns the major mode associated with a buffer.
 If buffer-or-name is nil return current buffer's mode."
   (buffer-local-value 'major-mode
-                      (if buffer-or-name (get-buffer buffer-or-name) (current-buffer))))
+                      (if buffer-or-name
+			  (get-buffer buffer-or-name)
+			(current-buffer))))
 ;; ====================获得当前buffer的major-mode======================

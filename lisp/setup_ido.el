@@ -24,7 +24,11 @@
 ;; ==================only-dired=======================
 ;; ==================iswitchb-dired=======================
 (iswitchb-mode 1)
-(setq iswitchb-buffer-ignore '("\\` " "\\`\\*Messages\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*MATLAB\\*\\'" ".*\\..+" "\\*.*\\*"))
+;; (setq iswitchb-buffer-ignore '("\\` " "\\`\\*Messages\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*MATLAB\\*\\'" ".+\\..+" "\\*.*\\*"))
+(defun iswitchb-only-dired-mode (name)
+  "Ignore all c mode buffers -- example function for iswitchb."
+  (not (eq (buffer-mode name) 'dired-mode)))
+(setq iswitchb-buffer-ignore '("^ " iswitchb-only-dired-mode))
 ;; (global-set-key (kbd "C-.") 'iswitchb-buffer)
 ;; ==================iswitchb-dired=======================
 ;; ==================ido-only-file=======================
