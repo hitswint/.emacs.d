@@ -1,9 +1,14 @@
+;; =======================SERVER========================
+(require 'server)
+(unless (server-running-p)
+  (server-start))
+;; =======================SERVER========================
 ;; ======================文件加密===================================
 (require 'epa-file)
 ;;(epa-file-enable)
 (setenv "GPG_AGENT_INFO" nil)
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
-(setq epa-file-inhibit-auto-save t)
+(setq epa-file-inhibit-auto-save nil)
 ;; ======================文件加密===================================
 ;; ====================multiple-cursors============================
 (require 'multiple-cursors)

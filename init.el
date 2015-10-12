@@ -35,7 +35,7 @@
 (dolist (file (directory-files defuns-dir t "\\w+"))
   (when (file-regular-p file)
     (load file)))
-;; =================BASIC===================
+;; =================DEFAULT===================
 (setq default-major-mode 'text-mode)    ;一打开就起用 text 模式。
 (global-font-lock-mode t)               ;语法高亮
 (auto-image-file-mode t)                ;打开图片显示功能
@@ -58,28 +58,10 @@
 (setq kill-ring-max 200)                ;用一个很大的 kill ring
 (delete-selection-mode t)
 (setq diary-file "~/org/journal.org.gpg") ;设置日记文件为加密文件
-;; ============BACKUP-AUTOSAVE=============
-;; 将backup和autosave文件都放在~/.emacs.d/.saves文件夹下。
-(setq backup-by-copying t               ;don't clobber symlinks
-      delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
-      version-control t)                ;use versioned backups
-(defconst temp-files-save-dir
-  (format "%s%s/" (expand-file-name user-emacs-directory) ".saves"))
-(setq backup-directory-alist
-      `((".*" . ,temp-files-save-dir)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temp-files-save-dir t)))
-(setq tramp-backup-directory-alist backup-directory-alist)
-(setq auto-save-list-file-prefix temp-files-save-dir)
-;; ================SERVER==================
-(require 'server)
-(unless (server-running-p)
-  (server-start))
 ;; =================SAVE===================
 ;; (when is-win
 ;;   (require 'setup_language_env))
+;; (eval-after-load 'ido '(require 'setup-ido))
 (require 'setup_desktop_session)
 ;; =================CUSTOM=================
 (cond
@@ -88,6 +70,7 @@
 (load custom-file)
 ;; =================SETUP==================
 (require 'setup_elpa)
+(require 'setup_backup_autosave)
 (require 'setup_keybindings)
 (require 'setup_abbrev)
 (require 'setup_ace_jump)
@@ -129,5 +112,4 @@
 (require 'setup_packages)
 (when is-lin
   (require 'setup_wicd))
-;; (eval-after-load 'ido '(require 'setup-ido))
 ;; =================END====================
