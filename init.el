@@ -33,8 +33,6 @@
 (setq visible-bell t)                   ;关闭烦人的出错时的提示声。
 (setq mouse-yank-at-point t)            ;支持中键粘贴
 (setq kill-ring-max 200)                ;用一个很大的 kill ring
-(setq make-backup-files nil)            ;不产生备份文件,临时文件
-(setq-default make-backup-files nil)
 (delete-selection-mode t)
 (setq diary-file "~/org/journal.org.gpg") ;设置日记文件为加密文件
 ;; =================开启server================
@@ -47,9 +45,9 @@
       (expand-file-name "site-lisp" user-emacs-directory))
 (setq lisp-dir
       (expand-file-name "lisp" user-emacs-directory))
-(setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
-;; Settings for currently logged in user
-(setq user-settings-dir
+(setq defuns-dir
+      (expand-file-name "defuns" user-emacs-directory))
+(setq user-settings-dir                 ;Settings for currently logged in user
       (concat user-emacs-directory "users/" user-login-name))
 ;; Set up load path
 (add-to-list 'load-path site-lisp-dir)
@@ -65,10 +63,21 @@
 (dolist (file (directory-files defuns-dir t "\\w+"))
   (when (file-regular-p file)
     (load file)))
-;; Write backup files to own directory
+;; ===========Backup和Autosave=============
+;; 将backup和autosave文件都放在~/.emacs.d/.saves文件夹下。
+(setq backup-by-copying t		;don't clobber symlinks
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)		;use versioned backups
+(defconst temp-files-save-dir
+  (format "%s%s/" (expand-file-name user-emacs-directory) ".saves"))
 (setq backup-directory-alist
-      `(("." . ,(expand-file-name
-                 (concat user-emacs-directory "backups")))))
+      `((".*" . ,temp-files-save-dir)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temp-files-save-dir t)))
+(setq tramp-backup-directory-alist backup-directory-alist)
+(setq auto-save-list-file-prefix temp-files-save-dir)
 ;; ==================保存=================
 ;; (when is-win
 ;;   (require 'setup_language_env))
