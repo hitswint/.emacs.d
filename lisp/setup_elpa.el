@@ -95,6 +95,7 @@
     windata
     window-numbering
     with-editor
+    wrap-region
     yasnippet
     zotelo
     ztree)

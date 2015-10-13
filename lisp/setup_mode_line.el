@@ -47,6 +47,7 @@
 (add-to-list 'sml/hidden-modes " Isearch[拼音]")
 (add-to-list 'sml/hidden-modes " =>")
 (add-to-list 'sml/hidden-modes " Guide")
+(add-to-list 'sml/hidden-modes " wr")
 ;; ================smart-mode-line===================
 ;; ====================abbrev-for-mode-line========================
 (defvar mode-line-cleaner-alist
