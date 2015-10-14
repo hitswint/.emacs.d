@@ -1,0 +1,14 @@
+# Unison preferences file
+root = /home/swint/Nutstore/backups
+root = /home/swint/org/backups
+
+# servercmd = /usr/bin/unison
+batch = true
+
+# backupcurrent = Name *.org
+# backuplocation = local
+# maxbackups = 0
+
+ignore = Name {matl11blin.iso,texlive2012.iso}
+
+# merge = Name *.org -> emacsclient -c --eval '(ediff-merge-files "CURRENT1" "CURRENT2" nil "NEW")'
