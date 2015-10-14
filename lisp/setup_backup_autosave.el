@@ -14,13 +14,26 @@
 (setq tramp-backup-directory-alist backup-directory-alist)
 (setq auto-save-list-file-prefix temp-files-save-dir)
 ;; Automatically purge backup files not accessed in a week.
-(message "Deleting old backup files...")
-(let ((week (* 60 60 24 7))
+(let ((day (* 60 60 24))
+      (week (* 60 60 24 7))
       (current (float-time (current-time))))
+  ;; 每周删除旧backup文件。
+  (message "Deleting old backup files...")
   (dolist (file (directory-files temp-files-save-dir t))
     (when (and (backup-file-name-p file)
                (> (- current (float-time (fifth (file-attributes file))))
                   week))
+      (message "%s" file)
+      (delete-file file t)))
+  ;; 每天清理trash中backup文件。
+  (message "Cleaning trashcan...")
+  (dolist (file (directory-files
+                 (cond
+                  (is-lin "~/.Trash")
+                  (is-win "c:/TRASHCAN")) t))
+    (when (and (backup-file-name-p file)
+               (> (- current (float-time (fifth (file-attributes file))))
+                  day))
       (message "%s" file)
       (delete-file file))))
 ;; Backup at each save.
