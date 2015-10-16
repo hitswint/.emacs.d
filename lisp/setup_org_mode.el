@@ -506,9 +506,13 @@ depending on the last command issued."
   ;; webdav会造成文件conflict，在pull之前先删除本地mobileorg文件。
   (mapcar 'delete-file (directory-files org-mobile-directory t
                                         ".+\\.\\(org\\|dat\\)"))
-  (let ((process (cond
-                  (is-lin (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d ~/Nutstore-mobileorg/"))
-                  (is-win (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=c:/Users/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar c:/Users/swint/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d c:/Users/swint/Nutstore-mobileorg/")))))
+  (let ((process
+         (start-process-shell-command
+          "webdav_sync" "*webdav_sync*"
+          (concat "java -Dderby.system.home="  (expand-file-name "~/.webdav_sync/")
+                  " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
+                  " -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d "
+                  (expand-file-name "~/Nutstore-mobileorg/")))))
     (set-process-sentinel
      process
      (lambda (process signal)
@@ -528,9 +532,13 @@ depending on the last command issued."
   (interactive)
   (with-current-buffer "task.org"
     (org-mobile-push))
-  (let ((process (cond
-                  (is-lin (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d ~/Nutstore-mobileorg/"))
-                  (is-win (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=c:/Users/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar c:/Users/swint/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d c:/Users/swint/Nutstore-mobileorg/")))))
+  (let ((process
+         (start-process-shell-command
+          "webdav_sync" "*webdav_sync*"
+          (concat "java -Dderby.system.home="  (expand-file-name "~/.webdav_sync/")
+                  " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
+                  " -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d "
+                  (expand-file-name "~/Nutstore-mobileorg/")))))
     (set-process-sentinel
      process
      (lambda (process signal)

@@ -30,16 +30,16 @@
 ;; (setq helm-locate-command "es %s %s")
 (cond
  (is-lin
-  ;; 使用 updatedb -l 0 -o ~/.swint-locate.db -U ~/ 建立用户数据库。
-  (setq helm-locate-create-db-command "updatedb -l 0 -o ~/.swint-locate.db -U ~/")
-  (setq helm-locate-command "locate -b -i %s -r %s -d ~/.swint-locate.db"))
+  ;; 使用 updatedb -l 0 -o ~/.helm-locate.db -U ~/ 建立用户数据库。
+  (setq helm-locate-create-db-command "updatedb -l 0 -o ~/.helm-locate.db -U ~/")
+  (setq helm-locate-command "locate -b -i %s -r %s -d ~/.helm-locate.db"))
  (is-win
   ;; 下列的命令建立locate数据库的时候，会导致数据库中记录的文件路径名为/cygdrive/c/，这种路径名emacs无法识别。
-  ;; (setq helm-locate-create-db-command "updatedb --output=/cygdrive/c/Users/swint/.swint-locate.db --localpaths='/cygdrive/c/Users/swint/'")
-  ;; (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.swint-locate.db")
+  ;; (setq helm-locate-create-db-command "updatedb --output=/cygdrive/c/Users/swint/.helm-locate.db --localpaths='/cygdrive/c/Users/swint/'")
+  ;; (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.helm-locate.db")
   ;; 下面的命令建立locate数据库的时候，会导致cygwin警告ms dos path sytle，无妨，时间稍长；locate命令无法识别这种ms dos path sytle。
-  (setq helm-locate-create-db-command "updatedb --output=c:/Users/swint/.swint-locate.db --localpaths='c:/Users/swint/'")
-  (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.swint-locate.db")))
+  (setq helm-locate-create-db-command "updatedb --output=c:/Users/swint/.helm-locate.db --localpaths='c:/Users/swint/'")
+  (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.helm-locate.db")))
 ;; ==================helm-dired-buffer====================
 (defun swint-helm-dired-buffers-list--init ()
   ;; Issue #51 Create the list before `helm-buffer' creation.

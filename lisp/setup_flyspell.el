@@ -1,12 +1,9 @@
 ;; ================================flyspell==================================
 (setq ispell-program-name "aspell")
-(cond
- (is-lin
-  (setq ispell-personal-dictionary "~/.ispell")
-  (ispell-change-dictionary "american" t))
- (is-win
-  (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/")
-  (setq ispell-personal-dictionary "c:/Users/swint/.ispell")))
+(setq ispell-personal-dictionary (expand-file-name "~/.ispell"))
+(ispell-change-dictionary "american" t)
+(when is-win
+  (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/"))
 (require 'ispell)
 (require 'flyspell)
 (define-key flyspell-mode-map (kbd "C-,") nil)

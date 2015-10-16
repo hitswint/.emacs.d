@@ -27,30 +27,18 @@
                             (filename . "~/Dropbox")
                             (filename . "~/Nutstore")
                             (filename . "~/.emacs.d")
-                            (filename . "/home/swint/Documents")
-                            (filename . "/home/swint/Dropbox")
-                            (filename . "/home/swint/Nutstore")
-                            (filename . "/home/swint/.emacs.d")
                             ))
                  ("REFERENCE" (or
                                (filename . "~/papers")
                                (filename . "~/book")
                                (filename . "~/linux")
-                               (filename . "/home/swint/papers")
-                               (filename . "/home/swint/book")
-                               (filename . "/home/swint/linux")
                                ))
                  ("TEX" (or
                          (filename . "~/tex")
+                         (filename . "~/myfile")
                          (filename . "~/Music")
                          (filename . "~/Pictures")
-                         (filename . "~/myfile")
-                         (filename . "/home/swint/tex")
-                         (filename . "/home/swint/Music")
-                         (filename . "/home/swint/Pictures")
-                         (filename . "/home/swint/myfile")
-                         ))
-                 )))))
+                         )))))))
 (when is-win
   (setq ibuffer-saved-filter-groups
         (quote (("default"
@@ -70,8 +58,7 @@
                          (filename . "c:/Users/swint/myfile")
                          (filename . "c:/Users/swint/Music")
                          (filename . "c:/Users/swint/Pictures")
-                         ))
-                 )))))
+                         )))))))
 (add-hook 'ibuffer-mode-hook
           (lambda ()
             (ibuffer-switch-to-saved-filter-groups "default")))

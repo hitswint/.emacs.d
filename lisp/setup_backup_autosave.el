@@ -35,7 +35,40 @@
                (> (- current (float-time (fifth (file-attributes file))))
                   day))
       (message "%s" file)
-      (delete-file file))))
+      (delete-file file)))
+  ;; 每周更新locate db文件，使用~/helm-locate-db.sh脚本更新~/.helm-locate.db文件。
+  (message "Updating locate db file...")
+  (let ((locat-db-file (expand-file-name "~/.helm-locate.db")))
+    (when (or (not (file-exists-p locat-db-file))
+              (> (- current (float-time (fifth (file-attributes locat-db-file))))
+                 week))
+      (message "%s" locat-db-file)
+      (get-buffer-create "*Updating-locate-db-file*")
+      (start-process-shell-command
+       "Updating-locate-db-file" "*Updating-locate-db-file*"
+       (concat "bash " (expand-file-name "~/helm-locate-db.sh")))))
+  ;; 每周更新file system tree，win和lin都有各自的tree命令，格式不同。
+  ;; win中shell-file-name为cmd，默认使用cmd执行命令，执行的是win自带的tree。
+  ;; 若命令前面加bash，则使用cygwin的bash执行命令，执行的是cygwin的tree，输出文件存在编码问题。
+  (message "Updating file system tree...")
+  (let ((fs-tree-file (concat (expand-file-name "~/org/backups/fs-tree/")
+                              (cond
+                               (is-win "fs-tree-win.txt")
+                               ((and is-lin is-X201)
+                                "fs-tree-lin-X201.txt")
+                               ((and is-lin is-T510)
+                                "fs-tree-lin-T510.txt")))))
+    (when (or (not (file-exists-p fs-tree-file))
+              (> (- current (float-time (fifth (file-attributes fs-tree-file))))
+                 week))
+      (message "%s" fs-tree-file)
+      (get-buffer-create "*Updating-file-system-tree*")
+      (start-process-shell-command
+       "Updating-file-system-tree" "*Updating-file-system-tree*"
+       (concat "tree " (expand-file-name "~")
+	       (cond
+		(is-lin " -o ")
+		(is-win " /f /a > ")) fs-tree-file)))))
 ;; Backup at each save.
 (defun force-backup-of-buffer ()
   (let ((buffer-backed-up nil))

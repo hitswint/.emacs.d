@@ -228,9 +228,13 @@
 (defun swint-webdav-sync-down ()
   "Sync files in webdav server to ~/Nutstore-sync."
   (interactive)
-  (let ((process (cond
-                  (is-lin (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d ~/Nutstore-sync/"))
-                  (is-win (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=c:/Users/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar c:/Users/swint/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d c:/Users/swint/Nutstore-sync/")))))
+  (let ((process
+         (start-process-shell-command
+          "webdav_sync" "*webdav_sync*"
+          (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
+                  " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
+                  " -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
+                  (expand-file-name "~/Nutstore-sync/")))))
     (set-process-sentinel
      process
      (lambda (process signal)
@@ -244,9 +248,13 @@
 (defun swint-webdav-sync-up ()
   "Sync files in ~/Nutstore-sync to webdav server."
   (interactive)
-  (let ((process (cond
-                  (is-lin (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d ~/Nutstore-sync/"))
-                  (is-win (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=c:/Users/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar c:/Users/swint/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d c:/Users/swint/Nutstore-sync/")))))
+  (let ((process
+         (start-process-shell-command
+          "webdav_sync" "*webdav_sync*"
+          (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
+                  " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
+                  " -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
+                  (expand-file-name "~/Nutstore-sync/")))))
     (set-process-sentinel
      process
      (lambda (process signal)
@@ -260,9 +268,13 @@
 (defun swint-webdav-sync-bi ()
   "Sync files in ~/Nutstore-sync to webdav server."
   (interactive)
-  (let ((process (cond
-                  (is-lin (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -bi -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d ~/Nutstore-sync/"))
-                  (is-win (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=c:/Users/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar c:/Users/swint/.webdav_sync/webdav_sync1_1_4.jar -r -bi -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d c:/Users/swint/Nutstore-sync/")))))
+  (let ((process
+         (start-process-shell-command
+          "webdav_sync" "*webdav_sync*"
+          (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
+                  " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
+                  " -r -bi -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
+                  (expand-file-name "~/Nutstore-sync/")))))
     (set-process-sentinel
      process
      (lambda (process signal)
@@ -281,9 +293,13 @@
 (defun swint-unison-sync-backups ()
   "Sync files in ~/Nutstore-sync to webdav server."
   (interactive)
-  (let ((process (cond
-                  (is-lin (start-process-shell-command "unison" "*unison*" "unison Nutstore-backups"))
-                  (is-win (start-process-shell-command "unison" "*unison*" "c:/cygwin64/bin/unison-2.40.exe Nutstore-backups")))))
+  (let ((process
+         (start-process-shell-command
+          "unison" "*unison*"
+          (concat (cond
+                   (is-lin "unison")
+                   (is-win "c:/cygwin64/bin/unison-2.40.exe"))
+                  " Nutstore-backups"))))
     (set-process-sentinel
      process
      (lambda (process signal)
