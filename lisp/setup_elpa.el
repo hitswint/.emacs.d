@@ -25,6 +25,7 @@
     async
     auto-complete
     auto-complete-auctex
+    backup-walker
     bing-dict
     clean-aindent-mode
     dash

@@ -347,4 +347,10 @@ is named like ODF with the extension turned to pdf."
   (define-key helm-find-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
   (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister))
 ;; =================total commander===============
+;; =================backup-walker===============
+(require 'backup-walker)
+(require 'git-timemachine)
+(global-set-key (kbd "C-x b") 'backup-walker-start)
+(global-set-key (kbd "C-c b") 'git-timemachine)
+;; =================backup-walker===============
 (provide 'setup_packages)
