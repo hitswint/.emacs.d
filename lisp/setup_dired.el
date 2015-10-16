@@ -307,5 +307,19 @@
          (message "swint-unison-sync-backups done."))
        (helm-switch-persp/buffer "*unison*")))))
 (global-set-key (kbd "C-c M-/") 'swint-unison-sync-backups)
+;; ===================peep-dired====================
+(require 'peep-dired)
+(setq peep-dired-cleanup-on-disable t)
+;; (setq peep-dired-cleanup-eagerly t)
+(setq peep-dired-enable-on-directories nil)
+(setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))
+(define-key dired-mode-map (kbd "C-M-q") 'peep-dired)
+(add-hook 'peep-dired-hook
+          '(lambda ()
+             (define-key peep-dired-mode-map (kbd "p") 'peep-dired-prev-file)
+             (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)
+             (define-key peep-dired-mode-map (kbd "C-p") nil)
+             (define-key peep-dired-mode-map (kbd "C-n") nil)))
+;; ===================peep-dired====================
 ;;======================dired========================
 (provide 'setup_dired)

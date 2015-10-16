@@ -58,6 +58,7 @@
 (setq visible-bell t)                   ;关闭烦人的出错时的提示声。
 (setq mouse-yank-at-point t)            ;支持中键粘贴
 (setq kill-ring-max 200)                ;用一个很大的 kill ring
+(setq large-file-warning-threshold nil) ;打开大文件时不询问
 (delete-selection-mode t)
 (setq diary-file "~/org/journal.org.gpg") ;设置日记文件为加密文件
 ;; =================SAVE===================

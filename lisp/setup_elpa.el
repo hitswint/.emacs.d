@@ -71,6 +71,7 @@
     paredit
     paredit-everywhere
     parsebib
+    peep-dired
     pinyin-search
     pkg-info
     popup
