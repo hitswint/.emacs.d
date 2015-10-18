@@ -9,10 +9,10 @@
 (global-auto-revert-mode 1)
 ;; Also auto refresh dired, but be quiet about it
 (setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
-;; dired-k--highlight会使auto-revert-mode出错
-;; 在dired-mode中禁用auto-revert-mode
-(setq global-auto-revert-ignore-modes '(dired-mode))
+(setq auto-revert-verbose nil)          ;静默更新
+;; dired-k--highlight会使auto-revert-mode出错，在dired-mode中禁用auto-revert-mode。
+;; 已修复上述问题，在dired-mode中重新开启auto-revert-mode。
+;; (setq global-auto-revert-ignore-modes '(dired-mode))
 ;; 使用dired-mode自带的auto-revert
 (setq dired-auto-revert-buffer t)
 ;; =============Auto-revert-mode=============
