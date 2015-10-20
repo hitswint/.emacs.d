@@ -324,28 +324,52 @@ is named like ODF with the extension turned to pdf."
                             callback)))
 ;; ==================doc-view-mode================
 ;; =================total commander===============
-(when is-win
-  ;;===========使用tc打开当前文件夹===========
-  (global-set-key (kbd "C-x j") '(lambda ()
-                                   (interactive)
-                                   (w32-shell-execute
-                                    "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T \" " (expand-file-name default-directory)))))
-  ;;========使用lister直接浏览文件========
-  (define-key dired-mode-map (kbd "C-M-j") '(lambda ()
-                                              (interactive)
-                                              (w32-shell-execute
-                                               "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T /S=L \" " (dired-get-filename)))))
-  (defun helm-open-file-with-lister (_candidate)
-    "Opens a file with lister of total commander."
-    (w32-shell-execute
-     "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T /S=L \" " (expand-file-name _candidate))))
-  (defun helm-ff-run-open-file-with-lister ()
-    "Run Rename file action from `helm-source-find-files'."
-    (interactive)
-    (with-helm-alive-p
-      (helm-exit-and-execute-action 'helm-open-file-with-lister)))
-  (define-key helm-find-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
-  (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister))
+;;使用tc打开当前文件夹。
+(global-set-key (kbd "C-x j") '(lambda ()
+                                 (interactive)
+                                 (cond
+                                  (is-win (w32-shell-execute
+                                           "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T \" " (expand-file-name default-directory))))
+                                  (is-lin (progn (start-process-shell-command
+                                                  "tc" "*tc*"
+                                                  (concat "wine-development "
+                                                          "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T z:"
+                                                          (replace-regexp-in-string " " "\\\\ " (expand-file-name default-directory))))
+                                                 (let ((default-directory
+                                                         "/home/swint/.wine/drive_c/Program Files/viatc/"))
+                                                   (start-process-shell-command
+                                                    "viatc" "*viatc*"
+                                                    "wine-development viatc.exe")))))))
+;;使用lister直接浏览文件。
+(define-key dired-mode-map (kbd "C-M-j") '(lambda ()
+                                            (interactive)
+                                            (cond
+                                             (is-win (w32-shell-execute
+                                                      "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T /S=L \" " (dired-get-filename))))
+                                             (is-lin (start-process-shell-command
+                                                      "tc" "*tc*"
+                                                      (concat "wine-development "
+                                                              "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
+                                                              (replace-regexp-in-string " " "\\\\ "
+                                                                                        (expand-file-name (dired-get-filename)))))))))
+(defun helm-open-file-with-lister (_candidate)
+  "Opens a file with lister of total commander."
+  (cond
+   (is-win (w32-shell-execute
+            "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T /S=L \" " (expand-file-name _candidate))))
+   (is-lin (start-process-shell-command
+            "tc" "*tc*"
+            (concat "wine-development "
+                    "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
+                    (replace-regexp-in-string " " "\\\\ "
+                                              (expand-file-name _candidate)))))))
+(defun helm-ff-run-open-file-with-lister ()
+  "Run Rename file action from `helm-source-find-files'."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'helm-open-file-with-lister)))
+(define-key helm-find-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
+(define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
 ;; =================total commander===============
 ;; =================backup-walker===============
 (require 'backup-walker)

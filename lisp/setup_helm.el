@@ -353,7 +353,6 @@ from its directory."
 (define-key helm-read-file-map (kbd "C-h") 'helm-find-files-up-one-level)
 (define-key helm-find-files-map (kbd "M-U") 'helm-unmark-all)
 (define-key helm-find-files-map (kbd "M-t") 'helm-toggle-all-marks)
-
 (define-key helm-buffer-map (kbd "C-o") 'helm-buffer-switch-other-window)
 (define-key helm-find-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
 (define-key helm-generic-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
