@@ -115,3 +115,8 @@ fi
 export PATH=/usr/local/MATLAB/R2011b/bin:$PATH
 export PATH=$PATH:/opt/emacs24/bin
 bind Space:magic-space
+
+# wine
+export WINEPREFIX=$HOME/.wine
+export WINEARCH=win32
+WINEDLLOVERRIDES=winemenubuilder.exe=d
