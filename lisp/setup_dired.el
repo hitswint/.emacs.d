@@ -124,6 +124,9 @@
                 ("ods" . "libreoffice")("odt" . "libreoffice")
                 ("dwg" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/AutoCAD\\ 2004/acad.exe")
                 ("dxf" . "librecad")
+                ("caj" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
+                ("nh" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
+                ("kdh" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
                 ("gp" . "gnuplot")
                 ("rar" . "unrar x -o+")
                 ("zip" . "unzip")
@@ -139,7 +142,7 @@
       (let ((command (cdr (assoc file-exten file-extension-app-alist))))
         (start-process "Shell" nil shell-file-name shell-command-switch
                        (concat command " " "\""
-                               (if (member file-exten '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "dwg"))
+                               (if (member file-exten '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "dwg" "caj" "nh" "kdh"))
                                    (file-name-nondirectory file)
                                  file)
                                "\"")))))
