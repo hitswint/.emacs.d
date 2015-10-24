@@ -9,7 +9,7 @@
 (define-key ac-completing-map "\C-n" 'ac-next)
 (define-key ac-completing-map "\C-p" 'ac-previous)
 ;; 不能把auto-complete快捷键设置成TAB，会导致无法indent。
-(define-key ac-mode-map (kbd "M-u") 'auto-complete)
+(define-key ac-mode-map (kbd "M-U") 'auto-complete)
 ;; TAB的默认作用有两个：
 ;; 1. 延伸menu出现之前的默认选项。取消延伸默认选项，使用RET替代。
 (define-key ac-completing-map (kbd "TAB") nil)
@@ -83,9 +83,6 @@
 (add-to-list 'ac-modes 'octave-mode)
 ;; =========================auto-complete-octave=========================
 ;; ============================shell中使用============================
-(when is-lin
-  (setq explicit-shell-file-name "bash")
-  (setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash")))
 ;; 下面这句会导致octave运行时emacs hang
 ;; (setq comint-process-echoes t)
 ;; prevent echoed commands from being printed (t)

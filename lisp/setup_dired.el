@@ -178,21 +178,12 @@
          (list "\\.c$" "gcc -Wall")
          ))
   ;; ===============在当前目录下打开urxvt===============
-  (defun urxvt-cd-directory (path)
+  (defun urxvt-default-directory ()
     (interactive)
-    (start-process "Shell" nil shell-file-name shell-command-switch (concat "tabbed -c " "urxvt" " -cd " "\"" path "\"" " -embed"))
-    )
-  (defun urxvt-for-dired-file ()
-    (interactive)
-    (urxvt-cd-directory (dired-current-directory)))
-  (defun urxvt-for-file ()
-    (interactive)
-    (urxvt-cd-directory (file-name-directory (buffer-file-name))))
-  (global-set-key (kbd "<C-s-return>") 'urxvt-for-file)
-  (add-hook 'dired-mode-hook
-            (lambda ()
-              (setq truncate-lines t)
-              (define-key dired-mode-map (kbd "<C-s-return>") 'urxvt-for-dired-file))))
+    (start-process "Urxvt" nil shell-file-name shell-command-switch
+                   (concat "tabbed -c " "urxvt" " -cd " "\""
+                           (expand-file-name default-directory) "\"" " -embed")))
+  (global-set-key (kbd "<C-s-return>") 'urxvt-default-directory))
  (is-win
   ;;=====================w32-browser======================
   (require 'w32-browser)

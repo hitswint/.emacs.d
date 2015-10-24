@@ -325,7 +325,7 @@ is named like ODF with the extension turned to pdf."
 ;; ==================doc-view-mode================
 ;; =================total commander===============
 ;;使用tc打开当前文件夹。
-(global-set-key (kbd "C-x j") '(lambda ()
+(global-set-key (kbd "C-s-m") '(lambda ()
                                  (interactive)
                                  (cond
                                   (is-win (w32-shell-execute

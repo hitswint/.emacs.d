@@ -27,6 +27,10 @@
                    ))
 ;; 让shell命令在windows下默认启用cygwin bash
 ;; cmdproxy.exe则是windows自带命令行工具
-(when is-win
+(cond
+ (is-win
   (setq explicit-shell-file-name "bash.exe"))
+ (is-lin
+  (setq explicit-shell-file-name "bash")
+  (setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash"))))
 (provide 'setup_eshell)

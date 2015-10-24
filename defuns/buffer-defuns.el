@@ -84,10 +84,10 @@ Emacs buffers are those whose name starts with *."
   (interactive "P")
   (move-border-up-or-down arg nil))
 ;; keybindings for window resizing
-(global-set-key (kbd "C-s-h") 'move-border-left)
-(global-set-key (kbd "C-s-l") 'move-border-right)
-(global-set-key (kbd "C-s-k") 'move-border-up)
-(global-set-key (kbd "C-s-j") 'move-border-down)
+(global-set-key (kbd "M-H") 'move-border-left)
+(global-set-key (kbd "M-L") 'move-border-right)
+(global-set-key (kbd "M-K") 'move-border-up)
+(global-set-key (kbd "M-J") 'move-border-down)
 ;; ======================intuitive window resizing=======================
 ;; ======================切换窗口分割模式========================
 (global-set-key (kbd "C-c C-i") 'toggle-window-split)
@@ -207,6 +207,6 @@ Emacs buffers are those whose name starts with *."
 If buffer-or-name is nil return current buffer's mode."
   (buffer-local-value 'major-mode
                       (if buffer-or-name
-			  (get-buffer buffer-or-name)
-			(current-buffer))))
+                          (get-buffer buffer-or-name)
+                        (current-buffer))))
 ;; ====================获得当前buffer的major-mode======================
