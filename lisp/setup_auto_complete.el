@@ -9,12 +9,12 @@
 (define-key ac-completing-map "\C-n" 'ac-next)
 (define-key ac-completing-map "\C-p" 'ac-previous)
 ;; 不能把auto-complete快捷键设置成TAB，会导致无法indent。
-(define-key ac-mode-map (kbd "M-U") 'auto-complete)
-;; TAB的默认作用有两个：
-;; 1. 延伸menu出现之前的默认选项。取消延伸默认选项，使用RET替代。
-(define-key ac-completing-map (kbd "TAB") nil)
-;; 2. 切换menu的选项。取消TAB切换menu选项。
-(define-key ac-menu-map (kbd "TAB") nil)
+(define-key ac-mode-map (kbd "M-u") 'auto-complete)
+;; ;; 取消TAB绑定以适应yasnippet。TAB的默认作用有两个：
+;; ;; 1. 延伸menu出现之前的默认选项。取消延伸默认选项，使用RET替代。
+;; (define-key ac-completing-map (kbd "TAB") nil)
+;; ;; 2. 切换menu的选项。取消TAB切换menu选项。
+;; (define-key ac-menu-map (kbd "TAB") nil)
 (setq ac-menu-height 12)
 (setq-default ac-sources '(
                            ac-source-yasnippet

@@ -4,6 +4,7 @@
 ;; (yas-initialize)
 (yas-global-mode 1)
 (yas-minor-mode 1)
+(define-key yas-minor-mode-map (kbd "M-I") 'yas-expand)
 (setq yas-snippet-dirs
       '("~/.emacs.d/snippets"                 ;; personal snippets
         ;;         "/path/to/some/collection/"           ;; foo-mode and bar-mode snippet collection
