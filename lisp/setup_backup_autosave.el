@@ -21,7 +21,7 @@
   (message "Deleting old backup files...")
   (dolist (file (directory-files temp-files-save-dir t))
     (when (and (backup-file-name-p file)
-               (> (- current (float-time (fifth (file-attributes file))))
+               (> (- current (float-time (sixth (file-attributes file))))
                   week))
       (message "%s" file)
       (delete-file file t)))
@@ -32,7 +32,7 @@
                   (is-lin "~/.Trash")
                   (is-win "c:/TRASHCAN")) t))
     (when (and (backup-file-name-p file)
-               (> (- current (float-time (fifth (file-attributes file))))
+               (> (- current (float-time (sixth (file-attributes file))))
                   day))
       (message "%s" file)
       (delete-file file)))
@@ -40,7 +40,7 @@
   (message "Updating locate db file...")
   (let ((locat-db-file (expand-file-name "~/.helm-locate.db")))
     (when (or (not (file-exists-p locat-db-file))
-              (> (- current (float-time (fifth (file-attributes locat-db-file))))
+              (> (- current (float-time (sixth (file-attributes locat-db-file))))
                  week))
       (message "%s" locat-db-file)
       (get-buffer-create "*Updating-locate-db-file*")
@@ -59,16 +59,16 @@
                                ((and is-lin is-T510)
                                 "fs-tree-lin-T510.txt")))))
     (when (or (not (file-exists-p fs-tree-file))
-              (> (- current (float-time (fifth (file-attributes fs-tree-file))))
+              (> (- current (float-time (sixth (file-attributes fs-tree-file))))
                  week))
       (message "%s" fs-tree-file)
       (get-buffer-create "*Updating-file-system-tree*")
       (start-process-shell-command
        "Updating-file-system-tree" "*Updating-file-system-tree*"
        (concat "tree " (expand-file-name "~")
-	       (cond
-		(is-lin " -o ")
-		(is-win " /f /a > ")) fs-tree-file)))))
+               (cond
+                (is-lin " -o ")
+                (is-win " /f /a > ")) fs-tree-file)))))
 ;; Backup at each save.
 (defun force-backup-of-buffer ()
   (let ((buffer-backed-up nil))
