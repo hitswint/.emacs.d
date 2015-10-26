@@ -6,8 +6,8 @@
 ;;              (loop for i from ?0 to ?9 collect i)
 ;;              (loop for i from ?A to ?Z collect i)))
 (global-set-key (kbd "C-h") 'swint-ace-jump-char-mode)
-(global-set-key (kbd "C-M-h") 'ace-jump-mode)
-(global-set-key (kbd "C-c C-h") 'ace-jump-line-mode)
+(global-set-key (kbd "C-c C-h") 'ace-jump-mode)
+(global-set-key (kbd "C-M-h") 'ace-jump-line-mode)
 ;; C-u C-h ace-jume-char-mode; C-u C-u C-h ace-jump-line-mode
 ;; If you also use viper mode:
 ;; (define-key viper-vi-global-user-map (kbd "SPC") 'ace-jump-mode)

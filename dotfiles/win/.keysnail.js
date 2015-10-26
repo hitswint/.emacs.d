@@ -576,6 +576,10 @@ key.setGlobalKey(['C-c', 'C-h'], function (ev, arg) {
     ext.exec('hok-start-background-mode', arg, ev);
 }, 'Start Hit a Hint background mode', true);
 
+key.setViewKey('C-M-h', function (aEvent, aArg) {
+    ext.exec("hok-start-extended-mode", aArg);
+}, 'Start Hit a Hint Extented mode', true);
+
 key.setGlobalKey(['C-o', 'b'], function (ev, arg) {
     var myUrl = "http://cn.bing.com";
     var ff= document.getElementById("content");
