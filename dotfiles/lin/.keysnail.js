@@ -564,10 +564,12 @@ key.setGlobalKey(['C-c', 'C-\''], function (ev, arg) {
     ext.exec("bmany-list-bookmarks-with-keyword", arg, ev);
 }, 'bmany - List bookmarks with keyword');
 
+// tanything
 key.setGlobalKey('C-,', function (ev, arg) {
     ext.exec('tanything', arg, ev);
 }, 'view all tabs ', true);
 
+// hok
 key.setGlobalKey(['C-h'], function (ev, arg) {
     ext.exec('hok-start-foreground-mode', arg, ev);
 }, 'Start Hit a Hint foreground mode', true);
@@ -576,8 +578,12 @@ key.setGlobalKey(['C-c', 'C-h'], function (ev, arg) {
     ext.exec('hok-start-background-mode', arg, ev);
 }, 'Start Hit a Hint background mode', true);
 
-key.setViewKey('C-M-h', function (aEvent, aArg) {
-    ext.exec("hok-start-extended-mode", aArg);
+key.setViewKey('C-M-h', function (ev, arg) {
+    children = document.getElementById("nav-bar").children;
+    for (i = 0; i < children.length; i++) {
+        children[i].style.backgroundColor = "pink";
+    }
+    ext.exec("hok-start-extended-mode", arg);
 }, 'Start Hit a Hint Extented mode', true);
 
 key.setGlobalKey(['C-o', 'b'], function (ev, arg) {
