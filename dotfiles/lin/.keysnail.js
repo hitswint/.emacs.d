@@ -422,6 +422,15 @@ key.setCaretKey('M-v', function (ev) {
     ev.target.ksMarked ? goDoCommand("cmd_selectPagePrevious") : goDoCommand("cmd_movePageUp");
 }, 'Move caret up by page');
 
+key.setCaretKey('M-w', function (ev) {
+    command.copyRegion(ev);
+    children = document.getElementById("nav-bar").children;
+    for (i = 0; i < children.length; i++) {
+        children[i].style.backgroundColor = "transparent";
+    }
+    util.setBoolPref("accessibility.browsewithcaret", false);
+}, 'Copy selected text and exit caret-browse mode', true);
+
 key.setCaretKey('C-;', function (ev) {
     command.setMark(ev);
 }, 'Set the mark', true);
@@ -578,11 +587,12 @@ key.setGlobalKey(['C-c', 'C-h'], function (ev, arg) {
     ext.exec('hok-start-background-mode', arg, ev);
 }, 'Start Hit a Hint background mode', true);
 
-key.setViewKey('C-M-h', function (ev, arg) {
+key.setGlobalKey('C-M-h', function (ev, arg) {
     children = document.getElementById("nav-bar").children;
     for (i = 0; i < children.length; i++) {
         children[i].style.backgroundColor = "pink";
     }
+    util.setBoolPref("accessibility.browsewithcaret", false);
     ext.exec("hok-start-extended-mode", arg);
 }, 'Start Hit a Hint Extented mode', true);
 
