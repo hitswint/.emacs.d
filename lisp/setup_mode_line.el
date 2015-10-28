@@ -48,6 +48,9 @@
 (add-to-list 'sml/hidden-modes " =>")
 (add-to-list 'sml/hidden-modes " Guide")
 (add-to-list 'sml/hidden-modes " wr")
+(add-to-list 'sml/hidden-modes " HelmGtags")
+(add-to-list 'sml/hidden-modes " FA")
+(add-to-list 'sml/hidden-modes " hs")
 ;; ================smart-mode-line===================
 ;; ====================abbrev-for-mode-line========================
 (defvar mode-line-cleaner-alist

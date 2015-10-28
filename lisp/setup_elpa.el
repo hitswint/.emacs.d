@@ -25,6 +25,8 @@
     async
     auto-complete
     auto-complete-auctex
+    auto-complete-c-headers
+    auto-complete-clang
     backup-walker
     bing-dict
     clean-aindent-mode
@@ -32,6 +34,7 @@
     dired-details
     dirtree
     drag-stuff
+    function-args
     elisp-slime-nav
     elmacro
     emms
@@ -50,6 +53,7 @@
     helm
     helm-bibtex
     helm-core
+    helm-gtags
     helm-projectile
     helm-swoop
     helm-unicode

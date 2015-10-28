@@ -20,5 +20,5 @@
 ;; 上述命令前加前缀C-u 3表示当前位置之前三个词。
 ;; 另define-global-abbrev define-mode-abbrev 可以自定义要abbrev的词。
 ;; 退出时会要求保存abbrev_defs文件。
-(provide 'setup_abbrev)
 ;; ====================abbrev====================
+(provide 'setup_abbrev)

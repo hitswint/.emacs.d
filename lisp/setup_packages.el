@@ -219,8 +219,8 @@
 ;; elpa安装imenu-anywhere
 ;; imenu-anywhere与imenu额区别在于，前者包括所有打开的相同mode的buffer，而后者只限于当前buffer。
 ;; 但是imenu-anywhere在初次使用时经常失效，没有结果。
-(global-set-key (kbd "M-s i") 'helm-imenu)
-(global-set-key (kbd "M-s C-i") 'helm-imenu-anywhere)
+(global-set-key (kbd "M-s i") 'helm-semantic-or-imenu)
+(global-set-key (kbd "M-s I") 'helm-imenu-anywhere)
 ;; ===================imenu-anywhere====================
 ;; ================fcitx.el=================
 ;; https://github.com/cute-jumper/fcitx.el

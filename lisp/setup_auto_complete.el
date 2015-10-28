@@ -1,8 +1,9 @@
-;; ============================auto-complete基本设置============================
+;; ===========================auto-complete============================
 ;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/dict")
 ;; 重新使用package安装autocomplete。
 (require 'auto-complete-config)
 (ac-config-default)
+;; (setq ac-quick-help-delay 0.5)
 ;; (setq ac-auto-start nil)
 ;; (ac-set-trigger-key "TAB")
 (setq ac-use-menu-map t)
@@ -23,7 +24,6 @@
                            ac-source-words-in-same-mode-buffers
                            ac-source-files-in-current-dir
                            ))
-;; ============================auto-complete基本设置============================
 ;; ============================ac-auctex=========================
 (eval-after-load 'setup_yasnippet '(require 'auto-complete-auctex))
 ;; lin上的ac-auctex会自动启闭latex-math-mode，造成`输入公式的方法失效，两种解决方法：
@@ -94,7 +94,5 @@
 ;; =====================graphviz-dot-mode=================
 (add-to-list 'ac-modes 'graphviz-dot-mode)
 ;; =====================graphviz-dot-mode=================
-;; =====================C-mode=================
-(add-to-list 'ac-modes 'cc-mode)
-;; =====================C-mode=================
+;; ===========================auto-complete============================
 (provide 'setup_auto_complete)
