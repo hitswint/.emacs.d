@@ -338,7 +338,6 @@ from its directory."
 (define-key helm-map (kbd "C-/") 'swint-helm-quit-and-find-file)
 ;; ================在别的helm-buffer中运行helm命令==============
 (global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x g") 'helm-do-grep) ;不是递归grep，加C-u为递归
 (global-set-key (kbd "C-c C-f") 'helm-locate)
 ;; (global-set-key (kbd "C-c C-f") 'helm-recentf)
 ;; (define-key helm-map (kbd "C-j") 'helm-select-action)
@@ -470,4 +469,11 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 ;; =======================helm-unicode==============================
 (global-set-key (kbd "M-s m") 'helm-unicode)
 ;; =======================helm-unicode==============================
+;; ====================helm-ag=========================
+;; (global-set-key (kbd "C-x g") 'helm-do-grep) ;不是递归grep，加C-u为递归
+(global-set-key (kbd "C-x g") 'helm-do-ag) ;使用helm-ag。
+(when is-win
+  (custom-set-variables
+   '(helm-ag-base-command "pt -e --nocolor --nogroup")))
+;; ====================helm-ag=========================
 (provide 'setup_helm)

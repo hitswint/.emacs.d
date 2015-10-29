@@ -257,7 +257,12 @@
 ;; ============guide-key=============
 (require 'guide-key)
 (setq guide-key/guide-key-sequence
-      '("M-s" "C-x 8"
+      '("C-c"
+        "M-s"
+        "M-g"
+        "C-x c"
+        "C-x x"
+        "C-x 8"
         (org-mode "C-c C-x")
         ))
 (guide-key-mode 1)
