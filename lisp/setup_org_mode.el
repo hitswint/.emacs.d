@@ -54,6 +54,7 @@
              (define-key org-mode-map (kbd "C-c j") nil)
              (define-key org-mode-map (kbd "C-c =") nil)
              (define-key org-mode-map (kbd "C-c C-f") nil)
+             (define-key org-mode-map (kbd "C-c ?") nil)
              (define-key org-mode-map [(control \,)] nil)
              (define-key org-mode-map [(control \.)] nil)
              (define-key org-mode-map [(control \#)] nil)

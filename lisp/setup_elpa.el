@@ -49,8 +49,8 @@
     gnuplot-mode
     god-mode
     graphviz-dot-mode
-    guide-key
     helm
+    helm-ag
     helm-bibtex
     helm-core
     helm-gtags
@@ -98,6 +98,7 @@
     undo-tree
     visible-mark
     w3m
+    which-key
     windata
     window-numbering
     with-editor

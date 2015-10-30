@@ -254,20 +254,19 @@
 (require 'ztree-diff)
 (global-set-key (kbd "C-c z") 'ztree-diff)
 ;; ============ztree=============
-;; ============guide-key=============
-(require 'guide-key)
-(setq guide-key/guide-key-sequence
-      '("C-c"
-        "M-s"
-        "M-g"
-        "C-x c"
-        "C-x x"
-        "C-x 8"
-        (org-mode "C-c C-x")
-        ))
-(guide-key-mode 1)
-(setq guide-key/popup-window-position 'bottom)
-;; ============guide-key=============
+;; ============which-key=============
+;; 原用guide-key，改用which-key，显示更好。
+;; (require 'guide-key)
+;; (setq guide-key/guide-key-sequence
+;;       '("C-c" (org-mode "C-c C-x")))
+(require 'which-key)
+(which-key-mode)
+(which-key-setup-side-window-right-bottom)
+(setq which-key-sort-order 'which-key-description-order)
+;; 使用C-h或?切换页面。
+(setq which-key-use-C-h-for-paging t
+      which-key-prevent-C-h-from-cycling nil)
+;; ============which-key=============
 ;; ===================pdf-tools=================
 ;; 添加的注释跟okular类似，将注释的内容另存为一份文件，只有在emacs中才能看到
 ;; 上述注释为旧版本，新版本的pdf-tools已经可以将注释放在pdf文件本身之中了。

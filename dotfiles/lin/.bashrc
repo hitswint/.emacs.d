@@ -85,6 +85,7 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias ag='ag --path-to-agignore=~/.agignore'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -116,6 +117,6 @@ export PATH=/usr/local/MATLAB/R2011b/bin:$PATH
 export PATH=$PATH:/opt/emacs24/bin
 bind Space:magic-space
 
-# 设置wineprefix和winearch
+# wine
 export WINEPREFIX=$HOME/.wine
 export WINEARCH=win32

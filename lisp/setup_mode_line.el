@@ -51,6 +51,7 @@
 (add-to-list 'sml/hidden-modes " HelmGtags")
 (add-to-list 'sml/hidden-modes " FA")
 (add-to-list 'sml/hidden-modes " hs")
+(add-to-list 'sml/hidden-modes " WK")
 ;; ================smart-mode-line===================
 ;; ====================abbrev-for-mode-line========================
 (defvar mode-line-cleaner-alist
