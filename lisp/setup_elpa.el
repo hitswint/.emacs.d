@@ -97,6 +97,8 @@
     tree-mode
     undo-tree
     visible-mark
+    visual-regexp
+    vlf
     w3m
     which-key
     windata

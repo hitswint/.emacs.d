@@ -375,10 +375,36 @@ is named like ODF with the extension turned to pdf."
 (define-key helm-find-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
 (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
 ;; =================total commander===============
-;; =================backup-walker===============
+;; ================backup-walker================
 (require 'backup-walker)
 (require 'git-timemachine)
 (global-set-key (kbd "C-x b") 'backup-walker-start)
 (global-set-key (kbd "C-c b") 'git-timemachine)
-;; =================backup-walker===============
+;; ================backup-walker================
+;; ===============visual-regexp===============
+(require 'visual-regexp)
+(define-key global-map (kbd "M-s r") 'vr/replace)
+(define-key global-map (kbd "M-s C-r") 'vr/query-replace)
+(define-key global-map (kbd "M-s C-;") 'vr/mc-mark)
+;; ===============visual-regexp===============
+;; ===============vlf===============
+;; vlf把大文件分成多个batch，以改善性能。
+;; Enable vlf when opening files bigger than 100MB.
+(setq large-file-warning-threshold 100000000)
+(require 'vlf-setup)
+(custom-set-variables '(vlf-application 'dont-ask))
+(add-to-list 'vlf-forbidden-modes-list 'pdf-view-mode)
+(eval-after-load "vlf"
+  '(define-key vlf-prefix-map "\C-cv" vlf-mode-map))
+;; C-c C-v n and C-c C-v p move batch by batch.
+;; C-c C-v SPC displays batch starting from current point.
+;; C-c C-v [ and C-c C-v ] take you to the beginning and end of file respectively.
+;; C-c C-v j jumps to particular batch number.
+;; C-c C-v + and C-c C-v - control current batch size by factors of 2.
+;; C-c C-v s and C-c C-v r search forward and backward respectively over the whole file, batch by batch.
+;; C-c C-v % does search and query replace saving intermediate changes.
+;; C-c C-v l jumps to given line in file.
+;; M-x vlf-ediff-files and M-x vlf-ediff-buffers to compare files/buffers batch by batch.
+;; C-c C-v o builds index over whole file for given regular expression just like M-x occur.
+;; ===============vlf===============
 (provide 'setup_packages)

@@ -467,7 +467,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 ;; 重新定义插入citation命令为\citep{}，快捷键定义在setup_latex.el中。
 ;; =======================helm-bibtex==============================
 ;; =======================helm-unicode==============================
-(global-set-key (kbd "M-s m") 'helm-unicode)
+(global-set-key (kbd "C-c C-x m") 'helm-unicode)
 ;; =======================helm-unicode==============================
 ;; ====================helm-ag=========================
 ;; (global-set-key (kbd "C-x g") 'helm-do-grep) ;不是递归grep，加C-u为递归
