@@ -53,6 +53,9 @@
     helm-ag
     helm-bibtex
     helm-core
+    helm-firefox
+    helm-flycheck
+    helm-flyspell
     helm-gtags
     helm-projectile
     helm-swoop
@@ -64,6 +67,7 @@
     ido-vertical-mode
     imenu-anywhere
     lacarte
+    latex-preview-pane
     let-alist
     magit
     magit-popup

@@ -5,6 +5,9 @@
 ;; 修改anything-config.el中的(defvar w3m-command "/usr/bin/w3m")为(defvar w3m-command "c:/Program Files (x86)/w3m/w3m.exe")，问题解决。
 ;; 在lin上面通过elpa安装，在win上直接使用.emacs.d/w3m中下载的已经编译好的代码。
 (require 'w3m)
+(require 'helm-firefox)
+(when is-win
+  (setq helm-firefox-default-directory "~/AppData/Roaming/Mozilla/Firefox/"))
 (setq w3m-use-form t)
 (setq w3m-tab-width 8)
 (setq w3m-use-cookies t)
@@ -50,6 +53,6 @@
              (define-key w3m-mode-map (kbd "C-o g") '(lambda () (interactive)
                                                        (w3m-new-tab)
                                                        (w3m-browse-url "www.google.com")))
-             (define-key w3m-mode-map (kbd "'") 'helm-w3m-bookmarks)))
+             (define-key w3m-mode-map (kbd "'") 'helm-firefox-bookmarks)))
 ;; ===================w3m=====================
 (provide 'setup_w3m)

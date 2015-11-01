@@ -188,4 +188,12 @@
   (shell-command (concat "pandoc -o " (file-name-base (buffer-name)) ".docx " (buffer-name))))
 (global-set-key (kbd "C-c C-S-e") 'pandoc-latex-to-doc)
 ;; ======================pandoc=============================
+;; ===================latex-preview-pane===================
+(require 'latex-preview-pane)
+;; latex-preview-pane-enable绑定latex-mode-hook，无效。
+(add-hook 'TeX-mode-hook (lambda () (latex-preview-pane-mode 1)))
+(define-key latex-preview-pane-mode-map (kbd "M-p") nil)
+(define-key latex-preview-pane-mode-map (kbd "M-P") nil)
+(setq pdf-latex-command "xelatex")
+;; ===================latex-preview-pane===================
 (provide 'setup_latex)

@@ -1,13 +1,19 @@
 ;; ================================flycheck==================================
+(require 'helm-flycheck)
 ;; 取消自动开启
 ;; (add-hook 'after-init-hook #'global-flycheck-mode)
 (setq global-flycheck-mode nil)
-(global-set-key (kbd "M-s c") 'flycheck-mode)
+;; Change the prefix.
+(define-key flycheck-mode-map flycheck-keymap-prefix nil)
+(setq flycheck-keymap-prefix (kbd "M-s M-c"))
+(define-key flycheck-mode-map flycheck-keymap-prefix flycheck-command-map)
 ;; C-c ! c flycheck-buffer
 ;; C-c ! p flycheck-previous-error
 ;; C-c ! n flycheck-next-error
 ;; C-c ! l flycheck-list-errors
 ;; C-c ! ? flycheck-describe-checker
+(global-set-key (kbd "M-s c") 'flycheck-mode)
+(define-key flycheck-command-map (kbd "'") 'helm-flycheck)
 ;; From Emacsrocks
 (defun magnars/adjust-flycheck-automatic-syntax-eagerness ()
   "Adjust how often we check for errors based on if there are any.
