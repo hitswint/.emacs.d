@@ -48,6 +48,7 @@
     git-timemachine
     gnuplot-mode
     god-mode
+    google-translate
     graphviz-dot-mode
     helm
     helm-ag

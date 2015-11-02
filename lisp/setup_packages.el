@@ -407,4 +407,16 @@ is named like ODF with the extension turned to pdf."
 ;; M-x vlf-ediff-files and M-x vlf-ediff-buffers to compare files/buffers batch by batch.
 ;; C-c C-v o builds index over whole file for given regular expression just like M-x occur.
 ;; ===============vlf===============
+;; ===============google-translate===============
+(require 'google-translate)
+(require 'google-translate-smooth-ui)
+(global-set-key (kbd "M-@") 'google-translate-smooth-translate)
+(define-key help-mode-map (kbd "q") 'kill-buffer-and-window)
+(setq google-translate-base-url
+      "http://translate.google.cn/translate_a/single")
+(setq google-translate-listen-url
+      "http://translate.google.cn/translate_tts")
+(setq google-translate-translation-directions-alist
+      '(("en" . "zh-CN") ("zh-CN" . "en")))
+;; ===============google-translate===============
 (provide 'setup_packages)
