@@ -96,7 +96,6 @@
     s
     smart-mode-line
     smex
-    smooth-scrolling
     switch-window
     tangotango-theme
     tree-mode

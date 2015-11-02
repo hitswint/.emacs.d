@@ -85,9 +85,6 @@
   :group 'visible-mark)
 (setq visible-mark-faces '(visible-mark-active my-visible-mark-face-2))
 ;; =================visible-mark=================
-;; =================smooth-scrolling=================
-(require 'smooth-scrolling)
-;; =================smooth-scrolling=================
 ;; ====================ace-jump-buffer========================
 ;; 放弃ace-jump-buffer
 (require 'ace-jump-buffer)
