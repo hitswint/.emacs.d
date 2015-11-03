@@ -195,5 +195,16 @@
 (define-key latex-preview-pane-mode-map (kbd "M-p") nil)
 (define-key latex-preview-pane-mode-map (kbd "M-P") nil)
 (setq pdf-latex-command "xelatex")
+;; 使auctex编译支持synctex。
+(setq TeX-source-correlate-mode t)
+(setq TeX-source-correlate-method 'synctex)
+;; 使latex-preview-pane编译支持synctex。
+(setq shell-escape-mode "--synctex=1")
+;; 原函数使用call-process同步编译，改用start-process异步编译。
+(defun lpp/invoke-pdf-latex-command ()
+  (let ((buff (expand-file-name (lpp/buffer-file-name))) (default-directory (file-name-directory (expand-file-name (lpp/buffer-file-name)))))
+    (if shell-escape-mode
+        (start-process "latex-preview-pane" "*pdflatex-buffer*" pdf-latex-command shell-escape-mode buff)
+      (start-process "latex-preview-pane" "*pdflatex-buffer*" pdf-latex-command buff))))
 ;; ===================latex-preview-pane===================
 (provide 'setup_latex)
