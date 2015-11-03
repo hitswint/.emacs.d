@@ -200,11 +200,13 @@
 (setq TeX-source-correlate-method 'synctex)
 ;; 使latex-preview-pane编译支持synctex。
 (setq shell-escape-mode "--synctex=1")
-;; 原函数使用call-process同步编译，改用start-process异步编译。
-(defun lpp/invoke-pdf-latex-command ()
-  (let ((buff (expand-file-name (lpp/buffer-file-name))) (default-directory (file-name-directory (expand-file-name (lpp/buffer-file-name)))))
-    (if shell-escape-mode
-        (start-process "latex-preview-pane" "*pdflatex-buffer*" pdf-latex-command shell-escape-mode buff)
-      (start-process "latex-preview-pane" "*pdflatex-buffer*" pdf-latex-command buff))))
+;; 原函数使用call-process同步编译，会导致hang。
+;; 改用start-process异步编译会造成auto-revert-buffers错误。
+;; 因为异步编译时，pdf-view仍然在更新，显示pdf文件被损坏。
+;; (defun lpp/invoke-pdf-latex-command ()
+;;   (let ((buff (expand-file-name (lpp/buffer-file-name))) (default-directory (file-name-directory (expand-file-name (lpp/buffer-file-name)))))
+;;     (if shell-escape-mode
+;;         (start-process "latex-preview-pane" "*pdflatex-buffer*" pdf-latex-command shell-escape-mode buff)
+;;       (start-process "latex-preview-pane" "*pdflatex-buffer*" pdf-latex-command buff))))
 ;; ===================latex-preview-pane===================
 (provide 'setup_latex)

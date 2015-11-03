@@ -271,10 +271,10 @@
   (pdf-tools-install)
   (add-hook 'pdf-view-mode-hook 'pdf-annot-minor-mode)
   (add-hook 'pdf-view-mode-hook 'pdf-outline-minor-mode)
-  ;; (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
   ;; pdf-view-auto-slice-minor-mode 翻页自动切边。
-  (add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
-  ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。
+  ;; (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
+  ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。取消。
+  ;; (add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
   (define-key pdf-view-mode-map (kbd "C-c C-i") nil)
   (define-key pdf-view-mode-map (kbd "M-s i") 'helm-imenu)
   (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
