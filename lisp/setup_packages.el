@@ -271,7 +271,6 @@
   (pdf-tools-install)
   (add-hook 'pdf-view-mode-hook 'pdf-annot-minor-mode)
   (add-hook 'pdf-view-mode-hook 'pdf-outline-minor-mode)
-  (add-hook 'pdf-view-mode-hook 'auto-revert-mode)
   ;; pdf-view-auto-slice-minor-mode 翻页自动切边。
   ;; (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
   ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。取消。
@@ -306,7 +305,6 @@
 ;; win下使用doc-view查看office和pdf文件时，文件名都不可以包含中文字符。
 ;; 默认的缓存文件夹分别为/tmp和c:/Users/swint/AppData/Local/Temp，使用doc-view-clear-cache清理。
 (setq doc-view-continuous t)
-(add-hook 'doc-view-mode-hook 'auto-revert-mode)
 (define-key doc-view-mode-map (kbd "M-v") 'doc-view-scroll-down-or-previous-page)
 (define-key doc-view-mode-map (kbd "C-v") 'doc-view-scroll-up-or-next-page)
 (define-key doc-view-mode-map (kbd "C-p") '(lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
