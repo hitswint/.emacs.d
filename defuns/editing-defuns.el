@@ -57,20 +57,20 @@ When there is a text selection, act on the region."
       (put this-command 'stateIsCompact-p (if currentStateIsCompact nil t)))))
 ;; ==================compact-uncompact-block===================
 ;; ======================复制和粘贴行======================
-(defun copy-line-or-region ()
-  "Copy current line, or current text selection."
-  (interactive)
-  (if (region-active-p)
-      (kill-ring-save (region-beginning) (region-end))
-    (kill-ring-save (line-beginning-position) (line-beginning-position 2))))
+;; (defun copy-line-or-region ()
+;;   "Copy current line, or current text selection."
+;;   (interactive)
+;;   (if (region-active-p)
+;;       (kill-ring-save (region-beginning) (region-end))
+;;     (kill-ring-save (line-beginning-position) (line-beginning-position 2))))
 (defun cut-line-or-region ()
   "Cut the current line, or current text selection."
   (interactive)
   (if (region-active-p)
       (kill-region (region-beginning) (region-end))
     (kill-region (line-beginning-position) (line-beginning-position 2))))
+;; (global-set-key (kbd "M-w") 'copy-line-or-region)
 (global-set-key (kbd "C-w") 'cut-line-or-region)
-(global-set-key (kbd "M-w") 'copy-line-or-region)
 ;; ======================复制和粘贴行======================
 ;; =============光标不动，窗口上下移动两三行=========================
 (defun window-move-up (&optional arg)

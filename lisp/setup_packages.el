@@ -416,4 +416,12 @@ is named like ODF with the extension turned to pdf."
 (setq google-translate-translation-directions-alist
       '(("en" . "zh-CN") ("zh-CN" . "en")))
 ;; ===============google-translate===============
+;; ==============easy-kill===============
+(require 'easy-kill)
+(global-set-key [remap kill-ring-save] 'easy-kill)
+(global-set-key [remap mark-sexp] 'easy-mark)
+(global-set-key (kbd "M-w") 'kill-ring-save)
+(define-key easy-kill-base-map (kbd "C-w") 'easy-kill-region)
+;; M-w ?: help 查看M-w prefix快捷键
+;; ==============easy-kill===============
 (provide 'setup_packages)

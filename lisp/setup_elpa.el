@@ -35,6 +35,7 @@
     dirtree
     drag-stuff
     function-args
+    easy-kill
     elisp-slime-nav
     elmacro
     emms

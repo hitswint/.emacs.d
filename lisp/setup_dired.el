@@ -326,5 +326,11 @@
              (define-key peep-dired-mode-map (kbd "C-p") nil)
              (define-key peep-dired-mode-map (kbd "C-n") nil)))
 ;; ===================peep-dired====================
+;; ===================async====================
+;; async: Simple library for asynchronous processing in Emacs
+;; async-start async-start-process async-get async-ready async-wait
+(autoload 'dired-async-mode "dired-async.el" nil t)
+(dired-async-mode 1)
+;; ===================async====================
 ;;======================dired========================
 (provide 'setup_dired)
