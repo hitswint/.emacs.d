@@ -7,8 +7,10 @@
 ;; (setq ac-auto-start nil)
 ;; (ac-set-trigger-key "TAB")
 (setq ac-use-menu-map t)
-(define-key ac-completing-map "\C-n" 'ac-next)
-(define-key ac-completing-map "\C-p" 'ac-previous)
+;; (define-key ac-completing-map "\C-p" 'ac-previous)
+;; (define-key ac-completing-map "\C-n" 'ac-next)
+(define-key ac-menu-map (kbd "C-p") nil)
+(define-key ac-menu-map (kbd "C-n") nil)
 ;; 不能把auto-complete快捷键设置成TAB，会导致无法indent。
 (define-key ac-mode-map (kbd "M-u") 'auto-complete)
 ;; ;; 取消TAB绑定以适应yasnippet。TAB的默认作用有两个：
@@ -17,13 +19,11 @@
 ;; ;; 2. 切换menu的选项。取消TAB切换menu选项。
 ;; (define-key ac-menu-map (kbd "TAB") nil)
 (setq ac-menu-height 12)
-(setq-default ac-sources '(
-                           ac-source-yasnippet
+(setq-default ac-sources '(ac-source-yasnippet
                            ac-source-abbrev
                            ac-source-dictionary
                            ac-source-words-in-same-mode-buffers
-                           ac-source-files-in-current-dir
-                           ))
+                           ac-source-files-in-current-dir))
 ;; ============================ac-auctex=========================
 (eval-after-load 'setup_yasnippet '(require 'auto-complete-auctex))
 ;; lin上的ac-auctex会自动启闭latex-math-mode，造成`输入公式的方法失效，两种解决方法：

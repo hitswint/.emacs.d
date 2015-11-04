@@ -52,6 +52,7 @@
 (add-to-list 'sml/hidden-modes " FA")
 (add-to-list 'sml/hidden-modes " hs")
 (add-to-list 'sml/hidden-modes " WK")
+(add-to-list 'sml/hidden-modes " ARev")
 ;; ================smart-mode-line===================
 ;; ====================abbrev-for-mode-line========================
 (defvar mode-line-cleaner-alist

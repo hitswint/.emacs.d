@@ -192,6 +192,7 @@
 (require 'latex-preview-pane)
 ;; latex-preview-pane-enable绑定latex-mode-hook，无效。
 (add-hook 'TeX-mode-hook (lambda () (latex-preview-pane-mode 1)))
+(setq global-auto-revert-ignore-modes '(pdf-view-mode doc-view-mode))
 (define-key latex-preview-pane-mode-map (kbd "M-p") nil)
 (define-key latex-preview-pane-mode-map (kbd "M-P") nil)
 (setq pdf-latex-command "xelatex")
@@ -203,10 +204,55 @@
 ;; 原函数使用call-process同步编译，会导致hang。
 ;; 改用start-process异步编译会造成auto-revert-buffers错误。
 ;; 因为异步编译时，pdf-view仍然在更新，显示pdf文件被损坏。
-;; (defun lpp/invoke-pdf-latex-command ()
-;;   (let ((buff (expand-file-name (lpp/buffer-file-name))) (default-directory (file-name-directory (expand-file-name (lpp/buffer-file-name)))))
-;;     (if shell-escape-mode
-;;         (start-process "latex-preview-pane" "*pdflatex-buffer*" pdf-latex-command shell-escape-mode buff)
-;;       (start-process "latex-preview-pane" "*pdflatex-buffer*" pdf-latex-command buff))))
+(defvar swint-latex-preview-pdf-buff-name nil
+  "Latex preview pdf buffer name.")
+(defun lpp/invoke-pdf-latex-command ()
+  (let* ((buff (expand-file-name (lpp/buffer-file-name)))
+         (default-directory (file-name-directory (expand-file-name (lpp/buffer-file-name)))))
+    (setq swint-latex-preview-pdf-buff-name
+          (replace-regexp-in-string "\.tex" ".pdf" (file-name-nondirectory buff)))
+    ;; 在打开preview-pane之前禁用auto-revert-mode。
+    (remove-hook 'pdf-view-mode-hook 'auto-revert-mode)
+    (remove-hook 'doc-view-mode-hook 'auto-revert-mode)
+    ;; 在已经打开的preview-pane中禁用auto-revert-mode。
+    (if (buffer-live-p (get-buffer swint-latex-preview-pdf-buff-name))
+        (with-current-buffer swint-latex-preview-pdf-buff-name
+          (auto-revert-mode -1)))
+    (let ((process (if shell-escape-mode
+                       (start-process "latex-preview-pane" "*pdflatex-buffer*" pdf-latex-command shell-escape-mode buff)
+                     (start-process "latex-preview-pane" "*pdflatex-buffer*" pdf-latex-command buff))))
+      (set-process-sentinel
+       process
+       (lambda (process signal)
+         (when (memq (process-status process) '(exit signal))
+           (with-current-buffer (get-buffer swint-latex-preview-pdf-buff-name)
+             (cond
+              ((eq (buffer-mode) 'pdf-view-mode)
+               (pdf-view-revert-buffer nil t))
+              ((eq (buffer-mode) 'doc-view-mode)
+               (doc-view-revert-buffer nil t)))
+             (add-hook 'pdf-view-mode-hook 'auto-revert-mode)
+             (add-hook 'doc-view-mode-hook 'auto-revert-mode))))))))
+(defun latex-preview-pane-update-p ()
+  (if (eq (lpp/invoke-pdf-latex-command) 1)
+      (progn
+        (lpp/display-backtrace)
+        (remove-overlays)
+        (lpp/line-errors-to-layovers (lpp/line-errors)))
+
+    (let ((pdf-filename (replace-regexp-in-string "\.tex$" ".pdf" (lpp/buffer-file-name)))
+          (tex-buff (current-buffer))
+          (pdf-buff (replace-regexp-in-string "\.tex" ".pdf" (buffer-name (get-file-buffer (lpp/buffer-file-name))))))
+      (remove-overlays)
+      ;; if the file doesn't exist, say that the file isn't available due to error messages
+      (if (file-exists-p pdf-filename)
+          (if (eq (get-buffer pdf-buff) nil)
+              (set-window-buffer (lpp/window-containing-preview) (find-file-noselect pdf-filename))
+            (progn
+              (set-window-buffer (lpp/window-containing-preview) pdf-buff)
+              (switch-to-buffer-other-window pdf-buff)
+              ;; 注释掉以取消自动更新pdf buffer。
+              ;; (doc-view-revert-buffer nil t)
+              (switch-to-buffer-other-window tex-buff)))))))
 ;; ===================latex-preview-pane===================
 (provide 'setup_latex)
