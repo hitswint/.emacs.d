@@ -3,14 +3,12 @@
 ;; 重新使用package安装autocomplete。
 (require 'auto-complete-config)
 (ac-config-default)
-;; (setq ac-quick-help-delay 0.5)
-;; (setq ac-auto-start nil)
-;; (ac-set-trigger-key "TAB")
+(setq ac-auto-start nil)
 (setq ac-use-menu-map t)
-;; (define-key ac-completing-map "\C-p" 'ac-previous)
-;; (define-key ac-completing-map "\C-n" 'ac-next)
-(define-key ac-menu-map (kbd "C-p") nil)
-(define-key ac-menu-map (kbd "C-n") nil)
+(setq ac-fuzzy-enable t)
+(define-key ac-completing-map "\C-p" 'ac-previous)
+(define-key ac-completing-map "\C-n" 'ac-next)
+;; (ac-set-trigger-key "TAB")
 ;; 不能把auto-complete快捷键设置成TAB，会导致无法indent。
 (define-key ac-mode-map (kbd "M-u") 'auto-complete)
 ;; ;; 取消TAB绑定以适应yasnippet。TAB的默认作用有两个：
@@ -18,7 +16,6 @@
 ;; (define-key ac-completing-map (kbd "TAB") nil)
 ;; ;; 2. 切换menu的选项。取消TAB切换menu选项。
 ;; (define-key ac-menu-map (kbd "TAB") nil)
-(setq ac-menu-height 12)
 (setq-default ac-sources '(ac-source-yasnippet
                            ac-source-abbrev
                            ac-source-dictionary

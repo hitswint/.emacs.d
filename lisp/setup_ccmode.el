@@ -65,7 +65,7 @@
 (require 'function-args)
 (fa-config-default)
 (define-key function-args-mode-map (kbd "M-s M-u") 'moo-complete)
-(define-key function-args-mode-map (kbd "M-U") 'fa-show)
+(define-key function-args-mode-map (kbd "M-s M-U") 'fa-show)
 (define-key function-args-mode-map (kbd "C-j") 'fa-jump-maybe)
 (define-key function-args-mode-map (kbd "M-s C-i") 'moo-jump-local)
 (define-key function-args-mode-map (kbd "M-n") nil)
@@ -112,6 +112,23 @@
 (define-key helm-gtags-mode-map (kbd "C-x <") 'helm-gtags-previous-history)
 (define-key helm-gtags-mode-map (kbd "C-x >") 'helm-gtags-next-history)
 ;; =======================helm-gtags===========================
+;; =======================company===========================
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(define-key company-active-map (kbd "C-n") 'company-select-next)
+(dotimes (i 10)
+  (define-key company-active-map (read-kbd-macro (format "C-%d" i)) 'company-complete-number))
+(setq company-show-numbers t)
+(global-set-key (kbd "M-U") 'company-complete-common)
+(setq company-backends (delete 'company-semantic company-backends))
+(add-to-list 'company-backends 'company-c-headers)
+;; To complete for projects, you need to tell Clang your include paths.
+;; Create a file named .dir-locals.el at your project root:
+;; ((nil . ((company-clang-arguments . ("-I/home/<user>/project_root/include1/"
+;;                                      "-I/home/<user>/project_root/include2/")))))
+;; If you use Helm, you can easily insert absolute path by C-c i at the current path in helm-find-files.
+;; =======================company===========================
 ;; =======================auto-complete-c-headers===========================
 (defun ac-c-header-init()
   (require 'auto-complete-c-headers)
@@ -130,9 +147,10 @@
 ;; =======================auto-complete-clang===========================
 (require 'auto-complete-clang)
 (setq ac-clang-flags
-      (mapcar(lambda (item)(concat "-I" item))
-             (split-string
-              "
+      (mapcar (lambda (item)
+                (concat "-I" item))
+              (split-string
+               "
 /usr/include/c++/4.9
 /usr/include/x86_64-linux-gnu/c++/4.9
 /usr/include/c++/4.9/backward
@@ -142,7 +160,7 @@
 /usr/include/x86_64-linux-gnu
 /usr/include
 "
-              )))
+               )))
 (setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 (defun ac-cc-mode-setup ()
   (setq ac-sources

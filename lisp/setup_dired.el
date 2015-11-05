@@ -331,6 +331,33 @@
 ;; async-start async-start-process async-get async-ready async-wait
 (autoload 'dired-async-mode "dired-async.el" nil t)
 (dired-async-mode 1)
+(defun dired-do-copy (&optional arg)
+  "Redefine dired-do-copy to fix conflict between dired-async-mode and dired-sync-annotated."
+  (interactive "P")
+  (let* ((fn-list (dired-get-marked-files nil arg))
+         (fn-list-nodirectory (mapcar 'file-name-nondirectory fn-list))
+         (annotated-file-list (if (dired-k--parse-annotated-status)
+                                  (hash-table-keys (dired-k--parse-annotated-status))))
+         (fn-list-annotated (remove-if-not (lambda (x)
+                                             (member x annotated-file-list))
+                                           fn-list-nodirectory))
+         (annotation-storage-files
+          (remove nil (mapcar (lambda (from)
+                                (directory-files "~/org/annotated/" t
+                                                 (concat "annotated-("
+                                                         (replace-regexp-in-string
+                                                          "/" "_" (substring-no-properties (abbreviate-file-name from) 1)) "_")))
+                              fn-list))))
+    (if (or fn-list-annotated annotation-storage-files)
+        (progn (message "%s" fn-list-annotated)
+               (message "%s" annotation-storage-files)
+               (dired-async-mode 0))))
+  (let ((dired-recursive-copies dired-recursive-copies))
+    (dired-do-create-files 'copy (function dired-copy-file)
+                           "Copy"
+                           arg dired-keep-marker-copy
+                           nil dired-copy-how-to-fn))
+  (dired-async-mode 1))
 ;; ===================async====================
 ;;======================dired========================
 (provide 'setup_dired)

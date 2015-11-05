@@ -30,6 +30,8 @@
     backup-walker
     bing-dict
     clean-aindent-mode
+    company
+    company-c-headers
     dash
     dired-details
     dirtree

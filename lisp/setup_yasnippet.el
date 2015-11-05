@@ -5,6 +5,7 @@
 (yas-global-mode 1)
 (yas-minor-mode 1)
 (define-key yas-minor-mode-map (kbd "M-I") 'yas-expand)
+(define-key yas-minor-mode-map (kbd "TAB") nil)
 (setq yas-snippet-dirs
       '("~/.emacs.d/snippets"                 ;; personal snippets
         ;;         "/path/to/some/collection/"           ;; foo-mode and bar-mode snippet collection
@@ -14,10 +15,10 @@
 ;; use popup to yas/choose-value
 ;; 使用ac的popup代替yas/choose-value自带的弹出菜单
 (define-key popup-menu-keymap (kbd "C-p") 'popup-previous)
-(define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
 (define-key popup-menu-keymap (kbd "C-n") 'popup-next)
+(define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
+(define-key popup-menu-keymap (kbd "M-n") 'popup-next)
 (define-key popup-menu-keymap (kbd "TAB") 'popup-next)
-(define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
 (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
   (when (featurep 'popup)
     (popup-menu*
