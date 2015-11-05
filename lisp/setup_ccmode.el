@@ -125,7 +125,7 @@
 (require 'company-quickhelp)
 (company-quickhelp-mode 1)
 (setq company-quickhelp-delay nil)
-(define-key company-quickhelp-mode-map (kbd "C-o") #'company-quickhelp-manual-begin)
+(define-key company-active-map (kbd "C-o") #'company-quickhelp-manual-begin)
 ;; 在弹出popup的情况下，C-h 打开*Help*，C-w 进入文件，C-o弹出pos-tip，C-s 搜索，C-M-s 过滤。
 ;; company-c-headers
 (add-to-list 'company-backends 'company-c-headers)

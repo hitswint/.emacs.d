@@ -424,4 +424,21 @@ is named like ODF with the extension turned to pdf."
 (define-key easy-kill-base-map (kbd "C-w") 'easy-kill-region)
 ;; M-w ?: help 查看M-w prefix快捷键
 ;; ==============easy-kill===============
+;; ================smex==================
+(require 'smex)
+(global-set-key (kbd "M-X")
+                (lambda ()
+                  (interactive)
+                  (or (boundp 'smex-cache)
+                      (smex-initialize))
+                  (global-set-key (kbd "M-X") 'smex)
+                  (smex)))
+(global-set-key (kbd "C-x M-x")
+                (lambda ()
+                  (interactive)
+                  (or (boundp 'smex-cache)
+                      (smex-initialize))
+                  (global-set-key (kbd "C-x M-x") 'smex-major-mode-commands)
+                  (smex-major-mode-commands)))
+;; ================smex==================
 (provide 'setup_packages)

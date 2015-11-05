@@ -89,5 +89,17 @@
 (add-hook 'org-mode-hook 'wrap-region-mode)
 (add-hook 'latex-mode-hook 'wrap-region-mode)
 ;; ==================wrap-region==================
+;; =======================rainbow-delimiters==========================
+(require 'rainbow-delimiters)
+;; (global-rainbow-delimiters-mode)
+;; 在org-mode中打开rainbow会让org本身的highlight失效
+;; (add-hook 'org-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'dired-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'octave-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'gnuplot-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'c-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'graphviz-dot-mode-hook 'rainbow-delimiters-mode)
+;; =======================rainbow-delimiters==========================
 ;; =============================括号==============================
 (provide 'setup_parenthesis)

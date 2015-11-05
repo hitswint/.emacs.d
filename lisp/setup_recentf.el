@@ -1,5 +1,5 @@
 ;; ========================recentf=========================
-(recentf-mode 1) ; keep a list of recently opened files
+(recentf-mode 1)
 ;; recentf改用helm前端。
 (global-set-key (kbd "C-c f") 'recentf-ido-find-file)
 (defun recentf-ido-find-file ()

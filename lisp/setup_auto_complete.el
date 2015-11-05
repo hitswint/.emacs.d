@@ -1,6 +1,5 @@
 ;; ===========================auto-complete============================
 ;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/dict")
-;; 重新使用package安装autocomplete。
 (require 'auto-complete-config)
 (ac-config-default)
 (setq ac-auto-start nil)
@@ -8,8 +7,7 @@
 (setq ac-fuzzy-enable t)
 (define-key ac-completing-map "\C-p" 'ac-previous)
 (define-key ac-completing-map "\C-n" 'ac-next)
-;; (ac-set-trigger-key "TAB")
-;; 不能把auto-complete快捷键设置成TAB，会导致无法indent。
+;; (ac-set-trigger-key "TAB")              ;导致无法indent
 (define-key ac-mode-map (kbd "M-u") 'auto-complete)
 ;; ;; 取消TAB绑定以适应yasnippet。TAB的默认作用有两个：
 ;; ;; 1. 延伸menu出现之前的默认选项。取消延伸默认选项，使用RET替代。

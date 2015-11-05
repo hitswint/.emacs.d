@@ -191,7 +191,6 @@
 ;; ===================latex-preview-pane===================
 (require 'latex-preview-pane)
 ;; latex-preview-pane-enable绑定latex-mode-hook，无效。
-;; 取消tex文件自动开启latex-preview-pane-mode。
 ;; (add-hook 'TeX-mode-hook (lambda () (latex-preview-pane-mode 1)))
 (define-key latex-preview-pane-mode-map (kbd "M-p") nil)
 (define-key latex-preview-pane-mode-map (kbd "M-P") nil)

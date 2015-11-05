@@ -1,18 +1,16 @@
 ;; ==================yasnippet===================
-;; (yas/load-directory "~/.emacs.d/yasnippet-0.6.1c/snippets")
-(require 'yasnippet) ;; not yasnippet-bundle
+(require 'yasnippet)
 ;; (yas-initialize)
 (yas-global-mode 1)
 (yas-minor-mode 1)
 (define-key yas-minor-mode-map (kbd "M-I") 'yas-expand)
 (define-key yas-minor-mode-map (kbd "TAB") nil)
 (setq yas-snippet-dirs
-      '("~/.emacs.d/snippets"                 ;; personal snippets
+      '("~/.emacs.d/snippets" ;; personal snippets
         ;;         "/path/to/some/collection/"           ;; foo-mode and bar-mode snippet collection
         ;;         "/path/to/yasnippet/yasmate/snippets" ;; the yasmate collection
         ;;         "/path/to/yasnippet/snippets"         ;; the default collection
         ))
-;; use popup to yas/choose-value
 ;; 使用ac的popup代替yas/choose-value自带的弹出菜单
 (define-key popup-menu-keymap (kbd "C-p") 'popup-previous)
 (define-key popup-menu-keymap (kbd "C-n") 'popup-next)

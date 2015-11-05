@@ -92,8 +92,7 @@
 ;; =======设定todo的子项完成后主项自动完成==========
 ;; =======设定todo关键词==========
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")
-        ))
+      '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")))
 ;; |后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔
 ;; =======设定todo关键词==========
 ;; =======================org输出latex=============================
@@ -274,7 +273,6 @@ depending on the last command issued."
 ;; Pressing the single-quote ' followed by another character modifies the symbol before point with an accent or a font. If you wait more than 1.5 seconds after the single-quote, a help window will pop up. Character modification will work only inside LaTeX fragments; outside the quote is normal.
 ;; ==============org中输入公式======================
 ;; ==============截图================
-;; 只截图，而不在文件中插入
 ;; screenshot-local截图到./pic文件夹中，screenshot截图到home/swint/org/pic文件夹中。
 (defun my-screenshot ()
   "Take a screenshot into a unique-named file in the current buffer file

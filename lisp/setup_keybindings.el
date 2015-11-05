@@ -13,12 +13,7 @@
 (global-set-key (kbd "C-M-5") 'w3m)
 (global-set-key (kbd "C-M-6") 'calendar)
 (global-set-key (kbd "C-;") 'set-mark-command)
-;; (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key [f9] 'menu-bar-mode)
 (global-set-key (kbd "C-SPC") nil)
-;; (defun prev-window ()
-;;   (interactive)
-;;   (other-window -1))
-;; (global-set-key (kbd "<C-S-iso-lefttab>") 'prev-window)
 ;; ===========================全局快捷键==============================
 (provide 'setup_keybindings)

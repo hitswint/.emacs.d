@@ -1,5 +1,4 @@
 ;; ===================Anzu====================
-;; 在win上使用elpa安装，但是在lin上无法安装，因为版本不满足要求。使用elpa安装cl-lib-0.5，然后手动安装anzu。
 (require 'anzu)
 (global-anzu-mode +1)
 (global-set-key (kbd "M-*") 'anzu-query-replace)
