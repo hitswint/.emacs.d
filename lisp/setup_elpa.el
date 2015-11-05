@@ -32,6 +32,7 @@
     clean-aindent-mode
     company
     company-c-headers
+    company-quickhelp
     dash
     dired-details
     dirtree
