@@ -16,8 +16,8 @@
     (smp--delete-directory directory recursive)))
 ;; 借自prelude。
 (defvar prelude-packages
-  '(ace-jump-buffer
-    ace-jump-mode
+  '(ace-jump-mode
+    ac-ispell
     ac-math
     aggressive-indent
     anchored-transpose

@@ -13,12 +13,13 @@
 ;; (define-key ac-completing-map (kbd "TAB") nil)
 ;; ;; 2. 切换menu的选项。取消TAB切换menu选项。
 ;; (define-key ac-menu-map (kbd "TAB") nil)
-(add-to-list 'ac-dictionary-files "~/.english-words")
-(setq-default ac-sources '(ac-source-yasnippet
-                           ac-source-abbrev
+(setq-default ac-sources '(ac-source-abbrev
                            ac-source-dictionary
                            ac-source-words-in-same-mode-buffers
-                           ac-source-files-in-current-dir))
+                           ac-source-files-in-current-dir
+                           ac-source-yasnippet
+                           ac-source-ispell
+                           ac-source-ispell-fuzzy))
 ;; =======================auto-complete-c-headers===========================
 (defun ac-c-header-init()
   (require 'auto-complete-c-headers)
@@ -51,7 +52,6 @@
 /usr/include
 "
                )))
-(setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 (defun ac-cc-mode-setup ()
   (setq ac-sources
         (append '(ac-source-clang
@@ -125,9 +125,15 @@
 (add-to-list 'ac-modes 'shell-mode)
 (add-hook 'shell-mode-hook 'ac-rlc-setup-sources)
 ;; ============================shell中使用============================
-;; =====================graphviz-dot-mode=================
+;; =================graphviz-dot-mode=================
 (add-to-list 'ac-modes 'graphviz-dot-mode)
-;; =====================graphviz-dot-mode=================
+;; =================graphviz-dot-mode=================
+;; =================ac-ispell=================
+;; Completion words longer than 4 characters
+(eval-after-load "auto-complete" '(ac-ispell-setup))
+;; 也可以加下句，使用ac-source-dictionary补全单词。
+;; (add-to-list 'ac-dictionary-files "~/.english-words")
+;; =================ac-ispell=================
 ;; ===========================auto-complete============================
 ;; ==============hippie-expand===================
 ;; 打开.english-words方式进行补全

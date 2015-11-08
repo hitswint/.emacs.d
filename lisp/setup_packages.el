@@ -85,10 +85,6 @@
   :group 'visible-mark)
 (setq visible-mark-faces '(visible-mark-active my-visible-mark-face-2))
 ;; =================visible-mark=================
-;; ====================ace-jump-buffer========================
-;; 放弃ace-jump-buffer
-(require 'ace-jump-buffer)
-;; ====================ace-jump-buffer========================
 ;; =====================unicad=====================
 ;; lin中不会出现乱码，不需要，这个包会拖慢启动速度
 (when is-win
