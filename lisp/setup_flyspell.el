@@ -4,6 +4,8 @@
 (ispell-change-dictionary "american" t)
 (when is-win
   (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/"))
+(if (not ispell-alternate-dictionary)
+    (setq ispell-alternate-dictionary (file-truename "~/.english-words")))
 (require 'ispell)
 (require 'flyspell)
 (require 'helm-flyspell)
