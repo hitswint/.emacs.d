@@ -1,7 +1,6 @@
 ;; ================================perspective====================================
 (require 'perspective)
 (persp-mode)
-(global-set-key (kbd "C-c .") 'persp-switch)
 ;;; iswitch限制在当前persp
 (defvar iswitchb-temp-buflist/other-persps nil)
 (defvar iswitchb-temp-buflist/all-persps nil)

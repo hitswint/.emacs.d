@@ -15,9 +15,9 @@
 ;; (global-set-key (kbd "C-M-;") 'set-rectangular-region-anchor)
 (global-set-key (kbd "C-M-,") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-M-.") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-c C-0") 'mc/edit-lines)
-(global-set-key (kbd "C-c C-9") 'mc/mark-all-like-this)
-(global-set-key (kbd "C-c C-8") 'mc/insert-numbers)
+(global-set-key (kbd "M-s ,") 'mc/edit-lines)
+(global-set-key (kbd "M-s .") 'mc/mark-all-like-this)
+(global-set-key (kbd "M-s /") 'mc/insert-numbers)
 ;; mc/i:mc/insert-numbers: Insert increasing numbers for each cursor, top to bottom.
 ;; mc/sort-regions: Sort the marked regions alphabetically.
 ;; mc/reverse-regions: Reverse the order of the marked regions.
@@ -88,7 +88,6 @@
 ;; ====================ace-jump-buffer========================
 ;; 放弃ace-jump-buffer
 (require 'ace-jump-buffer)
-(global-set-key (kbd "C-c ,") 'ace-jump-buffer)
 ;; ====================ace-jump-buffer========================
 ;; =====================unicad=====================
 ;; lin中不会出现乱码，不需要，这个包会拖慢启动速度
@@ -196,10 +195,12 @@
 ;; ===================popup-kill-ring====================
 ;; ===================highlight-symbol====================
 (require 'highlight-symbol)
-(global-set-key (kbd "M-g h") 'highlight-symbol-at-point)
-(global-set-key (kbd "M-g n") 'highlight-symbol-next)
-(global-set-key (kbd "M-g p") 'highlight-symbol-prev)
-(global-set-key (kbd "M-g r") 'highlight-symbol-query-replace)
+(setq highlight-symbol-foreground-color "gray30")
+(smartrep-define-key global-map "C-x"
+  '(("/" . highlight-symbol-at-point)
+    ("," . highlight-symbol-prev)
+    ("." . highlight-symbol-next)))
+;; (global-set-key (kbd "C-c ") 'highlight-symbol-query-replace)
 ;; ===================highlight-symbol====================
 ;; ===================elmacro====================
 ;; 需要先打开elmacro-mode，然后F3/F4录制宏
@@ -441,4 +442,28 @@ is named like ODF with the extension turned to pdf."
                   (global-set-key (kbd "C-x M-x") 'smex-major-mode-commands)
                   (smex-major-mode-commands)))
 ;; ================smex==================
+;; =================bm===================
+(require 'bm)
+(smartrep-define-key global-map "C-c"
+  '(("/" . bm-toggle)
+    ("," . bm-previous)
+    ("." . bm-next)))
+;; (setq temporary-bookmark-p t)
+;; =================bm===================
+;; ============operate-on-number============
+;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字。
+(require 'operate-on-number)
+(smartrep-define-key global-map "C-="
+  '(("+" . apply-operation-to-number-at-point)
+    ("-" . apply-operation-to-number-at-point)
+    ("*" . apply-operation-to-number-at-point)
+    ("/" . apply-operation-to-number-at-point)
+    ("\\" . apply-operation-to-number-at-point)
+    ("^" . apply-operation-to-number-at-point)
+    ("<" . apply-operation-to-number-at-point)
+    (">" . apply-operation-to-number-at-point)
+    ("#" . apply-operation-to-number-at-point)
+    ("%" . apply-operation-to-number-at-point)
+    ("=" . operate-on-number-at-point)))
+;; ============operate-on-number============
 (provide 'setup_packages)

@@ -1,8 +1,7 @@
 ;; =================winner-mode=================
 (winner-mode 1)
-;; copied from http://puntoblogspot.blogspot.com/2011/05/undo-layouts-in-emacs.html
-(global-set-key (kbd "M-s M-/") 'winner-undo)
-(global-set-key (kbd "M-s /") 'winner-redo)
+(global-set-key (kbd "M-/") 'winner-undo)
+(global-set-key (kbd "M-s M-/") 'winner-redo)
 ;; =================winner-mode=================
 ;; =================window-numbering=================
 (require 'window-numbering)
@@ -104,29 +103,30 @@ If prefix ARG is given, delete the window instead of selecting it."
    The function wraps a function with `ignore-errors' macro."
   (interactive)
   (setq previously-selected-window (selected-window))
-  (windmove-left))
+  (funcall (ignore-error-wrapper 'windmove-left)))
 (defun swint-windmove-right ()
   "Funtion return new function that ignore errors.
    The function wraps a function with `ignore-errors' macro."
   (interactive)
   (setq previously-selected-window (selected-window))
-  (windmove-right))
+  (funcall (ignore-error-wrapper 'windmove-right)))
 (defun swint-windmove-up ()
   "Funtion return new function that ignore errors.
    The function wraps a function with `ignore-errors' macro."
   (interactive)
   (setq previously-selected-window (selected-window))
-  (windmove-up))
+  (funcall (ignore-error-wrapper 'windmove-up)))
 (defun swint-windmove-down ()
   "Funtion return new function that ignore errors.
    The function wraps a function with `ignore-errors' macro."
   (interactive)
   (setq previously-selected-window (selected-window))
-  (windmove-down))
-(global-set-key (kbd "M-s h") (ignore-error-wrapper 'swint-windmove-left))
-(global-set-key (kbd "M-s l") (ignore-error-wrapper 'swint-windmove-right))
-(global-set-key (kbd "M-s k") (ignore-error-wrapper 'swint-windmove-up))
-(global-set-key (kbd "M-s j") (ignore-error-wrapper 'swint-windmove-down))
+  (funcall (ignore-error-wrapper 'windmove-down)))
+(smartrep-define-key global-map "M-s"
+  '(("h" . swint-windmove-left)
+    ("l" . swint-windmove-right)
+    ("k" . swint-windmove-up)
+    ("j" . swint-windmove-down)))
 ;; =====================windmove=====================
 ;; ====================三窗口设置=====================
 (defun split-window-3-horizontally (&optional arg)
@@ -143,6 +143,12 @@ If prefix ARG is given, delete the window instead of selecting it."
   (split-window-vertically)
   (if arg (other-window 1))
   (split-window-horizontally))
+(defun change-split-type (split-fn &optional arg)
+  "Change 3 window style from horizontal to vertical and vice-versa"
+  (let ((bufList (mapcar 'window-buffer (window-list))))
+    (select-window (get-largest-window))
+    (funcall split-fn arg)
+    (mapcar* 'set-window-buffer (window-list) bufList)))
 (defun change-split-type-3-v (&optional arg)
   "change 3 window style from horizon to vertical"
   (interactive "P")
@@ -151,13 +157,5 @@ If prefix ARG is given, delete the window instead of selecting it."
   "change 3 window style from vertical to horizon"
   (interactive "P")
   (change-split-type 'split-window-3-vertically arg))
-(defun change-split-type (split-fn &optional arg)
-  "Change 3 window style from horizontal to vertical and vice-versa"
-  (let ((bufList (mapcar 'window-buffer (window-list))))
-    (select-window (get-largest-window))
-    (funcall split-fn arg)
-    (mapcar* 'set-window-buffer (window-list) bufList)))
-(global-set-key (kbd "M-s ,") 'change-split-type-3-h)
-(global-set-key (kbd "M-s .") 'change-split-type-3-v)
 ;; ====================三窗口设置=====================
 (provide 'setup_windows)

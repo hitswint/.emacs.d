@@ -86,6 +86,8 @@
 ;; 在header-line显示函数，显示有问题。可以用which-function-mode代替。
 (global-semantic-stickyfunc-mode 0)
 (semantic-mode 1)
+(define-key semantic-mode-map (kbd "C-c ,") nil)
+;; 所有semantic的快捷键均以C-c ,为前缀，可以考虑用M-s s代替。
 ;; =======================semantic===========================
 ;; =======================helm-gtags===========================
 ;; helm-man-woman: C-x c m
@@ -136,44 +138,5 @@
 ;;                                      "-I/home/<user>/project_root/include2/")))))
 ;; If you use Helm, you can easily insert absolute path by C-c i at the current path in helm-find-files.
 ;; =======================company===========================
-;; =======================auto-complete-c-headers===========================
-(defun ac-c-header-init()
-  (require 'auto-complete-c-headers)
-  (add-to-list 'ac-sources 'ac-source-c-headers)
-  (add-to-list 'achead:include-directories '"/usr/include/c++/4.9")
-  (add-to-list 'achead:include-directories '"/usr/include/x86_64-linux-gnu/c++/4.9")
-  (add-to-list 'achead:include-directories '"/usr/include/c++/4.9/backward")
-  (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-linux-gnu/4.9/include")
-  (add-to-list 'achead:include-directories '"/usr/local/include")
-  (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed")
-  (add-to-list 'achead:include-directories '"/usr/include/x86_64-linux-gnu")
-  (add-to-list 'achead:include-directories '"/usr/include"))
-(add-hook 'c++-mode-hook 'ac-c-header-init)
-(add-hook 'c-mode-hook 'ac-c-header-init)
-;; =======================auto-complete-c-headers===========================
-;; =======================auto-complete-clang===========================
-(require 'auto-complete-clang)
-(setq ac-clang-flags
-      (mapcar (lambda (item)
-                (concat "-I" item))
-              (split-string
-               "
-/usr/include/c++/4.9
-/usr/include/x86_64-linux-gnu/c++/4.9
-/usr/include/c++/4.9/backward
-/usr/lib/gcc/x86_64-linux-gnu/4.9/include
-/usr/local/include
-/usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed
-/usr/include/x86_64-linux-gnu
-/usr/include
-"
-               )))
-(setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
-(defun ac-cc-mode-setup ()
-  (setq ac-sources
-        (append '(ac-source-clang
-                  ac-source-semantic) ac-sources)))
-(add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
-;; =======================auto-complete-clang===========================
 ;; =======================ccmode========================
 (provide 'setup_ccmode)

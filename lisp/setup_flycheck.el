@@ -7,6 +7,9 @@
 (define-key flycheck-mode-map flycheck-keymap-prefix nil)
 (setq flycheck-keymap-prefix (kbd "M-s M-c"))
 (define-key flycheck-mode-map flycheck-keymap-prefix flycheck-command-map)
+(smartrep-define-key flycheck-mode-map "M-s M-c"
+  '(("p" . flycheck-previous-error)
+    ("n" . flycheck-next-error)))
 ;; C-c ! c flycheck-buffer
 ;; C-c ! p flycheck-previous-error
 ;; C-c ! n flycheck-next-error

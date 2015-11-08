@@ -1,5 +1,4 @@
 ;; ===========================auto-complete============================
-;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/dict")
 (require 'auto-complete-config)
 (ac-config-default)
 (setq ac-auto-start nil)
@@ -14,11 +13,51 @@
 ;; (define-key ac-completing-map (kbd "TAB") nil)
 ;; ;; 2. 切换menu的选项。取消TAB切换menu选项。
 ;; (define-key ac-menu-map (kbd "TAB") nil)
+(add-to-list 'ac-dictionary-files "~/.english-words")
 (setq-default ac-sources '(ac-source-yasnippet
                            ac-source-abbrev
                            ac-source-dictionary
                            ac-source-words-in-same-mode-buffers
                            ac-source-files-in-current-dir))
+;; =======================auto-complete-c-headers===========================
+(defun ac-c-header-init()
+  (require 'auto-complete-c-headers)
+  (add-to-list 'ac-sources 'ac-source-c-headers)
+  (add-to-list 'achead:include-directories '"/usr/include/c++/4.9")
+  (add-to-list 'achead:include-directories '"/usr/include/x86_64-linux-gnu/c++/4.9")
+  (add-to-list 'achead:include-directories '"/usr/include/c++/4.9/backward")
+  (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-linux-gnu/4.9/include")
+  (add-to-list 'achead:include-directories '"/usr/local/include")
+  (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed")
+  (add-to-list 'achead:include-directories '"/usr/include/x86_64-linux-gnu")
+  (add-to-list 'achead:include-directories '"/usr/include"))
+(add-hook 'c++-mode-hook 'ac-c-header-init)
+(add-hook 'c-mode-hook 'ac-c-header-init)
+;; =======================auto-complete-c-headers===========================
+;; =======================auto-complete-clang===========================
+(require 'auto-complete-clang)
+(setq ac-clang-flags
+      (mapcar (lambda (item)
+                (concat "-I" item))
+              (split-string
+               "
+/usr/include/c++/4.9
+/usr/include/x86_64-linux-gnu/c++/4.9
+/usr/include/c++/4.9/backward
+/usr/lib/gcc/x86_64-linux-gnu/4.9/include
+/usr/local/include
+/usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed
+/usr/include/x86_64-linux-gnu
+/usr/include
+"
+               )))
+(setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+(defun ac-cc-mode-setup ()
+  (setq ac-sources
+        (append '(ac-source-clang
+                  ac-source-semantic) ac-sources)))
+(add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
+;; =======================auto-complete-clang===========================
 ;; ============================ac-auctex=========================
 (eval-after-load 'setup_yasnippet '(require 'auto-complete-auctex))
 ;; lin上的ac-auctex会自动启闭latex-math-mode，造成`输入公式的方法失效，两种解决方法：
@@ -90,4 +129,45 @@
 (add-to-list 'ac-modes 'graphviz-dot-mode)
 ;; =====================graphviz-dot-mode=================
 ;; ===========================auto-complete============================
-(provide 'setup_auto_complete)
+;; ==============hippie-expand===================
+;; 打开.english-words方式进行补全
+(setq hippie-expand-try-functions-list
+      '(try-expand-by-dict
+        ;; try-expand-dabbrev-all-buffers
+        ;; try-complete-file-name-partially
+        ;; try-complete-file-name
+        ;; try-expand-all-abbrevs
+        ;; try-expand-list
+        ;; try-expand-line
+        ;; try-expand-dabbrev
+        ;; try-expand-dabbrev-from-kill
+        ;; try-complete-lisp-symbol-partially
+        ;; try-complete-lisp-symbol
+        ))
+;; Bin Chen写的补全单词函数，但无法使用ido界面，显示undo次数过多。
+(global-set-key (kbd "M-?") 'hippie-expand)
+;; The actual expansion function
+(defun try-expand-by-dict (old)
+  ;; old is true if we have already attempted an expansion
+  (unless (bound-and-true-p ispell-minor-mode)
+    (ispell-minor-mode 1))
+  ;; english-words.txt is the fallback dicitonary
+  (if (not ispell-alternate-dictionary)
+      (setq ispell-alternate-dictionary (file-truename "~/.english-words")))
+  (let ((lookup-func (if (fboundp 'ispell-lookup-words)
+                         'ispell-lookup-words
+                       'lookup-words)))
+    (unless old
+      (he-init-string (he-lisp-symbol-beg) (point))
+      (if (not (he-string-member he-search-string he-tried-table))
+          (setq he-tried-table (cons he-search-string he-tried-table)))
+      (setq he-expand-list
+            (and (not (equal he-search-string ""))
+                 (funcall lookup-func (concat (buffer-substring-no-properties (he-lisp-symbol-beg) (point)) "*")))))
+    (if (null he-expand-list)
+        (if old (he-reset-string))
+      (he-substitute-string (car he-expand-list))
+      (setq he-expand-list (cdr he-expand-list))
+      t)))
+;; ==============hippie-expand===================
+(provide 'setup_completion)

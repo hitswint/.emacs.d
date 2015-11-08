@@ -1,10 +1,10 @@
-;; ===========================全局快捷键==============================
+;; ====================快捷键====================
 (global-set-key (kbd "C-c `") 'ibuffer)
 (global-set-key (kbd "C-c ~") 'speedbar-get-focus)
 (global-set-key (kbd "M-,") 'delete-other-windows)
+(global-set-key (kbd "M-.") 'delete-window)
 (global-set-key (kbd "M-s M-,") 'split-window-vertically)
 (global-set-key (kbd "M-s M-.") 'split-window-horizontally)
-(global-set-key (kbd "M-.") 'delete-window)
 (global-set-key (kbd "C-M-1") 'eshell)
 (global-set-key (kbd "C-M-!") 'shell)
 (global-set-key (kbd "C-M-2") 'kid-sdcv-to-buffer)
@@ -15,5 +15,9 @@
 (global-set-key (kbd "C-;") 'set-mark-command)
 (global-set-key [f9] 'menu-bar-mode)
 (global-set-key (kbd "C-SPC") nil)
-;; ===========================全局快捷键==============================
+;; ============smartrep============
+(require 'smartrep)
+(setq smartrep-mode-line-string-activated nil)
+;; ============smartrep============
+;; ====================快捷键====================
 (provide 'setup_keybindings)

@@ -29,6 +29,7 @@
     auto-complete-clang
     backup-walker
     bing-dict
+    bm
     clean-aindent-mode
     company
     company-c-headers
@@ -81,6 +82,7 @@
     multiple-cursors
     names
     nyan-mode
+    operate-on-number
     outline-magic
     paredit
     paredit-everywhere
@@ -99,6 +101,7 @@
     rich-minority
     s
     smart-mode-line
+    smartrep
     smex
     switch-window
     tangotango-theme

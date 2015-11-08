@@ -30,7 +30,7 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
     ))
 ;; ===============切换cap和大小写===================
 ;; ==================compact-uncompact-block===================
-(global-set-key (kbd "M-:") 'compact-uncompact-block)
+(global-set-key (kbd "C-M-q") 'compact-uncompact-block)
 (defun compact-uncompact-block ()
   "Remove or add line ending chars on current paragraph.
 This command is similar to a toggle of `fill-paragraph'.
@@ -89,10 +89,10 @@ When there is a text selection, act on the region."
 (global-set-key [(meta p)] 'window-move-down)
 ;; =============光标不动，窗口上下移动两三行=========================
 ;; ====================合并一行============================
-(global-set-key(kbd "M-?")
-               (lambda()
-                 (interactive)
-                 (join-line -1)))
+(global-set-key (kbd "M-Q")
+                (lambda()
+                  (interactive)
+                  (join-line -1)))
 ;; ====================合并一行============================
 ;; ====================移除行尾的空格并indent======================================
 (defun cleanup-buffer-safe ()
@@ -114,8 +114,6 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-x C-;") 'cleanup-buffer)
 ;; ====================移除行尾的空格并indent======================================
 ;; ======================临时标记===================================
-(global-set-key (kbd "C-x ,") 'ska-point-to-register)
-(global-set-key (kbd "C-x .") 'ska-jump-to-register)
 (defun ska-point-to-register()
   "Store cursorposition _fast_ in a register.
 Use ska-jump-to-register to jump back to the stored

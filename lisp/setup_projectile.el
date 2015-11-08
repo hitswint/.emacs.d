@@ -1,25 +1,15 @@
 ;; ================Projectile================
-(setq projectile-keymap-prefix (kbd "M-s p"))
+(setq projectile-keymap-prefix (kbd "M-s '"))
 (projectile-global-mode)
 (setq projectile-enable-caching t)
-(setq projectile-mode-line nil;; (quote (:eval (format "[%s]" (projectile-project-name))))
-      )
+(setq projectile-mode-line nil)
+;; (setq projectile-mode-line
+;;       (quote (:eval (format "[%s]" (projectile-project-name)))))
 ;; 设置切换project的默认操作
-;; (setq projectile-switch-project-action 'projectile-dired)
 (setq projectile-switch-project-action 'helm-projectile)
 (when is-win
   ;; windows下的缓存方式从native改到alien，加快缓存速度
   (setq projectile-indexing-method 'alien))
-;; ;; home(~/)加入git版本控制，导致projectile缓存home下的所有文件
-;; (setq projectile-ignored-projects '("~/")) ;将~/加入忽略列表
-;; (defun swint-helm-projectile ()
-;;   (interactive)
-;;   (if (or
-;;        (not (projectile-project-p))
-;;        (string-equal (projectile-project-root) "/home/swint/")) ;当前buffer不在project下或者在home project下时
-;;       (projectile-switch-project nil)
-;;     (helm-projectile)
-;;     ))
 (global-set-key (kbd "M-'") 'helm-projectile)
 ;; M-s p s g 为projectile-grep，出现find错误。使用helm-grep，不输入任何文件就是对整个文件夹进行grep，加C-u就是递归搜索。
 ;; 在helm-projectile中C-d为打开project的根目录。

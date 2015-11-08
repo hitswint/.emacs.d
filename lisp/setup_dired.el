@@ -27,18 +27,16 @@
 (add-hook 'dired-after-readin-hook
           '(lambda ()
              (setq truncate-lines t)))
-;;快捷键
+;; 快捷键
 (add-hook 'dired-mode-hook
           '(lambda ()
-             ;; (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+             (define-key dired-mode-map (kbd "M-=") nil)
              (define-key dired-mode-map (kbd "r") (lambda () (interactive) (find-alternate-file "..")))
              ;; 在dired对mark的多个文件内容进行查找
              (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
              (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
              (define-key dired-mode-map (kbd "C-c C-p") 'dired-k--previous-annotated-file)
-             (define-key dired-mode-map (kbd "C-c C-n") 'dired-k--next-annotated-file)
-             (define-key dired-mode-map (kbd "M-=") nil)
-             ))
+             (define-key dired-mode-map (kbd "C-c C-n") 'dired-k--next-annotated-file)))
 ;; ==========默认文件夹排在最前面==============
 (defun sof/dired-sort ()
   "Dired sort hook to list directories first."
@@ -318,7 +316,7 @@
 ;; (setq peep-dired-cleanup-eagerly t)
 (setq peep-dired-enable-on-directories nil)
 (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))
-(define-key dired-mode-map (kbd "C-M-q") 'peep-dired)
+(define-key dired-mode-map (kbd "q") 'peep-dired)
 (add-hook 'peep-dired-hook
           '(lambda ()
              (define-key peep-dired-mode-map (kbd "p") 'peep-dired-prev-file)

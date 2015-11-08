@@ -24,6 +24,7 @@
      (define-key paredit-mode-map (kbd "M-r") nil)
      (define-key paredit-mode-map (kbd "M-J") nil)
      (define-key paredit-mode-map (kbd "M-K") nil)
+     (define-key paredit-mode-map (kbd "M-?") nil)
      (define-key paredit-mode-map (kbd "C-M-<left>") nil)
      (define-key paredit-mode-map (kbd "C-M-<right>") nil)
      (define-key paredit-mode-map (kbd "C-(") 'paredit-backward-slurp-sexp)
