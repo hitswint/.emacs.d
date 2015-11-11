@@ -9,7 +9,7 @@
 (setq desktop-dirname "~/.emacs.d/")
 (setq desktop-base-file-name "emacs-desktop")
 (desktop-save-mode t)
-(global-set-key (kbd "M-M") 'session-jump-to-last-change)
+;; (global-set-key (kbd "M-M") 'session-jump-to-last-change)
 ;; Expanded folded secitons as required
 (defun le::maybe-reveal ()
   (when (and (or (memq major-mode  '(org-mode outline-mode))

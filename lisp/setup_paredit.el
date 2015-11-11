@@ -40,8 +40,7 @@
      (define-key paredit-mode-map (kbd "M-S") 'paredit-split-sexp)
      (define-key paredit-mode-map (kbd "M-R") 'paredit-raise-sexp)
      (define-key paredit-mode-map (kbd "M-A") 'paredit-join-sexps)
-     (define-key paredit-mode-map (kbd "M-D") 'paredit-splice-sexp)
-     ))
+     (define-key paredit-mode-map (kbd "M-D") 'paredit-splice-sexp)))
 ;; M-( M-) M-[ M-] M-{ M-} M-" M-S M-R M-A M-D C-) C-} C-( C-{ C-M-d C-M-u C-M-p C-M-n
 ;; 在其他mode中使用paredit
 (require 'paredit-everywhere)
@@ -72,8 +71,7 @@
      (define-key paredit-everywhere-mode-map (kbd "M-S") 'paredit-split-sexp)
      (define-key paredit-everywhere-mode-map (kbd "M-R") 'paredit-raise-sexp)
      (define-key paredit-everywhere-mode-map (kbd "M-A") 'paredit-join-sexps)
-     (define-key paredit-everywhere-mode-map (kbd "M-D") 'paredit-splice-sexp)
-     ))
+     (define-key paredit-everywhere-mode-map (kbd "M-D") 'paredit-splice-sexp)))
 ;; M-( M-) M-[ M-] M-{ M-} M-" M-S M-R M-A M-D C-) C-} C-( C-{ M-DEL M-d
 ;; ==================paredit=========================
 (provide 'setup_paredit)

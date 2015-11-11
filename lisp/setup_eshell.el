@@ -10,8 +10,7 @@
                               (define-key eshell-mode-map (kbd "C-M-r") 'helm-eshell-history)
                               (define-key eshell-mode-map (kbd "C-c C-i") nil)
                               (define-key eshell-mode-map (kbd "C-c C-o") nil)
-                              (define-key eshell-mode-map (kbd "M-s") nil)
-                              ))
+                              (define-key eshell-mode-map (kbd "M-s") nil)))
 (defvar ac-source-eshell-pcomplete
   '((candidates . (pcomplete-completions))))
 (defun ac-complete-eshell-pcomplete ()

@@ -7,8 +7,7 @@
     (interactive)
     (x-send-client-message
      nil 0 nil "_NET_WM_STATE" 32
-     '(2 "_NET_WM_STATE_FULLSCREEN" 0))
-    )
+     '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
   ;;最大化
   (defun my-maximized ()
     (interactive)
@@ -17,8 +16,7 @@
      '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
     (x-send-client-message
      nil 0 nil "_NET_WM_STATE" 32
-     '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
-    )
+     '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0)))
   ;;启动emacs时窗口最大化
   (my-maximized)
   ;;启动窗口大小

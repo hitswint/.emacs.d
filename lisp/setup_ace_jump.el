@@ -42,9 +42,8 @@ The returned value is a list of `aj-position' record."
                              ;; begin is not a valid visible char.
                              ;; We need to help it to move forward.
                              do (if (string-equal re-query-string "^")
-                                    (goto-char (1+ (match-beginning 0))))))
-                     )))))
-(defun swint-ace-jump-do( re-query-string )
+                                    (goto-char (1+ (match-beginning 0)))))))))))
+(defun swint-ace-jump-do (re-query-string)
   "The main function to start the AceJump mode.
 QUERY-STRING should be a valid regexp string, which finally pass to `search-forward-regexp'.
 You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."

@@ -89,8 +89,7 @@
     (goto-char (point-min))
     (insert (concat "*** Bing Dict" " (" word ")\n"))
     (indent-for-tab-command)
-    (swint-bing-dict-brief word)
-    ))
+    (swint-bing-dict-brief word)))
 (defun yasdcv--output-cleaner:common ()
   ;; 从yasdcv借来的函数
   (goto-char (point-min))
@@ -127,8 +126,7 @@
                 (goto-char (point-max))
                 (if short-exps
                     (insert (concat pronunciation short-exps))
-                  (insert "No results")
-                  ))))
+                  (insert "No results")))))
         (bing-dict-brief keyword))
     (error
      (with-current-buffer "*sdcv*"

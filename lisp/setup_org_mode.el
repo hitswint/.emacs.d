@@ -7,10 +7,8 @@
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c b") 'org-iswitchb)
-(add-hook 'org-mode-hook
-          (lambda ()
-            (setq truncate-lines nil)
-            ))
+(add-hook 'org-mode-hook (lambda ()
+                           (setq truncate-lines nil)))
 (setq org-capture-templates
       '(
         ("i" "Idea" entry (file+headline "~/org/task.org" "Idea List")
@@ -22,8 +20,7 @@
         ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others")
          "* %? %U %^g")
         ("j" "Journal" entry (file+datetree "~/org/journal.org.gpg")
-         "* %? %U")
-        ))
+         "* %? %U")))
 ;; %^{Description}
 ;; 禁用org-mode本身定义得C-tab快捷键，使全局快捷键生效
 (add-hook 'org-mode-hook
@@ -96,8 +93,8 @@
 ;; |后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔
 ;; =======设定todo关键词==========
 ;; =======================org输出latex=============================
-(add-hook 'org-mode-hook
-          (lambda () (setq truncate-lines nil)))
+(add-hook 'org-mode-hook (lambda ()
+                           (setq truncate-lines nil)))
 ;; (require 'org-install)
 ;; (require 'org-latex)
 ;; 使用上面的两个命令会导致输出成beamer的选项出不来
@@ -411,8 +408,7 @@ depending on the last command issued."
 (add-hook 'org-mode-hook
           '(lambda ()
              (define-key org-mode-map (kbd "C-c p") 'my-screenshot-org-local)
-             (define-key org-mode-map (kbd "C-x p") 'my-screenshot-org)
-             ))
+             (define-key org-mode-map (kbd "C-x p") 'my-screenshot-org)))
 ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p
 ;; org中打开和关闭图片显示(org-display-inline-images)和(org-remove-inline-images)，可以使用(org-toggle-inline-images)快捷键为C-c C-x C-v。
 ;; =================org插入截图====================
@@ -469,14 +465,12 @@ depending on the last command issued."
                            ("\\.html\\'" . "firefox %s")
                            ("\\.htm\\'" . "firefox %s")
                            )))
-      (swint-org-open-at-point)
-      )))
+      (swint-org-open-at-point))))
  (is-win
   (defun org-open-at-point-with-apps ()
     (interactive)
     (let (org-file-apps w32-browser)
-      (swint-org-open-at-point)
-      ))))
+      (swint-org-open-at-point)))))
 ;; =================org中使用外部程序打开文件=================
 ;; =================mobileorg===============
 ;; Set to the location of your Org files on your local system

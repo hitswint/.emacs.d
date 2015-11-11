@@ -10,14 +10,12 @@
                                   (message "Enabling Setings for dot-mode")
                                   (setq fill-column 1000)
                                   ;; (base-auto-pair)
-                                  (linum-mode)
-                                  ))))
+                                  (linum-mode)))))
 (setq graphviz-dot-view-command "feh")
 (add-hook 'graphviz-dot-mode-hook
           '(lambda ()
              (define-key graphviz-dot-mode-map (kbd "C-c C-c") 'compile)
-             (define-key graphviz-dot-mode-map (kbd "C-c C-v") 'swint-graphviz-output)
-             ))
+             (define-key graphviz-dot-mode-map (kbd "C-c C-v") 'swint-graphviz-output)))
 (defun swint-graphviz-output ()
   "Start a viewer without confirmation.
 The viewer is started either on region or master file,
@@ -25,7 +23,8 @@ depending on the last command issued."
   (interactive)
   (let ((output-file (cond
                       (is-lin (concat (file-name-base (buffer-name)) ".png"))
-                      (is-win (concat (file-name-directory buffer-file-name) (file-name-base (buffer-name)) ".png")))))
+                      (is-win (concat (file-name-directory buffer-file-name)
+                                      (file-name-base (buffer-name)) ".png")))))
     (if (file-exists-p output-file)
         (cond
          (is-lin (async-shell-command-no-output-buffer-from-file output-file))

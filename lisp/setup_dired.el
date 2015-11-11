@@ -24,14 +24,15 @@
 ;; 将annotated显示加hook放在前面，使其出现在dired-after-readin-hook中函数列表最后，进而最后生效。
 (add-hook 'dired-after-readin-hook 'dired-k--highlight)
 ;; 不折行显示
-(add-hook 'dired-after-readin-hook
-          '(lambda ()
-             (setq truncate-lines t)))
+(add-hook 'dired-after-readin-hook '(lambda ()
+                                      (setq truncate-lines t)))
 ;; 快捷键
 (add-hook 'dired-mode-hook
           '(lambda ()
              (define-key dired-mode-map (kbd "M-=") nil)
-             (define-key dired-mode-map (kbd "r") (lambda () (interactive) (find-alternate-file "..")))
+             (define-key dired-mode-map (kbd "r") (lambda ()
+                                                    (interactive)
+                                                    (find-alternate-file "..")))
              ;; 在dired对mark的多个文件内容进行查找
              (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
              (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
@@ -58,16 +59,20 @@
                              (define-key dired-mode-map "s" dired-sort-map)
                              (define-key dired-sort-map "s"
                                '(lambda () ;"sort by Size"
-                                  (interactive) (dired-sort-other (concat dired-listing-switches "S"))))
+                                  (interactive)
+                                  (dired-sort-other (concat dired-listing-switches "S"))))
                              (define-key dired-sort-map "x"
                                '(lambda () ;"sort by eXtension"
-                                  (interactive) (dired-sort-other (concat dired-listing-switches "X"))))
+                                  (interactive)
+                                  (dired-sort-other (concat dired-listing-switches "X"))))
                              (define-key dired-sort-map "t"
                                '(lambda () ;"sort by Time"
-                                  (interactive) (dired-sort-other (concat dired-listing-switches "t"))))
+                                  (interactive)
+                                  (dired-sort-other (concat dired-listing-switches "t"))))
                              (define-key dired-sort-map "n"
                                '(lambda () ;"sort by Name"
-                                  (interactive) (dired-sort-other (concat dired-listing-switches ""))))))
+                                  (interactive)
+                                  (dired-sort-other (concat dired-listing-switches ""))))))
 ;; =====================文件夹排序=======================
 ;; =====================跳转至dired顶部和尾部==================
 (defun dired-back-to-top ()
@@ -173,8 +178,7 @@
          (list "\\.mpg$" "mplayer * >/dev/null 2>&1 &")
          (list "\\.ods$" "libreoffice * >/dev/null 2>&1 &")
          (list "\\.tex$" "xelatex * >/dev/null 2>&1 &")
-         (list "\\.c$" "gcc -Wall")
-         ))
+         (list "\\.c$" "gcc -Wall")))
   ;; ===============在当前目录下打开urxvt===============
   (defun urxvt-default-directory ()
     (interactive)

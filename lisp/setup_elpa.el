@@ -54,6 +54,7 @@
     gnuplot-mode
     god-mode
     google-translate
+    goto-last-change
     graphviz-dot-mode
     helm
     helm-ag

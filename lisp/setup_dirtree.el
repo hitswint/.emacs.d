@@ -14,7 +14,9 @@
   (interactive)
   (let* ((file buffer-file-name)
          (dir (if file (file-name-directory file) default-directory))
-         (dirtree-buffer-name (if (eq major-mode 'dired-mode) (file-name-nondirectory (dired-get-filename)) (if file (file-name-nondirectory file) nil))))
+         (dirtree-buffer-name (if (eq major-mode 'dired-mode)
+                                  (file-name-nondirectory (dired-get-filename))
+                                (if file (file-name-nondirectory file) nil))))
     (dirtree dir nil)
     (if dirtree-buffer-name
         (re-search-forward (concat " " dirtree-buffer-name) nil t))

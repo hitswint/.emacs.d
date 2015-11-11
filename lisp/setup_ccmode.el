@@ -51,8 +51,7 @@
   ;; 关闭gdb buffer
   (with-current-buffer gud-comint-buffer (comint-skip-input))
   (kill-process (get-buffer-process gud-comint-buffer))
-  (delete-window)
-  )
+  (delete-window))
 ;; 关闭gdb的process时，关闭buffer。取自setup_misc中'退出shell时关闭buffer'。
 (add-hook 'gdb-mode-hook 'kill-shell-buffer-after-exit t)
 ;; 直接使用gdb-or-gud-go会显示gud-comint-buffer变量未定义，需要先使用gdb一次，然后才能使用gdb-or-gud-go。

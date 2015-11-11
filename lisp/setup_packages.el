@@ -462,4 +462,8 @@ is named like ODF with the extension turned to pdf."
     ("%" . apply-operation-to-number-at-point)
     ("=" . operate-on-number-at-point)))
 ;; ============operate-on-number============
+;; ============goto-last-change============
+(require 'goto-last-change)
+(global-set-key (kbd "M-M") 'goto-last-change)
+;; ============goto-last-change============
 (provide 'setup_packages)

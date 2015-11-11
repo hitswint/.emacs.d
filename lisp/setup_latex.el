@@ -15,8 +15,7 @@
             (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
             (define-key outline-minor-mode-map (kbd "C-c C-u") 'outline-up-heading)
             (define-key outline-minor-mode-map (kbd "C-x C-p") 'outline-backward-same-level)
-            (define-key outline-minor-mode-map (kbd "C-x C-n") 'outline-forward-same-level)
-            ))
+            (define-key outline-minor-mode-map (kbd "C-x C-n") 'outline-forward-same-level)))
 ;; ===========outline===============
 ;; ===========preview===============
 (set-default 'preview-scale-function 1.5)
@@ -70,15 +69,13 @@
             (define-key LaTeX-mode-map (kbd "C-c C-i") nil)
             (define-key LaTeX-mode-map (kbd "C-c C-o") nil)
             (define-key LaTeX-mode-map (kbd "C-c C-f") nil)
-            (define-key LaTeX-mode-map (kbd "\"") nil)
-            ))
+            (define-key LaTeX-mode-map (kbd "\"") nil)))
 ;; 关闭tex的同时关闭latexmk编译进程
 (defun swint-kill-tex-buffer ()
   "kill tex buffer with active process"
   (interactive)
   (if (TeX-active-process)
-      (kill-process (TeX-active-process))
-    )
+      (kill-process (TeX-active-process)))
   (dirtree-exist-kill-this-buffer))
 (setq TeX-view-program-list
       '(("Llpp" "llpp %o")
@@ -172,8 +169,7 @@
 (add-hook 'LaTeX-mode-hook
           '(lambda ()
              (define-key LaTeX-mode-map (kbd "C-c p") 'my-screenshot-tex-local)
-             (define-key LaTeX-mode-map (kbd "C-x p") 'my-screenshot-tex)
-             ))
+             (define-key LaTeX-mode-map (kbd "C-x p") 'my-screenshot-tex)))
 ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p
 ;; =================latex插入截图====================
 ;; ======================zotelo=============================
