@@ -40,6 +40,56 @@
   ;; 下面的命令建立locate数据库的时候，会导致cygwin警告ms dos path sytle，无妨，时间稍长；locate命令无法识别这种ms dos path sytle。
   (setq helm-locate-create-db-command "updatedb --output=c:/Users/swint/.helm-locate.db --localpaths='c:/Users/swint/'")
   (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.helm-locate.db")))
+;; ==================helm-related-to-persp==================
+(defun helm-switch-persp/buffer (buffer)
+  "Helm-switch to persp/buffer simultaneously"
+  (cond
+   ((memq buffer (persp-buffers persp-curr))
+    (switch-to-buffer buffer))
+   ((memq buffer (persp-buffers (gethash "8" perspectives-hash)))
+    (swint-persp-switch "8")
+    (if (window-live-p (get-buffer-window buffer))
+        (select-window (get-buffer-window buffer))
+      (switch-to-buffer buffer)))
+   ((memq buffer (persp-buffers (gethash "9" perspectives-hash)))
+    (swint-persp-switch "9")
+    (if (window-live-p (get-buffer-window buffer))
+        (select-window (get-buffer-window buffer))
+      (switch-to-buffer buffer)))
+   ((memq buffer (persp-buffers (gethash "0" perspectives-hash)))
+    (swint-persp-switch "0")
+    (if (window-live-p (get-buffer-window buffer))
+        (select-window (get-buffer-window buffer))
+      (switch-to-buffer buffer)))
+   (t
+    (swint-persp-switch "i")
+    (if (window-live-p (get-buffer-window buffer))
+        (select-window (get-buffer-window buffer))
+      (switch-to-buffer buffer)))))
+(defun swint-switch-persp/other-window (buffer)
+  "Helm-switch to persp/other-window simultaneously"
+  (if (memq buffer (persp-buffers persp-curr))
+      (helm-switch-to-buffers buffer t)
+    (let ((curr-buf (current-buffer)))
+      (swint-persp-switch "i")
+      (switch-to-buffer curr-buf)
+      (switch-to-buffer-other-window buffer))))
+(defun swint-helm-buffer-switch-persp/other-window ()
+  "Run switch-persp/other-window action from `helm-source-buffers-list'."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'swint-switch-persp/other-window)))
+(defun swint-helm-buffer-switch-to-buffers ()
+  "Run switch-to-buffers action from `helm-source-buffers-list'."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'helm-switch-to-buffers)))
+(defun swint-helm-buffer-persp-remove-buffer ()
+  "Run persp-remove-buffer action from `helm-source-buffers-list'."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'persp-remove-buffer)))
+;; ==================helm-related-to-persp==================
 ;; ==================helm-dired-buffer====================
 (defun swint-helm-dired-buffers-list--init ()
   ;; Issue #51 Create the list before `helm-buffer' creation.
@@ -115,31 +165,6 @@
     "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
 (defvar swint-helm-dired-source-buffers-list nil)
 (defvar swint-helm-dired-source-buffers-list/other-persps nil)
-(defun helm-switch-persp/buffer (buffer)
-  "helm-switch to persp/buffer simultaneously"
-  (cond
-   ((memq buffer (persp-buffers persp-curr))
-    (switch-to-buffer buffer))
-   ((memq buffer (persp-buffers (gethash "8" perspectives-hash)))
-    (swint-persp-switch "8")
-    (if (window-live-p (get-buffer-window buffer))
-        (select-window (get-buffer-window buffer))
-      (switch-to-buffer buffer)))
-   ((memq buffer (persp-buffers (gethash "9" perspectives-hash)))
-    (swint-persp-switch "9")
-    (if (window-live-p (get-buffer-window buffer))
-        (select-window (get-buffer-window buffer))
-      (switch-to-buffer buffer)))
-   ((memq buffer (persp-buffers (gethash "0" perspectives-hash)))
-    (swint-persp-switch "0")
-    (if (window-live-p (get-buffer-window buffer))
-        (select-window (get-buffer-window buffer))
-      (switch-to-buffer buffer)))
-   (t
-    (swint-persp-switch "i")
-    (if (window-live-p (get-buffer-window buffer))
-        (select-window (get-buffer-window buffer))
-      (switch-to-buffer buffer)))))
 (defun swint-helm-dired-buffers-list ()
   "Preconfigured `helm' to list buffers."
   (interactive)
@@ -329,13 +354,13 @@ from its directory."
       ((and ffap-url-regexp (string-match ffap-url-regexp sel)) sel)
       ;; Default.
       (t default-preselection)))))
-(define-key helm-find-files-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
 (define-key helm-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
 (define-key helm-map (kbd "C-'") 'swint-helm-bookmarks-after-quit)
 (define-key helm-map (kbd "C-,") 'swint-helm-mini-after-quit)
-(define-key helm-find-files-map (kbd "C-x C-f") 'swint-helm-find-files-after-quit)
 (define-key helm-map (kbd "C-x C-f") 'swint-helm-find-files-after-quit)
 (define-key helm-map (kbd "C-/") 'swint-helm-quit-and-find-file)
+(define-key helm-find-files-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
+(define-key helm-find-files-map (kbd "C-x C-f") 'swint-helm-find-files-after-quit)
 ;; ================在别的helm-buffer中运行helm命令==============
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-c C-f") 'helm-locate)
@@ -345,17 +370,18 @@ from its directory."
 (define-key helm-map (kbd "C-l") 'helm-execute-persistent-action)
 (define-key helm-map (kbd "C-M-p") 'helm-previous-source)
 (define-key helm-map (kbd "C-M-n") 'helm-next-source)
-(define-key helm-buffer-map (kbd "C-M-k") 'helm-buffer-run-kill-buffers)
 (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)
-(define-key helm-read-file-map (kbd "C-l") 'helm-execute-persistent-action)
 (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
-(define-key helm-read-file-map (kbd "C-h") 'helm-find-files-up-one-level)
 (define-key helm-find-files-map (kbd "M-U") 'helm-unmark-all)
 (define-key helm-find-files-map (kbd "M-t") 'helm-toggle-all-marks)
-(define-key helm-buffer-map (kbd "C-o") 'helm-buffer-switch-other-window)
 (define-key helm-find-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
-(define-key helm-generic-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
+(define-key helm-buffer-map (kbd "M-RET") 'swint-helm-buffer-switch-to-buffers)
+(define-key helm-buffer-map (kbd "C-M-k") 'swint-helm-buffer-persp-remove-buffer)
+(define-key helm-buffer-map (kbd "C-o") 'swint-helm-buffer-switch-persp/other-window)
+(define-key helm-read-file-map (kbd "C-l") 'helm-execute-persistent-action)
+(define-key helm-read-file-map (kbd "C-h") 'helm-find-files-up-one-level)
 (define-key helm-grep-map (kbd "C-o") 'helm-grep-run-other-window-action)
+(define-key helm-generic-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
 (define-key helm-bookmark-map (kbd "C-o") 'helm-bookmark-run-jump-other-window)
 (when is-lin
   (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
@@ -364,7 +390,7 @@ from its directory."
   (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-with-default-tool)
   (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-with-default-tool))
 ;; C-x c c helm-colors
-;; helm-mini下：C-c C-d 从列表中删除，但实际不kill buffer；C-c d kill buffer同时不关闭helm buffer；M-D kill buffer同时关闭helm
+;; helm-mini下：C-c C-d 从列表中删除，但实际不kill buffer；C-c d kill buffer同时不关闭helm buffer；M-D kill buffer同时关闭helm。
 ;; helm-find-files-map下：
 ;; C-l 一次expand candidate，二次打开文件
 ;; TAB 打开选项
@@ -379,7 +405,6 @@ from its directory."
 ;; C-] toggle basename/fullpath
 ;; C-backspace 开启关闭自动补全
 ;; C-{ C-} 放大缩小helm窗口
-;; find file as root
 ;; ================helm================
 ;; ================helm-swoop================
 (require 'helm-swoop)
@@ -470,8 +495,13 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 (global-set-key (kbd "C-c C-x m") 'helm-unicode)
 ;; =======================helm-unicode==============================
 ;; ====================helm-ag=========================
-;; (global-set-key (kbd "C-x g") 'helm-do-grep) ;不是递归grep，加C-u为递归
-(global-set-key (kbd "C-x g") 'helm-do-ag) ;使用helm-ag。
+;; 使用helm-ag代替helm-grep。
+;; (global-set-key (kbd "C-x g") 'helm-do-grep) ;加C-u为递归
+(require 'helm-ag)
+(global-set-key (kbd "C-x g") 'helm-do-ag)
+(define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)
+(define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)
+;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果。
 (when is-win
   (custom-set-variables
    '(helm-ag-base-command "pt -e --nocolor --nogroup")))

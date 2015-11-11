@@ -1,13 +1,11 @@
 ;; ===============退出shell时关闭buffer===============
 (defun kill-shell-buffer(process event)
   "The one actually kill shell buffer when exit. "
-  (kill-buffer (process-buffer process))
-  )
+  (kill-buffer (process-buffer process)))
 (defun kill-shell-buffer-after-exit()
   "kill shell buffer when exit."
   (set-process-sentinel (get-buffer-process (current-buffer))
-                        #'kill-shell-buffer)
-  )
+                        #'kill-shell-buffer))
 (add-hook 'shell-mode-hook 'kill-shell-buffer-after-exit t)
 ;; ===============退出shell时关闭buffer===============
 ;; ===============上一个下一个buffer=================

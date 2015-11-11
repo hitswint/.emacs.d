@@ -63,10 +63,8 @@
           (lambda ()
             (turn-on-font-lock)
             (define-key inferior-octave-mode-map (kbd "C-c RET") nil)
-            (define-key inferior-octave-mode-map [up]
-              'comint-previous-input)
-            (define-key inferior-octave-mode-map [down]
-              'comint-next-input)))
+            (define-key inferior-octave-mode-map [up] 'comint-previous-input)
+            (define-key inferior-octave-mode-map [down] 'comint-next-input)))
 (setq octave-comment-start "%% ")       ;使用%注释
 (setq octave-comment-char 37)           ;使用%注释
 (add-hook 'octave-mode-hook
@@ -76,18 +74,8 @@
              (define-key octave-mode-map (kbd "C-c C-i") nil)
              (define-key octave-mode-map (kbd "C-c C-f") nil)
              (define-key octave-mode-map [(control \h)] nil)
-             (define-key octave-mode-map [(meta \q)] nil)
-             )) ;取消C-h的快捷键
+             (define-key octave-mode-map [(meta \q)] nil)))
 ;; 退出octave时关闭buffer
-(defun kill-octave-buffer(process event)
-  "The one actually kill octave buffer when exit. "
-  (kill-buffer (process-buffer process))
-  )
-(defun kill-octave-buffer-after-exit()
-  "kill octave buffer when exit."
-  (set-process-sentinel (get-buffer-process (current-buffer))
-                        #'kill-octave-buffer)
-  )
-(add-hook 'inferior-octave-mode-hook 'kill-octave-buffer-after-exit t)
+(add-hook 'inferior-octave-mode-hook 'kill-shell-buffer-after-exit t)
 ;; ======================octave==============================
 (provide 'setup_matlab_octave)
