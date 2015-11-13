@@ -200,4 +200,27 @@
 ;; 改用start-process异步编译会造成auto-revert-buffers错误。
 ;; 因为异步编译时，pdf-view仍然在更新，显示pdf文件被损坏。
 ;; ===================latex-preview-pane===================
+;; ===================magic-latex-buffer===================
+(require 'magic-latex-buffer)
+(add-hook 'TeX-mode-hook 'magic-latex-buffer)
+;; Bug：Error running timer `font-latex-jit-lock-force-redisplay': (wrong-number-of-arguments (2 . 2) 3) [N times]
+;; Redefine font-latex-jit-lock-force-redisplay to fix aboved bug.
+(defun font-latex-jit-lock-force-redisplay (buf start end)
+  "Compatibility for Emacsen not offering `jit-lock-force-redisplay'."
+  ;; The following block is an expansion of `jit-lock-force-redisplay'
+  ;; and involved macros taken from CVS Emacs on 2007-04-28.
+  (with-current-buffer buf
+    (let ((modified (buffer-modified-p)))
+      (unwind-protect
+          (let ((buffer-undo-list t)
+                (inhibit-read-only t)
+                (inhibit-point-motion-hooks t)
+                (inhibit-modification-hooks t)
+                deactivate-mark
+                buffer-file-name
+                buffer-file-truename)
+            (put-text-property start end 'fontified t))
+        (unless modified
+          (restore-buffer-modified-p nil))))))
+;; ===================magic-latex-buffer===================
 (provide 'setup_latex)

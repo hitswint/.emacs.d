@@ -76,6 +76,7 @@
     lacarte
     latex-preview-pane
     let-alist
+    magic-latex-buffer
     magit
     magit-popup
     math-symbol-lists

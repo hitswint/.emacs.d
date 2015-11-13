@@ -55,6 +55,7 @@
 (add-to-list 'sml/hidden-modes " ARev")
 (add-to-list 'sml/hidden-modes " company")
 (add-to-list 'sml/hidden-modes " Spell")
+(add-to-list 'sml/hidden-modes " mLaTeX")
 ;; ================smart-mode-line===================
 ;; ====================abbrev-for-mode-line========================
 (defvar mode-line-cleaner-alist
