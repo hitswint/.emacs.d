@@ -1,7 +1,10 @@
 ;; ================================perspective====================================
-(require 'perspective)
+;; 将配置写到:config里面会有错误。
+;; Eager macro-expansion failure:
+;; (error "(persp-buffers persp) is not a valid place expression")
+(use-package perspective)
 (persp-mode)
-;;; iswitch限制在当前persp
+;; iswitch限制在当前persp
 (defvar iswitchb-temp-buflist/other-persps nil)
 (defvar iswitchb-temp-buflist/all-persps nil)
 (defun iswitchb-persp-curr-only ()
@@ -12,7 +15,7 @@
     (setq iswitchb-temp-buflist/all-persps iswitchb-temp-buflist)
     (setq iswitchb-temp-buflist matches)))
 (add-hook 'iswitchb-make-buflist-hook 'iswitchb-persp-curr-only)
-;;; ido限制在当前persp
+;; ido限制在当前persp
 (defvar ido-temp-list/other-persps nil)
 (defvar ido-temp-list/all-persps nil)
 (defun ido-persp-curr-only ()
@@ -24,31 +27,29 @@
     (setq ido-temp-list matches)))
 (add-hook 'ido-make-buffer-list-hook 'ido-persp-curr-only)
 ;; =================模板宏==================
-(eval-after-load 'perspective
-  '(progn
-     (defmacro senny-persp (name &rest body)
-       `(let ((initialize (not (gethash ,name perspectives-hash)))
-              (current-perspective persp-curr))
-          (persp-switch ,name)
-          (when initialize ,@body)
-          (setq persp-last current-perspective)))
-     (defun persp-format-name (name)
-       "Format the perspective name given by NAME for display in `persp-modestring'."
-       (let ((string-name (format "%s" name)))
-         (if (equal name (persp-name persp-curr))
-             (propertize string-name 'face 'persp-selected-face))))
-     (defun persp-update-modestring ()
-       "Update `persp-modestring' to reflect the current perspectives.
+(defmacro senny-persp (name &rest body)
+  `(let ((initialize (not (gethash ,name perspectives-hash)))
+         (current-perspective persp-curr))
+     (persp-switch ,name)
+     (when initialize ,@body)
+     (setq persp-last current-perspective)))
+(defun persp-format-name (name)
+  "Format the perspective name given by NAME for display in `persp-modestring'."
+  (let ((string-name (format "%s" name)))
+    (if (equal name (persp-name persp-curr))
+        (propertize string-name 'face 'persp-selected-face))))
+(defun persp-update-modestring ()
+  "Update `persp-modestring' to reflect the current perspectives.
 Has no effect when `persp-show-modestring' is nil."
-       (when persp-show-modestring
-         (setq persp-modestring
-               (append '("")
-                       (persp-intersperse (mapcar 'persp-format-name (persp-names)) "")
-                       '("")))))
-     ;; Perspective Defuns
-     (defun senny-persp-last ()
-       (interactive)
-       (persp-switch (persp-name persp-last)))))
+  (when persp-show-modestring
+    (setq persp-modestring
+          (append '("")
+                  (persp-intersperse (mapcar 'persp-format-name (persp-names)) "")
+                  '("")))))
+;; Perspective Defuns
+(defun senny-persp-last ()
+  (interactive)
+  (persp-switch (persp-name persp-last)))
 ;; =================模板宏==================
 (defun persp-push-current-buffer (name)
   (interactive)

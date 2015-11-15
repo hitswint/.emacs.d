@@ -1,104 +1,193 @@
 ;;======================dired========================
-(setq dired-recursive-copies 'top)
-(setq dired-recursive-deletes 'top)
-(require 'dired-x)
-(require 'dired-details)
-(dired-details-install)
-;; =============Auto-revert-mode=============
-;; Auto refresh buffers
-(global-auto-revert-mode 1)
-;; Also auto refresh dired, but be quiet about it
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)          ;静默更新
-;; dired-k--highlight会使auto-revert-mode出错，在dired-mode中禁用auto-revert-mode。
-;; 已修复上述问题，在dired-mode中重新开启auto-revert-mode。
-;; (setq global-auto-revert-ignore-modes '(dired-mode))
-;; 使用dired-mode自带的auto-revert
-(setq dired-auto-revert-buffer t)
-;; =============Auto-revert-mode=============
-(put 'dired-find-alternate-file 'disabled nil)
-;; 让dired显示文件大小
-(setq dired-listing-switches "-alh")
-;; 文件夹间复制
-(setq dired-dwim-target t)
-;; 将annotated显示加hook放在前面，使其出现在dired-after-readin-hook中函数列表最后，进而最后生效。
-(add-hook 'dired-after-readin-hook 'dired-k--highlight)
-;; 不折行显示
-(add-hook 'dired-after-readin-hook '(lambda ()
-                                      (setq truncate-lines t)))
-;; 快捷键
-(add-hook 'dired-mode-hook
-          '(lambda ()
-             (define-key dired-mode-map (kbd "M-=") nil)
-             (define-key dired-mode-map (kbd "r") (lambda ()
-                                                    (interactive)
-                                                    (find-alternate-file "..")))
-             ;; 在dired对mark的多个文件内容进行查找
-             (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
-             (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
-             (define-key dired-mode-map (kbd "C-c C-p") 'dired-k--previous-annotated-file)
-             (define-key dired-mode-map (kbd "C-c C-n") 'dired-k--next-annotated-file)))
-;; ==========默认文件夹排在最前面==============
-(defun sof/dired-sort ()
-  "Dired sort hook to list directories first."
-  (save-excursion
-    (let (buffer-read-only)
-      (forward-line 2)
-      (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max))))
-  (and (featurep 'xemacs)
-       (fboundp 'dired-insert-set-properties)
-       (dired-insert-set-properties (point-min) (point-max)))
-  (set-buffer-modified-p nil))
-(add-hook 'dired-after-readin-hook 'sof/dired-sort)
-;; ==========默认文件夹排在最前面==============
-;; =====================文件夹排序=======================
-(add-hook 'dired-mode-hook (lambda ()
-                             (interactive)
-                             (make-local-variable  'dired-sort-map)
-                             (setq dired-sort-map (make-sparse-keymap))
-                             (define-key dired-mode-map "s" dired-sort-map)
-                             (define-key dired-sort-map "s"
-                               '(lambda () ;"sort by Size"
-                                  (interactive)
-                                  (dired-sort-other (concat dired-listing-switches "S"))))
-                             (define-key dired-sort-map "x"
-                               '(lambda () ;"sort by eXtension"
-                                  (interactive)
-                                  (dired-sort-other (concat dired-listing-switches "X"))))
-                             (define-key dired-sort-map "t"
-                               '(lambda () ;"sort by Time"
-                                  (interactive)
-                                  (dired-sort-other (concat dired-listing-switches "t"))))
-                             (define-key dired-sort-map "n"
-                               '(lambda () ;"sort by Name"
-                                  (interactive)
-                                  (dired-sort-other (concat dired-listing-switches ""))))))
-;; =====================文件夹排序=======================
-;; =====================跳转至dired顶部和尾部==================
-(defun dired-back-to-top ()
-  (interactive)
-  (beginning-of-buffer)
-  (cond
-   (is-lin (dired-next-line 4))
-   (is-win (dired-next-line 3))))
-(define-key dired-mode-map
-  (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
-(defun dired-jump-to-bottom ()
-  (interactive)
-  (end-of-buffer)
-  (dired-next-line -1))
-(define-key dired-mode-map
-  (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
-(defun dired-beginning-of-line ()
-  (interactive)
-  (smart-beginning-of-line)
-  (forward-char 1))
-(define-key dired-mode-map
-  (vector 'remap 'smart-beginning-of-line) 'dired-beginning-of-line)
-;; =====================跳转至dired顶部和尾部==================
+(use-package dired
+  :config
+  (use-package dired-x)
+  (use-package dired-details)
+  (use-package diredful
+    :load-path "site-lisp/diredful/")
+  (setq dired-recursive-copies 'top)
+  (setq dired-recursive-deletes 'top)
+  (dired-details-install)
+  ;; =============Auto-revert-mode=============
+  ;; Auto refresh buffers
+  (global-auto-revert-mode 1)
+  ;; Also auto refresh dired, but be quiet about it
+  (setq global-auto-revert-non-file-buffers t)
+  (setq auto-revert-verbose nil)          ;静默更新
+  ;; dired-k--highlight会使auto-revert-mode出错，在dired-mode中禁用auto-revert-mode。
+  ;; 已修复上述问题，在dired-mode中重新开启auto-revert-mode。
+  ;; (setq global-auto-revert-ignore-modes '(dired-mode))
+  ;; 使用dired-mode自带的auto-revert
+  (setq dired-auto-revert-buffer t)
+  ;; =============Auto-revert-mode=============
+  (put 'dired-find-alternate-file 'disabled nil)
+  ;; 让dired显示文件大小
+  (setq dired-listing-switches "-alh")
+  ;; 文件夹间复制
+  (setq dired-dwim-target t)
+  ;; 将annotated显示加hook放在前面，使其出现在dired-after-readin-hook中函数列表最后，进而最后生效。
+  (add-hook 'dired-after-readin-hook 'dired-k--highlight)
+  ;; 不折行显示
+  (add-hook 'dired-after-readin-hook '(lambda ()
+                                        (setq truncate-lines t)))
+  ;; 快捷键
+  (add-hook 'dired-mode-hook
+            '(lambda ()
+               (define-key dired-mode-map (kbd "M-=") nil)
+               (define-key dired-mode-map (kbd "r") (lambda ()
+                                                      (interactive)
+                                                      (find-alternate-file "..")))
+               ;; 在dired对mark的多个文件内容进行查找
+               (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
+               (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
+               (define-key dired-mode-map (kbd "C-c C-p") 'dired-k--previous-annotated-file)
+               (define-key dired-mode-map (kbd "C-c C-n") 'dired-k--next-annotated-file)))
+  ;; ==========默认文件夹排在最前面==============
+  (defun sof/dired-sort ()
+    "Dired sort hook to list directories first."
+    (save-excursion
+      (let (buffer-read-only)
+        (forward-line 2)
+        (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max))))
+    (and (featurep 'xemacs)
+         (fboundp 'dired-insert-set-properties)
+         (dired-insert-set-properties (point-min) (point-max)))
+    (set-buffer-modified-p nil))
+  (add-hook 'dired-after-readin-hook 'sof/dired-sort)
+  ;; ==========默认文件夹排在最前面==============
+  ;; =====================文件夹排序=======================
+  (add-hook 'dired-mode-hook (lambda ()
+                               (interactive)
+                               (make-local-variable  'dired-sort-map)
+                               (setq dired-sort-map (make-sparse-keymap))
+                               (define-key dired-mode-map "s" dired-sort-map)
+                               (define-key dired-sort-map "s"
+                                 '(lambda () ;"sort by Size"
+                                    (interactive)
+                                    (dired-sort-other (concat dired-listing-switches "S"))))
+                               (define-key dired-sort-map "x"
+                                 '(lambda () ;"sort by eXtension"
+                                    (interactive)
+                                    (dired-sort-other (concat dired-listing-switches "X"))))
+                               (define-key dired-sort-map "t"
+                                 '(lambda () ;"sort by Time"
+                                    (interactive)
+                                    (dired-sort-other (concat dired-listing-switches "t"))))
+                               (define-key dired-sort-map "n"
+                                 '(lambda () ;"sort by Name"
+                                    (interactive)
+                                    (dired-sort-other (concat dired-listing-switches ""))))))
+  ;; =====================文件夹排序=======================
+  ;; =====================跳转至dired顶部和尾部==================
+  (defun dired-back-to-top ()
+    (interactive)
+    (beginning-of-buffer)
+    (cond
+     (is-lin (dired-next-line 4))
+     (is-win (dired-next-line 3))))
+  (define-key dired-mode-map
+    (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
+  (defun dired-jump-to-bottom ()
+    (interactive)
+    (end-of-buffer)
+    (dired-next-line -1))
+  (define-key dired-mode-map
+    (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
+  (defun dired-beginning-of-line ()
+    (interactive)
+    (smart-beginning-of-line)
+    (forward-char 1))
+  (define-key dired-mode-map
+    (vector 'remap 'smart-beginning-of-line) 'dired-beginning-of-line)
+  ;; =====================跳转至dired顶部和尾部==================
+  ;; ===================webdav_sync同步文件======================
+  (defun swint-webdav-sync-down ()
+    "Sync files in webdav server to ~/Nutstore-sync."
+    (interactive)
+    (let ((process
+           (start-process-shell-command
+            "webdav_sync" "*webdav_sync*"
+            (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
+                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
+                    " -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
+                    (expand-file-name "~/Nutstore-sync/")))))
+      (set-process-sentinel
+       process
+       (lambda (process signal)
+         (when (memq (process-status process) '(exit signal))
+           (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
+                                               (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+             (if (string-equal webdav_sync-process-output "Done.\n")
+                 (message "swint-webdav-sync-down done.")
+               (message "swint-webdav-sync-down failed"))))
+         (helm-switch-persp/buffer "*webdav_sync*")))))
+  (defun swint-webdav-sync-up ()
+    "Sync files in ~/Nutstore-sync to webdav server."
+    (interactive)
+    (let ((process
+           (start-process-shell-command
+            "webdav_sync" "*webdav_sync*"
+            (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
+                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
+                    " -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
+                    (expand-file-name "~/Nutstore-sync/")))))
+      (set-process-sentinel
+       process
+       (lambda (process signal)
+         (when (memq (process-status process) '(exit signal))
+           (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
+                                               (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+             (if (string-equal webdav_sync-process-output "Done.\n")
+                 (message "swint-webdav-sync-up done.")
+               (message "swint-webdav-sync-up failed"))))
+         (helm-switch-persp/buffer "*webdav_sync*")))))
+  (defun swint-webdav-sync-bi ()
+    "Sync files in ~/Nutstore-sync to webdav server."
+    (interactive)
+    (let ((process
+           (start-process-shell-command
+            "webdav_sync" "*webdav_sync*"
+            (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
+                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
+                    " -r -bi -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
+                    (expand-file-name "~/Nutstore-sync/")))))
+      (set-process-sentinel
+       process
+       (lambda (process signal)
+         (when (memq (process-status process) '(exit signal))
+           (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
+                                               (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+             (if (string-equal webdav_sync-process-output "Done.\n")
+                 (message "swint-webdav-sync-bi done.")
+               (message "swint-webdav-sync-bi failed"))))
+         (helm-switch-persp/buffer "*webdav_sync*")))))
+  (global-set-key (kbd "C-x M-,") 'swint-webdav-sync-down)
+  (global-set-key (kbd "C-x M-.") 'swint-webdav-sync-up)
+  (global-set-key (kbd "C-x M-/") 'swint-webdav-sync-bi)
+  ;; ===================webdav_sync同步文件======================
+  ;; ===================unison====================
+  (defun swint-unison-sync-backups ()
+    "Sync files in ~/Nutstore-sync to webdav server."
+    (interactive)
+    (let ((process
+           (start-process-shell-command
+            "unison" "*unison*"
+            (concat (cond
+                     (is-lin "unison")
+                     (is-win "c:/cygwin64/bin/unison-2.40.exe"))
+                    " Nutstore-backups"))))
+      (set-process-sentinel
+       process
+       (lambda (process signal)
+         (when (memq (process-status process) '(exit signal))
+           (message "swint-unison-sync-backups done."))
+         (helm-switch-persp/buffer "*unison*")))))
+  (global-set-key (kbd "C-c M-/") 'swint-unison-sync-backups)
+  ;; ===================unison====================
+  )
+;;=====================默认程序打开文件==================
 (cond
  (is-lin
-  ;;=====================默认程序打开文件==================
   (add-hook 'dired-mode-hook
             (lambda ()
               (setq truncate-lines t)
@@ -188,31 +277,32 @@
   (global-set-key (kbd "<C-s-return>") 'urxvt-default-directory))
  (is-win
   ;;=====================w32-browser======================
-  (require 'w32-browser)
-  ;; (eval-after-load "dired"
-  ;;   '(define-key dired-mode-map (kbd "TAB") (lambda ()
-  ;;                                             (interactive)
-  ;;                                             (w32-browser
-  ;;                                              (dired-replace-in-string
-  ;;                                               "/" "\\"
-  ;;                                               (dired-get-filename))))))
-  (define-key dired-mode-map (kbd "C-j") 'swint-w32-browser-open)
-  (define-key dired-mode-map (kbd "C-i") 'w32explore)
-  (defun w32-browser-open ()
-    (interactive)
-    (w32-browser
-     (dired-replace-in-string
-      "/" "\\"
-      (dired-get-filename))))
-  (defun swint-w32-browser-open ()
-    "Fix problems of openning word"
-    (interactive)
-    (if (and (or (string-equal (file-name-extension (dired-get-filename)) "doc")
-                 (string-equal (file-name-extension (dired-get-filename)) "docx"))
-             (not (string-match "WINWORD.EXE" (concat (prin1-to-string (proced-process-attributes))))))
-        (progn (w32-shell-execute "open" "word")
-               (sit-for 5)))
-    (w32-browser-open))
+  (use-package w32-browser
+    :config
+    ;; (eval-after-load "dired"
+    ;;   '(define-key dired-mode-map (kbd "TAB") (lambda ()
+    ;;                                             (interactive)
+    ;;                                             (w32-browser
+    ;;                                              (dired-replace-in-string
+    ;;                                               "/" "\\"
+    ;;                                               (dired-get-filename))))))
+    (define-key dired-mode-map (kbd "C-j") 'swint-w32-browser-open)
+    (define-key dired-mode-map (kbd "C-i") 'w32explore)
+    (defun w32-browser-open ()
+      (interactive)
+      (w32-browser
+       (dired-replace-in-string
+        "/" "\\"
+        (dired-get-filename))))
+    (defun swint-w32-browser-open ()
+      "Fix problems of openning word"
+      (interactive)
+      (if (and (or (string-equal (file-name-extension (dired-get-filename)) "doc")
+                   (string-equal (file-name-extension (dired-get-filename)) "docx"))
+               (not (string-match "WINWORD.EXE" (concat (prin1-to-string (proced-process-attributes))))))
+          (progn (w32-shell-execute "open" "word")
+                 (sit-for 5)))
+      (w32-browser-open)))
   ;;==============默认程序打开，但是emacs会冻结=================
   ;; (eval-after-load "dired"
   ;;   '(progn
@@ -231,135 +321,61 @@
   ;;     (if (file-exists-p file-name)
   ;;      (shell-command (format "\"%s\"" file-name) ))))
   ))
-;; ===================webdav_sync同步文件======================
-(defun swint-webdav-sync-down ()
-  "Sync files in webdav server to ~/Nutstore-sync."
-  (interactive)
-  (let ((process
-         (start-process-shell-command
-          "webdav_sync" "*webdav_sync*"
-          (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
-                  " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
-                  " -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
-                  (expand-file-name "~/Nutstore-sync/")))))
-    (set-process-sentinel
-     process
-     (lambda (process signal)
-       (when (memq (process-status process) '(exit signal))
-         (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                             (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
-           (if (string-equal webdav_sync-process-output "Done.\n")
-               (message "swint-webdav-sync-down done.")
-             (message "swint-webdav-sync-down failed"))))
-       (helm-switch-persp/buffer "*webdav_sync*")))))
-(defun swint-webdav-sync-up ()
-  "Sync files in ~/Nutstore-sync to webdav server."
-  (interactive)
-  (let ((process
-         (start-process-shell-command
-          "webdav_sync" "*webdav_sync*"
-          (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
-                  " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
-                  " -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
-                  (expand-file-name "~/Nutstore-sync/")))))
-    (set-process-sentinel
-     process
-     (lambda (process signal)
-       (when (memq (process-status process) '(exit signal))
-         (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                             (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
-           (if (string-equal webdav_sync-process-output "Done.\n")
-               (message "swint-webdav-sync-up done.")
-             (message "swint-webdav-sync-up failed"))))
-       (helm-switch-persp/buffer "*webdav_sync*")))))
-(defun swint-webdav-sync-bi ()
-  "Sync files in ~/Nutstore-sync to webdav server."
-  (interactive)
-  (let ((process
-         (start-process-shell-command
-          "webdav_sync" "*webdav_sync*"
-          (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
-                  " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
-                  " -r -bi -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
-                  (expand-file-name "~/Nutstore-sync/")))))
-    (set-process-sentinel
-     process
-     (lambda (process signal)
-       (when (memq (process-status process) '(exit signal))
-         (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                             (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
-           (if (string-equal webdav_sync-process-output "Done.\n")
-               (message "swint-webdav-sync-bi done.")
-             (message "swint-webdav-sync-bi failed"))))
-       (helm-switch-persp/buffer "*webdav_sync*")))))
-(global-set-key (kbd "C-x M-,") 'swint-webdav-sync-down)
-(global-set-key (kbd "C-x M-.") 'swint-webdav-sync-up)
-(global-set-key (kbd "C-x M-/") 'swint-webdav-sync-bi)
-;; ===================webdav_sync同步文件======================
-;; ===================unison====================
-(defun swint-unison-sync-backups ()
-  "Sync files in ~/Nutstore-sync to webdav server."
-  (interactive)
-  (let ((process
-         (start-process-shell-command
-          "unison" "*unison*"
-          (concat (cond
-                   (is-lin "unison")
-                   (is-win "c:/cygwin64/bin/unison-2.40.exe"))
-                  " Nutstore-backups"))))
-    (set-process-sentinel
-     process
-     (lambda (process signal)
-       (when (memq (process-status process) '(exit signal))
-         (message "swint-unison-sync-backups done."))
-       (helm-switch-persp/buffer "*unison*")))))
-(global-set-key (kbd "C-c M-/") 'swint-unison-sync-backups)
+;;=====================默认程序打开文件==================
 ;; ===================peep-dired====================
-(require 'peep-dired)
-(setq peep-dired-cleanup-on-disable t)
-;; (setq peep-dired-cleanup-eagerly t)
-(setq peep-dired-enable-on-directories nil)
-(setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))
-(define-key dired-mode-map (kbd "q") 'peep-dired)
-(add-hook 'peep-dired-hook
-          '(lambda ()
-             (define-key peep-dired-mode-map (kbd "p") 'peep-dired-prev-file)
-             (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)
-             (define-key peep-dired-mode-map (kbd "C-p") nil)
-             (define-key peep-dired-mode-map (kbd "C-n") nil)))
+(use-package peep-dired
+  :defer t
+  :commands peep-dired
+  :init
+  (bind-key "q" 'peep-dired dired-mode-map)
+  :config
+  (setq peep-dired-cleanup-on-disable t)
+  ;; (setq peep-dired-cleanup-eagerly t)
+  (setq peep-dired-enable-on-directories nil)
+  (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))
+  (add-hook 'peep-dired-hook
+            '(lambda ()
+               (define-key peep-dired-mode-map (kbd "p") 'peep-dired-prev-file)
+               (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)
+               (define-key peep-dired-mode-map (kbd "C-p") nil)
+               (define-key peep-dired-mode-map (kbd "C-n") nil))))
 ;; ===================peep-dired====================
 ;; ===================async====================
 ;; async: Simple library for asynchronous processing in Emacs
 ;; async-start async-start-process async-get async-ready async-wait
-(autoload 'dired-async-mode "dired-async.el" nil t)
-(dired-async-mode 1)
-(defun dired-do-copy (&optional arg)
-  "Redefine dired-do-copy to fix conflict between dired-async-mode and dired-sync-annotated."
-  (interactive "P")
-  (let* ((fn-list (dired-get-marked-files nil arg))
-         (fn-list-nodirectory (mapcar 'file-name-nondirectory fn-list))
-         (annotated-file-list (if (dired-k--parse-annotated-status)
-                                  (hash-table-keys (dired-k--parse-annotated-status))))
-         (fn-list-annotated (remove-if-not (lambda (x)
-                                             (member x annotated-file-list))
-                                           fn-list-nodirectory))
-         (annotation-storage-files
-          (remove nil (mapcar (lambda (from)
-                                (directory-files "~/org/annotated/" t
-                                                 (concat "annotated-("
-                                                         (replace-regexp-in-string
-                                                          "/" "_" (substring-no-properties (abbreviate-file-name from) 1)) "_")))
-                              fn-list))))
-    (if (or fn-list-annotated annotation-storage-files)
-        (progn (message "%s" fn-list-annotated)
-               (message "%s" annotation-storage-files)
-               (dired-async-mode 0))))
-  (let ((dired-recursive-copies dired-recursive-copies))
-    (dired-do-create-files 'copy (function dired-copy-file)
-                           "Copy"
-                           arg dired-keep-marker-copy
-                           nil dired-copy-how-to-fn))
-  (dired-async-mode 1))
+(use-package dired-async
+  :defer t
+  :init
+  (add-hook 'dired-mode-hook '(lambda () (dired-async-mode 1)))
+  :config
+  (defun dired-do-copy (&optional arg)
+    "Redefine dired-do-copy to fix conflict between dired-async-mode and dired-sync-annotated."
+    (interactive "P")
+    (let* ((fn-list (dired-get-marked-files nil arg))
+           (fn-list-nodirectory (mapcar 'file-name-nondirectory fn-list))
+           (annotated-file-list (if (dired-k--parse-annotated-status)
+                                    (hash-table-keys (dired-k--parse-annotated-status))))
+           (fn-list-annotated (remove-if-not (lambda (x)
+                                               (member x annotated-file-list))
+                                             fn-list-nodirectory))
+           (annotation-storage-files
+            (remove nil (mapcar (lambda (from)
+                                  (directory-files "~/org/annotated/" t
+                                                   (concat "annotated-("
+                                                           (replace-regexp-in-string
+                                                            "/" "_" (substring-no-properties (abbreviate-file-name from) 1)) "_")))
+                                fn-list))))
+      (if (or fn-list-annotated annotation-storage-files)
+          (progn (message "%s" fn-list-annotated)
+                 (message "%s" annotation-storage-files)
+                 (dired-async-mode 0))))
+    (let ((dired-recursive-copies dired-recursive-copies))
+      (dired-do-create-files 'copy (function dired-copy-file)
+                             "Copy"
+                             arg dired-keep-marker-copy
+                             nil dired-copy-how-to-fn))
+    (dired-async-mode 1)))
+;; (autoload 'dired-async-mode "dired-async.el" nil t)
 ;; ===================async====================
 ;;======================dired========================
 (provide 'setup_dired)

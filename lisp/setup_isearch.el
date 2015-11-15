@@ -1,45 +1,48 @@
 ;; ===================Anzu====================
-(require 'anzu)
-(global-anzu-mode +1)
-(global-set-key (kbd "M-*") 'anzu-query-replace)
-(global-set-key (kbd "C-M-*") 'anzu-query-replace-regexp)
-(set-face-attribute 'anzu-mode-line nil
-                    :foreground "green" :weight 'bold)
-(custom-set-variables
- '(anzu-mode-lighter "")
- '(anzu-deactivate-region t)
- '(anzu-search-threshold 1000)
- '(anzu-replace-to-string-separator " => "))
+(use-package anzu
+  :config
+  (global-anzu-mode 1)
+  (global-set-key (kbd "M-*") 'anzu-query-replace)
+  (global-set-key (kbd "C-M-*") 'anzu-query-replace-regexp)
+  (set-face-attribute 'anzu-mode-line nil
+                      :foreground "green" :weight 'bold)
+  (custom-set-variables
+   '(anzu-mode-lighter "")
+   '(anzu-deactivate-region t)
+   '(anzu-search-threshold 1000)
+   '(anzu-replace-to-string-separator " => ")))
 ;; ===================Anzu====================
 ;; ===================pinyin-search=====================
 ;; 安装时由于isearch-mode-map中已经设定M-s为helm-swoop，导致快捷键设定失败，修改之。
-(require 'pinyin-search)
-(define-key isearch-mode-map (kbd "C-q") #'isearch-toggle-pinyin)
-(global-set-key (kbd "C-s") 'isearch-forward-pinyin)
-(global-set-key (kbd "C-r") 'isearch-backward-pinyin)
-;; 同时搜索中英文，与ace-jump一样，对于.*+?等正则表达式使用的符号无效
-(defun swint-pinyin-search--pinyin-to-regexp (string)
-  "Wrap for Pinyin searching."
-  (let ((swint-regexp ""))
-    (if (or (string-match "[iuv]" string) ;当字符串中有iuv时，不转换string
-            (string-empty-p (pinyin-search--pinyin-to-regexp string))) ;当搜索中文或符号时，不转换string
-        (setq swint-regexp string)
-      (setq swint-regexp (concat string "\\|" (pinyin-search--pinyin-to-regexp string))))
-    swint-regexp))
-(defun isearch-function-with-pinyin ()
-  "Wrap for Pinyin searching."
-  (if pinyin-search-activated
-      ;; Return the function to use for pinyin search
-      `(lambda (string bound noerror)
-         (funcall (if ,isearch-forward
-                      're-search-forward
-                    're-search-backward)
-                  (swint-pinyin-search--pinyin-to-regexp string) bound noerror))
-    ;; Return default function
-    (isearch-search-fun-default)))
-(add-hook 'isearch-mode-end-hook
-          (lambda ()
-            (setq pinyin-search-activated nil)))
+(use-package pinyin-search
+  :defer t
+  :bind (("C-s" . isearch-forward-pinyin)
+         ("C-r" . isearch-backward-pinyin))
+  :config
+  (define-key isearch-mode-map (kbd "C-q") #'isearch-toggle-pinyin)
+  ;; 同时搜索中英文，与ace-jump一样，对于.*+?等正则表达式使用的符号无效
+  (defun swint-pinyin-search--pinyin-to-regexp (string)
+    "Wrap for Pinyin searching."
+    (let ((swint-regexp ""))
+      (if (or (string-match "[iuv]" string) ;当字符串中有iuv时，不转换string
+              (string-empty-p (pinyin-search--pinyin-to-regexp string))) ;当搜索中文或符号时，不转换string
+          (setq swint-regexp string)
+        (setq swint-regexp (concat string "\\|" (pinyin-search--pinyin-to-regexp string))))
+      swint-regexp))
+  (defun isearch-function-with-pinyin ()
+    "Wrap for Pinyin searching."
+    (if pinyin-search-activated
+        ;; Return the function to use for pinyin search
+        `(lambda (string bound noerror)
+           (funcall (if ,isearch-forward
+                        're-search-forward
+                      're-search-backward)
+                    (swint-pinyin-search--pinyin-to-regexp string) bound noerror))
+      ;; Return default function
+      (isearch-search-fun-default)))
+  (add-hook 'isearch-mode-end-hook
+            (lambda ()
+              (setq pinyin-search-activated nil))))
 ;; ===================pinyin-search=====================
 ;; ==============extended isearch==================
 (defun symbol-name-at-point ()

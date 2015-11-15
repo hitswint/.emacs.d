@@ -1,4 +1,4 @@
-;; ====================stardict=====================
+;; ==================stardict====================
 (define-derived-mode sdcv-mode org-mode
   ;; "Major mode for sdcv."
   (interactive)
@@ -101,8 +101,8 @@
   (goto-char (point-min))
   (when is-lin
     (kill-line 1)))
-;; ====================stardict=====================
-;; ===================bing-dict=====================
+;; ==================stardict====================
+;; ==================bing-dict===================
 (require 'bing-dict)
 (defvar swint-bing-dict-result nil)
 (defun swint-bing-dict-brief-cb (status keyword)
@@ -146,6 +146,8 @@
                   `(,(decode-coding-string keyword 'utf-8))
                   t
                   t)))
+;; ==================bing-dict===================
+;; ====================youdao====================
 (defun youdao-sample-sentences ()
   (interactive)
   (let ((word (if mark-active
@@ -161,5 +163,19 @@
               (is-win (w3m-url-encode-string word 'utf-8)))
              "&keyfrom=dict.top"))))
 (global-set-key (kbd "C-M-@") 'youdao-sample-sentences)
-;; ===================bing-dict=====================
-(provide 'setup_stardict)
+;; ====================youdao====================
+;; ===============google-translate===============
+(use-package google-translate
+  :defer t
+  :bind ("M-@" . google-translate-smooth-translate)
+  :init
+  (setq google-translate-base-url
+        "http://translate.google.cn/translate_a/single")
+  (setq google-translate-listen-url
+        "http://translate.google.cn/translate_tts")
+  (setq google-translate-translation-directions-alist
+        '(("en" . "zh-CN") ("zh-CN" . "en")))
+  :config
+  (use-package google-translate-smooth-ui))
+;; ===============google-translate===============
+(provide 'setup_dict)

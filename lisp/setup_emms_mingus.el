@@ -1,7 +1,17 @@
-(cond
- (is-lin
-  ;; ==============emms==================
-  (require 'emms-setup)
+;; ================emms==================
+(use-package emms
+  :if is-lin
+  :defer t
+  :bind (("C-c e l" . swint-emms-playlist-mode-go)
+         ("C-c e o" . emms-play-file))
+  :init
+  (defun swint-emms-playlist-mode-go ()
+    "swint-playlist."
+    (interactive)
+    (emms-player-mpd-connect)
+    (emms-playlist-mode-go))
+  :config
+  (use-package emms-setup)
   (emms-devel)
   (setq emms-player-mpg321-command-name "mpg321"
         emms-player-mplayer-command-name "mplayer"
@@ -18,22 +28,15 @@
         emms-lyrics-display-format ""
         emms-playing-time-display-format "") ; 关闭emms在mode-line上的显示
   ;; ==============emms-mpd================
-  (require 'emms-player-mpd)
+  (use-package emms-player-mpd)
   (setq emms-player-mpd-server-name "localhost")
   (setq emms-player-mpd-server-port "6600")
   (setq emms-player-mpd-music-directory "~/Music")
   (add-to-list 'emms-info-functions 'emms-info-mpd)
   (add-to-list 'emms-player-list 'emms-player-mpd)
   ;; ==============emms-mpd================
-  (defun swint-playlist ()
-    "open file with external app"
-    (interactive)
-    (emms-player-mpd-connect)
-    (emms-playlist-mode-go))
   ;; emms-mpd快捷键设置
   (global-set-key (kbd "C-c e c") 'emms-player-mpd-connect)
-  (global-set-key (kbd "C-c e l") 'swint-playlist)
-  (global-set-key (kbd "C-c e o") 'emms-play-file)
   (global-set-key (kbd "C-M-SPC") 'emms-pause)
   (global-set-key (kbd "C-M-<up>") 'emms-volume-raise)
   (global-set-key (kbd "C-M-<down>") 'emms-volume-lower)
@@ -41,32 +44,23 @@
   (global-set-key (kbd "C-M-<right>") 'emms-seek-forward)
   (global-set-key (kbd "C-s-<left>") 'emms-previous)
   (global-set-key (kbd "C-s-<right>") 'emms-next)
-  (global-set-key (kbd "C-s-SPC") 'emms-stop)
-  ;; emms使用mpg321或者mplayer的快捷键设置
-  ;; (global-set-key (kbd "C-c e l") 'swint-playlist)
-  ;; (global-set-key (kbd "C-c e s") 'emms-start)
-  ;; (global-set-key (kbd "C-c e t") 'emms-stop)
-  ;; (global-set-key (kbd "C-c e n") 'emms-next)
-  ;; (global-set-key (kbd "C-c e p") 'emms-previous)
-  ;; (global-set-key (kbd "C-c e e") 'emms-pause)
-  ;; (global-set-key (kbd "C-c e f") 'emms-play-playlist)
-  ;; (global-set-key (kbd "C-c e o") 'emms-play-file)
-  ;; (global-set-key (kbd "C-c e d") 'emms-play-directory-tree)
-  ;; (global-set-key (kbd "C-c e a") 'emms-add-directory-tree)
-  ;; (global-set-key (kbd "C-c C--") 'emms-seek-backward)
-  ;; (global-set-key (kbd "C-c C-=") 'emms-seek-forward)
-  ;; (global-set-key (kbd "C-c e c") 'emms-player-mpd-connect)
-  )
- (is-win
-  ;; 在win上使用emms提示找不到service:6600，似乎找不到mpd后台。这个问题似乎是因为emms-player-mpd-ensure-process需要接受一个整数作为port number，但是接受到了一个字符串"6600"，按下述网址https://lists.gnu.org/archive/html/emms-help/2013-08/msg00002.html修改emms-player-mpd.el能够解决这个问题。
-  ;; 但播放音乐时出现musicpd error {add}  not found的错误，似乎是mpd数据库问题。
-  ;; ==============mingus==================
+  (global-set-key (kbd "C-s-SPC") 'emms-stop))
+;; ================emms==================
+;; ===============mingus=================
+(use-package mingus
+  :load-path "site-lisp/mingus/"
+  :if is-win
+  :defer t
+  :bind (("C-c e l" . mingus)
+         ("C-c e o" . swint-mingus-browse))
+  :init
+  (defun swint-mingus-browse ()
+    "swint-mingus-browse."
+    (interactive)
+    (mingus)
+    (mingus-browse))
+  :config
   (autoload 'mingus "mingus-stays-home" nil t)
-  (global-set-key (kbd "C-c e l") 'mingus)
-  (global-set-key (kbd "C-c e o") '(lambda () (interactive)
-                                     (mingus)
-                                     (mingus-browse)
-                                     ))
   (global-set-key (kbd "C-M-SPC") 'mingus-toggle)
   (global-set-key (kbd "C-M-<up>") 'mingus-vol-up)
   (global-set-key (kbd "C-M-<down>") 'mingus-vol-down)
@@ -79,6 +73,8 @@
                                    (define-key mingus-browse-map (kbd "C-j") '(lambda () (interactive)
                                                                                 (mingus-clear t)
                                                                                 (mingus-insert-and-play)
-                                                                                (kill-this-buffer)))))))
-;; ==============mingus==================
+                                                                                (kill-this-buffer))))))
+;; 在win上使用emms提示找不到service:6600，似乎找不到mpd后台。这个问题似乎是因为emms-player-mpd-ensure-process需要接受一个整数作为port number，但是接受到了一个字符串"6600"，按下述网址https://lists.gnu.org/archive/html/emms-help/2013-08/msg00002.html修改emms-player-mpd.el能够解决这个问题。
+;; 但播放音乐时出现musicpd error {add}  not found的错误，似乎是mpd数据库问题。
+;; ===============mingus=================
 (provide 'setup_emms_mingus)

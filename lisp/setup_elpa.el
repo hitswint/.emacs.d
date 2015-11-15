@@ -1,11 +1,15 @@
 ;; ====================elpa=========================
 (require 'package)
-(setq package-archives '(("melpa" . "http://melpa.org/packages/")
-                         ("gnu" . "http://elpa.gnu.org/packages/")
-                         ("org" . "http://orgmode.org/elpa/")
-                         ("elpa" . "http://tromey.com/elpa/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")))
-(package-initialize)
+(unless package--initialized
+  (setq package-archives '(("melpa" . "http://melpa.org/packages/")
+                           ("gnu" . "http://elpa.gnu.org/packages/")
+                           ("org" . "http://orgmode.org/elpa/")
+                           ("elpa" . "http://tromey.com/elpa/")
+                           ("marmalade" . "http://marmalade-repo.org/packages/")))
+  ;; optimization, no need to activate all the packages so early
+  (setq package-enable-at-startup nil)
+  ;; 激活所有packages，也可以使用package-activate单独激活。
+  (package-initialize))
 (when (< emacs-major-version 24)
   ;; Help package.el work in older Emacsen, where there's no TRASH arg
   ;; for 'delete-directory
@@ -23,11 +27,13 @@
     anchored-transpose
     anzu
     async
+    auctex
     auto-complete
     auto-complete-auctex
     auto-complete-c-headers
     auto-complete-clang
     backup-walker
+    bind-key
     bing-dict
     bm
     clean-aindent-mode
@@ -35,6 +41,7 @@
     company-c-headers
     company-quickhelp
     dash
+    diminish
     dired-details
     dirtree
     drag-stuff
@@ -109,6 +116,7 @@
     tangotango-theme
     tree-mode
     undo-tree
+    use-package
     visible-mark
     visual-regexp
     vlf
@@ -154,4 +162,10 @@ Missing packages are installed automatically."
  (is-win (prelude-require-packages
           '(w32-browser))))
 ;; ====================elpa=========================
+;; =================USE-PACKAGE=====================
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
+;; =================USE-PACKAGE=====================
 (provide 'setup_elpa)

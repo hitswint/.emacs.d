@@ -61,15 +61,96 @@
 (delete-selection-mode t)
 (setq diary-file "~/org/journal.org.gpg")
 ;; =================SAVE===================
-;; (when is-win
-;;   (require 'setup_language_env))
-;; (eval-after-load 'ido '(require 'setup-ido))
 (require 'setup_desktop_session)
 ;; =================CUSTOM=================
 (cond
  (is-lin (setq custom-file (expand-file-name "custom-lin.el" user-emacs-directory)))
  (is-win (setq custom-file (expand-file-name "custom-win.el" user-emacs-directory))))
 (load custom-file)
+;; =================TIME===================
+;; ;; Function to collect information of packages.
+;; (defvar missing-packages-list nil
+;;   "List of packages that `try-require' can't find.")
+;; (defvar package-init-statistic nil "Package loading statistics")
+;; ;; attempt to load a feature/library, failing silently
+;; (defun try-require (feature &optional click)
+;;   "Attempt to load a library or module. Return true if the
+;; library given as argument is successfully loaded. If not, instead
+;; of an error, just add the package to a list of missing packages."
+;;   (condition-case err
+;;       ;; protected form
+;;       (let ((timestamp (current-time))
+;;             (package (if (stringp feature) feature (symbol-name feature))))
+;;         (if (stringp feature)
+;;             (load-library feature)
+;;           (require feature))
+;;         (if click
+;;             (add-to-list 'package-init-statistic
+;;                          (cons (if (stringp feature) feature (symbol-name feature))
+;;                                (float-time (time-since timestamp)))))
+;;         (message "Checking for library `%s'... Found, cost %.2f seconds"
+;;                  feature (float-time (time-since timestamp))))
+;;     ;; error handler
+;;     (file-error  ; condition
+;;      (progn
+;;        (message "Checking for library `%s'... Missing" feature)
+;;        (add-to-list 'missing-packages-list feature 'append))
+;;      nil)))
+;; ;; Load all configuration and packages.
+;; (let ((ts-init (current-time)))
+;;   (setq missing-packages-list nil
+;;         package-init-statistic nil)
+;;   (try-require 'setup_elpa t)
+;;   (try-require 'setup_keybindings t)
+;;   (try-require 'setup_backup_autosave t)
+;;   (try-require 'setup_abbrev t)
+;;   (try-require 'setup_ace_jump t)
+;;   (try-require 'setup_appearance t)
+;;   (try-require 'setup_ccmode t)
+;;   (try-require 'setup_fonts t)
+;;   (try-require 'setup_dired t)
+;;   (try-require 'setup_dirtree t)
+;;   (try-require 'setup_emms_mingus t)
+;;   (try-require 'setup_flycheck t)
+;;   (try-require 'setup_flyspell t)
+;;   (try-require 'setup_gnuplot t)
+;;   (try-require 'setup_graphviz t)
+;;   (try-require 'setup_ibuffer t)
+;;   (try-require 'setup_ido t)
+;;   (try-require 'setup_isearch t)
+;;   (try-require 'setup_latex t)
+;;   (try-require 'setup_magit t)
+;;   (try-require 'setup_matlab_octave t)
+;;   (try-require 'setup_mew t)
+;;   (try-require 'setup_minibuffer t)
+;;   (try-require 'setup_mode_line t)
+;;   (try-require 'setup_org_mode t)
+;;   (try-require 'setup_helm t)
+;;   (try-require 'setup_projectile t)
+;;   (try-require 'setup_paredit t)
+;;   (try-require 'setup_parenthesis t)
+;;   (try-require 'setup_perspective t)
+;;   (try-require 'setup_recentf t)
+;;   (try-require 'setup_yasnippet t)
+;;   (try-require 'setup_dict t)
+;;   (try-require 'setup_w3m t)
+;;   (try-require 'setup_windows t)
+;;   (try-require 'setup_completion t)
+;;   (try-require 'setup_eshell t)
+;;   (try-require 'setup_packages t)
+;;   (try-require 'setup_wicd t)
+;;   ;; Report package statistics.
+;;   (message "\n\nShowing package initialization statistics:\n%s"
+;;            (mapconcat (lambda (x)
+;;                         (format "package %s cost %.2f seconds" (car x) (cdr x)))
+;;                       (reverse package-init-statistic)
+;;                       "\n"
+;;                       ))
+;;   (message "Finished startup in %.2f seconds,  %d packages missing%s\n\n"
+;;            (float-time (time-since ts-init)) (length missing-packages-list)
+;;            (if missing-packages-list
+;;                ". Refer to `missing-packages-list` for missing packages."
+;;              ".")))
 ;; =================SETUP==================
 (require 'setup_elpa)
 (require 'setup_keybindings)
@@ -102,13 +183,12 @@
 (require 'setup_parenthesis)
 (require 'setup_perspective)
 (require 'setup_recentf)
-(require 'setup_stardict)
+(require 'setup_yasnippet)
+(require 'setup_dict)
 (require 'setup_w3m)
 (require 'setup_windows)
 (require 'setup_completion)
 (require 'setup_eshell)
-(require 'setup_yasnippet)
 (require 'setup_packages)
-(when is-lin
-  (require 'setup_wicd))
+(require 'setup_wicd)
 ;; =================END====================

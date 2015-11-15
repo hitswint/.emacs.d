@@ -1,16 +1,24 @@
 ;; ================Projectile================
-(setq projectile-keymap-prefix (kbd "M-s '"))
-(projectile-global-mode)
-(setq projectile-enable-caching t)
-(setq projectile-mode-line nil)
-;; (setq projectile-mode-line
-;;       (quote (:eval (format "[%s]" (projectile-project-name)))))
-;; 设置切换project的默认操作
-(setq projectile-switch-project-action 'helm-projectile)
-(when is-win
-  ;; windows下的缓存方式从native改到alien，加快缓存速度
-  (setq projectile-indexing-method 'alien))
-(global-set-key (kbd "M-'") 'helm-projectile)
+(use-package projectile
+  :defer t
+  :init
+  (setq projectile-keymap-prefix (kbd "M-s '"))
+  :config
+  (projectile-global-mode)
+  (setq projectile-enable-caching t)
+  (setq projectile-mode-line nil)
+  ;; (setq projectile-mode-line
+  ;;       (quote (:eval (format "[%s]" (projectile-project-name)))))
+  )
+(use-package helm-projectile
+  :defer t
+  :bind ("M-'" . helm-projectile)
+  :config
+  ;; 设置切换project的默认操作
+  (setq projectile-switch-project-action 'helm-projectile)
+  (when is-win
+    ;; windows下的缓存方式从native改到alien，加快缓存速度
+    (setq projectile-indexing-method 'alien)))
 ;; M-s p s g 为projectile-grep，出现find错误。使用helm-grep，不输入任何文件就是对整个文件夹进行grep，加C-u就是递归搜索。
 ;; 在helm-projectile中C-d为打开project的根目录。
 ;; C-c p f         Display a list of all files in the project. With a prefix argument it will clear the cache first.

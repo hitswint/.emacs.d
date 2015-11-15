@@ -199,7 +199,7 @@ Emacs buffers are those whose name starts with *."
                    name (file-name-nondirectory new-name)))))))
 (global-set-key (kbd "C-x C-r") 'rename-current-buffer-file)
 ;; ====================重命名当前buffer======================
-;; ====================获得当前buffer的major-mode======================
+;; ===================获得当前buffer的major-mode======================
 (defun buffer-mode (&optional buffer-or-name)
   "Returns the major mode associated with a buffer.
 If buffer-or-name is nil return current buffer's mode."
@@ -207,4 +207,11 @@ If buffer-or-name is nil return current buffer's mode."
                       (if buffer-or-name
                           (get-buffer buffer-or-name)
                         (current-buffer))))
-;; ====================获得当前buffer的major-mode======================
+;; ===================获得当前buffer的major-mode======================
+;; ====================获得不包括扩展名的文件名=======================
+(defun file-name-base (&optional filename)
+  "Return the base name of the FILENAME: no directory, no extension.
+FILENAME defaults to `buffer-file-name'."
+  (file-name-sans-extension
+   (file-name-nondirectory (or filename (buffer-file-name)))))
+;; ====================获得不包括扩展名的文件名=======================

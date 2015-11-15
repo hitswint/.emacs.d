@@ -67,39 +67,44 @@
           '(lambda ()
              (define-key org-mode-map (kbd "$") 'insert-pair-math-bracket)))
 ;; ==================wrap-region==================
-(require 'wrap-region)
-(add-hook 'wrap-region-before-wrap-hook 'wrap-region-add-space)
-(defun wrap-region-add-space ()
-  "Add space around punctuations."
-  (when (member left '("*" "~" "/" "=" "+" "_" "$"))
-    (unless (or (char-equal (char-before (region-beginning)) 32)  ;空格
-                (char-equal (char-before (region-beginning)) 10)) ;回车
-      (setq left (concat " " left)))
-    (unless (or (char-equal (char-after (region-end)) 32)  ;空格
-                (char-equal (char-after (region-end)) 10)) ;回车
-      (setq right (concat right " ")))))
-(wrap-region-add-wrappers
- '(("*" "*" nil org-mode)
-   ("~" "~" nil org-mode)
-   ("/" "/" nil org-mode)
-   ("=" "=" nil org-mode)
-   ("+" "+" nil org-mode)
-   ("_" "_" nil org-mode)
-   ("$" "$" nil (org-mode latex-mode))))
-(add-hook 'org-mode-hook 'wrap-region-mode)
-(add-hook 'latex-mode-hook 'wrap-region-mode)
+(use-package wrap-region
+  :defer t
+  :init
+  (add-hook 'org-mode-hook 'wrap-region-mode)
+  (add-hook 'latex-mode-hook 'wrap-region-mode)
+  :config
+  (add-hook 'wrap-region-before-wrap-hook 'wrap-region-add-space)
+  (defun wrap-region-add-space ()
+    "Add space around punctuations."
+    (when (member left '("*" "~" "/" "=" "+" "_" "$"))
+      (unless (or (char-equal (char-before (region-beginning)) 32)  ;空格
+                  (char-equal (char-before (region-beginning)) 10)) ;回车
+        (setq left (concat " " left)))
+      (unless (or (char-equal (char-after (region-end)) 32)  ;空格
+                  (char-equal (char-after (region-end)) 10)) ;回车
+        (setq right (concat right " ")))))
+  (wrap-region-add-wrappers
+   '(("*" "*" nil org-mode)
+     ("~" "~" nil org-mode)
+     ("/" "/" nil org-mode)
+     ("=" "=" nil org-mode)
+     ("+" "+" nil org-mode)
+     ("_" "_" nil org-mode)
+     ("$" "$" nil (org-mode latex-mode)))))
 ;; ==================wrap-region==================
 ;; =======================rainbow-delimiters==========================
-(require 'rainbow-delimiters)
-;; (global-rainbow-delimiters-mode)
-;; 在org-mode中打开rainbow会让org本身的highlight失效
-;; (add-hook 'org-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'dired-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'octave-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'gnuplot-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'c-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'graphviz-dot-mode-hook 'rainbow-delimiters-mode)
+(use-package rainbow-delimiters
+  :defer t
+  :init
+  ;; (global-rainbow-delimiters-mode)
+  ;; 在org-mode中打开rainbow会让org本身的highlight失效
+  ;; (add-hook 'org-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'dired-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'octave-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'gnuplot-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'c-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'graphviz-dot-mode-hook 'rainbow-delimiters-mode))
 ;; =======================rainbow-delimiters==========================
 ;; =============================括号==============================
 (provide 'setup_parenthesis)
