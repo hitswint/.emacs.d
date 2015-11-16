@@ -5,9 +5,7 @@
   (setq major-mode 'sdcv-mode)
   (setq mode-name "sdcv")
   (local-set-key (kbd "n") 'next-line)
-  (local-set-key (kbd "j") 'next-line)
   (local-set-key (kbd "p") 'previous-line)
-  (local-set-key (kbd "k") 'previous-line)
   (local-set-key (kbd "SPC") 'scroll-up)
   (local-set-key (kbd "DEL") 'scroll-down)
   (local-set-key (kbd "d") 'kid-sdcv-to-buffer)
@@ -103,49 +101,52 @@
     (kill-line 1)))
 ;; ==================stardict====================
 ;; ==================bing-dict===================
-(require 'bing-dict)
-(defvar swint-bing-dict-result nil)
-(defun swint-bing-dict-brief-cb (status keyword)
-  (set-buffer-multibyte t)
-  (bing-dict--delete-response-header)
-  (condition-case nil
-      (if (buffer-live-p (get-buffer "*sdcv*"))
-          (if (bing-dict--has-machine-translation-p)
-              (with-current-buffer "*sdcv*"
-                (goto-char (point-max))
-                (insert (concat (propertize (bing-dict--machine-translation)
-                                            'face
-                                            'font-lock-doc-face))))
-            (let ((query-word (propertize keyword 'face 'font-lock-keyword-face))
-                  (pronunciation (bing-dict--pronunciation))
-                  (short-exps (mapconcat 'identity (bing-dict--definitions)
-                                         (propertize " | "
-                                                     'face
-                                                     'font-lock-builtin-face))))
-              (with-current-buffer "*sdcv*"
-                (goto-char (point-max))
-                (if short-exps
-                    (insert (concat pronunciation short-exps))
-                  (insert "No results")))))
-        (bing-dict-brief keyword))
-    (error
-     (with-current-buffer "*sdcv*"
-       (goto-char (point-max))
-       (insert "No results")))))
-(defun swint-bing-dict-brief (&optional word)
-  (interactive)
-  (let ((keyword (or word (read-string
-                           "Search Bing dict: "
-                           (if (use-region-p)
-                               (buffer-substring-no-properties
-                                (region-beginning) (region-end))
-                             (thing-at-point 'word))))))
-    (url-retrieve (concat "http://www.bing.com/dict/search?q="
-                          (url-hexify-string keyword))
-                  'swint-bing-dict-brief-cb
-                  `(,(decode-coding-string keyword 'utf-8))
-                  t
-                  t)))
+(use-package bing-dict
+  :defer t
+  :commands swint-bing-dict-brief
+  :config
+  (defvar swint-bing-dict-result nil)
+  (defun swint-bing-dict-brief-cb (status keyword)
+    (set-buffer-multibyte t)
+    (bing-dict--delete-response-header)
+    (condition-case nil
+        (if (buffer-live-p (get-buffer "*sdcv*"))
+            (if (bing-dict--has-machine-translation-p)
+                (with-current-buffer "*sdcv*"
+                  (goto-char (point-max))
+                  (insert (concat (propertize (bing-dict--machine-translation)
+                                              'face
+                                              'font-lock-doc-face))))
+              (let ((query-word (propertize keyword 'face 'font-lock-keyword-face))
+                    (pronunciation (bing-dict--pronunciation))
+                    (short-exps (mapconcat 'identity (bing-dict--definitions)
+                                           (propertize " | "
+                                                       'face
+                                                       'font-lock-builtin-face))))
+                (with-current-buffer "*sdcv*"
+                  (goto-char (point-max))
+                  (if short-exps
+                      (insert (concat pronunciation short-exps))
+                    (insert "No results")))))
+          (bing-dict-brief keyword))
+      (error
+       (with-current-buffer "*sdcv*"
+         (goto-char (point-max))
+         (insert "No results")))))
+  (defun swint-bing-dict-brief (&optional word)
+    (interactive)
+    (let ((keyword (or word (read-string
+                             "Search Bing dict: "
+                             (if (use-region-p)
+                                 (buffer-substring-no-properties
+                                  (region-beginning) (region-end))
+                               (thing-at-point 'word))))))
+      (url-retrieve (concat "http://www.bing.com/dict/search?q="
+                            (url-hexify-string keyword))
+                    'swint-bing-dict-brief-cb
+                    `(,(decode-coding-string keyword 'utf-8))
+                    t
+                    t))))
 ;; ==================bing-dict===================
 ;; ====================youdao====================
 (defun youdao-sample-sentences ()

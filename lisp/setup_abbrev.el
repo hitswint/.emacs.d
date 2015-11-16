@@ -1,5 +1,6 @@
 ;; ====================abbrev====================
 (use-package abbrev
+  :defer 2
   :config
   ;; turn on abbrev mode globally
   (setq-default abbrev-mode t)
@@ -7,7 +8,7 @@
   (setq save-abbrevs t)
   (if (file-exists-p abbrev-file-name)
       (quietly-read-abbrev-file))
-  (setq abbrev-file-name          ;; tell emacs where to read abbrev
+  (setq abbrev-file-name
         "~/.emacs.d/abbrev_defs")
   ;; sample use of emacs abbreviation feature
   (define-abbrev-table 'global-abbrev-table

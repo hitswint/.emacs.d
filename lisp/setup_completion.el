@@ -1,13 +1,17 @@
 ;; ===========================auto-complete============================
 (use-package auto-complete
   :defer t
-  :bind ("M-u" . auto-complete)
   :config
   (use-package auto-complete-config)
   (ac-config-default)
   (setq ac-auto-start nil)
   (setq ac-use-menu-map t)
   (setq ac-fuzzy-enable t)
+  (setq-default ac-sources '(ac-source-abbrev
+                             ac-source-dictionary
+                             ac-source-words-in-same-mode-buffers
+                             ac-source-files-in-current-dir
+                             ac-source-yasnippet))
   (define-key ac-completing-map "\C-p" 'ac-previous)
   (define-key ac-completing-map "\C-n" 'ac-next)
   ;; (ac-set-trigger-key "TAB")              ;导致无法indent
@@ -17,13 +21,6 @@
   ;; (define-key ac-completing-map (kbd "TAB") nil)
   ;; ;; 2. 切换menu的选项。取消TAB切换menu选项。
   ;; (define-key ac-menu-map (kbd "TAB") nil)
-  (setq-default ac-sources '(ac-source-abbrev
-                             ac-source-dictionary
-                             ac-source-words-in-same-mode-buffers
-                             ac-source-files-in-current-dir
-                             ac-source-yasnippet
-                             ac-source-ispell
-                             ac-source-ispell-fuzzy))
   ;; =======================auto-complete-c-headers===========================
   (use-package auto-complete-c-headers
     :config
@@ -48,7 +45,6 @@
       (setq ac-sources
             (append '(ac-source-clang
                       ac-source-semantic) ac-sources)))
-    :config
     (setq ac-clang-flags
           (mapcar (lambda (item)
                     (concat "-I" item))
@@ -136,7 +132,8 @@
   (setq comint-process-echoes nil)
   (add-to-list 'ac-modes 'shell-mode)
   (use-package readline-complete
-    :config
+    :defer t
+    :init
     (add-hook 'shell-mode-hook 'ac-rlc-setup-sources))
   ;; =================shell==================
   ;; ===================eshell===================
@@ -160,7 +157,12 @@
   ;; Completion words longer than 4 characters
   (use-package ac-ispell
     :config
-    (ac-ispell-setup))
+    (ac-ispell-setup)
+    (defun swint-auto-complete-ispell ()
+      (interactive)
+      (auto-complete '(ac-source-ispell-fuzzy
+                       ac-source-ispell)))
+    (global-set-key (kbd "M-U") 'swint-auto-complete-ispell))
   ;; 也可以加下句，使用ac-source-dictionary补全单词。
   ;; (add-to-list 'ac-dictionary-files "~/.english-words")
   ;; =================ac-ispell=================

@@ -184,7 +184,6 @@
     "Return the current list of buffers.
 Currently visible buffers are put at the end of the list.
 See `ido-make-buffer-list' for more infos."
-    (require 'ido)
     (let ((ido-process-ignore-lists t)
           ido-ignored-list
           ;; 在原函数中注销下句，因为会导致ido忽略buffer的定义失效。
@@ -238,7 +237,6 @@ See `ido-make-buffer-list' for more infos."
   (defun swint-helm-mini ()
     "Preconfigured `helm' lightweight version \(buffer -> recentf\)."
     (interactive)
-    (require 'helm-files)
     (unless helm-source-buffers-list
       (setq helm-source-buffers-list
             (helm-make-source "File Buffers" 'helm-source-buffers)))
@@ -276,10 +274,10 @@ Run all sources defined in `helm-for-files-preferred-list'."
   ;; =============为helm分别定义recent file和recent directory的source==================
   (use-package recentf-ext
     :config
+    (use-package recentf)
     ;; 定义 swint-helm-source-recentf-file
     (defclass swint-helm-recentf-file-source (helm-source-sync)
       ((init :initform (lambda ()
-                         (require 'recentf)
                          (recentf-mode 1)))
        (candidates :initform (lambda () (remove-if (lambda (x)
                                                      (or (string-match-p ".*\/$" x)
@@ -315,7 +313,6 @@ Set `recentf-max-saved-items' to a bigger value if default is too small.")
     ;; 定义 swint-helm-source-recentf-directory
     (defclass swint-helm-recentf-directory-source (helm-source-sync)
       ((init :initform (lambda ()
-                         (require 'recentf)
                          (recentf-mode 1)))
        (candidates :initform (lambda () (remove-if-not (lambda (x)
                                                          (and (string-match-p ".*\/$" x)
@@ -389,7 +386,6 @@ Set `recentf-max-saved-items' to a bigger value if default is too small.")
 If current selection is a buffer or a file, `helm-find-files'
 from its directory."
     (interactive)
-    (require 'helm-grep)
     (helm-run-after-quit
      (lambda (f)
        (if (file-exists-p f)
@@ -574,6 +570,35 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
   ;; =================total commander===============
   )
+;; =======================helm-bibtex==============================
+(use-package helm-bibtex
+  :defer t
+  :bind ("C-c C-x b" . helm-bibtex)
+  :init
+  (setq helm-bibtex-bibliography "./literature.bib")
+  ;; (zotelo-translator-charsets (quote ((BibTeX . "Unicode") (Default . "Unicode"))))
+  ;; 设置.bib文件的编码格式，否则出现乱码
+  (defvar helm-source-bibtex
+    '((name                                      . "BibTeX entries")
+      (init                                      . helm-bibtex-init)
+      (candidates                                . helm-bibtex-candidates)
+      (filtered-candidate-transformer            . helm-bibtex-candidates-formatter)
+      (action . (("Insert citation"              . helm-bibtex-insert-citation)
+                 ("Open PDF file (if present)"   . helm-bibtex-open-pdf)
+                 ("Open URL or DOI in browser"   . helm-bibtex-open-url-or-doi)
+                 ("Insert reference"             . helm-bibtex-insert-reference)
+                 ("Insert BibTeX key"            . helm-bibtex-insert-key)
+                 ("Insert BibTeX entry"          . helm-bibtex-insert-bibtex)
+                 ("Attach PDF to email"          . helm-bibtex-add-PDF-attachment)
+                 ("Edit notes"                   . helm-bibtex-edit-notes)
+                 ("Show entry"                   . helm-bibtex-show-entry))))
+    "Source for searching in BibTeX files.")
+  ;; 因为没有使用xpdf索引pdf文件，无法直接打开pdf文件。设置insert-citation为默认选项
+  ;; 重新定义插入citation命令为\citep{}。
+  (defun swint-helm-bibtex-format-citation-cite (keys)
+    "Formatter for LaTeX citation macro."
+    (format "\\citep{%s}" (s-join ", " keys))))
+;; =======================helm-bibtex==============================
 ;; ================helm-swoop================
 (use-package helm-swoop
   :defer t
@@ -598,37 +623,6 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   ;; If nil, you can slightly boost invoke speed in exchange for text color
   (setq helm-swoop-speed-or-color nil))
 ;; ================helm-swoop================
-;; =======================helm-bibtex==============================
-(use-package helm-bibtex
-  :defer t
-  :commands helm-bibtex
-  :init
-  (bind-key "C-c C-x b" 'helm-bibtex LaTeX-mode-map)
-  (setq helm-bibtex-bibliography "./literature.bib")
-  :config
-  ;; (zotelo-translator-charsets (quote ((BibTeX . "Unicode") (Default . "Unicode"))))
-  ;; 设置.bib文件的编码格式，否则出现乱码
-  (defvar helm-source-bibtex
-    '((name                                      . "BibTeX entries")
-      (init                                      . helm-bibtex-init)
-      (candidates                                . helm-bibtex-candidates)
-      (filtered-candidate-transformer            . helm-bibtex-candidates-formatter)
-      (action . (("Insert citation"              . helm-bibtex-insert-citation)
-                 ("Open PDF file (if present)"   . helm-bibtex-open-pdf)
-                 ("Open URL or DOI in browser"   . helm-bibtex-open-url-or-doi)
-                 ("Insert reference"             . helm-bibtex-insert-reference)
-                 ("Insert BibTeX key"            . helm-bibtex-insert-key)
-                 ("Insert BibTeX entry"          . helm-bibtex-insert-bibtex)
-                 ("Attach PDF to email"          . helm-bibtex-add-PDF-attachment)
-                 ("Edit notes"                   . helm-bibtex-edit-notes)
-                 ("Show entry"                   . helm-bibtex-show-entry))))
-    "Source for searching in BibTeX files.")
-  ;; 因为没有使用xpdf索引pdf文件，无法直接打开pdf文件。设置insert-citation为默认选项
-  ;; 重新定义插入citation命令为\citep{}，快捷键定义在setup_latex.el中。
-  (defun swint-helm-bibtex-format-citation-cite (keys)
-    "Formatter for LaTeX citation macro."
-    (format "\\citep{%s}" (s-join ", " keys))))
-;; =======================helm-bibtex==============================
 ;; =======================helm-unicode==============================
 (use-package helm-unicode
   :defer t

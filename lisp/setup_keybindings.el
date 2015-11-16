@@ -16,8 +16,10 @@
 (global-set-key [f9] 'menu-bar-mode)
 (global-set-key (kbd "C-SPC") nil)
 ;; ============smartrep============
-(require 'smartrep)
-(setq smartrep-mode-line-string-activated nil)
+(use-package smartrep
+  :config
+  (setq smartrep-mode-line-string-activated nil))
 ;; ============smartrep============
+(define-key lisp-interaction-mode-map (kbd "C-j") nil)
 ;; ====================快捷键====================
 (provide 'setup_keybindings)

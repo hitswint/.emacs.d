@@ -1,11 +1,13 @@
 ;; =======================SERVER========================
 (use-package server
+  :defer 2
   :config
   (unless (server-running-p)
     (server-start)))
 ;; =======================SERVER========================
 ;; ======================文件加密===================================
 (use-package epa-file
+  :defer 2
   :config
   ;;(epa-file-enable)
   (setenv "GPG_AGENT_INFO" nil)
@@ -130,6 +132,7 @@
 ;; =====================everything======================
 ;; =====================popwin======================
 (use-package popwin
+  :defer 2
   :config
   (popwin-mode 1))
 ;; =====================popwin======================
@@ -177,7 +180,7 @@
   (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
     (add-hook hook 'elisp-slime-nav-mode))
   :config
-  (require 'cl-lib)
+  (use-package cl-lib)
   (define-key elisp-slime-nav-mode-map (kbd "C-x C-,") 'elisp-slime-nav-find-elisp-thing-at-point)
   (define-key elisp-slime-nav-mode-map (kbd "C-x C-.") 'pop-tag-mark)
   (define-key elisp-slime-nav-mode-map (kbd "C-x C-/") 'elisp-slime-nav-describe-elisp-thing-at-point)
@@ -240,6 +243,7 @@
 ;; ===================elmacro====================
 ;; ===================hungry-delete====================
 (use-package hungry-delete
+  :defer 2
   :config
   (global-hungry-delete-mode)
   (add-hook 'wdired-mode-hook
@@ -271,17 +275,17 @@
 ;; ================fcitx.el=================
 ;; ============aggressive-indent=============
 (use-package aggressive-indent
-  :defer t
   :config
   (global-aggressive-indent-mode 1))
 ;; ============aggressive-indent=============
 ;; ============clean-aindent-mode=============
 (use-package clean-aindent-mode
   :defer t
+  :init
+  (add-hook 'prog-mode-hook 'clean-aindent-mode)
   :config
   (clean-aindent-mode t)
   (setq clean-aindent-is-simple-indent t)
-  (add-hook 'prog-mode-hook 'clean-aindent-mode)
   (define-key global-map (kbd "RET") 'newline-and-indent))
 ;; RET：自动清除white space，光标停留在前一行indentation处。
 ;; M-DEL：unindent，回到前一行indentation处。

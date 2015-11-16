@@ -42,7 +42,7 @@
     (when (or (not (file-exists-p locat-db-file))
               (> (- current (float-time (sixth (file-attributes locat-db-file))))
                  week))
-      (message "%s" locat-db-file)
+      (message "%s ===============================================" locat-db-file)
       (get-buffer-create "*Updating-locate-db-file*")
       (start-process-shell-command
        "Updating-locate-db-file" "*Updating-locate-db-file*"
@@ -61,7 +61,7 @@
     (when (or (not (file-exists-p fs-tree-file))
               (> (- current (float-time (sixth (file-attributes fs-tree-file))))
                  week))
-      (message "%s" fs-tree-file)
+      (message "%s ===============================================" fs-tree-file)
       (get-buffer-create "*Updating-file-system-tree*")
       (start-process-shell-command
        "Updating-file-system-tree" "*Updating-file-system-tree*"

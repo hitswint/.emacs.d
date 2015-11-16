@@ -89,6 +89,7 @@
 ;; =======================hs-minor-mode===========================
 ;; =======================semantic===========================
 (use-package semantic
+  :defer 2
   :config
   (global-semanticdb-minor-mode 1)
   ;; 在空闲时分析buffer。
@@ -128,7 +129,8 @@
   (define-key helm-gtags-mode-map (kbd "C-x C-.") 'helm-gtags-pop-stack)
   (define-key helm-gtags-mode-map (kbd "C-x C-/") 'helm-gtags-select)
   (define-key helm-gtags-mode-map (kbd "C-x <") 'helm-gtags-previous-history)
-  (define-key helm-gtags-mode-map (kbd "C-x >") 'helm-gtags-next-history))
+  (define-key helm-gtags-mode-map (kbd "C-x >") 'helm-gtags-next-history)
+  (define-key helm-gtags-mode-map (kbd "M-.") nil))
 ;; =======================helm-gtags===========================
 ;; =======================company===========================
 (use-package company
@@ -136,20 +138,28 @@
   :init
   (add-hook 'after-init-hook 'global-company-mode)
   (setq company-show-numbers t)
-  (global-set-key (kbd "M-U") 'company-complete-common)
+  (global-set-key (kbd "M-O") 'company-complete-common)
   :config
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (dotimes (i 10)
     (define-key company-active-map (read-kbd-macro (format "C-%d" i)) 'company-complete-number))
   ;; company-quickhelp-mode
-  (require 'company-quickhelp)
-  (company-quickhelp-mode 1)
-  (setq company-quickhelp-delay nil)
-  (define-key company-active-map (kbd "C-o") #'company-quickhelp-manual-begin)
+  (use-package company-quickhelp
+    :defer t
+    :commands company-quickhelp-manual-begin
+    :init
+    (bind-key "C-o" 'company-quickhelp-manual-begin company-active-map)
+    (setq company-quickhelp-delay nil)
+    :config
+    (company-quickhelp-mode 1))
   ;; 在弹出popup的情况下，C-h 打开*Help*，C-w 进入文件，C-o弹出pos-tip，C-s 搜索，C-M-s 过滤。
   ;; company-c-headers
-  (add-to-list 'company-backends 'company-c-headers)
+  (use-package company-c-headers
+    :defer t
+    :init
+    (add-hook 'c-mode-hook '(lambda ()
+                              (add-to-list 'company-backends 'company-c-headers))))
   (setq company-backends (delete 'company-semantic company-backends))
   ;; To complete for projects, you need to tell Clang your include paths.
   ;; Create a file named .dir-locals.el at your project root:

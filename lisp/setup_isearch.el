@@ -1,5 +1,6 @@
 ;; ===================Anzu====================
 (use-package anzu
+  :defer t
   :config
   (global-anzu-mode 1)
   (global-set-key (kbd "M-*") 'anzu-query-replace)

@@ -158,16 +158,15 @@
 ;; ===========outline===============
 (use-package outline
   :defer t
-  :mode ("\\.[tT][eE][xX]\\'" . LaTeX-mode)
   :init
+  (add-hook 'TeX-mode-hook 'turn-on-outline-minor-mode)
   (defun turn-on-outline-minor-mode ()
     (outline-minor-mode 1))
-  (add-hook 'TeX-mode-hook 'turn-on-outline-minor-mode)
   :config
   ;; (setq outline-minor-mode-prefix "\C-o") ;必须放在setup_anything_lacarte.el之前
   (add-hook 'outline-minor-mode-hook
             (lambda ()
-              (require 'outline-magic)
+              (use-package outline-magic)
               (define-key outline-minor-mode-map (kbd "C-M-i") 'outline-cycle)
               (define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
               (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
@@ -179,15 +178,14 @@
 ;; 安装了texlive2009及更高的版本之后，默认就有latexmk，不用做任何改变。只需要加入.latexmkrc的配置文件和这个auctex-latexmk。
 (use-package auctex-latexmk
   :load-path "site-lisp/auctex-latexmk/"
+  :defer t
+  :commands auctex-latexmk-setup
   :init
-  (add-hook 'TeX-mode-hook 'auctex-latexmk-setup)
-  :config
-  (auctex-latexmk-setup))
+  (add-hook 'TeX-mode-hook 'auctex-latexmk-setup))
 ;; ===================auctex-latexmk=============================
 ;; ======================zotelo=============================
 (use-package zotelo
   :defer t
-  :mode ("\\.[tT][eE][xX]\\'" . LaTeX-mode)
   :init
   (add-hook 'TeX-mode-hook 'zotelo-minor-mode))
 ;; 使用方法，C-c z c建立bib文件，C-c z u更新bib文件，C-c [引用
@@ -215,7 +213,6 @@
 ;; ===================magic-latex-buffer===================
 (use-package magic-latex-buffer
   :defer t
-  :mode ("\\.[tT][eE][xX]\\'" . LaTeX-mode)
   :init
   (add-hook 'TeX-mode-hook 'magic-latex-buffer)
   :config

@@ -85,10 +85,6 @@ want to use in the modeline *in lieu of* the original.")
                (setq mode-name mode-str)))))
 (add-hook 'after-change-major-mode-hook 'clean-mode-line)
 ;; ====================abbrev-for-mode-line========================
-;; =================Lisp Interaction mode===================
-;; Deal with the problems caused by using eval-print-last-sexp(C-j) in scratch buffer
-(define-key lisp-interaction-mode-map (kbd "C-j") nil)
-;; =================Lisp Interaction mode===================
 ;; ================nyan-mode=================
 (use-package nyan-mode
   :config
