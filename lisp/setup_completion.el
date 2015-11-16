@@ -25,27 +25,35 @@
                              ac-source-ispell
                              ac-source-ispell-fuzzy))
   ;; =======================auto-complete-c-headers===========================
-  (defun ac-c-header-init()
-    (require 'auto-complete-c-headers)
-    (add-to-list 'ac-sources 'ac-source-c-headers)
-    (add-to-list 'achead:include-directories '"/usr/include/c++/4.9")
-    (add-to-list 'achead:include-directories '"/usr/include/x86_64-linux-gnu/c++/4.9")
-    (add-to-list 'achead:include-directories '"/usr/include/c++/4.9/backward")
-    (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-linux-gnu/4.9/include")
-    (add-to-list 'achead:include-directories '"/usr/local/include")
-    (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed")
-    (add-to-list 'achead:include-directories '"/usr/include/x86_64-linux-gnu")
-    (add-to-list 'achead:include-directories '"/usr/include"))
-  (add-hook 'c++-mode-hook 'ac-c-header-init)
-  (add-hook 'c-mode-hook 'ac-c-header-init)
+  (use-package auto-complete-c-headers
+    :config
+    (add-hook 'c++-mode-hook 'ac-c-header-init)
+    (add-hook 'c-mode-hook 'ac-c-header-init)
+    (defun ac-c-header-init()
+      (add-to-list 'ac-sources 'ac-source-c-headers)
+      (add-to-list 'achead:include-directories '"/usr/include/c++/4.9")
+      (add-to-list 'achead:include-directories '"/usr/include/x86_64-linux-gnu/c++/4.9")
+      (add-to-list 'achead:include-directories '"/usr/include/c++/4.9/backward")
+      (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-linux-gnu/4.9/include")
+      (add-to-list 'achead:include-directories '"/usr/local/include")
+      (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed")
+      (add-to-list 'achead:include-directories '"/usr/include/x86_64-linux-gnu")
+      (add-to-list 'achead:include-directories '"/usr/include")))
   ;; =======================auto-complete-c-headers===========================
   ;; =======================auto-complete-clang===========================
-  (require 'auto-complete-clang)
-  (setq ac-clang-flags
-        (mapcar (lambda (item)
-                  (concat "-I" item))
-                (split-string
-                 "
+  (use-package auto-complete-clang
+    :config
+    (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
+    (defun ac-cc-mode-setup ()
+      (setq ac-sources
+            (append '(ac-source-clang
+                      ac-source-semantic) ac-sources)))
+    :config
+    (setq ac-clang-flags
+          (mapcar (lambda (item)
+                    (concat "-I" item))
+                  (split-string
+                   "
 /usr/include/c++/4.9
 /usr/include/x86_64-linux-gnu/c++/4.9
 /usr/include/c++/4.9/backward
@@ -55,19 +63,12 @@
 /usr/include/x86_64-linux-gnu
 /usr/include
 "
-                 )))
-  (defun ac-cc-mode-setup ()
-    (setq ac-sources
-          (append '(ac-source-clang
-                    ac-source-semantic) ac-sources)))
-  (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
+                   ))))
   ;; =======================auto-complete-clang===========================
   ;; ============================ac-auctex=========================
   ;; (eval-after-load 'setup_yasnippet '(require 'auto-complete-auctex))
+  (add-to-list 'ac-modes 'latex-mode)
   (use-package auto-complete-auctex
-    :defer t
-    :init
-    (add-to-list 'ac-modes 'latex-mode)
     :config
     (add-hook 'TeX-mode-hook 'ac-auctex-setup))
   ;; lin上的ac-auctex会自动启闭latex-math-mode，造成`输入公式的方法失效，两种解决方法：
@@ -83,7 +84,6 @@
   ;; 在于ac-source-math-unicode/ac-source-math-latex/ac-source-latex-commands中的prefix正则表达式匹配问题。
   ;; 修改ac-math.el原文件，使用[a-z0-9A-Z]代替原来的.任意字符，去掉空格的影响。
   ;; 这样公式环境中，不以\开头的字符，识别为普通字符。
-  (require 'ac-math)
   ;; 注释掉下列，在tex中不使用ac-math。
   ;; (add-to-list 'ac-modes 'latex-mode)   ; make auto-complete aware of `latex-mode`
   ;; (defun ac-latex-mode-setup ()         ; add ac-sources to default ac-sources
@@ -99,9 +99,11 @@
   ;; (setq ac-math-unicode-in-math-p t)      ;在latex的math环境中激活unicode输入
   ;; 在org-mode中使用ac-math激活unicode输入
   (add-to-list 'ac-modes 'org-mode)
-  (defun ac-org-mode-setup ()
-    (add-to-list 'ac-sources 'ac-source-math-unicode))
-  (add-hook 'org-mode-hook 'ac-org-mode-setup)
+  (use-package ac-math
+    :config
+    (add-hook 'org-mode-hook 'ac-org-mode-setup)
+    (defun ac-org-mode-setup ()
+      (add-to-list 'ac-sources 'ac-source-math-unicode)))
   ;; =====================ac-math=========================
   ;; ============================ac-octave=========================
   ;; ac-octave.el里面并没有定义关键词，似乎是通过和octave的沟通来补全，需要打开octave。
@@ -123,42 +125,42 @@
   ;; ============================ac-octave=========================
   ;; =========================auto-complete-octave=========================
   ;; ac-octave有问题，使用auto-complete-octave
+  (add-to-list 'ac-modes 'octave-mode)
   (use-package auto-complete-octave
-    :load-path "site-lisp/auto-complete-octave/"
-    :init
-    (add-to-list 'ac-modes 'octave-mode))
+    :load-path "site-lisp/auto-complete-octave/")
   ;; =========================auto-complete-octave=========================
   ;; =================shell==================
   ;; 下面这句会导致octave运行时emacs hang
   ;; (setq comint-process-echoes t)
   ;; prevent echoed commands from being printed (t)
   (setq comint-process-echoes nil)
+  (add-to-list 'ac-modes 'shell-mode)
   (use-package readline-complete
-    :init
-    (add-to-list 'ac-modes 'shell-mode)
+    :config
     (add-hook 'shell-mode-hook 'ac-rlc-setup-sources))
   ;; =================shell==================
   ;; ===================eshell===================
-  (defvar ac-source-eshell-pcomplete
-    '((candidates . (pcomplete-completions))))
-  (defun ac-complete-eshell-pcomplete ()
-    (interactive)
-    (auto-complete '(ac-source-eshell-pcomplete)))
   (add-to-list 'ac-modes 'eshell-mode)
-  (setq ac-sources '(ac-source-eshell-pcomplete
-                     ;; ac-source-files-in-current-dir
-                     ;; ac-source-filename
-                     ;; ac-source-abbrev
-                     ;; ac-source-words-in-buffer
-                     ;; ac-source-imenu
-                     ))
+  (use-package pcomplete
+    :config
+    (add-hook 'shell-mode-hook 'pcomplete-shell-setup)
+    (add-hook 'eshell-mode-hook 'ac-eshell-mode-setup)
+    (defun ac-eshell-mode-setup ()
+      (add-to-list 'ac-sources 'ac-source-eshell-pcomplete))
+    (defvar ac-source-eshell-pcomplete
+      '((candidates . (pcomplete-completions)))))
+  ;; (defun ac-complete-eshell-pcomplete ()
+  ;;   (interactive)
+  ;;   (auto-complete '(ac-source-eshell-pcomplete)))
   ;; ===================eshell===================
   ;; =================graphviz-dot-mode=================
   (add-to-list 'ac-modes 'graphviz-dot-mode)
   ;; =================graphviz-dot-mode=================
   ;; =================ac-ispell=================
   ;; Completion words longer than 4 characters
-  (eval-after-load "auto-complete" '(ac-ispell-setup))
+  (use-package ac-ispell
+    :config
+    (ac-ispell-setup))
   ;; 也可以加下句，使用ac-source-dictionary补全单词。
   ;; (add-to-list 'ac-dictionary-files "~/.english-words")
   ;; =================ac-ispell=================

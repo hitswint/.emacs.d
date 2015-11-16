@@ -74,7 +74,8 @@
   (define-key function-args-mode-map (kbd "M-s M-U") 'fa-show)
   (define-key function-args-mode-map (kbd "C-j") 'fa-jump-maybe)
   (define-key function-args-mode-map (kbd "M-s C-i") 'moo-jump-local)
-  (define-key function-args-mode-map (kbd "M-n") nil))
+  (define-key function-args-mode-map (kbd "M-n") nil)
+  (define-key function-args-mode-map (kbd "M-u") nil))
 ;; =======================function-args===========================
 ;; =======================hs-minor-mode===========================
 (use-package hideshow
