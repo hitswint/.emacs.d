@@ -3,8 +3,8 @@
 ;; (load "auctex.el" nil t t)
 ;; (load "preview-latex.el" nil t t)
 (use-package tex
-  ;; Enabled at self-insert-command.
-  :defer t
+  ;; Enabled at idle.
+  :defer 2
   :config
   ;; ==========================reftex==============================
   (setq reftex-plug-into-AUCTeX t

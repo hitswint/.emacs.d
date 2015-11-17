@@ -1,7 +1,7 @@
 ;; ================================flycheck==================================
 (use-package flycheck
-  ;; Enabled at self-insert-command.
-  :defer t
+  ;; Enabled at idle.
+  :defer 2
   :config
   (global-set-key (kbd "M-s c") 'flycheck-mode)
   ;; 取消自动开启

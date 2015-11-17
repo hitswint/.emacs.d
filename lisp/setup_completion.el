@@ -1,9 +1,32 @@
 ;; ===========================auto-complete============================
 (use-package auto-complete
-  ;; Enabled at self-insert-command.
+  ;; Enabled at commands.
   :defer t
+  :commands (ac-config-default auto-complete ac-define-source)
   :init
-  (add-hook 'post-self-insert-hook 'ac-config-default)
+  (global-set-key (kbd "M-U") '(lambda ()
+                                 (interactive)
+                                 (unless global-auto-complete-mode
+                                   (ac-config-default))))
+  ;; =================ac-ispell=================
+  ;; Completion words longer than 4 characters
+  (use-package ac-ispell
+    ;; Enabled at commands.
+    :commands ac-ispell-setup
+    :init
+    (bind-key "M-u" 'swint-auto-complete-ispell)
+    (defun swint-auto-complete-ispell ()
+      (interactive)
+      (unless global-auto-complete-mode
+        (ac-config-default))
+      (unless (or (boundp 'ac-source-ispell)
+                  (boundp 'ac-source-ispell-fuzzy))
+        (ac-ispell-setup))
+      (auto-complete '(ac-source-ispell-fuzzy
+                       ac-source-ispell))))
+  ;; 也可以加下句，使用ac-source-dictionary补全单词。
+  ;; (add-to-list 'ac-dictionary-files "~/.english-words")
+  ;; =================ac-ispell=================
   :config
   (use-package auto-complete-config)
   (setq ac-auto-start nil)
@@ -17,19 +40,25 @@
   (define-key ac-completing-map "\C-p" 'ac-previous)
   (define-key ac-completing-map "\C-n" 'ac-next)
   ;; (ac-set-trigger-key "TAB")              ;导致无法indent
-  (define-key ac-mode-map (kbd "M-u") 'auto-complete)
+  (define-key ac-mode-map (kbd "M-U") 'auto-complete)
   ;; ;; 取消TAB绑定以适应yasnippet。TAB的默认作用有两个：
   ;; ;; 1. 延伸menu出现之前的默认选项。取消延伸默认选项，使用RET替代。
   ;; (define-key ac-completing-map (kbd "TAB") nil)
   ;; ;; 2. 切换menu的选项。取消TAB切换menu选项。
   ;; (define-key ac-menu-map (kbd "TAB") nil)
+  (add-to-list 'ac-modes 'latex-mode)
+  (add-to-list 'ac-modes 'org-mode)
+  (add-to-list 'ac-modes 'octave-mode)
+  (add-to-list 'ac-modes 'shell-mode)
+  (add-to-list 'ac-modes 'eshell-mode)
+  (add-to-list 'ac-modes 'graphviz-dot-mode)
   ;; =======================auto-complete-c-headers===========================
   (use-package auto-complete-c-headers
     ;; Enabled automatically.
     :config
     (add-hook 'c++-mode-hook 'ac-c-header-init)
     (add-hook 'c-mode-hook 'ac-c-header-init)
-    (defun ac-c-header-init()
+    (defun ac-c-header-init ()
       (add-to-list 'ac-sources 'ac-source-c-headers)
       (add-to-list 'achead:include-directories '"/usr/include/c++/4.9")
       (add-to-list 'achead:include-directories '"/usr/include/x86_64-linux-gnu/c++/4.9")
@@ -67,7 +96,6 @@
   ;; =======================auto-complete-clang===========================
   ;; ============================ac-auctex=========================
   ;; (eval-after-load 'setup_yasnippet '(require 'auto-complete-auctex))
-  (add-to-list 'ac-modes 'latex-mode)
   (use-package auto-complete-auctex
     ;; Enabled automatically.
     :config
@@ -99,7 +127,6 @@
   ;; (add-hook 'LaTeX-mode-hook 'ac-latex-mode-setup)
   ;; (setq ac-math-unicode-in-math-p t)      ;在latex的math环境中激活unicode输入
   ;; 在org-mode中使用ac-math激活unicode输入
-  (add-to-list 'ac-modes 'org-mode)
   (use-package ac-math
     ;; Enabled automatically.
     :config
@@ -127,7 +154,6 @@
   ;; ============================ac-octave=========================
   ;; =========================auto-complete-octave=========================
   ;; ac-octave有问题，使用auto-complete-octave
-  (add-to-list 'ac-modes 'octave-mode)
   (use-package auto-complete-octave
     ;; Enabled automatically.
     :load-path "site-lisp/auto-complete-octave/")
@@ -136,15 +162,13 @@
   ;; 下面这句会导致octave运行时emacs hang
   ;; (setq comint-process-echoes t)
   ;; prevent echoed commands from being printed (t)
-  (setq comint-process-echoes nil)
-  (add-to-list 'ac-modes 'shell-mode)
   (use-package readline-complete
     ;; Enabled automatically.
     :config
+    (setq comint-process-echoes nil)
     (add-hook 'shell-mode-hook 'ac-rlc-setup-sources))
   ;; =================shell==================
   ;; ===================eshell===================
-  (add-to-list 'ac-modes 'eshell-mode)
   (use-package pcomplete
     ;; Enabled automatically.
     :config
@@ -154,27 +178,7 @@
       (add-to-list 'ac-sources 'ac-source-eshell-pcomplete))
     (defvar ac-source-eshell-pcomplete
       '((candidates . (pcomplete-completions)))))
-  ;; (defun ac-complete-eshell-pcomplete ()
-  ;;   (interactive)
-  ;;   (auto-complete '(ac-source-eshell-pcomplete)))
   ;; ===================eshell===================
-  ;; =================graphviz-dot-mode=================
-  (add-to-list 'ac-modes 'graphviz-dot-mode)
-  ;; =================graphviz-dot-mode=================
-  ;; =================ac-ispell=================
-  ;; Completion words longer than 4 characters
-  (use-package ac-ispell
-    ;; Enabled automatically.
-    :config
-    (ac-ispell-setup)
-    (defun swint-auto-complete-ispell ()
-      (interactive)
-      (auto-complete '(ac-source-ispell-fuzzy
-                       ac-source-ispell)))
-    (global-set-key (kbd "M-U") 'swint-auto-complete-ispell))
-  ;; 也可以加下句，使用ac-source-dictionary补全单词。
-  ;; (add-to-list 'ac-dictionary-files "~/.english-words")
-  ;; =================ac-ispell=================
   )
 ;; ===========================auto-complete============================
 ;; ==============hippie-expand===================

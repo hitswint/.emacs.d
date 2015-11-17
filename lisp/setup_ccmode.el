@@ -152,13 +152,12 @@
 ;; =======================helm-gtags===========================
 ;; =======================company===========================
 (use-package company
-  ;; Enabled at self-insert-command.
+  ;; Enabled at commands.
   :defer t
-  :init
-  (add-hook 'post-self-insert-hook 'global-company-mode)
+  :bind ("M-O" . company-complete-common)
   :config
+  (global-company-mode 1)
   (setq company-show-numbers t)
-  (global-set-key (kbd "M-O") 'company-complete-common)
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (dotimes (i 10)
@@ -176,11 +175,9 @@
   ;; 在弹出popup的情况下，C-h 打开*Help*，C-w 进入文件，C-o弹出pos-tip，C-s 搜索，C-M-s 过滤。
   ;; company-c-headers
   (use-package company-c-headers
-    ;; Enabled in cc-mode.
-    :defer t
-    :init
-    (add-hook 'c-mode-hook '(lambda ()
-                              (add-to-list 'company-backends 'company-c-headers))))
+    ;; Enabled automatically.
+    :config
+    (add-to-list 'company-backends 'company-c-headers))
   (setq company-backends (delete 'company-semantic company-backends))
   ;; To complete for projects, you need to tell Clang your include paths.
   ;; Create a file named .dir-locals.el at your project root:
