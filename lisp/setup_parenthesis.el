@@ -68,10 +68,11 @@
              (define-key org-mode-map (kbd "$") 'insert-pair-math-bracket)))
 ;; ==================wrap-region==================
 (use-package wrap-region
+  ;; Enabled in several modes.
   :defer t
   :init
   (add-hook 'org-mode-hook 'wrap-region-mode)
-  (add-hook 'latex-mode-hook 'wrap-region-mode)
+  (add-hook 'LaTeX-mode-hook 'wrap-region-mode)
   :config
   (add-hook 'wrap-region-before-wrap-hook 'wrap-region-add-space)
   (defun wrap-region-add-space ()
@@ -94,6 +95,7 @@
 ;; ==================wrap-region==================
 ;; =======================rainbow-delimiters==========================
 (use-package rainbow-delimiters
+  ;; Enabled in several modes.
   :defer t
   :init
   ;; (global-rainbow-delimiters-mode)

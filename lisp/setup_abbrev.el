@@ -1,6 +1,11 @@
 ;; ====================abbrev====================
 (use-package abbrev
-  :defer 2
+  ;; Enabled at self-insert-command.
+  ;; Enabled automatically actually.
+  :defer t
+  :init
+  (add-hook 'post-self-insert-hook '(lambda ()
+                                      (setq-default abbrev-mode t)))
   :config
   ;; turn on abbrev mode globally
   (setq-default abbrev-mode t)

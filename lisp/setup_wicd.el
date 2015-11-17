@@ -1,5 +1,6 @@
 ;; ================wicd-mode=================
 (use-package wicd-mode
+  ;; Enabled at commands.
   :load-path "site-lisp/wicd-mode/"
   :if is-lin
   :defer t

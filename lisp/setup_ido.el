@@ -1,5 +1,6 @@
 ;; =========================ido===========================
 (use-package ido
+  ;; Enabled automatically.
   :config
   (ido-mode t)
   ;; (global-set-key (kbd "C-,") 'ido-switch-buffer)
@@ -261,6 +262,7 @@ especially for extending ido-find-file functionality
   )
 ;; ==================iswitchb-dired=======================
 (use-package iswitchb
+  ;; Enabled automatically.
   :load-path "site-lisp/helm-pinyin/"
   :config
   (iswitchb-mode 1)
@@ -276,6 +278,7 @@ especially for extending ido-find-file functionality
 ;; (defvar ido-cur-list nil)
 ;; 以上三行去掉emacs启动时ido-ubiquitous产生的编译警告，但是好像会导致ido-ubiquitous失效。
 (use-package ido-ubiquitous
+  ;; Enabled automatically.
   :load-path "site-lisp/ido-ubiquitous/"
   :config
   (ido-ubiquitous-mode 1)
@@ -295,11 +298,13 @@ especially for extending ido-find-file functionality
 ;;       (ido-vertical-mode 1)
 ;;       (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)))
 (use-package ido-hacks
+  ;; Enabled automatically.
   :config
   (if (commandp 'flx-ido-mode)
       (flx-ido-mode 1)))
 ;; (require 'ido-hacks nil t)
 (use-package ido-at-point
+  ;; Enabled automatically.
   :config
   (ido-at-point-mode)) ; unless installed from a package
 ;; ==================flx-ido/ido-at-point/ido-hacks/ido-vertical-mode========================

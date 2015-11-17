@@ -3,6 +3,7 @@
 ;; (load "auctex.el" nil t t)
 ;; (load "preview-latex.el" nil t t)
 (use-package tex
+  ;; Enabled at self-insert-command.
   :defer t
   :config
   ;; ==========================reftex==============================
@@ -157,11 +158,10 @@
   )
 ;; ===========outline===============
 (use-package outline
+  ;; Enabled in several modes.
   :defer t
   :init
-  (add-hook 'TeX-mode-hook 'turn-on-outline-minor-mode)
-  (defun turn-on-outline-minor-mode ()
-    (outline-minor-mode 1))
+  (add-hook 'TeX-mode-hook 'outline-minor-mode)
   :config
   ;; (setq outline-minor-mode-prefix "\C-o") ;必须放在setup_anything_lacarte.el之前
   (add-hook 'outline-minor-mode-hook
@@ -177,6 +177,7 @@
 ;; ===================auctex-latexmk=============================
 ;; 安装了texlive2009及更高的版本之后，默认就有latexmk，不用做任何改变。只需要加入.latexmkrc的配置文件和这个auctex-latexmk。
 (use-package auctex-latexmk
+  ;; Enabled in latex-mode.
   :load-path "site-lisp/auctex-latexmk/"
   :defer t
   :commands auctex-latexmk-setup
@@ -185,6 +186,7 @@
 ;; ===================auctex-latexmk=============================
 ;; ======================zotelo=============================
 (use-package zotelo
+  ;; Enabled in latex-mode.
   :defer t
   :init
   (add-hook 'TeX-mode-hook 'zotelo-minor-mode))
@@ -193,6 +195,7 @@
 ;; ======================zotelo=============================
 ;; ===================latex-preview-pane===================
 (use-package latex-preview-pane
+  ;; Enabled at commands.
   :defer t
   :commands latex-preview-pane-mode
   :config
@@ -212,6 +215,7 @@
 ;; ===================latex-preview-pane===================
 ;; ===================magic-latex-buffer===================
 (use-package magic-latex-buffer
+  ;; Enabled in latex-mode.
   :defer t
   :init
   (add-hook 'TeX-mode-hook 'magic-latex-buffer)

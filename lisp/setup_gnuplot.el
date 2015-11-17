@@ -1,5 +1,6 @@
 ;; ===========================gnuplot=================================
 (use-package gnuplot-mode
+  ;; Enabled in gnuplot-mode.
   :defer t
   :init
   (add-to-list 'auto-mode-alist '("\\.\\(gp\\|gnuplot\\)$" . gnuplot-mode))

@@ -1,5 +1,6 @@
 ;; ==================org-mode==========================
 (use-package org
+  ;; Enabled in org-mode.
   :load-path "site-lisp/org/"
   :defer t
   :config
@@ -9,7 +10,7 @@
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c c") 'org-capture)
   (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-c b") 'org-iswitchb)
+  ;; (global-set-key (kbd "C-c b") 'org-iswitchb)
   (add-hook 'org-mode-hook (lambda ()
                              (setq truncate-lines nil)))
   (setq org-capture-templates
@@ -544,6 +545,7 @@ depending on the last command issued."
 ;; ======================org标注工具=============================
 ;; Display annotated files with mark
 (use-package dired-x-annotated
+  ;; Enabled automatically.
   :load-path "site-lisp/org-annotate-file/"
   :init
   (defun swint-org-annotate-file-storage-file ()
@@ -558,6 +560,7 @@ depending on the last command issued."
     :load-path "site-lisp/org-annotate-file/"))
 ;; 原有org-annotate-file用于全局注释
 (use-package org-annotate-file
+  ;; Enabled at commands.
   :load-path "site-lisp/org-annotate-file/"
   :defer t
   :bind ("C-x C-l" . org-annotate-file)
@@ -567,6 +570,7 @@ depending on the last command issued."
                                                 (org-annotate-file (abbreviate-file-name (dired-get-filename))))))
 ;; 新建swint-org-annotate-file.el用于局部注释
 (use-package swint-org-annotate-file
+  ;; Enabled at commands.
   :load-path "site-lisp/org-annotate-file/"
   :defer t
   :bind ("C-c C-l" . swint-org-annotate-file)

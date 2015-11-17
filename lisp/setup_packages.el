@@ -1,5 +1,6 @@
 ;; =======================SERVER========================
 (use-package server
+  ;; Enabled at idle.
   :defer 2
   :config
   (unless (server-running-p)
@@ -7,6 +8,7 @@
 ;; =======================SERVER========================
 ;; ======================文件加密===================================
 (use-package epa-file
+  ;; Enabled at idle.
   :defer 2
   :config
   ;;(epa-file-enable)
@@ -16,6 +18,7 @@
 ;; ======================文件加密===================================
 ;; ====================multiple-cursors============================
 (use-package multiple-cursors
+  ;; Enabled at commands.
   :defer t
   :bind (("C-M-," . mc/mark-previous-like-this)
          ("C-M-." . mc/mark-next-like-this)
@@ -30,6 +33,7 @@
 ;; ====================multiple-cursors============================
 ;; ====================expand-region=========================
 (use-package expand-region
+  ;; Enabled at commands.
   :defer t
   :bind ("C-M-;" . er/expand-region))
 ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end。
@@ -37,10 +41,12 @@
 ;; ====================expand-region=========================
 ;; ==================回收站=======================
 (use-package trashcan
+  ;; Enabled automatically.
   :load-path "site-lisp/trashcan/")
 ;; ==================回收站=======================
 ;; ==================undo-tree===================
 (use-package undo-tree
+  ;; Enabled at commands.
   :defer t
   :bind (("C-/" . undo-tree-undo)
          ("C-M-/" . undo-tree-redo))
@@ -50,6 +56,7 @@
 ;; ==================undo-tree===================
 ;; ==================breadcrumb==================
 (use-package breadcrumb
+  ;; Enabled at commands.
   :load-path "site-lisp/breadcrumb/"
   :defer t
   :bind (("C-c C-/" . bc-set)
@@ -63,6 +70,7 @@
 ;; ==================breadcrumb==================
 ;; ==================auto-mark===================
 (use-package auto-mark
+  ;; Enabled at commands.
   :load-path "site-lisp/auto-mark/"
   :defer t
   :bind ("M-m" . jump-to-mark)
@@ -87,6 +95,7 @@
 ;; ==================auto-mark===================
 ;; ================visible-mark==================
 (use-package visible-mark
+  ;; Enabled automatically.
   :config
   (global-visible-mark-mode 1)
   ;; 下面的代码增加一个桔黄色的mark，显示灰色和桔黄色两个mark
@@ -101,6 +110,7 @@
 ;; =====================unicad=====================
 ;; lin中不会出现乱码，不需要，这个包会拖慢启动速度。
 (use-package unicad
+  ;; Enabled automatically.
   :load-path "site-lisp/unicad/"
   :if is-win
   :config
@@ -114,6 +124,7 @@
 ;; =====================unicad=====================
 ;; =====================everything======================
 (use-package everything
+  ;; Enabled at commands.
   :load-path "site-lisp/everything/"
   :if is-win
   :bind ("C-c C-S-f" . everything)
@@ -132,12 +143,14 @@
 ;; =====================everything======================
 ;; =====================popwin======================
 (use-package popwin
+  ;; Enabled at idle.
   :defer 2
   :config
   (popwin-mode 1))
 ;; =====================popwin======================
 ;; =====================anchored-transpose======================
 (use-package anchored-transpose
+  ;; Enabled at commands.
   :defer t
   :bind ("C-x t" . anchored-transpose)
   :config
@@ -149,6 +162,7 @@
 ;; =====================anchored-transpose======================
 ;; =====================God-mode======================
 (use-package god-mode
+  ;; Enabled at commands.
   :defer t
   :bind ("<escape>" . god-local-mode)
   :config
@@ -163,6 +177,8 @@
 ;; =====================God-mode======================
 ;; =====================elisp-slime-nav======================
 (use-package help
+  ;; Enabled at commands.
+  ;; Enabled automatically actually.
   :defer t
   :bind ("C-M-'" . help-for-help)
   :config
@@ -171,10 +187,12 @@
   (define-key 'help-command (kbd "C-k") 'find-function-on-key)
   (define-key 'help-command (kbd "C-v") 'find-variable))
 (use-package help-mode
+  ;; Enabled with defer.
   :defer t
   :config
   (define-key help-mode-map (kbd "q") 'kill-buffer-and-window))
 (use-package elisp-slime-nav
+  ;; Enabled in emacs-lisp-mode.
   :defer t
   :init
   (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
@@ -191,6 +209,7 @@
 ;; =====================elisp-slime-nav======================
 ;; ===================drag stuff====================
 (use-package drag-stuff
+  ;; Enabled in several modes.
   :defer t
   :init
   (add-hook 'dired-mode-hook 'drag-stuff-mode)
@@ -216,6 +235,7 @@
 ;; ===================drag stuff====================
 ;; ===================popup-kill-ring====================
 (use-package popup-kill-ring
+  ;; Enabled at commands.
   :defer t
   :bind ("C-M-y" . popup-kill-ring)
   :config
@@ -227,6 +247,7 @@
 ;; ===================popup-kill-ring====================
 ;; ===================highlight-symbol====================
 (use-package highlight-symbol
+  ;; Enabled at commands.
   :defer t
   :init
   (smartrep-define-key global-map "C-x"
@@ -243,6 +264,7 @@
 ;; ===================elmacro====================
 ;; ===================hungry-delete====================
 (use-package hungry-delete
+  ;; Enabled at idle.
   :defer 2
   :config
   (global-hungry-delete-mode)
@@ -256,12 +278,14 @@
 ;; 但是imenu-anywhere在初次使用时经常失效，没有结果。
 (global-set-key (kbd "M-s i") 'helm-semantic-or-imenu)
 (use-package imenu-anywhere
+  ;; Enabled at commands.
   :defer t
   :bind ("M-s I" . helm-imenu-anywhere))
 ;; ===================imenu-anywhere====================
 ;; ================fcitx.el=================
 ;; https://github.com/cute-jumper/fcitx.el
 (use-package fcitx
+  ;; Enabled automatically.
   :if is-lin
   :config
   (fcitx-prefix-keys-add "M-s")
@@ -275,11 +299,14 @@
 ;; ================fcitx.el=================
 ;; ============aggressive-indent=============
 (use-package aggressive-indent
+  ;; Enabled at idle.
+  :defer 2
   :config
   (global-aggressive-indent-mode 1))
 ;; ============aggressive-indent=============
 ;; ============clean-aindent-mode=============
 (use-package clean-aindent-mode
+  ;; Enabled in several modes.
   :defer t
   :init
   (add-hook 'prog-mode-hook 'clean-aindent-mode)
@@ -292,11 +319,13 @@
 ;; ============clean-aindent-mode=============
 ;; ============multifiles=============
 (use-package multifiles
+  ;; Enabled at commands.
   :defer t
   :bind ("C-c t" . mf/mirror-region-in-multifile))
 ;; ============multifiles=============
 ;; ============ztree=============
 (use-package ztree-diff
+  ;; Enabled at commands.
   :defer t
   :bind ("C-c z" . ztree-diff))
 ;; ============ztree=============
@@ -306,7 +335,8 @@
 ;; (setq guide-key/guide-key-sequence
 ;;       '("C-c" (org-mode "C-c C-x")))
 (use-package which-key
-  :defer t
+  ;; Enabled at idle.
+  :defer 2
   :config
   (which-key-mode)
   (which-key-setup-side-window-right-bottom)
@@ -319,6 +349,7 @@
 ;; 添加的注释跟okular类似，将注释的内容另存为一份文件，只有在emacs中才能看到
 ;; 上述注释为旧版本，新版本的pdf-tools已经可以将注释放在pdf文件本身之中了。
 (use-package pdf-tools
+  ;; Enabled in pdf-view-mode.
   :if is-lin
   :defer t
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
@@ -359,6 +390,7 @@
 ;; win下使用doc-view查看office和pdf文件时，文件名都不可以包含中文字符。
 ;; 默认的缓存文件夹分别为/tmp和c:/Users/swint/AppData/Local/Temp，使用doc-view-clear-cache清理。
 (use-package doc-view
+  ;; Enabled in doc-view-mode.
   :defer t
   :config
   (setq doc-view-continuous t)
@@ -383,14 +415,17 @@ is named like ODF with the extension turned to pdf."
 ;; ==================doc-view-mode================
 ;; ================backup-walker================
 (use-package backup-walker
+  ;; Enabled at commands.
   :defer t
   :bind ("C-x b" . backup-walker-start))
 (use-package git-timemachine
+  ;; Enabled at commands.
   :defer t
   :bind ("C-c b" . git-timemachine))
 ;; ================backup-walker================
 ;; ===============visual-regexp===============
 (use-package visual-regexp
+  ;; Enabled at commands.
   :defer t
   :bind (("M-s r" . vr/replace)
          ("M-s C-r" . vr/query-replace)
@@ -400,6 +435,7 @@ is named like ODF with the extension turned to pdf."
 ;; vlf把大文件分成多个batch，以改善性能。
 ;; Enable vlf when opening files bigger than 100MB.
 (use-package vlf
+  ;; Enabled at commands.
   :defer t
   :commands dired-vlf
   :init
@@ -424,6 +460,7 @@ is named like ODF with the extension turned to pdf."
 ;; ===============vlf===============
 ;; ==============easy-kill===============
 (use-package easy-kill
+  ;; Enabled at commands.
   :defer t
   :bind ("M-w" . kill-ring-save)
   :init
@@ -435,12 +472,14 @@ is named like ODF with the extension turned to pdf."
 ;; ==============easy-kill===============
 ;; ================smex==================
 (use-package smex
+  ;; Enabled at commands.
   :defer t
   :bind (("M-X" . smex)
          ("C-x M-X" . smex-major-mode-commands)))
 ;; ================smex==================
 ;; =================bm===================
 (use-package bm
+  ;; Enabled at commands.
   :defer t
   :init
   (smartrep-define-key global-map "C-c"
@@ -452,6 +491,7 @@ is named like ODF with the extension turned to pdf."
 ;; ============operate-on-number============
 ;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字。
 (use-package operate-on-number
+  ;; Enabled at commands.
   :defer t
   :init
   (smartrep-define-key global-map "C-="
@@ -469,6 +509,7 @@ is named like ODF with the extension turned to pdf."
 ;; ============operate-on-number============
 ;; ============goto-last-change============
 (use-package goto-last-change
+  ;; Enabled at commands.
   :defer t
   :bind ("M-M" . goto-last-change))
 ;; ============goto-last-change============

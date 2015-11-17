@@ -102,6 +102,7 @@
 ;; ==================stardict====================
 ;; ==================bing-dict===================
 (use-package bing-dict
+  ;; Enabled at commands.
   :defer t
   :commands swint-bing-dict-brief
   :config
@@ -167,6 +168,7 @@
 ;; ====================youdao====================
 ;; ===============google-translate===============
 (use-package google-translate
+  ;; Enabled at commands.
   :defer t
   :bind ("M-@" . google-translate-smooth-translate)
   :init

@@ -1,5 +1,6 @@
 ;; ====================graphviz-dot-mode=========================
 (use-package graphviz-dot-mode
+  ;; Enabled in graphviz-dot-mode.
   :defer t
   :init
   (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
@@ -7,7 +8,6 @@
   (when is-win
     ;; 注意：路径/bin 后面一定要有那个分号;，不用将路径加到环境变量中
     (setenv "PATH" (concat "c:/Program Files (x86)/Graphviz2.36/bin;" (getenv "PATH"))))
-  (load "graphviz-dot-mode.el" nil t t)
   (add-hook 'find-file-hook (lambda()
                               (if (string= "dot" (file-name-extension
                                                   buffer-file-name))

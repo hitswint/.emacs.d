@@ -1,5 +1,6 @@
 ;; =========================helm_lacarte=============================
 (use-package lacarte
+  ;; Enabled at commands.
   :defer t
   :bind (("C-c m" . helm-insert-latex-math)
          ("C-x m" . helm-browse-menubar))
@@ -23,18 +24,24 @@
           nil nil "*helm math symbols*")))
 ;; =========================helm_lacarte=============================
 ;; ================helm================
-(use-package helm-config
-  :config
-  (helm-mode 1))
 (use-package helm
+  ;; Enabled at commands.
   :defer t
-  :bind (("C-." . swint-helm-dired-buffers-list)
-         ("C-," . swint-helm-mini)
-         ("C-x C-f" . swint-helm-find-files)
-         ("C-'" . swint-helm-bookmarks)
+  :bind (("C-." . helm-mini)
+         ("C-," . helm-mini)
+         ("C-x C-f" . helm-find-files)
+         ("C-'" . helm-bookmarks)
          ("M-x" . helm-M-x)
          ("C-c C-f" . helm-locate))
-  :init
+  :config
+  (use-package helm-config)
+  (helm-mode 1)
+  (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
+  (global-set-key (kbd "C-,") 'swint-helm-mini)
+  (global-set-key (kbd "C-x C-f") 'swint-helm-find-files)
+  (global-set-key (kbd "C-'") 'swint-helm-bookmarks)
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "C-c C-f") 'helm-locate)
   ;; ==================helm-related-to-persp==================
   (defun helm-switch-persp/buffer (buffer)
     "Helm-switch to persp/buffer simultaneously"
@@ -180,16 +187,6 @@
             :truncate-lines t)))
   ;; ==================helm-dired-buffer====================
   ;; ==================helm-mini====================
-  (defun helm-buffer-list ()
-    "Return the current list of buffers.
-Currently visible buffers are put at the end of the list.
-See `ido-make-buffer-list' for more infos."
-    (let ((ido-process-ignore-lists t)
-          ido-ignored-list
-          ;; 在原函数中注销下句，因为会导致ido忽略buffer的定义失效。
-          ;; ido-ignore-buffers
-          ido-use-virtual-buffers)
-      (ido-make-buffer-list nil)))
   (defun helm-buffers-list--init/other-persps ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
     (setq helm-buffers-list-cache/other-persps ido-temp-list/other-persps)
@@ -237,6 +234,18 @@ See `ido-make-buffer-list' for more infos."
   (defun swint-helm-mini ()
     "Preconfigured `helm' lightweight version \(buffer -> recentf\)."
     (interactive)
+    ;; 修改helm-buffer-list，使其忽略dired buffer。
+    ;; 手动启动helm会覆盖该定义，恢复原始定义，故放在这里。
+    (defun helm-buffer-list ()
+      "Return the current list of buffers.
+    Currently visible buffers are put at the end of the list.
+    See `ido-make-buffer-list' for more infos."
+      (let ((ido-process-ignore-lists t)
+            ido-ignored-list
+            ;; 在原函数中注销下句，因为会导致ido忽略dired buffer的定义失效。
+            ;; ido-ignore-buffers
+            ido-use-virtual-buffers)
+        (ido-make-buffer-list nil)))
     (unless helm-source-buffers-list
       (setq helm-source-buffers-list
             (helm-make-source "File Buffers" 'helm-source-buffers)))
@@ -270,9 +279,9 @@ Run all sources defined in `helm-for-files-preferred-list'."
           :ff-transformer-show-only-basename t
           :buffer "*helm find files-swint*"))
   ;; ==================helm-find-file====================
-  :config
   ;; =============为helm分别定义recent file和recent directory的source==================
   (use-package recentf-ext
+    ;; Enabled automatically.
     :config
     (use-package recentf)
     ;; 定义 swint-helm-source-recentf-file
@@ -572,6 +581,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   )
 ;; =======================helm-bibtex==============================
 (use-package helm-bibtex
+  ;; Enabled at commands.
   :defer t
   :bind ("C-c C-x b" . helm-bibtex)
   :init
@@ -601,6 +611,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 ;; =======================helm-bibtex==============================
 ;; ================helm-swoop================
 (use-package helm-swoop
+  ;; Enabled at commands.
   :defer t
   :bind (("M-s M-s" . helm-swoop)
          ("M-s M-S" . helm-swoop-back-to-last-point)
@@ -625,6 +636,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 ;; ================helm-swoop================
 ;; =======================helm-unicode==============================
 (use-package helm-unicode
+  ;; Enabled at commands.
   :defer t
   :bind ("C-c C-x m" . helm-unicode))
 ;; =======================helm-unicode==============================
@@ -632,6 +644,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 ;; 使用helm-ag代替helm-grep。
 ;; (global-set-key (kbd "C-x g") 'helm-do-grep) ;加C-u为递归
 (use-package helm-ag
+  ;; Enabled at commands.
   :defer t
   :bind ("C-x g" . helm-do-ag)
   :config

@@ -17,6 +17,7 @@
 (global-set-key (kbd "C-SPC") nil)
 ;; ============smartrep============
 (use-package smartrep
+  ;; Enabled automatically.
   :config
   (setq smartrep-mode-line-string-activated nil))
 ;; ============smartrep============

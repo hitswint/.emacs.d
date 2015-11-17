@@ -1,6 +1,8 @@
 ;; =================================magit===============================
 (use-package magit
+  ;; Enabled at commands.
   :defer t
+  :bind ("C-c g" . magit-status)
   :config
   ;; (when is-win
   ;;   ;; 使用下列cygwin-mount可以解决cygwin的路径问题，但是会导致其他mode中路径不识别，例如org无法显示图片。
@@ -123,7 +125,6 @@
   ;; Don't bother me with flyspell keybindings
   (eval-after-load "flyspell"
     '(define-key flyspell-mode-map (kbd "C-.") nil))
-  (global-set-key (kbd "C-c g") 'magit-status)
   ;; 在git remote add和git clone中需要使用cygwin的路径名称 file:///cygdrive/c/Users/swint/
   ;; 建立的远程仓库remote.git， 初始化时使用git --bare init，直接使用remote.git文件夹作为.git文件夹
   ;; ==================初始化远程库和克隆远程库===================

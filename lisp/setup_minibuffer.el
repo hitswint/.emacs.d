@@ -9,6 +9,7 @@
 (define-key minibuffer-local-map (kbd "C-<tab>") 'nil)
 ;; ====================cycle-mini====================
 (use-package cycle-mini
+  ;; Enabled at commands.
   :load-path "site-lisp/cycle-mini/"
   :defer t
   :commands (cycle-mini-previous-completion cycle-mini-next-completion)

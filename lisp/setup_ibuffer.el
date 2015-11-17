@@ -1,5 +1,6 @@
 ;; ===========================ibuffer==================================
 (use-package ibuffer
+  ;; Enabled at commands.
   :defer t
   :bind ("C-c `" . ibuffer)
   :config

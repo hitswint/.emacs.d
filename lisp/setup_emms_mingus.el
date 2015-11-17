@@ -1,10 +1,12 @@
 ;; ================emms==================
 (use-package emms
+  ;; Enabled at commands.
   :if is-lin
   :defer t
-  :bind (("C-c e l" . swint-emms-playlist-mode-go)
-         ("C-c e o" . emms-play-file))
+  :commands (emms-play-file emms-player-mpd-connect emms-playlist-mode-go)
   :init
+  (bind-key "C-c e l" 'swint-emms-playlist-mode-go)
+  (bind-key "C-c e o" 'emms-play-file)
   (defun swint-emms-playlist-mode-go ()
     "swint-playlist."
     (interactive)
@@ -48,12 +50,14 @@
 ;; ================emms==================
 ;; ===============mingus=================
 (use-package mingus
+  ;; Enabled at commands.
   :load-path "site-lisp/mingus/"
   :if is-win
   :defer t
-  :bind (("C-c e l" . mingus)
-         ("C-c e o" . swint-mingus-browse))
+  :commands (mingus mingus-browse)
   :init
+  (bind-key "C-c e l" 'mingus)
+  (bind-key "C-c e o" 'swint-mingus-browse)
   (defun swint-mingus-browse ()
     "swint-mingus-browse."
     (interactive)

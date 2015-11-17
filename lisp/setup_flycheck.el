@@ -1,8 +1,9 @@
 ;; ================================flycheck==================================
 (use-package flycheck
+  ;; Enabled at self-insert-command.
   :defer t
-  :bind ("M-s c" . flycheck-mode)
   :config
+  (global-set-key (kbd "M-s c") 'flycheck-mode)
   ;; 取消自动开启
   ;; (add-hook 'after-init-hook #'global-flycheck-mode)
   (setq global-flycheck-mode nil)
@@ -19,6 +20,7 @@
   ;; C-c ! l flycheck-list-errors
   ;; C-c ! ? flycheck-describe-checker
   (use-package helm-flycheck
+    ;; Enabled at commands.
     :defer t
     :commands helm-flycheck
     :init

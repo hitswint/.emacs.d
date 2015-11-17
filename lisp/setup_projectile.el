@@ -1,9 +1,10 @@
 ;; ================Projectile================
 (use-package projectile
+  ;; Enabled at commands.
   :defer t
-  :init
-  (setq projectile-keymap-prefix (kbd "M-s '"))
+  :bind-keymap ("M-s '" . projectile-command-map)
   :config
+  (setq projectile-keymap-prefix (kbd "M-s '"))
   (projectile-global-mode)
   (setq projectile-enable-caching t)
   (setq projectile-mode-line nil)
@@ -11,6 +12,7 @@
   ;;       (quote (:eval (format "[%s]" (projectile-project-name)))))
   )
 (use-package helm-projectile
+  ;; Enabled at commands.
   :defer t
   :bind ("M-'" . helm-projectile)
   :config

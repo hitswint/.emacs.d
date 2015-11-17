@@ -1,10 +1,12 @@
 ;; ==================dirtree=========================
 (use-package dirtree
+  ;; Enabled at commands.
   :defer t
-  :bind (("C-c C-j" . dirtree-local)
-         ("C-c j" . dirtree-home)
-         ("C-q" . dirtree-exist-kill-this-buffer))
+  :commands dirtree
   :init
+  (bind-key "C-c C-j" 'dirtree-local)
+  (bind-key "C-c j" 'dirtree-home)
+  (bind-key "C-q" 'dirtree-exist-kill-this-buffer)
   (defun dirtree-local ()
     (interactive)
     (let* ((file buffer-file-name)
@@ -37,6 +39,12 @@
         ;; (switch-to-buffer (car (swint-iswitchb-make-buflist nil)))
         ;; (kill-buffer (car (swint-iswitchb-make-buflist nil)))
         )))
+  (defun dirtree-switch-to-dirtree ()
+    "kill this buffer and switch to other windows"
+    (interactive)
+    (bc-set)
+    (kill-this-buffer)
+    (other-window 1))
   ;; ==================关闭当前buffer之后切换到之前访问过的buffer=======================
   ;; 原始的关闭buffer存在两个问题：
   ;; 一是会切换到helm buffer中，二是在persp之间切换时会切换到上一个persp的buffer中。
@@ -127,12 +135,7 @@ at the end of the list.  Created by `iswitchb-make-buflist'.")
     (interactive)
     (kill-this-buffer)
     (delete-window))
-  (defun dirtree-switch-to-dirtree ()
-    "kill this buffer and switch to other windows"
-    (interactive)
-    (bc-set)
-    (kill-this-buffer)
-    (other-window 1))
+
   (defun dirtree-open-and-kill-dirtree ()
     "go to the position of buffer"
     (interactive)

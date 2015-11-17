@@ -1,5 +1,6 @@
 ;; ================================flyspell==================================
 (use-package flyspell
+  ;; Enabled at commands.
   :defer t
   :bind ("M-s f" . swint-toggle-flyspell-mode)
   :init
@@ -19,6 +20,7 @@
   :config
   (use-package ispell))
 (use-package helm-flyspell
+  ;; Enabled at commands.
   :defer t
   :bind ("M-s M-f" . helm-flyspell-correct)
   :config

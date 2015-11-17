@@ -1,5 +1,6 @@
 ;;======================dired========================
 (use-package dired
+  ;; Enabled automatically.
   :config
   (use-package dired-x)
   (use-package dired-details)
@@ -278,6 +279,7 @@
  (is-win
   ;;=====================w32-browser======================
   (use-package w32-browser
+    ;; Enabled automatically.
     :config
     ;; (eval-after-load "dired"
     ;;   '(define-key dired-mode-map (kbd "TAB") (lambda ()
@@ -324,6 +326,7 @@
 ;;=====================默认程序打开文件==================
 ;; ===================peep-dired====================
 (use-package peep-dired
+  ;; Enabled at commands.
   :defer t
   :commands peep-dired
   :init
@@ -344,6 +347,7 @@
 ;; async: Simple library for asynchronous processing in Emacs
 ;; async-start async-start-process async-get async-ready async-wait
 (use-package dired-async
+  ;; Enabled in dired-mode.
   :defer t
   :init
   (add-hook 'dired-mode-hook '(lambda () (dired-async-mode 1)))

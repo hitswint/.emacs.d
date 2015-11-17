@@ -1,5 +1,6 @@
 ;; ========================Mew=========================
 (use-package mew
+  ;; Enabled at commands.
   :defer t
   :bind ("C-M-7" . mew)
   :config

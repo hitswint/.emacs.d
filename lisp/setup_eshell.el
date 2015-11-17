@@ -1,5 +1,6 @@
 ;; ================================eshell==================================
 (use-package esh-mode
+  ;; Enabled at commands.
   :defer t
   :bind ("C-M-1" . eshell)
   :config

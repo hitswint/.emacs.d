@@ -1,6 +1,7 @@
 ;; =================winner-mode=================
 (use-package winner
-  :defer t
+  ;; Enabled at commands.
+  :defer 2
   :bind (("M-/" . winner-undo)
          ("M-s M-/" . winner-redo))
   :config
@@ -8,6 +9,7 @@
 ;; =================winner-mode=================
 ;; =================window-numbering=================
 (use-package window-numbering
+  ;; Enabled automatically.
   :config
   (window-numbering-mode 1)
   ;; 当按键大于现有窗口数目时，选中最后一个窗口
@@ -91,19 +93,21 @@ If prefix ARG is given, delete the window instead of selecting it."
 ;; =================window-numbering=================
 ;; =====================switch-window======================
 (use-package switch-window
+  ;; Enabled at commands.
   :defer t
   :bind ("C-x o" . switch-window))
 ;; =====================switch-window======================
 ;; =====================windmove=====================
 (use-package windmove
+  ;; Enabled at commands.
   :defer t
+  :commands (windmove-left windmove-right windmove-up windmove-down)
   :init
   (smartrep-define-key global-map "M-s"
     '(("h" . swint-windmove-left)
       ("l" . swint-windmove-right)
       ("k" . swint-windmove-up)
       ("j" . swint-windmove-down)))
-  :config
   (defun ignore-error-wrapper (fn)
     "Funtion return new function that ignore errors.
    The function wraps a function with `ignore-errors' macro."

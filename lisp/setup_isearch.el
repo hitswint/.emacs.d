@@ -1,10 +1,11 @@
 ;; ===================Anzu====================
 (use-package anzu
+  ;; Enabled at commands.
   :defer t
+  :bind (("M-*" . anzu-query-replace)
+         ("C-M-*" . anzu-query-replace-regexp))
   :config
   (global-anzu-mode 1)
-  (global-set-key (kbd "M-*") 'anzu-query-replace)
-  (global-set-key (kbd "C-M-*") 'anzu-query-replace-regexp)
   (set-face-attribute 'anzu-mode-line nil
                       :foreground "green" :weight 'bold)
   (custom-set-variables
@@ -16,10 +17,12 @@
 ;; ===================pinyin-search=====================
 ;; 安装时由于isearch-mode-map中已经设定M-s为helm-swoop，导致快捷键设定失败，修改之。
 (use-package pinyin-search
+  ;; Enabled at commands.
   :defer t
   :bind (("C-s" . isearch-forward-pinyin)
          ("C-r" . isearch-backward-pinyin))
   :config
+  (use-package anzu)
   (define-key isearch-mode-map (kbd "C-q") #'isearch-toggle-pinyin)
   ;; 同时搜索中英文，与ace-jump一样，对于.*+?等正则表达式使用的符号无效
   (defun swint-pinyin-search--pinyin-to-regexp (string)

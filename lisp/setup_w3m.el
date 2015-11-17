@@ -5,6 +5,7 @@
 ;; 修改anything-config.el中的(defvar w3m-command "/usr/bin/w3m")为(defvar w3m-command "c:/Program Files (x86)/w3m/w3m.exe")，问题解决。
 ;; 在lin上面通过elpa安装，在win上直接使用.emacs.d/w3m中下载的已经编译好的代码。
 (use-package w3m
+  ;; Enabled at commands.
   :defer t
   :bind ("C-M-5" . w3m)
   :init

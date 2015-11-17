@@ -27,6 +27,7 @@
 ;; ===================MATLAB==================
 ;; ===================octave==================
 (use-package octave
+  ;; Enabled in octave-mode.
   :defer t
   :init
   (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))

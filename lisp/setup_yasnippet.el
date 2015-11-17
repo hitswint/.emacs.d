@@ -1,5 +1,6 @@
 ;; ==================yasnippet===================
 (use-package yasnippet
+  ;; Enabled at commands.
   :defer t
   :bind ("M-I" . swint-yas-global-mode)
   :init

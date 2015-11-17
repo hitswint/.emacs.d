@@ -1,5 +1,6 @@
 ;; ====================ace-jump=========================
 (use-package ace-jump-mode
+  ;; Enabled at commands.
   :defer t
   :bind (("C-h" . swint-ace-jump-char-mode)
          ("C-c C-h" . ace-jump-mode)

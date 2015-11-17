@@ -1,33 +1,47 @@
 ;; =======================ccmode========================
-;; Available C style:
-;; “gnu”: The default style for GNU projects
-;; “k&r”: What Kernighan and Ritchie, the authors of C used in their book
-;; “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
-;; “whitesmith”: Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
-;; “stroustrup”: What Stroustrup, the author of C++ used in his book
-;; “ellemtel”: Popular C++ coding standards as defined by “Programming in C++, Rules and Recommendations,” Erik Nyquist and Mats Henricson, Ellemtel
-;; “linux”: What the Linux developers use for kernel development
-;; “python”: What Python developers use for extension modules
-;; “java”: The default style for java-mode (see below)
-;; “user”: When you want to define your own style
-(setq c-default-style "linux") ;; set style to "linux"
-(defun c-compile-current-file ()
-  (interactive)
-  (unless (file-exists-p "Makefile")
-    (let ((file (file-name-nondirectory buffer-file-name)))
-      (compile (format "%s -o %s.out %s %s %s"
-                       (or (getenv "CC") "gcc")
-                       (file-name-sans-extension file)
-                       (or (getenv "CPPFLAGS") "")
-                       (or (getenv "CFLAGS") "-Wall -g")
-                       file)))))
-(add-hook 'c-mode-hook
-          (lambda ()
-            (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
-            (define-key c-mode-base-map (kbd "(") nil)
-            (define-key c-mode-base-map (kbd "{") nil)))
+(use-package cc-mode
+  ;; Enabled in cc-mode.
+  :defer t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.[ch]\\'" . c-mode))
+  (add-to-list 'auto-mode-alist '("\\.y\\(acc\\)?\\'" . c-mode))
+  (add-to-list 'auto-mode-alist '("\\.lex\\'" . c-mode))
+  (add-to-list 'auto-mode-alist '("\\.i\\'" . c-mode))
+  (add-to-list 'auto-mode-alist '("\\.ii\\'" . c++-mode))
+  :config
+  (defun c-compile-current-file ()
+    (interactive)
+    (unless (file-exists-p "Makefile")
+      (let ((file (file-name-nondirectory buffer-file-name)))
+        (compile (format "%s -o %s.out %s %s %s"
+                         (or (getenv "CC") "gcc")
+                         (file-name-sans-extension file)
+                         (or (getenv "CPPFLAGS") "")
+                         (or (getenv "CFLAGS") "-Wall -g")
+                         file)))))
+  (add-hook 'c-mode-hook
+            (lambda ()
+              (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
+              (define-key c-mode-base-map (kbd "(") nil)
+              (define-key c-mode-base-map (kbd "{") nil)))
+  ;; Available C style:
+  ;; “gnu”: The default style for GNU projects
+  ;; “k&r”: What Kernighan and Ritchie, the authors of C used in their book
+  ;; “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
+  ;; “whitesmith”: Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
+  ;; “stroustrup”: What Stroustrup, the author of C++ used in his book
+  ;; “ellemtel”: Popular C++ coding standards as defined by “Programming in C++, Rules and Recommendations,” Erik Nyquist and Mats Henricson, Ellemtel
+  ;; “linux”: What the Linux developers use for kernel development
+  ;; “python”: What Python developers use for extension modules
+  ;; “java”: The default style for java-mode (see below)
+  ;; “user”: When you want to define your own style
+  (setq c-default-style "linux"))
 ;; =======================gdb=======================
 (use-package gdb-mi
+  ;; Enabled at commands.
   :defer t
   :bind (("C-M-S-g" . gdb)
          ("C-M-g" . gdb-or-gud-go)
@@ -66,6 +80,7 @@
 ;; =======================gdb=======================
 ;; =======================function-args===========================
 (use-package function-args
+  ;; Enabled in cc-mode.
   :defer t
   :init
   (add-hook 'c-mode-hook 'fa-config-default)
@@ -79,6 +94,7 @@
 ;; =======================function-args===========================
 ;; =======================hs-minor-mode===========================
 (use-package hideshow
+  ;; Enabled in cc-mode.
   :defer t
   :init
   (add-hook 'c-mode-common-hook 'hs-minor-mode)
@@ -89,6 +105,7 @@
 ;; =======================hs-minor-mode===========================
 ;; =======================semantic===========================
 (use-package semantic
+  ;; Enabled at idle.
   :defer 2
   :config
   (global-semanticdb-minor-mode 1)
@@ -108,6 +125,7 @@
 ;; helm-semantic-or-imenu: C-x c i
 ;; 可以使用senator-previous-tag和senator-next-tag跳转tag。
 (use-package helm-gtags
+  ;; Enabled in cc-mode.
   :defer t
   :init
   (setq
@@ -134,18 +152,20 @@
 ;; =======================helm-gtags===========================
 ;; =======================company===========================
 (use-package company
+  ;; Enabled at self-insert-command.
   :defer t
   :init
-  (add-hook 'after-init-hook 'global-company-mode)
+  (add-hook 'post-self-insert-hook 'global-company-mode)
+  :config
   (setq company-show-numbers t)
   (global-set-key (kbd "M-O") 'company-complete-common)
-  :config
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (dotimes (i 10)
     (define-key company-active-map (read-kbd-macro (format "C-%d" i)) 'company-complete-number))
   ;; company-quickhelp-mode
   (use-package company-quickhelp
+    ;; Enabled at commands.
     :defer t
     :commands company-quickhelp-manual-begin
     :init
@@ -156,6 +176,7 @@
   ;; 在弹出popup的情况下，C-h 打开*Help*，C-w 进入文件，C-o弹出pos-tip，C-s 搜索，C-M-s 过滤。
   ;; company-c-headers
   (use-package company-c-headers
+    ;; Enabled in cc-mode.
     :defer t
     :init
     (add-hook 'c-mode-hook '(lambda ()

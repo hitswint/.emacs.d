@@ -1,9 +1,11 @@
 ;; ===========================auto-complete============================
 (use-package auto-complete
+  ;; Enabled at self-insert-command.
   :defer t
+  :init
+  (add-hook 'post-self-insert-hook 'ac-config-default)
   :config
   (use-package auto-complete-config)
-  (ac-config-default)
   (setq ac-auto-start nil)
   (setq ac-use-menu-map t)
   (setq ac-fuzzy-enable t)
@@ -23,6 +25,7 @@
   ;; (define-key ac-menu-map (kbd "TAB") nil)
   ;; =======================auto-complete-c-headers===========================
   (use-package auto-complete-c-headers
+    ;; Enabled automatically.
     :config
     (add-hook 'c++-mode-hook 'ac-c-header-init)
     (add-hook 'c-mode-hook 'ac-c-header-init)
@@ -39,6 +42,7 @@
   ;; =======================auto-complete-c-headers===========================
   ;; =======================auto-complete-clang===========================
   (use-package auto-complete-clang
+    ;; Enabled automatically.
     :config
     (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
     (defun ac-cc-mode-setup ()
@@ -65,6 +69,7 @@
   ;; (eval-after-load 'setup_yasnippet '(require 'auto-complete-auctex))
   (add-to-list 'ac-modes 'latex-mode)
   (use-package auto-complete-auctex
+    ;; Enabled automatically.
     :config
     (add-hook 'TeX-mode-hook 'ac-auctex-setup))
   ;; lin上的ac-auctex会自动启闭latex-math-mode，造成`输入公式的方法失效，两种解决方法：
@@ -96,6 +101,7 @@
   ;; 在org-mode中使用ac-math激活unicode输入
   (add-to-list 'ac-modes 'org-mode)
   (use-package ac-math
+    ;; Enabled automatically.
     :config
     (add-hook 'org-mode-hook 'ac-org-mode-setup)
     (defun ac-org-mode-setup ()
@@ -123,6 +129,7 @@
   ;; ac-octave有问题，使用auto-complete-octave
   (add-to-list 'ac-modes 'octave-mode)
   (use-package auto-complete-octave
+    ;; Enabled automatically.
     :load-path "site-lisp/auto-complete-octave/")
   ;; =========================auto-complete-octave=========================
   ;; =================shell==================
@@ -132,13 +139,14 @@
   (setq comint-process-echoes nil)
   (add-to-list 'ac-modes 'shell-mode)
   (use-package readline-complete
-    :defer t
-    :init
+    ;; Enabled automatically.
+    :config
     (add-hook 'shell-mode-hook 'ac-rlc-setup-sources))
   ;; =================shell==================
   ;; ===================eshell===================
   (add-to-list 'ac-modes 'eshell-mode)
   (use-package pcomplete
+    ;; Enabled automatically.
     :config
     (add-hook 'shell-mode-hook 'pcomplete-shell-setup)
     (add-hook 'eshell-mode-hook 'ac-eshell-mode-setup)
@@ -156,6 +164,7 @@
   ;; =================ac-ispell=================
   ;; Completion words longer than 4 characters
   (use-package ac-ispell
+    ;; Enabled automatically.
     :config
     (ac-ispell-setup)
     (defun swint-auto-complete-ispell ()
@@ -170,6 +179,7 @@
 ;; ===========================auto-complete============================
 ;; ==============hippie-expand===================
 (use-package hippie-exp
+  ;; Enabled at commands.
   :defer t
   :bind ("M-?" . hippie-expand)
   :config

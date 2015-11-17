@@ -1,5 +1,6 @@
 ;; ========================recentf=========================
 (use-package recentf
+  ;; Enabled at commands.
   :defer t
   :bind ("C-c f" . recentf-ido-find-file)
   :config

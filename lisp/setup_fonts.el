@@ -1,5 +1,6 @@
 ;; ==================chinese-fonts-setup===================
 (use-package chinese-fonts-setup
+  ;; Enabled automatically.
   :load-path "site-lisp/chinese-fonts-setup/"
   :config
   (cond
