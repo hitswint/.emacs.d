@@ -1,7 +1,7 @@
 ;; ===========================auto-complete============================
 (use-package auto-complete
   ;; Enabled at commands.
-  :defer 2
+  :defer t
   :init
   (bind-key "M-U" '(lambda ()
                      (interactive)
@@ -97,7 +97,6 @@
                    ))))
   ;; =======================auto-complete-clang===========================
   ;; ============================ac-auctex=========================
-  ;; (eval-after-load 'setup_yasnippet '(require 'auto-complete-auctex))
   (use-package auto-complete-auctex
     ;; Enabled automatically.
     :config

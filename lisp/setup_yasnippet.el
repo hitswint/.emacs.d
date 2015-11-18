@@ -1,13 +1,14 @@
 ;; ==================yasnippet===================
 (use-package yasnippet
   ;; Enabled at commands.
-  :defer 2
+  :defer t
   :init
   (bind-key "M-I" '(lambda ()
                      (interactive)
                      (unless yas-global-mode
                        (yas-global-mode 1)
-                       (yas-minor-mode 1))))
+                       (yas-minor-mode 1)
+                       (yas-expand))))
   :config
   ;; (yas-initialize)
   (unless yas-global-mode

@@ -47,7 +47,7 @@
 ;; ==================undo-tree===================
 (use-package undo-tree
   ;; Enabled at commands.
-  :defer 2
+  :defer t
   :bind (("C-/" . undo-tree-undo)
          ("C-M-/" . undo-tree-redo))
   :config
@@ -72,7 +72,7 @@
 (use-package auto-mark
   ;; Enabled at commands.
   :load-path "site-lisp/auto-mark/"
-  :defer 2
+  :defer t
   :bind ("M-m" . jump-to-mark)
   :config
   (global-auto-mark-mode 1)
@@ -435,18 +435,15 @@ is named like ODF with the extension turned to pdf."
 ;; vlf把大文件分成多个batch，以改善性能。
 ;; Enable vlf when opening files bigger than 100MB.
 (use-package vlf
-  ;; Enabled at commands.
+  ;; Enabled at idle.
   :defer 2
-  :commands dired-vlf
   :init
-  (bind-key "V" 'dired-vlf dired-mode-map)
   (setq large-file-warning-threshold 100000000)
   :config
   (use-package vlf-setup)
   (custom-set-variables '(vlf-application 'dont-ask))
   (add-to-list 'vlf-forbidden-modes-list 'pdf-view-mode)
-  (eval-after-load "vlf"
-    '(define-key vlf-prefix-map "\C-cv" vlf-mode-map)))
+  (define-key vlf-prefix-map "\C-cv" vlf-mode-map))
 ;; C-c C-v n and C-c C-v p move batch by batch.
 ;; C-c C-v SPC displays batch starting from current point.
 ;; C-c C-v [ and C-c C-v ] take you to the beginning and end of file respectively.

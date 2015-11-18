@@ -26,7 +26,7 @@
 ;; ================helm================
 (use-package helm
   ;; Enabled at commands.
-  :defer 2
+  :defer t
   :bind (("C-." . helm-mini)
          ("C-," . helm-mini)
          ("C-x C-f" . helm-find-files)

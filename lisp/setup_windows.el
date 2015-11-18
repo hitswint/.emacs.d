@@ -1,7 +1,7 @@
 ;; =================winner-mode=================
 (use-package winner
   ;; Enabled at commands.
-  :defer 2
+  :defer t
   :bind (("M-/" . winner-undo)
          ("M-s M-/" . winner-redo))
   :config

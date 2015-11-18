@@ -16,14 +16,13 @@
   ;; ================================ibuffer分组======================================
   ;; Enable ibuffer-filter-by-filename to filter on directory names too.
   ;; 这个版本的ibuffer有问题，dired的路径为"~/"，而文件的路径为"/home/swint/"，所以要分开设置。
-  (eval-after-load "ibuf-ext"
-    '(define-ibuffer-filter filename
-         "Toggle current view to buffers with file or directory name matching QUALIFIER."
-       (:description "filename"
-                     :reader (read-from-minibuffer "Filter by file/directory name (regexp): "))
-       (ibuffer-awhen (or (buffer-local-value 'buffer-file-name buf)
-                          (buffer-local-value 'dired-directory buf))
-         (string-match qualifier it))))
+  (define-ibuffer-filter filename
+      "Toggle current view to buffers with file or directory name matching QUALIFIER."
+    (:description "filename"
+                  :reader (read-from-minibuffer "Filter by file/directory name (regexp): "))
+    (ibuffer-awhen (or (buffer-local-value 'buffer-file-name buf)
+                       (buffer-local-value 'dired-directory buf))
+      (string-match qualifier it)))
   (when is-lin
     (setq ibuffer-saved-filter-groups
           (quote (("default"

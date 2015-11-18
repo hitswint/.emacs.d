@@ -1,7 +1,7 @@
 ;; ================Projectile================
 (use-package projectile
   ;; Enabled at commands.
-  :defer 2
+  :defer t
   :bind-keymap ("M-s '" . projectile-command-map)
   :config
   (setq projectile-keymap-prefix (kbd "M-s '"))
