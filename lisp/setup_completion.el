@@ -1,18 +1,18 @@
 ;; ===========================auto-complete============================
 (use-package auto-complete
   ;; Enabled at commands.
-  :defer t
-  :commands (ac-config-default auto-complete ac-define-source)
+  :defer 2
   :init
-  (global-set-key (kbd "M-U") '(lambda ()
-                                 (interactive)
-                                 (unless global-auto-complete-mode
-                                   (ac-config-default))))
+  (bind-key "M-U" '(lambda ()
+                     (interactive)
+                     (unless global-auto-complete-mode
+                       (ac-config-default))
+                     (auto-complete)))
   ;; =================ac-ispell=================
   ;; Completion words longer than 4 characters
   (use-package ac-ispell
     ;; Enabled at commands.
-    :commands ac-ispell-setup
+    :defer t
     :init
     (bind-key "M-u" 'swint-auto-complete-ispell)
     (defun swint-auto-complete-ispell ()
@@ -28,6 +28,8 @@
   ;; (add-to-list 'ac-dictionary-files "~/.english-words")
   ;; =================ac-ispell=================
   :config
+  (unless global-auto-complete-mode
+    (ac-config-default))
   (use-package auto-complete-config)
   (setq ac-auto-start nil)
   (setq ac-use-menu-map t)

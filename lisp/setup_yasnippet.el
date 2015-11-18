@@ -1,16 +1,18 @@
 ;; ==================yasnippet===================
 (use-package yasnippet
   ;; Enabled at commands.
-  :defer t
-  :bind ("M-I" . swint-yas-global-mode)
+  :defer 2
   :init
-  (defun swint-yas-global-mode ()
-    (interactive)
-    (unless yas-global-mode
-      (yas-global-mode 1))
-    (yas-minor-mode 1))
+  (bind-key "M-I" '(lambda ()
+                     (interactive)
+                     (unless yas-global-mode
+                       (yas-global-mode 1)
+                       (yas-minor-mode 1))))
   :config
   ;; (yas-initialize)
+  (unless yas-global-mode
+    (yas-global-mode 1)
+    (yas-minor-mode 1))
   (define-key yas-minor-mode-map (kbd "M-I") 'yas-expand)
   (define-key yas-minor-mode-map (kbd "TAB") nil)
   ;; yas-snippet-dirs 默认包括自带snippets和用户自定义~/.emacs.d/snippets。

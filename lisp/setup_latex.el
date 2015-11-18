@@ -4,7 +4,7 @@
 ;; (load "preview-latex.el" nil t t)
 (use-package tex
   ;; Enabled at idle.
-  :defer 2
+  :defer t
   :config
   ;; ==========================reftex==============================
   (setq reftex-plug-into-AUCTeX t

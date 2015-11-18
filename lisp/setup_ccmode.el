@@ -152,12 +152,13 @@
 ;; =======================helm-gtags===========================
 ;; =======================company===========================
 (use-package company
-  ;; Enabled at idle.
+  ;; Enabled at commands.
   :defer 2
+  :commands company-complete-common
+  :bind ("M-O" . company-complete-common)
   :config
   (global-company-mode 1)
   (setq company-show-numbers t)
-  (global-set-key (kbd "M-O") 'company-complete-common)
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (dotimes (i 10)
