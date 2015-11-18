@@ -8,6 +8,8 @@
                      (unless (if (boundp 'auto-complete-mode)
                                  auto-complete-mode)
                        (auto-complete-mode 1))
+                     (if (boundp 'company-mode)
+                         (company-abort))
                      (auto-complete)))
   ;; =================ac-ispell=================
   ;; Completion words longer than 4 characters
@@ -24,6 +26,8 @@
       (unless (or (boundp 'ac-source-ispell)
                   (boundp 'ac-source-ispell-fuzzy))
         (ac-ispell-setup))
+      (if (boundp 'company-mode)
+          (company-abort))
       (auto-complete '(ac-source-ispell-fuzzy
                        ac-source-ispell))))
   ;; 也可以加下句，使用ac-source-dictionary补全单词。
@@ -31,15 +35,9 @@
   ;; =================ac-ispell=================
   :config
   (use-package auto-complete-config)
-  (ac-config-default)
   (setq ac-auto-start nil)
   (setq ac-use-menu-map t)
   (setq ac-fuzzy-enable t)
-  (setq-default ac-sources '(ac-source-abbrev
-                             ac-source-dictionary
-                             ac-source-words-in-same-mode-buffers
-                             ac-source-files-in-current-dir
-                             ac-source-yasnippet))
   (define-key ac-completing-map "\C-p" 'ac-previous)
   (define-key ac-completing-map "\C-n" 'ac-next)
   ;; (ac-set-trigger-key "TAB")              ;导致无法indent
@@ -48,6 +46,10 @@
   ;; (define-key ac-completing-map (kbd "TAB") nil)
   ;; ;; 2. 切换menu的选项。取消TAB切换menu选项。
   ;; (define-key ac-menu-map (kbd "TAB") nil)
+  ;; ============ac-modes============
+  ;; hook的函数只在文件打开时运行，如果文件已经打开，那么hook的函数无效。
+  ;; 在auto-complete激活名单中加入mode。
+  ;; 与hook机制不同，即使该buffer已经打开，仍然起作用。
   (add-to-list 'ac-modes 'latex-mode)
   (add-to-list 'ac-modes 'org-mode)
   (add-to-list 'ac-modes 'octave-mode)
@@ -60,6 +62,10 @@
     :config
     (add-hook 'c++-mode-hook 'ac-c-header-init)
     (add-hook 'c-mode-hook 'ac-c-header-init)
+    (add-hook 'auto-complete-mode-hook '(lambda ()
+                                          (if (memq (buffer-mode) '(c++-mode
+                                                                    c-mode))
+                                              (ac-c-header-init))))
     (defun ac-c-header-init ()
       (add-to-list 'ac-sources 'ac-source-c-headers)
       (add-to-list 'achead:include-directories '"/usr/include/c++/4.9")
@@ -76,6 +82,10 @@
     ;; Enabled automatically.
     :config
     (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
+    (add-hook 'auto-complete-mode-hook '(lambda ()
+                                          (if (memq (buffer-mode) '(c++-mode
+                                                                    c-mode))
+                                              (ac-cc-mode-setup))))
     (defun ac-cc-mode-setup ()
       (setq ac-sources
             (append '(ac-source-clang
@@ -100,7 +110,9 @@
   (use-package auto-complete-auctex
     ;; Enabled automatically.
     :config
-    (add-hook 'TeX-mode-hook 'ac-auctex-setup))
+    (add-hook 'auto-complete-mode-hook '(lambda ()
+                                          (if (memq (buffer-mode) '(latex-mode))
+                                              (ac-auctex-setup)))))
   ;; lin上的ac-auctex会自动启闭latex-math-mode，造成`输入公式的方法失效，两种解决方法：
   ;; 1. 去掉(init . LaTeX-math-mode)项，这样会导致有时ac失效。
   ;; 2. 定义如下函数代替原函数中的初始化，由(init . LaTeX-math-mode)变成(init . swint-latex-math-mode)。
@@ -132,6 +144,9 @@
     ;; Enabled automatically.
     :config
     (add-hook 'org-mode-hook 'ac-org-mode-setup)
+    (add-hook 'auto-complete-mode-hook '(lambda ()
+                                          (if (memq (buffer-mode) '(org-mode))
+                                              (ac-org-mode-setup))))
     (defun ac-org-mode-setup ()
       (add-to-list 'ac-sources 'ac-source-math-unicode)))
   ;; =====================ac-math=========================
@@ -157,7 +172,11 @@
   ;; ac-octave有问题，使用auto-complete-octave
   (use-package auto-complete-octave
     ;; Enabled automatically.
-    :load-path "site-lisp/auto-complete-octave/")
+    :load-path "site-lisp/auto-complete-octave/"
+    :config
+    (add-hook 'auto-complete-mode-hook '(lambda ()
+                                          (if (memq (buffer-mode) '(octave-mode))
+                                              (add-to-list 'ac-sources 'ac-source-octave)))))
   ;; =========================auto-complete-octave=========================
   ;; =================shell==================
   ;; 下面这句会导致octave运行时emacs hang
@@ -167,7 +186,10 @@
     ;; Enabled automatically.
     :config
     (setq comint-process-echoes nil)
-    (add-hook 'shell-mode-hook 'ac-rlc-setup-sources))
+    (add-hook 'shell-mode-hook 'ac-rlc-setup-sources)
+    (add-hook 'auto-complete-mode-hook '(lambda ()
+                                          (if (memq (buffer-mode) '(shell-mode))
+                                              (ac-rlc-setup-sources)))))
   ;; =================shell==================
   ;; ===================eshell===================
   (use-package pcomplete
@@ -175,12 +197,21 @@
     :config
     (add-hook 'shell-mode-hook 'pcomplete-shell-setup)
     (add-hook 'eshell-mode-hook 'ac-eshell-mode-setup)
+    (add-hook 'auto-complete-mode-hook '(lambda ()
+                                          (if (memq (buffer-mode) '(eshell-mode))
+                                              (ac-eshell-mode-setup))))
     (defun ac-eshell-mode-setup ()
       (add-to-list 'ac-sources 'ac-source-eshell-pcomplete))
     (defvar ac-source-eshell-pcomplete
       '((candidates . (pcomplete-completions)))))
   ;; ===================eshell===================
-  )
+  ;; 上述auto-complete-mode-hook函数在ac打开时运行。
+  ;; 将初始化语句放在最后，使global-auto-complete-mode打开时加载上述设定，即使某buffer已经打开。
+  (ac-config-default)
+  (setq-default ac-sources '(ac-source-abbrev
+                             ac-source-dictionary
+                             ac-source-words-in-same-mode-buffers
+                             ac-source-files-in-current-dir)))
 ;; ===========================auto-complete============================
 ;; ==============hippie-expand===================
 (use-package hippie-exp

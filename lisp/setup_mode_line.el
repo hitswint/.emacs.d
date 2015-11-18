@@ -65,7 +65,7 @@
   '((dired-mode . "Dr")
     (octave-mode . "Oc")
     (gnuplot-mode . "Gp")
-    (LaTeX-mode . "Tx")                ;找不到LaTeX/FMP代表的major mode
+    (latex-mode . "Tx")
     (emacs-lisp-mode . "El")
     (inferior-octave-mode . "Ic")
     (lisp-interaction-mode . "Li"))

@@ -30,6 +30,9 @@
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq-default TeX-master nil)
+  ;; Auctex在打开tex文件时加载，LaTeX-insert-left-brace会覆盖全局的括号定义。
+  ;; 打开auctex自带的默认输入右括号的选项。
+  (setq LaTeX-electric-left-right-brace t)
   ;;为 LaTeX 模式 hook 自动换行，数学公式，reftex 和显示行号的功能。
   (mapc (lambda (mode)
           (add-hook 'TeX-mode-hook mode))

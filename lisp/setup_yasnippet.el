@@ -7,14 +7,19 @@
                      (interactive)
                      (unless yas-global-mode
                        (yas-global-mode 1)
-                       (yas-minor-mode 1)
-                       (yas-expand))))
+                       (yas-minor-mode 1))
+                     (unless (if (boundp 'auto-complete-mode)
+                                 auto-complete-mode)
+                       (auto-complete-mode 1))
+                     (if (boundp 'company-mode)
+                         (company-abort))
+                     (auto-complete '(ac-source-yasnippet))))
   :config
   ;; (yas-initialize)
   (unless yas-global-mode
     (yas-global-mode 1)
     (yas-minor-mode 1))
-  (define-key yas-minor-mode-map (kbd "M-I") 'yas-expand)
+  ;; (define-key yas-minor-mode-map (kbd "M-I") 'yas-expand)
   (define-key yas-minor-mode-map (kbd "TAB") nil)
   ;; yas-snippet-dirs 默认包括自带snippets和用户自定义~/.emacs.d/snippets。
   ;; (setq yas-snippet-dirs
