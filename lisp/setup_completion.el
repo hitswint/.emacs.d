@@ -5,8 +5,9 @@
   :init
   (bind-key "M-U" '(lambda ()
                      (interactive)
-                     (unless global-auto-complete-mode
-                       (ac-config-default))
+                     (unless (if (boundp 'auto-complete-mode)
+                                 auto-complete-mode)
+                       (auto-complete-mode 1))
                      (auto-complete)))
   ;; =================ac-ispell=================
   ;; Completion words longer than 4 characters
@@ -17,8 +18,9 @@
     (bind-key "M-u" 'swint-auto-complete-ispell)
     (defun swint-auto-complete-ispell ()
       (interactive)
-      (unless global-auto-complete-mode
-        (ac-config-default))
+      (unless (if (boundp 'auto-complete-mode)
+                  auto-complete-mode)
+        (auto-complete-mode 1))
       (unless (or (boundp 'ac-source-ispell)
                   (boundp 'ac-source-ispell-fuzzy))
         (ac-ispell-setup))
@@ -28,9 +30,8 @@
   ;; (add-to-list 'ac-dictionary-files "~/.english-words")
   ;; =================ac-ispell=================
   :config
-  (unless global-auto-complete-mode
-    (ac-config-default))
   (use-package auto-complete-config)
+  (ac-config-default)
   (setq ac-auto-start nil)
   (setq ac-use-menu-map t)
   (setq ac-fuzzy-enable t)
@@ -42,7 +43,6 @@
   (define-key ac-completing-map "\C-p" 'ac-previous)
   (define-key ac-completing-map "\C-n" 'ac-next)
   ;; (ac-set-trigger-key "TAB")              ;导致无法indent
-  (define-key ac-mode-map (kbd "M-U") 'auto-complete)
   ;; ;; 取消TAB绑定以适应yasnippet。TAB的默认作用有两个：
   ;; ;; 1. 延伸menu出现之前的默认选项。取消延伸默认选项，使用RET替代。
   ;; (define-key ac-completing-map (kbd "TAB") nil)
