@@ -260,18 +260,6 @@ especially for extending ido-find-file functionality
       (exit-minibuffer))))
   ;; ====ido-find-file:open-file-with-external-app=====
   )
-;; ==================iswitchb-dired=======================
-(use-package iswitchb
-  ;; Enabled automatically.
-  :load-path "site-lisp/helm-pinyin/"
-  :config
-  (iswitchb-mode 1)
-  ;; (setq iswitchb-buffer-ignore '("\\` " "\\`\\*Messages\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*MATLAB\\*\\'" ".+\\..+" "\\*.*\\*"))
-  (defun iswitchb-only-dired-mode (name)
-    "Ignore all c mode buffers -- example function for iswitchb."
-    (not (eq (buffer-mode name) 'dired-mode)))
-  (setq iswitchb-buffer-ignore '("^ " iswitchb-only-dired-mode)))
-;; ==================iswitchb-dired=======================
 ;; =====================ido-ubiquitous===================
 ;; (defvar ido-cur-item nil)
 ;; (defvar ido-default-item nil)
@@ -302,11 +290,22 @@ especially for extending ido-find-file functionality
   :config
   (if (commandp 'flx-ido-mode)
       (flx-ido-mode 1)))
-;; (require 'ido-hacks nil t)
 (use-package ido-at-point
   ;; Enabled automatically.
   :config
-  (ido-at-point-mode)) ; unless installed from a package
+  (ido-at-point-mode))
 ;; ==================flx-ido/ido-at-point/ido-hacks/ido-vertical-mode========================
+;; ==================iswitchb-dired=======================
+(use-package iswitchb
+  ;; Enabled automatically.
+  :load-path "site-lisp/helm-pinyin/"
+  :config
+  (iswitchb-mode 1)
+  ;; (setq iswitchb-buffer-ignore '("\\` " "\\`\\*Messages\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*MATLAB\\*\\'" ".+\\..+" "\\*.*\\*"))
+  (defun iswitchb-only-dired-mode (name)
+    "Ignore all c mode buffers -- example function for iswitchb."
+    (not (eq (buffer-mode name) 'dired-mode)))
+  (setq iswitchb-buffer-ignore '("^ " iswitchb-only-dired-mode)))
+;; ==================iswitchb-dired=======================
 ;; =========================ido===========================
 (provide 'setup_ido)

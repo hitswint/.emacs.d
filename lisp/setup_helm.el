@@ -25,14 +25,7 @@
 ;; =========================helm_lacarte=============================
 ;; ================helm================
 (use-package helm
-  ;; Enabled at commands.
-  :defer t
-  :bind (("C-." . helm-mini)
-         ("C-," . helm-mini)
-         ("C-x C-f" . helm-find-files)
-         ("C-'" . helm-bookmarks)
-         ("M-x" . helm-M-x)
-         ("C-c C-f" . helm-locate))
+  ;; Enabled automatically.
   :config
   (use-package helm-config)
   (helm-mode 1)

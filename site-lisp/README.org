@@ -1,7 +1,5 @@
 #+STARTUP: showeverything
 * 不使用package安装的包
-  + auctex-latexmk
-    会自动安装auctex。
   + auto-complete-octave
     安装不成功，package中包存在问题。
   + auto-mark
@@ -10,13 +8,7 @@
     未包含在package中。
   + chinese-fonts-setup
     原有配置不适用于package中新版本包。
-  + cl-lib
-    需要保持低版本。
-  + color-theme
-    package中包版本无更新，用于emacs23及之前的版本。
   + cycle-mini
-    未包含在package中。
-  + diredful
     未包含在package中。
   + everything
     未采用package。
@@ -24,22 +16,12 @@
     已更改包。
   + ido-ubiquitous
     package中新版本包与iswitchb不兼容。
-  + matlab-emacs
-    未包含在package中。
   + mew-w3m
     使mew支持html格式邮件。
-  + mingus
-    未包含在package中。
-  + org
-    版本需要。
   + org-annotate-file
-    未包含在package中。
-  + org-cdlatex-mode
     未包含在package中。
   + perspective
     已更改包。
-  + session
-    package中包版本无更新。
   + trashcan
     未包含在package中。
   + unicad

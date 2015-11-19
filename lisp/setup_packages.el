@@ -198,7 +198,6 @@
   (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
     (add-hook hook 'elisp-slime-nav-mode))
   :config
-  (use-package cl-lib)
   (define-key elisp-slime-nav-mode-map (kbd "C-x C-,") 'elisp-slime-nav-find-elisp-thing-at-point)
   (define-key elisp-slime-nav-mode-map (kbd "C-x C-.") 'pop-tag-mark)
   (define-key elisp-slime-nav-mode-map (kbd "C-x C-/") 'elisp-slime-nav-describe-elisp-thing-at-point)

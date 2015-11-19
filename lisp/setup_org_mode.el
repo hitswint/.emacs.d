@@ -1,7 +1,6 @@
 ;; ==================org-mode==========================
 (use-package org
   ;; Enabled in org-mode.
-  :load-path "site-lisp/org/"
   :defer t
   :config
   (add-hook 'org-mode-hook 'turn-on-font-lock)
@@ -101,7 +100,10 @@
   ;; win中似乎不好使，应该是没装java
   ;; =======================org使用ditaa输出ascii图片==========================
   ;; ==============org中输入公式======================
-  (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
+  (use-package cdlatex
+    :defer t
+    :init
+    (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
   ;; Environment templates can be inserted with C-c {.
   ;; The <TAB> key will do template expansion if the cursor is inside a LaTeX fragment1. For example, <TAB> will expand fr to \frac{}{} and position the cursor correctly inside the first brace. Another <TAB> will get you into the second brace. Even outside fragments, <TAB> will expand environment abbreviations at the beginning of a line. For example, if you write ‘equ’ at the beginning of a line and press <TAB>, this abbreviation will be expanded to an equation environment. To get a list of all abbreviations, type M-x cdlatex-command-help.
   ;; Pressing _ and ^ inside a LaTeX fragment will insert these characters together with a pair of braces. If you use <TAB> to move out of the braces, and if the braces surround only a single character or macro, they are removed again (depending on the variable cdlatex-simplify-sub-super-scripts).

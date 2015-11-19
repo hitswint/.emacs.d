@@ -77,7 +77,6 @@
  '(read-buffer-function (quote iswitchb-read-buffer))
  '(recentf-max-saved-items 50)
  '(scroll-bar-mode nil)
- '(session-use-package t nil (session))
  '(show-paren-mode t)
  '(sml/col-number-format "%3c")
  '(sml/directory-truncation-string "")

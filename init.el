@@ -32,36 +32,10 @@
 (dolist (project (directory-files site-lisp-dir t "\\w+"))
   (when (file-directory-p project)
     (add-to-list 'load-path project)))
-(add-to-list 'load-path (concat site-lisp-dir "/org/lisp")) ;org-mode的路径设置
 ;; Functions (load all files in defuns-dir)
 (dolist (file (directory-files defuns-dir t "\\w+"))
   (when (file-regular-p file)
     (load file)))
-;; =================DEFAULT===================
-(setq default-major-mode 'text-mode)    ;一打开就起用 text 模式。
-(global-font-lock-mode t)               ;语法高亮
-(auto-image-file-mode t)                ;打开图片显示功能
-(fset 'yes-or-no-p 'y-or-n-p)           ;以 y/n代表 yes/no
-(global-linum-mode 0)
-(show-paren-mode t)                     ;显示括号匹配
-(tool-bar-mode 0)                       ;去掉那个大大的工具栏
-(menu-bar-mode 0)                       ;去掉菜单栏
-(scroll-bar-mode 0)                     ;去掉滚动条
-(mouse-avoidance-mode 'animate)         ;光标靠近鼠标指针时，让鼠标指针自动让开
-(require 'hl-line)                      ;光标所在行高亮
-(global-hl-line-mode t)
-(transient-mark-mode t)                 ;高亮选中得区域
-(setq x-select-enable-clipboard t)      ;支持emacs和外部程序的粘贴
-(setq frame-title-format "Emacs@ %b")   ;在标题栏提示你目前在什么位置。
-(setq default-fill-column 80)           ;默认显示 80列就换行
-(setq inhibit-startup-message t)        ;禁用启动信息
-(setq visible-bell t)                   ;关闭烦人的出错时的提示声。
-(setq mouse-yank-at-point t)            ;支持中键粘贴
-(setq kill-ring-max 200)                ;用一个很大的 kill ring
-(delete-selection-mode t)
-(setq diary-file "~/org/journal.org.gpg")
-;; =================SAVE===================
-(require 'setup_desktop_session)
 ;; =================CUSTOM=================
 (cond
  (is-lin (setq custom-file (expand-file-name "custom-lin.el" user-emacs-directory)))
@@ -101,8 +75,9 @@
 ;;   (setq missing-packages-list nil
 ;;         package-init-statistic nil)
 ;;   (try-require 'setup_elpa t)
-;;   (try-require 'setup_keybindings t)
+;;   (try-require 'setup_desktop_session t)
 ;;   (try-require 'setup_backup_autosave t)
+;;   (try-require 'setup_default t)
 ;;   (try-require 'setup_abbrev t)
 ;;   (try-require 'setup_ace_jump t)
 ;;   (try-require 'setup_appearance t)
@@ -153,8 +128,9 @@
 ;;              ".")))
 ;; =================SETUP==================
 (require 'setup_elpa)
-(require 'setup_keybindings)
+(require 'setup_desktop_session)
 (require 'setup_backup_autosave)
+(require 'setup_default)
 (require 'setup_abbrev)
 (require 'setup_ace_jump)
 (require 'setup_appearance)

@@ -51,7 +51,6 @@
 ;; ===============mingus=================
 (use-package mingus
   ;; Enabled at commands.
-  :load-path "site-lisp/mingus/"
   :if is-win
   :defer t
   :commands (mingus mingus-browse)

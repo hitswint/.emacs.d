@@ -5,7 +5,8 @@
   (use-package dired-x)
   (use-package dired-details)
   (use-package diredful
-    :load-path "site-lisp/diredful/")
+    :config
+    (diredful-mode 1))
   (setq dired-recursive-copies 'top)
   (setq dired-recursive-deletes 'top)
   (dired-details-install)

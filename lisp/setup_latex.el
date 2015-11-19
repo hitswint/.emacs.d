@@ -181,7 +181,6 @@
 ;; 安装了texlive2009及更高的版本之后，默认就有latexmk，不用做任何改变。只需要加入.latexmkrc的配置文件和这个auctex-latexmk。
 (use-package auctex-latexmk
   ;; Enabled in latex-mode.
-  :load-path "site-lisp/auctex-latexmk/"
   :defer t
   :commands auctex-latexmk-setup
   :init

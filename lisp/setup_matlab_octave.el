@@ -1,4 +1,7 @@
 ;; ===================MATLAB==================
+(use-package matlab-mode
+  :disabled
+  :mode ("\\.[mM]\\'" . matlab-mode))
 ;; (setenv "PATH" (concat (getenv "PATH") "/usr/local/MATLAB/R2011b/bin/"))
 ;; (setq exec-path (append exec-path '("/usr/local/MATLAB/R2011b/bin/")))
 ;; (server-start)

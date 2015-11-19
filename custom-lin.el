@@ -90,7 +90,6 @@
  '(preview-transparent-color (quote (highlight :background)))
  '(read-buffer-function (quote persp-read-buffer))
  '(recentf-max-saved-items 50)
- '(session-use-package t nil (session))
  '(show-paren-mode t)
  '(sml/col-number-format "%3c")
  '(sml/directory-truncation-string "")
