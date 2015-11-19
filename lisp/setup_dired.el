@@ -121,8 +121,7 @@
                                                (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
              (if (string-equal webdav_sync-process-output "Done.\n")
                  (message "swint-webdav-sync-down done.")
-               (message "swint-webdav-sync-down failed"))))
-         (helm-switch-persp/buffer "*webdav_sync*")))))
+               (message "swint-webdav-sync-down failed"))))))))
   (defun swint-webdav-sync-up ()
     "Sync files in ~/Nutstore-sync to webdav server."
     (interactive)
@@ -141,8 +140,7 @@
                                                (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
              (if (string-equal webdav_sync-process-output "Done.\n")
                  (message "swint-webdav-sync-up done.")
-               (message "swint-webdav-sync-up failed"))))
-         (helm-switch-persp/buffer "*webdav_sync*")))))
+               (message "swint-webdav-sync-up failed"))))))))
   (defun swint-webdav-sync-bi ()
     "Sync files in ~/Nutstore-sync to webdav server."
     (interactive)
@@ -161,8 +159,7 @@
                                                (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
              (if (string-equal webdav_sync-process-output "Done.\n")
                  (message "swint-webdav-sync-bi done.")
-               (message "swint-webdav-sync-bi failed"))))
-         (helm-switch-persp/buffer "*webdav_sync*")))))
+               (message "swint-webdav-sync-bi failed"))))))))
   (global-set-key (kbd "C-x M-,") 'swint-webdav-sync-down)
   (global-set-key (kbd "C-x M-.") 'swint-webdav-sync-up)
   (global-set-key (kbd "C-x M-/") 'swint-webdav-sync-bi)
@@ -182,8 +179,7 @@
        process
        (lambda (process signal)
          (when (memq (process-status process) '(exit signal))
-           (message "swint-unison-sync-backups done."))
-         (helm-switch-persp/buffer "*unison*")))))
+           (message "swint-unison-sync-backups done."))))))
   (global-set-key (kbd "C-c M-/") 'swint-unison-sync-backups)
   ;; ===================unison====================
   )

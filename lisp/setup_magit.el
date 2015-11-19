@@ -185,8 +185,7 @@
                                                     (not (equal (nth 1 (magit-pull-read-args t)) (magit-get-remote-branch)))
                                                     (list (nth 0 (magit-pull-read-args t)) (nth 1 (magit-pull-read-args t))))))
                         (message "swint-magit-pull-current done."))
-               (message "swint-magit-pull-current failed"))))
-         (helm-switch-persp/buffer "*webdav_sync*")))))
+               (message "swint-magit-pull-current failed"))))))))
   (defun swint-magit-push-current (branch remote &optional remote-branch args)
     "Push the current branch to its upstream branch.
 If the upstream isn't set, then read the remote branch."
@@ -201,8 +200,7 @@ If the upstream isn't set, then read the remote branch."
                                                (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
              (if (string-equal webdav_sync-process-output "Done.\n")
                  (message "swint-magit-push-current done.")
-               (message "swint-magit-push-current failed"))))
-         (helm-switch-persp/buffer "*webdav_sync*")))))
+               (message "swint-magit-push-current failed"))))))))
   ;; webdav_sync的同步方法不可靠，而且webdav的连接方式很慢。暂停使用。
   ;; (define-key magit-status-mode-map (kbd "C-c M-,") 'swint-magit-pull-current)
   ;; (define-key magit-status-mode-map (kbd "C-c M-.") 'swint-magit-push-current)
