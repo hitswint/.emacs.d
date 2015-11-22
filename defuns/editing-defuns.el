@@ -174,9 +174,6 @@ region\) apply comment-or-uncomment to the current line"
 ;; (setq mouse-wheel-follow-mouse 't)
 ;; (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
 ;; ======================滚动更流畅=======================
-;; ===========C-n到最后一行时自动打开新行==================
-(setq next-line-add-newlines t)
-;; ===========C-n到最后一行时自动打开新行==================
 ;; ;; =================上下移动行=========================
 ;; ;; 使用 drag-stuff-mode 替代
 ;; (defun move-line-down ()
@@ -213,9 +210,6 @@ region\) apply comment-or-uncomment to the current line"
 (global-set-key (kbd "C-c -") 'jcs-dashify)
 (global-set-key (kbd "C-c _") 'jcs-dashify-underline)
 ;; =================添加连接线和下划线==================
-;; ===============打字时cursor不可见================
-(setq make-pointer-invisible t)
-;; ===============打字时cursor不可见================
 ;; ===============复制矩形区域==============
 (defun copy-rectangle-as-kill ()
   (interactive)
@@ -246,3 +240,18 @@ if point is at end of line , new-line-and-indent"
            (indent-according-to-mode)))))
 (global-set-key (kbd "C-j") 'open-line-or-new-line-dep-pos)
 ;; ===============合并C-j和C-o===============
+;; =================jump to mark==================
+(global-set-key (kbd "M-m") 'pop-to-mark-command)
+(global-set-key (kbd "M-M") 'unpop-to-mark-command)
+(defun unpop-to-mark-command ()
+  "Unpop off mark ring. Does nothing if mark ring is empty."
+  (interactive)
+  (when mark-ring
+    (let ((pos (marker-position (car (last mark-ring)))))
+      (if (not (= (point) pos))
+          (goto-char pos)
+        (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+        (set-marker (mark-marker) pos)
+        (setq mark-ring (nbutlast mark-ring))
+        (goto-char (marker-position (car (last mark-ring))))))))
+;; =================jump to mark==================

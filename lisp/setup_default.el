@@ -1,26 +1,34 @@
 ;; ==================DEFAULT====================
-(setq default-major-mode 'text-mode)    ;一打开就起用 text 模式。
-(global-font-lock-mode t)               ;语法高亮
-(auto-image-file-mode t)                ;打开图片显示功能
-(fset 'yes-or-no-p 'y-or-n-p)           ;以 y/n代表 yes/no
+(setq default-major-mode 'text-mode)    ;默认使用text模式。
+(global-font-lock-mode t)               ;语法高亮。
+(auto-image-file-mode t)                ;打开图片显示功能。
+(fset 'yes-or-no-p 'y-or-n-p)           ;以y/n代表yes/no。
 (global-linum-mode 0)
-(show-paren-mode t)                     ;显示括号匹配
-(tool-bar-mode 0)                       ;去掉那个大大的工具栏
-(menu-bar-mode 0)                       ;去掉菜单栏
-(scroll-bar-mode 0)                     ;去掉滚动条
-(mouse-avoidance-mode 'animate)         ;光标靠近鼠标指针时，让鼠标指针自动让开
-(require 'hl-line)                      ;光标所在行高亮
-(global-hl-line-mode t)
-(transient-mark-mode t)                 ;高亮选中得区域
-(setq x-select-enable-clipboard t)      ;支持emacs和外部程序的粘贴
+(show-paren-mode t)                     ;显示括号匹配。
+(tool-bar-mode 0)                       ;去掉那个大大的工具栏。
+(menu-bar-mode 0)                       ;去掉菜单栏。
+(scroll-bar-mode 0)                     ;去掉滚动条。
+(mouse-avoidance-mode 'animate)         ;光标靠近鼠标指针时，让鼠标指针自动让开。
+(transient-mark-mode t)                 ;高亮选中得区域。
+(setq x-select-enable-clipboard t)      ;支持emacs和外部程序的粘贴。
 (setq frame-title-format "Emacs@ %b")   ;在标题栏提示你目前在什么位置。
-(setq default-fill-column 80)           ;默认显示 80列就换行
-(setq inhibit-startup-message t)        ;禁用启动信息
+(setq default-fill-column 80)           ;默认显示 80列就换行。
+(setq inhibit-startup-message t)        ;禁用启动信息。
 (setq visible-bell t)                   ;关闭烦人的出错时的提示声。
-(setq mouse-yank-at-point t)            ;支持中键粘贴
-(setq kill-ring-max 200)                ;用一个很大的 kill ring
+(setq mouse-yank-at-point t)            ;支持中键粘贴。
+(setq kill-ring-max 200)                ;用一个很大的 kill ring。
 (delete-selection-mode t)
+(setq next-line-add-newlines t)         ;最后一行自动打开新行。
+(setq make-pointer-invisible t)         ;打字时光标啊不可见。
 (setq diary-file "~/org/journal.org.gpg")
+;; 书签文件的路径及文件名。
+(setq bookmark-default-file "~/.emacs.d/.emacs.bmk")
+;; 同步更新书签文件，或者退出时保存。
+(setq bookmark-save-flag 1)
+;; 高亮光标所在行。
+(use-package hl-line
+  :config
+  (global-hl-line-mode t))
 ;; ==================DEFAULT====================
 ;; ===================快捷键====================
 (global-set-key (kbd "C-c `") 'ibuffer)

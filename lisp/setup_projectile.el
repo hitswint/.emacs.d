@@ -21,7 +21,7 @@
   (when is-win
     ;; windows下的缓存方式从native改到alien，加快缓存速度
     (setq projectile-indexing-method 'alien)))
-;; M-s p s g 为projectile-grep，出现find错误。使用helm-grep，不输入任何文件就是对整个文件夹进行grep，加C-u就是递归搜索。
+;; projectile-grep出现find错误。
 ;; 在helm-projectile中C-d为打开project的根目录。
 ;; C-c p f         Display a list of all files in the project. With a prefix argument it will clear the cache first.
 ;; C-c p F         Display a list of all files in all known projects.

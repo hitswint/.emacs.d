@@ -72,40 +72,42 @@
 (use-package auto-mark
   ;; Enabled at commands.
   :load-path "site-lisp/auto-mark/"
-  :defer t
-  :bind ("M-m" . jump-to-mark)
+  :defer 2
   :config
-  (global-auto-mark-mode 1)
-  ;; 会导致(void-variable last-command-char)错误
-  ;; (when (require 'auto-mark nil t)
-  ;;   (setq auto-mark-command-class-alist
-  ;;         '((anything . anything)
-  ;;           (goto-line . jump)
-  ;;           (indent-for-tab-command . ignore)
-  ;;           (undo . ignore)))
-  ;;   (setq auto-mark-command-classifiers
-  ;;         (list (lambda (command)
-  ;;                 (if (and (eq command 'self-insert-command)
-  ;;                          (eq last-command-char ? ))
-  ;;                     'ignore))))
-  ;;   (global-auto-mark-mode 1))
-  (defun jump-to-mark ()
-    (interactive)
-    (set-mark-command 1)))
+  ;; 会导致(void-variable last-command-char)错误。
+  (setq auto-mark-command-class-alist
+        '((goto-line . jump)
+          (goto-last-change . jump)
+          (indent-for-tab-command . ignore)
+          (undo . ignore)))
+  (setq auto-mark-command-classifiers
+        (list (lambda (command)
+                (if (and (eq command 'self-insert-command)
+                         (eq last-command-char ? ))
+                    'ignore))))
+  (global-auto-mark-mode 1))
 ;; ==================auto-mark===================
 ;; ================visible-mark==================
 (use-package visible-mark
   ;; Enabled automatically.
   :config
   (global-visible-mark-mode 1)
-  ;; 下面的代码增加一个桔黄色的mark，显示灰色和桔黄色两个mark
   (setq visible-mark-max 2)
-  (defface my-visible-mark-face-2
-    '((t (:background "#666666" ;; :foreground "white"
-                      )))
+  (defface swint-visible-mark-face-1
+    '((t (:background "#666666" :foreground "white")))
     "Face for the mark."
     :group 'visible-mark)
-  (setq visible-mark-faces '(visible-mark-active my-visible-mark-face-2)))
+  (setq visible-mark-faces '(visible-mark-active swint-visible-mark-face-1))
+  (setq visible-mark-forward-max 2)
+  (defface swint-visible-mark-forward-face-1
+    '((t (:background "dark red" :foreground "white")))
+    "Face for the mark."
+    :group 'visible-mark)
+  (defface swint-visible-mark-forward-face-2
+    '((t (:background "dark green" :foreground "white")))
+    "Face for the mark."
+    :group 'visible-mark)
+  (setq visible-mark-forward-faces '(swint-visible-mark-forward-face-1 swint-visible-mark-forward-face-2)))
 ;; ================visible-mark==================
 ;; =====================unicad=====================
 ;; lin中不会出现乱码，不需要，这个包会拖慢启动速度。
@@ -504,9 +506,24 @@ is named like ODF with the extension turned to pdf."
       ("=" . operate-on-number-at-point))))
 ;; ============operate-on-number============
 ;; ============goto-last-change============
-(use-package goto-last-change
+(use-package goto-chg
   ;; Enabled at commands.
   :defer t
-  :bind ("M-M" . goto-last-change))
+  :init
+  (smartrep-define-key global-map "M-s"
+    '(("M-p" . goto-last-change)
+      ("M-n" . goto-last-change-reverse))))
 ;; ============goto-last-change============
+;; =================Proced=================
+(use-package proced
+  ;; Enabled at commands.
+  :defer t
+  :bind ("C-M-4" . proced)
+  :config
+  (define-key proced-mode-map (kbd "q") 'kill-buffer-and-window)
+  ;; Proced自动更新，10秒
+  (defun proced-settings ()
+    (proced-toggle-auto-update 1))
+  (add-hook 'proced-mode-hook 'proced-settings))
+;; =================Proced=================
 (provide 'setup_packages)

@@ -1,20 +1,5 @@
-;; ==============Proced==============
-(require 'proced)
-(global-set-key (kbd "C-M-4") 'proced)
-(define-key proced-mode-map (kbd "q") 'kill-buffer-and-window)
-;; Proced自动更新，10秒
-(defun proced-settings ()
-  (proced-toggle-auto-update 1))
-(add-hook 'proced-mode-hook 'proced-settings)
-;; ==============Proced==============
-;; ==================书签===========================
-;; 书签文件的路径及文件名
-(setq bookmark-default-file "~/.emacs.d/.emacs.bmk")
-;; 同步更新书签文件 ;; 或者退出时保存
-(setq bookmark-save-flag 1)
-;; ==================书签===========================
 ;; ==============从xsel剪切板粘贴===============
-;; 解决无法从llpp中粘贴的问题，但未写入kill-ring
+;; 解决无法从llpp中粘贴的问题，但未写入kill-ring。
 (defun xsel-paste-function()
   (interactive)
   (insert (shell-command-to-string "xsel -o")))
