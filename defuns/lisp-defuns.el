@@ -16,3 +16,14 @@
 (setq auto-window-vscroll nil)
 ;; auto-window-vscroll: Non-nil means to automatically adjust `window-vscroll' to view tall lines.
 ;; ===============解决C-n卡顿的问题===============
+;; =========Determination internet status=========
+(defun internet-active-p ()
+  "Return non-nil if internet can be reached."
+  (cond
+   (is-lin
+    (or (assoc "eth0" (network-interface-list))
+        (assoc "wlan0" (network-interface-list))))
+   (is-win
+    (not (and (equal (vector 0 0 0 0 0) (cdr (assoc "eth0" (network-interface-list))))
+              (equal (vector 0 0 0 0 0) (cdr (assoc "wlan0" (network-interface-list)))))))))
+;; =========Determination internet status=========
