@@ -26,6 +26,10 @@
 ;; ================helm================
 (use-package helm
   ;; Enabled automatically.
+  :init
+  ;; emacs24中tramp存在问题，helm-files调用tramp-loaddefs会花费很长时间。
+  ;; 无网络时不存在问题，有网络时偶尔出现。下句解决helm启动变慢问题，源自水木。
+  (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
   :config
   (use-package helm-config)
   (helm-mode 1)

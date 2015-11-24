@@ -84,10 +84,11 @@
         (while (re-search-forward "*** Collins Cobuild English Dictionary " nil t)
           (hide-entry))          ;隐藏柯林斯辞典选项
         )))
-    (goto-char (point-min))
-    (insert (concat "*** Bing Dict" " (" word ")\n"))
-    (indent-for-tab-command)
-    (swint-bing-dict-brief word)))
+    (when (internet-active-p)
+      (goto-char (point-min))
+      (insert (concat "*** Bing Dict" " (" word ")\n"))
+      (indent-for-tab-command)
+      (swint-bing-dict-brief word))))
 (defun yasdcv--output-cleaner:common ()
   ;; 从yasdcv借来的函数
   (goto-char (point-min))

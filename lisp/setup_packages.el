@@ -74,17 +74,18 @@
   :load-path "site-lisp/auto-mark/"
   :defer 2
   :config
-  ;; 会导致(void-variable last-command-char)错误。
   (setq auto-mark-command-class-alist
         '((goto-line . jump)
-          (goto-last-change . jump)
           (indent-for-tab-command . ignore)
-          (undo . ignore)))
-  (setq auto-mark-command-classifiers
-        (list (lambda (command)
-                (if (and (eq command 'self-insert-command)
-                         (eq last-command-char ? ))
-                    'ignore))))
+          (undo . ignore)
+          (goto-last-change . jump)
+          (goto-last-change-reverse . jump)))
+  ;; 会导致(void-variable last-command-char)错误。
+  ;; (setq auto-mark-command-classifiers
+  ;;       (list (lambda (command)
+  ;;               (if (and (eq command 'self-insert-command)
+  ;;                        (eq last-command-char ? ))
+  ;;                   'ignore))))
   (global-auto-mark-mode 1))
 ;; ==================auto-mark===================
 ;; ================visible-mark==================
