@@ -48,6 +48,7 @@
 (global-set-key [f9] 'menu-bar-mode)
 (global-set-key (kbd "C-SPC") nil)
 (define-key lisp-interaction-mode-map (kbd "C-j") nil)
+(global-set-key (kbd "<C-M-backspace>") '(lambda () (interactive) (kill-sexp -1)))
 ;; ===================快捷键====================
 ;; ==================smartrep===================
 (use-package smartrep

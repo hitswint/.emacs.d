@@ -511,9 +511,23 @@ is named like ODF with the extension turned to pdf."
   ;; Enabled at commands.
   :defer t
   :init
-  (smartrep-define-key global-map "M-s"
-    '(("M-p" . goto-last-change)
-      ("M-n" . goto-last-change-reverse))))
+  (defun swint-goto-chg-command-with-prefix (&optional arg)
+    (interactive)
+    (goto-last-change arg)
+    (setq last-command 'goto-last-change)
+    ;; (invoke-prefix-command)
+    ;; (initialize-event-loop)
+    ;; The form (condition-case ERR FORM (quit QUIT-HANDLER))
+    ;; is there to catch C-g key presses and make sure that
+    ;; finalization code is run.
+    (condition-case e
+        (smartrep-read-event-loop
+         '(("M-:" . goto-last-change)
+           (";" . goto-last-change-reverse)))
+      (quit nil))
+    ;; (finalize-event-loop)
+    )
+  (global-set-key (kbd "M-:") 'swint-goto-chg-command-with-prefix))
 ;; ============goto-last-change============
 ;; =================Proced=================
 (use-package proced
