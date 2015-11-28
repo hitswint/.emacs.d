@@ -347,20 +347,24 @@
             (concat "java -Dderby.system.home="  (expand-file-name "~/.webdav_sync/")
                     " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
                     " -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d "
-                    (expand-file-name "~/Nutstore-mobileorg/")))))
+                    (expand-file-name "~/Nutstore-mobileorg/"))))
+          (pos (memq 'mode-line-modes mode-line-format)))
+      (setcdr pos (cons "org-mobile-pull " (cdr pos)))
       (set-process-sentinel
        process
        (lambda (process signal)
          (when (memq (process-status process) '(exit signal))
            (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                               (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+                                               (buffer-substring-no-properties (- (point-max) 6) (point-max))))
+                 (pos (memq 'mode-line-modes mode-line-format)))
              (if (string-equal webdav_sync-process-output "Done.\n")
                  (with-current-buffer "task.org"
                    (insert-file-contents "~/Nutstore-mobileorg/task.org" nil nil nil t)
                    (org-mobile-pull)
                    (org-mobile-push)
                    (message "swint-org-mobile-pull done."))
-               (message "swint-org-mobile-pull failed"))))))))
+               (message "swint-org-mobile-pull failed"))
+             (setcdr pos (remove "org-mobile-pull " (cdr pos)))))))))
   (defun swint-org-mobile-push ()
     "Operate on multiple PCs"
     (interactive)
@@ -372,16 +376,20 @@
             (concat "java -Dderby.system.home="  (expand-file-name "~/.webdav_sync/")
                     " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
                     " -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d "
-                    (expand-file-name "~/Nutstore-mobileorg/")))))
+                    (expand-file-name "~/Nutstore-mobileorg/"))))
+          (pos (memq 'mode-line-modes mode-line-format)))
+      (setcdr pos (cons "org-mobile-push " (cdr pos)))
       (set-process-sentinel
        process
        (lambda (process signal)
          (when (memq (process-status process) '(exit signal))
            (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                               (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+                                               (buffer-substring-no-properties (- (point-max) 6) (point-max))))
+                 (pos (memq 'mode-line-modes mode-line-format)))
              (if (string-equal webdav_sync-process-output "Done.\n")
                  (message "swint-org-mobile-push done.")
-               (message "swint-org-mobile-push failed"))))))))
+               (message "swint-org-mobile-push failed"))
+             (setcdr pos (remove "org-mobile-push " (cdr pos)))))))))
   (define-key org-mode-map (kbd "C-c M-,") 'swint-org-mobile-pull)
   (define-key org-mode-map (kbd "C-c M-.") 'swint-org-mobile-push)
   ;; =================mobileorg===============

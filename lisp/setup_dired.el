@@ -112,16 +112,20 @@
             (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
                     " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
                     " -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
-                    (expand-file-name "~/Nutstore-sync/")))))
+                    (expand-file-name "~/Nutstore-sync/"))))
+          (pos (memq 'mode-line-modes mode-line-format)))
+      (setcdr pos (cons "webdav-sync-down " (cdr pos)))
       (set-process-sentinel
        process
        (lambda (process signal)
          (when (memq (process-status process) '(exit signal))
            (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                               (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+                                               (buffer-substring-no-properties (- (point-max) 6) (point-max))))
+                 (pos (memq 'mode-line-modes mode-line-format)))
              (if (string-equal webdav_sync-process-output "Done.\n")
                  (message "swint-webdav-sync-down done.")
-               (message "swint-webdav-sync-down failed"))))))))
+               (message "swint-webdav-sync-down failed"))
+             (setcdr pos (remove "webdav-sync-down " (cdr pos)))))))))
   (defun swint-webdav-sync-up ()
     "Sync files in ~/Nutstore-sync to webdav server."
     (interactive)
@@ -131,16 +135,20 @@
             (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
                     " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
                     " -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
-                    (expand-file-name "~/Nutstore-sync/")))))
+                    (expand-file-name "~/Nutstore-sync/"))))
+          (pos (memq 'mode-line-modes mode-line-format)))
+      (setcdr pos (cons "webdav-sync-up " (cdr pos)))
       (set-process-sentinel
        process
        (lambda (process signal)
          (when (memq (process-status process) '(exit signal))
            (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                               (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+                                               (buffer-substring-no-properties (- (point-max) 6) (point-max))))
+                 (pos (memq 'mode-line-modes mode-line-format)))
              (if (string-equal webdav_sync-process-output "Done.\n")
                  (message "swint-webdav-sync-up done.")
-               (message "swint-webdav-sync-up failed"))))))))
+               (message "swint-webdav-sync-up failed"))
+             (setcdr pos (remove "webdav-sync-up " (cdr pos)))))))))
   (defun swint-webdav-sync-bi ()
     "Sync files in ~/Nutstore-sync to webdav server."
     (interactive)
@@ -150,16 +158,20 @@
             (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
                     " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
                     " -r -bi -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
-                    (expand-file-name "~/Nutstore-sync/")))))
+                    (expand-file-name "~/Nutstore-sync/"))))
+          (pos (memq 'mode-line-modes mode-line-format)))
+      (setcdr pos (cons "webdav-sync-bi " (cdr pos)))
       (set-process-sentinel
        process
        (lambda (process signal)
          (when (memq (process-status process) '(exit signal))
            (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                               (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
+                                               (buffer-substring-no-properties (- (point-max) 6) (point-max))))
+                 (pos (memq 'mode-line-modes mode-line-format)))
              (if (string-equal webdav_sync-process-output "Done.\n")
                  (message "swint-webdav-sync-bi done.")
-               (message "swint-webdav-sync-bi failed"))))))))
+               (message "swint-webdav-sync-bi failed"))
+             (setcdr pos (remove "webdav-sync-bi " (cdr pos)))))))))
   (global-set-key (kbd "C-x M-,") 'swint-webdav-sync-down)
   (global-set-key (kbd "C-x M-.") 'swint-webdav-sync-up)
   (global-set-key (kbd "C-x M-/") 'swint-webdav-sync-bi)
@@ -174,12 +186,16 @@
             (concat (cond
                      (is-lin "unison")
                      (is-win "c:/cygwin64/bin/unison-2.40.exe"))
-                    " Nutstore-backups"))))
+                    " Nutstore-backups")))
+          (pos (memq 'mode-line-modes mode-line-format)))
+      (setcdr pos (cons "unison-sync-backups " (cdr pos)))
       (set-process-sentinel
        process
        (lambda (process signal)
          (when (memq (process-status process) '(exit signal))
-           (message "swint-unison-sync-backups done."))))))
+           (let ((pos (memq 'mode-line-modes mode-line-format)))
+             (message "swint-unison-sync-backups done.")
+             (setcdr pos (remove "unison-sync-backups " (cdr pos)))))))))
   (global-set-key (kbd "C-c M-/") 'swint-unison-sync-backups)
   ;; ===================unison====================
   )
