@@ -27,6 +27,7 @@
             auto-complete-c-headers
             auto-complete-clang
             backup-walker
+            bbyac
             bind-key
             bing-dict
             bm

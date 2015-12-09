@@ -541,4 +541,21 @@ is named like ODF with the extension turned to pdf."
     (proced-toggle-auto-update 1))
   (add-hook 'proced-mode-hook 'proced-settings))
 ;; =================Proced=================
+;; =================bbyac=================
+(use-package bbyac
+  ;; Enabled at commands.
+  :defer t
+  :bind (("M-s <M-return>" . bbyac-expand-partial-lines)
+         ("M-s <return>" . bbyac-expand-lines))
+  :config
+  (bbyac-global-mode 1)
+  (setq browse-kill-ring-display-style 'one-line)
+  (define-key bbyac-mode-map (kbd "M-s <M-return>") 'bbyac-expand-partial-lines)
+  (define-key bbyac-mode-map (kbd "M-s <return>") 'bbyac-expand-lines)
+  (define-key bbyac-mode-map (kbd "M-g <return>") nil)
+  (define-key bbyac-mode-map (kbd "M-g x") nil)
+  (define-key bbyac-mode-map (kbd "M-s l") nil)
+  (define-key bbyac-mode-map (kbd "M-s s") nil)
+  (define-key bbyac-mode-map (kbd "M-s p") nil))
+;; =================bbyac=================
 (provide 'setup_packages)
