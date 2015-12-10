@@ -14,6 +14,7 @@
 ;; 借自prelude。
 (defvar prelude-packages
   (append '(ace-jump-mode
+            ace-pinyin
             ac-ispell
             ac-math
             aggressive-indent
@@ -26,6 +27,8 @@
             auto-complete-auctex
             auto-complete-c-headers
             auto-complete-clang
+            avy
+            avy-zap
             backup-walker
             bbyac
             bind-key
