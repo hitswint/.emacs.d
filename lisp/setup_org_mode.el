@@ -10,6 +10,8 @@
   (global-set-key (kbd "C-c c") 'org-capture)
   (global-set-key (kbd "C-c a") 'org-agenda)
   ;; (global-set-key (kbd "C-c b") 'org-iswitchb)
+  ;; 插入source code时高亮，C-c ' 打开相应major-mode编辑窗口。
+  (setq org-src-fontify-natively t)
   (add-hook 'org-mode-hook (lambda ()
                              (setq truncate-lines nil)))
   (setq org-capture-templates
