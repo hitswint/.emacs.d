@@ -326,9 +326,9 @@
   ;; 加密
   (setq org-mobile-encryption-tempfile "~/org/orgtmpcrypt")
   (unless (file-exists-p org-mobile-encryption-tempfile)
-    (shell-command (concat "touch " org-mobile-encryption-tempfile)))
+    (shell-command (concat "touch " (expand-file-name org-mobile-encryption-tempfile))))
   (unless (file-exists-p org-mobile-inbox-for-pull)
-    (shell-command (concat "touch " org-mobile-inbox-for-pull)))
+    (shell-command (concat "touch " (expand-file-name org-mobile-inbox-for-pull))))
   ;; 设置需要同步的文件
   (setq org-agenda-files (list "~/org/task.org"))
   (setq org-mobile-files org-agenda-files)
