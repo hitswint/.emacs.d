@@ -15,8 +15,8 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 
 conky | while true; read line; do xsetroot -name "$line"; done &
 
-# wicd-client -t &
-dbus-launch nm-applet &
+wicd-client -t &
+# dbus-launch nm-applet &
 
 xmodmap ~/.xmodmap
 # MPD daemon start (if no other user instance exists)
