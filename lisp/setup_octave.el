@@ -1,33 +1,3 @@
-;; ===================MATLAB==================
-(use-package matlab-mode
-  :disabled
-  :mode ("\\.[mM]\\'" . matlab-mode))
-;; (setenv "PATH" (concat (getenv "PATH") "/usr/local/MATLAB/R2011b/bin/"))
-;; (setq exec-path (append exec-path '("/usr/local/MATLAB/R2011b/bin/")))
-;; (server-start)
-;; (add-to-list 'load-path
-;;              "~/.emacs.d/matlab-emacs/matlab-emacs")
-;; (require 'matlab-load)
-;; (autoload 'matlab-mode "matlab" "Enter MATLAB mode." t)
-;; (setq auto-mode-alist (cons '("\\.m\\'" . matlab-mode) auto-mode-alist))
-;; (autoload 'matlab-shell "matlab" "Interactive MATLAB mode." t)
-;; (setq matlab-indent-function-body t)    ; if you want function bodies indented
-;; (setq matlab-verify-on-save-flag nil)   ; turn off auto-verify on save
-;; (defun my-matlab-mode-hook ()
-;;   (setq fill-column 76)
-;;   (imenu-add-to-menubar "Find"))        ; where auto-fill should wrap
-;; (add-hook 'matlab-mode-hook 'my-matlab-mode-hook)
-;; (defun my-matlab-shell-mode-hook ()
-;;   '())
-;; (add-hook 'matlab-shell-mode-hook 'my-matlab-shell-mode-hook)
-;; (setq matlab-shell-command-switches '("-nodesktop -nosplash"))
-;; (add-hook 'matlab-mode-hook
-;;           '(lambda ()
-;;              (define-key matlab-mode-map [(control \h)] nil)
-;;              (define-key matlab-mode-map [(meta \q)] nil)
-;;              (define-key matlab-mode-map [(control meta \e)] nil)
-;;              )) ;取消C-h的快捷键
-;; ===================MATLAB==================
 ;; ===================octave==================
 (use-package octave
   ;; Enabled in octave-mode.
@@ -83,4 +53,4 @@
   ;; 退出octave时关闭buffer
   (add-hook 'inferior-octave-mode-hook 'kill-shell-buffer-after-exit t))
 ;; ===================octave==================
-(provide 'setup_matlab_octave)
+(provide 'setup_octave)

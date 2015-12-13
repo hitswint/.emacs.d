@@ -78,6 +78,7 @@
 ;;   (try-require 'setup_desktop_session t)
 ;;   (try-require 'setup_backup_autosave t)
 ;;   (try-require 'setup_default t)
+;;   (try-require 'setup_abandoned t)
 ;;   (try-require 'setup_abbrev t)
 ;;   (try-require 'setup_avy t)
 ;;   (try-require 'setup_appearance t)
@@ -95,7 +96,7 @@
 ;;   (try-require 'setup_isearch t)
 ;;   (try-require 'setup_latex t)
 ;;   (try-require 'setup_magit t)
-;;   (try-require 'setup_matlab_octave t)
+;;   (try-require 'setup_octave t)
 ;;   (try-require 'setup_mew t)
 ;;   (try-require 'setup_minibuffer t)
 ;;   (try-require 'setup_mode_line t)
@@ -113,7 +114,6 @@
 ;;   (try-require 'setup_completion t)
 ;;   (try-require 'setup_eshell t)
 ;;   (try-require 'setup_packages t)
-;;   (try-require 'setup_wicd t)
 ;;   ;; Report package statistics.
 ;;   (message "\n\nShowing package initialization statistics:\n%s"
 ;;            (mapconcat (lambda (x)
@@ -131,6 +131,7 @@
 (require 'setup_desktop_session)
 (require 'setup_backup_autosave)
 (require 'setup_default)
+(require 'setup_abandoned)
 (require 'setup_abbrev)
 (require 'setup_avy)
 (require 'setup_appearance)
@@ -148,7 +149,7 @@
 (require 'setup_isearch)
 (require 'setup_latex)
 (require 'setup_magit)
-(require 'setup_matlab_octave)
+(require 'setup_octave)
 (require 'setup_mew)
 (require 'setup_minibuffer)
 (require 'setup_mode_line)
@@ -166,5 +167,4 @@
 (require 'setup_completion)
 (require 'setup_eshell)
 (require 'setup_packages)
-(require 'setup_wicd)
 ;; =================END====================
