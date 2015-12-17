@@ -529,7 +529,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
                                  (invalid-regexp nil))))))
   ;; =================total commander===============
   ;;使用tc打开当前文件夹。
-  (global-set-key (kbd "C-s-m") '(lambda ()
+  (global-set-key (kbd "C-s-;") '(lambda ()
                                    (interactive)
                                    (cond
                                     (is-win (w32-shell-execute

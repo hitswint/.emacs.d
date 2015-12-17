@@ -7,8 +7,7 @@
   (use-package avy
     ;; Enabled at commands.
     :defer t
-    :bind (("C-M-h" . avy-goto-line)
-           ("C-x C-h" . avy-goto-word-0)
+    :bind (("C-x C-h" . avy-goto-word-0)
            ("C-c C-h" . avy-goto-word-1))
     :init
     (bind-key "C-h"  'avy-isearch isearch-mode-map)
@@ -34,6 +33,8 @@
     (cond
      ((= query-char 8)
       (call-interactively 'avy-goto-char-2))
+     ((= query-char 12)
+      (call-interactively 'avy-goto-line))
      ((= query-char 134217847)
       (call-interactively 'avy-copy-line))
      ((= query-char 23)

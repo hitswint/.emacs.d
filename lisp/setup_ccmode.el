@@ -155,7 +155,7 @@
   ;; Enabled at commands.
   :defer 2
   :commands company-complete-common
-  :bind ("M-O" . company-complete-common)
+  :bind ("M-C" . company-complete-common)
   :config
   (global-company-mode 1)
   (setq company-show-numbers t)
