@@ -3,7 +3,7 @@
   ;; Enabled at commands.
   :defer t
   :init
-  (bind-key "M-I" '(lambda ()
+  (bind-key "M-Y" '(lambda ()
                      (interactive)
                      (unless yas-global-mode
                        (yas-global-mode 1)

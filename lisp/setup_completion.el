@@ -17,7 +17,7 @@
     ;; Enabled at commands.
     :defer t
     :init
-    (bind-key "M-u" 'swint-auto-complete-ispell)
+    (bind-key "M-I" 'swint-auto-complete-ispell)
     (defun swint-auto-complete-ispell ()
       (interactive)
       (unless (if (boundp 'auto-complete-mode)
