@@ -254,4 +254,13 @@ if point is at end of line , new-line-and-indent"
         (set-marker (mark-marker) pos)
         (setq mark-ring (nbutlast mark-ring))
         (goto-char (marker-position (car (last mark-ring))))))))
+;; When popping the mark, continue popping until the cursor actually moves.
+(defadvice pop-to-mark-command (around ensure-new-position activate)
+  (let ((p (point)))
+    (dotimes (i 10)
+      (when (= p (point)) ad-do-it))))
+(defadvice unpop-to-mark-command (around ensure-new-position activate)
+  (let ((p (point)))
+    (dotimes (i 10)
+      (when (= p (point)) ad-do-it))))
 ;; =================jump to mark==================
