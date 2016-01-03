@@ -46,7 +46,8 @@
   (add-to-list 'desktop-minor-mode-table '(helm-gtags-mode nil))
   (add-to-list 'desktop-minor-mode-table '(function-args-mode nil))
   (add-to-list 'desktop-minor-mode-table '(linum-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(bbyac-mode nil)))
+  (add-to-list 'desktop-minor-mode-table '(bbyac-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(ace-pinyin-mode nil)))
 ;; ==========打开文件时自动跳转到上次的位置(不好用)===========
 ;; ;; Save point position between sessions
 ;; (require 'saveplace)

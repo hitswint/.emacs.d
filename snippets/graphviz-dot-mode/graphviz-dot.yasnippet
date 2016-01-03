@@ -1,42 +1,44 @@
 # -*- mode: snippet -*-
-# key: gd
+# key: dot
 # name: graphviz-dot
 # --
-digraph G
+${1:di}graph G
 {
-        ${1://}rankdir=LR;
-        edge [fontname="SimSun"];
-        node [shape=box, fontname="SimSun", fontsize="", fontcolor="", fillcolor="white", style=rounded];
-        // node [shape=plaintext,height=0,width=0,fixedsize=true];
-        n1 [label="${2:}"];
-        n2 [label="${3:}"];
-        n3 [label="${4:}"];
-        n4 [label="${5:}"];
-        n5 [label="${6:}"];
-        n6 [label="${7:}"];
-        n7 [label="${8:}"];
-        n8 [label="${9:}"];
-        n9 [label="${10:}"];
-        n${11:} -> n${12:} [];
-        n${13:} -> n${14:} [];
-        n${15:} -> n${16:} [];
-        n${17:} -> n${18:} [];
-        n${19:} -> n${20:} [];
-        n${21:} -> n${22:} [];
-        n${23:} -> n${24:} [];
-        n${25:} -> n${26:} [];
-        n${27:} -> n${28:} [];
-        n${29:} -> n${30:} [];
+${2://}rankdir=LR;
+edge [fontname="${3:SimSun}", dir=${4:$$(yas/choose-value '("forward" "back" "both" "none"))}, arrowhead=${5:$$(yas/choose-value '("none" "normal" "inv" "dot" "odot" "invdot" "invodot" "tee" "empty" "invempty" "open" "halfopen" "diamond" "odiamond" "box" "obox" "crow"))}, arrowsize="${6:1}"];
+node [shape=${7:$$(yas/choose-value '("plaintext" "ellipse" "oval" "circle" "egg" "triangle" "box" "diamond" "trapezium" "parallelogram" "house" "hexagon" "octagon" "note" "tab" "box3d" "component"))}, fontname="${8:SimSun}", fontsize="${9:}", fontcolor="${10:$$(yas/choose-value '("black" "white" "red" "green" "blue" "yellow" "magenta" "cyan" "burlywood" "invis" "lightblue" "gray"))}", fillcolor="${11:$$(yas/choose-value '("white" "black" "red" "green" "blue" "yellow" "magenta" "cyan" "burlywood" "invis" "lightblue" "gray"))}", style=${12:$$(yas/choose-value '("filled" "solid" "dashed" "dotted" "bold" "invis" "rounded"))}];
+// node [shape=plaintext,height=0,width=0,fixedsize=true];
+$0
 }
 
 // 输出: -Tpng -Tps
-// GRAPH 参数: size="," rankdir=LR|RL|BT rotate=90 ratio= newrank=true,上述参数仅能用于最顶级的digraph，不能用于subgraph
-// EDGE 参数: minlen=(最小长度) weight=(线宽) decorate(从edge向label连线)
-// constraint=false 使edge不遵守rank的限制，使edge不破坏node的排列
-// label 参数: \n \l \r 分别代表新的一行，中间、左侧、右侧 \T \H \E \G 分别代表尾点、头点、连接和图的名字
-// node [label="<n1> left|<n2> middle|<n3> right"];shape必须用record
+// ===========================GRAPH==========================
+// digraph G 为有向图；graph G 为无向图。
+// size="4,4"，把图的尺寸设置为4inch*4inch。
+// rankdir=LR|RL|BT，rotate=90，ratio= newrank=true， bgcolor="mintcream" 上述参数仅能用于最顶级的digraph，不能用于subgraph。
+// 图名字 label="I love you";
+// 图名字的位置 labelloc=b(t)
+// 图名字的位置 labeljust=l(r)
+// ===========================GRAPH==========================
+// ===========================EDGE===========================
+// minlen=1(最小长度)，weight=1(线宽)，decorate=true(从edge向label连线)，constraint=false 使edge不遵守rank的限制，使edge不破坏node的排列。
 // 可以通过e,s,w,n,ne,se,sw,nw指定节点的连接位置，如n:e从东边连接n节点
+// ===========================EDGE===========================
+// ===========================LABEL==========================
+// \n \l \r 分别代表新的一行(中间、左侧、右侧)，\T \H \E \G 分别代表尾点、头点、连接和图的名字。
+// headlable和taillabel：给每条线的起始点和终点加上label，颜色由labelfontcolor来决定，而label的颜色由fontcolor来觉得。
+// ===========================LABEL==========================
+// ===========================NODE===========================
+// polygon(多边形)：sides=4 设置边数，perihperies=2 设置多边形的外框层数，regular=true 设置规则多边形，orientation=15 让多边形旋转一个角度，skew=0.5(-1.0~1.0) 能让你的图形斜切一个角度，distortion=0.7 扭曲度。
+// {rank=same; n1; n2; n3} 让n1/n2/n3对齐。
+// 复杂节点必须用record或Mrecord，区别是Mrecord的角是圆的。
+// node[label="<f0>LEFT|<f1>MIDDLE|<f2>RIGHT"]，LEFT/MIDDLE/RIGHT 为显示的label；f0/f1/f2为子节点，用于控制连线，如node:f0 -> node:f1。
+// 当默认排列从上到下时，复杂节点从左到右排列；当默认排列从左到右时，复杂节点从上到下排列。复杂节点中用{}括起来的部分排列方向改变。
+// 如node[label="a|{b|c}|d"] 若默认排列从上到下，则ad横向排列，bc竖向排列在ad之间。
+// ===========================NODE===========================
+// =========================SUBGRAPH=========================
 // 直接连接到子图上，先输入compound = true，然后通过lhead和ltail来连接，如:
 // b -> f [lhead=cluster_1]
 // c -> d [lhead=cluster_1, ltail=cluster_0]
-// 不同的subgraph之间对齐节点，需要在digraph后加入newrank=true;，然后将{rank=same; n1; n2}写到subgraph外。
+// 不同的subgraph之间对齐节点，需要在digraph后加入newrank=true，然后将{rank=same; n1; n2}写到subgraph外。
+// =========================SUBGRAPH=========================
