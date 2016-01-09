@@ -582,7 +582,14 @@ depending on the last command issued."
                ;;  "\\end{frame}"
                ;;  "\\begin{frame}[fragile]\\frametitle{%s}"
                ;;  "\\end{frame}")
-               )))
+               ))
+(setq org-beamer-outline-frame-title "目录")
+(use-package ox-beamer
+  :config
+  (add-to-list 'org-beamer-environments-extra
+               '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
+  (add-to-list 'org-beamer-environments-extra
+               '("uncoverenv" "U" "\\begin{uncoverenv}%a" "\\end{uncoverenv}"))))
 ;; ======================org标注工具=============================
 ;; Display annotated files with mark
 (use-package dired-x-annotated
