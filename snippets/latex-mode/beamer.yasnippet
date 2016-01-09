@@ -6,30 +6,49 @@
 # --
 \documentclass[11pt]{beamer}
 % [xcolor=dvipsnames]
-\usepackage{graphicx,subfigure,url,booktabs,tikz,float}
+\usepackage{graphicx,subfigure,url,booktabs,tikz,float,fontspec}
 \usepackage{amsmath,amssymb}
 \DeclareGraphicsRule{*}{mps}{*}{}
-\usepackage{subfigure}
 \usepackage{xmpmulti}
 \usepackage{colortbl,dcolumn}
 \usepackage{thumbpdf}
 \usepackage{wasysym}
 \usepackage{ucs}
-\usepackage[utf8]{inputenc}
+% \usepackage[utf8]{inputenc}
 \usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
 \usepackage{verbatim}
-\usepackage{xeCJK}
+\usepackage[BoldFont,SlantFont,CJKnumber,CJKchecksingle]{xeCJK}
+% \usepackage{times}
 % \setmainfont{Times New Roman}
 \setsansfont{Times New Roman}
+% {DejaVu Sans}{DejaVu Sans Mono}{DejaVu Serif}
 \setCJKmainfont{SimSun}
+\setCJKsansfont{SimSun}
 \usefonttheme[onlymath]{serif}
-% \usepackage{times}
-\newcommand{\song}{\CJKfamily{zhsong}}
-\newcommand{\hei}{\CJKfamily{zhhei}}
-\newcommand{\kai}{\CJKfamily{zhkai}}
-\newcommand{\fang}{\CJKfamily{zhfs}}
-\newcommand{\li}{\CJKfamily{zhli}}
-\newcommand{\you}{\CJKfamily{zhyou}}
+\setCJKfamilyfont{song}{SimSun}
+\setCJKfamilyfont{kai}{KaiTi}
+\setCJKfamilyfont{hei}{SimHei}
+\setCJKfamilyfont{you}{YouYuan}
+\setCJKfamilyfont{li}{LiSu}
+\setCJKfamilyfont{fang}{FangSong}
+\setCJKfamilyfont{nsong}{NSimSun}
+\setCJKfamilyfont{yh}{Microsoft YaHei}
+\setCJKfamilyfont{asong}{Adobe Song Std}
+\setCJKfamilyfont{afang}{Adobe FangSong Std}
+\setCJKfamilyfont{ahei}{Adobe Heiti Std}
+\setCJKfamilyfont{akai}{Adobe Kaiti Std}
+\newcommand{\song}{\CJKfamily{song}}
+\newcommand{\kai}{\CJKfamily{kai}}
+\newcommand{\hei}{\CJKfamily{hei}}
+\newcommand{\you}{\CJKfamily{you}}
+\newcommand{\li}{\CJKfamily{li}}
+\newcommand{\fang}{\CJKfamily{fang}}
+\newcommand{\nsong}{\CJKfamily{nsong}}
+\newcommand{\yh}{\CJKfamily{yh}}
+\newcommand{\asong}{\CJKfamily{asong}}
+\newcommand{\afang}{\CJKfamily{afang}}
+\newcommand{\ahei}{\CJKfamily{ahei}}
+\newcommand{\akai}{\CJKfamily{akai}}
 \newcommand{\erhao}{\zihao{2}}
 \newcommand{\xiaoer}{\fontsize{18pt}{\baselineskip}\selectfont}
 \newcommand{\sihao}{\zihao{4}}
@@ -37,6 +56,7 @@
 \newcommand{\wuhao}{\zihao{5}}
 \newcommand{\xiaowu}{\fontsize{9pt}{\baselineskip}\selectfont}
 \newcommand{\liuhao}{\zihao{6}}
+\renewcommand{\today}{\number\year 年 \number\month 月 \number\day 日}
 \usepackage[]{caption}
 \captionsetup{font={small,it}}
 \usepackage{comment}

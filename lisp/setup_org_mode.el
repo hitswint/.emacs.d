@@ -406,6 +406,13 @@
   ;; 加C-u表示当前节，两个C-u表示当前head
   (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境
   ;; =======================org-latex-preview======================
+  ;; 定义org markup(*_+/=~)等的转换。
+  (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
+                                      (code . verb)
+                                      (italic . "\\emph{%s}")
+                                      (strike-through . "\\sout{%s}")
+                                      (underline . "\\underline{%s}")
+                                      (verbatim . protectedtexttt)))
   ;; =======================org输出latex=============================
   (add-hook 'org-mode-hook (lambda ()
                              (setq truncate-lines nil)))
@@ -502,36 +509,58 @@ depending on the last command issued."
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 ;; 使用Listings宏包格式化源代码(只是把代码框用listing环境框起来，还需要额外的设置
 (setq org-export-latex-listings t)
-;; ;; ==========beamer设置===================
+;; ==========beamer设置===================
+;; beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)。
+;; 设定mainfont会导致公式环境中变量变成正体。
+;; 设定setsansfont使用Times New Roman无法使用英文斜体和粗体。
+;; 使用某些字体可以实现粗斜体，例如DejaVu Sans/DejaVu Sans Mono/DejaVu Serif等。
 (add-to-list 'org-latex-classes
              '("org-beamer"
                "\\documentclass[11pt]{beamer}
 % [xcolor=dvipsnames]
-\\usepackage{graphicx,subfigure,url,booktabs,tikz,float}
+\\usepackage{graphicx,subfigure,url,booktabs,tikz,float,fontspec}
 \\usepackage{amsmath,amssymb}
-\\usepackage{graphicx}
 \\DeclareGraphicsRule{*}{mps}{*}{}
-\\usepackage{subfigure}
 \\usepackage{xmpmulti}
 \\usepackage{colortbl,dcolumn}
 \\usepackage{thumbpdf}
 \\usepackage{wasysym}
 \\usepackage{ucs}
-\\usepackage[utf8]{inputenc}
+% \\usepackage[utf8]{inputenc}
 \\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
 \\usepackage{verbatim}
-\\usepackage{xeCJK}
+\\usepackage[BoldFont,SlantFont,CJKnumber,CJKchecksingle]{xeCJK}
+% \\usepackage{times}
 % \\setmainfont{Times New Roman}
 \\setsansfont{Times New Roman}
+% {DejaVu Sans}{DejaVu Sans Mono}{DejaVu Serif}
 \\setCJKmainfont{SimSun}
+\\setCJKsansfont{SimSun}
 \\usefonttheme[onlymath]{serif}
-% \\usepackage{times}
-\\newcommand{\\song}{\\CJKfamily{zhsong}}
-\\newcommand{\\hei}{\\CJKfamily{zhhei}}
-\\newcommand{\\kai}{\\CJKfamily{zhkai}}
-\\newcommand{\\fang}{\\CJKfamily{zhfs}}
-\\newcommand{\\li}{\\CJKfamily{zhli}}
-\\newcommand{\\you}{\\CJKfamily{zhyou}}
+\\setCJKfamilyfont{song}{SimSun}
+\\setCJKfamilyfont{kai}{KaiTi}
+\\setCJKfamilyfont{hei}{SimHei}
+\\setCJKfamilyfont{you}{YouYuan}
+\\setCJKfamilyfont{li}{LiSu}
+\\setCJKfamilyfont{fang}{FangSong}
+\\setCJKfamilyfont{nsong}{NSimSun}
+\\setCJKfamilyfont{yh}{Microsoft YaHei}
+\\setCJKfamilyfont{asong}{Adobe Song Std}
+\\setCJKfamilyfont{afang}{Adobe FangSong Std}
+\\setCJKfamilyfont{ahei}{Adobe Heiti Std}
+\\setCJKfamilyfont{akai}{Adobe Kaiti Std}
+\\newcommand{\\song}{\\CJKfamily{song}}
+\\newcommand{\\kai}{\\CJKfamily{kai}}
+\\newcommand{\\hei}{\\CJKfamily{hei}}
+\\newcommand{\\you}{\\CJKfamily{you}}
+\\newcommand{\\li}{\\CJKfamily{li}}
+\\newcommand{\\fang}{\\CJKfamily{fang}}
+\\newcommand{\\nsong}{\\CJKfamily{nsong}}
+\\newcommand{\\yh}{\\CJKfamily{yh}}
+\\newcommand{\\asong}{\\CJKfamily{asong}}
+\\newcommand{\\afang}{\\CJKfamily{afang}}
+\\newcommand{\\ahei}{\\CJKfamily{ahei}}
+\\newcommand{\\akai}{\\CJKfamily{akai}}
 \\newcommand{\\erhao}{\\zihao{2}}
 \\newcommand{\\xiaoer}{\\fontsize{18pt}{\\baselineskip}\\selectfont}
 \\newcommand{\\sihao}{\\zihao{4}}
@@ -539,6 +568,7 @@ depending on the last command issued."
 \\newcommand{\\wuhao}{\\zihao{5}}
 \\newcommand{\\xiaowu}{\\fontsize{9pt}{\\baselineskip}\\selectfont}
 \\newcommand{\\liuhao}{\\zihao{6}}
+\\renewcommand{\\today}{\\number\\year 年 \\number\\month 月 \\number\\day 日}
 \\usepackage[]{caption}
 \\captionsetup{font={small,it}}
 \\usepackage{comment}
