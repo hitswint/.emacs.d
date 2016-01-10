@@ -13,7 +13,8 @@
                        (auto-complete-mode 1))
                      (if (boundp 'company-mode)
                          (company-abort))
-                     (auto-complete '(ac-source-yasnippet))))
+                     (unless (auto-complete '(ac-source-yasnippet))
+                       (yas-insert-snippet))))
   :config
   ;; (yas-initialize)
   (unless yas-global-mode
