@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# contributor : Mads D. Kristensen <madsdk@gmail.com>
+# key : graphics
+# name : graphics
+# --
+[[./pic/${1:$$(if (file-directory-p "./pic") (yas-choose-value (directory-files "./pic")) (yas-choose-value (directory-files "./")))}]]$0

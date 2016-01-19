@@ -57,6 +57,7 @@
               (define-key LaTeX-mode-map (kbd "TAB") 'TeX-complete-symbol)
               (define-key LaTeX-mode-map (kbd "C-q") 'swint-kill-tex-buffer)
               (define-key orgtbl-mode-map (kbd "C-c |") 'org-table-create-or-convert-from-region)
+              (define-key orgtbl-mode-map (kbd "<M-return>") nil)
               (define-key LaTeX-mode-map (kbd "C-c C-x C-p") 'preview-at-point)
               (define-key LaTeX-mode-map (kbd "C-c C-x p") 'preview-clearout-buffer)
               (define-key LaTeX-mode-map (kbd "C-c RET") nil)

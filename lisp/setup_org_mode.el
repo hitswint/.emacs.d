@@ -468,6 +468,9 @@ depending on the last command issued."
                  "\\documentclass[11pt]{ctexart}
 \\usepackage[top=1in,bottom=1in,left=0.8in,right=0.8in]{geometry}
 \\usepackage{graphicx,amsmath,amssymb,subfigure,url,xspace,booktabs,tikz,float}
+\\usepackage[autoplay,loop]{animate}
+\\usepackage[absolute,overlay]{textpos}
+\\usetikzlibrary{arrows,shapes,chains,calc,positioning}
 \\newcommand{\\eg}{e.g.,\\xspace}
 \\newcommand{\\bigeg}{E.g.,\\xspace}
 \\newcommand{\\etal}{\\textit{et~al.\\xspace}}
@@ -523,6 +526,9 @@ depending on the last command issued."
 \\DeclareGraphicsRule{*}{mps}{*}{}
 \\usepackage{xmpmulti}
 \\usepackage{colortbl,dcolumn}
+\\usepackage[autoplay,loop]{animate}
+\\usepackage[absolute,overlay]{textpos}
+\\usetikzlibrary{arrows,shapes,chains,calc,positioning}
 \\usepackage{thumbpdf}
 \\usepackage{wasysym}
 \\usepackage{ucs}

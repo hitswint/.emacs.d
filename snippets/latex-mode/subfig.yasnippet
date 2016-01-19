@@ -6,5 +6,4 @@
 # --
 \subfigure[${1:caption}]{
 \label{fig:${2:$$(unless yas/modified-p (make-temp-name ""))}}
-\includegraphics[width=0.45\linewidth]{ pic$0}
-}
+\includegraphics[width=0.45\linewidth]{pic/${3:$$(if (file-directory-p "./pic") (yas-choose-value (directory-files "./pic")) (yas-choose-value (directory-files "./")))}}}

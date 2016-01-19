@@ -255,7 +255,7 @@
   ;; 设置一些文件的默认打开方式，此功能必须在(require 'dired-x)之后
   (setq dired-guess-shell-alist-user
         (list
-         (list "\\.pdf$" "evince * >/dev/null 2>&1 &")
+         (list "\\.pdf$" "/home/swint/adobe.sh * >/dev/null 2>&1 &")
          (list "\\.doc$" "wps * >/dev/null 2>&1 &")
          (list "\\.docx$" "wps * >/dev/null 2>&1 &")
          (list "\\.ppt$" "wpp * >/dev/null 2>&1 &")
