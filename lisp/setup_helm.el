@@ -270,9 +270,7 @@
     "Preconfigured `helm' for opening files.
 Run all sources defined in `helm-for-files-preferred-list'."
     (interactive)
-    (helm--maybe-build-source 'helm-source-files-in-current-dir
-      'helm-build-files-in-current-dir-source)
-    (helm :sources '(helm-source-files-in-current-dir)
+    (helm :sources 'helm-source-files-in-current-dir
           :ff-transformer-show-only-basename t
           :buffer "*helm find files-swint*"))
   ;; ==================helm-find-file====================
