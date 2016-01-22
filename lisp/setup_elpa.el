@@ -10,7 +10,10 @@
   ;; optimization, no need to activate all the packages so early
   (setq package-enable-at-startup nil)
   ;; 激活所有packages，也可以使用package-activate单独激活。
-  (package-initialize))
+  (package-initialize)
+  ;; win中出现Failed to download `gnu' archive错误。
+  (when is-win
+    (setq package-check-signature nil)))
 ;; 借自prelude。
 (defvar prelude-packages
   (append '(ace-jump-mode
