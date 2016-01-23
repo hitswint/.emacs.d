@@ -1,23 +1,14 @@
 # -*- mode: snippet -*-
 # contributor: Claudio Marforio <marforio@gmail.com>
-# key: beamer
-# group: skeleton
-# name: \documentclass{beamer} ...
+# key: standalone-tk
+# name: tk-standalone
+# group: tikz
 # --
-\documentclass[11pt]{beamer}
-% [xcolor=dvipsnames]
-\usepackage{graphicx,subfigure,url,booktabs,tikz,float,fontspec}
-\usepackage{amsmath,amssymb}
-\DeclareGraphicsRule{*}{mps}{*}{}
-\usepackage{xmpmulti}
-\usepackage{colortbl,dcolumn}
+\documentclass[convert={density=300,outext=.png}]{standalone}
+\usepackage{graphicx,amsmath,amssymb,subfigure,url,xspace,booktabs,tikz,float}
 \usepackage[autoplay,loop]{animate}
 \usepackage[absolute,overlay]{textpos}
 \usetikzlibrary{arrows,shapes,chains,calc,positioning}
-\usepackage{thumbpdf}
-\usepackage{wasysym}
-\usepackage{ucs}
-% \usepackage[utf8]{inputenc}
 \usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
 \usepackage{verbatim}
 \usepackage[BoldFont,SlantFont,CJKnumber,CJKchecksingle]{xeCJK}
@@ -27,7 +18,7 @@
 % {DejaVu Sans}{DejaVu Sans Mono}{DejaVu Serif}
 \setCJKmainfont{SimSun}
 \setCJKsansfont{SimSun}
-\usefonttheme[onlymath]{serif}
+% \usefonttheme[onlymath]{serif}
 \setCJKfamilyfont{song}{SimSun}
 \setCJKfamilyfont{kai}{KaiTi}
 \setCJKfamilyfont{hei}{SimHei}
@@ -59,44 +50,9 @@
 \newcommand{\wuhao}{\zihao{5}}
 \newcommand{\xiaowu}{\fontsize{9pt}{\baselineskip}\selectfont}
 \newcommand{\liuhao}{\zihao{6}}
-\renewcommand{\today}{\number\year 年 \number\month 月 \number\day 日}
-\usepackage[]{caption}
-\captionsetup{font={small,it}}
-\usepackage{comment}
-\usetheme{${1:$$(yas/choose-value '("Oxygen" "Air" "Gelugor" "JAutomation" "Madrid"))}}
-
-\title{${2:$$(unless yas/modified-p (file-name-base (buffer-name)))}}
-\subtitle{${3:}}
-\author{${4:王贵强}}
-\institute{${5:沈阳建筑大学}}
-\date{\today}
 
 \begin{document}
-\maketitle
-\section*{}
-\begin{frame}
-\frametitle{outline}
-\tableofcontents[section=1,hidesubsections]
-\end{frame}
-\AtBeginSection[]
-{
-\frame<handout:0>
-{
-\frametitle{outline}
-\tableofcontents[currentsection,hideallsubsections]
-}
-}
-\AtBeginSubsection[]
-{
-\frame<handout:0>
-{
-\frametitle{outline}
-\tableofcontents[sectionstyle=show/hide,subsectionstyle=show/shaded/hide]
-}
-}
-\newcommand<>{\highlighton}[1]{%
-\alt#2{\structure{#1}}{{#1}}
-}
-\newcommand{\icon}[1]{\pgfimage[height=1em]{#1}}
+\begin{tikzpicture}[]
 $0
+\end{tikzpicture}
 \end{document}

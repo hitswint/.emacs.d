@@ -397,5 +397,5 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
 ;; ;; Chinese Font
 ;; ;;(dolist (charset '(kana han symbol cjk-misc bopomofo))  (set-fontset-font (frame-parameter nil 'font)         charset                   (font-spec :family "Microsoft Yahei" :size 12)))
 ;; ;;处理shell-mode乱码,好像没作用
-;;============原win语言环境字符集设置==============
+;; ============原win语言环境字符集设置==============
 (provide 'setup_abandoned)

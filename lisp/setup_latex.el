@@ -47,7 +47,7 @@
             (lambda ()
               (setq TeX-auto-untabify t  ; remove all tabs before saving
                     TeX-engine 'xetex    ; use xelatex default
-                    ;; TeX-show-compilation t
+                    TeX-show-compilation t
                     )                    ; display compilation windows
               (TeX-global-PDF-mode t)    ; PDF mode enable, not plain
               (setq TeX-save-query nil)
@@ -69,6 +69,7 @@
   (setq TeX-view-program-list
         '(("Llpp" "llpp %o")
           ("Firefox" "firefox %o")))
+  (add-to-list 'TeX-command-list '("LaTeX-standalone" "%`xelatex -shell-escape%(mode)%' %t" TeX-run-TeX nil t))
   (cond
    ((eq system-type 'gnu/linux)
     (add-hook 'LaTeX-mode-hook
@@ -122,8 +123,7 @@
   directory and insert a link to this file."
     (interactive)
     ;; 将截图名字定义为buffer名字加日期
-    (if (file-exists-p "./pic")
-        ()
+    (unless (file-exists-p "./pic")
       ;; 建立pic文件夹
       (dired-create-directory "./pic"))
     (cond

@@ -149,8 +149,7 @@
   directory and insert a link to this file."
     (interactive)
     ;; 将截图名字定义为buffer名字加日期
-    (if (file-exists-p "./pic")
-        ()
+    (unless (file-exists-p "./pic")
       ;; 建立pic文件夹
       (dired-create-directory "./pic"))
     (cond
@@ -481,6 +480,9 @@ depending on the last command issued."
 \\usepackage{hyperref}
 \\usepackage{hypernat}
 % \\renewcommand{\\citet}[1]{\\textsuperscript{\\cite{#1}}}
+\\usepackage[]{caption}
+\\captionsetup{font={small,it}}
+\\usepackage{comment}
 % \\usepackage[]{ctex}
 % \\usepackage[]{xeCJK}
 % \\setmainfont{Times New Roman}
@@ -500,9 +502,6 @@ depending on the last command issued."
 \\newcommand{\\wuhao}{\\zihao{5}}
 \\newcommand{\\xiaowu}{\\fontsize{9pt}{\\baselineskip}\\selectfont}
 \\newcommand{\\liuhao}{\\zihao{6}}
-\\usepackage[]{caption}
-\\captionsetup{font={small,it}}
-\\usepackage{comment}
 [NO-DEFAULT-PACKAGES]
 [NO-PACKAGES]"
                ("\\section{%s}" . "\\section*{%s}")

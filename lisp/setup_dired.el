@@ -1,4 +1,4 @@
-;;======================dired========================
+;; ======================dired========================
 (use-package dired
   ;; Enabled automatically.
   :config
@@ -199,7 +199,7 @@
   (global-set-key (kbd "C-c M-/") 'swint-unison-sync-backups)
   ;; ===================unison====================
   )
-;;=====================默认程序打开文件==================
+;; =====================默认程序打开文件==================
 (cond
  (is-lin
   (add-hook 'dired-mode-hook
@@ -290,7 +290,7 @@
                            (expand-file-name default-directory) "\"" " -embed")))
   (global-set-key (kbd "<C-s-return>") 'urxvt-default-directory))
  (is-win
-  ;;=====================w32-browser======================
+  ;; =====================w32-browser======================
   (use-package w32-browser
     ;; Enabled automatically.
     :config
@@ -318,7 +318,7 @@
           (progn (w32-shell-execute "open" "word")
                  (sit-for 5)))
       (w32-browser-open)))
-  ;;==============默认程序打开，但是emacs会冻结=================
+  ;; ==============默认程序打开，但是emacs会冻结=================
   ;; (eval-after-load "dired"
   ;;   '(progn
   ;;      ;; Dired 原来的 “o” 对我来说基本没用。
@@ -336,7 +336,7 @@
   ;;     (if (file-exists-p file-name)
   ;;      (shell-command (format "\"%s\"" file-name) ))))
   ))
-;;=====================默认程序打开文件==================
+;; =====================默认程序打开文件==================
 ;; ===================peep-dired====================
 (use-package peep-dired
   ;; Enabled at commands.
@@ -394,5 +394,5 @@
     (dired-async-mode 1)))
 ;; (autoload 'dired-async-mode "dired-async.el" nil t)
 ;; ===================async====================
-;;======================dired========================
+;; ======================dired========================
 (provide 'setup_dired)
