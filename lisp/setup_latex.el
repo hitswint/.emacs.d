@@ -69,6 +69,7 @@
   (setq TeX-view-program-list
         '(("Llpp" "llpp %o")
           ("Firefox" "firefox %o")))
+  ;; 使用imagemagick中convert转换为图片。win中默认使用imgconvert，可以将cygwin中convert改名为imgconvert。
   (add-to-list 'TeX-command-list '("LaTeX-standalone" "%`xelatex -shell-escape%(mode)%' %t" TeX-run-TeX nil t))
   (cond
    ((eq system-type 'gnu/linux)

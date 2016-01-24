@@ -16,7 +16,10 @@
     (setq avy-keys (number-sequence ?a ?z))
     (setq avy-styles-alist '((avy-goto-char . at)
                              (avy-goto-char-2 . at)
-                             (avy-goto-word-0 . at))))
+                             (avy-goto-word-0 . at)))
+    (setq avy-dispatch-alist '((23 . avy-action-kill)
+                               (67108923 . avy-action-mark)
+                               (134217847 . avy-action-copy))))
   (use-package avy-zap
     ;; Enabled at commands.
     :bind (("M-z" . avy-zap-to-char-dwim)
@@ -35,6 +38,8 @@
       (call-interactively 'avy-goto-char-2))
      ((= query-char 12)
       (call-interactively 'avy-goto-line))
+     ((= query-char 19)
+      (call-interactively 'avy-goto-char-timer))
      ((= query-char 134217847)
       (call-interactively 'avy-copy-line))
      ((= query-char 23)

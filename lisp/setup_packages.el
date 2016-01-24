@@ -364,6 +364,7 @@
   ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。取消。
   ;; (add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
   (define-key pdf-view-mode-map (kbd "C-c C-i") nil)
+  (define-key pdf-view-mode-map (kbd "i") 'imenu)
   (define-key pdf-view-mode-map (kbd "M-s i") 'helm-imenu)
   (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
   (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
