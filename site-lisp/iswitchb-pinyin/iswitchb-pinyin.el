@@ -20,7 +20,7 @@
 
 ;; pinyin-initials.txt中包含了20902个汉字的拼音首字母。这些字母是按对应
 ;; 汉字unicode码点的顺序排列的。包括了所有的“CJK统一汉字”。
-(defvar pinyin-initials-file (concat site-lisp-dir "/helm-pinyin/pinyin-initials.txt"))
+(defvar pinyin-initials-file (concat site-lisp-dir "/iswitchb-pinyin/pinyin-initials.txt"))
 
 (defun iswitchb-pinyin-init ()
   (unless iswitchb-pinyin-initialized
@@ -115,24 +115,24 @@
 
 ;;; 这个函数跟iswitchb.el中的同名函数完全一样，除了一点
 ;;; 即它不是用string-match而是我们提供的pinyin-initials-string-match来做文件名匹配
-(defun iswitchb-get-matched-buffers (regexp
-                                     &optional string-format buffer-list)
-  "Return buffers matching REGEXP.
-If STRING-FORMAT is nil, consider REGEXP as just a string.
-BUFFER-LIST can be list of buffers or list of strings."
-  (let ((case-fold-search (iswitchb-case))
-        name ret)
-    (if (null string-format) (setq regexp (regexp-quote regexp)))
-    (setq iswitchb-invalid-regexp nil)
-    (condition-case error
-        (dolist (x buffer-list (nreverse ret))
-          (setq name (if (stringp x) x (buffer-name x)))
-          (when (and (pinyin-initials-string-match regexp name) ; string-match被替换为pinyin-initials-string-match
-                     (not (iswitchb-ignore-buffername-p name)))
-            (push name ret)))
-      (invalid-regexp
-       (setq iswitchb-invalid-regexp t)
-       (cdr error)))))
+;; (defun iswitchb-get-matched-buffers (regexp
+;;                                      &optional string-format buffer-list)
+;;   "Return buffers matching REGEXP.
+;; If STRING-FORMAT is nil, consider REGEXP as just a string.
+;; BUFFER-LIST can be list of buffers or list of strings."
+;;   (let ((case-fold-search (iswitchb-case))
+;;         name ret)
+;;     (if (null string-format) (setq regexp (regexp-quote regexp)))
+;;     (setq iswitchb-invalid-regexp nil)
+;;     (condition-case error
+;;         (dolist (x buffer-list (nreverse ret))
+;;           (setq name (if (stringp x) x (buffer-name x)))
+;;           (when (and (pinyin-initials-string-match regexp name) ; string-match被替换为pinyin-initials-string-match
+;;                      (not (iswitchb-ignore-buffername-p name)))
+;;             (push name ret)))
+;;       (invalid-regexp
+;;        (setq iswitchb-invalid-regexp t)
+;;        (cdr error)))))
 
 
 (iswitchb-pinyin-init)

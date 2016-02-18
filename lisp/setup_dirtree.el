@@ -33,8 +33,8 @@
           ;; (kill-this-buffer)             ;卸载slim后失效
           (kill-buffer (current-buffer)))
          (is-win (kill-this-buffer)))
-        (switch-to-buffer (car (swint-iswitchb-make-buflist nil)))
-        (switch-to-buffer (car (swint-iswitchb-make-buflist nil)))
+        (switch-to-buffer (car (swint-iswitchb-make-buflist)))
+        (switch-to-buffer (car (swint-iswitchb-make-buflist)))
         ;; 下面不可行，如果当前buffer不显示在buflist中，那么会kill其他的buffer
         ;; (switch-to-buffer (car (swint-iswitchb-make-buflist nil)))
         ;; (kill-buffer (car (swint-iswitchb-make-buflist nil)))
@@ -49,38 +49,55 @@
   ;; 原始的关闭buffer存在两个问题：
   ;; 一是会切换到helm buffer中，二是在persp之间切换时会切换到上一个persp的buffer中。
   (defvar swint-iswitchb-buflist nil
-    "Stores the current list of buffers that will be searched through.
-The list is ordered, so that the most recent buffers come first,
-although by default, the buffers visible in the current frame are put
-at the end of the list.  Created by `iswitchb-make-buflist'.")
-  (defun swint-iswitchb-make-buflist (default)
+    "Stores the current list of buffers that will be searched through.")
+  (defvar swint-iswitchb-bufs-in-frame nil
+    "List of the buffers visible in the current frame.")
+  (defcustom swint-iswitchb-all-frames 'visible
+    "Argument to pass to `walk-windows' when iswitchb is finding buffers.
+See documentation of `walk-windows' for useful values."
+    :type '(choice (const :tag "Selected frame only" nil)
+                   (const :tag "All existing frames" t)
+                   (const :tag "All visible frames" visible)
+                   (const :tag "All frames on this terminal" 0)))
+  (defun swint-iswitchb-get-bufname (win)
+    "Used by `swint-iswitchb-get-buffers-in-frames' to walk through all windows."
+    (let ((buf (buffer-name (window-buffer win))))
+      (if (not (member buf swint-iswitchb-bufs-in-frame))
+          ;; Only add buf if it is not already in list.
+          ;; This prevents same buf in two different windows being
+          ;; put into the list twice.
+          (setq swint-iswitchb-bufs-in-frame
+                (cons buf swint-iswitchb-bufs-in-frame)))))
+  (defun swint-iswitchb-get-buffers-in-frames (&optional current)
+    "Return the list of buffers that are visible in the current frame.
+If optional argument CURRENT is given, restrict searching to the
+current frame, rather than all frames, regardless of value of
+swint-`iswitchb-all-frames'."
+    (let ((swint-iswitchb-bufs-in-frame nil))
+      (walk-windows 'swint-iswitchb-get-bufname nil
+                    (if current
+                        nil
+                      swint-iswitchb-all-frames))
+      swint-iswitchb-bufs-in-frame))
+  (defun swint-iswitchb-make-buflist ()
     "该函数使关闭当前buffer之后切换到之前访问过的buffer"
     (setq swint-iswitchb-buflist
-          (let* ((iswitchb-current-buffers (iswitchb-get-buffers-in-frames))
-                 (iswitchb-temp-buflist
+          (let* ((swint-iswitchb-current-buffers (swint-iswitchb-get-buffers-in-frames))
+                 (swint-iswitchb-temp-buflist
                   (delq nil
                         (mapcar
                          (lambda (x)
-                           (let ((b-name (buffer-name x)))
-                             (if (not
-                                  (or
-                                   (swint-iswitchb-ignore-buffername-p b-name)
-                                   (memq b-name iswitchb-current-buffers)))
-                                 b-name)))
-                         (buffer-list (and iswitchb-use-frame-buffer-list
-                                           (selected-frame)))))))
-            (setq iswitchb-temp-buflist
-                  (nconc iswitchb-temp-buflist iswitchb-current-buffers))
-            (run-hooks 'iswitchb-make-buflist-hook)
-            ;; Should this be after the hooks, or should the hooks be the
-            ;; final thing to be run?
-            (if default
-                (progn
-                  (setq iswitchb-temp-buflist
-                        (delete default iswitchb-temp-buflist))
-                  (setq iswitchb-temp-buflist
-                        (cons default iswitchb-temp-buflist))))
-            iswitchb-temp-buflist)))
+                           (if (not
+                                (or
+                                 (swint-iswitchb-ignore-buffername-p x)
+                                 (memq x swint-iswitchb-current-buffers)))
+                               x))
+                         ;; 只使用(persp-buffers persp-curr)产生的buffer list顺序不对，无法切换回之前的buffer。
+                         (remove-if-not (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
+                                        (helm-buffer-list))))))
+            (setq swint-iswitchb-temp-buflist
+                  (nconc swint-iswitchb-temp-buflist swint-iswitchb-current-buffers))
+            swint-iswitchb-temp-buflist)))
   (defun swint-iswitchb-ignore-buffername-p (bufname)
     "Return t if the buffer BUFNAME should be ignored."
     (let ((data       (match-data))
@@ -107,8 +124,7 @@ at the end of the list.  Created by `iswitchb-make-buflist'.")
   (defcustom swint-iswitchb-buffer-ignore
     '("^ ")
     "因为iswitchb自身忽略了文件buffer，这里定义一个包括文件buffer的ignore list."
-    :type '(repeat (choice regexp function))
-    :group 'iswitchb)
+    :type '(repeat (choice regexp function)))
   (setq swint-iswitchb-buffer-ignore '("\\` " "\\`\\*Messages\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*MATLAB\\*\\'" "\\*.*\\*"))
   ;; ".*\\..+" 注释掉这句使其包括文件buffer
   ;; ==================关闭当前buffer之后切换到之前访问过的buffer=======================
@@ -135,7 +151,6 @@ at the end of the list.  Created by `iswitchb-make-buflist'.")
     (interactive)
     (kill-this-buffer)
     (delete-window))
-
   (defun dirtree-open-and-kill-dirtree ()
     "go to the position of buffer"
     (interactive)

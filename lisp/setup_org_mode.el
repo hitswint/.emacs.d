@@ -3,13 +3,16 @@
   ;; Enabled in org-mode.
   :defer t
   :config
+  (set-face-attribute 'org-level-5 nil :bold nil :foreground "cyan" :height 1.0)
+  (set-face-attribute 'org-level-6 nil :bold nil :foreground "magenta" :height 1.0)
+  (set-face-attribute 'org-level-7 nil :bold nil :foreground "purple" :height 1.0)
+  (set-face-attribute 'org-level-8 nil :bold nil :foreground "gray" :height 1.0)
   (add-hook 'org-mode-hook 'turn-on-font-lock)
   (setq org-hide-leading-stars t)
   ;; (setq org-startup-indented t)
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c c") 'org-capture)
   (global-set-key (kbd "C-c a") 'org-agenda)
-  ;; (global-set-key (kbd "C-c b") 'org-iswitchb)
   ;; 插入source code时高亮，C-c ' 打开相应major-mode编辑窗口。
   (setq org-src-fontify-natively t)
   (add-hook 'org-mode-hook (lambda ()

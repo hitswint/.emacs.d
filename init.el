@@ -128,6 +128,9 @@
 ;;                ". Refer to `missing-packages-list` for missing packages."
 ;;              ".")))
 ;; =================SETUP==================
+;; cl-lib(introduced in 24.3) provides cl-xxx while cl provides xxx, some packages still use xxx.
+;; Use cl-xxx function directly or load cl library which aliases xxx to cl-xxx.
+(require 'cl)
 (require 'setup_elpa)
 (require 'setup_desktop_session)
 (require 'setup_backup_autosave)

@@ -205,6 +205,7 @@ If the upstream isn't set, then read the remote branch."
   ;; (define-key magit-status-mode-map (kbd "C-c M-,") 'swint-magit-pull-current)
   ;; (define-key magit-status-mode-map (kbd "C-c M-.") 'swint-magit-push-current)
   ;; ==========使用webdav_sync同步文件============
-  )
+  (add-hook 'magit-mode-hook (lambda ()
+                               (define-key magit-mode-map (kbd "<C-tab>") nil))))
 ;; =================================magit===============================
 (provide 'setup_magit)

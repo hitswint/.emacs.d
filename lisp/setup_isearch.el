@@ -19,6 +19,7 @@
 (use-package pinyin-search
   ;; Enabled at commands.
   :defer t
+  :commands pinyin-search--pinyin-to-regexp
   :bind (("C-s" . isearch-forward-pinyin)
          ("C-r" . isearch-backward-pinyin))
   :config

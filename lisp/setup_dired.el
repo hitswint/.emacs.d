@@ -15,7 +15,7 @@
   (global-auto-revert-mode 1)
   ;; Also auto refresh dired, but be quiet about it
   (setq global-auto-revert-non-file-buffers t)
-  (setq auto-revert-verbose nil)          ;静默更新
+  (setq auto-revert-verbose nil)
   ;; dired-k--highlight会使auto-revert-mode出错，在dired-mode中禁用auto-revert-mode。
   ;; 已修复上述问题，在dired-mode中重新开启auto-revert-mode。
   ;; (setq global-auto-revert-ignore-modes '(dired-mode))
@@ -39,11 +39,25 @@
                (define-key dired-mode-map (kbd "r") (lambda ()
                                                       (interactive)
                                                       (find-alternate-file "..")))
+               (define-key dired-mode-map (kbd "I") 'dired-kill-and-next-subdir)
                ;; 在dired对mark的多个文件内容进行查找
                (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
                (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
                (define-key dired-mode-map (kbd "C-c C-p") 'dired-k--previous-annotated-file)
                (define-key dired-mode-map (kbd "C-c C-n") 'dired-k--next-annotated-file)))
+  ;; ================Kill subdir=================
+  (defun file-basename (file)
+    (let ((file-no-ending-slash (replace-regexp-in-string "/$" "" file)))
+      (car (reverse (split-string file-no-ending-slash "/")))))
+  (defun dired-kill-and-next-subdir ()
+    (interactive)
+    (let* ((subdir-name (dired-current-directory))
+           (parent-dir  (file-name-directory (directory-file-name subdir-name)))
+           (search-term (concat " " (file-basename subdir-name))))
+      (dired-kill-subdir)
+      (dired-goto-subdir parent-dir)
+      (search-forward search-term)))
+  ;; ================Kill subdir=================
   ;; ==========默认文件夹排在最前面==============
   (defun sof/dired-sort ()
     "Dired sort hook to list directories first."

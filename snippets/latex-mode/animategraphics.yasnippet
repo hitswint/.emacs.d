@@ -3,4 +3,4 @@
 # key : animategraphics
 # name : animategraphics
 # --
-\animategraphics[width=${1:}\linewidth]{${2:10}}{pic/${3:file}}{${4:1}}{${5:100}}
+\animategraphics[width=${1:}\linewidth]{${2:10}}{${3:$$(if (file-directory-p "./pic") (concat "pic/" (yas-choose-value (mapcar 'file-name-base (directory-files "./pic")))) (yas-choose-value (mapcar 'file-name-base (directory-files "./"))))}}{${4:1}}{${5:100}}

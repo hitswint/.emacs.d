@@ -3,51 +3,7 @@
   ;; Enabled automatically.
   :config
   (ido-mode t)
-  ;; (global-set-key (kbd "C-,") 'ido-switch-buffer)
   (global-set-key (kbd "C-x f") 'ido-find-file)
-  ;; ==================only-dired=======================
-  ;; (defun ido-for-mode(prompt the-mode)
-  ;;   (switch-to-buffer
-  ;;    (ido-completing-read prompt
-  ;;                         (save-excursion
-  ;;                           (delq
-  ;;                            nil
-  ;;                            (mapcar (lambda (buf)
-  ;;                                      (when (buffer-live-p buf)
-  ;;                                        (with-current-buffer buf
-  ;;                                          (and (eq major-mode the-mode)
-  ;;                                               (buffer-name buf)))))
-  ;;                                    (buffer-list)))))))
-  ;; (defun ido-dired-buffer()
-  ;;   (interactive)
-  ;;   (ido-for-mode "Dired: " 'dired-mode))
-  ;; (global-set-key (kbd "C-.") 'ido-dired-buffer)
-  ;; 上面的还可以，但是无法在切换的时候关闭dired
-  ;; ==================only-dired=======================
-  ;; ==================ido-only-file=======================
-  ;; (defvar my-always-show-regexps '("\\*\\(scratch\\|info\\|grep\\|compilation\\)\\*")
-  ;;   "*Buffer regexps to always show when buffer switching.")
-  ;; (defvar my-never-show-regexps '("^\\s-" "^\\*" "TAGS$")
-  ;;   "*Buffer regexps to never show when buffer switching.")
-  (defvar my-ido-ignore-dired-buffers t
-    "*If non-nil, buffer switching should ignore dired buffers.")
-  ;; (defun my-str-in-regexp-list (str regexp-list)
-  ;;   "Return non-nil if str matches anything in regexp-list."
-  ;;   (let ((case-fold-search nil))
-  ;;     (catch 'done
-  ;;       (dolist (regexp regexp-list)
-  ;;         (when (string-match regexp str)
-  ;;           (throw 'done t))))))
-  (defun my-ignore-buffer (name)
-    "Return non-nil if the named buffer should be ignored."
-    (or ;; (and (not (my-str-in-regexp-list name my-always-show-regexps))
-     ;;  (my-str-in-regexp-list name my-never-show-regexps))
-     (and my-ido-ignore-dired-buffers
-          (save-excursion
-            (set-buffer name)
-            (equal major-mode 'dired-mode)))))
-  (setq ido-ignore-buffers (append ido-ignore-buffers '(my-ignore-buffer)))
-  ;; ==================ido-only-file=======================
   ;; ====================ido-back-to-home===========================
   (add-hook 'ido-setup-hook
             (lambda ()
@@ -261,20 +217,11 @@ especially for extending ido-find-file functionality
   ;; ====ido-find-file:open-file-with-external-app=====
   )
 ;; =====================ido-ubiquitous===================
-;; (defvar ido-cur-item nil)
-;; (defvar ido-default-item nil)
-;; (defvar ido-cur-list nil)
-;; 以上三行去掉emacs启动时ido-ubiquitous产生的编译警告，但是好像会导致ido-ubiquitous失效。
 (use-package ido-ubiquitous
   ;; Enabled automatically.
-  :load-path "site-lisp/ido-ubiquitous/"
   :config
-  (ido-ubiquitous-mode 1)
   ;; (setq ido-everywhere t)      ;会导致dired中的操作都会启用ido，包括复制、重命名等
-  ;; ido-ubiquitous会导致iswitchb失效，而2.0以上版本的ido-ubiquitous暂时没有办法在使用iswitchb时禁用。
-  ;; (ido-ubiquitous-disable-in erc-iswitchb) ;在function中禁用ido-ubiquitous
-  ;; 使ido-ubiquitous对命令不起作用
-  (add-to-list 'ido-ubiquitous-command-exceptions 'iswitchb-buffer))
+  (ido-ubiquitous-mode 1))
 ;; =====================ido-ubiquitous===================
 ;; ==================flx-ido/ido-at-point/ido-hacks/ido-vertical-mode========================
 ;; 安装flx-ido/ido-at-point/ido-hacks/ido-vertical-mode
@@ -295,17 +242,5 @@ especially for extending ido-find-file functionality
   :config
   (ido-at-point-mode))
 ;; ==================flx-ido/ido-at-point/ido-hacks/ido-vertical-mode========================
-;; ==================iswitchb-dired=======================
-(use-package iswitchb
-  ;; Enabled automatically.
-  :load-path "site-lisp/helm-pinyin/"
-  :config
-  (iswitchb-mode 1)
-  ;; (setq iswitchb-buffer-ignore '("\\` " "\\`\\*Messages\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*MATLAB\\*\\'" ".+\\..+" "\\*.*\\*"))
-  (defun iswitchb-only-dired-mode (name)
-    "Ignore all c mode buffers -- example function for iswitchb."
-    (not (eq (buffer-mode name) 'dired-mode)))
-  (setq iswitchb-buffer-ignore '("^ " iswitchb-only-dired-mode)))
-;; ==================iswitchb-dired=======================
 ;; =========================ido===========================
 (provide 'setup_ido)

@@ -5,7 +5,7 @@
 # --
 \begin{tikzpicture}
 \centering
-\node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.9\linewidth]{pic/${1:$$(if (file-directory-p "./pic") (yas-choose-value (directory-files "./pic")) (yas-choose-value (directory-files "./")))}}};
+\node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.9\linewidth]{./${1:$$(if (file-directory-p "./pic") (concat "pic/" (yas-choose-value (directory-files "./pic"))) (yas-choose-value (directory-files "./")))}}};
 \begin{scope}[x={(image.south east)},y={(image.north west)}]
 \draw[help lines,semitransparent,semithick,xstep=.1,ystep=.1] (0,0) grid (1,1);
 \draw[help lines,semitransparent,very thin,xstep=.05,ystep=.05] (0,0) grid (1,1);

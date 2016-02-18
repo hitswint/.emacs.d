@@ -21,6 +21,7 @@
   (add-to-list 'desktop-minor-mode-table '(yas-minor-mode nil))
   (add-to-list 'desktop-minor-mode-table '(company-mode nil))
   (add-to-list 'desktop-minor-mode-table '(global-auto-revert-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(auto-revert-mode nil))
   (add-to-list 'desktop-minor-mode-table '(flx-ido-mode nil))
   (add-to-list 'desktop-minor-mode-table '(helm-mode nil))
   (add-to-list 'desktop-minor-mode-table '(aggressive-indent-mode nil))
@@ -48,7 +49,9 @@
   (add-to-list 'desktop-minor-mode-table '(linum-mode nil))
   (add-to-list 'desktop-minor-mode-table '(bbyac-mode nil))
   (add-to-list 'desktop-minor-mode-table '(ace-pinyin-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(hungry-delete-mode nil)))
+  (add-to-list 'desktop-minor-mode-table '(hungry-delete-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(peep-dired nil))
+  (add-to-list 'desktop-minor-mode-table '(ivy-mode nil)))
 ;; ==========打开文件时自动跳转到上次的位置(不好用)===========
 ;; ;; Save point position between sessions
 ;; (require 'saveplace)

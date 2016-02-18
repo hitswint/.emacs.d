@@ -6,7 +6,7 @@
 # --
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{pic/${3:$$(if (file-directory-p "./pic") (yas-choose-value (directory-files "./pic")) (yas-choose-value (directory-files "./")))}}
+\includegraphics[width=0.5\linewidth]{${3:$$(if (file-directory-p "./pic") (concat "pic/" (yas-choose-value (directory-files "./pic"))) (yas-choose-value (directory-files "./")))}}
 \caption{${1:caption}}
 \label{fig:${2:$$(unless yas/modified-p (make-temp-name ""))}}
 \end{figure}

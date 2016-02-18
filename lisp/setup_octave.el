@@ -37,6 +37,7 @@
   (add-hook 'inferior-octave-mode-hook ;up and down arrow in the shell
             (lambda ()
               (turn-on-font-lock)
+              (define-key inferior-octave-mode-map (kbd "M-.") nil)
               (define-key inferior-octave-mode-map (kbd "C-c RET") nil)
               (define-key inferior-octave-mode-map [up] 'comint-previous-input)
               (define-key inferior-octave-mode-map [down] 'comint-next-input)))

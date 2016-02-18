@@ -18,6 +18,7 @@
 (defvar prelude-packages
   (append '(ace-jump-mode
             ace-pinyin
+            ace-popup-menu
             ac-ispell
             ac-math
             aggressive-indent
@@ -31,6 +32,7 @@
             auto-complete-c-headers
             auto-complete-clang
             avy
+            avy-menu
             avy-zap
             backup-walker
             bbyac
@@ -38,6 +40,7 @@
             bing-dict
             bm
             cdlatex
+            char-menu
             clean-aindent-mode
             company
             company-c-headers
@@ -81,6 +84,7 @@
             hungry-delete
             ido-at-point
             ido-hacks
+            ido-ubiquitous
             ido-vertical-mode
             imenu-anywhere
             lacarte
@@ -101,6 +105,7 @@
             paredit-everywhere
             parsebib
             peep-dired
+            perspective
             pinyin-search
             pkg-info
             popup
@@ -122,6 +127,7 @@
             tree-mode
             undo-tree
             use-package
+            vimish-fold
             visible-mark
             visual-regexp
             vlf

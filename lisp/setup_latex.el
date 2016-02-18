@@ -24,8 +24,8 @@
   (when is-win
     (setq preview-image-type 'pnm)
     (setq preview-gs-command "c:/Program Files (x86)/gs/gs9.09/bin/gswin32c.exe"))
-  ;; C-c C-p C-p 如果有选中，则preview选中，如果无选中，则preview全部buffer
-  ;; C-c C-p C-c C-b 取消buffer的preview
+  ;; C-c C-x C-p 如果有选中，则preview选中，如果无选中，则preview全部buffer
+  ;; C-c C-x p 取消buffer的preview
   ;; ===========preview===============
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
@@ -47,17 +47,14 @@
             (lambda ()
               (setq TeX-auto-untabify t  ; remove all tabs before saving
                     TeX-engine 'xetex    ; use xelatex default
-                    TeX-show-compilation t
-                    )                    ; display compilation windows
+                    TeX-show-compilation t) ; display compilation windows
               (TeX-global-PDF-mode t)    ; PDF mode enable, not plain
               (setq TeX-save-query nil)
               (imenu-add-menubar-index)
               (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-parse-all)
-              (define-key LaTeX-mode-map (kbd "M-s M-m") 'TeX-insert-macro)
+              (define-key LaTeX-mode-map (kbd "C-c C-b") 'TeX-insert-macro)
               (define-key LaTeX-mode-map (kbd "TAB") 'TeX-complete-symbol)
               (define-key LaTeX-mode-map (kbd "C-q") 'swint-kill-tex-buffer)
-              (define-key orgtbl-mode-map (kbd "C-c |") 'org-table-create-or-convert-from-region)
-              (define-key orgtbl-mode-map (kbd "<M-return>") nil)
               (define-key LaTeX-mode-map (kbd "C-c C-x C-p") 'preview-at-point)
               (define-key LaTeX-mode-map (kbd "C-c C-x p") 'preview-clearout-buffer)
               (define-key LaTeX-mode-map (kbd "C-c RET") nil)
@@ -65,7 +62,10 @@
               (define-key LaTeX-mode-map (kbd "C-c C-i") nil)
               (define-key LaTeX-mode-map (kbd "C-c C-o") nil)
               (define-key LaTeX-mode-map (kbd "C-c C-f") nil)
-              (define-key LaTeX-mode-map (kbd "\"") nil)))
+              (define-key LaTeX-mode-map (kbd "\"") nil)
+              (define-key reftex-mode-map (kbd "C-c =") nil)
+              (define-key reftex-mode-map (kbd "C-c -") nil)
+              (define-key reftex-mode-map (kbd "C-c |") nil)))
   (setq TeX-view-program-list
         '(("Llpp" "llpp %o")
           ("Firefox" "firefox %o")))

@@ -1,28 +1,3 @@
-;; =========================helm_lacarte=============================
-(use-package lacarte
-  ;; Enabled at commands.
-  :defer t
-  :bind (("C-c m" . helm-insert-latex-math)
-         ("C-x m" . helm-browse-menubar))
-  :init
-  (setq LaTeX-math-menu-unicode t)
-  ;; 使用helm自带的程序而不使用下列自定义的命令
-  (defvar helm-source-lacarte-math
-    '((name . "Math Symbols")
-      (init . (lambda()
-                (setq helm-lacarte-major-mode major-mode)))
-      (candidates
-       . (lambda () (if (eq helm-lacarte-major-mode 'latex-mode)
-                        (delete '(nil) (lacarte-get-a-menu-item-alist LaTeX-math-mode-map)))))
-      (action . (("Open" . (lambda (candidate)
-                             (call-interactively candidate)))))))
-  (defun helm-math-symbols ()
-    "helm for searching math menus"
-    (interactive)
-    (helm '(helm-source-lacarte-math)
-          (thing-at-point 'symbol) "Symbol: "
-          nil nil "*helm math symbols*")))
-;; =========================helm_lacarte=============================
 ;; ================helm================
 (use-package helm
   ;; Enabled automatically.
@@ -30,15 +5,296 @@
   ;; emacs24中tramp存在问题，helm-files调用tramp-loaddefs会花费很长时间。
   ;; 无网络时不存在问题，有网络时偶尔出现。下句解决helm启动变慢问题，源自水木。
   (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+  ;; Stack Exchange上提供：(setq tramp-ssh-controlmaster-options "")。
   :config
   (use-package helm-config)
   (helm-mode 1)
+  (global-set-key (kbd "C-,") 'swint-helm-file-buffers-list)
   (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
-  (global-set-key (kbd "C-,") 'swint-helm-mini)
-  (global-set-key (kbd "C-x C-f") 'swint-helm-find-files)
   (global-set-key (kbd "C-'") 'swint-helm-bookmarks)
+  (global-set-key (kbd "C-x C-f") 'swint-helm-find-files)
   (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-c C-f") 'helm-locate)
+  ;; ==================helm-file-buffer=====================
+  (defun swint-helm-file-buffers-list--init/curr-persp ()
+    ;; Issue #51 Create the list before `helm-buffer' creation.
+    (setq swint-helm-file-buffers-list-cache/curr-persp
+          (remove-if (lambda (x) (equal (buffer-mode x) 'dired-mode))
+                     (remove-if-not (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
+                                    (helm-buffer-list))))
+    (let ((result (cl-loop for b in swint-helm-file-buffers-list-cache/curr-persp
+                           maximize (length b) into len-buf
+                           maximize (length (with-current-buffer b
+                                              (symbol-name major-mode)))
+                           into len-mode
+                           finally return (cons len-buf len-mode))))
+      (unless (default-value 'helm-buffer-max-length)
+        (helm-set-local-variable 'helm-buffer-max-length (car result)))
+      (unless (default-value 'helm-buffer-max-len-mode)
+        (helm-set-local-variable 'helm-buffer-max-len-mode (cdr result)))))
+  (defun swint-helm-file-buffers-list--init/other-persps ()
+    ;; Issue #51 Create the list before `helm-buffer' creation.
+    (setq swint-helm-file-buffers-list-cache/other-persps
+          (remove-if (lambda (x) (equal (buffer-mode x) 'dired-mode))
+                     (remove-if (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
+                                (helm-buffer-list))))
+    (let ((result (cl-loop for b in swint-helm-file-buffers-list-cache/other-persps
+                           maximize (length b) into len-buf
+                           maximize (length (with-current-buffer b
+                                              (symbol-name major-mode)))
+                           into len-mode
+                           finally return (cons len-buf len-mode))))
+      (unless (default-value 'helm-buffer-max-length)
+        (helm-set-local-variable 'helm-buffer-max-length (car result)))
+      (unless (default-value 'helm-buffer-max-len-mode)
+        (helm-set-local-variable 'helm-buffer-max-len-mode (cdr result)))))
+  (defclass swint-helm-file-buffers-source/curr-persp (helm-source-sync helm-type-buffer)
+    ((buffer-list
+      :initarg :buffer-list
+      :initform #'helm-buffer-list
+      :custom function
+      :documentation
+      "  A function with no arguments to create buffer list.")
+     (init :initform 'swint-helm-file-buffers-list--init/curr-persp)
+     (candidates :initform swint-helm-file-buffers-list-cache/curr-persp)
+     (matchplugin :initform nil)
+     (match :initform 'helm-buffers-match-function)
+     (persistent-action :initform 'helm-buffers-list-persistent-action)
+     (resume :initform (lambda ()
+                         (run-with-idle-timer
+                          0.1 nil (lambda ()
+                                    (with-helm-buffer
+                                      (helm-force-update))))))
+     (keymap :initform helm-buffer-map)
+     (volatile :initform t)
+     (help-message :initform 'helm-buffer-help-message)
+     (persistent-help
+      :initform
+      "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
+  (defclass swint-helm-file-buffers-source/other-persps (helm-source-sync helm-type-buffer)
+    ((buffer-list
+      :initarg :buffer-list
+      :initform #'helm-buffer-list
+      :custom function
+      :documentation
+      "  A function with no arguments to create buffer list.")
+     (init :initform 'swint-helm-file-buffers-list--init/other-persps)
+     (candidates :initform swint-helm-file-buffers-list-cache/other-persps)
+     (matchplugin :initform nil)
+     (match :initform 'helm-buffers-match-function)
+     (persistent-action :initform 'helm-buffers-list-persistent-action)
+     (resume :initform (lambda ()
+                         (run-with-idle-timer
+                          0.1 nil (lambda ()
+                                    (with-helm-buffer
+                                      (helm-force-update))))))
+     (keymap :initform helm-buffer-map)
+     (volatile :initform t)
+     (help-message :initform 'helm-buffer-help-message)
+     (persistent-help
+      :initform
+      "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
+  (defvar swint-helm-file-buffers-source-list/curr-persp nil)
+  (defvar swint-helm-file-buffers-source-list/other-persps nil)
+  (defcustom swint-helm-file-buffers-sources '(swint-helm-file-buffers-source-list/curr-persp
+                                               swint-helm-file-buffers-source-list/other-persps
+                                               swint-helm-source-recentf-file
+                                               helm-source-buffer-not-found)
+    "Default sources list used in `swint-file-buffers'."
+    :group 'helm-misc
+    :type '(repeat (choice symbol)))
+  (defun swint-helm-file-buffers-list ()
+    "Preconfigured `helm' lightweight version \(buffer -> recentf\)."
+    (interactive)
+    ;; 修改helm-buffer-list，使其忽略dired buffer。
+    ;; 手动启动helm会覆盖该定义，恢复原始定义，故放在这里。
+    (unless swint-helm-file-buffers-source-list/curr-persp
+      (setq swint-helm-file-buffers-source-list/curr-persp
+            (helm-make-source "File Buffers in current persp" 'swint-helm-file-buffers-source/curr-persp)))
+    (unless swint-helm-file-buffers-source-list/other-persps
+      (progn (setq swint-helm-file-buffers-source-list/other-persps
+                   (helm-make-source "File Buffers in other persps" 'swint-helm-file-buffers-source/other-persps))
+             (helm-add-action-to-source "Switch to persp/buffer" 'helm-switch-persp/buffer swint-helm-file-buffers-source-list/other-persps 0)))
+    (let ((helm-ff-transformer-show-only-basename nil))
+      (helm-other-buffer swint-helm-file-buffers-sources "*helm file buffers-swint*")))
+  ;; ==================helm-file-buffer=====================
+  ;; ==================helm-dired-buffer====================
+  (defun swint-helm-dired-buffers-list--init/curr-persp ()
+    ;; Issue #51 Create the list before `helm-buffer' creation.
+    (setq swint-helm-dired-buffers-list-cache/curr-persp
+          (remove-if-not (lambda (x) (equal (buffer-mode x) 'dired-mode))
+                         (remove-if-not (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
+                                        (helm-buffer-list))))
+    (let ((result (cl-loop for b in swint-helm-dired-buffers-list-cache/curr-persp
+                           maximize (length b) into len-buf
+                           maximize (length (with-current-buffer b
+                                              (symbol-name major-mode)))
+                           into len-mode
+                           finally return (cons len-buf len-mode))))
+      (unless (default-value 'helm-buffer-max-length)
+        (helm-set-local-variable 'helm-buffer-max-length (car result)))
+      (unless (default-value 'helm-buffer-max-len-mode)
+        (helm-set-local-variable 'helm-buffer-max-len-mode (cdr result)))))
+  (defun swint-helm-dired-buffers-list--init/other-persps ()
+    ;; Issue #51 Create the list before `helm-buffer' creation.
+    (setq swint-helm-dired-buffers-list-cache/other-persps
+          (remove-if-not (lambda (x) (equal (buffer-mode x) 'dired-mode))
+                         (remove-if (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
+                                    (helm-buffer-list))))
+    (let ((result (cl-loop for b in swint-helm-dired-buffers-list-cache/other-persps
+                           maximize (length b) into len-buf
+                           maximize (length (with-current-buffer b
+                                              (symbol-name major-mode)))
+                           into len-mode
+                           finally return (cons len-buf len-mode))))
+      (unless (default-value 'helm-buffer-max-length)
+        (helm-set-local-variable 'helm-buffer-max-length (car result)))
+      (unless (default-value 'helm-buffer-max-len-mode)
+        (helm-set-local-variable 'helm-buffer-max-len-mode (cdr result)))))
+  (defclass swint-helm-dired-buffers-source/curr-persp (helm-source-sync helm-type-buffer)
+    ((buffer-list
+      :initarg :buffer-list
+      :initform #'helm-buffer-list
+      :custom function
+      :documentation
+      "  A function with no arguments to create buffer list.")
+     (init :initform 'swint-helm-dired-buffers-list--init/curr-persp)
+     (candidates :initform swint-helm-dired-buffers-list-cache/curr-persp)
+     (matchplugin :initform nil)
+     (match :initform 'helm-buffers-match-function)
+     (persistent-action :initform 'helm-buffers-list-persistent-action)
+     (resume :initform (lambda ()
+                         (run-with-idle-timer
+                          0.1 nil (lambda ()
+                                    (with-helm-buffer
+                                      (helm-force-update))))))
+     (keymap :initform helm-buffer-map)
+     (volatile :initform t)
+     (help-message :initform 'helm-buffer-help-message)
+     (persistent-help
+      :initform
+      "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
+  (defclass swint-helm-dired-buffers-source/other-persps (helm-source-sync helm-type-buffer)
+    ((buffer-list
+      :initarg :buffer-list
+      :initform #'helm-buffer-list
+      :custom function
+      :documentation
+      "  A function with no arguments to create buffer list.")
+     (init :initform 'swint-helm-dired-buffers-list--init/other-persps)
+     (candidates :initform swint-helm-dired-buffers-list-cache/other-persps)
+     (matchplugin :initform nil)
+     (match :initform 'helm-buffers-match-function)
+     (persistent-action :initform 'helm-buffers-list-persistent-action)
+     (resume :initform (lambda ()
+                         (run-with-idle-timer
+                          0.1 nil (lambda ()
+                                    (with-helm-buffer
+                                      (helm-force-update))))))
+     (keymap :initform helm-buffer-map)
+     (volatile :initform t)
+     (help-message :initform 'helm-buffer-help-message)
+     (persistent-help
+      :initform
+      "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
+  (defvar swint-helm-dired-buffers-source-list/curr-persp nil)
+  (defvar swint-helm-dired-buffers-source-list/other-persps nil)
+  (defun swint-helm-dired-buffers-list ()
+    "Preconfigured `helm' to list buffers."
+    (interactive)
+    (unless swint-helm-dired-buffers-source-list/curr-persp
+      (setq swint-helm-dired-buffers-source-list/curr-persp
+            (helm-make-source "Dired Buffers in current persp" 'swint-helm-dired-buffers-source/curr-persp)))
+    (unless swint-helm-dired-buffers-source-list/other-persps
+      (progn (setq swint-helm-dired-buffers-source-list/other-persps
+                   (helm-make-source "Dired Buffers in other persps" 'swint-helm-dired-buffers-source/other-persps))
+             (helm-add-action-to-source "Switch to persp/buffer" 'helm-switch-persp/buffer swint-helm-dired-buffers-source-list/other-persps 0)))
+    (let ((helm-ff-transformer-show-only-basename nil))
+      (helm :sources '(swint-helm-dired-buffers-source-list/curr-persp
+                       swint-helm-dired-buffers-source-list/other-persps
+                       swint-helm-source-recentf-directory
+                       helm-source-buffer-not-found)
+            :buffer "*helm dired buffers-swint*"
+            :keymap helm-buffer-map
+            :truncate-lines t)))
+  ;; ==================helm-dired-buffer====================
+  ;; ===========recent file/recent directory================
+  (use-package recentf-ext
+    ;; Enabled automatically.
+    :config
+    (use-package recentf)
+    ;; 定义 swint-helm-source-recentf-file
+    (defclass swint-helm-recentf-file-source (helm-source-sync)
+      ((init :initform (lambda ()
+                         (recentf-mode 1)))
+       (candidates :initform (lambda () (remove-if (lambda (x)
+                                                     (or (string-match-p ".*\/$" x)
+                                                         (member x (mapcar (lambda (xx)
+                                                                             (buffer-file-name (get-buffer xx)))
+                                                                           (helm-buffer-list)))))
+                                                   recentf-list)))
+       (pattern-transformer :initform 'helm-recentf-pattern-transformer)
+       (match-part :initform (lambda (candidate)
+                               (if (or helm-ff-transformer-show-only-basename
+                                       helm-recentf--basename-flag)
+                                   (helm-basename candidate) candidate)))
+       (filter-one-by-one :initform (lambda (c)
+                                      (if (and helm-ff-transformer-show-only-basename
+                                               (not (consp c)))
+                                          (cons (helm-basename c) c)
+                                        c)))
+       (keymap :initform helm-generic-files-map)
+       (help-message :initform helm-generic-file-help-message)
+       (action :initform (helm-actions-from-type-file))))
+    (defvar swint-helm-source-recentf-file nil
+      "See (info \"(emacs)File Conveniences\").
+Set `recentf-max-saved-items' to a bigger value if default is too small.")
+    (defcustom swint-helm-recentf-file-fuzzy-match nil
+      "Enable fuzzy matching in `helm-source-recentf' when non--nil."
+      :group 'helm-files
+      :type 'boolean
+      :set (lambda (var val)
+             (set var val)
+             (setq swint-helm-source-recentf-file
+                   (helm-make-source "Recentf File" 'swint-helm-recentf-file-source
+                     :fuzzy-match swint-helm-recentf-file-fuzzy-match))))
+    ;; 定义 swint-helm-source-recentf-directory
+    (defclass swint-helm-recentf-directory-source (helm-source-sync)
+      ((init :initform (lambda ()
+                         (recentf-mode 1)))
+       (candidates :initform (lambda () (remove-if-not (lambda (x)
+                                                         (and (string-match-p ".*\/$" x)
+                                                              (not (member x (mapcar (lambda (xx)
+                                                                                       (with-current-buffer xx
+                                                                                         (expand-file-name default-directory)))
+                                                                                     (helm-buffer-list))))))
+                                                       recentf-list)))
+       (pattern-transformer :initform 'helm-recentf-pattern-transformer)
+       (match-part :initform (lambda (candidate)
+                               (if (or helm-ff-transformer-show-only-basename
+                                       helm-recentf--basename-flag)
+                                   (helm-basename candidate) candidate)))
+       (filter-one-by-one :initform (lambda (c)
+                                      (if (and helm-ff-transformer-show-only-basename
+                                               (not (consp c)))
+                                          (cons (helm-basename c) c)
+                                        c)))
+       (keymap :initform helm-generic-files-map)
+       (help-message :initform helm-generic-file-help-message)
+       (action :initform (helm-actions-from-type-file))))
+    (defvar swint-helm-source-recentf-directory nil
+      "See (info \"(emacs)File Conveniences\").
+Set `recentf-max-saved-items' to a bigger value if default is too small.")
+    (defcustom swint-helm-recentf-directory-fuzzy-match nil
+      "Enable fuzzy matching in `helm-source-recentf' when non--nil."
+      :group 'helm-files
+      :type 'boolean
+      :set (lambda (var val)
+             (set var val)
+             (setq swint-helm-source-recentf-directory
+                   (helm-make-source "Recentf Directory" 'swint-helm-recentf-directory-source
+                     :fuzzy-match swint-helm-recentf-directory-fuzzy-match)))))
+  ;; ===========recent file/recent directory================
   ;; ==================helm-related-to-persp==================
   (defun helm-switch-persp/buffer (buffer)
     "Helm-switch to persp/buffer simultaneously"
@@ -89,170 +345,6 @@
     (with-helm-alive-p
       (helm-exit-and-execute-action 'persp-remove-buffer)))
   ;; ==================helm-related-to-persp==================
-  ;; ==================helm-dired-buffer====================
-  (defun swint-helm-dired-buffers-list--init ()
-    ;; Issue #51 Create the list before `helm-buffer' creation.
-    (setq swint-helm-dired-buffers-list-cache (iswitchb-make-buflist nil))
-    (let ((result (cl-loop for b in swint-helm-dired-buffers-list-cache
-                           maximize (length b) into len-buf
-                           maximize (length (with-current-buffer b
-                                              (symbol-name major-mode)))
-                           into len-mode
-                           finally return (cons len-buf len-mode))))
-      (unless (default-value 'helm-buffer-max-length)
-        (helm-set-local-variable 'helm-buffer-max-length (car result)))
-      (unless (default-value 'helm-buffer-max-len-mode)
-        (helm-set-local-variable 'helm-buffer-max-len-mode (cdr result)))))
-  (defun swint-helm-dired-buffers-list--init/other-persps ()
-    ;; Issue #51 Create the list before `helm-buffer' creation.
-    (setq swint-helm-dired-buffers-list-cache/other-persps iswitchb-temp-buflist/other-persps)
-    (let ((result (cl-loop for b in swint-helm-dired-buffers-list-cache/other-persps
-                           maximize (length b) into len-buf
-                           maximize (length (with-current-buffer b
-                                              (symbol-name major-mode)))
-                           into len-mode
-                           finally return (cons len-buf len-mode))))
-      (unless (default-value 'helm-buffer-max-length)
-        (helm-set-local-variable 'helm-buffer-max-length (car result)))
-      (unless (default-value 'helm-buffer-max-len-mode)
-        (helm-set-local-variable 'helm-buffer-max-len-mode (cdr result)))))
-  (defclass swint-helm-dired-source-buffers (helm-source-sync helm-type-buffer)
-    ((buffer-list
-      :initarg :buffer-list
-      :initform #'helm-buffer-list
-      :custom function
-      :documentation
-      "  A function with no arguments to create buffer list.")
-     (init :initform 'swint-helm-dired-buffers-list--init)
-     (candidates :initform swint-helm-dired-buffers-list-cache)
-     (matchplugin :initform nil)
-     (match :initform 'helm-buffers-match-function)
-     (persistent-action :initform 'helm-buffers-list-persistent-action)
-     (resume :initform (lambda ()
-                         (run-with-idle-timer
-                          0.1 nil (lambda ()
-                                    (with-helm-buffer
-                                      (helm-force-update))))))
-     (keymap :initform helm-buffer-map)
-     (volatile :initform t)
-     (help-message :initform 'helm-buffer-help-message)
-     (persistent-help
-      :initform
-      "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
-  (defclass swint-helm-dired-source-buffers/other-persps (helm-source-sync helm-type-buffer)
-    ((buffer-list
-      :initarg :buffer-list
-      :initform #'helm-buffer-list
-      :custom function
-      :documentation
-      "  A function with no arguments to create buffer list.")
-     (init :initform 'swint-helm-dired-buffers-list--init/other-persps)
-     (candidates :initform swint-helm-dired-buffers-list-cache/other-persps)
-     (matchplugin :initform nil)
-     (match :initform 'helm-buffers-match-function)
-     (persistent-action :initform 'helm-buffers-list-persistent-action)
-     (resume :initform (lambda ()
-                         (run-with-idle-timer
-                          0.1 nil (lambda ()
-                                    (with-helm-buffer
-                                      (helm-force-update))))))
-     (keymap :initform helm-buffer-map)
-     (volatile :initform t)
-     (help-message :initform 'helm-buffer-help-message)
-     (persistent-help
-      :initform
-      "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
-  (defvar swint-helm-dired-source-buffers-list nil)
-  (defvar swint-helm-dired-source-buffers-list/other-persps nil)
-  (defun swint-helm-dired-buffers-list ()
-    "Preconfigured `helm' to list buffers."
-    (interactive)
-    (unless swint-helm-dired-source-buffers-list
-      (setq swint-helm-dired-source-buffers-list
-            (helm-make-source "Dired Buffers" 'swint-helm-dired-source-buffers)))
-    (unless swint-helm-dired-source-buffers-list/other-persps
-      (progn (setq swint-helm-dired-source-buffers-list/other-persps
-                   (helm-make-source "Dired Buffers in other persps" 'swint-helm-dired-source-buffers/other-persps))
-             (helm-add-action-to-source "Switch to persp/buffer" 'helm-switch-persp/buffer swint-helm-dired-source-buffers-list/other-persps 0)))
-    (let ((helm-ff-transformer-show-only-basename nil))
-      (helm :sources '(swint-helm-dired-source-buffers-list
-                       swint-helm-dired-source-buffers-list/other-persps
-                       swint-helm-source-recentf-directory
-                       helm-source-buffer-not-found)
-            :buffer "*helm dired buffers-swint*"
-            :keymap helm-buffer-map
-            :truncate-lines t)))
-  ;; ==================helm-dired-buffer====================
-  ;; ==================helm-mini====================
-  (defun helm-buffers-list--init/other-persps ()
-    ;; Issue #51 Create the list before `helm-buffer' creation.
-    (setq helm-buffers-list-cache/other-persps ido-temp-list/other-persps)
-    (let ((result (cl-loop for b in helm-buffers-list-cache/other-persps
-                           maximize (length b) into len-buf
-                           maximize (length (with-current-buffer b
-                                              (symbol-name major-mode)))
-                           into len-mode
-                           finally return (cons len-buf len-mode))))
-      (unless (default-value 'helm-buffer-max-length)
-        (helm-set-local-variable 'helm-buffer-max-length (car result)))
-      (unless (default-value 'helm-buffer-max-len-mode)
-        (helm-set-local-variable 'helm-buffer-max-len-mode (cdr result)))))
-  (defclass helm-source-buffers/other-persps (helm-source-sync helm-type-buffer)
-    ((buffer-list
-      :initarg :buffer-list
-      :initform #'helm-buffer-list
-      :custom function
-      :documentation
-      "  A function with no arguments to create buffer list.")
-     (init :initform 'helm-buffers-list--init/other-persps)
-     (candidates :initform helm-buffers-list-cache/other-persps)
-     (matchplugin :initform nil)
-     (match :initform 'helm-buffers-match-function)
-     (persistent-action :initform 'helm-buffers-list-persistent-action)
-     (resume :initform (lambda ()
-                         (run-with-idle-timer
-                          0.1 nil (lambda ()
-                                    (with-helm-buffer
-                                      (helm-force-update))))))
-     (keymap :initform helm-buffer-map)
-     (volatile :initform t)
-     (help-message :initform 'helm-buffer-help-message)
-     (persistent-help
-      :initform
-      "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
-  (defvar helm-source-buffers-list/other-persps nil)
-  (defcustom swint-helm-mini-default-sources '(helm-source-buffers-list
-                                               helm-source-buffers-list/other-persps
-                                               swint-helm-source-recentf-file
-                                               helm-source-buffer-not-found)
-    "Default sources list used in `swint-helm-mini'."
-    :group 'helm-misc
-    :type '(repeat (choice symbol)))
-  (defun swint-helm-mini ()
-    "Preconfigured `helm' lightweight version \(buffer -> recentf\)."
-    (interactive)
-    ;; 修改helm-buffer-list，使其忽略dired buffer。
-    ;; 手动启动helm会覆盖该定义，恢复原始定义，故放在这里。
-    (defun helm-buffer-list ()
-      "Return the current list of buffers.
-    Currently visible buffers are put at the end of the list.
-    See `ido-make-buffer-list' for more infos."
-      (let ((ido-process-ignore-lists t)
-            ido-ignored-list
-            ;; 在原函数中注销下句，因为会导致ido忽略dired buffer的定义失效。
-            ;; ido-ignore-buffers
-            ido-use-virtual-buffers)
-        (ido-make-buffer-list nil)))
-    (unless helm-source-buffers-list
-      (setq helm-source-buffers-list
-            (helm-make-source "File Buffers" 'helm-source-buffers)))
-    (unless helm-source-buffers-list/other-persps
-      (progn (setq helm-source-buffers-list/other-persps
-                   (helm-make-source "File Buffers in other persps" 'helm-source-buffers/other-persps))
-             (helm-add-action-to-source "Switch to persp/buffer" 'helm-switch-persp/buffer helm-source-buffers-list/other-persps 0)))
-    (let ((helm-ff-transformer-show-only-basename nil))
-      (helm-other-buffer swint-helm-mini-default-sources "*helm mini-swint*")))
-  ;; ==================helm-mini====================
   ;; ==================helm-bookmarks====================
   (defcustom swint-helm-bookmarks-list
     '(helm-source-bookmarks)
@@ -274,83 +366,6 @@ Run all sources defined in `helm-for-files-preferred-list'."
           :ff-transformer-show-only-basename t
           :buffer "*helm find files-swint*"))
   ;; ==================helm-find-file====================
-  ;; =============为helm分别定义recent file和recent directory的source==================
-  (use-package recentf-ext
-    ;; Enabled automatically.
-    :config
-    (use-package recentf)
-    ;; 定义 swint-helm-source-recentf-file
-    (defclass swint-helm-recentf-file-source (helm-source-sync)
-      ((init :initform (lambda ()
-                         (recentf-mode 1)))
-       (candidates :initform (lambda () (remove-if (lambda (x)
-                                                     (or (string-match-p ".*\/$" x)
-                                                         (member x (mapcar (lambda (xx)
-                                                                             (buffer-file-name (get-buffer xx)))
-                                                                           ido-temp-list/all-persps))))
-                                                   recentf-list)))
-       (pattern-transformer :initform 'helm-recentf-pattern-transformer)
-       (match-part :initform (lambda (candidate)
-                               (if (or helm-ff-transformer-show-only-basename
-                                       helm-recentf--basename-flag)
-                                   (helm-basename candidate) candidate)))
-       (filter-one-by-one :initform (lambda (c)
-                                      (if (and helm-ff-transformer-show-only-basename
-                                               (not (consp c)))
-                                          (cons (helm-basename c) c)
-                                        c)))
-       (keymap :initform helm-generic-files-map)
-       (help-message :initform helm-generic-file-help-message)
-       (action :initform (helm-actions-from-type-file))))
-    (defvar swint-helm-source-recentf-file nil
-      "See (info \"(emacs)File Conveniences\").
-Set `recentf-max-saved-items' to a bigger value if default is too small.")
-    (defcustom swint-helm-recentf-file-fuzzy-match nil
-      "Enable fuzzy matching in `helm-source-recentf' when non--nil."
-      :group 'helm-files
-      :type 'boolean
-      :set (lambda (var val)
-             (set var val)
-             (setq swint-helm-source-recentf-file
-                   (helm-make-source "Recentf File" 'swint-helm-recentf-file-source
-                     :fuzzy-match swint-helm-recentf-file-fuzzy-match))))
-    ;; 定义 swint-helm-source-recentf-directory
-    (defclass swint-helm-recentf-directory-source (helm-source-sync)
-      ((init :initform (lambda ()
-                         (recentf-mode 1)))
-       (candidates :initform (lambda () (remove-if-not (lambda (x)
-                                                         (and (string-match-p ".*\/$" x)
-                                                              (not (member x (mapcar (lambda (xx)
-                                                                                       (with-current-buffer xx
-                                                                                         (expand-file-name default-directory)))
-                                                                                     iswitchb-temp-buflist/all-persps)))))
-                                                       recentf-list)))
-       (pattern-transformer :initform 'helm-recentf-pattern-transformer)
-       (match-part :initform (lambda (candidate)
-                               (if (or helm-ff-transformer-show-only-basename
-                                       helm-recentf--basename-flag)
-                                   (helm-basename candidate) candidate)))
-       (filter-one-by-one :initform (lambda (c)
-                                      (if (and helm-ff-transformer-show-only-basename
-                                               (not (consp c)))
-                                          (cons (helm-basename c) c)
-                                        c)))
-       (keymap :initform helm-generic-files-map)
-       (help-message :initform helm-generic-file-help-message)
-       (action :initform (helm-actions-from-type-file))))
-    (defvar swint-helm-source-recentf-directory nil
-      "See (info \"(emacs)File Conveniences\").
-Set `recentf-max-saved-items' to a bigger value if default is too small.")
-    (defcustom swint-helm-recentf-directory-fuzzy-match nil
-      "Enable fuzzy matching in `helm-source-recentf' when non--nil."
-      :group 'helm-files
-      :type 'boolean
-      :set (lambda (var val)
-             (set var val)
-             (setq swint-helm-source-recentf-directory
-                   (helm-make-source "Recentf Directory" 'swint-helm-recentf-directory-source
-                     :fuzzy-match swint-helm-recentf-directory-fuzzy-match)))))
-  ;; =============为helm分别定义recent file和recent directory的source==================
   ;; (global-set-key (kbd "C-x l") 'locate)
   ;; win上locate似乎搜索中文有问题，改用es。但是es似乎仍然搜索不了中文，而且会导致emacs死掉，放弃。
   ;; win上面的linux工具包括grep/locate/find都不能够搜索中文。
@@ -368,14 +383,14 @@ Set `recentf-max-saved-items' to a bigger value if default is too small.")
     (setq helm-locate-create-db-command "updatedb --output=c:/Users/swint/.helm-locate.db --localpaths='c:/Users/swint/'")
     (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.helm-locate.db")))
   ;; ================在别的helm-buffer中运行helm命令==============
+  (defun swint-helm-file-buffers-after-quit ()
+    "List swint-helm-file-buffers."
+    (interactive)
+    (helm-run-after-quit #'(lambda () (swint-helm-file-buffers-list))))
   (defun swint-helm-dired-buffers-after-quit ()
     "List swint-helm-dired-buffers."
     (interactive)
     (helm-run-after-quit #'(lambda () (swint-helm-dired-buffers-list))))
-  (defun swint-helm-mini-after-quit ()
-    "List swint-helm-mini."
-    (interactive)
-    (helm-run-after-quit #'(lambda () (swint-helm-mini))))
   (defun swint-helm-bookmarks-after-quit ()
     "List swint-helm-bookmarks."
     (interactive)
@@ -439,9 +454,9 @@ from its directory."
         ((and ffap-url-regexp (string-match ffap-url-regexp sel)) sel)
         ;; Default.
         (t default-preselection)))))
+  (define-key helm-map (kbd "C-,") 'swint-helm-file-buffers-after-quit)
   (define-key helm-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
   (define-key helm-map (kbd "C-'") 'swint-helm-bookmarks-after-quit)
-  (define-key helm-map (kbd "C-,") 'swint-helm-mini-after-quit)
   (define-key helm-map (kbd "C-x C-f") 'swint-helm-find-files-after-quit)
   (define-key helm-map (kbd "C-/") 'swint-helm-quit-and-find-file)
   (define-key helm-find-files-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
@@ -574,12 +589,47 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
   ;; =================total commander===============
   )
+;; =========================helm_lacarte=============================
+(use-package lacarte
+  ;; Enabled at commands.
+  :defer t
+  :bind ("C-x m" . helm-browse-menubar)
+  :init
+  (bind-key "C-c m" '(lambda ()
+                       (interactive)
+                       (unless (boundp 'LaTeX-math-mode)
+                         (require 'latex))
+                       (helm-insert-latex-math)))
+  (setq LaTeX-math-menu-unicode t)
+  :config
+  ;; 使用helm自带的程序而不使用下列自定义的命令
+  (defvar helm-source-lacarte-math
+    '((name . "Math Symbols")
+      (init . (lambda()
+                (setq helm-lacarte-major-mode major-mode)))
+      (candidates
+       . (lambda () (if (eq helm-lacarte-major-mode 'latex-mode)
+                        (delete '(nil) (lacarte-get-a-menu-item-alist LaTeX-math-mode-map)))))
+      (action . (("Open" . (lambda (candidate)
+                             (call-interactively candidate)))))))
+  (defun helm-math-symbols ()
+    "helm for searching math menus"
+    (interactive)
+    (helm '(helm-source-lacarte-math)
+          (thing-at-point 'symbol) "Symbol: "
+          nil nil "*helm math symbols*")))
+;; =========================helm_lacarte=============================
 ;; =======================helm-bibtex==============================
 (use-package helm-bibtex
   ;; Enabled at commands.
   :defer t
-  :bind ("C-c C-x b" . helm-bibtex)
+  :bind ("C-c C-x b" . swint-helm-bibtex)
   :init
+  (defun swint-helm-bibtex ()
+    (interactive)
+    (unless (file-exists-p helm-bibtex-bibliography)
+      (zotelo-set-collection))
+    (helm-bibtex))
   (setq helm-bibtex-bibliography "./literature.bib")
   ;; (zotelo-translator-charsets (quote ((BibTeX . "Unicode") (Default . "Unicode"))))
   ;; 设置.bib文件的编码格式，否则出现乱码
@@ -633,7 +683,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 (use-package helm-unicode
   ;; Enabled at commands.
   :defer t
-  :bind ("C-c C-x m" . helm-unicode))
+  :bind ("M-s M-m" . helm-unicode))
 ;; =======================helm-unicode==============================
 ;; ====================helm-ag=========================
 ;; 使用helm-ag代替helm-grep。

@@ -559,4 +559,36 @@ is named like ODF with the extension turned to pdf."
   (define-key bbyac-mode-map (kbd "M-s s") nil)
   (define-key bbyac-mode-map (kbd "M-s p") nil))
 ;; =================bbyac=================
+;; ===============avy-menu================
+(use-package avy-menu
+  ;; Enabled at idle.
+  :defer 2
+  :config
+  ;; ace-popup-menu
+  (use-package ace-popup-menu
+    ;; Enabled automatically.
+    :config
+    (ace-popup-menu-mode 1)
+    (setq ace-popup-menu-show-pane-header t)))
+;; ===============avy-menu================
+;; ==============char-menu================
+(use-package char-menu
+  ;; Enabled at commands.
+  :defer t
+  :bind ("M-s m" . char-menu)
+  :config
+  (setq char-menu '(;; "—" "‘’" "“”" "…" "«»" "–"
+                    ("Typography" "•" "©" "†" "‡" "°" "·" "§" "№" "★")
+                    ("Math"       "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√")
+                    ("Arrows"     "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓")
+                    ("Greek small" "α" "β" "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ" "λ" "μ" "ν" "ξ" "ο" "π" "ρ" "σ" "τ" "υ" "φ" "χ" "ψ" "ω")
+                    ("Greek capital" "Α" "Β" "Γ" "Δ" "Ε" "Ζ" "Η" "Θ" "Ι" "Κ" "Λ" "Μ" "Ν" "Ξ" "Ο" "Π" "Ρ" "Σ" "Τ" "Υ" "Φ" "Χ" "Ψ" "Ω"))))
+;; ==============char-menu================
+;; =============vimish-fold===============
+(use-package vimish-fold
+  ;; Enabled at commands.
+  :defer t
+  :bind (("M-s v" . vimish-fold)
+         ("M-s V" . vimish-fold-delete)))
+;; =============vimish-fold===============
 (provide 'setup_packages)
