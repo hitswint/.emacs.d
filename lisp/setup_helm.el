@@ -106,8 +106,6 @@
   (defun swint-helm-file-buffers-list ()
     "Preconfigured `helm' lightweight version \(buffer -> recentf\)."
     (interactive)
-    ;; 修改helm-buffer-list，使其忽略dired buffer。
-    ;; 手动启动helm会覆盖该定义，恢复原始定义，故放在这里。
     (unless swint-helm-file-buffers-source-list/curr-persp
       (setq swint-helm-file-buffers-source-list/curr-persp
             (helm-make-source "File Buffers in current persp" 'swint-helm-file-buffers-source/curr-persp)))
@@ -202,9 +200,14 @@
   (defun swint-helm-dired-buffers-list ()
     "Preconfigured `helm' to list buffers."
     (interactive)
-    (unless swint-helm-dired-buffers-source-list/curr-persp
-      (setq swint-helm-dired-buffers-source-list/curr-persp
-            (helm-make-source "Dired Buffers in current persp" 'swint-helm-dired-buffers-source/curr-persp)))
+    ;; (unless swint-helm-dired-buffers-source-list/curr-persp
+    ;;   (setq swint-helm-dired-buffers-source-list/curr-persp
+    ;;         (helm-make-source "Dired Buffers in current persp" 'swint-helm-dired-buffers-source/curr-persp)))
+    ;; 根据当前persp中是否有dired buffer设置helm源，防止因无dired buffer产生错误。
+    (if (member 'dired-mode (mapcar 'buffer-mode (persp-buffers persp-curr)))
+        (setq swint-helm-dired-buffers-source-list/curr-persp
+              (helm-make-source "Dired Buffers in current persp" 'swint-helm-dired-buffers-source/curr-persp))
+      (setq swint-helm-dired-buffers-source-list/curr-persp nil))
     (unless swint-helm-dired-buffers-source-list/other-persps
       (progn (setq swint-helm-dired-buffers-source-list/other-persps
                    (helm-make-source "Dired Buffers in other persps" 'swint-helm-dired-buffers-source/other-persps))
@@ -298,29 +301,15 @@ Set `recentf-max-saved-items' to a bigger value if default is too small.")
   ;; ==================helm-related-to-persp==================
   (defun helm-switch-persp/buffer (buffer)
     "Helm-switch to persp/buffer simultaneously"
-    (cond
-     ((memq buffer (persp-buffers persp-curr))
-      (switch-to-buffer buffer))
-     ((memq buffer (persp-buffers (gethash "8" perspectives-hash)))
-      (swint-persp-switch "8")
-      (if (window-live-p (get-buffer-window buffer))
-          (select-window (get-buffer-window buffer))
-        (switch-to-buffer buffer)))
-     ((memq buffer (persp-buffers (gethash "9" perspectives-hash)))
-      (swint-persp-switch "9")
-      (if (window-live-p (get-buffer-window buffer))
-          (select-window (get-buffer-window buffer))
-        (switch-to-buffer buffer)))
-     ((memq buffer (persp-buffers (gethash "0" perspectives-hash)))
-      (swint-persp-switch "0")
-      (if (window-live-p (get-buffer-window buffer))
-          (select-window (get-buffer-window buffer))
-        (switch-to-buffer buffer)))
-     (t
-      (swint-persp-switch "i")
-      (if (window-live-p (get-buffer-window buffer))
-          (select-window (get-buffer-window buffer))
-        (switch-to-buffer buffer)))))
+    (let ((swint-all-persps (nreverse (cons  "i" (nreverse (delete "i" (persp-names)))))))
+      (cl-loop for persp in swint-all-persps
+               when (memq buffer (persp-buffers (gethash persp perspectives-hash)))
+               do (if (memq buffer (persp-buffers persp-curr))
+                      (switch-to-buffer buffer)
+                    (swint-persp-switch persp)
+                    (if (window-live-p (get-buffer-window buffer))
+                        (select-window (get-buffer-window buffer))
+                      (switch-to-buffer buffer))))))
   (defun swint-switch-persp/other-window (buffer)
     "Helm-switch to persp/other-window simultaneously"
     (if (memq buffer (persp-buffers persp-curr))
@@ -462,8 +451,6 @@ from its directory."
   (define-key helm-find-files-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
   (define-key helm-find-files-map (kbd "C-x C-f") 'swint-helm-find-files-after-quit)
   ;; ================在别的helm-buffer中运行helm命令==============
-  ;; (global-set-key (kbd "C-c C-f") 'helm-recentf)
-  ;; (define-key helm-map (kbd "C-j") 'helm-select-action)
   (define-key helm-map (kbd "C-;") 'helm-toggle-visible-mark)
   (define-key helm-map (kbd "C-l") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-M-p") 'helm-previous-source)

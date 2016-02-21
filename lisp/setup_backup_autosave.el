@@ -16,6 +16,7 @@
 ;; Automatically purge backup files not accessed in a week.
 (let ((day (* 60 60 24))
       (week (* 60 60 24 7))
+      (month (* 60 60 24 7 30))
       (current (float-time (current-time))))
   ;; 每周删除旧backup文件。
   (message "Deleting old backup files...")
@@ -37,12 +38,14 @@
       (message "%s" file)
       (delete-file file)))
   ;; 每周更新locate db文件，使用~/helm-locate-db.sh脚本更新~/.helm-locate.db文件。
-  (message "Updating locate db file...")
   (let ((locat-db-file (expand-file-name "~/.helm-locate.db")))
     (when (or (not (file-exists-p locat-db-file))
               (> (- current (float-time (cl-sixth (file-attributes locat-db-file))))
-                 week))
-      (message "%s ===============================================" locat-db-file)
+                 ;; lin上每周/win上每月升级locate db文件。
+                 (cond
+                  (is-lin week)
+                  (is-win month))))
+      (message "Updating locate db file: %s" locat-db-file)
       (get-buffer-create "*Updating-locate-db-file*")
       (start-process-shell-command
        "Updating-locate-db-file" "*Updating-locate-db-file*"
@@ -50,7 +53,6 @@
   ;; 每周更新file system tree，win和lin都有各自的tree命令，格式不同。
   ;; win中shell-file-name为cmd，默认使用cmd执行命令，执行的是win自带的tree。
   ;; 若命令前面加bash，则使用cygwin的bash执行命令，执行的是cygwin的tree，输出文件存在编码问题。
-  (message "Updating file system tree...")
   (let ((fs-tree-file (concat (expand-file-name "~/org/backups/fs-tree/")
                               (cond
                                (is-win "fs-tree-win.txt")
@@ -61,7 +63,7 @@
     (when (or (not (file-exists-p fs-tree-file))
               (> (- current (float-time (cl-sixth (file-attributes fs-tree-file))))
                  week))
-      (message "%s ===============================================" fs-tree-file)
+      (message "Updating file system tree: %s" fs-tree-file)
       (get-buffer-create "*Updating-file-system-tree*")
       (start-process-shell-command
        "Updating-file-system-tree" "*Updating-file-system-tree*"
