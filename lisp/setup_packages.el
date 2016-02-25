@@ -348,7 +348,7 @@
         which-key-prevent-C-h-from-cycling nil))
 ;; ============which-key=============
 ;; ===================pdf-tools=================
-;; 添加的注释跟okular类似，将注释的内容另存为一份文件，只有在emacs中才能看到
+;; 添加的注释跟okular类似，将注释的内容另存为一份文件，只有在emacs中才能看到。
 ;; 上述注释为旧版本，新版本的pdf-tools已经可以将注释放在pdf文件本身之中了。
 (use-package pdf-tools
   ;; Enabled in pdf-view-mode.
@@ -357,6 +357,7 @@
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :config
   (pdf-tools-install)
+  (setq pdf-outline-imenu-use-flat-menus t)
   (add-hook 'pdf-view-mode-hook 'pdf-annot-minor-mode)
   (add-hook 'pdf-view-mode-hook 'pdf-outline-minor-mode)
   ;; pdf-view-auto-slice-minor-mode 翻页自动切边。
@@ -381,7 +382,9 @@
 ;; (defun swint-pdf-history-goto-beginning ()
 ;;   "Fix the bug of reverting to beginning of pdf after persp-switch."
 ;;   (interactive)
-;;   (let ((pdf-buffers (remove-if-not (lambda (x) (eq (buffer-mode x) 'pdf-view-mode)) (persp-buffers persp-curr))))
+;;   (let ((pdf-buffers (remove-if-not
+;;                       (lambda (x) (eq (buffer-mode x) 'pdf-view-mode))
+;;                       (persp-buffers persp-curr))))
 ;;     (loop for pdf-buffer in pdf-buffers
 ;;           do (with-current-buffer pdf-buffer
 ;;                (pdf-history-goto 0)))))
@@ -579,10 +582,12 @@ is named like ODF with the extension turned to pdf."
   :config
   (setq char-menu '(;; "—" "‘’" "“”" "…" "«»" "–"
                     ("Typography" "•" "©" "†" "‡" "°" "·" "§" "№" "★")
-                    ("Math"       "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√")
-                    ("Arrows"     "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓")
-                    ("Greek small" "α" "β" "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ" "λ" "μ" "ν" "ξ" "ο" "π" "ρ" "σ" "τ" "υ" "φ" "χ" "ψ" "ω")
-                    ("Greek capital" "Α" "Β" "Γ" "Δ" "Ε" "Ζ" "Η" "Θ" "Ι" "Κ" "Λ" "Μ" "Ν" "Ξ" "Ο" "Π" "Ρ" "Σ" "Τ" "Υ" "Φ" "Χ" "Ψ" "Ω"))))
+                    ("Math" "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√")
+                    ("Arrows" "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓")
+                    ("Greek small"
+                     "α" "β" "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ" "λ" "μ" "ν" "ξ" "ο" "π" "ρ" "σ" "τ" "υ" "φ" "χ" "ψ" "ω")
+                    ("Greek capital"
+                     "Α" "Β" "Γ" "Δ" "Ε" "Ζ" "Η" "Θ" "Ι" "Κ" "Λ" "Μ" "Ν" "Ξ" "Ο" "Π" "Ρ" "Σ" "Τ" "Υ" "Φ" "Χ" "Ψ" "Ω"))))
 ;; ==============char-menu================
 ;; =============vimish-fold===============
 (use-package vimish-fold

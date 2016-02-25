@@ -24,21 +24,21 @@
   (defun dirtree-exist-kill-this-buffer ()
     "switch to dirtree after killing this buffer"
     (interactive)
-    (if (equal (buffer-name (other-buffer (current-buffer) t)) "*dirtree*")
-        (dirtree-switch-to-dirtree)
-      (progn
-        (bc-set)
-        (cond
-         (is-lin
-          ;; (kill-this-buffer)             ;卸载slim后失效
-          (kill-buffer (current-buffer)))
-         (is-win (kill-this-buffer)))
-        (switch-to-buffer (car (swint-iswitchb-make-buflist)))
-        (switch-to-buffer (car (swint-iswitchb-make-buflist)))
-        ;; 下面不可行，如果当前buffer不显示在buflist中，那么会kill其他的buffer
-        ;; (switch-to-buffer (car (swint-iswitchb-make-buflist nil)))
-        ;; (kill-buffer (car (swint-iswitchb-make-buflist nil)))
-        )))
+    (let ((swint-previous-buffer (car (swint-iswitchb-make-buflist))))
+      (if (equal (buffer-name (other-buffer (current-buffer) t)) "*dirtree*")
+          (dirtree-switch-to-dirtree)
+        (progn
+          (bc-set)
+          (cond
+           (is-lin
+            ;; (kill-this-buffer)             ;卸载slim后失效
+            (kill-buffer (current-buffer)))
+           (is-win (kill-this-buffer)))
+          (switch-to-buffer swint-previous-buffer)
+          ;; 下面不可行，如果当前buffer不显示在buflist中，那么会kill其他的buffer
+          ;; (switch-to-buffer (car (swint-iswitchb-make-buflist nil)))
+          ;; (kill-buffer (car (swint-iswitchb-make-buflist nil)))
+          ))))
   (defun dirtree-switch-to-dirtree ()
     "kill this buffer and switch to other windows"
     (interactive)
@@ -123,10 +123,9 @@ swint-`iswitchb-all-frames'."
       ignorep))
   (defcustom swint-iswitchb-buffer-ignore
     '("^ ")
-    "因为iswitchb自身忽略了文件buffer，这里定义一个包括文件buffer的ignore list."
+    "Define ignore list."
     :type '(repeat (choice regexp function)))
-  (setq swint-iswitchb-buffer-ignore '("\\` " "\\`\\*Messages\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*MATLAB\\*\\'" "\\*.*\\*"))
-  ;; ".*\\..+" 注释掉这句使其包括文件buffer
+  (setq swint-iswitchb-buffer-ignore '("\\` " "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'"))
   ;; ==================关闭当前buffer之后切换到之前访问过的buffer=======================
   :config
   (defun dirtree-shell-command ()
@@ -165,7 +164,6 @@ swint-`iswitchb-all-frames'."
                (define-key dirtree-mode-map "\C-j" 'dirtree-shell-command)
                (define-key dirtree-mode-map (kbd "q") 'dirtree-quit)
                (define-key dirtree-mode-map (kbd "i") 'tree-mode-toggle-expand))))
-;; (autoload 'dirtree "dirtree" "Add directory to tree view" t)
 ;; 放弃使用键盘宏
 ;; (fset 'dirtree-local
 ;;       [?\C-c return return ?\c ?\C-a ?\M-f ?\M-b])

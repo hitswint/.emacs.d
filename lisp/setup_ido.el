@@ -224,21 +224,26 @@ especially for extending ido-find-file functionality
   (ido-ubiquitous-mode 1))
 ;; =====================ido-ubiquitous===================
 ;; ==================flx-ido/ido-at-point/ido-hacks/ido-vertical-mode========================
-;; 安装flx-ido/ido-at-point/ido-hacks/ido-vertical-mode
+;; 以下导致ido-vertical-mode失效
 ;; '(ido-separator "   ")
-;; 上句会导致ido-vertical-mode失效
-;; ido-vertical-mode 不实用，注销
-;; (if (commandp 'ido-vertical-mode)
-;;     (progn
-;;       (ido-vertical-mode 1)
-;;       (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)))
-(use-package ido-hacks
-  ;; Enabled automatically.
+(use-package ido-vertical-mode
+  ;; Enabled at idle.
+  :defer 2
   :config
-  (if (commandp 'flx-ido-mode)
-      (flx-ido-mode 1)))
+  (ido-vertical-mode 1)
+  (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right))
+(use-package ido-hacks
+  ;; Enabled at idle.
+  :defer 2)
+(use-package flx-ido
+  ;; Enabled at idle.
+  :defer 2
+  :config
+  (setq ido-enable-flex-matching t)
+  (flx-ido-mode 1))
 (use-package ido-at-point
-  ;; Enabled automatically.
+  ;; Enabled at idle.
+  :defer 2
   :config
   (ido-at-point-mode))
 ;; ==================flx-ido/ido-at-point/ido-hacks/ido-vertical-mode========================
