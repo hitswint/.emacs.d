@@ -302,14 +302,19 @@ Set `recentf-max-saved-items' to a bigger value if default is too small.")
   (defun helm-switch-persp/buffer (buffer)
     "Helm-switch to persp/buffer simultaneously"
     (let ((swint-all-persps (nreverse (cons  "i" (nreverse (delete "i" (persp-names)))))))
-      (cl-loop for persp in swint-all-persps
-               when (memq buffer (persp-buffers (gethash persp perspectives-hash)))
-               do (if (memq buffer (persp-buffers persp-curr))
-                      (switch-to-buffer buffer)
-                    (swint-persp-switch persp)
-                    (if (window-live-p (get-buffer-window buffer))
-                        (select-window (get-buffer-window buffer))
-                      (switch-to-buffer buffer))))))
+      (unless (cl-loop for persp in swint-all-persps
+                       when (memq buffer (persp-buffers (gethash persp perspectives-hash)))
+                       do (if (memq buffer (persp-buffers persp-curr))
+                              (switch-to-buffer buffer)
+                            (swint-persp-switch persp)
+                            (if (window-live-p (get-buffer-window buffer))
+                                (select-window (get-buffer-window buffer))
+                              (switch-to-buffer buffer))))
+        ;; 当临时buffer不在任何persp中时，默认切换到i。
+        (swint-persp-switch "i")
+        (if (window-live-p (get-buffer-window buffer))
+            (select-window (get-buffer-window buffer))
+          (switch-to-buffer buffer)))))
   (defun swint-switch-persp/other-window (buffer)
     "Helm-switch to persp/other-window simultaneously"
     (if (memq buffer (persp-buffers persp-curr))
