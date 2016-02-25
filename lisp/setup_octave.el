@@ -29,28 +29,32 @@
   ;;使用octave-mode
   ;; (autoload 'octave-mode "octave-mod" nil t) ;显示无法找到octave-mod
   (add-hook 'octave-mode-hook
-            (lambda ()
-              (abbrev-mode 1)
-              (auto-fill-mode 1)
-              (if (eq window-system 'x)
-                  (font-lock-mode 1))))
-  (add-hook 'inferior-octave-mode-hook ;up and down arrow in the shell
-            (lambda ()
-              (turn-on-font-lock)
-              (define-key inferior-octave-mode-map (kbd "M-.") nil)
-              (define-key inferior-octave-mode-map (kbd "C-c RET") nil)
-              (define-key inferior-octave-mode-map [up] 'comint-previous-input)
-              (define-key inferior-octave-mode-map [down] 'comint-next-input)))
-  (setq octave-comment-start "%% ")       ;使用%注释
-  (setq octave-comment-char 37)           ;使用%注释
-  (add-hook 'octave-mode-hook
             '(lambda ()
+               (abbrev-mode 1)
+               (auto-fill-mode 1)
+               (if (eq window-system 'x)
+                   (font-lock-mode 1))
+               (define-key octave-mode-map (kbd "C-x C-,") 'octave-find-definition)
+               (define-key octave-mode-map (kbd "C-x C-/") 'octave-help)
                (define-key octave-mode-map (kbd "C-c i") 'octave-send-line)
                (define-key octave-mode-map (kbd "C-c o") 'octave-send-region)
+               (define-key octave-mode-map (kbd "M-.") nil)
                (define-key octave-mode-map (kbd "C-c C-i") nil)
                (define-key octave-mode-map (kbd "C-c C-f") nil)
                (define-key octave-mode-map [(control \h)] nil)
                (define-key octave-mode-map [(meta \q)] nil)))
+  (add-hook 'inferior-octave-mode-hook
+            (lambda ()
+              (turn-on-font-lock)
+              (define-key inferior-octave-mode-map (kbd "C-x C-,") 'octave-find-definition)
+              (define-key inferior-octave-mode-map (kbd "C-x C-/") 'octave-help)
+              (define-key inferior-octave-mode-map [up] 'comint-previous-input)
+              (define-key inferior-octave-mode-map [down] 'comint-next-input)
+              (define-key inferior-octave-mode-map (kbd "M-.") nil)
+              (define-key inferior-octave-mode-map (kbd "C-h") nil)
+              (define-key inferior-octave-mode-map (kbd "C-c RET") nil)))
+  (setq octave-comment-start "%% ")       ;使用%注释
+  (setq octave-comment-char 37)           ;使用%注释
   ;; 退出octave时关闭buffer
   (add-hook 'inferior-octave-mode-hook 'kill-shell-buffer-after-exit t))
 ;; ===================octave==================
