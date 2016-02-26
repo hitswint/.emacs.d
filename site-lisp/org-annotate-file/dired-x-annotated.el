@@ -30,18 +30,21 @@
                           (dired-k--highlight-line annotated-file stats)))))))
 
 (defun dired-k--highlight-line (file stats)
-  (let ((stat (gethash file stats 'not-annotated)))
-    (dired-k--highlight-line-normal stat)
-    ))
-
-(defun dired-k--highlight-line-normal (stat)
-  (let ((ov (make-overlay (point) (1+ (point))))
-        (stat-face (dired-k--annotated-status-color stat))
-        (marker-symbol (substring-no-properties (thing-at-point 'symbol) 0 1))
-        )
+  (let* ((stat (gethash file stats 'not-annotated))
+         (ov (make-overlay (point) (1+ (point))))
+         (stat-face (dired-k--annotated-status-color stat))
+         (marker-symbol (substring-no-properties file 0 1)))
     (if (eq stat-face 'dired-k-annotated)
-        (overlay-put ov 'display (propertize marker-symbol 'face stat-face)))
-    ))
+        (overlay-put ov 'display (propertize marker-symbol 'face stat-face)))))
+
+;; (defun dired-k--highlight-line-normal (stat)
+;;   (let ((ov (make-overlay (point) (1+ (point))))
+;;         (stat-face (dired-k--annotated-status-color stat))
+;;         (marker-symbol (substring-no-properties (thing-at-point 'symbol) 0 1))
+;;         )
+;;     (if (eq stat-face 'dired-k-annotated)
+;;         (overlay-put ov 'display (propertize marker-symbol 'face stat-face)))
+;;     ))
 
 (defsubst dired-k--annotated-status-color (stat)
   (cl-case stat
