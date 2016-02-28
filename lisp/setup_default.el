@@ -31,10 +31,10 @@
   (global-hl-line-mode t))
 ;; Press Tab once to indent and again to complete.
 (setq tab-always-indent 'complete)
+;; (setq debug-on-error t)
 ;; ==================DEFAULT====================
 ;; ===================快捷键====================
-(global-set-key (kbd "C-c `") 'ibuffer)
-(global-set-key (kbd "C-c ~") 'speedbar-get-focus)
+(global-set-key (kbd "C-c `") 'speedbar-get-focus)
 (global-set-key (kbd "M-,") 'delete-other-windows)
 (global-set-key (kbd "M-.") 'delete-window)
 (global-set-key (kbd "M-s M-,") 'split-window-vertically)

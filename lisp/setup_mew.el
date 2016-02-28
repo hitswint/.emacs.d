@@ -66,7 +66,6 @@
   (setq toolbar-mail-reader 'Mew)
   (set-default 'mew-decode-quoted 't)
   (setq sml/active-background-color "#222222")
-  ;; (setq debug-on-error t)
   ;; (setq mew-debug t)
   )
 ;; ========================Mew=========================

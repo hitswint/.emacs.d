@@ -39,6 +39,7 @@
             bind-key
             bing-dict
             bm
+	    buttercup
             cdlatex
             char-menu
             clean-aindent-mode
