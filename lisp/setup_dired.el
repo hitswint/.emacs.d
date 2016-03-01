@@ -51,7 +51,8 @@
                (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
                (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
                (define-key dired-mode-map (kbd "C-c C-p") 'dired-k--previous-annotated-file)
-               (define-key dired-mode-map (kbd "C-c C-n") 'dired-k--next-annotated-file)))
+               (define-key dired-mode-map (kbd "C-c C-n") 'dired-k--next-annotated-file)
+               (define-key dired-mode-map (kbd "C-/") 'helm-dired-current-file)))
   ;; ================Kill subdir=================
   (defun file-basename (file)
     (let ((file-no-ending-slash (replace-regexp-in-string "/$" "" file)))
@@ -65,6 +66,16 @@
       (dired-goto-subdir parent-dir)
       (search-forward search-term)))
   ;; ================Kill subdir=================
+  ;; ===========helm-dired-current-file==========
+  (defun helm-dired-current-file ()
+    (interactive)
+    (let ((swint-dired-current-file (dired-get-filename)))
+      (if (file-directory-p swint-dired-current-file)
+          (helm-find-files-1 (file-name-as-directory swint-dired-current-file))
+        (helm-find-files-1 (expand-file-name default-directory)
+                           (if helm-ff-transformer-show-only-basename
+                               (helm-basename swint-dired-current-file) swint-dired-current-file)))))
+  ;; ===========helm-dired-current-file==========
   ;; ==========默认文件夹排在最前面==============
   (defun sof/dired-sort ()
     "Dired sort hook to list directories first."

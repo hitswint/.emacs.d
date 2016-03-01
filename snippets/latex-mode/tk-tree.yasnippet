@@ -3,8 +3,7 @@
 # name : tk-tree
 # group: tikz
 # --
-\begin{tikzpicture}
-[every node/.style={fill=${1:$$(yas/choose-value '("white" "black" "red" "green" "blue" "cyan" "magenta" "yellow" "gray" "darkgray" "lightgray" "brown" "lime" "olive" "orange" "pink" "purple" "teal" "violet"))}!${2:30},draw=${3:$$(yas/choose-value '("black" "white" "red" "green" "blue" "cyan" "magenta" "yellow" "gray" "darkgray" "lightgray" "brown" "lime" "olive" "orange" "pink" "purple" "teal" "violet"))}!${4:100},rounded corners=0mm},edge from parent/.style={draw},edge from parent path={(\tikzparentnode.south) |- ($(\tikzchildnode.north)+(0,0.5)$) -- (\tikzchildnode)},level distance=20mm,sibling distance=30mm]
+\begin{tikzpicture}[every node/.style={fill=${1:$$(yas/choose-value '("white" "black" "red" "green" "blue" "cyan" "magenta" "yellow" "gray" "darkgray" "lightgray" "brown" "lime" "olive" "orange" "pink" "purple" "teal" "violet"))}!${2:30},draw=${3:$$(yas/choose-value '("black" "white" "red" "green" "blue" "cyan" "magenta" "yellow" "gray" "darkgray" "lightgray" "brown" "lime" "olive" "orange" "pink" "purple" "teal" "violet"))}!${4:100},rounded corners=0mm},edge from parent/.style={draw},edge from parent path={(\tikzparentnode.south) |- ($(\tikzchildnode.north)+(0,0.5)$) -- (\tikzchildnode)},level distance=20mm,sibling distance=30mm]
 \node {${5:}}
 child {node {${6:}}
 child {node {${7:}}}};
