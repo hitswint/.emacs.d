@@ -398,13 +398,14 @@ from its directory."
     (helm-run-after-quit
      (lambda (f)
        (if (file-exists-p f)
-           (helm-find-files-1 (file-name-directory f)
-                              (concat
-                               "^"
-                               (regexp-quote
-                                (if helm-ff-transformer-show-only-basename
-                                    (helm-basename f) f))))
-         (helm-find-files-1 f)))
+           (if (file-directory-p f)
+               (helm-find-files-1 (file-name-as-directory f))
+             (helm-find-files-1 (file-name-directory f)
+                                (concat
+                                 "^"
+                                 (regexp-quote
+                                  (if helm-ff-transformer-show-only-basename
+                                      (helm-basename f) f)))))))
      (let* ((sel       (helm-get-selection))
             (grep-line (and (stringp sel)
                             (helm-grep-split-line sel)))
