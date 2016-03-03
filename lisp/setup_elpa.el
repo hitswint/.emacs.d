@@ -39,7 +39,7 @@
             bind-key
             bing-dict
             bm
-	    buttercup
+            buttercup
             cdlatex
             char-menu
             clean-aindent-mode
@@ -49,6 +49,8 @@
             dash
             diminish
             dired-details
+            dired-narrow
+            dired-ranger
             diredful
             dirtree
             drag-stuff

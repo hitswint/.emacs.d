@@ -426,5 +426,35 @@
     (dired-async-mode 1)))
 ;; (autoload 'dired-async-mode "dired-async.el" nil t)
 ;; ===================async====================
+;; ===============dired-narrow=================
+(use-package dired-narrow
+  ;; Enabled at commands.
+  :defer t
+  :bind (:map dired-mode-map
+              ("/" . dired-narrow))
+  :config
+  (defun dired-narrow--string-filter (filter)
+    (let ((words (split-string filter " ")))
+      (--all? (save-excursion (or (search-forward it (line-end-position) t)
+                                  (unless (or (string-match "[iuv]" it) ;当字符串中有iuv时，不转换string
+                                              (string-empty-p (pinyin-search--pinyin-to-regexp it))) ;当搜索中文或符号时，不转换string
+                                    (re-search-forward (pinyin-search--pinyin-to-regexp it) (line-end-position) t)))) words))))
+;; ===============dired-narrow=================
+;; ===============dired-ranger=================
+(use-package dired-ranger
+  ;; Enabled at commands.
+  :defer t
+  :bind (:map dired-mode-map
+              (("C-y" . dired-ranger-paste)
+               ("C-M-y" . dired-ranger-move)))
+  :init
+  (bind-key "M-w" '(lambda ()
+                     (interactive)
+                     (easy-kill)
+                     (call-interactively 'dired-ranger-copy)) dired-mode-map)
+  :config
+  ;; C-M-y快捷键绑定会被pop-kill-ring覆盖，这里重新定义。
+  (bind-key "C-M-y" 'dired-ranger-move dired-mode-map))
+;; ===============dired-ranger=================
 ;; ======================dired========================
 (provide 'setup_dired)

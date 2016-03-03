@@ -231,10 +231,10 @@
       ((init :initform (lambda ()
                          (recentf-mode 1)))
        (candidates :initform (lambda () (remove-if (lambda (x)
-                                                     (or (string-match-p ".*\/$" x)
+                                                     (or (file-directory-p x)
                                                          (member x (mapcar (lambda (xx)
-                                                                             (buffer-file-name (get-buffer xx)))
-                                                                           (helm-buffer-list)))))
+                                                                             (buffer-file-name xx))
+                                                                           (buffer-list)))))
                                                    recentf-list)))
        (pattern-transformer :initform 'helm-recentf-pattern-transformer)
        (match-part :initform (lambda (candidate)
@@ -265,13 +265,14 @@ Set `recentf-max-saved-items' to a bigger value if default is too small.")
     (defclass swint-helm-recentf-directory-source (helm-source-sync)
       ((init :initform (lambda ()
                          (recentf-mode 1)))
-       (candidates :initform (lambda () (remove-if-not (lambda (x)
-                                                         (and (string-match-p ".*\/$" x)
-                                                              (not (member x (mapcar (lambda (xx)
-                                                                                       (with-current-buffer xx
-                                                                                         (expand-file-name default-directory)))
-                                                                                     (helm-buffer-list))))))
-                                                       recentf-list)))
+       (candidates :initform (lambda () (remove-if (lambda (x)
+                                                     (or (not (file-directory-p x))
+                                                         (member x (mapcar (lambda (xx)
+                                                                             (expand-file-name (buffer-local-value 'default-directory xx)))
+                                                                           (remove-if-not (lambda (x)
+                                                                                            (equal (buffer-mode x) 'dired-mode))
+                                                                                          (buffer-list))))))
+                                                   recentf-list)))
        (pattern-transformer :initform 'helm-recentf-pattern-transformer)
        (match-part :initform (lambda (candidate)
                                (if (or helm-ff-transformer-show-only-basename
@@ -389,7 +390,7 @@ Run all sources defined in `helm-for-files-preferred-list'."
     "List swint-helm-find-files."
     (interactive)
     (helm-run-after-quit #'(lambda () (swint-helm-find-files))))
-  ;; Fix bugs of helm-quit-and-find-file on dired buffer
+  ;; Fix bugs of helm-quit-and-find-file on dired buffer.
   (defun swint-helm-quit-and-find-file ()
     "Drop into `helm-find-files' from `helm'.
 If current selection is a buffer or a file, `helm-find-files'

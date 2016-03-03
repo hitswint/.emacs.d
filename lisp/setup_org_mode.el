@@ -472,7 +472,7 @@ depending on the last command issued."
 \\usepackage{graphicx,amsmath,amssymb,subfigure,url,xspace,booktabs,tikz,float}
 \\usepackage[autoplay,loop]{animate}
 \\usepackage[absolute,overlay]{textpos}
-\\usetikzlibrary{arrows,shapes,chains,calc,positioning}
+\\usetikzlibrary{arrows,shapes,chains,calc,positioning,decorations.markings}
 \\newcommand{\\eg}{e.g.,\\xspace}
 \\newcommand{\\bigeg}{E.g.,\\xspace}
 \\newcommand{\\etal}{\\textit{et~al.\\xspace}}
@@ -530,7 +530,7 @@ depending on the last command issued."
 \\usepackage{colortbl,dcolumn}
 \\usepackage[autoplay,loop]{animate}
 \\usepackage[absolute,overlay]{textpos}
-\\usetikzlibrary{arrows,shapes,chains,calc,positioning}
+\\usetikzlibrary{arrows,shapes,chains,calc,positioning,decorations.markings}
 \\usepackage{thumbpdf}
 \\usepackage{wasysym}
 \\usepackage{ucs}
