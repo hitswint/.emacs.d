@@ -37,7 +37,6 @@
   :defer t
   :bind ("C-M-;" . er/expand-region))
 ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end。
-;; emacs不是真正的假死，C-g会恢复。
 ;; ====================expand-region=========================
 ;; ==================回收站=======================
 (use-package trashcan
@@ -239,7 +238,7 @@
 (use-package popup-kill-ring
   ;; Enabled at commands.
   :defer t
-  :bind ("C-M-y" . popup-kill-ring)
+  :bind ("M-Y" . popup-kill-ring)
   :config
   (use-package popup)
   (use-package pos-tip)
@@ -278,14 +277,14 @@
 ;; elpa安装imenu-anywhere
 ;; imenu-anywhere与imenu额区别在于，前者包括所有打开的相同mode的buffer，而后者只限于当前buffer。
 ;; 但是imenu-anywhere在初次使用时经常失效，没有结果。
-(global-set-key (kbd "M-s i") 'helm-semantic-or-imenu)
 (use-package imenu-anywhere
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s I" . helm-imenu-anywhere))
+  :bind ("M-s I" . helm-imenu-anywhere)
+  :config
+  (setq imenu-anywhere-delimiter-helm " | "))
 ;; ===================imenu-anywhere====================
 ;; ================fcitx.el=================
-;; https://github.com/cute-jumper/fcitx.el
 (use-package fcitx
   ;; Enabled automatically.
   :if is-lin
@@ -368,12 +367,11 @@
   ;; (add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
   (define-key pdf-view-mode-map (kbd "C-c C-i") nil)
   (define-key pdf-view-mode-map (kbd "i") 'imenu)
-  (define-key pdf-view-mode-map (kbd "M-s i") 'helm-imenu)
+  (define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save)
   (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
   (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
   (define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
   (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
-  (define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save)
   (define-key pdf-view-mode-map (kbd "C-x C-l") '(lambda () (interactive)
                                                    (dired-jump-other-window)
                                                    (org-annotate-file (abbreviate-file-name (dired-get-filename)))))
@@ -479,8 +477,8 @@ is named like ODF with the extension turned to pdf."
 (use-package smex
   ;; Enabled at commands.
   :defer t
-  :bind (("M-X" . smex)
-         ("C-x M-X" . smex-major-mode-commands)))
+  :bind (("C-x M-x" . smex)
+         ("C-c M-x" . smex-major-mode-commands)))
 ;; ================smex==================
 ;; =================bm===================
 (use-package bm
@@ -598,4 +596,31 @@ is named like ODF with the extension turned to pdf."
   :bind (("M-s v" . vimish-fold)
          ("M-s V" . vimish-fold-delete)))
 ;; =============vimish-fold===============
+;; =============clipmon===============
+(use-package clipmon
+  ;; Enabled at commands.
+  :defer t
+  :after easy-kill
+  :config
+  ;; (add-to-list 'after-init-hook 'clipmon-mode-start)
+  ;; (add-to-list 'after-init-hook 'clipmon-persist)
+  (clipmon-mode-start)
+  (clipmon-persist)
+  (defun clipmon--clipboard-contents ()
+    "Get current contents of system clipboard - returns a string, or nil."
+    ;; when the OS is first started x-get-selection-value will throw (error "No
+    ;; selection is available"), so ignore errors.
+    ;; note: (x-get-selection 'CLIPBOARD) doesn't work on Windows.
+    (if (eq window-system 'w32)
+        (ignore-errors (x-get-selection-value)) ; can be nil
+      ;; don't add contents to kill-ring if emacs already owns this item,
+      ;; as emacs will handle doing that.
+      (let ((v (if (x-selection-owner-p 'CLIPBOARD)
+                   nil
+                 ;; 默认的'STRING导致中文乱码，改为'UTF8_STRING。
+                 (ignore-errors (x-get-selection 'CLIPBOARD 'UTF8_STRING)))))
+        ;; need to remove properties or selection won't work.
+        (if (null v) nil
+          (substring-no-properties v))))))
+;; =============clipmon===============
 (provide 'setup_packages)

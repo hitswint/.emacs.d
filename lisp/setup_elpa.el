@@ -43,6 +43,7 @@
             cdlatex
             char-menu
             clean-aindent-mode
+            clipmon
             company
             company-c-headers
             company-quickhelp

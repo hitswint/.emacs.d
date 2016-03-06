@@ -51,7 +51,9 @@
   (add-to-list 'desktop-minor-mode-table '(ace-pinyin-mode nil))
   (add-to-list 'desktop-minor-mode-table '(hungry-delete-mode nil))
   (add-to-list 'desktop-minor-mode-table '(peep-dired nil))
-  (add-to-list 'desktop-minor-mode-table '(ivy-mode nil)))
+  (add-to-list 'desktop-minor-mode-table '(ivy-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(clipmon-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(ispell-minor-mode nil)))
 ;; ==========打开文件时自动跳转到上次的位置(不好用)===========
 ;; ;; Save point position between sessions
 ;; (require 'saveplace)

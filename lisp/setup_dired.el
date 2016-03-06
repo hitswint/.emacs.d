@@ -3,13 +3,14 @@
   ;; Enabled automatically.
   :config
   (use-package dired-x)
-  (use-package dired-details)
+  (use-package dired-details
+    :config
+    (dired-details-install))
   (use-package diredful
     :config
     (diredful-mode 1))
   (setq dired-recursive-copies 'top)
   (setq dired-recursive-deletes 'top)
-  (dired-details-install)
   ;; =============Auto-revert-mode=============
   ;; Auto refresh buffers
   (global-auto-revert-mode 1)
@@ -92,7 +93,7 @@
   ;; =====================文件夹排序=======================
   (add-hook 'dired-mode-hook (lambda ()
                                (interactive)
-                               (make-local-variable  'dired-sort-map)
+                               (make-local-variable 'dired-sort-map)
                                (setq dired-sort-map (make-sparse-keymap))
                                (define-key dired-mode-map "s" dired-sort-map)
                                (define-key dired-sort-map "s"
@@ -236,7 +237,6 @@
  (is-lin
   (add-hook 'dired-mode-hook
             (lambda ()
-              (setq truncate-lines t)
               (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-for-alternate-file)))
   (defun dired-async-shell-command-for-alternate-file ()
     (interactive)
