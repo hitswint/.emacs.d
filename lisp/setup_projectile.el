@@ -17,10 +17,10 @@
   :defer t
   :bind ("M-'" . helm-projectile)
   :config
-  ;; 设置切换project的默认操作
+  ;; 设置切换project的默认操作。
   (setq projectile-switch-project-action 'helm-projectile)
   (when is-win
-    ;; windows下的缓存方式从native改到alien，加快缓存速度
+    ;; windows下的缓存方式从native改到alien，加快缓存速度。
     (setq projectile-indexing-method 'alien)))
 ;; projectile-grep出现find错误。
 ;; 在helm-projectile中C-d为打开project的根目录。
@@ -62,7 +62,7 @@
 ;; C-c p ESC       Switch to the most recently selected projectile buffer.
 ;; ================Projectile================
 ;; ================persp-projectile================
-;; 会导致ido无法忽略带星号的buffer
+;; 会导致ido无法忽略带星号的buffer。
 ;; (require 'persp-projectile)
 ;; (define-key projectile-mode-map (kbd "s-s") 'projectile-persp-switch-project)
 ;; ================persp-projectile================

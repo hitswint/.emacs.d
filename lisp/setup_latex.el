@@ -33,7 +33,7 @@
   ;; Auctex在打开tex文件时加载，LaTeX-insert-left-brace会覆盖全局的括号定义。
   ;; 打开auctex自带的默认输入右括号的选项。
   (setq LaTeX-electric-left-right-brace t)
-  ;;为 LaTeX 模式 hook 自动换行，数学公式，reftex 和显示行号的功能。
+  ;; 为 LaTeX 模式 hook 自动换行，数学公式，reftex 和显示行号的功能。
   (mapc (lambda (mode)
           (add-hook 'TeX-mode-hook mode))
         (list 'auto-fill-mode
@@ -42,7 +42,7 @@
               'turn-on-reftex
               'turn-on-orgtbl
               'LaTeX-install-toolbar))
-  ;;在 LaTeX mode 中，默认开启 PDF mode，即默认使用 xelatex 直接生成 pdf 文件，而不用每次用 'C-c C-t C-p' 进行切换。设置 'Tex-show-compilation' 为t，在另一个窗口显示编译信息，对于错误的排除很方便。另外，编译时默认直接保存文件，绑定补全符号到 TAB 键。
+  ;; 在 LaTeX mode 中，默认开启 PDF mode，即默认使用 xelatex 直接生成 pdf 文件，而不用每次用 'C-c C-t C-p' 进行切换。设置 'Tex-show-compilation' 为t，在另一个窗口显示编译信息，对于错误的排除很方便。另外，编译时默认直接保存文件，绑定补全符号到 TAB 键。
   (add-hook 'LaTeX-mode-hook
             (lambda ()
               (setq TeX-auto-untabify t  ; remove all tabs before saving
@@ -52,8 +52,10 @@
               (setq TeX-save-query nil)
               (imenu-add-menubar-index)
               (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-parse-all)
+              (define-key LaTeX-mode-map (kbd "C-c f") 'TeX-font)
               (define-key LaTeX-mode-map (kbd "TAB") 'TeX-complete-symbol)
               (define-key LaTeX-mode-map (kbd "C-q") 'swint-kill-tex-buffer)
+              (define-key LaTeX-mode-map (kbd "C-c C-x C-v") 'iimage-mode)
               (define-key LaTeX-mode-map (kbd "C-c C-x p") 'preview-at-point)
               (define-key LaTeX-mode-map (kbd "C-c C-x P") 'preview-clearout-buffer)
               (define-key LaTeX-mode-map (kbd "\"") nil)))
@@ -71,9 +73,9 @@
   ;; =============自动fold===========
   (add-hook 'TeX-mode-hook
             (lambda () (TeX-fold-mode 1))) ; Automatically activate TeX-fold-mode.
-  ;; C-c C-o C-b打开fold，C-c C-o b关闭fold
+  ;; C-c C-o C-b打开fold，C-c C-o b关闭fold。
   ;; =============自动fold===========
-  ;; 关闭tex的同时关闭latexmk编译进程
+  ;; 关闭tex的同时关闭latexmk编译进程。
   (defun swint-kill-tex-buffer ()
     "kill tex buffer with active process"
     (interactive)
@@ -81,14 +83,14 @@
         (kill-process (TeX-active-process)))
     (dirtree-kill-this-buffer))
   ;; =================latex插入截图====================
-  ;;1. suspend current emacs window
-  ;;2. call scrot to capture the screen and save as a file in $HOME/.emacs.img/
-  ;;3. put the png file reference in current buffer, like this:  [[/home/path/.emacs.img/1q2w3e.png]]
+  ;; 1. suspend current emacs window
+  ;; 2. call scrot to capture the screen and save as a file in $HOME/.emacs.img/
+  ;; 3. put the png file reference in current buffer, like this:  [[/home/path/.emacs.img/1q2w3e.png]]
   (defun my-screenshot-tex ()
     "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
     (interactive)
-    ;; 将截图名字定义为buffer名字加日期
+    ;; 将截图名字定义为buffer名字加日期。
     (cond
      (is-lin
       (setq filename
@@ -143,13 +145,15 @@
             '(lambda ()
                (define-key LaTeX-mode-map (kbd "C-c p") 'my-screenshot-tex-local)
                (define-key LaTeX-mode-map (kbd "C-c P") 'my-screenshot-tex)))
-  ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p
+  ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p。
   ;; =================latex插入截图====================
   ;; ======================pandoc=============================
   (defun pandoc-latex-to-doc ()
     (interactive)
     (shell-command (concat "pandoc -o " (file-name-base (buffer-name)) ".docx " (buffer-name))))
-  (global-set-key (kbd "C-c C-S-e") 'pandoc-latex-to-doc)
+  (add-hook 'LaTeX-mode-hook
+            '(lambda ()
+               (define-key LaTeX-mode-map (kbd "C-c C-S-e") 'pandoc-latex-to-doc)))
   ;; ======================pandoc=============================
   )
 ;; ===========outline===============
@@ -159,7 +163,7 @@
   :init
   (add-hook 'TeX-mode-hook 'outline-minor-mode)
   :config
-  ;; (setq outline-minor-mode-prefix "\C-o") ;必须放在setup_anything_lacarte.el之前
+  ;; (setq outline-minor-mode-prefix "\C-o")
   (add-hook 'outline-minor-mode-hook
             (lambda ()
               (use-package outline-magic)
@@ -167,8 +171,8 @@
               (define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
               (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
               (define-key outline-minor-mode-map (kbd "C-c C-u") 'outline-up-heading)
-              (define-key outline-minor-mode-map (kbd "C-x C-p") 'outline-backward-same-level)
-              (define-key outline-minor-mode-map (kbd "C-x C-n") 'outline-forward-same-level))))
+              (define-key outline-minor-mode-map (kbd "C-c C-b") 'outline-backward-same-level)
+              (define-key outline-minor-mode-map (kbd "C-c C-f") 'outline-forward-same-level))))
 ;; ===========outline===============
 ;; ===================auctex-latexmk=============================
 ;; 安装了texlive2009及更高的版本之后，默认就有latexmk，不用做任何改变。只需要加入.latexmkrc的配置文件和这个auctex-latexmk。
@@ -185,7 +189,7 @@
   :defer t
   :init
   (add-hook 'TeX-mode-hook 'zotelo-minor-mode))
-;; 使用方法，C-c z c建立bib文件，C-c z u更新bib文件，C-c [引用
+;; 使用方法，C-c z c建立bib文件，C-c z u更新bib文件，C-c [引用。
 ;; 刚添加bib时会显示没有有效的bib文件，需要重新打开或者重启emacs。
 ;; ======================zotelo=============================
 ;; ===================latex-preview-pane===================

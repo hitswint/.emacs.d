@@ -117,8 +117,8 @@
   ;; Don't bother me with flyspell keybindings
   (eval-after-load "flyspell"
     '(define-key flyspell-mode-map (kbd "C-.") nil))
-  ;; 在git remote add和git clone中需要使用cygwin的路径名称 file:///cygdrive/c/Users/swint/
-  ;; 建立的远程仓库remote.git， 初始化时使用git --bare init，直接使用remote.git文件夹作为.git文件夹
+  ;; 在git remote add和git clone中需要使用cygwin的路径名称 file:///cygdrive/c/Users/swint/ 。
+  ;; 建立的远程仓库remote.git， 初始化时使用git --bare init，直接使用remote.git文件夹作为.git文件夹。
   ;; ==================初始化远程库和克隆远程库===================
   (defun magit-clone-remote ()
     (interactive)
@@ -147,7 +147,7 @@
                                      (is-lin (concat "~/Nutstore/" (buffer-name (window-buffer (next-window)))))
                                      (is-win (read-string "Remote url: " (concat "file:///cygdrive/c/Users/swint/Nutstore/" (buffer-name (window-buffer (next-window))))))))))
     (magit-run-git-async "remote" "add" "-f" remote url))
-  ;; 使magit-remote-add默认以另一个窗口的buffer为remote
+  ;; 使magit-remote-add默认以另一个窗口的buffer为remote。
   ;; ==================初始化远程库和克隆远程库===================
   (setq magit-last-seen-setup-instructions "1.4.0")
   ;; ==========使用git管理doc文件=============

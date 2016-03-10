@@ -6,7 +6,7 @@
   (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
   :config
   (when is-win
-    ;; 注意：路径/bin 后面一定要有那个分号;，不用将路径加到环境变量中
+    ;; 注意：路径/bin 后面一定要有那个分号;，不用将路径加到环境变量中。
     (setenv "PATH" (concat "c:/Program Files (x86)/Graphviz2.36/bin;" (getenv "PATH"))))
   (add-hook 'find-file-hook (lambda()
                               (if (string= "dot" (file-name-extension

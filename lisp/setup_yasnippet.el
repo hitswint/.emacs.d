@@ -29,7 +29,7 @@
   ;;         ;;         "/path/to/yasnippet/yasmate/snippets" ;; the yasmate collection
   ;;         ;;         "/path/to/yasnippet/snippets"         ;; the default collection
   ;;         ))
-  ;; 使用ac的popup代替yas/choose-value自带的弹出菜单
+  ;; 使用ac的popup代替yas/choose-value自带的弹出菜单。
   (use-package popup
     :config
     (define-key popup-menu-keymap (kbd "C-p") 'popup-previous)

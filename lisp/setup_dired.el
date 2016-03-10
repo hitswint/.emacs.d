@@ -20,11 +20,11 @@
   ;; dired-k--highlight会使auto-revert-mode出错，在dired-mode中禁用auto-revert-mode。
   ;; 已修复上述问题，在dired-mode中重新开启auto-revert-mode。
   ;; (setq global-auto-revert-ignore-modes '(dired-mode))
-  ;; 使用dired-mode自带的auto-revert
+  ;; 使用dired-mode自带的auto-revert。
   (setq dired-auto-revert-buffer t)
   ;; =============Auto-revert-mode=============
   (put 'dired-find-alternate-file 'disabled nil)
-  ;; 让dired显示文件大小
+  ;; 显示文件大小
   (setq dired-listing-switches "-alh")
   ;; 文件夹间复制
   (setq dired-dwim-target t)
@@ -39,7 +39,9 @@
                (define-key dired-mode-map (kbd "M-=") nil)
                (define-key dired-mode-map (kbd "r") (lambda ()
                                                       (interactive)
-                                                      (find-alternate-file "..")))
+                                                      (let ((current-directory default-directory))
+                                                        (find-alternate-file "..")
+                                                        (dired-goto-file (expand-file-name current-directory)))))
                (define-key dired-mode-map (kbd "i") '(lambda ()
                                                        (interactive)
                                                        (call-interactively 'dired-maybe-insert-subdir)
@@ -284,7 +286,7 @@
                                    (file-name-nondirectory file)
                                  file)
                                "\"")))))
-  ;; 设置一些文件的默认打开方式，此功能必须在(require 'dired-x)之后
+  ;; 设置一些文件的默认打开方式，此功能必须在(require 'dired-x)之后。
   (setq dired-guess-shell-alist-user
         (list
          (list "\\.pdf$" "/home/swint/adobe.sh * >/dev/null 2>&1 &")
@@ -389,7 +391,7 @@
                (define-key peep-dired-mode-map (kbd "C-n") nil))))
 ;; ===================peep-dired====================
 ;; ===================async====================
-;; async: Simple library for asynchronous processing in Emacs
+;; async: Simple library for asynchronous processing in Emacs.
 ;; async-start async-start-process async-get async-ready async-wait
 (use-package dired-async
   ;; Enabled in dired-mode.

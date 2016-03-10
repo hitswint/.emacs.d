@@ -1,5 +1,4 @@
 ;; ==================paredit=========================
-;; 在emacs-lisp中很有用，但对我用处不大
 (use-package paredit
   ;; Enabled in emacs-lisp-mode.
   :defer t
@@ -44,7 +43,7 @@
   (define-key paredit-mode-map (kbd "M-D") 'paredit-splice-sexp))
 ;; (autoload 'enable-paredit-mode "paredit" t)
 ;; M-( M-) M-[ M-] M-{ M-} M-" M-S M-R M-A M-D C-) C-} C-( C-{ C-M-d C-M-u C-M-p C-M-n
-;; 在其他mode中使用paredit
+;; 在其他mode中使用paredit。
 (use-package paredit-everywhere
   ;; Enabled in several modes.
   :defer t

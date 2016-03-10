@@ -229,7 +229,7 @@
     ;; Enabled automatically.
     :config
     (use-package recentf)
-    ;; 定义 swint-helm-source-recentf-file
+    ;; 定义swint-helm-source-recentf-file。
     (defclass swint-helm-recentf-file-source (helm-source-sync)
       ((init :initform (lambda ()
                          (recentf-mode 1)))
@@ -264,7 +264,7 @@ Set `recentf-max-saved-items' to a bigger value if default is too small.")
              (setq swint-helm-source-recentf-file
                    (helm-make-source "Recentf File" 'swint-helm-recentf-file-source
                      :fuzzy-match swint-helm-recentf-file-fuzzy-match))))
-    ;; 定义 swint-helm-source-recentf-directory
+    ;; 定义swint-helm-source-recentf-directory。
     (defclass swint-helm-recentf-directory-source (helm-source-sync)
       ((init :initform (lambda ()
                          (recentf-mode 1)))
@@ -497,10 +497,10 @@ from its directory."
   ;; C-backspace 开启关闭自动补全
   ;; C-{ C-} 放大缩小helm窗口
   ;; =======================helm-pinyin==============================
-  ;; 让helm支持拼音头字母搜索
-  (load "iswitchb-pinyin")            ; 给iswitchb-mode添加按拼音首字母匹配的能力
+  ;; 让helm支持拼音头字母搜索。
+  (load "iswitchb-pinyin")           ; 给iswitchb-mode添加按拼音首字母匹配的能力
   ;; 这个东西本身是给iswitchb增加拼音头字母搜索的，使用其中的pinyin-initials-string-match函数。
-  ;; 使buffer支持中文拼音首字母
+  ;; 使buffer支持中文拼音首字母。
   (defun helm-buffer--match-pattern (pattern candidate)
     (let ((fun (if (and helm-buffers-fuzzy-matching
                         (not (pinyin-initials-string-match "\\`\\^" pattern)))
@@ -588,14 +588,15 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   :defer t
   :bind ("C-x m" . helm-browse-menubar)
   :init
-  (bind-key "C-c m" '(lambda ()
-                       (interactive)
-                       (unless (boundp 'LaTeX-math-mode)
-                         (require 'latex))
-                       (helm-insert-latex-math)))
+  (add-hook 'LaTeX-mode-hook
+            '(lambda ()
+               (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)))
+  (add-hook 'org-mode-hook
+            '(lambda ()
+               (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)))
   (setq LaTeX-math-menu-unicode t)
   :config
-  ;; 使用helm自带的程序而不使用下列自定义的命令
+  ;; 使用helm自带的程序而不使用下列自定义的命令。
   (defvar helm-source-lacarte-math
     '((name . "Math Symbols")
       (init . (lambda()
@@ -614,10 +615,13 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 ;; =========================helm_lacarte=============================
 ;; =======================helm-bibtex==============================
 (use-package helm-bibtex
-  ;; Enabled after features.
+  ;; Enabled at commands.
   :defer t
-  :after tex
+  :commands swint-helm-bibtex
   :init
+  (add-hook 'LaTeX-mode-hook
+            '(lambda ()
+               (define-key LaTeX-mode-map (kbd "C-c b") 'swint-helm-bibtex)))
   (setq helm-bibtex-bibliography "./literature.bib")
   (defun swint-helm-bibtex ()
     (interactive)
@@ -641,13 +645,11 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
                  ("Edit notes"                   . helm-bibtex-edit-notes)
                  ("Show entry"                   . helm-bibtex-show-entry))))
     "Source for searching in BibTeX files.")
-  ;; 因为没有使用xpdf索引pdf文件，无法直接打开pdf文件。设置insert-citation为默认选项
+  ;; 因为没有使用xpdf索引pdf文件，无法直接打开pdf文件。设置insert-citation为默认选项。
   ;; 重新定义插入citation命令为\citep{}。
   (defun swint-helm-bibtex-format-citation-cite (keys)
     "Formatter for LaTeX citation macro."
-    (format "\\citep{%s}" (s-join ", " keys)))
-  :config
-  (bind-key "C-c b" 'swint-helm-bibtex TeX-mode-map))
+    (format "\\citep{%s}" (s-join ", " keys))))
 ;; =======================helm-bibtex==============================
 ;; ================helm-swoop================
 (use-package helm-swoop

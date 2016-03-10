@@ -87,17 +87,17 @@ Has no effect when `persp-show-modestring' is nil."
 ;;              ])
 ;; ;; (global-set-key (kbd "S-SPC") 'swint-persp-all)
 ;; ;; 所有包加载完之后，启动swint-persp-all宏。
-;; ;; 不行，虽然buffer已经加载完，但是界面上并没有显示，这个键盘宏发生作用的时候，并没有加载buffer，造成结果中没有保存的buffer
+;; ;; 不行，虽然buffer已经加载完，但是界面上并没有显示，这个键盘宏发生作用的时候，并没有加载buffer，造成结果中没有保存的buffer。
 ;; ;; 这个应该是函数和键盘宏的区别，函数是背后发生的事情，不需要界面的响应，而键盘宏是需要界面相应的，就像是一个人在操作一样。
 ;; ;; (eval-after-load 'setup_desktop_session
 ;; ;; '(execute-kbd-macro (symbol-function 'swint-persp-all)))
-;; ;; 先让desktop恢复buffers，然后再启动swint-persp-all
+;; ;; 先让desktop恢复buffers，然后再启动swint-persp-all。
 ;; (defun swint-perspective ()
 ;;   (interactive)
 ;;   (execute-kbd-macro (symbol-function 'swint-persp-all)))
 ;; (add-hook 'desktop-after-read-hook 'swint-perspective)
 ;; ========放弃使用键盘宏分配buffers到perspective的做法=========
-;; 使用lisp方式在emacs关闭时保存perspectives，开启时读取
+;; 使用lisp方式在emacs关闭时保存perspectives，开启时读取。
 (setq swint-perspectives-saved-file "~/.emacs.d/saved-perspectives.el")
 (defun swint-save-perspectives ()
   (setq persp-last-session (persp-name persp-curr))

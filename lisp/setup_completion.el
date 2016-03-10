@@ -139,7 +139,7 @@
   ;;                 ac-sources)))
   ;; (add-hook 'LaTeX-mode-hook 'ac-latex-mode-setup)
   ;; (setq ac-math-unicode-in-math-p t)      ;在latex的math环境中激活unicode输入
-  ;; 在org-mode中使用ac-math激活unicode输入
+  ;; 在org-mode中使用ac-math激活unicode输入。
   (use-package ac-math
     ;; Enabled automatically.
     :config
@@ -153,23 +153,23 @@
   ;; ============================ac-octave=========================
   ;; ac-octave.el里面并没有定义关键词，似乎是通过和octave的沟通来补全，需要打开octave。
   ;; (require 'ac-octave)
-  ;; ;; octave-mode中使用
+  ;; ;; octave-mode中使用。
   ;; (add-to-list 'ac-modes 'octave-mode)
   ;; (defun ac-octave-mode-setup ()
   ;;   (setq ac-sources '(ac-source-octave)))
   ;; (add-hook 'octave-mode-hook
   ;;           '(lambda () (ac-octave-mode-setup)))
-  ;; ;; inferior-octave中使用
+  ;; ;; inferior-octave中使用。
   ;; (add-to-list 'ac-modes 'inferior-octave-mode)
   ;; (add-hook 'inferior-octave-mode
   ;;           '(lambda () (ac-octave-mode-setup)))
-  ;; matlab-mode中使用
+  ;; matlab-mode中使用。
   ;; (defun ac-matlab-mode-setup ()
   ;;   (add-to-list 'ac-sources 'ac-source-octave))
   ;; (add-hook 'matlab-mode-hook 'ac-matlab-mode-setup)
   ;; ============================ac-octave=========================
   ;; =========================auto-complete-octave=========================
-  ;; ac-octave有问题，使用auto-complete-octave
+  ;; ac-octave有问题，使用auto-complete-octave。
   (use-package auto-complete-octave
     ;; Enabled automatically.
     :load-path "site-lisp/auto-complete-octave/"
@@ -179,9 +179,9 @@
                                               (add-to-list 'ac-sources 'ac-source-octave)))))
   ;; =========================auto-complete-octave=========================
   ;; =================shell==================
-  ;; 下面这句会导致octave运行时emacs hang
+  ;; 下面这句会导致octave运行时emacs hang。
   ;; (setq comint-process-echoes t)
-  ;; prevent echoed commands from being printed (t)
+  ;; prevent echoed commands from being printed (t).
   (use-package readline-complete
     ;; Enabled automatically.
     :config
@@ -219,7 +219,7 @@
   :defer t
   :bind ("C-x M-u" . hippie-expand)
   :config
-  ;; 打开.english-words方式进行补全
+  ;; 打开.english-words方式进行补全。
   (setq hippie-expand-try-functions-list
         '(try-expand-by-dict
           ;; try-expand-dabbrev-all-buffers

@@ -20,22 +20,17 @@
                              (setq org-imenu-depth 8)
                              (turn-on-font-lock)))
   (setq org-capture-templates
-        '(("i" "Idea" entry (file+headline "~/org/task.org" "Idea List")
-           "* TODO %? %^g")
-          ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work")
-           "* %? %U %^g")
-          ("c" "Computer" entry (file+headline "~/org/notes-computer.org" "Computer")
-           "* %? %U %^g")
-          ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others")
-           "* %? %U %^g")
-          ("j" "Journal" entry (file+datetree "~/org/journal.org.gpg")
-           "* %? %U")))
+        '(("i" "Idea" entry (file+headline "~/org/task.org" "Idea List") "* TODO %? %U %^g")
+          ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
+          ("c" "Computer" entry (file+headline "~/org/notes-computer.org" "Computer") "* %? %U %^g")
+          ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others") "* %? %U %^g")
+          ("j" "Journal" entry (file+datetree "~/org/journal.org.gpg") "* %? %U")))
   ;; %^{Description}
-  ;; 禁用org-mode本身定义得C-tab快捷键，使全局快捷键生效
+  ;; 禁用org-mode本身定义得C-tab快捷键，使全局快捷键生效。
   (add-hook 'org-mode-hook
             '(lambda ()
                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
-               (define-key org-mode-map (kbd "C-c C-b") 'org-beamer-select-environment)
+               (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
                (define-key org-mode-map (kbd "C-c C-v") 'swint-org-open-export-pdf)
                (define-key org-mode-map (kbd "C-c i") 'org-open-at-point-with-apps)
                (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-org-open-at-point t)))
@@ -44,8 +39,6 @@
                (define-key org-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
                (define-key org-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
                (define-key org-mode-map (kbd "C-c C-u") 'outline-up-heading)
-               (define-key org-mode-map (kbd "C-x C-p") 'outline-backward-same-level)
-               (define-key org-mode-map (kbd "C-x C-n") 'outline-forward-same-level)
                (define-key org-mode-map (kbd "C-a") nil)
                (define-key org-mode-map (kbd "C-e") 'end-of-line)
                (define-key org-mode-map (kbd "C-j") nil)
@@ -58,7 +51,7 @@
                (define-key org-mode-map [(control \#)] nil)
                (define-key org-mode-map [(control tab)] nil)
                (define-key org-mode-map [(control \')] nil)))
-  ;; do not show title of task in mode-line when using org-clock
+  ;; do not show title of task in mode-line when using org-clock.
   (setq org-clock-heading-function
         (lambda ()
           (substring (nth 4 (org-heading-components)) 0 0)))
@@ -74,7 +67,7 @@
   ;; =======设定todo关键词==========
   (setq org-todo-keywords
         '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")))
-  ;; |后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔
+  ;; |后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔。
   ;; =======设定todo关键词==========
   ;; =======================org使用ditaa输出ascii图片==========================
   (setq org-ditaa-jar-path "~/.emacs.d/org-8.2.1/contrib/scripts/ditaa.jar")
@@ -95,7 +88,7 @@
            (plantuml . t)
            (latex . t))))
   (setq org-confirm-babel-evaluate nil)
-  ;; win中似乎不好使，应该是没装java
+  ;; win中似乎不好使，应该是没装java。
   ;; =======================org使用ditaa输出ascii图片==========================
   ;; ==============org中输入公式======================
   (use-package cdlatex
@@ -114,7 +107,7 @@
     "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
     (interactive)
-    ;; 将截图名字定义为buffer名字加日期
+    ;; 将截图名字定义为buffer名字加日期。
     (cond
      (is-lin
       (setq filename
@@ -127,7 +120,7 @@
                                                                   "\"" filename "\"" )))
      (is-win
       (setq filename
-            ;; 注释掉原来make-temp-name的方法，因为在win上对于某些prefix无法生成随机名字
+            ;; 注释掉原来make-temp-name的方法，因为在win上对于某些prefix无法生成随机名字。
             ;; (concat (make-temp-name
             ;;          (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
             ;;                  "_"
@@ -135,7 +128,7 @@
             (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
                     "_"
                     (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      ;; turn into path in windows type
+      ;; turn into path in windows type.
       (setq windows-filename
             (replace-regexp-in-string "/" "\\" filename t t))
       (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil
@@ -144,9 +137,9 @@
     "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
     (interactive)
-    ;; 将截图名字定义为buffer名字加日期
+    ;; 将截图名字定义为buffer名字加日期。
     (unless (file-exists-p "./pic")
-      ;; 建立pic文件夹
+      ;; 建立pic文件夹。
       (dired-create-directory "./pic"))
     (cond
      (is-lin
@@ -163,7 +156,7 @@
             (concat "./pic/" (file-name-base (buffer-name))
                     "_"
                     (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      ;; turn into path in windows type
+      ;; turn into path in windows type.
       (setq windows-filename
             (replace-regexp-in-string "/" "\\" filename t t))
       (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil
@@ -172,9 +165,9 @@
   (global-set-key (kbd "C-x P") 'my-screenshot)
   ;; ==============截图================
   ;; =================org插入截图====================
-  ;;1. suspend current emacs window
-  ;;2. call scrot to capture the screen and save as a file in $HOME/.emacs.img/
-  ;;3. put the png file reference in current buffer, like this:  [[/home/path/.emacs.img/1q2w3e.png]]
+  ;; 1. suspend current emacs window
+  ;; 2. call scrot to capture the screen and save as a file in $HOME/.emacs.img/
+  ;; 3. put the png file reference in current buffer, like this:  [[/home/path/.emacs.img/1q2w3e.png]]
   (add-hook 'org-mode-hook 'iimage-mode) ; enable iimage-mode for org-mode
   (add-hook 'org-mode-hook 'org-display-inline-images)
   (define-key org-mode-map (kbd "C-c C-x C-v") '(lambda ()
@@ -188,7 +181,7 @@
     "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
     (interactive)
-    ;; 将截图名字定义为buffer名字加日期
+    ;; 将截图名字定义为buffer名字加日期。
     (cond
      (is-lin
       (setq filename
@@ -201,7 +194,7 @@
                                                                   "\"" filename "\"" )))
      (is-win
       (setq filename
-            ;; 在org文件中显示图片只需要/Users/...，而不需要前面的c:
+            ;; 在org文件中显示图片只需要/Users/...，而不需要前面的c:。
             (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
                     "_"
                     (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
@@ -216,10 +209,10 @@
     "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
     (interactive)
-    ;; 将截图名字定义为buffer名字加日期
+    ;; 将截图名字定义为buffer名字加日期。
     (if (file-exists-p "./pic")
         ()
-      ;; 建立pic文件夹
+      ;; 建立pic文件夹。
       (dired-create-directory "./pic"))
     (cond
      (is-lin
@@ -236,7 +229,7 @@
             (concat "./pic/" (file-name-base (buffer-name))
                     "_"
                     (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      ;; turn into path in windows type
+      ;; turn into path in windows type.
       (setq windows-filename
             (replace-regexp-in-string "/" "\\" filename t t))
       (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
@@ -247,7 +240,7 @@
             '(lambda ()
                (define-key org-mode-map (kbd "C-c p") 'my-screenshot-org-local)
                (define-key org-mode-map (kbd "C-c P") 'my-screenshot-org)))
-  ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p
+  ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p。
   ;; org中打开和关闭图片显示(org-display-inline-images)和(org-remove-inline-images)。
   ;; 可以使用(org-toggle-inline-images)快捷键为C-c C-x C-v。
   ;; =================org插入截图====================
@@ -312,9 +305,9 @@
         (swint-org-open-at-point)))))
   ;; =================org中使用外部程序打开文件=================
   ;; =================mobileorg===============
-  ;; Set to the location of your Org files on your local system
+  ;; Set to the location of your Org files on your local system.
   (setq org-directory "~/org")
-  ;; Set to the name of the file where new notes will be stored
+  ;; Set to the name of the file where new notes will be stored.
   (setq org-mobile-inbox-for-pull "~/org/task-from-mobile.org")
   ;; Set to <your Dropbox root directory>/MobileOrg.
   (setq org-mobile-directory "~/Nutstore-mobileorg")
@@ -324,16 +317,16 @@
     (shell-command (concat "touch " (expand-file-name org-mobile-encryption-tempfile))))
   (unless (file-exists-p org-mobile-inbox-for-pull)
     (shell-command (concat "touch " (expand-file-name org-mobile-inbox-for-pull))))
-  ;; 设置需要同步的文件
+  ;; 设置需要同步的文件。
   (setq org-agenda-files (list "~/org/task.org"))
   (setq org-mobile-files org-agenda-files)
-  ;; 在不同gtd文件之间refile
+  ;; 在不同gtd文件之间refile。
   ;; (custom-set-variables
   ;;  '(org-refile-targets
   ;;    (quote
   ;;     (("Gtd-task.org" :maxlevel . 1)("Gtd-project.org" :maxlevel . 1) ("Gtd-maybe.org":maxlevel . 1) ("Gtd-done-aborted.org":maxlevel . 1)))))
   (defun swint-org-mobile-pull ()
-    "Operate on multiple PCs"
+    "Operate on multiple PCs."
     (interactive)
     ;; webdav会造成文件conflict，在pull之前先删除本地mobileorg文件。
     (mapcar 'delete-file (directory-files org-mobile-directory t
@@ -391,14 +384,14 @@
   (define-key org-mode-map (kbd "C-c M-.") 'swint-org-mobile-push)
   ;; =================mobileorg===============
   ;; =======================org输出doc=============================
-  ;; 先生成odt文件(需要zip支持)，然后使用libreoffice转化成doc文件
-  ;; 在win上转doc格式路径名中不能有中文
+  ;; 先生成odt文件(需要zip支持)，然后使用libreoffice转化成doc文件。
+  ;; 在win上转doc格式路径名中不能有中文。
   (setq org-odt-preferred-output-format "doc") ;v8
   (define-key org-mode-map (kbd "C-c C-S-e") 'org-odt-export-to-odt)
   ;; =======================org输出doc=============================
   ;; =======================org-latex-preview======================
-  ;; C-c C-x C-l org-preview-latex-fragment表示preview当前位置
-  ;; 加C-u表示当前节，两个C-u表示当前head
+  ;; C-c C-x C-l org-preview-latex-fragment表示preview当前位置。
+  ;; 加C-u表示当前节，两个C-u表示当前head。
   (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境
   ;; =======================org-latex-preview======================
   ;; 定义org markup(*_+/=~)等的转换。
@@ -411,8 +404,8 @@
   ;; =======================org输出latex=============================
   ;; (require 'org-install)
   ;; (require 'org-latex)
-  ;; 使用上面的两个命令会导致输出成beamer的选项出不来
-  ;; 使用xelatex一步生成PDF
+  ;; 使用上面的两个命令会导致输出成beamer的选项出不来。
+  ;; 使用xelatex一步生成PDF。
   (setq org-latex-pdf-process
         '("xelatex -interaction nonstopmode %f"
           "xelatex -interaction nonstopmode %f"))
@@ -420,7 +413,7 @@
         '("xelatex -interaction nonstopmode %f"
           "xelatex -interaction nonstopmode %f"))
   (when is-lin
-    ;; 生成pdf自动用llpp打开
+    ;; 生成pdf自动用llpp打开。
     (add-hook 'org-mode-hook
               '(lambda ()
                  (delete '("\\.pdf\\'" . default) org-file-apps)
@@ -438,7 +431,7 @@ depending on the last command issued."
            (is-lin (async-shell-command-no-output-buffer-from-file output-file))
            (is-win (w32-browser output-file)))
         (message "Warning: No export pdf."))))
-  ;; 原来的好像有问题
+  ;; 原来的好像有问题。
   ;; code执行免应答（Eval code without confirm）
   (setq org-confirm-babel-evaluate nil)
   (defun org-mode-article-modes ()
@@ -503,7 +496,7 @@ depending on the last command issued."
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                ("\\paragraph{%s}" . "\\paragraph*{%s}")
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-;; 使用Listings宏包格式化源代码(只是把代码框用listing环境框起来，还需要额外的设置
+;; 使用Listings宏包格式化源代码(只是把代码框用listing环境框起来，还需要额外的设置。
 (setq org-export-latex-listings t)
 ;; ==========beamer设置===================
 ;; beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)。
@@ -590,7 +583,7 @@ depending on the last command issued."
   (add-to-list 'org-beamer-environments-extra
                '("uncoverenv" "U" "\\begin{uncoverenv}%a" "\\end{uncoverenv}"))))
 ;; ======================org标注工具=============================
-;; Display annotated files with mark
+;; Display annotated files with mark.
 (use-package dired-x-annotated
   ;; Enabled automatically.
   :load-path "site-lisp/org-annotate-file/"
@@ -605,7 +598,7 @@ depending on the last command issued."
   ;; Sync annotated status as operating.
   (use-package dired-sync-annotated
     :load-path "site-lisp/org-annotate-file/"))
-;; 原有org-annotate-file用于全局注释
+;; 原有org-annotate-file用于全局注释。
 (use-package org-annotate-file
   ;; Enabled at commands.
   :load-path "site-lisp/org-annotate-file/"
@@ -615,11 +608,17 @@ depending on the last command issued."
   (bind-key "C-x L" 'org-annotate-file-current)
   (defun org-annotate-file-current ()
     (interactive)
-    (if (equal major-mode 'dired-mode)
-        (org-annotate-file (abbreviate-file-name (dired-get-filename)))
-      (org-annotate-file (abbreviate-file-name (buffer-file-name)))))
+    (cond
+     ((equal major-mode 'dired-mode)
+      (org-annotate-file (abbreviate-file-name (dired-get-filename))))
+     ((equal major-mode 'pdf-view-mode)
+      (dired-jump-other-window)
+      (org-annotate-file (abbreviate-file-name (dired-get-filename))))
+     (t
+      (switch-to-buffer-other-window (current-buffer))
+      (org-annotate-file (abbreviate-file-name (buffer-file-name))))))
   (setq org-annotate-file-storage-file "~/org/annotated/annotated.org"))
-;; 新建swint-org-annotate-file.el用于局部注释
+;; 新建swint-org-annotate-file.el用于局部注释。
 (use-package swint-org-annotate-file
   ;; Enabled at commands.
   :load-path "site-lisp/org-annotate-file/"
@@ -629,9 +628,15 @@ depending on the last command issued."
   (bind-key "C-x l" 'swint-org-annotate-file-current)
   (defun swint-org-annotate-file-current ()
     (interactive)
-    (if (equal major-mode 'dired-mode)
-        (swint-org-annotate-file (abbreviate-file-name (dired-get-filename)))
-      (swint-org-annotate-file (abbreviate-file-name (buffer-file-name))))))
+    (cond
+     ((equal major-mode 'dired-mode)
+      (swint-org-annotate-file (abbreviate-file-name (dired-get-filename))))
+     ((equal major-mode 'pdf-view-mode)
+      (dired-jump-other-window)
+      (swint-org-annotate-file (abbreviate-file-name (dired-get-filename))))
+     (t
+      (switch-to-buffer-other-window (current-buffer))
+      (swint-org-annotate-file (abbreviate-file-name (buffer-file-name)))))))
 ;; ======================org标注工具=============================
 ;; ==================org-mode==========================
 (provide 'setup_org_mode)

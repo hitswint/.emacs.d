@@ -51,7 +51,7 @@
          ("M-s g" . gdb-or-gud-go)
          ("M-s G" . gud-kill))
   :config
-  ;; 默认打开多窗口会有问题
+  ;; 默认打开多窗口会有问题。
   (setq gdb-many-windows t)
   ;; 出现问题，在于 gdb-ui过时了，似乎改成gdb-mi。
   (defun gdb-or-gud-go ()
@@ -67,7 +67,7 @@
   (defun gud-kill ()
     "Kill gdb process."
     (interactive)
-    ;; 关闭其他四个buffer，其中io buffer会询问
+    ;; 关闭其他四个buffer，其中io buffer会询问。
     (kill-buffer (gdb-locals-buffer-name))
     (kill-buffer (gdb-stack-buffer-name))
     (kill-buffer (gdb-breakpoints-buffer-name))

@@ -25,7 +25,7 @@
   :config
   (use-package anzu)
   (define-key isearch-mode-map (kbd "C-q") #'isearch-toggle-pinyin)
-  ;; 同时搜索中英文，与ace-jump一样，对于.*+?等正则表达式使用的符号无效
+  ;; 同时搜索中英文，与ace-jump一样，对于.*+?等正则表达式使用的符号无效。
   (defun swint-pinyin-search--pinyin-to-regexp (string)
     "Wrap for Pinyin searching."
     (let ((swint-regexp ""))

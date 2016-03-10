@@ -14,8 +14,8 @@
                                              'eshell-postoutput-scroll-to-bottom)
                                 (define-key eshell-mode-map (kbd "C-M-r") 'helm-eshell-history)
                                 (define-key eshell-mode-map (kbd "M-s") nil)))
-  ;; 让shell命令在windows下默认启用cygwin bash
-  ;; cmdproxy.exe则是windows自带命令行工具
+  ;; 让shell命令在windows下默认启用cygwin bash。
+  ;; cmdproxy.exe则是windows自带命令行工具。
   (cond
    (is-win
     (setq explicit-shell-file-name "bash.exe"))

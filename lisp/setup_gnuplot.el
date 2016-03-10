@@ -9,7 +9,7 @@
   :config
   (cond
    (is-lin
-    ;; 打开gnuplot的输出图片
+    ;; 打开gnuplot的输出图片。
     (defun open-gnuplot-output-file ()
       "Start a viewer without confirmation.
 The viewer is started either on region or master file,

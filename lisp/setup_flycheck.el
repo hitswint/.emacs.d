@@ -5,7 +5,7 @@
   :init
   (bind-key "M-s c" 'flycheck-mode)
   :config
-  ;; 取消自动开启
+  ;; 取消自动开启。
   ;; (add-hook 'after-init-hook #'global-flycheck-mode)
   (setq global-flycheck-mode nil)
   ;; Change the prefix.

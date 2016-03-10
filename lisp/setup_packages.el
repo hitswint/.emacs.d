@@ -169,15 +169,15 @@
   :config
   (autoload 'anchored-transpose "anchored-transpose" nil t))
 ;; First select the entire phrase and type C-x t. Then select the anchor phrase and type C-x t again. You’re done!
-;; 首先选择整个区域，然后选择锚点，锚点两侧的内容交换
+;; 首先选择整个区域，然后选择锚点，锚点两侧的内容交换。
 ;; You can select the anchor phrase first followed by the phrase to be transposed if more convenient. Or select the 2 phrases independently. If you select 2 overlapping sections it ignores the overlap and swaps the non-overlapping sections. It even supports SecondarySelection. Somehow it can always tell what you want ;-)
-;; 另外，可以分别选择两部分交换的内容
+;; 另外，可以分别选择两部分交换的内容。
 ;; =====================anchored-transpose======================
 ;; =====================God-mode======================
 (use-package god-mode
   ;; Enabled at commands.
   :defer t
-  :bind ("<escape>" . god-local-mode)
+  :bind ("<S-escape>" . god-local-mode)
   :config
   ;; (global-set-key (kbd "<escape>") 'god-mode-all)
   (defun my-update-cursor ()
@@ -193,7 +193,7 @@
   ;; Enabled at commands.
   ;; Enabled automatically actually.
   :defer t
-  :bind ("C-M-'" . help-for-help)
+  :bind ("C-M-'" . help-command)
   :config
   (define-key 'help-command (kbd "C-l") 'find-library)
   (define-key 'help-command (kbd "C-f") 'find-function)
@@ -271,8 +271,8 @@
   (setq highlight-symbol-foreground-color "gray30"))
 ;; ===================highlight-symbol====================
 ;; ===================elmacro====================
-;; 需要先打开elmacro-mode，然后F3/F4录制宏
-;; 然后使用elmacro-show-last-macro来将操作转换为elisp
+;; 需要先打开elmacro-mode，然后F3/F4录制宏。
+;; 然后使用elmacro-show-last-macro来将操作转换为elisp。
 ;; ===================elmacro====================
 ;; ===================hungry-delete====================
 (use-package hungry-delete
@@ -285,9 +285,7 @@
               (setq hungry-delete-mode nil))))
 ;; ===================hungry-delete====================
 ;; ===================imenu-anywhere====================
-;; elpa安装imenu-anywhere
 ;; imenu-anywhere与imenu额区别在于，前者包括所有打开的相同mode的buffer，而后者只限于当前buffer。
-;; 但是imenu-anywhere在初次使用时经常失效，没有结果。
 (use-package imenu-anywhere
   ;; Enabled at commands.
   :defer t
@@ -308,7 +306,7 @@
   (fcitx-isearch-turn-on)
   (fcitx-read-funcs-turn-on)
   ;; (fcitx-aggressive-minibuffer-turn-on)
-  ;; 会导致tramp问题，使需要在minibuffer输入密码时hang
+  ;; 会导致tramp问题，使需要在minibuffer输入密码时hang。
   )
 ;; ================fcitx.el=================
 ;; ============aggressive-indent=============
@@ -368,8 +366,6 @@ Usually this is `describe-prefix-bindings'."
       (helm-descbinds which-key--current-prefix))))
 ;; ============which-key=============
 ;; ===================pdf-tools=================
-;; 添加的注释跟okular类似，将注释的内容另存为一份文件，只有在emacs中才能看到。
-;; 上述注释为旧版本，新版本的pdf-tools已经可以将注释放在pdf文件本身之中了。
 (use-package pdf-tools
   ;; Enabled in pdf-view-mode.
   :if is-lin
@@ -389,13 +385,7 @@ Usually this is `describe-prefix-bindings'."
   (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
   (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
   (define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
-  (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
-  (define-key pdf-view-mode-map (kbd "C-x L") '(lambda () (interactive)
-                                                 (dired-jump-other-window)
-                                                 (org-annotate-file (abbreviate-file-name (dired-get-filename)))))
-  (define-key pdf-view-mode-map (kbd "C-x l") '(lambda () (interactive)
-                                                 (dired-jump-other-window)
-                                                 (swint-org-annotate-file (abbreviate-file-name (dired-get-filename))))))
+  (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3))))
 ;; Failed to fix the bug of pdf-view-mode.
 ;; (defun swint-pdf-history-goto-beginning ()
 ;;   "Fix the bug of reverting to beginning of pdf after persp-switch."
@@ -558,7 +548,7 @@ is named like ODF with the extension turned to pdf."
   :bind ("C-M-4" . proced)
   :config
   (define-key proced-mode-map (kbd "q") 'kill-buffer-and-window)
-  ;; Proced自动更新，10秒
+  ;; Proced自动更新，10秒。
   (defun proced-settings ()
     (proced-toggle-auto-update 1))
   (add-hook 'proced-mode-hook 'proced-settings))

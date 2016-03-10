@@ -12,7 +12,7 @@
   ;; Enabled automatically.
   :config
   (window-numbering-mode 1)
-  ;; 当按键大于现有窗口数目时，选中最后一个窗口
+  ;; 当按键大于现有窗口数目时，选中最后一个窗口。
   (defvar previously-selected-window nil
     "previously-selected-window.")
   (defun select-window-by-number (i &optional arg)

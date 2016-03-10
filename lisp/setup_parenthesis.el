@@ -1,6 +1,6 @@
 ;; =============================括号==============================
-;; (setq show-paren-style 'parenthesis)    ; highlight just brackets
-;; (setq show-paren-style 'expression)     ; highlight entire bracket expression
+;; (setq show-paren-style 'parenthesis)    ;highlight just brackets
+;; (setq show-paren-style 'expression)     ;highlight entire bracket expression
 ;; (setq skeleton-pair t)                  ;自动插入匹配的括号
 ;; (global-set-key (kbd "(") 'skeleton-pair-insert-maybe)
 ;; (global-set-key (kbd "[") 'skeleton-pair-insert-maybe)
@@ -99,7 +99,7 @@
   :defer t
   :init
   ;; (global-rainbow-delimiters-mode)
-  ;; 在org-mode中打开rainbow会让org本身的highlight失效
+  ;; 在org-mode中打开rainbow会让org本身的highlight失效。
   ;; (add-hook 'org-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'dired-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'octave-mode-hook 'rainbow-delimiters-mode)

@@ -37,7 +37,7 @@
   (defun w3m-new-tab ()
     (interactive)
     (w3m-copy-buffer nil nil nil t))
-  ;;为了在w3m下使用meta n快捷键，必须先取消w3m下原有的设定
+  ;; 为了在w3m下使用meta n快捷键，必须先取消w3m下原有的设定。
   (add-hook 'w3m-mode-hook
             '(lambda ()
                (define-key w3m-mode-map [(\h)] 'w3m-previous-buffer)

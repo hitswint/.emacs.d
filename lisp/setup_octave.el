@@ -51,7 +51,7 @@
               (define-key inferior-octave-mode-map (kbd "C-h") nil)))
   (setq octave-comment-start "%% ")       ;使用%注释
   (setq octave-comment-char 37)           ;使用%注释
-  ;; 退出octave时关闭buffer
+  ;; 退出octave时关闭buffer。
   (add-hook 'inferior-octave-mode-hook 'kill-shell-buffer-after-exit t))
 ;; ===================octave==================
 (provide 'setup_octave)
