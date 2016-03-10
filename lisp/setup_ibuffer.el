@@ -7,9 +7,6 @@
   (setq ibuffer-delete-window-on-quit t
         ibuffer-expert t
         ibuffer-show-empty-filter-groups nil)
-  (defadvice ibuffer-quit (after kill-ibuffer activate)
-    ;;Kill the ibuffer buffer on exit.
-    (kill-buffer "*Ibuffer*"))
   (define-key ibuffer-mode-map (kbd "A") 'ibuffer-do-view-horizontally)
   (use-package ibuf-ext
     ;; Enabled automatically.

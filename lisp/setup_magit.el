@@ -69,7 +69,7 @@
     (delete-window))
   (defun magit-exit-commit-mode ()
     (interactive)
-    (kill-buffer)
+    (dirtree-kill-this-buffer)
     (delete-window))
   (eval-after-load "git-commit-mode"
     '(define-key git-commit-mode-map (kbd "C-c C-k") 'magit-exit-commit-mode))
@@ -90,7 +90,7 @@
   (defun vc-annotate-quit ()
     "Restores the previous window configuration and kills the vc-annotate buffer"
     (interactive)
-    (kill-buffer)
+    (dirtree-kill-this-buffer)
     (jump-to-register :vc-annotate-fullscreen))
   (eval-after-load "vc-annotate"
     '(progn

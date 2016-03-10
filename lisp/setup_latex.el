@@ -79,7 +79,7 @@
     (interactive)
     (if (TeX-active-process)
         (kill-process (TeX-active-process)))
-    (dirtree-exist-kill-this-buffer))
+    (dirtree-kill-this-buffer))
   ;; =================latex插入截图====================
   ;;1. suspend current emacs window
   ;;2. call scrot to capture the screen and save as a file in $HOME/.emacs.img/

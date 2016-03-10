@@ -6,7 +6,7 @@
   :init
   (bind-key "C-x j" 'dirtree-local)
   (bind-key "C-x J" 'dirtree-home)
-  (bind-key "C-q" 'dirtree-exist-kill-this-buffer)
+  (bind-key "C-q" 'dirtree-kill-this-buffer)
   (defun dirtree-local ()
     (interactive)
     (let* ((file buffer-file-name)
@@ -21,23 +21,19 @@
   (defun dirtree-home ()
     (interactive)
     (dirtree "~/" nil))
-  (defun dirtree-exist-kill-this-buffer ()
-    "switch to dirtree after killing this buffer"
+  (defun dirtree-kill-this-buffer ()
+    "switch to dirtree after killing this buffer."
     (interactive)
     (let ((swint-previous-buffer (car (swint-iswitchb-make-buflist))))
+      (bc-set)
+      ;; kill-buffer后不加参数会直接切换到之前所在的buffer，可能导致persp混乱，加参数则不会产生这个问题。
+      ;; 可以使用kill-this-buffer和kill-buffer-and-window，因为这两个函数中都使用了kill-buffer加参数的形式。
+      (kill-this-buffer)
       (if (equal (buffer-name (other-buffer (current-buffer) t)) "*dirtree*")
-          (dirtree-switch-to-dirtree)
+          (other-window 1)
         (progn
-          (bc-set)
-          (kill-this-buffer)
           ;; 关闭当前buffer之后切换到之前所在的buffer。
           (switch-to-buffer swint-previous-buffer)))))
-  (defun dirtree-switch-to-dirtree ()
-    "kill this buffer and switch to other windows"
-    (interactive)
-    (bc-set)
-    (kill-this-buffer)
-    (other-window 1))
   ;; ==================关闭当前buffer之后切换到之前访问过的buffer=======================
   ;; 原始的关闭buffer存在两个问题：
   ;; 一是会切换到helm buffer中，二是在persp之间切换时会切换到上一个persp的buffer中。
@@ -138,11 +134,6 @@ swint-`iswitchb-all-frames'."
                   (progn (w32-shell-execute "open" "word")
                          (sit-for 5)))
               (w32-browser file)))))))
-  (defun dirtree-quit ()
-    "quit dirtree and delete window"
-    (interactive)
-    (kill-this-buffer)
-    (delete-window))
   (defun dirtree-open-and-kill-dirtree ()
     "go to the position of buffer"
     (interactive)
@@ -155,7 +146,7 @@ swint-`iswitchb-all-frames'."
                (define-key dirtree-mode-map (kbd "C-p") 'tree-mode-previous-node)
                (define-key dirtree-mode-map (kbd "C-n") 'tree-mode-next-node)
                (define-key dirtree-mode-map "\C-j" 'dirtree-shell-command)
-               (define-key dirtree-mode-map (kbd "q") 'dirtree-quit)
+               (define-key dirtree-mode-map (kbd "q") 'kill-buffer-and-window)
                (define-key dirtree-mode-map (kbd "i") 'tree-mode-toggle-expand))))
 ;; 放弃使用键盘宏
 ;; (fset 'dirtree-local
