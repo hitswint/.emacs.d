@@ -5,7 +5,7 @@
   (if (active-minibuffer-window)
       (select-window (active-minibuffer-window))
     (error "Minibuffer is not active")))
-(global-set-key (kbd "C-c C-<tab>") 'switch-to-minibuffer)
+(global-set-key (kbd "C-x C-<tab>") 'switch-to-minibuffer)
 (define-key minibuffer-local-map (kbd "C-<tab>") 'nil)
 ;; ====================cycle-mini====================
 (use-package cycle-mini

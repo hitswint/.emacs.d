@@ -77,6 +77,7 @@
             helm-ag
             helm-bibtex
             helm-core
+            helm-descbinds
             helm-firefox
             helm-flycheck
             helm-flyspell

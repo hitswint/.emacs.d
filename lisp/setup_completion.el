@@ -217,7 +217,7 @@
 (use-package hippie-exp
   ;; Enabled at commands.
   :defer t
-  :bind ("M-?" . hippie-expand)
+  :bind ("C-x M-u" . hippie-expand)
   :config
   ;; 打开.english-words方式进行补全
   (setq hippie-expand-try-functions-list

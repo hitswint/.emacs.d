@@ -2,7 +2,7 @@
 (use-package magit
   ;; Enabled at commands.
   :defer t
-  :bind ("C-c g" . magit-status)
+  :bind ("C-x M-g" . magit-status)
   :config
   ;; (when is-win
   ;;   ;; 使用下列cygwin-mount可以解决cygwin的路径问题，但是会导致其他mode中路径不识别，例如org无法显示图片。
@@ -81,14 +81,6 @@
        (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
   (eval-after-load "magit"
     '(define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend))
-  ;; C-x C-k to kill file on line
-  (defun magit-kill-file-on-line ()
-    "Show file on current magit line and prompt for deletion."
-    (interactive)
-    (magit-visit-item)
-    (delete-current-buffer-file)
-    (magit-refresh))
-  (define-key magit-status-mode-map (kbd "C-x C-k") 'magit-kill-file-on-line)
   ;; full screen magit-status
   (defadvice magit-status (around magit-fullscreen activate)
     (window-configuration-to-register :magit-fullscreen)
@@ -142,10 +134,10 @@
       (shell-command (concat "git --bare init ~/Nutstore/"  (buffer-name) ".git")))
      (is-win
       (shell-command (concat "git --bare init /cygdrive/c/Users/swint/Nutstore/"  (buffer-name) ".git")))))
-  (global-set-key (kbd "C-c C-x ,") 'magit-clone-remote)
-  (global-set-key (kbd "C-c C-x .") 'magit-bare-init-remote)
-  ;; clone操作需要打开两个窗口一个是目标位置一个是Nutstore中远程库
-  ;; init操作不需要打开两个窗口，远程库自动生成在Nutstore中
+  ;; clone操作需要打开两个窗口一个是目标位置一个是Nutstore中远程库。
+  (global-set-key (kbd "M-g ,") 'magit-clone-remote)
+  ;; init操作不需要打开两个窗口，远程库自动生成在Nutstore中。
+  (global-set-key (kbd "M-g .") 'magit-bare-init-remote)
   (defun magit-remote-add (remote url)
     "Add the REMOTE and fetch it.
 \('git remote add REMOTE URL')."

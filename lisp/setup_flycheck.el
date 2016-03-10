@@ -12,9 +12,10 @@
   (define-key flycheck-mode-map flycheck-keymap-prefix nil)
   (setq flycheck-keymap-prefix (kbd "M-s M-c"))
   (define-key flycheck-mode-map flycheck-keymap-prefix flycheck-command-map)
-  (smartrep-define-key flycheck-mode-map "M-s M-c"
-    '(("p" . flycheck-previous-error)
-      ("n" . flycheck-next-error)))
+  (smartrep-define-key flycheck-mode-map "M-s"
+    '(("M-p" . flycheck-previous-error)
+      ("M-n" . flycheck-next-error)
+      ("M-c" . helm-flycheck)))
   ;; C-c ! c flycheck-buffer
   ;; C-c ! p flycheck-previous-error
   ;; C-c ! n flycheck-next-error
@@ -23,9 +24,7 @@
   (use-package helm-flycheck
     ;; Enabled at commands.
     :defer t
-    :commands helm-flycheck
-    :init
-    (bind-key "'" 'helm-flycheck flycheck-command-map))
+    :commands helm-flycheck)
   ;; From Emacsrocks
   (defun magnars/adjust-flycheck-automatic-syntax-eagerness ()
     "Adjust how often we check for errors based on if there are any.

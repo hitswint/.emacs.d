@@ -24,8 +24,8 @@
   (when is-win
     (setq preview-image-type 'pnm)
     (setq preview-gs-command "c:/Program Files (x86)/gs/gs9.09/bin/gswin32c.exe"))
-  ;; C-c C-x C-p 如果有选中，则preview选中，如果无选中，则preview全部buffer
-  ;; C-c C-x p 取消buffer的preview
+  ;; C-c C-x p preview选中或者全部。
+  ;; C-c C-x P 取消buffer的preview。
   ;; ===========preview===============
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
@@ -52,20 +52,11 @@
               (setq TeX-save-query nil)
               (imenu-add-menubar-index)
               (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-parse-all)
-              (define-key LaTeX-mode-map (kbd "C-c C-b") 'TeX-insert-macro)
               (define-key LaTeX-mode-map (kbd "TAB") 'TeX-complete-symbol)
               (define-key LaTeX-mode-map (kbd "C-q") 'swint-kill-tex-buffer)
-              (define-key LaTeX-mode-map (kbd "C-c C-x C-p") 'preview-at-point)
-              (define-key LaTeX-mode-map (kbd "C-c C-x p") 'preview-clearout-buffer)
-              (define-key LaTeX-mode-map (kbd "C-c RET") nil)
-              (define-key LaTeX-mode-map (kbd "C-c C-j") nil)
-              (define-key LaTeX-mode-map (kbd "C-c C-i") nil)
-              (define-key LaTeX-mode-map (kbd "C-c C-o") nil)
-              (define-key LaTeX-mode-map (kbd "C-c C-f") nil)
-              (define-key LaTeX-mode-map (kbd "\"") nil)
-              (define-key reftex-mode-map (kbd "C-c =") nil)
-              (define-key reftex-mode-map (kbd "C-c -") nil)
-              (define-key reftex-mode-map (kbd "C-c |") nil)))
+              (define-key LaTeX-mode-map (kbd "C-c C-x p") 'preview-at-point)
+              (define-key LaTeX-mode-map (kbd "C-c C-x P") 'preview-clearout-buffer)
+              (define-key LaTeX-mode-map (kbd "\"") nil)))
   (setq TeX-view-program-list
         '(("Llpp" "llpp %o")
           ("Firefox" "firefox %o")))
@@ -151,7 +142,7 @@
   (add-hook 'LaTeX-mode-hook
             '(lambda ()
                (define-key LaTeX-mode-map (kbd "C-c p") 'my-screenshot-tex-local)
-               (define-key LaTeX-mode-map (kbd "C-x p") 'my-screenshot-tex)))
+               (define-key LaTeX-mode-map (kbd "C-c P") 'my-screenshot-tex)))
   ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p
   ;; =================latex插入截图====================
   ;; ======================pandoc=============================

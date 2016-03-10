@@ -3,7 +3,7 @@
   ;; Enabled automatically.
   :config
   (ido-mode t)
-  (global-set-key (kbd "C-x f") 'ido-find-file)
+  ;; (global-set-key (kbd "C-x f") 'ido-find-file)
   ;; ====================ido-back-to-home===========================
   (add-hook 'ido-setup-hook
             (lambda ()

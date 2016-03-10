@@ -18,13 +18,52 @@
   (if (not ispell-alternate-dictionary)
       (setq ispell-alternate-dictionary (file-truename "~/.english-words")))
   :config
-  (use-package ispell))
+  (use-package ispell)
+  (define-key flyspell-mode-map (kbd "C-,") nil)
+  (define-key flyspell-mode-map (kbd "C-.") nil)
+  (smartrep-define-key flyspell-mode-map "M-s"
+    '(("M-p" . flyspell-goto-previous-error)
+      ("M-n" . flyspell-goto-next-error)
+      ("M-f" . helm-flyspell-correct)))
+  (defun flyspell-goto-previous-error (arg)
+    "Go to arg previous spelling error."
+    (interactive "p")
+    (while (not (= 0 arg))
+      (let ((pos (point))
+            (min (point-min)))
+        (if (and (eq (current-buffer) flyspell-old-buffer-error)
+                 (eq pos flyspell-old-pos-error))
+            (progn
+              (if (= flyspell-old-pos-error min)
+                  ;; goto beginning of buffer
+                  (progn
+                    (message "Restarting from end of buffer")
+                    (goto-char (point-max)))
+                (backward-word 1))
+              (setq pos (point))))
+        ;; seek the next error
+        (while (and (> pos min)
+                    (let ((ovs (overlays-at pos))
+                          (r '()))
+                      (while (and (not r) (consp ovs))
+                        (if (flyspell-overlay-p (car ovs))
+                            (setq r t)
+                          (setq ovs (cdr ovs))))
+                      (not r)))
+          (backward-word 1)
+          (setq pos (point)))
+        ;; save the current location for next invocation
+        (setq arg (1- arg))
+        (setq flyspell-old-pos-error pos)
+        (setq flyspell-old-buffer-error (current-buffer))
+        (goto-char pos)
+        (if (= pos min)
+            (progn
+              (message "No more miss-spelled word!")
+              (setq arg 0)))))))
 (use-package helm-flyspell
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s M-f" . helm-flyspell-correct)
-  :config
-  (define-key flyspell-mode-map (kbd "C-,") nil)
-  (define-key flyspell-mode-map (kbd "C-.") nil))
+  :bind ("M-s M-f" . helm-flyspell-correct))
 ;; ================================flyspell==================================
 (provide 'setup_flyspell)

@@ -2,7 +2,7 @@
 (use-package recentf
   ;; Enabled at commands.
   :defer t
-  :bind ("C-c f" . recentf-ido-find-file)
+  :bind ("C-x M-f" . recentf-ido-find-file)
   :config
   (recentf-mode 1)
   ;; recentf改用helm前端。

@@ -16,8 +16,8 @@
   (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
   (global-set-key (kbd "C-'") 'swint-helm-bookmarks)
   (global-set-key (kbd "C-x C-f") 'swint-helm-find-files)
+  (global-set-key (kbd "C-x f") 'helm-locate)
   (global-set-key (kbd "M-x") 'helm-M-x)
-  (global-set-key (kbd "C-c C-f") 'helm-locate)
   ;; ==================helm-file-buffer=====================
   (defun swint-helm-file-buffers-list--init/curr-persp ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
@@ -614,16 +614,16 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 ;; =========================helm_lacarte=============================
 ;; =======================helm-bibtex==============================
 (use-package helm-bibtex
-  ;; Enabled at commands.
+  ;; Enabled after features.
   :defer t
-  :bind ("C-c C-x b" . swint-helm-bibtex)
+  :after tex
   :init
+  (setq helm-bibtex-bibliography "./literature.bib")
   (defun swint-helm-bibtex ()
     (interactive)
     (unless (file-exists-p helm-bibtex-bibliography)
       (zotelo-set-collection))
     (helm-bibtex))
-  (setq helm-bibtex-bibliography "./literature.bib")
   ;; (zotelo-translator-charsets (quote ((BibTeX . "Unicode") (Default . "Unicode"))))
   ;; 设置.bib文件的编码格式，否则出现乱码
   (defvar helm-source-bibtex
@@ -645,7 +645,9 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   ;; 重新定义插入citation命令为\citep{}。
   (defun swint-helm-bibtex-format-citation-cite (keys)
     "Formatter for LaTeX citation macro."
-    (format "\\citep{%s}" (s-join ", " keys))))
+    (format "\\citep{%s}" (s-join ", " keys)))
+  :config
+  (bind-key "C-c b" 'swint-helm-bibtex TeX-mode-map))
 ;; =======================helm-bibtex==============================
 ;; ================helm-swoop================
 (use-package helm-swoop
@@ -693,5 +695,12 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
     (custom-set-variables
      '(helm-ag-base-command "pt -e --nocolor --nogroup"))))
 ;; ====================helm-ag=========================
+;; ================helm-descbinds======================
+(use-package helm-descbinds
+  ;; Enabled at idle.
+  :defer 2
+  :config
+  (helm-descbinds-mode))
+;; ================helm-descbinds======================
 ;; ================helm================
 (provide 'setup_helm)

@@ -18,18 +18,25 @@
 ;; ======================文件加密===================================
 ;; ====================multiple-cursors============================
 (use-package multiple-cursors
-  ;; Enabled at commands.
-  :defer t
-  :bind (("C-M-," . mc/mark-previous-like-this)
-         ("C-M-." . mc/mark-next-like-this)
-         ("M-s ," . mc/edit-lines)
-         ("M-s ." . mc/mark-all-like-this)
-         ("M-s /" . mc/insert-numbers)))
-;; (global-set-key (kbd "C-M-;") 'set-rectangular-region-anchor)
-;; mc/i:mc/insert-numbers: Insert increasing numbers for each cursor, top to bottom.
-;; mc/sort-regions: Sort the marked regions alphabetically.
-;; mc/reverse-regions: Reverse the order of the marked regions.
-;; messages中会出现Error during redisplay: (error Lisp nesting exceeds `max-lisp-eval-depth')的错误。
+  ;; Enabled at idle.
+  :defer 2
+  :config
+  (bind-key "C-M-," 'mc/mark-previous-like-this)
+  (bind-key "C-M-." 'mc/mark-next-like-this)
+  (bind-key "<C-M-mouse-1>" 'mc/add-cursor-on-click)
+  (smartrep-define-key global-map "C-x"
+    '(("C-M-," . mc/unmark-previous-like-this)
+      ("C-M-." . mc/unmark-next-like-this)
+      ("M-<" . mc/skip-to-previous-like-this)
+      ("M->" . mc/skip-to-next-like-this)
+      ("C-M-;" . mc/mark-all-like-this)
+      ("C-M-/" . mc/edit-lines)
+      ("C-M-'" . mc/mark-more-like-this-extended)
+      ("M-m" . mc/mark-pop)
+      ("M-:" . mc/insert-numbers)
+      ("M-\"" . mc/insert-letters)
+      ("M-?" . mc/sort-regions)))
+  (define-key mc/keymap (kbd "C-`") 'mc-hide-unmatched-lines-mode))
 ;; ====================multiple-cursors============================
 ;; ====================expand-region=========================
 (use-package expand-region
@@ -58,14 +65,18 @@
   ;; Enabled at commands.
   :load-path "site-lisp/breadcrumb/"
   :defer t
-  :bind (("C-c C-/" . bc-set)
-         ("C-c C-," . bc-previous)
-         ("C-c C-." . bc-next)))
+  :commands (bc-previous bc-next bc-set)
+  :init
+  (bind-key "C-x C-," 'bc-previous)
+  (bind-key "C-x C-." 'bc-next)
+  :config
+  ;; 默认被session-jump-to-last-change占用。
+  (bind-key "C-x C-/" 'bc-set))
 ;; 删除breadcrumb.el源文件中(message "breadcrumb bookmark is set for the current position.")，使bc-set不出现提示。
-;; (global-set-key (kbd "C-c /") 'bc-list) ;; C-x M-j for the bookmark menu list
-;; (global-set-key (kbd "C-c /") 'bc-local-previous) ;; M-up-arrow for local previous
-;; (global-set-key (kbd "C-c /") 'bc-local-next)     ;; M-down-arrow for local next
-;; (global-set-key (kbd "C-c /") 'bc-goto-current) ;; C-c j for jump to current bookmark
+;; (global-set-key (kbd "C-x C-/") 'bc-list) ;; C-x M-j for the bookmark menu list
+;; (global-set-key (kbd "C-x C-/") 'bc-local-previous) ;; M-up-arrow for local previous
+;; (global-set-key (kbd "C-x C-/") 'bc-local-next)     ;; M-down-arrow for local next
+;; (global-set-key (kbd "C-x C-/") 'bc-goto-current) ;; C-c j for jump to current bookmark
 ;; ==================breadcrumb==================
 ;; ==================auto-mark===================
 (use-package auto-mark
@@ -129,15 +140,15 @@
   ;; Enabled at commands.
   :load-path "site-lisp/everything/"
   :if is-win
-  :bind ("C-c C-S-f" . everything)
+  :bind ("C-x F" . everything)
   :init
-  (global-set-key (kbd "C-c C-M-f") '(lambda () (interactive)
+  (global-set-key (kbd "C-x C-S-f") '(lambda () (interactive)
                                        (w32-shell-execute
                                         "open" "c:/Program Files/Everything/Everything.exe")))
-  (global-set-key (kbd "C-c M-f") '(lambda () (interactive)
-                                     (w32-shell-execute
-                                      "open" "c:/Program Files/Everything/Everything.exe"
-                                      (concat "-p " (expand-file-name default-directory)))))
+  (global-set-key (kbd "C-x C-M-f") '(lambda () (interactive)
+                                       (w32-shell-execute
+                                        "open" "c:/Program Files/Everything/Everything.exe"
+                                        (concat "-p " (expand-file-name default-directory)))))
   :config
   (setq everything-ffap-integration nil) ;; to disable ffap integration
   (setq everything-matchpath t)
@@ -200,9 +211,9 @@
   (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
     (add-hook hook 'elisp-slime-nav-mode))
   :config
-  (define-key elisp-slime-nav-mode-map (kbd "C-x C-,") 'elisp-slime-nav-find-elisp-thing-at-point)
-  (define-key elisp-slime-nav-mode-map (kbd "C-x C-.") 'pop-tag-mark)
-  (define-key elisp-slime-nav-mode-map (kbd "C-x C-/") 'elisp-slime-nav-describe-elisp-thing-at-point)
+  (define-key elisp-slime-nav-mode-map (kbd "C-c C-,") 'elisp-slime-nav-find-elisp-thing-at-point)
+  (define-key elisp-slime-nav-mode-map (kbd "C-c C-.") 'pop-tag-mark)
+  (define-key elisp-slime-nav-mode-map (kbd "C-c C-/") 'elisp-slime-nav-describe-elisp-thing-at-point)
   (define-key elisp-slime-nav-mode-map (kbd "M-.") nil)
   (define-key elisp-slime-nav-mode-map (kbd "M-,") nil)
   (define-key elisp-slime-nav-mode-map (kbd "C-c C-d d") nil)
@@ -255,9 +266,9 @@
     '(("/" . highlight-symbol-at-point)
       ("," . highlight-symbol-prev)
       ("." . highlight-symbol-next)))
+  ;; (global-set-key (kbd "C-c ") 'highlight-symbol-query-replace)
   :config
   (setq highlight-symbol-foreground-color "gray30"))
-;; (global-set-key (kbd "C-c ") 'highlight-symbol-query-replace)
 ;; ===================highlight-symbol====================
 ;; ===================elmacro====================
 ;; 需要先打开elmacro-mode，然后F3/F4录制宏
@@ -324,13 +335,13 @@
 (use-package multifiles
   ;; Enabled at commands.
   :defer t
-  :bind ("C-c t" . mf/mirror-region-in-multifile))
+  :bind ("M-s t" . mf/mirror-region-in-multifile))
 ;; ============multifiles=============
 ;; ============ztree=============
 (use-package ztree-diff
   ;; Enabled at commands.
   :defer t
-  :bind ("C-c z" . ztree-diff))
+  :bind ("M-s z" . ztree-diff))
 ;; ============ztree=============
 ;; ============which-key=============
 ;; 原用guide-key，改用which-key，显示更好。
@@ -346,7 +357,15 @@
   (setq which-key-sort-order 'which-key-description-order)
   ;; 使用C-h或?切换页面。
   (setq which-key-use-C-h-for-paging t
-        which-key-prevent-C-h-from-cycling nil))
+        which-key-prevent-C-h-from-cycling nil)
+  ;; 默认的C-h启用describe-prefix-bindings不带prefix。
+  (defun which-key-show-standard-help ()
+    "Call the command in `which-key--prefix-help-cmd-backup'.
+Usually this is `describe-prefix-bindings'."
+    (interactive)
+    (let ((which-key-inhibit t))
+      (which-key--hide-popup-ignore-command)
+      (helm-descbinds which-key--current-prefix))))
 ;; ============which-key=============
 ;; ===================pdf-tools=================
 ;; 添加的注释跟okular类似，将注释的内容另存为一份文件，只有在emacs中才能看到。
@@ -365,19 +384,18 @@
   ;; (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
   ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。取消。
   ;; (add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
-  (define-key pdf-view-mode-map (kbd "C-c C-i") nil)
   (define-key pdf-view-mode-map (kbd "i") 'imenu)
   (define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save)
   (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
   (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
   (define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
   (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
-  (define-key pdf-view-mode-map (kbd "C-x C-l") '(lambda () (interactive)
-                                                   (dired-jump-other-window)
-                                                   (org-annotate-file (abbreviate-file-name (dired-get-filename)))))
-  (define-key pdf-view-mode-map (kbd "C-c C-l") '(lambda () (interactive)
-                                                   (dired-jump-other-window)
-                                                   (swint-org-annotate-file (abbreviate-file-name (dired-get-filename))))))
+  (define-key pdf-view-mode-map (kbd "C-x L") '(lambda () (interactive)
+                                                 (dired-jump-other-window)
+                                                 (org-annotate-file (abbreviate-file-name (dired-get-filename)))))
+  (define-key pdf-view-mode-map (kbd "C-x l") '(lambda () (interactive)
+                                                 (dired-jump-other-window)
+                                                 (swint-org-annotate-file (abbreviate-file-name (dired-get-filename))))))
 ;; Failed to fix the bug of pdf-view-mode.
 ;; (defun swint-pdf-history-goto-beginning ()
 ;;   "Fix the bug of reverting to beginning of pdf after persp-switch."
@@ -419,16 +437,16 @@ is named like ODF with the extension turned to pdf."
                                     (concat (doc-view--current-cache-dir) (file-name-base odf) ".pdf") odf)
                               callback))))
 ;; ==================doc-view-mode================
-;; ================backup-walker================
+;; ================backup================
 (use-package backup-walker
   ;; Enabled at commands.
   :defer t
-  :bind ("C-x b" . backup-walker-start))
+  :bind ("C-x B" . backup-walker-start))
 (use-package git-timemachine
   ;; Enabled at commands.
   :defer t
-  :bind ("C-c b" . git-timemachine))
-;; ================backup-walker================
+  :bind ("C-x b" . git-timemachine))
+;; ================backup================
 ;; ===============visual-regexp===============
 (use-package visual-regexp
   ;; Enabled at commands.
@@ -449,7 +467,7 @@ is named like ODF with the extension turned to pdf."
   (use-package vlf-setup)
   (custom-set-variables '(vlf-application 'dont-ask))
   (add-to-list 'vlf-forbidden-modes-list 'pdf-view-mode)
-  (define-key vlf-prefix-map "\C-cv" vlf-mode-map))
+  (define-key vlf-prefix-map "\C-c\C-v" vlf-mode-map))
 ;; C-c C-v n and C-c C-v p move batch by batch.
 ;; C-c C-v SPC displays batch starting from current point.
 ;; C-c C-v [ and C-c C-v ] take you to the beginning and end of file respectively.
@@ -485,7 +503,7 @@ is named like ODF with the extension turned to pdf."
   ;; Enabled at commands.
   :defer t
   :init
-  (smartrep-define-key global-map "C-c"
+  (smartrep-define-key global-map "M-s"
     '(("/" . bm-toggle)
       ("," . bm-previous)
       ("." . bm-next))))
@@ -526,12 +544,12 @@ is named like ODF with the extension turned to pdf."
     ;; finalization code is run.
     (condition-case e
         (smartrep-read-event-loop
-         '(("M-:" . goto-last-change)
-           (";" . goto-last-change-reverse)))
+         '(("M-?" . goto-last-change)
+           ("?" . goto-last-change-reverse)))
       (quit nil))
     ;; (finalize-event-loop)
     )
-  (global-set-key (kbd "M-:") 'swint-goto-chg-command-with-prefix))
+  (global-set-key (kbd "M-?") 'swint-goto-chg-command-with-prefix))
 ;; ============goto-last-change============
 ;; =================Proced=================
 (use-package proced
@@ -598,7 +616,7 @@ is named like ODF with the extension turned to pdf."
 ;; =============vimish-fold===============
 ;; =============clipmon===============
 (use-package clipmon
-  ;; Enabled at commands.
+  ;; Enabled after features.
   :defer t
   :after easy-kill
   :config

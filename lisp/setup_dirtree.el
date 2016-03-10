@@ -4,8 +4,8 @@
   :defer t
   :commands dirtree
   :init
-  (bind-key "C-c C-j" 'dirtree-local)
-  (bind-key "C-c j" 'dirtree-home)
+  (bind-key "C-x j" 'dirtree-local)
+  (bind-key "C-x J" 'dirtree-home)
   (bind-key "C-q" 'dirtree-exist-kill-this-buffer)
   (defun dirtree-local ()
     (interactive)
@@ -29,16 +29,9 @@
           (dirtree-switch-to-dirtree)
         (progn
           (bc-set)
-          (cond
-           (is-lin
-            ;; (kill-this-buffer)             ;卸载slim后失效
-            (kill-buffer (current-buffer)))
-           (is-win (kill-this-buffer)))
-          (switch-to-buffer swint-previous-buffer)
-          ;; 下面不可行，如果当前buffer不显示在buflist中，那么会kill其他的buffer
-          ;; (switch-to-buffer (car (swint-iswitchb-make-buflist nil)))
-          ;; (kill-buffer (car (swint-iswitchb-make-buflist nil)))
-          ))))
+          (kill-this-buffer)
+          ;; 关闭当前buffer之后切换到之前所在的buffer。
+          (switch-to-buffer swint-previous-buffer)))))
   (defun dirtree-switch-to-dirtree ()
     "kill this buffer and switch to other windows"
     (interactive)

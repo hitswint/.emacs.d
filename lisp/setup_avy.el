@@ -2,24 +2,22 @@
 (use-package ace-pinyin
   ;; Enabled at commands.
   :defer t
-  :bind (("C-h" . ace-pinyin-jump-char))
+  :bind ("C-h" . ace-pinyin-jump-char)
   :init
   (use-package avy
     ;; Enabled at commands.
     :defer t
-    :bind (("C-x C-h" . avy-goto-word-0)
-           ("C-c C-h" . avy-goto-word-1))
-    :init
-    (bind-key "C-h"  'avy-isearch isearch-mode-map)
+    :bind (:map isearch-mode-map
+                ("C-h" . avy-isearch))
     :config
     ;; at-full会造成ace-pinyin显示不正确。
     (setq avy-keys (number-sequence ?a ?z))
     (setq avy-styles-alist '((avy-goto-char . at)
                              (avy-goto-char-2 . at)
                              (avy-goto-word-0 . at)))
-    (setq avy-dispatch-alist '((23 . avy-action-kill)
-                               (67108923 . avy-action-mark)
-                               (134217847 . avy-action-copy))))
+    (setq avy-dispatch-alist '((?\C-w . avy-action-kill)
+                               (?\C-\; . avy-action-mark)
+                               (?\M-w . avy-action-copy))))
   (use-package avy-zap
     ;; Enabled at commands.
     :bind (("M-z" . avy-zap-to-char-dwim)
@@ -34,18 +32,22 @@
                            (read-char "char: ")
                          (read-char "Query Char:"))))
     (cond
-     ((= query-char 8)
+     ((= query-char ?\C-h)
       (call-interactively 'avy-goto-char-2))
-     ((= query-char 12)
+     ((= query-char ?\C-l)
       (call-interactively 'avy-goto-line))
-     ((= query-char 19)
+     ((= query-char ?\C-s)
       (call-interactively 'swint-avy-goto-char-timer))
-     ((= query-char 134217847)
+     ((= query-char ?\M-w)
       (call-interactively 'avy-copy-line))
-     ((= query-char 23)
+     ((= query-char ?\C-w)
       (call-interactively 'avy-move-line))
-     ((= query-char 134217751)
+     ((= query-char ?\C-\M-w)
       (call-interactively 'avy-copy-region))
+     ((= query-char ?\C-x)
+      (call-interactively 'avy-goto-word-0))
+     ((= query-char ?\C-c)
+      (call-interactively 'avy-goto-word-1))
      (t (cond (ace-pinyin-mode
                (ace-pinyin--jump-impl query-char))
               (ace-pinyin-use-avy

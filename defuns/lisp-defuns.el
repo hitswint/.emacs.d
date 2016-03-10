@@ -1,5 +1,5 @@
 ;; ====================eval-expression=====================
-(global-set-key (kbd "C-c =") 'replace-last-sexp)
+(global-set-key (kbd "C-x e") 'replace-last-sexp)
 (defun replace-last-sexp ()
   (interactive)
   (let ((value (eval (preceding-sexp))))

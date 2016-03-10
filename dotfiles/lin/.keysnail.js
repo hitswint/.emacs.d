@@ -135,7 +135,7 @@ key.setGlobalKey('C-r', function (ev) {
     command.iSearchBackwardKs(ev);
 }, 'Emacs like incremental search backward', true);
 
-key.setGlobalKey(['C-c', 'C-,'], function (ev) {
+key.setGlobalKey(['C-x', 'C-,'], function (ev) {
     undoCloseTab();
 }, 'Undo closed tab');
 

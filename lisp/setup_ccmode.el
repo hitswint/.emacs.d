@@ -24,6 +24,10 @@
                          file)))))
   (add-hook 'c-mode-hook
             (lambda ()
+              (define-key c-mode-base-map (kbd "<f5>") (lambda ()
+                                                         (interactive)
+                                                         (setq-local compilation-read-command nil)
+                                                         (call-interactively 'compile)))
               (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
               (define-key c-mode-base-map (kbd "(") nil)
               (define-key c-mode-base-map (kbd "{") nil)))
@@ -43,9 +47,9 @@
 (use-package gdb-mi
   ;; Enabled at commands.
   :defer t
-  :bind (("C-M-S-g" . gdb)
-         ("C-M-g" . gdb-or-gud-go)
-         ("C-S-g" . gud-kill))
+  :bind (("M-s M-g" . gdb)
+         ("M-s g" . gdb-or-gud-go)
+         ("M-s G" . gud-kill))
   :config
   ;; 默认打开多窗口会有问题
   (setq gdb-many-windows t)
@@ -75,7 +79,6 @@
   ;; 关闭gdb的process时，关闭buffer。取自setup_misc中'退出shell时关闭buffer'。
   (add-hook 'gdb-mode-hook 'kill-shell-buffer-after-exit t)
   ;; 直接使用gdb-or-gud-go会显示gud-comint-buffer变量未定义，需要先使用gdb一次，然后才能使用gdb-or-gud-go。
-  ;; 所以先使用C-M-S-g一次，再使用C-M-g。
   )
 ;; =======================gdb=======================
 ;; =======================function-args===========================
@@ -85,10 +88,10 @@
   :init
   (add-hook 'c-mode-hook 'fa-config-default)
   :config
-  (define-key function-args-mode-map (kbd "M-s M-u") 'moo-complete)
-  (define-key function-args-mode-map (kbd "M-s M-U") 'fa-show)
+  (define-key function-args-mode-map (kbd "C-c o") 'moo-complete)
+  (define-key function-args-mode-map (kbd "C-c O") 'fa-show)
   (define-key function-args-mode-map (kbd "C-j") 'fa-jump-maybe)
-  (define-key function-args-mode-map (kbd "M-s C-i") 'moo-jump-local)
+  (define-key function-args-mode-map (kbd "C-c i") 'moo-jump-local)
   (define-key function-args-mode-map (kbd "M-n") nil)
   (define-key function-args-mode-map (kbd "M-u") nil))
 ;; =======================function-args===========================
@@ -114,11 +117,10 @@
   ;; 在minibuffer显示函数。
   (global-semantic-idle-summary-mode 1)
   ;; 在header-line显示函数，显示有问题。可以用which-function-mode代替。
-  (global-semantic-stickyfunc-mode 0)
+  (global-semantic-stickyfunc-mode 1)
   (semantic-mode 1)
-  (define-key semantic-mode-map (kbd "C-c ,") nil)
   ;; 所有semantic的快捷键均以C-c ,为前缀，可以考虑用M-s s代替。
-  )
+  (define-key semantic-mode-map (kbd "C-c ,") nil))
 ;; =======================semantic===========================
 ;; =======================helm-gtags===========================
 ;; helm-man-woman: C-x c m
@@ -132,7 +134,7 @@
         helm-gtags-auto-update t
         helm-gtags-use-input-at-cursor t
         helm-gtags-pulse-at-cursor t
-        helm-gtags-prefix-key "\M-sg"
+        helm-gtags-prefix-key "\C-c"
         helm-gtags-suggested-key-mapping t)
   ;; Enable helm-gtags-mode
   ;; (add-hook 'dired-mode-hook 'helm-gtags-mode)
@@ -141,12 +143,13 @@
   (add-hook 'c++-mode-hook 'helm-gtags-mode)
   (add-hook 'asm-mode-hook 'helm-gtags-mode)
   :config
-  (define-key helm-gtags-mode-map (kbd "M-s g a") 'helm-gtags-tags-in-this-function)
-  (define-key helm-gtags-mode-map (kbd "C-x C-,") 'helm-gtags-dwim)
-  (define-key helm-gtags-mode-map (kbd "C-x C-.") 'helm-gtags-pop-stack)
-  (define-key helm-gtags-mode-map (kbd "C-x C-/") 'helm-gtags-select)
-  (define-key helm-gtags-mode-map (kbd "C-x <") 'helm-gtags-previous-history)
-  (define-key helm-gtags-mode-map (kbd "C-x >") 'helm-gtags-next-history)
+  (define-key helm-gtags-mode-map (kbd "C-c a") 'helm-gtags-tags-in-this-function)
+  (define-key helm-gtags-mode-map (kbd "C-c C-,") 'helm-gtags-dwim)
+  (define-key helm-gtags-mode-map (kbd "C-c C-.") 'helm-gtags-pop-stack)
+  (define-key helm-gtags-mode-map (kbd "C-c C-/") 'helm-gtags-select)
+  (define-key helm-gtags-mode-map (kbd "C-c ,") 'helm-gtags-previous-history)
+  (define-key helm-gtags-mode-map (kbd "C-c .") 'helm-gtags-next-history)
+  (define-key helm-gtags-mode-map (kbd "C-c /") 'helm-gtags-show-stack)
   (define-key helm-gtags-mode-map (kbd "M-.") nil))
 ;; =======================helm-gtags===========================
 ;; =======================company===========================

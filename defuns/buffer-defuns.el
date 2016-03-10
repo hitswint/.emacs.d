@@ -88,7 +88,7 @@ Emacs buffers are those whose name starts with *."
 (global-set-key (kbd "M-J") 'move-border-down)
 ;; ======================intuitive window resizing=======================
 ;; ======================切换窗口分割模式========================
-(global-set-key (kbd "C-c C-i") 'toggle-window-split)
+(global-set-key (kbd "C-x C-i") 'toggle-window-split)
 ;; (defun window-toggle-split-direction ()
 ;;   "Switch window split from horizontally to vertically, or vice versa.
 ;; i.e. change right window to bottom, or change bottom window to right."
@@ -141,7 +141,7 @@ Emacs buffers are those whose name starts with *."
           (if this-win-2nd (other-window 1))))))
 ;; ======================切换窗口分割模式========================
 ;; ======================循环窗口============================
-(global-set-key (kbd "C-c C-o") 'rotate-windows)
+(global-set-key (kbd "C-x C-o") 'rotate-windows)
 (defun rotate-windows ()
   "Rotate your windows"
   (interactive)

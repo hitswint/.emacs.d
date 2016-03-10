@@ -12,7 +12,7 @@
   "[。，！？；：「」『』（）、【】《》〈〉※—]")
 (defvar wc-regexp-english-word
   "[a-zA-Z0-9-]+")
-(defun wc ()
+(defun swint-count-words-region ()
   "「較精確地」統計中/日/英文字數。
 - 文章中的註解不算在字數內。
 - 平假名與片假名亦包含在「中日文字數」內，每個平/片假名都算單獨一個字（但片假
@@ -62,5 +62,5 @@
              chinese-char chinese-char-and-punc english-word
              (+ chinese-char english-word)
              (+ chinese-char-and-punc english-word)))))
-(global-set-key (kbd "C-x l") 'wc)
+(global-set-key (kbd "M-=") 'swint-count-words-region)
 ;; ==============WordsCount===============

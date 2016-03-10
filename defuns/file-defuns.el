@@ -16,7 +16,7 @@
 ;; ===============改变文件编码==============
 (fset 'swint-coding-system
       [?\C-x return ?r ?u ?t ?f ?- ?8 ?- ?u ?n ?i ?x ?\C-m ?y])
-(global-set-key (kbd "C-c u") 'swint-coding-system)
+(global-set-key (kbd "M-s u") 'swint-coding-system)
 ;; ===============改变文件编码==============
 ;; ===============dos2unix===============
 (defun save-buffer-with-dos2unix ()

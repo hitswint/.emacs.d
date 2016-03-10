@@ -7,9 +7,10 @@
   (set-face-attribute 'org-level-6 nil :bold nil :foreground "magenta" :height 1.0)
   (set-face-attribute 'org-level-7 nil :bold nil :foreground "purple" :height 1.0)
   (set-face-attribute 'org-level-8 nil :bold nil :foreground "gray" :height 1.0)
-  (global-set-key (kbd "C-c l") 'org-store-link)
-  (global-set-key (kbd "C-c c") 'org-capture)
-  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "M-s o") nil)
+  (global-set-key (kbd "M-s o l") 'org-store-link)
+  (global-set-key (kbd "M-s o c") 'org-capture)
+  (global-set-key (kbd "M-s o a") 'org-agenda)
   (add-hook 'org-mode-hook (lambda ()
                              ;; 插入source code时高亮，C-c ' 打开相应major-mode编辑窗口。
                              (setq org-src-fontify-natively t)
@@ -19,8 +20,7 @@
                              (setq org-imenu-depth 8)
                              (turn-on-font-lock)))
   (setq org-capture-templates
-        '(
-          ("i" "Idea" entry (file+headline "~/org/task.org" "Idea List")
+        '(("i" "Idea" entry (file+headline "~/org/task.org" "Idea List")
            "* TODO %? %^g")
           ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work")
            "* %? %U %^g")
@@ -39,15 +39,7 @@
                (define-key org-mode-map (kbd "C-c C-v") 'swint-org-open-export-pdf)
                (define-key org-mode-map (kbd "C-c i") 'org-open-at-point-with-apps)
                (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-org-open-at-point t)))
-               (define-key org-mode-map (kbd "C-c C-x C-p") 'org-preview-latex-fragment)
-               (define-key org-mode-map (kbd "C-c C-i") nil)
-               (define-key org-mode-map (kbd "C-c C-o") nil)
-               (define-key org-mode-map (kbd "C-c C-j") nil)
-               (define-key org-mode-map (kbd "C-c RET") nil)
-               (define-key org-mode-map (kbd "C-o") nil)
-               (define-key org-mode-map (kbd "M-a") nil)
-               (define-key org-mode-map (kbd "M-e") nil)
-               (define-key org-mode-map (kbd "RET") nil)
+               (define-key org-mode-map (kbd "C-c C-x p") 'org-preview-latex-fragment)
                (define-key org-mode-map (kbd "C-M-i") 'org-cycle)
                (define-key org-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
                (define-key org-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
@@ -57,10 +49,10 @@
                (define-key org-mode-map (kbd "C-a") nil)
                (define-key org-mode-map (kbd "C-e") 'end-of-line)
                (define-key org-mode-map (kbd "C-j") nil)
-               (define-key org-mode-map (kbd "C-c j") nil)
-               (define-key org-mode-map (kbd "C-c =") nil)
-               (define-key org-mode-map (kbd "C-c C-f") nil)
-               (define-key org-mode-map (kbd "C-c ?") nil)
+               (define-key org-mode-map (kbd "C-o") nil)
+               (define-key org-mode-map (kbd "M-a") nil)
+               (define-key org-mode-map (kbd "M-e") nil)
+               (define-key org-mode-map (kbd "RET") nil)
                (define-key org-mode-map [(control \,)] nil)
                (define-key org-mode-map [(control \.)] nil)
                (define-key org-mode-map [(control \#)] nil)
@@ -176,8 +168,8 @@
             (replace-regexp-in-string "/" "\\" filename t t))
       (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil
                     (concat "/clippaste /convert=" windows-filename)))))
-  (global-set-key (kbd "C-c M-p") 'my-screenshot-local)
-  (global-set-key (kbd "C-x M-p") 'my-screenshot)
+  (global-set-key (kbd "C-x p") 'my-screenshot-local)
+  (global-set-key (kbd "C-x P") 'my-screenshot)
   ;; ==============截图================
   ;; =================org插入截图====================
   ;;1. suspend current emacs window
@@ -254,7 +246,7 @@
   (add-hook 'org-mode-hook
             '(lambda ()
                (define-key org-mode-map (kbd "C-c p") 'my-screenshot-org-local)
-               (define-key org-mode-map (kbd "C-x p") 'my-screenshot-org)))
+               (define-key org-mode-map (kbd "C-c P") 'my-screenshot-org)))
   ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p
   ;; org中打开和关闭图片显示(org-display-inline-images)和(org-remove-inline-images)。
   ;; 可以使用(org-toggle-inline-images)快捷键为C-c C-x C-v。
@@ -618,20 +610,28 @@ depending on the last command issued."
   ;; Enabled at commands.
   :load-path "site-lisp/org-annotate-file/"
   :defer t
-  :bind ("C-x C-l" . org-annotate-file)
+  :commands org-annotate-file
   :init
-  (setq org-annotate-file-storage-file "~/org/annotated/annotated.org")
-  (define-key dired-mode-map (kbd "C-x C-l") '(lambda () (interactive)
-                                                (org-annotate-file (abbreviate-file-name (dired-get-filename))))))
+  (bind-key "C-x L" 'org-annotate-file-current)
+  (defun org-annotate-file-current ()
+    (interactive)
+    (if (equal major-mode 'dired-mode)
+        (org-annotate-file (abbreviate-file-name (dired-get-filename)))
+      (org-annotate-file (abbreviate-file-name (buffer-file-name)))))
+  (setq org-annotate-file-storage-file "~/org/annotated/annotated.org"))
 ;; 新建swint-org-annotate-file.el用于局部注释
 (use-package swint-org-annotate-file
   ;; Enabled at commands.
   :load-path "site-lisp/org-annotate-file/"
   :defer t
-  :bind ("C-c C-l" . swint-org-annotate-file)
+  :commands swint-org-annotate-file
   :init
-  (define-key dired-mode-map (kbd "C-c C-l") '(lambda () (interactive)
-                                                (swint-org-annotate-file (abbreviate-file-name (dired-get-filename))))))
+  (bind-key "C-x l" 'swint-org-annotate-file-current)
+  (defun swint-org-annotate-file-current ()
+    (interactive)
+    (if (equal major-mode 'dired-mode)
+        (swint-org-annotate-file (abbreviate-file-name (dired-get-filename)))
+      (swint-org-annotate-file (abbreviate-file-name (buffer-file-name))))))
 ;; ======================org标注工具=============================
 ;; ==================org-mode==========================
 (provide 'setup_org_mode)

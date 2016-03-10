@@ -152,7 +152,7 @@ region\) apply comment-or-uncomment to the current line"
     (if (< (point) (mark))
         (comment-or-uncomment-region (point) (mark))
       (comment-or-uncomment-region (mark) (point)))))
-(global-set-key (kbd "C-c C-;") 'comment-or-uncomment-region-or-line)
+(global-set-key (kbd "M-:") 'comment-or-uncomment-region-or-line)
 ;; ====================注释/反注释-行或区域===================
 ;; ====================smart-beginning-of-line=============
 ;; "smart" home, i.e., home toggles b/w 1st non-blank character and 1st column
@@ -207,8 +207,8 @@ region\) apply comment-or-uncomment to the current line"
   (unless (use-region-p)
     (error "No region specified"))
   (replace-regexp "[ \n]+" "_" nil (region-beginning) (region-end)))
-(global-set-key (kbd "C-c -") 'jcs-dashify)
-(global-set-key (kbd "C-c _") 'jcs-dashify-underline)
+(global-set-key (kbd "C-x -") 'jcs-dashify)
+(global-set-key (kbd "C-x _") 'jcs-dashify-underline)
 ;; =================添加连接线和下划线==================
 ;; ===============复制矩形区域==============
 (defun copy-rectangle-as-kill ()
@@ -218,6 +218,10 @@ region\) apply comment-or-uncomment to the current line"
     (exchange-point-and-mark)
     (yank-rectangle)))
 (global-set-key (kbd "C-x r w") 'copy-rectangle-as-kill)
+;; 复制矩形区域三种方法：
+;; 1. 使用C-x rrr复制，使用C-x rir粘贴。
+;; 2. 使用multiple-cursors复制，使用C-x ry粘贴。
+;; 3. 使用C-x SPC直接矩形复制，使用C-y粘贴。
 ;; ===============复制矩形区域==============
 ;; ===============合并C-j和C-o===============
 (defun open-line-or-new-line-dep-pos ()

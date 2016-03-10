@@ -5,8 +5,8 @@
   :defer t
   :commands (emms-play-file emms-player-mpd-connect emms-playlist-mode-go)
   :init
-  (bind-key "C-c e l" 'swint-emms-playlist-mode-go)
-  (bind-key "C-c e o" 'emms-play-file)
+  (bind-key "M-s e l" 'swint-emms-playlist-mode-go)
+  (bind-key "M-s e o" 'emms-play-file)
   (defun swint-emms-playlist-mode-go ()
     "swint-playlist."
     (interactive)
@@ -38,7 +38,7 @@
   (add-to-list 'emms-player-list 'emms-player-mpd)
   ;; ==============emms-mpd================
   ;; emms-mpd快捷键设置
-  (global-set-key (kbd "C-c e c") 'emms-player-mpd-connect)
+  (global-set-key (kbd "M-s e c") 'emms-player-mpd-connect)
   (global-set-key (kbd "C-M-SPC") 'emms-pause)
   (global-set-key (kbd "C-M-<up>") 'emms-volume-raise)
   (global-set-key (kbd "C-M-<down>") 'emms-volume-lower)
@@ -55,8 +55,8 @@
   :defer t
   :commands (mingus mingus-browse)
   :init
-  (bind-key "C-c e l" 'mingus)
-  (bind-key "C-c e o" 'swint-mingus-browse)
+  (bind-key "M-s e l" 'mingus)
+  (bind-key "M-s e o" 'swint-mingus-browse)
   (defun swint-mingus-browse ()
     "swint-mingus-browse."
     (interactive)
