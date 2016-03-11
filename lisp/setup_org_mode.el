@@ -11,14 +11,6 @@
   (global-set-key (kbd "M-s o l") 'org-store-link)
   (global-set-key (kbd "M-s o c") 'org-capture)
   (global-set-key (kbd "M-s o a") 'org-agenda)
-  (add-hook 'org-mode-hook (lambda ()
-                             ;; 插入source code时高亮，C-c ' 打开相应major-mode编辑窗口。
-                             (setq org-src-fontify-natively t)
-                             ;; (setq org-startup-indented t)
-                             (setq truncate-lines nil)
-                             (setq org-hide-leading-stars t)
-                             (setq org-imenu-depth 8)
-                             (turn-on-font-lock)))
   (setq org-capture-templates
         '(("i" "Idea" entry (file+headline "~/org/task.org" "Idea List") "* TODO %? %U %^g")
           ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
@@ -26,9 +18,15 @@
           ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others") "* %? %U %^g")
           ("j" "Journal" entry (file+datetree "~/org/journal.org.gpg") "* %? %U")))
   ;; %^{Description}
-  ;; 禁用org-mode本身定义得C-tab快捷键，使全局快捷键生效。
   (add-hook 'org-mode-hook
             '(lambda ()
+               ;; 插入source code时高亮，C-c ' 打开相应major-mode编辑窗口。
+               (setq org-src-fontify-natively t)
+               ;; (setq org-startup-indented t)
+               (setq truncate-lines nil)
+               (setq org-hide-leading-stars t)
+               (setq org-imenu-depth 8)
+               (turn-on-font-lock)
                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
                (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
                (define-key org-mode-map (kbd "C-c C-v") 'swint-org-open-export-pdf)
@@ -38,7 +36,10 @@
                (define-key org-mode-map (kbd "C-M-i") 'org-cycle)
                (define-key org-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
                (define-key org-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
-               (define-key org-mode-map (kbd "C-c C-u") 'outline-up-heading)
+               (smartrep-define-key org-mode-map "C-c"
+                 '(("C-u" . outline-up-heading)
+                   ("C-b" . org-backward-heading-same-level)
+                   ("C-f" . org-forward-heading-same-level)))
                (define-key org-mode-map (kbd "C-a") nil)
                (define-key org-mode-map (kbd "C-e") 'end-of-line)
                (define-key org-mode-map (kbd "C-j") nil)
@@ -51,24 +52,23 @@
                (define-key org-mode-map [(control \#)] nil)
                (define-key org-mode-map [(control tab)] nil)
                (define-key org-mode-map [(control \')] nil)))
-  ;; do not show title of task in mode-line when using org-clock.
+  ;; ==============GTD==================
+  ;; Do not show title of task in mode-line when using org-clock.
   (setq org-clock-heading-function
         (lambda ()
           (substring (nth 4 (org-heading-components)) 0 0)))
-  ;; ==============显示两周的agenda==================
+  ;; 显示两周的agenda。
   (setq org-agenda-span 14)
-  ;; ==============显示两周的agenda==================
-  ;; =======设定todo的子项完成后主项自动完成==========
+  ;; 设定todo的子项完成后主项自动完成。
   (defun my-org-autodone (n-done n-not-done)
     (let (org-log-done org-log-states)
       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
   (add-hook 'org-after-todo-statistics-hook 'my-org-autodone)
-  ;; =======设定todo的子项完成后主项自动完成==========
-  ;; =======设定todo关键词==========
+  ;; 设定todo关键词。
   (setq org-todo-keywords
         '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")))
   ;; |后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔。
-  ;; =======设定todo关键词==========
+  ;; ==============GTD==================
   ;; =======================org使用ditaa输出ascii图片==========================
   (setq org-ditaa-jar-path "~/.emacs.d/org-8.2.1/contrib/scripts/ditaa.jar")
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
@@ -128,7 +128,7 @@
             (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
                     "_"
                     (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      ;; turn into path in windows type.
+      ;; Turn into path in windows type.
       (setq windows-filename
             (replace-regexp-in-string "/" "\\" filename t t))
       (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil
@@ -156,7 +156,7 @@
             (concat "./pic/" (file-name-base (buffer-name))
                     "_"
                     (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      ;; turn into path in windows type.
+      ;; Turn into path in windows type.
       (setq windows-filename
             (replace-regexp-in-string "/" "\\" filename t t))
       (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil
@@ -198,7 +198,7 @@
             (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
                     "_"
                     (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      ;; turn into path in windows type
+      ;; Turn into path in windows type
       (setq windows-filename
             (replace-regexp-in-string "/" "\\" filename t t))
       (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
@@ -229,7 +229,7 @@
             (concat "./pic/" (file-name-base (buffer-name))
                     "_"
                     (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      ;; turn into path in windows type.
+      ;; Turn into path in windows type.
       (setq windows-filename
             (replace-regexp-in-string "/" "\\" filename t t))
       (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat

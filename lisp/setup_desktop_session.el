@@ -1,8 +1,10 @@
 ;; =====================desktop-and-session========================
 (use-package session
+  ;; Enabled automatically.
   :config
   (add-hook 'after-init-hook 'session-initialize))
 (use-package desktop
+  ;; Enabled automatically.
   :config
   (add-to-list 'desktop-modes-not-to-save 'Info-mode)
   (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
@@ -38,6 +40,7 @@
   (add-to-list 'desktop-minor-mode-table '(flyspell-mode nil))
   (add-to-list 'desktop-minor-mode-table '(zotelo-minor-mode nil))
   (add-to-list 'desktop-minor-mode-table '(auto-fill-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(auto-fill-function nil))
   (add-to-list 'desktop-minor-mode-table '(override-global-mode nil))
   (add-to-list 'desktop-minor-mode-table '(outline-minor-mode nil))
   (add-to-list 'desktop-minor-mode-table '(orgtbl-mode nil))

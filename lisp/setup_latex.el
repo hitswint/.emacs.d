@@ -170,9 +170,10 @@
               (define-key outline-minor-mode-map (kbd "C-M-i") 'outline-cycle)
               (define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
               (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
-              (define-key outline-minor-mode-map (kbd "C-c C-u") 'outline-up-heading)
-              (define-key outline-minor-mode-map (kbd "C-c C-b") 'outline-backward-same-level)
-              (define-key outline-minor-mode-map (kbd "C-c C-f") 'outline-forward-same-level))))
+              (smartrep-define-key outline-minor-mode-map "C-c"
+                '(("C-u" . outline-up-heading)
+                  ("C-b" . outline-backward-same-level)
+                  ("C-f" . outline-forward-same-level))))))
 ;; ===========outline===============
 ;; ===================auctex-latexmk=============================
 ;; 安装了texlive2009及更高的版本之后，默认就有latexmk，不用做任何改变。只需要加入.latexmkrc的配置文件和这个auctex-latexmk。
