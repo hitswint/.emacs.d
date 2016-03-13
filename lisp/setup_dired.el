@@ -50,6 +50,8 @@
                                                        (interactive)
                                                        (dired-kill-and-next-subdir)
                                                        (revert-buffer)))
+               (define-key dired-mode-map (kbd "l") 'swint-org-annotate-file-current)
+               (define-key dired-mode-map (kbd "L") 'org-annotate-file-current)
                ;; 在dired对mark的多个文件内容进行查找
                (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
                (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)

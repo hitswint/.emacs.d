@@ -24,7 +24,7 @@
   (defun dirtree-kill-this-buffer ()
     "switch to dirtree after killing this buffer."
     (interactive)
-    (let ((swint-previous-buffer (car (swint-iswitchb-make-buflist))))
+    (let ((swint-previous-buffer (get-buffer (car (swint-iswitchb-make-buflist)))))
       (bc-set)
       ;; kill-buffer后不加参数会直接切换到之前所在的buffer，可能导致persp混乱，加参数则不会产生这个问题。
       ;; 可以使用kill-this-buffer和kill-buffer-and-window，因为这两个函数中都使用了kill-buffer加参数的形式。

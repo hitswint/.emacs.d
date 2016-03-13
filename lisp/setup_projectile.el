@@ -9,19 +9,28 @@
   (projectile-global-mode)
   (setq projectile-enable-caching t)
   (setq projectile-mode-line nil)
-  ;; (setq projectile-mode-line
-  ;;       (quote (:eval (format "[%s]" (projectile-project-name)))))
-  )
+  (setq projectile-completion-system 'helm))
+;; =================helm-projectile======================
 (use-package helm-projectile
   ;; Enabled at commands.
   :defer t
   :bind ("M-'" . helm-projectile)
   :config
+  (helm-projectile-on)
+  (helm-add-action-to-source "Projectile persp switch project" 'projectile-persp-switch-project helm-source-projectile-projects 1)
+  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-j") 'projectile-persp-switch-project)
   ;; 设置切换project的默认操作。
   (setq projectile-switch-project-action 'helm-projectile)
+  ;; windows下的缓存方式从native改到alien，加快缓存速度。
   (when is-win
-    ;; windows下的缓存方式从native改到alien，加快缓存速度。
     (setq projectile-indexing-method 'alien)))
+;; =================helm-projectile======================
+;; ================persp-projectile======================
+(use-package persp-projectile
+  ;; Enabled at commands.
+  :defer t
+  :commands projectile-persp-switch-project)
+;; ================persp-projectile======================
 ;; projectile-grep出现find错误。
 ;; 在helm-projectile中C-d为打开project的根目录。
 ;; C-c p f         Display a list of all files in the project. With a prefix argument it will clear the cache first.
@@ -61,9 +70,4 @@
 ;; C-c p m         Run the commander (an interface to run commands with a single key).
 ;; C-c p ESC       Switch to the most recently selected projectile buffer.
 ;; ================Projectile================
-;; ================persp-projectile================
-;; 会导致ido无法忽略带星号的buffer。
-;; (require 'persp-projectile)
-;; (define-key projectile-mode-map (kbd "s-s") 'projectile-persp-switch-project)
-;; ================persp-projectile================
 (provide 'setup_projectile)

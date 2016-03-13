@@ -111,6 +111,7 @@
             parsebib
             peep-dired
             perspective
+            persp-projectile
             pinyin-search
             pkg-info
             popup

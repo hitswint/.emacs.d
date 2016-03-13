@@ -2,7 +2,9 @@
 ;; 将配置写到:config启动时会有错误。
 ;; Eager macro-expansion failure:
 ;; (error "(persp-buffers persp) is not a valid place expression")
-(use-package perspective)
+(use-package perspective
+  :config
+  (setq persp-interactive-completion-function 'helm--completing-read-default))
 (defun persp-activate (persp)
   "Activate the perspective given by the persp struct PERSP."
   (check-persp persp)
@@ -97,7 +99,7 @@ Has no effect when `persp-show-modestring' is nil."
 ;;   (execute-kbd-macro (symbol-function 'swint-persp-all)))
 ;; (add-hook 'desktop-after-read-hook 'swint-perspective)
 ;; ========放弃使用键盘宏分配buffers到perspective的做法=========
-;; 使用lisp方式在emacs关闭时保存perspectives，开启时读取。
+;; =================emacs关闭时保存perspectives=================
 (setq swint-perspectives-saved-file "~/.emacs.d/saved-perspectives.el")
 (defun swint-save-perspectives ()
   (setq persp-last-session (persp-name persp-curr))
@@ -122,6 +124,8 @@ Has no effect when `persp-show-modestring' is nil."
                                 ")\n")))
             (persp-names))))
 (add-hook 'kill-emacs-hook 'swint-save-perspectives)
+;; =================emacs关闭时保存perspectives=================
+;; =================emacs开启时加载perspectives=================
 (load swint-perspectives-saved-file t)
 (defun swint-perspective-init ()
   ;; 升级到emacs24.5之后，(persp-mode)启动初始化错误，这里重新初始化。
@@ -139,5 +143,6 @@ Has no effect when `persp-show-modestring' is nil."
 (add-hook 'persp-before-switch-hook '(lambda ()
                                        (unless (marker-position (persp-point-marker persp))
                                          (setf (persp-point-marker persp) (point)))))
-;; ;; ================================perspective====================================
+;; =================emacs开启时加载perspectives=================
+;; ================================perspective====================================
 (provide 'setup_perspective)

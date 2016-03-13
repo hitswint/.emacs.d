@@ -481,6 +481,7 @@ from its directory."
     (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-with-default-tool)
     (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-with-default-tool))
   ;; C-x c c helm-colors
+  ;; C-x c b helm-resume 恢复之前的helm buffer，加C-u进行选择。
   ;; helm-mini下：C-c C-d 从列表中删除，但实际不kill buffer；C-c d kill buffer同时不关闭helm buffer；M-D kill buffer同时关闭helm。
   ;; helm-find-files-map下：
   ;; C-l 一次expand candidate，二次打开文件

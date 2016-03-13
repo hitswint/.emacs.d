@@ -41,10 +41,10 @@
   (define-key ac-completing-map "\C-p" 'ac-previous)
   (define-key ac-completing-map "\C-n" 'ac-next)
   ;; (ac-set-trigger-key "TAB")              ;导致无法indent
-  ;; ;; 取消TAB绑定以适应yasnippet。TAB的默认作用有两个：
-  ;; ;; 1. 延伸menu出现之前的默认选项。取消延伸默认选项，使用RET替代。
+  ;; 取消TAB绑定以适应yasnippet。TAB的默认作用有两个：
+  ;; 1. 延伸menu出现之前的默认选项。取消延伸默认选项，使用RET替代。
   ;; (define-key ac-completing-map (kbd "TAB") nil)
-  ;; ;; 2. 切换menu的选项。取消TAB切换menu选项。
+  ;; 2. 切换menu的选项。取消TAB切换menu选项。
   ;; (define-key ac-menu-map (kbd "TAB") nil)
   ;; ============ac-modes============
   ;; hook的函数只在文件打开时运行，如果文件已经打开，那么hook的函数无效。
