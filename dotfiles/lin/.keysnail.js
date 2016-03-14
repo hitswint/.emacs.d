@@ -561,17 +561,17 @@ key.setGlobalKey(['C-c', 'O'], function (ev, arg) {
 }, 'Edit current url and open it');
 
 // 书签
-key.setGlobalKey(['C-\''], function (ev, arg) {
+key.setGlobalKey(['M-\''], function (ev, arg) {
     ext.exec("bmany-list-all-bookmarks", arg, ev);
 }, 'bmany - List all bookmarks');
 
-key.setGlobalKey(['C-x', 'C-\''], function (ev, arg) {
-    ext.exec("bmany-list-toolbar-bookmarks", arg, ev);
-}, 'bmany - List all bookmarklets');
+// key.setGlobalKey(['C-x', 'C-\''], function (ev, arg) {
+//     ext.exec("bmany-list-toolbar-bookmarks", arg, ev);
+// }, 'bmany - List all bookmarklets');
 
-key.setGlobalKey(['C-c', 'C-\''], function (ev, arg) {
-    ext.exec("bmany-list-bookmarks-with-keyword", arg, ev);
-}, 'bmany - List bookmarks with keyword');
+// key.setGlobalKey(['C-c', 'C-\''], function (ev, arg) {
+//     ext.exec("bmany-list-bookmarks-with-keyword", arg, ev);
+// }, 'bmany - List bookmarks with keyword');
 
 // tanything
 key.setGlobalKey('C-,', function (ev, arg) {
