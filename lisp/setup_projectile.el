@@ -2,9 +2,9 @@
 (use-package projectile
   ;; Enabled at commands.
   :defer t
-  :bind-keymap ("C-M-'" . projectile-command-map)
+  :bind-keymap ("M-s '" . projectile-command-map)
   :init
-  (setq projectile-keymap-prefix (kbd "C-M-'"))
+  (setq projectile-keymap-prefix (kbd "M-s '"))
   :config
   (projectile-global-mode)
   (setq projectile-enable-caching t)
@@ -14,7 +14,7 @@
 (use-package helm-projectile
   ;; Enabled at commands.
   :defer t
-  :bind ("C-'" . helm-projectile)
+  :bind ("M-'" . helm-projectile)
   :config
   (helm-projectile-on)
   (helm-add-action-to-source "Projectile persp switch project" 'projectile-persp-switch-project helm-source-projectile-projects 0)
@@ -31,7 +31,9 @@
 (use-package persp-projectile
   ;; Enabled at commands.
   :defer t
-  :commands projectile-persp-switch-project)
+  :after projectile
+  :config
+  (bind-key "'" 'projectile-persp-switch-project projectile-command-map))
 ;; ================persp-projectile======================
 ;; projectile-grep出现find错误。
 ;; 在helm-projectile中C-d为打开project的根目录。

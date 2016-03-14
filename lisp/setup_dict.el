@@ -1,6 +1,6 @@
 ;; ==================stardict====================
+;; Major mode for sdcv.
 (define-derived-mode sdcv-mode org-mode
-  ;; "Major mode for sdcv."
   (interactive)
   (setq major-mode 'sdcv-mode)
   (setq mode-name "sdcv")
@@ -11,15 +11,20 @@
   (local-set-key (kbd "d") 'kid-sdcv-to-buffer)
   (local-set-key (kbd "q") 'kill-buffer-and-window)
   (run-hooks 'sdcv-mode-hook))
-(defvar current-window-number nil)
+(defun swint-get-words-at-points ()
+  "Get words at point, use pyim-get-words-list-at-point to deal with chinese."
+  (interactive)
+  (if mark-active
+      (buffer-substring-no-properties (region-beginning) (region-end))
+    (let ((words-at-point (if (equal (point) (point-at-eol))
+                              (pyim-get-words-list-at-point)
+                            (pyim-get-words-list-at-point t))))
+      (if (equal (length words-at-point) 1)
+          (car (car words-at-point))
+        (ido-completing-read "Get Words:" (mapcar 'car words-at-point))))))
 (defun kid-sdcv-to-buffer ()
   (interactive)
-  (let ((word (if mark-active
-                  (buffer-substring-no-properties (region-beginning) (region-end))
-                (current-word nil t))))
-    (setq current-window-number (length (window-list)))
-    (setq word (read-string (format "Search the dictionary for (default %s): " word)
-                            nil nil word))
+  (let ((word (swint-get-words-at-points)))
     (when is-win
       (w32-shell-execute "open" "sdcv" (concat "--data-dir c:/Users/swint/.stardict " word " stardict")))
     (set-buffer (get-buffer-create "*sdcv*"))
@@ -82,7 +87,7 @@
       (indent-for-tab-command)
       (swint-bing-dict-brief word))))
 (defun yasdcv--output-cleaner:common ()
-  ;; 从yasdcv借来的函数
+  "从yasdcv借来的函数。"
   (goto-char (point-min))
   (while (re-search-forward "-->\\(.*\\)\n-->\\(.*\\)" nil t)
     (replace-match "*** \\1 (\\2)"))
@@ -145,11 +150,7 @@
 ;; ====================youdao====================
 (defun youdao-sample-sentences ()
   (interactive)
-  (let ((word (if mark-active
-                  (buffer-substring-no-properties (region-beginning) (region-end))
-                (current-word nil t))))
-    (setq word (read-string (format "Sample Sentences for (default %s): " word)
-                            nil nil word))
+  (let ((word (swint-get-words-at-points)))
     (browse-url
      (concat "http://dict.youdao.com/search?le=eng&q=lj%3A"
              (cond

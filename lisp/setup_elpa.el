@@ -42,6 +42,7 @@
             buttercup
             cdlatex
             char-menu
+            chinese-pyim
             clean-aindent-mode
             clipmon
             company

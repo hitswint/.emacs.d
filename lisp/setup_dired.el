@@ -449,6 +449,7 @@
   ;; Enabled at commands.
   :defer t
   :bind (:map dired-mode-map
+              ;; 加C-u不清除clipboards。
               (("C-y" . dired-ranger-paste)
                ("C-M-y" . dired-ranger-move)))
   :init

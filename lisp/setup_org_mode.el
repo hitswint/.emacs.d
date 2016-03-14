@@ -12,7 +12,7 @@
   (global-set-key (kbd "M-s o c") 'org-capture)
   (global-set-key (kbd "M-s o a") 'org-agenda)
   (setq org-capture-templates
-        '(("i" "Idea" entry (file+headline "~/org/task.org" "Idea List") "* TODO %? %U %^g")
+        '(("i" "Idea" entry (file+headline "~/org/task.org" "Idea List") "* TODO %? %^g")
           ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
           ("c" "Computer" entry (file+headline "~/org/notes-computer.org" "Computer") "* %? %U %^g")
           ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others") "* %? %U %^g")
