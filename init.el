@@ -140,7 +140,7 @@
 (require 'setup_avy)
 (require 'setup_appearance)
 (require 'setup_ccmode)
-(require 'setup_fonts)
+(require 'setup_chinese)
 (require 'setup_dired)
 (require 'setup_dirtree)
 (require 'setup_emms_mingus)
