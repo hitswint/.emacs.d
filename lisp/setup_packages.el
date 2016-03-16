@@ -198,7 +198,8 @@
   (define-key 'help-command (kbd "C-l") 'find-library)
   (define-key 'help-command (kbd "C-f") 'find-function)
   (define-key 'help-command (kbd "C-k") 'find-function-on-key)
-  (define-key 'help-command (kbd "C-v") 'find-variable))
+  (define-key 'help-command (kbd "C-v") 'find-variable)
+  (define-key 'help-command (char-to-string help-char) nil))
 (use-package help-mode
   ;; Enabled with defer.
   :defer t
@@ -447,11 +448,11 @@ is named like ODF with the extension turned to pdf."
 ;; ===============visual-regexp===============
 ;; ===============vlf===============
 ;; vlf把大文件分成多个batch，以改善性能。
-;; Enable vlf when opening files bigger than 100MB.
 (use-package vlf
   ;; Enabled at idle.
   :defer 2
   :init
+  ;; Enable vlf when opening files bigger than 100MB.
   (setq large-file-warning-threshold 100000000)
   :config
   (use-package vlf-setup)
@@ -479,7 +480,7 @@ is named like ODF with the extension turned to pdf."
   (global-set-key [remap mark-sexp] 'easy-mark)
   :config
   (define-key easy-kill-base-map (kbd "C-w") 'easy-kill-region))
-;; M-w ?: help 查看M-w prefix快捷键
+;; M-w ?: help 查看M-w prefix快捷键。
 ;; ==============easy-kill===============
 ;; ================smex==================
 (use-package smex

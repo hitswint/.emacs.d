@@ -49,6 +49,7 @@
 (global-set-key (kbd "C-;") 'set-mark-command)
 (global-set-key (kbd "C-x ;") 'rectangle-mark-mode)
 (global-set-key [f9] 'menu-bar-mode)
+(global-set-key (kbd "M-S-SPC") 'just-one-space)
 (global-set-key (kbd "C-SPC") nil)
 (define-key lisp-interaction-mode-map (kbd "C-j") nil)
 (global-set-key (kbd "<C-M-backspace>") '(lambda () (interactive) (kill-sexp -1)))

@@ -3,21 +3,21 @@
   ;; Enabled at commands.
   :defer t
   :init
-  (bind-key "M-U" '(lambda ()
-                     (interactive)
-                     (unless (if (boundp 'auto-complete-mode)
-                                 auto-complete-mode)
-                       (auto-complete-mode 1))
-                     (if (boundp 'company-mode)
-                         (company-abort))
-                     (auto-complete)))
+  (bind-key "M-s M-U" '(lambda ()
+                         (interactive)
+                         (unless (if (boundp 'auto-complete-mode)
+                                     auto-complete-mode)
+                           (auto-complete-mode 1))
+                         (if (boundp 'company-mode)
+                             (company-abort))
+                         (auto-complete)))
   ;; =================ac-ispell=================
   ;; Completion words longer than 4 characters
   (use-package ac-ispell
     ;; Enabled at commands.
     :defer t
     :init
-    (bind-key "M-u" 'swint-auto-complete-ispell)
+    (bind-key "M-U" 'swint-auto-complete-ispell)
     (defun swint-auto-complete-ispell ()
       (interactive)
       (unless (if (boundp 'auto-complete-mode)
@@ -217,7 +217,7 @@
 (use-package hippie-exp
   ;; Enabled at commands.
   :defer t
-  :bind ("C-x M-u" . hippie-expand)
+  :bind ("M-s M-?" . hippie-expand)
   :config
   ;; 打开.english-words方式进行补全。
   (setq hippie-expand-try-functions-list

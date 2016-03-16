@@ -26,7 +26,7 @@
 (use-package chinese-pyim
   :defer 2
   :commands pyim-get-words-list-at-point
-  :bind ("M-SPC" . pyim-convert-pinyin-at-point)
+  :bind ("C-M-SPC" . pyim-convert-pinyin-at-point)
   :config
   (setq default-input-method "chinese-pyim")
   (global-set-key (kbd "C-x SPC") 'toggle-input-method)
@@ -53,9 +53,9 @@
                   pyim-probe-org-structure-template
                   pyim-probe-isearch-mode
                   pyim-probe-program-mode
+                  swint-pyim-probe-dynamic-english
                   ;; 在minibuffer关闭中文输入。
-                  window-minibuffer-p
-                  swint-pyim-probe-dynamic-english))
+                  window-minibuffer-p))
   (setq-default pyim-punctuation-half-width-functions
                 '(pyim-probe-punctuation-line-beginning
                   pyim-probe-punctuation-after-punctuation))
