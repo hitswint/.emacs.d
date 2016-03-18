@@ -372,6 +372,9 @@ Usually this is `describe-prefix-bindings'."
   :if is-lin
   :defer t
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
+  :init
+  ;; pdf-tools会默认设置x-gtk-use-system-tooltips为nil，导致chinese-pyim选词框失效。
+  (setq pdf-annot-tweak-tooltips nil)
   :config
   (pdf-tools-install)
   (setq pdf-outline-imenu-use-flat-menus t)

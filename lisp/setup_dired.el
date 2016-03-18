@@ -379,8 +379,41 @@
   :defer t
   :commands peep-dired
   :init
-  (bind-key "q" 'peep-dired dired-mode-map)
+  (bind-key "q" '(lambda ()
+                   (interactive)
+                   (if (buffer-live-p (get-buffer image-dired-display-image-buffer))
+                       (kill-buffer image-dired-display-image-buffer))
+                   (call-interactively 'peep-dired)) dired-mode-map)
   :config
+  (defcustom peep-dired-image-extensions
+    '("png" "PNG" "JPG" "jpg" "bmp" "BMP" "jpeg" "JPEG")
+    "Extensions to not try to open"
+    :group 'peep-dired
+    :type 'list)
+  (defun peep-dired-display-file-other-window ()
+    (let ((entry-name (dired-file-name-at-point)))
+      (unless (member (file-name-extension entry-name)
+                      peep-dired-ignored-extensions)
+        (add-to-list 'peep-dired-peeped-buffers
+                     (if (member (file-name-extension entry-name)
+                                 peep-dired-image-extensions)
+                         (window-buffer
+                          (display-buffer
+                           (progn
+                             (image-dired-create-display-image-buffer)
+                             (display-buffer image-dired-display-image-buffer)
+                             (image-dired-display-image entry-name)
+                             (set-buffer-modified-p nil)
+                             image-dired-display-image-buffer)
+                           t))
+                       (window-buffer
+                        (display-buffer
+                         (if (file-directory-p entry-name)
+                             (peep-dired-dir-buffer entry-name)
+                           (or
+                            (find-buffer-visiting entry-name)
+                            (find-file-noselect entry-name)))
+                         t)))))))
   (setq peep-dired-cleanup-on-disable t)
   ;; (setq peep-dired-cleanup-eagerly t)
   (setq peep-dired-enable-on-directories nil)
