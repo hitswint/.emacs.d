@@ -381,10 +381,18 @@
   :init
   (bind-key "q" '(lambda ()
                    (interactive)
-                   (if (buffer-live-p (get-buffer image-dired-display-image-buffer))
-                       (kill-buffer image-dired-display-image-buffer))
-                   (call-interactively 'peep-dired)) dired-mode-map)
+                   (let ((image-buffer (get-buffer image-dired-display-image-buffer)))
+                     (if (buffer-live-p image-buffer)
+                         (progn
+                           (kill-buffer image-buffer)))
+                     (call-interactively 'peep-dired))) dired-mode-map)
   :config
+  (bind-key "q" nil peep-dired-mode-map)
+  ;; image-dired默认使用convert作为图片转换程序。
+  ;; C-t C-t: toggle thumbs display; C-t i: display image; C-t d: display thumbs; C-t x: display external。
+  ;; win上c:/cygwin64/bin同时存在convert.exe和imgconvert.exe，需要将转换程序设置为imgconvert.exe。
+  (when is-win
+    (setq image-dired-cmd-create-temp-image-program "imgconvert"))
   (defcustom peep-dired-image-extensions
     '("png" "PNG" "JPG" "jpg" "bmp" "BMP" "jpeg" "JPEG")
     "Extensions to not try to open"
@@ -403,7 +411,6 @@
                              (image-dired-create-display-image-buffer)
                              (display-buffer image-dired-display-image-buffer)
                              (image-dired-display-image entry-name)
-                             (set-buffer-modified-p nil)
                              image-dired-display-image-buffer)
                            t))
                        (window-buffer

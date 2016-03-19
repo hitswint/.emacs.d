@@ -31,13 +31,35 @@
   (setq default-input-method "chinese-pyim")
   (global-set-key (kbd "C-x SPC") 'toggle-input-method)
   (global-set-key (kbd "S-SPC") 'pyim-punctuation-translate-at-point)
-  (define-key pyim-mode-map "," 'pyim-previous-page)
-  (define-key pyim-mode-map "." 'pyim-next-page)
+  ;; (define-key pyim-mode-map "," 'pyim-previous-page)
+  ;; (define-key pyim-mode-map "." 'pyim-next-page)
   ;; (global-set-key (kbd "M-f") 'pyim-forward-word)
   ;; (global-set-key (kbd "M-b") 'pyim-backward-word)
-  ;; pyim-delete-word-from-personal-buffer
   ;; 关闭使用双拼。
   ;; (setq pyim-default-pinyin-scheme 'pyim-shuangpin)
+  ;; 关闭拼音搜索功能。
+  ;; (setq pyim-isearch-enable-pinyin-search t)
+  ;; 使用pyim-fuzzy-pinyin-alist设置模糊音。
+  ;; 设置选词框显示方式popup/pos-tip/nil。
+  (setq pyim-use-tooltip 'pos-tip)
+  ;; lin下使用gtk绘制选词框，通过修改~/.emacs.d/gtkrc改变pos-tip字体。
+  (when is-lin
+    (setq x-gtk-use-system-tooltips t))
+  ;; 使用pyim-enable-words-predict设置词语联想方式，其中guess-word需要安装guessdict词库。
+  (setq pyim-enable-words-predict
+        '(dabbrev pinyin-shouzimu pinyin-similar pinyin-znabc)) ;guess-words
+  ;; guess-word会造成速度较慢，但效果一般。
+  ;; (:name "guessdict" :file "/home/swint/.emacs.d/pyim/dicts/pyim-guessdict.gpyim"
+  ;;     :coding utf-8-unix :dict-type guess-dict)
+  (cond
+   (is-lin (setq pyim-dicts '((:name "bigdict" :file "/home/swint/.emacs.d/pyim/dicts/pyim-bigdict.pyim"
+                                     :coding utf-8-unix :dict-type pinyin-dict))))
+   (is-win (setq pyim-dicts '((:name "bigdict" :file "c:/Users/swint/.emacs.d/pyim/dicts/pyim-bigdict.pyim"
+                                     :coding utf-8-unix :dict-type pinyin-dict)))))
+  ;; 仅加载chinese-pyim时并未生成pyim-cchar2pinyin-cache，导致使用pyim-get-words-list-at-point函数错误。
+  (unless pyim-cchar2pinyin-cache
+    (pyim-cchar2pinyin-create-cache))
+  ;; 使用探针(probe)函数判断当前语境以确定当前输入法和标点形式。
   (defun swint-pyim-probe-dynamic-english ()
     "Changed the behaviour of chinese-pyim at beginning of line."
     (if (or (= (- (point) (point-at-bol)) (current-indentation))
@@ -59,30 +81,6 @@
   (setq-default pyim-punctuation-half-width-functions
                 '(pyim-probe-punctuation-line-beginning
                   pyim-probe-punctuation-after-punctuation))
-  ;; 关闭拼音搜索功能。
-  ;; (setq pyim-isearch-enable-pinyin-search t)
-  ;; 设置选词框显示方式popup/pos-tip/nil。
-  ;; 通过修改~/.emacs.d/gtkrc改变pos-tip字体。
-  (setq pyim-use-tooltip 'pos-tip
-        pyim-page-length 5)
-  ;; lin下可以使用gtk绘制选词框。
-  (when is-lin
-    (setq x-gtk-use-system-tooltips t))
-  ;; 使用pyim-fuzzy-pinyin-alist设置模糊音。
-  ;; 使用pyim-enable-words-predict设置词语联想方式。
-  ;; 其中guess-word需要安装guessdict词库。
-  (cond
-   (is-lin (setq pyim-dicts '((:name "bigdict" :file "/home/swint/.emacs.d/pyim/dicts/pyim-bigdict.pyim"
-                                     :coding utf-8-unix :dict-type pinyin-dict)
-                              (:name "guessdict" :file "/home/swint/.emacs.d/pyim/dicts/pyim-guessdict.gpyim"
-                                     :coding utf-8-unix :dict-type guess-dict))))
-   (is-win (setq pyim-dicts '((:name "bigdict" :file "c:/Users/swint/.emacs.d/pyim/dicts/pyim-bigdict.pyim"
-                                     :coding utf-8-unix :dict-type pinyin-dict)
-                              (:name "guessdict" :file "c:/Users/swint/.emacs.d/pyim/dicts/pyim-guessdict.gpyim"
-                                     :coding utf-8-unix :dict-type guess-dict)))))
-  ;; 仅加载chinese-pyim时并未生成pyim-cchar2pinyin-cache，导致使用pyim-get-words-list-at-point函数错误。
-  (unless pyim-cchar2pinyin-cache
-    (pyim-cchar2pinyin-create-cache))
   ;; 添加company支持，使其可以更加准确的补全。
   (require 'chinese-pyim-company)
   (setq pyim-company-max-length 10))
