@@ -225,14 +225,15 @@
   ;; Enabled in several modes.
   :defer t
   :init
-  (add-hook 'dired-mode-hook 'drag-stuff-mode)
-  (add-hook 'octave-mode-hook 'drag-stuff-mode)
-  (add-hook 'org-mode-hook 'drag-stuff-mode)
-  (add-hook 'gnuplot-mode-hook 'drag-stuff-mode)
-  (add-hook 'emacs-lisp-mode-hook 'drag-stuff-mode)
-  (add-hook 'c-mode-hook 'drag-stuff-mode)
-  (add-hook 'graphviz-dot-mode-hook 'drag-stuff-mode)
-  (add-hook 'LaTeX-mode-hook 'drag-stuff-mode)
+  (dolist (hook '(dired-mode-hook
+                  octave-mode-hook
+                  org-mode-hook
+                  gnuplot-mode-hook
+                  emacs-lisp-mode-hook
+                  c-mode-hook
+                  graphviz-dot-mode-hook
+                  LaTeX-mode-hook))
+    (add-hook hook 'drag-stuff-mode))
   :config
   ;; 重新定义drag-stuff.el文件中的 drag-stuff-define-keys 函数，取消关于 M+方向键 的快捷键定义。
   (defun drag-stuff-define-keys ()

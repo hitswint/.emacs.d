@@ -48,13 +48,14 @@
   ;; Enabled in several modes.
   :defer t
   :init
-  (add-hook 'LaTeX-mode-hook 'paredit-everywhere-mode)
-  (add-hook 'org-mode-hook 'paredit-everywhere-mode)
-  (add-hook 'octave-mode-hook 'paredit-everywhere-mode)
-  (add-hook 'gnuplot-mode-hook 'paredit-everywhere-mode)
-  (add-hook 'c-mode-hook 'paredit-everywhere-mode)
-  (add-hook 'graphviz-dot-mode-hook 'paredit-everywhere-mode)
-  (add-hook 'lisp-interaction-mode-hook 'paredit-everywhere-mode)
+  (dolist (hook '(LaTeX-mode-hook
+                  org-mode-hook
+                  octave-mode-hook
+                  gnuplot-mode-hook
+                  c-mode-hook
+                  graphviz-dot-mode-hook
+                  lisp-interaction-mode-hook))
+    (add-hook hook 'paredit-everywhere-mode))
   :config
   (define-key paredit-everywhere-mode-map (kbd "M-s") nil)
   (define-key paredit-everywhere-mode-map (kbd "M-r") nil)

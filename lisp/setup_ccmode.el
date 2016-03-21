@@ -137,11 +137,12 @@
         helm-gtags-prefix-key "\C-c"
         helm-gtags-suggested-key-mapping t)
   ;; Enable helm-gtags-mode
-  ;; (add-hook 'dired-mode-hook 'helm-gtags-mode)
-  ;; (add-hook 'eshell-mode-hook 'helm-gtags-mode)
-  (add-hook 'c-mode-hook 'helm-gtags-mode)
-  (add-hook 'c++-mode-hook 'helm-gtags-mode)
-  (add-hook 'asm-mode-hook 'helm-gtags-mode)
+  (dolist (hook '(;; dired-mode-hook
+                  ;; eshell-mode-hook
+                  c-mode-hook
+                  c++-mode-hook
+                  asm-mode-hook))
+    (add-hook hook 'helm-gtags-mode))
   :config
   (define-key helm-gtags-mode-map (kbd "C-c a") 'helm-gtags-tags-in-this-function)
   (define-key helm-gtags-mode-map (kbd "C-c C-,") 'helm-gtags-dwim)

@@ -100,13 +100,14 @@
   :init
   ;; (global-rainbow-delimiters-mode)
   ;; 在org-mode中打开rainbow会让org本身的highlight失效。
-  ;; (add-hook 'org-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'dired-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'octave-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'gnuplot-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'c-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'graphviz-dot-mode-hook 'rainbow-delimiters-mode))
+  (dolist (hook '(;; org-mode-hook
+                  dired-mode-hook
+                  octave-mode-hook
+                  gnuplot-mode-hook
+                  emacs-lisp-mode-hook
+                  c-mode-hook
+                  graphviz-dot-mode-hook))
+    (add-hook hook 'rainbow-delimiters-mode)))
 ;; =======================rainbow-delimiters==========================
 ;; =============================括号==============================
 (provide 'setup_parenthesis)
