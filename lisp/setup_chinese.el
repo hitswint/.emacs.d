@@ -31,8 +31,6 @@
   (setq default-input-method "chinese-pyim")
   (global-set-key (kbd "C-x SPC") 'toggle-input-method)
   (global-set-key (kbd "S-SPC") 'pyim-punctuation-translate-at-point)
-  ;; (define-key pyim-mode-map "," 'pyim-previous-page)
-  ;; (define-key pyim-mode-map "." 'pyim-next-page)
   ;; (global-set-key (kbd "M-f") 'pyim-forward-word)
   ;; (global-set-key (kbd "M-b") 'pyim-backward-word)
   ;; 关闭使用双拼。
@@ -56,26 +54,13 @@
                                      :coding utf-8-unix :dict-type pinyin-dict))))
    (is-win (setq pyim-dicts '((:name "bigdict" :file "c:/Users/swint/.emacs.d/pyim/dicts/pyim-bigdict.pyim"
                                      :coding utf-8-unix :dict-type pinyin-dict)))))
-  ;; 仅加载chinese-pyim时并未生成pyim-cchar2pinyin-cache，导致使用pyim-get-words-list-at-point函数错误。
-  (unless pyim-cchar2pinyin-cache
-    (pyim-cchar2pinyin-create-cache))
   ;; 使用探针(probe)函数判断当前语境以确定当前输入法和标点形式。
-  (defun swint-pyim-probe-dynamic-english ()
-    "Changed the behaviour of chinese-pyim at beginning of line."
-    (if (or (= (- (point) (point-at-bol)) (current-indentation))
-            (= (point) (point-at-bol)))
-        (not (or (pyim-string-match-p "\\cc" (save-excursion
-                                               ;; 查找前一个非空格字符。
-                                               (if (re-search-backward "[^[:space:]]" nil t)
-                                                   (char-to-string (char-after (point))))))
-                 (> (length pyim-current-key) 0)))
-      (pyim-probe-dynamic-english)))
   (setq-default pyim-english-input-switch-functions
                 '(pyim-probe-org-speed-commands
                   pyim-probe-org-structure-template
                   pyim-probe-isearch-mode
                   pyim-probe-program-mode
-                  swint-pyim-probe-dynamic-english
+                  pyim-probe-dynamic-english
                   ;; 在minibuffer关闭中文输入。
                   window-minibuffer-p))
   (setq-default pyim-punctuation-half-width-functions

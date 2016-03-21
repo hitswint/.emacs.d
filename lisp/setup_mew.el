@@ -33,10 +33,10 @@
   (setq mew-cite-format "On %s %s wrote:\n\n")
   ;; 密码设置
   (when is-lin
-    (setq mew-use-master-passwd t))       ;使用主密码，win提示主密码错误
+    (setq mew-use-master-passwd t))     ;使用主密码，win提示主密码错误
   (setq mew-use-cached-passwd t)
   (setq mew-passwd-timer-unit 60)
-  (setq mew-passwd-lifetime 24)           ; timer-unit x 24 = 24 hours
+  (setq mew-passwd-lifetime 24)         ;timer-unit x 24 = 24 hours
   ;; (setq mew-passwd-alist '(("wgq_713@163.com" "xxx" 0)
   ;;                          ("wgq_hit@126.com" "xxx" 0)))
   ;; 编码设置
@@ -57,7 +57,7 @@
   ;; biff设置(邮件提醒)
   (setq mew-use-biff t)
   (setq mew-use-biff-bell t)
-  (setq mew-biff-interval 5) ;; 这个值一定要小于下面的timer-unit和lifetime值，这个可以使用
+  (setq mew-biff-interval 5) ;这个值一定要小于下面的timer-unit和lifetime值，这个可以使用
   (setq mew-pop-biff-interval 3)
   ;; 其他
   (setq mew-pop-delete nil)
