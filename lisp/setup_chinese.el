@@ -24,45 +24,29 @@
 ;; ==================chinese-fonts-setup===================
 ;; =============chinese-pyim===============
 (use-package chinese-pyim
-  ;; Enabled automatically.
+  ;; Enabled at commands.
+  :defer t
+  :bind (("C-M-SPC" . pyim-convert-pinyin-at-point)
+         ("S-SPC" . pyim-punctuation-translate-at-point))
   :config
-  (bind-key "S-SPC" 'toggle-input-method)
-  (bind-key "C-M-SPC" 'swint-pyim-convert-at-point)
-  (defun swint-pyim-convert-at-point ()
-    "Integrate pyim-convert-pinyin-at-point and pyim-punctuation-translate-at-point."
-    (interactive)
-    (let* ((current-char (char-to-string (preceding-char)))
-           (punc-list
-            (cl-some (lambda (x)
-                       (when (member current-char x) x))
-                     pyim-punctuation-dict)))
-      (if punc-list
-          (progn (delete-char -1)
-                 (if (equal current-char (car punc-list))
-                     (insert (pyim-return-proper-punctuation punc-list t))
-                   (insert (car punc-list))))
-        (pyim-convert-pinyin-at-point))))
-  ;; 设置词库文件路径。
+  (setq default-input-method "chinese-pyim")
+  ;; 使用pyim-fuzzy-pinyin-alist设置模糊音。
+  ;; 设置选词框显示方式popup/pos-tip/nil。
+  (setq pyim-use-tooltip 'pos-tip)
+  ;; lin下使用gtk绘制选词框，通过修改~/.emacs.d/gtkrc改变pos-tip字体。
+  (when is-lin
+    (setq x-gtk-use-system-tooltips t))
+  ;; 设置词语联想方式。guess-word需要安装guess-dict词库。
+  (setq pyim-enable-words-predict
+        '(dabbrev pinyin-shouzimu pinyin-similar pinyin-znabc)) ;guess-words
+  ;; 设置词库文件路径。guess-word速度较慢，暂停使用。
+  ;; (:name "guessdict" :file "/home/swint/.emacs.d/pyim/dicts/pyim-guessdict.gpyim"
+  ;;     :coding utf-8-unix :dict-type guess-dict)
   (cond
    (is-lin (setq pyim-dicts '((:name "bigdict" :file "/home/swint/.emacs.d/pyim/dicts/pyim-bigdict.pyim"
                                      :coding utf-8-unix :dict-type pinyin-dict))))
    (is-win (setq pyim-dicts '((:name "bigdict" :file "c:/Users/swint/.emacs.d/pyim/dicts/pyim-bigdict.pyim"
                                      :coding utf-8-unix :dict-type pinyin-dict)))))
-  (setq default-input-method "chinese-pyim")
-  ;; 在某些mode中默认开启或关闭chinese-pyim。
-  (dolist (hook '(text-mode-hook
-                  prog-mode-hook
-                  wdired-mode-hook))
-    (add-hook hook '(lambda () (set-input-method "chinese-pyim"))))
-  (dolist (hook '(sdcv-mode-hook))
-    (add-hook hook '(lambda () (set-input-method nil))))
-  ;; 设置选词框显示方式popup/pos-tip/nil。lin下使用gtk绘制选词框，通过修改~/.emacs.d/gtkrc改变pos-tip字体。
-  (setq pyim-use-tooltip 'pos-tip)
-  (when is-lin
-    (setq x-gtk-use-system-tooltips t))
-  ;; 设置词语联想方式，其中guess-word速度较慢，暂停使用。
-  (setq pyim-enable-words-predict
-        '(dabbrev pinyin-shouzimu pinyin-similar pinyin-znabc)) ;guess-words
   ;; 使用探针(probe)函数判断当前语境以确定当前输入法和标点形式。
   (setq-default pyim-english-input-switch-functions
                 '(pyim-probe-org-speed-commands
