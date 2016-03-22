@@ -16,8 +16,8 @@
   (use-package ac-ispell
     ;; Enabled at commands.
     :defer t
-    :init
-    (bind-key "M-U" 'swint-auto-complete-ispell)
+    :bind ("M-U" . swint-auto-complete-ispell)
+    :config
     (defun swint-auto-complete-ispell ()
       (interactive)
       (unless (if (boundp 'auto-complete-mode)

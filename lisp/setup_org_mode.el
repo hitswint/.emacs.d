@@ -604,8 +604,8 @@ depending on the last command issued."
   :load-path "site-lisp/org-annotate-file/"
   :defer t
   :commands org-annotate-file
-  :init
-  (bind-key "C-x L" 'org-annotate-file-current)
+  :bind ("C-x L" . org-annotate-file-current)
+  :config
   (defun org-annotate-file-current ()
     (interactive)
     (cond
@@ -624,8 +624,8 @@ depending on the last command issued."
   :load-path "site-lisp/org-annotate-file/"
   :defer t
   :commands swint-org-annotate-file
-  :init
-  (bind-key "C-x l" 'swint-org-annotate-file-current)
+  :bind ("C-x l" . swint-org-annotate-file-current)
+  :config
   (defun swint-org-annotate-file-current ()
     (interactive)
     (cond

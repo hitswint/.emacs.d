@@ -23,42 +23,30 @@
           (read-string (format "Search the dictionary for (default %s): " (car (car words-at-point)))
                        nil nil (car (car words-at-point)))
         (ido-completing-read "Get Words:" (mapcar 'car words-at-point))))))
-(defun kid-sdcv-to-buffer ()
+(defun swint-sdcv-to-buffer ()
   (interactive)
   (let ((word (swint-get-words-at-points)))
-    (set-buffer (get-buffer-create "*sdcv*"))
-    (buffer-disable-undo)
-    (erase-buffer)
     (cond
      (is-lin
+      (set-buffer (get-buffer-create "*sdcv*"))
+      (buffer-disable-undo)
+      (erase-buffer)
       (let ((process (start-process-shell-command "sdcv" "*sdcv*" "sdcv" "-n --data-dir ~/.stardict/dict" word)))
         (set-process-sentinel
          process
          (lambda (process signal)
            (when (memq (process-status process) '(exit signal))
-             (switch-to-buffer-other-window "*sdcv*")
+             (unless (equal (buffer-name) "*sdcv*")
+               (switch-to-buffer-other-window "*sdcv*"))
              (yasdcv--output-cleaner:common)
              (sdcv-mode)
              (show-all)
              (while (re-search-forward "*** Collins Cobuild English Dictionary " nil t)
-               (hide-entry)))))))
+               (hide-entry))
+             (indent-region (point-min) (point-max))
+             (goto-char (point-min)))))))
      (is-win
-      (w32-shell-execute "open" "sdcv" (concat "--data-dir c:/Users/swint/.stardict " word " stardict"))
-      (switch-to-buffer-other-window "*sdcv*")
-      (yasdcv--output-cleaner:common)
-      (sdcv-mode)
-      (show-all)))
-    (when (internet-active-p)
-      ;; 输入google-translate结果。
-      (save-excursion (if (pyim-string-match-p "\\cc" word)
-                          (google-translate-translate "zh-CN" "en" word)
-                        (google-translate-translate "en" "zh-CN" word)))
-      (insert (concat "*** Google Translate" " (" word ")\n"))
-      (insert-buffer-substring "*Google Translate*")
-      (kill-buffer "*Google Translate*")
-      ;; 输入bing-dict结果。
-      (swint-bing-dict-brief word)
-      (indent-region (point-min) (point-max)))))
+      (w32-shell-execute "open" "sdcv" (concat "--data-dir c:/Users/swint/.stardict " word " stardict"))))))
 (defun yasdcv--output-cleaner:common ()
   "从yasdcv借来的函数。"
   (goto-char (point-min))
@@ -75,16 +63,43 @@
 (use-package bing-dict
   ;; Enabled at commands.
   :defer t
-  :commands (bing-dict-brief swint-bing-dict-brief)
+  :bind ("C-M-@" . swint-bing-google-translate)
   :config
+  (defun swint-bing-google-translate ()
+    (interactive)
+    (let ((word (swint-get-words-at-points)))
+      (when (internet-active-p)
+        (unless (equal (buffer-name) "*bing-google*")
+          (switch-to-buffer-other-window "*bing-google*"))
+        (set-buffer "*bing-google*")
+        (buffer-disable-undo)
+        (erase-buffer)
+        (sdcv-mode)
+        ;; 输入google-translate结果。
+        (save-excursion (if (pyim-string-match-p "\\cc" word)
+                            (google-translate-translate "zh-CN" "en" word)
+                          (google-translate-translate "en" "zh-CN" word)))
+        (goto-char (point-max))
+        (insert (concat "*** Google Translate" " (" word ")\n"
+                        (with-current-buffer "*Google Translate*"
+                          (buffer-substring (point-at-bol 3) (point-max)))))
+        (kill-buffer "*Google Translate*")
+        ;; 输入bing-dict结果。
+        (swint-bing-dict-brief word)
+        (show-all)
+        (while (re-search-forward "\\\<1\\\. " nil t)
+          (org-shiftmetaright)
+          (org-shiftmetaright)
+          (org-shiftmetaright))
+        (indent-region (point-min) (point-max)))))
   (defvar swint-bing-dict-result nil)
   (defun swint-bing-dict-brief-cb (status keyword)
     (set-buffer-multibyte t)
     (bing-dict--delete-response-header)
     (condition-case nil
-        (if (buffer-live-p (get-buffer "*sdcv*"))
+        (if (buffer-live-p (get-buffer "*bing-google*"))
             (if (bing-dict--has-machine-translation-p)
-                (with-current-buffer "*sdcv*"
+                (with-current-buffer "*bing-google*"
                   (goto-char (point-max))
                   (insert (concat "*** Bing Dict" " (" keyword ")\n"))
                   (indent-for-tab-command)
@@ -97,7 +112,7 @@
                                            (propertize " | "
                                                        'face
                                                        'font-lock-builtin-face))))
-                (with-current-buffer "*sdcv*"
+                (with-current-buffer "*bing-google*"
                   (goto-char (point-max))
                   (insert (concat "*** Bing Dict" " (" keyword ")\n"))
                   (indent-for-tab-command)
@@ -106,7 +121,7 @@
                     (insert "No results")))))
           (bing-dict-brief keyword))
       (error
-       (with-current-buffer "*sdcv*"
+       (with-current-buffer "*bing-google*"
          (goto-char (point-max))
          (insert (concat "*** Bing Dict" " (" keyword ")\n"))
          (indent-for-tab-command)
@@ -149,6 +164,6 @@
               ;; 解决w3m无法解析网址的问题
               (is-win (w3m-url-encode-string word 'utf-8)))
              "&keyfrom=dict.top"))))
-(global-set-key (kbd "C-M-@") 'youdao-sample-sentences)
+(global-set-key (kbd "M-@") 'youdao-sample-sentences)
 ;; ====================youdao====================
 (provide 'setup_dict)

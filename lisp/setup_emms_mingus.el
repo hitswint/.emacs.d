@@ -3,16 +3,14 @@
   ;; Enabled at commands.
   :if is-lin
   :defer t
-  :commands (emms-play-file emms-player-mpd-connect emms-playlist-mode-go)
-  :init
-  (bind-key "M-s e l" 'swint-emms-playlist-mode-go)
-  (bind-key "M-s e o" 'emms-play-file)
+  :bind (("M-s e l" . swint-emms-playlist-mode-go)
+         ("M-s e o" . emms-play-file))
+  :config
   (defun swint-emms-playlist-mode-go ()
     "swint-playlist."
     (interactive)
     (emms-player-mpd-connect)
     (emms-playlist-mode-go))
-  :config
   (use-package emms-setup)
   (emms-devel)
   (setq emms-player-mpg321-command-name "mpg321"
@@ -28,7 +26,7 @@
   (setq emms-mode-line-mode-line-function nil)
   (setq emms-mode-line-format ""
         emms-lyrics-display-format ""
-        emms-playing-time-display-format "") ; 关闭emms在mode-line上的显示
+        emms-playing-time-display-format "") ;关闭emms在mode-line上的显示
   ;; ==============emms-mpd================
   (use-package emms-player-mpd)
   (setq emms-player-mpd-server-name "localhost")
@@ -53,16 +51,14 @@
   ;; Enabled at commands.
   :if is-win
   :defer t
-  :commands (mingus mingus-browse)
-  :init
-  (bind-key "M-s e l" 'mingus)
-  (bind-key "M-s e o" 'swint-mingus-browse)
+  :bind (("M-s e l" . mingus)
+         ("M-s e o" . swint-mingus-browse))
+  :config
   (defun swint-mingus-browse ()
     "swint-mingus-browse."
     (interactive)
     (mingus)
     (mingus-browse))
-  :config
   (autoload 'mingus "mingus-stays-home" nil t)
   (global-set-key (kbd "C-M-SPC") 'mingus-toggle)
   (global-set-key (kbd "C-M-<up>") 'mingus-vol-up)

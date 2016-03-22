@@ -65,10 +65,9 @@
   ;; Enabled at commands.
   :load-path "site-lisp/breadcrumb/"
   :defer t
-  :commands (bc-previous bc-next bc-set)
-  :init
-  (bind-key "C-x C-," 'bc-previous)
-  (bind-key "C-x C-." 'bc-next)
+  :bind (("C-x C-," . bc-previous)
+         ("C-x C-." . bc-next))
+  :commands bc-set
   :config
   ;; 默认被session-jump-to-last-change占用。
   (bind-key "C-x C-/" 'bc-set))

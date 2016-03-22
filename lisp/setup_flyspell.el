@@ -2,14 +2,16 @@
 (use-package flyspell
   ;; Enabled at commands.
   :defer t
+  :after ac-ispell
   :bind ("M-s f" . swint-toggle-flyspell-mode)
-  :init
+  :config
   (defun swint-toggle-flyspell-mode ()
     (interactive)
     (if flyspell-mode
         (flyspell-mode-off)
       (progn (flyspell-buffer)
              (flyspell-mode))))
+  (use-package ispell)
   (setq ispell-program-name "aspell")
   (setq ispell-personal-dictionary (expand-file-name "~/.ispell"))
   (ispell-change-dictionary "american" t)
@@ -17,8 +19,6 @@
     (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/"))
   (if (not ispell-alternate-dictionary)
       (setq ispell-alternate-dictionary (file-truename "~/.english-words")))
-  :config
-  (use-package ispell)
   (define-key flyspell-mode-map (kbd "C-,") nil)
   (define-key flyspell-mode-map (kbd "C-.") nil)
   (smartrep-define-key flyspell-mode-map "M-s"

@@ -41,7 +41,7 @@
 (global-set-key (kbd "M-s M-.") 'split-window-horizontally)
 (global-set-key (kbd "C-M-1") 'eshell)
 (global-set-key (kbd "C-M-!") 'shell)
-(global-set-key (kbd "C-M-2") 'kid-sdcv-to-buffer)
+(global-set-key (kbd "C-M-2") 'swint-sdcv-to-buffer)
 (global-set-key (kbd "C-M-3") 'run-octave)
 (global-set-key (kbd "C-M-#") 'calculator)
 (global-set-key (kbd "C-M-5") 'w3m)
