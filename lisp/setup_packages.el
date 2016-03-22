@@ -253,12 +253,24 @@
   :defer t
   :bind ("M-Y" . popup-kill-ring)
   :config
-  (use-package popup)
-  (use-package pos-tip)
-  ;; (pos-tip-w32-max-width-height)   ; Maximize frame temporarily
-  ;; (pos-tip-w32-max-width-height t) ; Keep frame maximized
   (setq popup-kill-ring-interactive-insert t))
 ;; ===================popup-kill-ring====================
+;; ========================popup=========================
+(use-package popup
+  ;; Enabled at commands.
+  :defer 2
+  :commands (popup-tip popup-create popup-make-item)
+  :config
+  (define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
+  (define-key popup-menu-keymap (kbd "M-n") 'popup-next)
+  (define-key popup-menu-keymap (kbd "TAB") 'popup-next))
+;; ========================popup=========================
+;; =======================pos-tip========================
+(use-package pos-tip
+  ;; Enabled at commands.
+  :defer 2
+  :commands (pos-tip-show pos-tip-show-no-propertize))
+;; =======================pos-tip========================
 ;; ===================highlight-symbol====================
 (use-package highlight-symbol
   ;; Enabled at commands.
