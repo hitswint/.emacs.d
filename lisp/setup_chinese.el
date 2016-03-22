@@ -26,6 +26,7 @@
 (use-package chinese-pyim
   ;; Enabled at commands.
   :defer t
+  :commands pyim-get-words-list-at-point
   :bind (("C-M-SPC" . pyim-convert-pinyin-at-point)
          ("S-SPC" . pyim-punctuation-translate-at-point))
   :config

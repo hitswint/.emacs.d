@@ -52,6 +52,7 @@
                                                        (revert-buffer)))
                (define-key dired-mode-map (kbd "l") 'swint-org-annotate-file-current)
                (define-key dired-mode-map (kbd "L") 'org-annotate-file-current)
+               (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
                ;; 在dired对mark的多个文件内容进行查找
                (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
                (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
@@ -501,5 +502,59 @@
   ;; C-M-y快捷键绑定会被pop-kill-ring覆盖，这里重新定义。
   (bind-key "C-M-y" 'dired-ranger-move dired-mode-map))
 ;; ===============dired-ranger=================
+;; ===========dired-view-file-or-dir===========
+(defconst +kilobyte+ 1024.0)
+(defconst +megabyte+ (* 1024 1024.0))
+(defconst +gigabyte+ (* 1024 1024 1024.0))
+(defconst +terabyte+ (* 1024 1024 1024.0 1024.0))
+(defun txm-format-file-size (size)
+  "Return string with formatted file size"
+  (cl-flet ((float-to-string (x)
+                             (format "%.2f" x)))
+    (cond ((< size +kilobyte+)
+           (concat (number-to-string size) " bytes"))
+          ((< size +megabyte+)
+           (concat (float-to-string (/ size +kilobyte+)) " Kb"))
+          ((< size +gigabyte+)
+           (concat (float-to-string (/ size +megabyte+)) " Mb"))
+          ((< size +terabyte+)
+           (concat (float-to-string (/ size +gigabyte+)) " Gb"))
+          (t "Unknown size"))))
+(defun txm-file-or-dir-size (path)
+  "Calculate size of the directory or file using Unix 'wc' tool"
+  (message (concat "Processing " path "..."))
+  (let ((du-command
+         (if (eq system-type 'darwin)
+             "/opt/local/bin/gdu"
+           "du")))
+    (with-temp-buffer
+      (if (zerop (apply 'call-process
+                        du-command
+                        (list nil t nil "-s" "-b" path)))
+          ;; possibly more complicated processing here
+          (string-to-number (car (split-string (buffer-string))))
+        -1))))
+(defun txm-dired-view-file-or-dir ()
+  "Replacement for dired-view-file-or-dir.
+If called on file - view it, on directory - calculate its size
+Assuming .. and . is a current directory (like in FAR)"
+  (interactive)
+  (let ((file (dired-get-file-for-visit)))
+    (if (file-directory-p file)
+        (let ((filename (car (last (split-string file "/")))))
+          (when (or (string= filename "..")
+                    (string= filename "."))
+            (setq file (dired-current-directory)))
+          (let ((size (txm-file-or-dir-size file)))
+            (if (/= size -1 )
+                (message (concat (txm-format-file-size size)
+                                 " in "
+                                 filename
+                                 " ("
+                                 (number-to-string size)
+                                 " bytes)"))
+              (message (concat "Cannot determine size of " filename)))))
+      (view-file file))))
+;; ===========dired-view-file-or-dir===========
 ;; ======================dired========================
 (provide 'setup_dired)
