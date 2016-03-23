@@ -2,11 +2,10 @@
 (use-package dirtree
   ;; Enabled at commands.
   :defer t
-  :commands dirtree
-  :init
-  (bind-key "C-x j" 'dirtree-local)
-  (bind-key "C-x J" 'dirtree-home)
-  (bind-key "C-q" 'dirtree-kill-this-buffer)
+  :bind (("C-x j" . dirtree-local)
+         ("C-x J" . dirtree-home)
+         ("C-q" . dirtree-kill-this-buffer))
+  :config
   (defun dirtree-local ()
     (interactive)
     (let* ((file buffer-file-name)

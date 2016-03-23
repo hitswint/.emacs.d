@@ -379,15 +379,16 @@
   ;; Enabled at commands.
   :defer t
   :commands peep-dired
-  :init
-  (bind-key "q" '(lambda ()
-                   (interactive)
-                   (let ((image-buffer (get-buffer image-dired-display-image-buffer)))
-                     (if (buffer-live-p image-buffer)
-                         (progn
-                           (kill-buffer image-buffer)))
-                     (call-interactively 'peep-dired))) dired-mode-map)
+  :bind (:map dired-mode-map
+              ("q" . swint-peep-dired))
   :config
+  (defun swint-peep-dired ()
+    (interactive)
+    (let ((image-buffer (get-buffer image-dired-display-image-buffer)))
+      (if (buffer-live-p image-buffer)
+          (progn
+            (kill-buffer image-buffer)))
+      (call-interactively 'peep-dired)))
   (bind-key "q" nil peep-dired-mode-map)
   ;; image-dired默认使用convert作为图片转换程序。
   ;; C-t C-t: toggle thumbs display; C-t i: display image; C-t d: display thumbs; C-t x: display external。
@@ -490,16 +491,14 @@
   ;; Enabled at commands.
   :defer t
   :bind (:map dired-mode-map
-              ;; 加C-u不清除clipboards。
-              (("C-y" . dired-ranger-paste)
-               ("C-M-y" . dired-ranger-move)))
-  :init
-  (bind-key "M-w" '(lambda ()
-                     (interactive)
-                     (easy-kill)
-                     (call-interactively 'dired-ranger-copy)) dired-mode-map)
+              ("M-w" . swint-dired-ranger-copy))
   :config
-  ;; C-M-y快捷键绑定会被pop-kill-ring覆盖，这里重新定义。
+  (defun swint-dired-ranger-copy ()
+    (interactive)
+    (easy-kill)
+    (call-interactively 'dired-ranger-copy))
+  ;; 加C-u不清除clipboards。
+  (bind-key "C-y" 'dired-ranger-paste dired-mode-map)
   (bind-key "C-M-y" 'dired-ranger-move dired-mode-map))
 ;; ===============dired-ranger=================
 ;; ===========dired-view-file-or-dir===========

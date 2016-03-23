@@ -2,8 +2,7 @@
 (use-package flycheck
   ;; Enabled at commands.
   :defer t
-  :init
-  (bind-key "M-s c" 'flycheck-mode)
+  :bind ("M-s c" . flycheck-mode)
   :config
   ;; 取消自动开启。
   ;; (add-hook 'after-init-hook #'global-flycheck-mode)

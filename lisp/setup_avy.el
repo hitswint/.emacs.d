@@ -1,27 +1,30 @@
 ;; =======================avy===========================
+(use-package avy
+  ;; Enabled at commands.
+  :after ace-pinyin
+  :defer t
+  :bind (:map isearch-mode-map
+              ("C-h" . avy-isearch))
+  :config
+  ;; at-full会造成ace-pinyin显示不正确。
+  (setq avy-keys (number-sequence ?a ?z))
+  (setq avy-styles-alist '((avy-goto-char . at)
+                           (avy-goto-char-2 . at)
+                           (avy-goto-word-0 . at)))
+  (setq avy-dispatch-alist '((?\C-w . avy-action-kill)
+                             (?\C-\; . avy-action-mark)
+                             (?\M-w . avy-action-copy))))
+;; ===============avy-zap===============
+(use-package avy-zap
+  ;; Enabled at commands.
+  :bind (("M-z" . avy-zap-to-char-dwim)
+         ("M-Z" . avy-zap-up-to-char-dwim)))
+;; ===============avy-zap===============
+;; ==============ace-pinyin===============
 (use-package ace-pinyin
   ;; Enabled at commands.
   :defer t
   :bind ("C-h" . ace-pinyin-jump-char)
-  :init
-  (use-package avy
-    ;; Enabled at commands.
-    :defer t
-    :bind (:map isearch-mode-map
-                ("C-h" . avy-isearch))
-    :config
-    ;; at-full会造成ace-pinyin显示不正确。
-    (setq avy-keys (number-sequence ?a ?z))
-    (setq avy-styles-alist '((avy-goto-char . at)
-                             (avy-goto-char-2 . at)
-                             (avy-goto-word-0 . at)))
-    (setq avy-dispatch-alist '((?\C-w . avy-action-kill)
-                               (?\C-\; . avy-action-mark)
-                               (?\M-w . avy-action-copy))))
-  (use-package avy-zap
-    ;; Enabled at commands.
-    :bind (("M-z" . avy-zap-to-char-dwim)
-           ("M-Z" . avy-zap-up-to-char-dwim)))
   :config
   (setq ace-pinyin-use-avy t)
   (ace-pinyin-global-mode +1)
@@ -134,5 +137,6 @@ This function obeys `avy-all-windows' setting."
         (avy--process
          (swint-avy--read-candidates)
          (avy--style-fn avy-style))))))
+;; ==============ace-pinyin===============
 ;; =======================avy===========================
 (provide 'setup_avy)

@@ -2,20 +2,14 @@
 (use-package yasnippet
   ;; Enabled at commands.
   :defer t
-  :init
-  (bind-key "M-I" '(lambda ()
-                     (interactive)
-                     (unless yas-global-mode
-                       (yas-global-mode 1)
-                       (yas-minor-mode 1))
-                     (unless (if (boundp 'auto-complete-mode)
-                                 auto-complete-mode)
-                       (auto-complete-mode 1))
-                     (if (boundp 'company-mode)
-                         (company-abort))
-                     (unless (auto-complete '(ac-source-yasnippet))
-                       (yas-insert-snippet))))
+  :bind ("M-I" . swint-yas-insert-snippet)
   :config
+  (defun swint-yas-insert-snippet ()
+    (interactive)
+    (if (boundp 'company-mode)
+        (company-abort))
+    (unless (auto-complete '(ac-source-yasnippet))
+      (yas-insert-snippet)))
   ;; (yas-initialize)
   (unless yas-global-mode
     (yas-global-mode 1)
@@ -34,12 +28,12 @@
     (when (featurep 'popup)
       (popup-menu*
        (mapcar
-	(lambda (choice)
-	  (popup-make-item
-	   (or (and display-fn (funcall display-fn choice))
-	       choice)
-	   :value choice))
-	choices)
+        (lambda (choice)
+          (popup-make-item
+           (or (and display-fn (funcall display-fn choice))
+               choice)
+           :value choice))
+        choices)
        :prompt prompt
        ;; start isearch mode immediately
        :isearch t)))

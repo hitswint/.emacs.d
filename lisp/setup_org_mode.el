@@ -587,14 +587,13 @@ depending on the last command issued."
 (use-package dired-x-annotated
   ;; Enabled automatically.
   :load-path "site-lisp/org-annotate-file/"
-  :init
+  :config
   (defun swint-org-annotate-file-storage-file ()
     "Modified from var to function"
     (concat "~/org/annotated/annotated-("
             (replace-regexp-in-string
              "/" "_" (substring-no-properties (abbreviate-file-name default-directory) 1))
             ").org"))
-  :config
   ;; Sync annotated status as operating.
   (use-package dired-sync-annotated
     :load-path "site-lisp/org-annotate-file/"))

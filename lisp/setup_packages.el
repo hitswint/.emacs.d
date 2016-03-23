@@ -274,6 +274,7 @@
 (use-package highlight-symbol
   ;; Enabled at commands.
   :defer t
+  :commands (highlight-symbol-at-point highlight-symbol-prev highlight-symbol-next)
   :init
   (smartrep-define-key global-map "C-x"
     '(("/" . highlight-symbol-at-point)
@@ -508,6 +509,7 @@ is named like ODF with the extension turned to pdf."
 (use-package bm
   ;; Enabled at commands.
   :defer t
+  :commands (bm-toggle bm-previous bm-next)
   :init
   (smartrep-define-key global-map "M-s"
     '(("/" . bm-toggle)
@@ -520,6 +522,7 @@ is named like ODF with the extension turned to pdf."
 (use-package operate-on-number
   ;; Enabled at commands.
   :defer t
+  :commands (apply-operation-to-number-at-point operate-on-number-at-point)
   :init
   (smartrep-define-key global-map "C-="
     '(("+" . apply-operation-to-number-at-point)
@@ -538,7 +541,8 @@ is named like ODF with the extension turned to pdf."
 (use-package goto-chg
   ;; Enabled at commands.
   :defer t
-  :init
+  :bind ("M-?" . swint-goto-chg-command-with-prefix)
+  :config
   (defun swint-goto-chg-command-with-prefix (&optional arg)
     (interactive)
     (goto-last-change arg)
@@ -554,8 +558,7 @@ is named like ODF with the extension turned to pdf."
            ("?" . goto-last-change-reverse)))
       (quit nil))
     ;; (finalize-event-loop)
-    )
-  (global-set-key (kbd "M-?") 'swint-goto-chg-command-with-prefix))
+    ))
 ;; ============goto-last-change============
 ;; =================Proced=================
 (use-package proced
