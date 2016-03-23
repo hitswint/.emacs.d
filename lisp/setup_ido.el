@@ -4,7 +4,7 @@
   :config
   (ido-mode t)
   ;; (global-set-key (kbd "C-x f") 'ido-find-file)
-  ;; ====================ido-back-to-home===========================
+  ;; =================ido-back-to-home=================
   (add-hook 'ido-setup-hook
             (lambda ()
               ;; Go straight home
@@ -15,7 +15,7 @@
                   (if (looking-back "/")
                       (insert "~/")
                     (call-interactively 'self-insert-command))))))
-  ;; ====================ido-back-to-home===========================
+  ;; =================ido-back-to-home=================
   ;; ====ido-find-file:open-file-with-external-app=====
   (defvar ido-fallback-function nil "The fallback function that will be explicitly check and can be externally modified
 this variable is introduced to enhance ido-find-file functionality
@@ -216,16 +216,13 @@ especially for extending ido-find-file functionality
       (exit-minibuffer))))
   ;; ====ido-find-file:open-file-with-external-app=====
   )
-;; =====================ido-ubiquitous===================
+;; ======================ido-tips======================
 (use-package ido-ubiquitous
-  ;; Enabled automatically.
+  ;; Enabled at idle.
+  :defer 2
   :config
   ;; (setq ido-everywhere t)      ;会导致dired中的操作都会启用ido，包括复制、重命名等
   (ido-ubiquitous-mode 1))
-;; =====================ido-ubiquitous===================
-;; ==================flx-ido/ido-at-point/ido-hacks/ido-vertical-mode========================
-;; 以下导致ido-vertical-mode失效
-;; '(ido-separator "   ")
 (use-package ido-vertical-mode
   ;; Enabled at idle.
   :defer 2
@@ -246,6 +243,6 @@ especially for extending ido-find-file functionality
   :defer 2
   :config
   (ido-at-point-mode))
-;; ==================flx-ido/ido-at-point/ido-hacks/ido-vertical-mode========================
+;; ======================ido-tips======================
 ;; =========================ido===========================
 (provide 'setup_ido)

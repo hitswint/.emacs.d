@@ -2,6 +2,7 @@
 (use-package graphviz-dot-mode
   ;; Enabled in graphviz-dot-mode.
   :defer t
+  :commands graphviz-dot-mode
   :init
   (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
   :config

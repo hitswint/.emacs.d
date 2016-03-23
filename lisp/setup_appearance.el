@@ -24,7 +24,7 @@
   ;;    '((height . 30) (width . 75) (menu-bar-lines . 20) (tool-bar-lines . 0)))
   )
 ;; ================全屏和最大化===============
-;; ==============tangotango-theme==============
+;; ==============tangotango-theme=============
 (load-theme 'tangotango t)
-;; ==============tangotango-theme==============
+;; ==============tangotango-theme=============
 (provide 'setup_appearance)

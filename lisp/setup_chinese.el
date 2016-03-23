@@ -1,4 +1,4 @@
-;; ==================chinese-fonts-setup===================
+;; ==========chinese-fonts-setup===========
 (use-package chinese-fonts-setup
   ;; Enabled automatically.
   :load-path "site-lisp/chinese-fonts-setup/"
@@ -21,7 +21,7 @@
                     (swint-cfs-set-font-with-saved-size))))
     (add-hook 'window-setup-hook
               'swint-cfs-set-font-with-saved-size)))
-;; ==================chinese-fonts-setup===================
+;; ==========chinese-fonts-setup===========
 ;; =============chinese-pyim===============
 (use-package chinese-pyim
   ;; Enabled at commands.

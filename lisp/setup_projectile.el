@@ -1,16 +1,15 @@
-;; ================Projectile================
+;; ===================Projectile===================
 (use-package projectile
   ;; Enabled at commands.
   :defer t
   :bind-keymap ("M-s '" . projectile-command-map)
-  :init
-  (setq projectile-keymap-prefix (kbd "M-s '"))
   :config
+  (setq projectile-keymap-prefix (kbd "M-s '"))
   (projectile-global-mode)
   (setq projectile-enable-caching t)
   (setq projectile-mode-line nil)
   (setq projectile-completion-system 'helm))
-;; =================helm-projectile======================
+;; ==============helm-projectile================
 (use-package helm-projectile
   ;; Enabled at commands.
   :defer t
@@ -26,15 +25,15 @@
   ;; windows下的缓存方式从native改到alien，加快缓存速度。
   (when is-win
     (setq projectile-indexing-method 'alien)))
-;; =================helm-projectile======================
-;; ================persp-projectile======================
+;; ==============helm-projectile================
+;; ================persp-projectile=============
 (use-package persp-projectile
-  ;; Enabled at commands.
+  ;; Enabled after features.
   :defer t
   :after projectile
   :config
   (bind-key "'" 'projectile-persp-switch-project projectile-command-map))
-;; ================persp-projectile======================
+;; ================persp-projectile=============
 ;; projectile-grep出现find错误。
 ;; 在helm-projectile中C-d为打开project的根目录。
 ;; C-c p f         Display a list of all files in the project. With a prefix argument it will clear the cache first.
@@ -73,5 +72,5 @@
 ;; C-c p S         Save all project buffers.
 ;; C-c p m         Run the commander (an interface to run commands with a single key).
 ;; C-c p ESC       Switch to the most recently selected projectile buffer.
-;; ================Projectile================
+;; ===================Projectile===================
 (provide 'setup_projectile)

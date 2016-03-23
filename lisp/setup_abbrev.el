@@ -1,7 +1,6 @@
 ;; ====================abbrev====================
 (use-package abbrev
   ;; Enabled at idle.
-  ;; Enabled automatically actually.
   :defer 2
   :config
   ;; turn on abbrev mode globally

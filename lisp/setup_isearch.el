@@ -2,6 +2,7 @@
 (use-package anzu
   ;; Enabled at commands.
   :defer t
+  :after pinyin-search
   :bind (("M-*" . anzu-query-replace)
          ("C-M-*" . anzu-query-replace-regexp))
   :config
@@ -14,7 +15,7 @@
    '(anzu-search-threshold 1000)
    '(anzu-replace-to-string-separator " => ")))
 ;; ===================Anzu====================
-;; ===================pinyin-search=====================
+;; ===============pinyin-search===============
 ;; 安装时由于isearch-mode-map中已经设定M-s为helm-swoop，导致快捷键设定失败，修改之。
 (use-package pinyin-search
   ;; Enabled at commands.
@@ -23,7 +24,6 @@
   :bind (("C-s" . isearch-forward-pinyin)
          ("C-r" . isearch-backward-pinyin))
   :config
-  (use-package anzu)
   (define-key isearch-mode-map (kbd "C-q") #'isearch-toggle-pinyin)
   ;; 同时搜索中英文，与ace-jump一样，对于.*+?等正则表达式使用的符号无效。
   (defun swint-pinyin-search--pinyin-to-regexp (string)
@@ -48,8 +48,8 @@
   (add-hook 'isearch-mode-end-hook
             (lambda ()
               (setq pinyin-search-activated nil))))
-;; ===================pinyin-search=====================
-;; ==============extended isearch==================
+;; ===============pinyin-search===============
+;; =============extended isearch==============
 (defun symbol-name-at-point ()
   (let ((symbol (symbol-at-point)))
     (if symbol
@@ -71,7 +71,7 @@
   (interactive)
   (isearch-yank-string (current-thing)))
 (define-key isearch-mode-map (kbd "C-t") 'isearch-thing)
-;; ==============extended isearch==================
+;; =============extended isearch==============
 ;; ==============拼音首字母搜索===============
 ;; 使用pinyin-search替代，但这个可以同时搜索中英文，保留之。
 (defun swint-pinyin-search-forward (&optional bound noerror count)

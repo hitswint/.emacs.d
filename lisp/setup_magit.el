@@ -1,4 +1,4 @@
-;; =================================magit===============================
+;; ====================magit=======================
 (use-package magit
   ;; Enabled at commands.
   :defer t
@@ -119,7 +119,7 @@
     '(define-key flyspell-mode-map (kbd "C-.") nil))
   ;; 在git remote add和git clone中需要使用cygwin的路径名称 file:///cygdrive/c/Users/swint/ 。
   ;; 建立的远程仓库remote.git， 初始化时使用git --bare init，直接使用remote.git文件夹作为.git文件夹。
-  ;; ==================初始化远程库和克隆远程库===================
+  ;; ========初始化远程库和克隆远程库===========
   (defun magit-clone-remote ()
     (interactive)
     (cond
@@ -148,9 +148,9 @@
                                      (is-win (read-string "Remote url: " (concat "file:///cygdrive/c/Users/swint/Nutstore/" (buffer-name (window-buffer (next-window))))))))))
     (magit-run-git-async "remote" "add" "-f" remote url))
   ;; 使magit-remote-add默认以另一个窗口的buffer为remote。
-  ;; ==================初始化远程库和克隆远程库===================
+  ;; ========初始化远程库和克隆远程库===========
   (setq magit-last-seen-setup-instructions "1.4.0")
-  ;; ==========使用git管理doc文件=============
+  ;; ===========使用git管理doc文件==============
   (defun swint-magit-diff-doc ()
     (interactive)
     (with-temp-file ".gitattributes"
@@ -158,8 +158,8 @@
     (shell-command "git config diff.word.textconv catdoc")
     (shell-command "git config diff.wordx.textconv docx2txt-git"))
   (define-key magit-status-mode-map (kbd "C-c d") 'swint-magit-diff-doc)
-  ;; ==========使用git管理doc文件=============
-  ;; ==========使用webdav_sync同步文件============
+  ;; ===========使用git管理doc文件==============
+  ;; =========使用webdav_sync同步文件===========
   (defun swint-magit-pull-current (remote branch &optional args)
     "Fetch and merge into current branch."
     (interactive (magit-pull-read-args t))
@@ -196,8 +196,8 @@ If the upstream isn't set, then read the remote branch."
   ;; webdav_sync的同步方法不可靠，而且webdav的连接方式很慢。暂停使用。
   ;; (define-key magit-status-mode-map (kbd "C-c M-,") 'swint-magit-pull-current)
   ;; (define-key magit-status-mode-map (kbd "C-c M-.") 'swint-magit-push-current)
-  ;; ==========使用webdav_sync同步文件============
+  ;; =========使用webdav_sync同步文件===========
   (add-hook 'magit-mode-hook (lambda ()
                                (define-key magit-mode-map (kbd "<C-tab>") nil))))
-;; =================================magit===============================
+;; ====================magit=======================
 (provide 'setup_magit)

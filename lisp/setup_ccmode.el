@@ -1,7 +1,8 @@
-;; =======================ccmode========================
+;; =====================ccmode=====================
 (use-package cc-mode
   ;; Enabled in cc-mode.
   :defer t
+  :commands (c-mode c++-mode)
   :init
   (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-mode))
   (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode))
@@ -43,7 +44,7 @@
   ;; “java”: The default style for java-mode (see below)
   ;; “user”: When you want to define your own style
   (setq c-default-style "linux"))
-;; =======================gdb=======================
+;; =====================gdb=====================
 (use-package gdb-mi
   ;; Enabled at commands.
   :defer t
@@ -80,11 +81,12 @@
   (add-hook 'gdb-mode-hook 'kill-shell-buffer-after-exit t)
   ;; 直接使用gdb-or-gud-go会显示gud-comint-buffer变量未定义，需要先使用gdb一次，然后才能使用gdb-or-gud-go。
   )
-;; =======================gdb=======================
-;; =======================function-args===========================
+;; =====================gdb=====================
+;; ==================function-args==============
 (use-package function-args
   ;; Enabled in cc-mode.
   :defer t
+  :commands fa-config-default
   :init
   (add-hook 'c-mode-hook 'fa-config-default)
   :config
@@ -94,19 +96,20 @@
   (define-key function-args-mode-map (kbd "C-c i") 'moo-jump-local)
   (define-key function-args-mode-map (kbd "M-n") nil)
   (define-key function-args-mode-map (kbd "M-u") nil))
-;; =======================function-args===========================
-;; =======================hs-minor-mode===========================
+;; ==================function-args==============
+;; ==================hs-minor-mode==============
 (use-package hideshow
   ;; Enabled in cc-mode.
   :defer t
+  :commands hs-minor-mode
   :init
   (add-hook 'c-mode-common-hook 'hs-minor-mode)
   :config
   (add-hook 'c-mode-hook
             (lambda ()
               (define-key hs-minor-mode-map (kbd "C-M-i") 'hs-toggle-hiding))))
-;; =======================hs-minor-mode===========================
-;; =======================semantic===========================
+;; ==================hs-minor-mode==============
+;; ===================semantic==================
 (use-package semantic
   ;; Enabled at idle.
   :defer 2
@@ -121,21 +124,16 @@
   (semantic-mode 1)
   ;; 所有semantic的快捷键均以C-c ,为前缀，可以考虑用M-s s代替。
   (define-key semantic-mode-map (kbd "C-c ,") nil))
-;; =======================semantic===========================
-;; =======================helm-gtags===========================
+;; ===================semantic==================
+;; ==================helm-gtags=================
 ;; helm-man-woman: C-x c m
 ;; helm-semantic-or-imenu: C-x c i
 ;; 可以使用senator-previous-tag和senator-next-tag跳转tag。
 (use-package helm-gtags
   ;; Enabled in cc-mode.
   :defer t
+  :commands helm-gtags-mode
   :init
-  (setq helm-gtags-ignore-case t
-        helm-gtags-auto-update t
-        helm-gtags-use-input-at-cursor t
-        helm-gtags-pulse-at-cursor t
-        helm-gtags-prefix-key "\C-c"
-        helm-gtags-suggested-key-mapping t)
   ;; Enable helm-gtags-mode
   (dolist (hook '(;; dired-mode-hook
                   ;; eshell-mode-hook
@@ -144,6 +142,12 @@
                   asm-mode-hook))
     (add-hook hook 'helm-gtags-mode))
   :config
+  (setq helm-gtags-ignore-case t
+        helm-gtags-auto-update t
+        helm-gtags-use-input-at-cursor t
+        helm-gtags-pulse-at-cursor t
+        helm-gtags-prefix-key "\C-c"
+        helm-gtags-suggested-key-mapping t)
   (define-key helm-gtags-mode-map (kbd "C-c a") 'helm-gtags-tags-in-this-function)
   (define-key helm-gtags-mode-map (kbd "C-c C-,") 'helm-gtags-dwim)
   (define-key helm-gtags-mode-map (kbd "C-c C-.") 'helm-gtags-pop-stack)
@@ -152,43 +156,6 @@
   (define-key helm-gtags-mode-map (kbd "C-c .") 'helm-gtags-next-history)
   (define-key helm-gtags-mode-map (kbd "C-c /") 'helm-gtags-show-stack)
   (define-key helm-gtags-mode-map (kbd "M-.") nil))
-;; =======================helm-gtags===========================
-;; =======================company===========================
-(use-package company
-  ;; Enabled at commands.
-  :defer 2
-  :commands company-complete-common
-  :bind ("M-O" . company-complete-common)
-  :config
-  (global-company-mode 1)
-  (setq company-show-numbers t)
-  (define-key company-active-map (kbd "C-p") 'company-select-previous)
-  (define-key company-active-map (kbd "C-n") 'company-select-next)
-  (dotimes (i 10)
-    (define-key company-active-map (read-kbd-macro (format "C-%d" i)) 'company-complete-number))
-  ;; company-quickhelp-mode
-  (use-package company-quickhelp
-    ;; Enabled at commands.
-    :defer t
-    :commands company-quickhelp-manual-begin
-    :init
-    (bind-key "C-o" 'company-quickhelp-manual-begin company-active-map)
-    (setq company-quickhelp-delay nil)
-    :config
-    (company-quickhelp-mode 1))
-  ;; 在弹出popup的情况下，C-h 打开*Help*，C-w 进入文件，C-o弹出pos-tip，C-s 搜索，C-M-s 过滤。
-  ;; company-c-headers
-  (use-package company-c-headers
-    ;; Enabled automatically.
-    :config
-    (add-to-list 'company-backends 'company-c-headers))
-  (setq company-backends (delete 'company-semantic company-backends))
-  ;; To complete for projects, you need to tell Clang your include paths.
-  ;; Create a file named .dir-locals.el at your project root:
-  ;; ((nil . ((company-clang-arguments . ("-I/home/<user>/project_root/include1/"
-  ;;                                      "-I/home/<user>/project_root/include2/")))))
-  ;; If you use Helm, you can easily insert absolute path by C-c i at the current path in helm-find-files.
-  )
-;; =======================company===========================
-;; =======================ccmode========================
+;; ==================helm-gtags=================
+;; =====================ccmode=====================
 (provide 'setup_ccmode)

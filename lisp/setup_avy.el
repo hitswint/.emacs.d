@@ -1,4 +1,4 @@
-;; =======================avy===========================
+;; =====================avy========================
 (use-package avy
   ;; Enabled at commands.
   :after ace-pinyin
@@ -14,13 +14,14 @@
   (setq avy-dispatch-alist '((?\C-w . avy-action-kill)
                              (?\C-\; . avy-action-mark)
                              (?\M-w . avy-action-copy))))
-;; ===============avy-zap===============
+;; ===================avy-zap===================
 (use-package avy-zap
   ;; Enabled at commands.
+  :defer t
   :bind (("M-z" . avy-zap-to-char-dwim)
          ("M-Z" . avy-zap-up-to-char-dwim)))
-;; ===============avy-zap===============
-;; ==============ace-pinyin===============
+;; ===================avy-zap===================
+;; =================ace-pinyin==================
 (use-package ace-pinyin
   ;; Enabled at commands.
   :defer t
@@ -137,6 +138,6 @@ This function obeys `avy-all-windows' setting."
         (avy--process
          (swint-avy--read-candidates)
          (avy--style-fn avy-style))))))
-;; ==============ace-pinyin===============
-;; =======================avy===========================
+;; =================ace-pinyin==================
+;; =====================avy========================
 (provide 'setup_avy)

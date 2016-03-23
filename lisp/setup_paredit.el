@@ -2,6 +2,7 @@
 (use-package paredit
   ;; Enabled in emacs-lisp-mode.
   :defer t
+  :commands enable-paredit-mode
   :init
   (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
   :config
@@ -45,8 +46,9 @@
 ;; M-( M-) M-[ M-] M-{ M-} M-" M-S M-R M-A M-D C-) C-} C-( C-{ C-M-d C-M-u C-M-p C-M-n
 ;; 在其他mode中使用paredit。
 (use-package paredit-everywhere
-  ;; Enabled in several modes.
+  ;; Enabled in modes.
   :defer t
+  :commands paredit-everywhere-mode
   :init
   (dolist (hook '(LaTeX-mode-hook
                   org-mode-hook

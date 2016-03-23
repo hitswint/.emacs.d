@@ -2,6 +2,7 @@
 (use-package gnuplot-mode
   ;; Enabled in gnuplot-mode.
   :defer t
+  :commands gnuplot-mode
   :init
   (add-to-list 'auto-mode-alist '("\\.\\(gp\\|gnuplot\\)$" . gnuplot-mode))
   (when is-win

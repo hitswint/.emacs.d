@@ -7,9 +7,11 @@
   :config
   (winner-mode 1))
 ;; =================winner-mode=================
-;; =================window-numbering=================
+;; ==============window-numbering===============
 (use-package window-numbering
   ;; Enabled automatically.
+  :defer t
+  :bind ("C-<tab>" . select-previously-selected-window)
   :config
   (window-numbering-mode 1)
   ;; 当按键大于现有窗口数目时，选中最后一个窗口。
@@ -86,28 +88,28 @@ If prefix ARG is given, delete the window instead of selecting it."
                (set-window-buffer (next-window) this-win)
                (other-window 1)))
       (setq previously-selected-window current-selected-window)))
-  (global-set-key (kbd "C-<tab>") 'select-previously-selected-window)
   (cond
    (is-lin (global-set-key (kbd "<C-S-iso-lefttab>") 'transpose-with-previously-selected-window))
    (is-win (global-set-key (kbd "C-S-<tab>") 'transpose-with-previously-selected-window))))
-;; =================window-numbering=================
-;; =====================switch-window======================
+;; ==============window-numbering===============
+;; ===============switch-window=================
 (use-package switch-window
   ;; Enabled at commands.
   :defer t
   :bind ("C-x o" . switch-window))
-;; =====================switch-window======================
-;; =====================windmove=====================
+;; ===============switch-window=================
+;; ================windmove=====================
 (use-package windmove
   ;; Enabled at commands.
   :defer t
-  :commands (windmove-left windmove-right windmove-up windmove-down)
+  :commands (swint-windmove-left swint-windmove-right swint-windmove-up swint-windmove-down)
   :init
   (smartrep-define-key global-map "M-s"
     '(("h" . swint-windmove-left)
       ("l" . swint-windmove-right)
       ("k" . swint-windmove-up)
       ("j" . swint-windmove-down)))
+  :config
   (defun ignore-error-wrapper (fn)
     "Funtion return new function that ignore errors.
    The function wraps a function with `ignore-errors' macro."
@@ -140,8 +142,8 @@ If prefix ARG is given, delete the window instead of selecting it."
     (interactive)
     (setq previously-selected-window (selected-window))
     (funcall (ignore-error-wrapper 'windmove-down))))
-;; =====================windmove=====================
-;; ====================三窗口设置=====================
+;; ================windmove=====================
+;; ================三窗口设置===================
 (defun split-window-3-horizontally (&optional arg)
   "Split window into 3 while largest one is in horizon"
   ;; (interactive "P")
@@ -170,5 +172,5 @@ If prefix ARG is given, delete the window instead of selecting it."
   "change 3 window style from vertical to horizon"
   (interactive "P")
   (change-split-type 'split-window-3-vertically arg))
-;; ====================三窗口设置=====================
+;; ================三窗口设置===================
 (provide 'setup_windows)

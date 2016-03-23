@@ -1,4 +1,4 @@
-;; ======================dired========================
+;; ====================dired======================
 (use-package dired
   ;; Enabled automatically.
   :config
@@ -59,7 +59,7 @@
                (define-key dired-mode-map (kbd "C-c C-p") 'dired-k--previous-annotated-file)
                (define-key dired-mode-map (kbd "C-c C-n") 'dired-k--next-annotated-file)
                (define-key dired-mode-map (kbd "C-/") 'helm-dired-current-file)))
-  ;; ================Kill subdir=================
+  ;; ===============Kill subdir================
   (defun file-basename (file)
     (let ((file-no-ending-slash (replace-regexp-in-string "/$" "" file)))
       (car (reverse (split-string file-no-ending-slash "/")))))
@@ -71,8 +71,8 @@
       (dired-kill-subdir)
       (dired-goto-subdir parent-dir)
       (search-forward search-term)))
-  ;; ================Kill subdir=================
-  ;; ===========helm-dired-current-file==========
+  ;; ===============Kill subdir================
+  ;; ==========helm-dired-current-file=========
   (defun helm-dired-current-file ()
     (interactive)
     (let ((swint-dired-current-file (dired-get-filename)))
@@ -81,8 +81,8 @@
         (helm-find-files-1 (expand-file-name default-directory)
                            (if helm-ff-transformer-show-only-basename
                                (helm-basename swint-dired-current-file) swint-dired-current-file)))))
-  ;; ===========helm-dired-current-file==========
-  ;; ==========默认文件夹排在最前面==============
+  ;; ==========helm-dired-current-file=========
+  ;; =========默认文件夹排在最前面=============
   (defun sof/dired-sort ()
     "Dired sort hook to list directories first."
     (save-excursion
@@ -94,8 +94,8 @@
          (dired-insert-set-properties (point-min) (point-max)))
     (set-buffer-modified-p nil))
   (add-hook 'dired-after-readin-hook 'sof/dired-sort)
-  ;; ==========默认文件夹排在最前面==============
-  ;; =====================文件夹排序=======================
+  ;; =========默认文件夹排在最前面=============
+  ;; =============文件夹排序===================
   (add-hook 'dired-mode-hook (lambda ()
                                (interactive)
                                (make-local-variable 'dired-sort-map)
@@ -117,8 +117,8 @@
                                  '(lambda () ;"sort by Name"
                                     (interactive)
                                     (dired-sort-other (concat dired-listing-switches ""))))))
-  ;; =====================文件夹排序=======================
-  ;; =====================跳转至dired顶部和尾部==================
+  ;; =============文件夹排序===================
+  ;; ========跳转至dired顶部和尾部=============
   (defun dired-back-to-top ()
     (interactive)
     (beginning-of-buffer)
@@ -139,8 +139,8 @@
     (forward-char 1))
   (define-key dired-mode-map
     (vector 'remap 'smart-beginning-of-line) 'dired-beginning-of-line)
-  ;; =====================跳转至dired顶部和尾部==================
-  ;; ===================webdav_sync同步文件======================
+  ;; ========跳转至dired顶部和尾部=============
+  ;; =========webdav_sync同步文件==============
   (defun swint-webdav-sync-down ()
     "Sync files in webdav server to ~/Nutstore-sync."
     (interactive)
@@ -213,8 +213,8 @@
   (global-set-key (kbd "C-x M-,") 'swint-webdav-sync-down)
   (global-set-key (kbd "C-x M-.") 'swint-webdav-sync-up)
   (global-set-key (kbd "C-x M-/") 'swint-webdav-sync-bi)
-  ;; ===================webdav_sync同步文件======================
-  ;; ===================unison====================
+  ;; =========webdav_sync同步文件==============
+  ;; ================unison====================
   (defun swint-unison-sync-backups ()
     "Sync files in ~/Nutstore-sync to webdav server."
     (interactive)
@@ -235,146 +235,149 @@
              (message "swint-unison-sync-backups done.")
              (setcdr pos (remove "unison-sync-backups " (cdr pos)))))))))
   (global-set-key (kbd "C-c M-/") 'swint-unison-sync-backups)
-  ;; ===================unison====================
-  )
-;; =====================默认程序打开文件==================
-(cond
- (is-lin
-  (add-hook 'dired-mode-hook
-            (lambda ()
-              (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-for-alternate-file)))
-  (defun dired-async-shell-command-for-alternate-file ()
-    (interactive)
-    (async-shell-command-no-output-buffer-from-file (dired-get-file-for-visit)))
-  (defun async-shell-command-no-output-buffer-from-file (file)
-    (interactive)
-    (if (not (boundp 'file-extension-app-alist))
-        (setq file-extension-app-alist
-              '(("pdf" . "llpp") ("djvu" . "llpp")
-                ("rmvb" . "mplayer") ("rm" . "mplayer") ("mp4" . "mplayer") ("avi" . "mplayer") ("flv" . "mplayer") ("f4v" . "mplayer") ("mpg" . "mplayer") ("mkv" . "mplayer") ("3gp" . "mplayer") ("wmv" . "mplayer") ("mov" . "mplayer") ("dat" . "mplayer") ("asf" . "mplayer") ("mpeg" . "mplayer") ("wma" . "mplayer")
-                ("mp3" . "mpg321")
-                ("ape" . "mplayer")
-                ("xoj" . "xournal")
-                ("jpg" . "~/feh.sh") ("png" . "~/feh.sh") ("bmp" . "~/feh.sh") ("jpeg" . "~/feh.sh")
-                ("eps" . "gv") ("ps" . "gv")
-                ("html" . "firefox") ("htm" . "firefox")
-                ("doc" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/WINWORD.EXE")
-                ("docx" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/WINWORD.EXE")
-                ("xls" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/EXCEL.EXE")
-                ("xlsx" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/EXCEL.EXE")
-                ("ppt" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/POWERPNT.EXE")
-                ("pptx" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/POWERPNT.EXE")
-                ("ods" . "libreoffice")("odt" . "libreoffice")
-                ("dwg" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/AutoCAD\\ 2004/acad.exe")
-                ("dxf" . "librecad")
-                ("caj" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
-                ("nh" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
-                ("kdh" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
-                ("gp" . "gnuplot")
-                ("rar" . "unrar x -o+")
-                ("zip" . "unzip")
-                ("gz" . "tar zvxf")
-                ("tgz" . "tar zvxf")
-                ("bz2" . "tar jvxf")
-                ("tar" . "tar xf")
-                ("tex" . "xelatex")
-                ("dot" . "dot -Tpng -o dot.png")
-                ("c" . "gcc -Wall")
-                )))
-    (let ((file-exten (downcase (file-name-extension file))))
-      (let ((command (cdr (assoc file-exten file-extension-app-alist))))
-        (start-process "Shell" nil shell-file-name shell-command-switch
-                       (concat command " " "\""
-                               (if (member file-exten '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "dwg" "caj" "nh" "kdh"))
-                                   (file-name-nondirectory file)
-                                 file)
-                               "\"")))))
-  ;; 设置一些文件的默认打开方式，此功能必须在(require 'dired-x)之后。
-  (setq dired-guess-shell-alist-user
-        (list
-         (list "\\.pdf$" "/home/swint/adobe.sh * >/dev/null 2>&1 &")
-         (list "\\.doc$" "wps * >/dev/null 2>&1 &")
-         (list "\\.docx$" "wps * >/dev/null 2>&1 &")
-         (list "\\.ppt$" "wpp * >/dev/null 2>&1 &")
-         (list "\\.pptx$" "wpp * >/dev/null 2>&1 &")
-         (list "\\.xls$" "et * >/dev/null 2>&1 &")
-         (list "\\.xlsx$" "et * >/dev/null 2>&1 &")
-         (list "\\.ps$" "display -flatten * >/dev/null 2>&1 &")
-         (list "\\.eps$" "display -flatten * >/dev/null 2>&1 &")
-         (list "\\.jpg$" "display -flatten * >/dev/null 2>&1 &")
-         (list "\\.png$" "display -flatten * >/dev/null 2>&1 &")
-         (list "\\.bmp$" "display -flatten * >/dev/null 2>&1 &")
-         (list "\\.html$" "firefox * >/dev/null 2>&1 &")
-         (list "\\.dxf$" "librecad * >/dev/null 2>&1 &")
-         (list "\\.mp3$" "mpg321 * >/dev/null 2>&1 &")
-         (list "\\.ape$" "mplayer * >/dev/null 2>&1 &")
-         (list "\\.avi$" "mplayer * >/dev/null 2>&1 &")
-         (list "\\.mkv$" "mplayer * >/dev/null 2>&1 &")
-         (list "\\.rmvb$" "mplayer * >/dev/null 2>&1 &")
-         (list "\\.mp4$" "mplayer * >/dev/null 2>&1 &")
-         (list "\\.rm$" "mplayer * >/dev/null 2>&1 &")
-         (list "\\.flv$" "mplayer * >/dev/null 2>&1 &")
-         (list "\\.mov$" "mplayer * >/dev/null 2>&1 &")
-         (list "\\.mpg$" "mplayer * >/dev/null 2>&1 &")
-         (list "\\.ods$" "libreoffice * >/dev/null 2>&1 &")
-         (list "\\.tex$" "xelatex * >/dev/null 2>&1 &")
-         (list "\\.c$" "gcc -Wall")))
-  ;; ===============在当前目录下打开urxvt===============
-  (defun urxvt-default-directory ()
-    (interactive)
-    (start-process "Urxvt" nil shell-file-name shell-command-switch
-                   (concat "tabbed -c " "urxvt" " -cd " "\""
-                           (expand-file-name default-directory) "\"" " -embed")))
-  (global-set-key (kbd "C-s-m") 'urxvt-default-directory))
- (is-win
-  ;; =====================w32-browser======================
-  (use-package w32-browser
-    ;; Enabled automatically.
-    :config
+  ;; ================unison====================
+  ;; ==============默认程序打开文件============
+  (cond
+   (is-lin
+    (add-hook 'dired-mode-hook
+              (lambda ()
+                (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-for-alternate-file)))
+    (defun dired-async-shell-command-for-alternate-file ()
+      (interactive)
+      (async-shell-command-no-output-buffer-from-file (dired-get-file-for-visit)))
+    (defun async-shell-command-no-output-buffer-from-file (file)
+      (interactive)
+      (if (not (boundp 'file-extension-app-alist))
+          (setq file-extension-app-alist
+                '(("pdf" . "llpp") ("djvu" . "llpp")
+                  ("rmvb" . "mplayer") ("rm" . "mplayer") ("mp4" . "mplayer") ("avi" . "mplayer") ("flv" . "mplayer") ("f4v" . "mplayer") ("mpg" . "mplayer") ("mkv" . "mplayer") ("3gp" . "mplayer") ("wmv" . "mplayer") ("mov" . "mplayer") ("dat" . "mplayer") ("asf" . "mplayer") ("mpeg" . "mplayer") ("wma" . "mplayer")
+                  ("mp3" . "mpg321")
+                  ("ape" . "mplayer")
+                  ("xoj" . "xournal")
+                  ("jpg" . "~/feh.sh") ("png" . "~/feh.sh") ("bmp" . "~/feh.sh") ("jpeg" . "~/feh.sh")
+                  ("eps" . "gv") ("ps" . "gv")
+                  ("html" . "firefox") ("htm" . "firefox")
+                  ("doc" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/WINWORD.EXE")
+                  ("docx" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/WINWORD.EXE")
+                  ("xls" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/EXCEL.EXE")
+                  ("xlsx" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/EXCEL.EXE")
+                  ("ppt" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/POWERPNT.EXE")
+                  ("pptx" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/POWERPNT.EXE")
+                  ("ods" . "libreoffice")("odt" . "libreoffice")
+                  ("dwg" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/AutoCAD\\ 2004/acad.exe")
+                  ("dxf" . "librecad")
+                  ("caj" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
+                  ("nh" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
+                  ("kdh" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
+                  ("gp" . "gnuplot")
+                  ("rar" . "unrar x -o+")
+                  ("zip" . "unzip")
+                  ("gz" . "tar zvxf")
+                  ("tgz" . "tar zvxf")
+                  ("bz2" . "tar jvxf")
+                  ("tar" . "tar xf")
+                  ("tex" . "xelatex")
+                  ("dot" . "dot -Tpng -o dot.png")
+                  ("c" . "gcc -Wall")
+                  )))
+      (let ((file-exten (downcase (file-name-extension file))))
+        (let ((command (cdr (assoc file-exten file-extension-app-alist))))
+          (start-process "Shell" nil shell-file-name shell-command-switch
+                         (concat command " " "\""
+                                 (if (member file-exten '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "dwg" "caj" "nh" "kdh"))
+                                     (file-name-nondirectory file)
+                                   file)
+                                 "\"")))))
+    ;; 设置一些文件的默认打开方式，此功能必须在(require 'dired-x)之后。
+    (setq dired-guess-shell-alist-user
+          (list
+           (list "\\.pdf$" "/home/swint/adobe.sh * >/dev/null 2>&1 &")
+           (list "\\.doc$" "wps * >/dev/null 2>&1 &")
+           (list "\\.docx$" "wps * >/dev/null 2>&1 &")
+           (list "\\.ppt$" "wpp * >/dev/null 2>&1 &")
+           (list "\\.pptx$" "wpp * >/dev/null 2>&1 &")
+           (list "\\.xls$" "et * >/dev/null 2>&1 &")
+           (list "\\.xlsx$" "et * >/dev/null 2>&1 &")
+           (list "\\.ps$" "display -flatten * >/dev/null 2>&1 &")
+           (list "\\.eps$" "display -flatten * >/dev/null 2>&1 &")
+           (list "\\.jpg$" "display -flatten * >/dev/null 2>&1 &")
+           (list "\\.png$" "display -flatten * >/dev/null 2>&1 &")
+           (list "\\.bmp$" "display -flatten * >/dev/null 2>&1 &")
+           (list "\\.html$" "firefox * >/dev/null 2>&1 &")
+           (list "\\.dxf$" "librecad * >/dev/null 2>&1 &")
+           (list "\\.mp3$" "mpg321 * >/dev/null 2>&1 &")
+           (list "\\.ape$" "mplayer * >/dev/null 2>&1 &")
+           (list "\\.avi$" "mplayer * >/dev/null 2>&1 &")
+           (list "\\.mkv$" "mplayer * >/dev/null 2>&1 &")
+           (list "\\.rmvb$" "mplayer * >/dev/null 2>&1 &")
+           (list "\\.mp4$" "mplayer * >/dev/null 2>&1 &")
+           (list "\\.rm$" "mplayer * >/dev/null 2>&1 &")
+           (list "\\.flv$" "mplayer * >/dev/null 2>&1 &")
+           (list "\\.mov$" "mplayer * >/dev/null 2>&1 &")
+           (list "\\.mpg$" "mplayer * >/dev/null 2>&1 &")
+           (list "\\.ods$" "libreoffice * >/dev/null 2>&1 &")
+           (list "\\.tex$" "xelatex * >/dev/null 2>&1 &")
+           (list "\\.c$" "gcc -Wall")))
+    ;; ==========在当前目录下打开urxvt=========
+    (defun urxvt-default-directory ()
+      (interactive)
+      (start-process "Urxvt" nil shell-file-name shell-command-switch
+                     (concat "tabbed -c " "urxvt" " -cd " "\""
+                             (expand-file-name default-directory) "\"" " -embed")))
+    (global-set-key (kbd "C-s-m") 'urxvt-default-directory))
+   (is-win
+    ;; ==========在当前目录下打开urxvt=========
+    (use-package w32-browser
+      ;; Enabled at commands.
+      :defer t
+      :bind (:map dired-mode-map
+                  ("C-j" . swint-w32-browser-open)
+                  ("C-i" . w32explore))
+      ;; (eval-after-load "dired"
+      ;;   '(define-key dired-mode-map (kbd "TAB") (lambda ()
+      ;;                                             (interactive)
+      ;;                                             (w32-browser
+      ;;                                              (dired-replace-in-string
+      ;;                                               "/" "\\"
+      ;;                                               (dired-get-filename))))))
+      :config
+      (defun w32-browser-open ()
+        (interactive)
+        (w32-browser
+         (dired-replace-in-string
+          "/" "\\"
+          (dired-get-filename))))
+      (defun swint-w32-browser-open ()
+        "Fix problems of openning word"
+        (interactive)
+        (if (and (or (string-equal (file-name-extension (dired-get-filename)) "doc")
+                     (string-equal (file-name-extension (dired-get-filename)) "docx"))
+                 (not (string-match "WINWORD.EXE" (concat (prin1-to-string (proced-process-attributes))))))
+            (progn (w32-shell-execute "open" "word")
+                   (sit-for 5)))
+        (w32-browser-open)))
+    ;; 默认程序打开，但是emacs会冻结
     ;; (eval-after-load "dired"
-    ;;   '(define-key dired-mode-map (kbd "TAB") (lambda ()
-    ;;                                             (interactive)
-    ;;                                             (w32-browser
-    ;;                                              (dired-replace-in-string
-    ;;                                               "/" "\\"
-    ;;                                               (dired-get-filename))))))
-    (define-key dired-mode-map (kbd "C-j") 'swint-w32-browser-open)
-    (define-key dired-mode-map (kbd "C-i") 'w32explore)
-    (defun w32-browser-open ()
-      (interactive)
-      (w32-browser
-       (dired-replace-in-string
-        "/" "\\"
-        (dired-get-filename))))
-    (defun swint-w32-browser-open ()
-      "Fix problems of openning word"
-      (interactive)
-      (if (and (or (string-equal (file-name-extension (dired-get-filename)) "doc")
-                   (string-equal (file-name-extension (dired-get-filename)) "docx"))
-               (not (string-match "WINWORD.EXE" (concat (prin1-to-string (proced-process-attributes))))))
-          (progn (w32-shell-execute "open" "word")
-                 (sit-for 5)))
-      (w32-browser-open)))
-  ;; ==============默认程序打开，但是emacs会冻结=================
-  ;; (eval-after-load "dired"
-  ;;   '(progn
-  ;;      ;; Dired 原来的 “o” 对我来说基本没用。
-  ;;      (define-key dired-mode-map (kbd "TAB") 'chunyu-dired-open-explorer)))
-  ;; (defun chunyu-dired-open-explorer ()
-  ;;   (interactive)
-  ;;   (let ((file-name (dired-get-file-for-visit)))
-  ;;     (if (file-exists-p file-name)
-  ;;      (start-process "dir" nil
-  ;;                     "cmd.exe" "/c" "start" file-name))))
-  ;; ;;用如下的方法解决空格问题
-  ;; (defun chunyu-dired-open-explorer ()
-  ;;   (interactive)
-  ;;   (let ((file-name (dired-get-file-for-visit)))
-  ;;     (if (file-exists-p file-name)
-  ;;      (shell-command (format "\"%s\"" file-name) ))))
-  ))
-;; =====================默认程序打开文件==================
-;; ===================peep-dired====================
+    ;;   '(progn
+    ;;      ;; Dired 原来的 “o” 对我来说基本没用。
+    ;;      (define-key dired-mode-map (kbd "TAB") 'chunyu-dired-open-explorer)))
+    ;; (defun chunyu-dired-open-explorer ()
+    ;;   (interactive)
+    ;;   (let ((file-name (dired-get-file-for-visit)))
+    ;;     (if (file-exists-p file-name)
+    ;;      (start-process "dir" nil
+    ;;                     "cmd.exe" "/c" "start" file-name))))
+    ;; 用如下的方法解决空格问题
+    ;; (defun chunyu-dired-open-explorer ()
+    ;;   (interactive)
+    ;;   (let ((file-name (dired-get-file-for-visit)))
+    ;;     (if (file-exists-p file-name)
+    ;;      (shell-command (format "\"%s\"" file-name) ))))
+    ))
+  ;; ==============默认程序打开文件============
+  )
+;; ====================dired======================
+;; ==================peep-dired===================
 (use-package peep-dired
   ;; Enabled at commands.
   :defer t
@@ -433,13 +436,14 @@
                (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)
                (define-key peep-dired-mode-map (kbd "C-p") nil)
                (define-key peep-dired-mode-map (kbd "C-n") nil))))
-;; ===================peep-dired====================
-;; ===================async====================
+;; ==================peep-dired===================
+;; =====================async=====================
 ;; async: Simple library for asynchronous processing in Emacs.
 ;; async-start async-start-process async-get async-ready async-wait
 (use-package dired-async
   ;; Enabled in dired-mode.
   :defer t
+  :commands dired-async-mode
   :init
   (add-hook 'dired-mode-hook '(lambda () (dired-async-mode 1)))
   :config
@@ -471,8 +475,8 @@
                              nil dired-copy-how-to-fn))
     (dired-async-mode 1)))
 ;; (autoload 'dired-async-mode "dired-async.el" nil t)
-;; ===================async====================
-;; ===============dired-narrow=================
+;; =====================async=====================
+;; ==================dired-narrow=================
 (use-package dired-narrow
   ;; Enabled at commands.
   :defer t
@@ -485,8 +489,8 @@
                                   (unless (or (string-match "[iuv]" it) ;当字符串中有iuv时，不转换string
                                               (string-empty-p (pinyin-search--pinyin-to-regexp it))) ;当搜索中文或符号时，不转换string
                                     (re-search-forward (pinyin-search--pinyin-to-regexp it) (line-end-position) t)))) words))))
-;; ===============dired-narrow=================
-;; ===============dired-ranger=================
+;; ==================dired-narrow=================
+;; ==================dired-ranger=================
 (use-package dired-ranger
   ;; Enabled at commands.
   :defer t
@@ -500,8 +504,8 @@
   ;; 加C-u不清除clipboards。
   (bind-key "C-y" 'dired-ranger-paste dired-mode-map)
   (bind-key "C-M-y" 'dired-ranger-move dired-mode-map))
-;; ===============dired-ranger=================
-;; ===========dired-view-file-or-dir===========
+;; ==================dired-ranger=================
+;; ==============dired-view-file-or-dir===========
 (defconst +kilobyte+ 1024.0)
 (defconst +megabyte+ (* 1024 1024.0))
 (defconst +gigabyte+ (* 1024 1024 1024.0))
@@ -554,6 +558,5 @@ Assuming .. and . is a current directory (like in FAR)"
                                  " bytes)"))
               (message (concat "Cannot determine size of " filename)))))
       (view-file file))))
-;; ===========dired-view-file-or-dir===========
-;; ======================dired========================
+;; ==============dired-view-file-or-dir===========
 (provide 'setup_dired)

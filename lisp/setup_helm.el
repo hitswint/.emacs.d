@@ -1,4 +1,4 @@
-;; ================helm================
+;; ======================helm======================
 (use-package helm
   ;; Enabled automatically.
   :init
@@ -18,7 +18,7 @@
   (global-set-key (kbd "C-x C-f") 'swint-helm-find-files)
   (global-set-key (kbd "C-x f") 'helm-locate)
   (global-set-key (kbd "M-x") 'helm-M-x)
-  ;; ==================helm-file-buffer=====================
+  ;; ============helm-file-buffer===============
   (defun swint-helm-file-buffers-list--init/curr-persp ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
     (setq swint-helm-file-buffers-list-cache/curr-persp
@@ -118,8 +118,8 @@
              (helm-add-action-to-source "Switch to persp/buffer" 'helm-switch-persp/buffer swint-helm-file-buffers-source-list/other-persps 0)))
     (let ((helm-ff-transformer-show-only-basename nil))
       (helm-other-buffer swint-helm-file-buffers-sources "*helm file buffers-swint*")))
-  ;; ==================helm-file-buffer=====================
-  ;; ==================helm-dired-buffer====================
+  ;; ============helm-file-buffer===============
+  ;; ============helm-dired-buffer==============
   (defun swint-helm-dired-buffers-list--init/curr-persp ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
     (setq swint-helm-dired-buffers-list-cache/curr-persp
@@ -223,8 +223,8 @@
             :buffer "*helm dired buffers-swint*"
             :keymap helm-buffer-map
             :truncate-lines t)))
-  ;; ==================helm-dired-buffer====================
-  ;; ===========recent file/recent directory================
+  ;; ============helm-dired-buffer==============
+  ;; ======recent file/recent directory=========
   (use-package recentf-ext
     ;; Enabled automatically.
     :config
@@ -301,8 +301,8 @@ Set `recentf-max-saved-items' to a bigger value if default is too small.")
              (setq swint-helm-source-recentf-directory
                    (helm-make-source "Recentf Directory" 'swint-helm-recentf-directory-source
                      :fuzzy-match swint-helm-recentf-directory-fuzzy-match)))))
-  ;; ===========recent file/recent directory================
-  ;; ==================helm-related-to-persp==================
+  ;; ======recent file/recent directory=========
+  ;; =========helm-related-to-persp=============
   (defun helm-switch-persp/buffer (buffer)
     "Helm-switch to persp/buffer simultaneously"
     (let ((swint-all-persps (nreverse (cons  "i" (nreverse (delete "i" (persp-names)))))))
@@ -338,8 +338,8 @@ Set `recentf-max-saved-items' to a bigger value if default is too small.")
     (interactive)
     (with-helm-alive-p
       (helm-exit-and-execute-action 'persp-remove-buffer)))
-  ;; ==================helm-related-to-persp==================
-  ;; ==================helm-bookmarks====================
+  ;; =========helm-related-to-persp=============
+  ;; ============helm-bookmarks=================
   (defcustom swint-helm-bookmarks-list
     '(helm-source-bookmarks)
     "Default sources list used in `swint-helm-bookmarks'."
@@ -350,8 +350,8 @@ Set `recentf-max-saved-items' to a bigger value if default is too small.")
     (interactive)
     (let ((helm-ff-transformer-show-only-basename t))
       (helm-other-buffer swint-helm-bookmarks-list "*helm bookmarks-swint*")))
-  ;; ==================helm-bookmarks====================
-  ;; ==================helm-find-file====================
+  ;; ============helm-bookmarks=================
+  ;; ============helm-find-file=================
   (defun swint-helm-find-files ()
     "Preconfigured `helm' for opening files.
 Run all sources defined in `helm-for-files-preferred-list'."
@@ -359,7 +359,7 @@ Run all sources defined in `helm-for-files-preferred-list'."
     (helm :sources 'helm-source-files-in-current-dir
           :ff-transformer-show-only-basename t
           :buffer "*helm find files-swint*"))
-  ;; ==================helm-find-file====================
+  ;; ============helm-find-file=================
   ;; (global-set-key (kbd "C-x l") 'locate)
   ;; win上locate似乎搜索中文有问题，改用es。但是es似乎仍然搜索不了中文，而且会导致emacs死掉，放弃。
   ;; win上面的linux工具包括grep/locate/find都不能够搜索中文。
@@ -376,7 +376,7 @@ Run all sources defined in `helm-for-files-preferred-list'."
     ;; 下面的命令建立locate数据库的时候，会导致cygwin警告ms dos path sytle，无妨，时间稍长；locate命令无法识别这种ms dos path sytle。
     (setq helm-locate-create-db-command "updatedb --output=c:/Users/swint/.helm-locate.db --localpaths='c:/Users/swint/'")
     (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.helm-locate.db")))
-  ;; ================在别的helm-buffer中运行helm命令==============
+  ;; ======在别的helm-buffer中运行helm命令======
   (defun swint-helm-file-buffers-after-quit ()
     "List swint-helm-file-buffers."
     (interactive)
@@ -456,7 +456,7 @@ from its directory."
   (define-key helm-map (kbd "C-/") 'swint-helm-quit-and-find-file)
   (define-key helm-find-files-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
   (define-key helm-find-files-map (kbd "C-x C-f") 'swint-helm-find-files-after-quit)
-  ;; ================在别的helm-buffer中运行helm命令==============
+  ;; ======在别的helm-buffer中运行helm命令======
   (define-key helm-map (kbd "C-;") 'helm-toggle-visible-mark)
   (define-key helm-map (kbd "C-l") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-M-p") 'helm-previous-source)
@@ -497,7 +497,7 @@ from its directory."
   ;; C-] toggle basename/fullpath
   ;; C-backspace 开启关闭自动补全
   ;; C-{ C-} 放大缩小helm窗口
-  ;; =======================helm-pinyin==============================
+  ;; ================helm-pinyin================
   ;; 让helm支持拼音头字母搜索。
   (load "iswitchb-pinyin")           ; 给iswitchb-mode添加按拼音首字母匹配的能力
   ;; 这个东西本身是给iswitchb增加拼音头字母搜索的，使用其中的pinyin-initials-string-match函数。
@@ -534,7 +534,8 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
                                    ;; to the fuzzy fn.
                                    (pinyin-initials-string-match regexp str)
                                  (invalid-regexp nil))))))
-  ;; =================total commander===============
+  ;; ================helm-pinyin================
+  ;; ==============total commander==============
   ;;使用tc打开当前文件夹。
   (global-set-key (kbd "C-s-c") '(lambda ()
                                    (interactive)
@@ -581,9 +582,9 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
       (helm-exit-and-execute-action 'helm-open-file-with-lister)))
   (define-key helm-find-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
   (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
-  ;; =================total commander===============
+  ;; ==============total commander==============
   )
-;; =========================helm_lacarte=============================
+;; =================helm_lacarte===================
 (use-package lacarte
   ;; Enabled at commands.
   :defer t
@@ -613,8 +614,8 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
     (helm '(helm-source-lacarte-math)
           (thing-at-point 'symbol) "Symbol: "
           nil nil "*helm math symbols*")))
-;; =========================helm_lacarte=============================
-;; =======================helm-bibtex==============================
+;; =================helm_lacarte===================
+;; =================helm-bibtex====================
 (use-package helm-bibtex
   ;; Enabled at commands.
   :defer t
@@ -651,8 +652,8 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   (defun swint-helm-bibtex-format-citation-cite (keys)
     "Formatter for LaTeX citation macro."
     (format "\\citep{%s}" (s-join ", " keys))))
-;; =======================helm-bibtex==============================
-;; ================helm-swoop================
+;; =================helm-bibtex====================
+;; =================helm-swoop=====================
 (use-package helm-swoop
   ;; Enabled at commands.
   :defer t
@@ -676,14 +677,14 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   (setq helm-swoop-split-direction 'split-window-vertically)
   ;; If nil, you can slightly boost invoke speed in exchange for text color
   (setq helm-swoop-speed-or-color nil))
-;; ================helm-swoop================
-;; =======================helm-unicode==============================
+;; =================helm-swoop=====================
+;; ================helm-unicode====================
 (use-package helm-unicode
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s M-m" . helm-unicode))
-;; =======================helm-unicode==============================
-;; ====================helm-ag=========================
+  :bind ("M-s m" . helm-unicode))
+;; ================helm-unicode====================
+;; ==================helm-ag=======================
 ;; 使用helm-ag代替helm-grep。
 ;; (global-set-key (kbd "C-x g") 'helm-do-grep) ;加C-u为递归
 (use-package helm-ag
@@ -697,13 +698,13 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   (when is-win
     (custom-set-variables
      '(helm-ag-base-command "pt -e --nocolor --nogroup"))))
-;; ====================helm-ag=========================
-;; ================helm-descbinds======================
+;; ==================helm-ag=======================
+;; ==============helm-descbinds====================
 (use-package helm-descbinds
   ;; Enabled at idle.
   :defer 2
   :config
   (helm-descbinds-mode))
-;; ================helm-descbinds======================
-;; ================helm================
+;; ==============helm-descbinds====================
+;; ======================helm======================
 (provide 'setup_helm)

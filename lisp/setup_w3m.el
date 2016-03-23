@@ -8,7 +8,7 @@
   ;; Enabled at commands.
   :defer t
   :bind ("C-M-5" . w3m)
-  :init
+  :config
   (setq w3m-use-form t)
   (setq w3m-tab-width 8)
   (setq w3m-use-cookies t)
@@ -21,7 +21,6 @@
   (setq browse-url-browser-function 'w3m-browse-url)
   (setq w3m-view-this-url-new-session-in-background t)
   (setq w3m-command-arguments '("-cookie" "-F"))
-  :config
   (defun w3m-open-site-current-session (site)
     "Open site in current session with ‘http://’ appended"
     (interactive
@@ -55,13 +54,16 @@
                (define-key w3m-mode-map (kbd "C-o g") '(lambda () (interactive)
                                                          (w3m-new-tab)
                                                          (w3m-browse-url "www.google.com")))
-               (define-key w3m-mode-map (kbd "'") 'helm-firefox-bookmarks)))
-  (use-package helm-firefox
-    :defer t
-    :commands helm-firefox-bookmarks
-    :init
-    (bind-key "'" 'helm-firefox-bookmarks w3m-mode-map)
-    (when is-win
-      (setq helm-firefox-default-directory "~/AppData/Roaming/Mozilla/Firefox/"))))
+               (define-key w3m-mode-map (kbd "'") 'helm-firefox-bookmarks))))
+;; ===============helm-firefox================
+(use-package helm-firefox
+  ;; Enabled after features.
+  :defer t
+  :after w3m
+  :config
+  (bind-key "'" 'helm-firefox-bookmarks w3m-mode-map)
+  (when is-win
+    (setq helm-firefox-default-directory "~/AppData/Roaming/Mozilla/Firefox/")))
+;; ===============helm-firefox================
 ;; ===================w3m=====================
 (provide 'setup_w3m)

@@ -1,4 +1,4 @@
-;; ==================dirtree=========================
+;; ====================dirtree=====================
 (use-package dirtree
   ;; Enabled at commands.
   :defer t
@@ -33,7 +33,7 @@
         (progn
           ;; 关闭当前buffer之后切换到之前所在的buffer。
           (switch-to-buffer swint-previous-buffer)))))
-  ;; ==================关闭当前buffer之后切换到之前访问过的buffer=======================
+  ;; =========关闭buffer后切换到之前的buffer=======
   ;; 原始的关闭buffer存在两个问题：
   ;; 一是会切换到helm buffer中，二是在persp之间切换时会切换到上一个persp的buffer中。
   (defvar swint-iswitchb-buflist nil
@@ -114,7 +114,7 @@ swint-`iswitchb-all-frames'."
     "Define ignore list."
     :type '(repeat (choice regexp function)))
   (setq swint-iswitchb-buffer-ignore '("\\` " "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'"))
-  ;; ==================关闭当前buffer之后切换到之前访问过的buffer=======================
+  ;; =========关闭buffer后切换到之前的buffer=======
   :config
   (defun dirtree-shell-command ()
     "open file with external app"
@@ -152,5 +152,5 @@ swint-`iswitchb-all-frames'."
 ;;       [?\C-c return return ?\c ?\C-a ?\M-f ?\M-b])
 ;; (fset 'dirtree-home
 ;;       [?\C-c return ?\C-a ?\C-f ?\C-f ?\C-k ?\C-m ?\C-n])
-;; ==================dirtree=========================
+;; ====================dirtree=====================
 (provide 'setup_dirtree)

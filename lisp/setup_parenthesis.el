@@ -1,4 +1,4 @@
-;; =============================括号==============================
+;; ====================括号========================
 ;; (setq show-paren-style 'parenthesis)    ;highlight just brackets
 ;; (setq show-paren-style 'expression)     ;highlight entire bracket expression
 ;; (setq skeleton-pair t)                  ;自动插入匹配的括号
@@ -66,13 +66,15 @@
 (add-hook 'org-mode-hook
           '(lambda ()
              (define-key org-mode-map (kbd "$") 'insert-pair-math-bracket)))
-;; ==================wrap-region==================
+;; ================wrap-region==================
 (use-package wrap-region
-  ;; Enabled in several modes.
+  ;; Enabled in modes.
   :defer t
+  :commands wrap-region-mode
   :init
-  (add-hook 'org-mode-hook 'wrap-region-mode)
-  (add-hook 'LaTeX-mode-hook 'wrap-region-mode)
+  (dolist (hook '(LaTeX-mode-hook
+                  org-mode-hook))
+    (add-hook hook 'wrap-region-mode))
   :config
   (add-hook 'wrap-region-before-wrap-hook 'wrap-region-add-space)
   (defun wrap-region-add-space ()
@@ -92,11 +94,12 @@
      ("+" "+" nil org-mode)
      ("_" "_" nil org-mode)
      ("$" "$" nil (org-mode latex-mode)))))
-;; ==================wrap-region==================
-;; =======================rainbow-delimiters==========================
+;; ================wrap-region==================
+;; ==============rainbow-delimiters=============
 (use-package rainbow-delimiters
-  ;; Enabled in several modes.
+  ;; Enabled in modes.
   :defer t
+  :commands rainbow-delimiters-mode
   :init
   ;; (global-rainbow-delimiters-mode)
   ;; 在org-mode中打开rainbow会让org本身的highlight失效。
@@ -108,6 +111,6 @@
                   c-mode-hook
                   graphviz-dot-mode-hook))
     (add-hook hook 'rainbow-delimiters-mode)))
-;; =======================rainbow-delimiters==========================
-;; =============================括号==============================
+;; ==============rainbow-delimiters=============
+;; ====================括号========================
 (provide 'setup_parenthesis)

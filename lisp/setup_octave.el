@@ -1,7 +1,8 @@
-;; ===================octave==================
+;; ======================octave====================
 (use-package octave
   ;; Enabled in octave-mode.
   :defer t
+  :commands octave-mode
   :init
   (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
   :config
@@ -53,5 +54,5 @@
   (setq octave-comment-char 37)           ;使用%注释
   ;; 退出octave时关闭buffer。
   (add-hook 'inferior-octave-mode-hook 'kill-shell-buffer-after-exit t))
-;; ===================octave==================
+;; ======================octave====================
 (provide 'setup_octave)

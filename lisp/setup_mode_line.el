@@ -1,4 +1,4 @@
-;; ================smart-mode-line===================
+;; ================smart-mode-line=================
 (use-package smart-mode-line
   ;; Enabled automatically.
   :config
@@ -62,8 +62,8 @@
   (add-to-list 'sml/hidden-modes " BBC")
   (add-to-list 'sml/hidden-modes " AcePY")
   (add-to-list 'sml/hidden-modes " h"))
-;; ================smart-mode-line===================
-;; ====================abbrev-for-mode-line========================
+;; ================smart-mode-line=================
+;; =============abbrev-for-mode-line===============
 (defvar mode-line-cleaner-alist
   '((dired-mode . "Dr")
     (octave-mode . "Oc")
@@ -79,21 +79,21 @@ want to use in the modeline *in lieu of* the original.")
 (defun clean-mode-line ()
   (interactive)
   (cl-loop for cleaner in mode-line-cleaner-alist
-	   do (let* ((mode (car cleaner))
-		     (mode-str (cdr cleaner))
-		     (old-mode-str (cdr (assq mode minor-mode-alist))))
-		(when old-mode-str
-		  (setcar old-mode-str mode-str))
-		;; major mode
-		(when (eq mode major-mode)
-		  (setq mode-name mode-str)))))
+           do (let* ((mode (car cleaner))
+                     (mode-str (cdr cleaner))
+                     (old-mode-str (cdr (assq mode minor-mode-alist))))
+                (when old-mode-str
+                  (setcar old-mode-str mode-str))
+                ;; major mode
+                (when (eq mode major-mode)
+                  (setq mode-name mode-str)))))
 (add-hook 'after-change-major-mode-hook 'clean-mode-line)
-;; ====================abbrev-for-mode-line========================
-;; ================nyan-mode=================
+;; =============abbrev-for-mode-line===============
+;; ===================nyan-mode====================
 (use-package nyan-mode
   ;; Enabled automatically.
   :config
   (nyan-mode t)
   (setq nyan-bar-length 20))
-;; ================nyan-mode=================
+;; ===================nyan-mode====================
 (provide 'setup_mode_line)

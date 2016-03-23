@@ -1,4 +1,4 @@
-;; ================================flycheck==================================
+;; ===============flycheck====================
 (use-package flycheck
   ;; Enabled at commands.
   :defer t
@@ -20,10 +20,6 @@
   ;; C-c ! n flycheck-next-error
   ;; C-c ! l flycheck-list-errors
   ;; C-c ! ? flycheck-describe-checker
-  (use-package helm-flycheck
-    ;; Enabled at commands.
-    :defer t
-    :commands helm-flycheck)
   ;; From Emacsrocks
   (defun magnars/adjust-flycheck-automatic-syntax-eagerness ()
     "Adjust how often we check for errors based on if there are any.
@@ -50,5 +46,11 @@ threaded system and the forced deferred makes errors never show
 up before you execute another command."
     (flycheck-clear-idle-change-timer)
     (flycheck-buffer-automatically 'idle-change)))
-;; ================================flycheck==================================
+;; ==============helm-flycheck================
+(use-package helm-flycheck
+  ;; Enabled at commands.
+  :defer t
+  :commands helm-flycheck)
+;; ==============helm-flycheck================
+;; ===============flycheck====================
 (provide 'setup_flycheck)
