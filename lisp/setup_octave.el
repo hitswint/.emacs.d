@@ -37,8 +37,11 @@
                    (font-lock-mode 1))
                (define-key octave-mode-map (kbd "C-c C-,") 'octave-find-definition)
                (define-key octave-mode-map (kbd "C-c C-/") 'octave-help)
-               (define-key octave-mode-map (kbd "C-c i") 'octave-send-line)
-               (define-key octave-mode-map (kbd "C-c o") 'octave-send-region)
+               (define-key octave-mode-map (kbd "C-c q") '(lambda ()
+                                                            (interactive)
+                                                            (if mark-active
+                                                                (call-interactively 'octave-send-region)
+                                                              (call-interactively 'octave-send-line))))
                (define-key octave-mode-map (kbd "M-.") nil)
                (define-key octave-mode-map (kbd "C-h") nil)))
   (add-hook 'inferior-octave-mode-hook

@@ -61,7 +61,8 @@
   (add-to-list 'sml/hidden-modes " mLaTeX")
   (add-to-list 'sml/hidden-modes " BBC")
   (add-to-list 'sml/hidden-modes " AcePY")
-  (add-to-list 'sml/hidden-modes " h"))
+  (add-to-list 'sml/hidden-modes " h")
+  (add-to-list 'sml/hidden-modes " VHl"))
 ;; ================smart-mode-line=================
 ;; =============abbrev-for-mode-line===============
 (defvar mode-line-cleaner-alist

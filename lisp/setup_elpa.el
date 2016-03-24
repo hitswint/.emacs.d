@@ -138,6 +138,7 @@
             visible-mark
             visual-regexp
             vlf
+            volatile-highlights
             w3m
             which-key
             windata

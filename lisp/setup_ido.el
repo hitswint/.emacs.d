@@ -218,10 +218,11 @@ especially for extending ido-find-file functionality
   )
 ;; ======================ido-tips======================
 (use-package ido-ubiquitous
-  ;; Enabled at idle.
-  :defer 2
+  ;; Enabled after features.
+  :defer t
+  :after ido
   :config
-  ;; (setq ido-everywhere t)      ;会导致dired中的操作都会启用ido，包括复制、重命名等
+  ;; (setq ido-everywhere t)
   (ido-ubiquitous-mode 1))
 (use-package ido-vertical-mode
   ;; Enabled at idle.

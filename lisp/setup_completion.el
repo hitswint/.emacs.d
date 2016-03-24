@@ -21,6 +21,23 @@
   ;; (define-key ac-completing-map (kbd "TAB") nil)
   ;; 2. 切换menu的选项。取消TAB切换menu选项。
   ;; (define-key ac-menu-map (kbd "TAB") nil)
+  ;; ===================eshell===================
+  ;; pcomplete会自动启动，造成打开eshell时读取ac-sources错误。
+  ;; 放在auto-complete中，使其只有当ac开启时才能够执行。
+  (use-package pcomplete
+    ;; Enabled after features.
+    :after auto-complete
+    :config
+    (add-hook 'shell-mode-hook 'pcomplete-shell-setup)
+    (add-hook 'eshell-mode-hook 'ac-eshell-mode-setup)
+    (add-hook 'auto-complete-mode-hook '(lambda ()
+                                          (if (memq (buffer-mode) '(eshell-mode))
+                                              (ac-eshell-mode-setup))))
+    (defun ac-eshell-mode-setup ()
+      (add-to-list 'ac-sources 'ac-source-eshell-pcomplete))
+    (defvar ac-source-eshell-pcomplete
+      '((candidates . (pcomplete-completions)))))
+  ;; ===================eshell===================
   )
 ;; ================auto-complete===============
 ;; ==================ac-ispell=================
@@ -183,21 +200,6 @@
                                         (if (memq (buffer-mode) '(shell-mode))
                                             (ac-rlc-setup-sources)))))
 ;; ===================shell====================
-;; ===================eshell===================
-(use-package pcomplete
-  ;; Enabled after features.
-  :after auto-complete
-  :config
-  (add-hook 'shell-mode-hook 'pcomplete-shell-setup)
-  (add-hook 'eshell-mode-hook 'ac-eshell-mode-setup)
-  (add-hook 'auto-complete-mode-hook '(lambda ()
-                                        (if (memq (buffer-mode) '(eshell-mode))
-                                            (ac-eshell-mode-setup))))
-  (defun ac-eshell-mode-setup ()
-    (add-to-list 'ac-sources 'ac-source-eshell-pcomplete))
-  (defvar ac-source-eshell-pcomplete
-    '((candidates . (pcomplete-completions)))))
-;; ===================eshell===================
 ;; ===========auto-complete-config=============
 (use-package auto-complete-config
   ;; Enabled after features.

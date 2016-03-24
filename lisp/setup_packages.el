@@ -653,4 +653,23 @@ is named like ODF with the extension turned to pdf."
         (if (null v) nil
           (substring-no-properties v))))))
 ;; ====================clipmon=====================
+;; ==============volatile-highlights===============
+(use-package volatile-highlights
+  ;; Enabled at idle.
+  :defer 2
+  :config
+  (volatile-highlights-mode t))
+;; ==============volatile-highlights===============
+;; ===================quickrun=====================
+(use-package quickrun
+  :defer t
+  :bind (("C-x q" . swint-quickrun)
+         ("C-x Q" . quickrun-shell))
+  :config
+  (defun swint-quickrun ()
+    (interactive)
+    (if mark-active
+        (call-interactively 'quickrun-region)
+      (call-interactively 'quickrun))))
+;; ===================quickrun=====================
 (provide 'setup_packages)
