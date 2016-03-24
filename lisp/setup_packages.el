@@ -18,9 +18,11 @@
 ;; ====================文件加密====================
 ;; ================multiple-cursors================
 (use-package multiple-cursors
-  ;; Enabled at idle.
-  :defer 2
-  :config
+  ;; Enabled at commands.
+  ;; mc/函数都不在mc包中，但都激活mcc包。
+  :defer t
+  :after multiple-cursors-core
+  :init
   (bind-key "C-M-," 'mc/mark-previous-like-this)
   (bind-key "C-M-." 'mc/mark-next-like-this)
   (bind-key "<C-M-mouse-1>" 'mc/add-cursor-on-click)
@@ -36,6 +38,7 @@
       ("M-:" . mc/insert-numbers)
       ("M-\"" . mc/insert-letters)
       ("M-?" . mc/sort-regions)))
+  :config
   (define-key mc/keymap (kbd "C-`") 'mc-hide-unmatched-lines-mode))
 ;; ================multiple-cursors================
 ;; =================expand-region==================

@@ -120,6 +120,7 @@
             popwin
             pos-tip
             projectile
+            quickrun
             rainbow-delimiters
             readline-complete
             recentf-ext
@@ -181,6 +182,7 @@ Missing packages are installed automatically."
 (prelude-install-packages)
 ;; ====================elpa=========================
 ;; =================USE-PACKAGE=====================
+;; :bind或:commands中需使用package或:config中的函数。
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)

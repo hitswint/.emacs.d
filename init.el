@@ -74,6 +74,7 @@
 ;; (let ((ts-init (current-time)))
 ;;   (setq missing-packages-list nil
 ;;         package-init-statistic nil)
+;;   (try-require 'cl t)
 ;;   (try-require 'setup_elpa t)
 ;;   (try-require 'setup_desktop_session t)
 ;;   (try-require 'setup_backup_autosave t)
@@ -83,7 +84,7 @@
 ;;   (try-require 'setup_avy t)
 ;;   (try-require 'setup_appearance t)
 ;;   (try-require 'setup_ccmode t)
-;;   (try-require 'setup_fonts t)
+;;   (try-require 'setup_chinese t)
 ;;   (try-require 'setup_dired t)
 ;;   (try-require 'setup_dirtree t)
 ;;   (try-require 'setup_emms_mingus t)

@@ -1,4 +1,4 @@
-;; ===================Anzu====================
+;; =====================Anzu=======================
 (use-package anzu
   ;; Enabled at commands.
   :defer t
@@ -14,16 +14,41 @@
    '(anzu-deactivate-region t)
    '(anzu-search-threshold 1000)
    '(anzu-replace-to-string-separator " => ")))
-;; ===================Anzu====================
-;; ===============pinyin-search===============
+;; =====================Anzu=======================
+;; ==================pinyin-search=================
 ;; 安装时由于isearch-mode-map中已经设定M-s为helm-swoop，导致快捷键设定失败，修改之。
 (use-package pinyin-search
   ;; Enabled at commands.
   :defer t
   :commands pinyin-search--pinyin-to-regexp
-  :bind (("C-s" . isearch-forward-pinyin)
-         ("C-r" . isearch-backward-pinyin))
+  :bind (("C-s" . swint-isearch-forward)
+         ("C-r" . swint-isearch-backward))
   :config
+  (defun swint-isearch-forward ()
+    (interactive)
+    (if (region-active-p)
+        (setq swint-isearch-current-thing (buffer-substring (region-beginning) (region-end)))
+      (setq swint-isearch-current-thing (symbol-name-at-point)))
+    (isearch-forward-pinyin))
+  (defun swint-isearch-backward ()
+    (interactive)
+    (if (region-active-p)
+        (setq swint-isearch-current-thing (buffer-substring (region-beginning) (region-end)))
+      (setq swint-isearch-current-thing (symbol-name-at-point)))
+    (isearch-backward-pinyin))
+  ;; ==========Isearch thing at point===========
+  (defvar swint-isearch-current-thing nil)
+  (defun symbol-name-at-point ()
+    (let ((symbol (symbol-at-point)))
+      (if symbol
+          (symbol-name symbol)
+        "")))
+  (defun isearch-thing ()
+    "Search for the current thing."
+    (interactive)
+    (isearch-yank-string swint-isearch-current-thing))
+  (define-key isearch-mode-map (kbd "C-t") 'isearch-thing)
+  ;; ==========Isearch thing at point===========
   (define-key isearch-mode-map (kbd "C-q") #'isearch-toggle-pinyin)
   ;; 同时搜索中英文，与ace-jump一样，对于.*+?等正则表达式使用的符号无效。
   (defun swint-pinyin-search--pinyin-to-regexp (string)
@@ -48,31 +73,8 @@
   (add-hook 'isearch-mode-end-hook
             (lambda ()
               (setq pinyin-search-activated nil))))
-;; ===============pinyin-search===============
-;; =============extended isearch==============
-(defun symbol-name-at-point ()
-  (let ((symbol (symbol-at-point)))
-    (if symbol
-        (symbol-name symbol)
-      "")))
-(defun current-thing ()
-  "Return the current \"thing\":
-- if the region is active, return the region's text and deactivate the mark
-- else return the symbol at point or the empty string."
-  (let ((thing (if (region-active-p)
-                   (buffer-substring (region-beginning) (region-end))
-                 (symbol-name-at-point))))
-    (deactivate-mark)
-    thing))
-(defun isearch-thing ()
-  "Search for the current \"thing\":
-- if the region is active, return the region's text and deactivate the mark
-- else return the symbol at point or the empty string."
-  (interactive)
-  (isearch-yank-string (current-thing)))
-(define-key isearch-mode-map (kbd "C-t") 'isearch-thing)
-;; =============extended isearch==============
-;; ==============拼音首字母搜索===============
+;; ==================pinyin-search=================
+;; =================拼音首字母搜索=================
 ;; 使用pinyin-search替代，但这个可以同时搜索中英文，保留之。
 (defun swint-pinyin-search-forward (&optional bound noerror count)
   (interactive)
@@ -112,5 +114,5 @@
 (global-set-key (kbd "C-S-r") 'swint-pinyin-search-backward)
 (define-key minibuffer-local-map (kbd "C-S-s") 'exit-minibuffer)
 (define-key minibuffer-local-map (kbd "C-S-r") 'exit-minibuffer)
-;; ==============拼音首字母搜索===============
+;; =================拼音首字母搜索=================
 (provide 'setup_isearch)

@@ -99,6 +99,7 @@
       "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
   (defvar swint-helm-file-buffers-source-list/curr-persp nil)
   (defvar swint-helm-file-buffers-source-list/other-persps nil)
+  (defvar swint-helm-source-recentf-file nil)
   (defcustom swint-helm-file-buffers-sources '(swint-helm-file-buffers-source-list/curr-persp
                                                swint-helm-file-buffers-source-list/other-persps
                                                swint-helm-source-recentf-file
@@ -200,6 +201,7 @@
       "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
   (defvar swint-helm-dired-buffers-source-list/curr-persp nil)
   (defvar swint-helm-dired-buffers-source-list/other-persps nil)
+  (defvar swint-helm-source-recentf-directory nil)
   (defun swint-helm-dired-buffers-list ()
     "Preconfigured `helm' to list buffers."
     (interactive)
@@ -224,84 +226,6 @@
             :keymap helm-buffer-map
             :truncate-lines t)))
   ;; ============helm-dired-buffer==============
-  ;; ======recent file/recent directory=========
-  (use-package recentf-ext
-    ;; Enabled automatically.
-    :config
-    (use-package recentf)
-    ;; 定义swint-helm-source-recentf-file。
-    (defclass swint-helm-recentf-file-source (helm-source-sync)
-      ((init :initform (lambda ()
-                         (recentf-mode 1)))
-       (candidates :initform (lambda () (remove-if (lambda (x)
-                                                     (or (file-directory-p x)
-                                                         (member x (mapcar (lambda (xx)
-                                                                             (buffer-file-name xx))
-                                                                           (buffer-list)))))
-                                                   recentf-list)))
-       (pattern-transformer :initform 'helm-recentf-pattern-transformer)
-       (match-part :initform (lambda (candidate)
-                               (if (or helm-ff-transformer-show-only-basename
-                                       helm-recentf--basename-flag)
-                                   (helm-basename candidate) candidate)))
-       (filter-one-by-one :initform (lambda (c)
-                                      (if (and helm-ff-transformer-show-only-basename
-                                               (not (consp c)))
-                                          (cons (helm-basename c) c)
-                                        c)))
-       (keymap :initform helm-generic-files-map)
-       (help-message :initform helm-generic-file-help-message)
-       (action :initform (helm-actions-from-type-file))))
-    (defvar swint-helm-source-recentf-file nil
-      "See (info \"(emacs)File Conveniences\").
-Set `recentf-max-saved-items' to a bigger value if default is too small.")
-    (defcustom swint-helm-recentf-file-fuzzy-match nil
-      "Enable fuzzy matching in `helm-source-recentf' when non--nil."
-      :group 'helm-files
-      :type 'boolean
-      :set (lambda (var val)
-             (set var val)
-             (setq swint-helm-source-recentf-file
-                   (helm-make-source "Recentf File" 'swint-helm-recentf-file-source
-                     :fuzzy-match swint-helm-recentf-file-fuzzy-match))))
-    ;; 定义swint-helm-source-recentf-directory。
-    (defclass swint-helm-recentf-directory-source (helm-source-sync)
-      ((init :initform (lambda ()
-                         (recentf-mode 1)))
-       (candidates :initform (lambda () (remove-if (lambda (x)
-                                                     (or (not (file-directory-p x))
-                                                         (member x (mapcar (lambda (xx)
-                                                                             (expand-file-name (buffer-local-value 'default-directory xx)))
-                                                                           (remove-if-not (lambda (x)
-                                                                                            (equal (buffer-mode x) 'dired-mode))
-                                                                                          (buffer-list))))))
-                                                   recentf-list)))
-       (pattern-transformer :initform 'helm-recentf-pattern-transformer)
-       (match-part :initform (lambda (candidate)
-                               (if (or helm-ff-transformer-show-only-basename
-                                       helm-recentf--basename-flag)
-                                   (helm-basename candidate) candidate)))
-       (filter-one-by-one :initform (lambda (c)
-                                      (if (and helm-ff-transformer-show-only-basename
-                                               (not (consp c)))
-                                          (cons (helm-basename c) c)
-                                        c)))
-       (keymap :initform helm-generic-files-map)
-       (help-message :initform helm-generic-file-help-message)
-       (action :initform (helm-actions-from-type-file))))
-    (defvar swint-helm-source-recentf-directory nil
-      "See (info \"(emacs)File Conveniences\").
-Set `recentf-max-saved-items' to a bigger value if default is too small.")
-    (defcustom swint-helm-recentf-directory-fuzzy-match nil
-      "Enable fuzzy matching in `helm-source-recentf' when non--nil."
-      :group 'helm-files
-      :type 'boolean
-      :set (lambda (var val)
-             (set var val)
-             (setq swint-helm-source-recentf-directory
-                   (helm-make-source "Recentf Directory" 'swint-helm-recentf-directory-source
-                     :fuzzy-match swint-helm-recentf-directory-fuzzy-match)))))
-  ;; ======recent file/recent directory=========
   ;; =========helm-related-to-persp=============
   (defun helm-switch-persp/buffer (buffer)
     "Helm-switch to persp/buffer simultaneously"
@@ -498,9 +422,8 @@ from its directory."
   ;; C-backspace 开启关闭自动补全
   ;; C-{ C-} 放大缩小helm窗口
   ;; ================helm-pinyin================
-  ;; 让helm支持拼音头字母搜索。
-  (load "iswitchb-pinyin")           ; 给iswitchb-mode添加按拼音首字母匹配的能力
-  ;; 这个东西本身是给iswitchb增加拼音头字母搜索的，使用其中的pinyin-initials-string-match函数。
+  ;; iswitchb-pinyin给iswitchb增加拼音头字母搜索的，使用pinyin-initials-string-match函数。
+  (load "iswitchb-pinyin")
   ;; 使buffer支持中文拼音首字母。
   (defun helm-buffer--match-pattern (pattern candidate)
     (let ((fun (if (and helm-buffers-fuzzy-matching
@@ -701,8 +624,9 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 ;; ==================helm-ag=======================
 ;; ==============helm-descbinds====================
 (use-package helm-descbinds
-  ;; Enabled at idle.
-  :defer 2
+  ;; Enabled at commands.
+  :defer t
+  :commands helm-descbinds
   :config
   (helm-descbinds-mode))
 ;; ==============helm-descbinds====================
