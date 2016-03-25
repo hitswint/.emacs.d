@@ -170,7 +170,7 @@ key.setEditKey('C-;', function (ev) {
     command.setMark(ev);
 }, 'Set the mark', true);
 
-key.setEditKey('C-o', function (ev) {
+key.setEditKey('C-M-o', function (ev) {
     command.openLine(ev);
 }, 'Open line', false);
 

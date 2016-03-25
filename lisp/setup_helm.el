@@ -385,6 +385,8 @@ from its directory."
   (define-key helm-map (kbd "C-l") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-M-p") 'helm-previous-source)
   (define-key helm-map (kbd "C-M-n") 'helm-next-source)
+  (define-key helm-map (kbd "M-U") 'helm-unmark-all)
+  (define-key helm-map (kbd "M-t") 'helm-toggle-all-marks)
   (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)
   (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
   (define-key helm-find-files-map (kbd "M-U") 'helm-unmark-all)

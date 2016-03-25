@@ -120,3 +120,86 @@ bind Space:magic-space
 # wine
 export WINEPREFIX=$HOME/.wine
 export WINEARCH=win32
+
+# Percol
+# Find file.
+[ $(uname -s | grep -c CYGWIN) -eq 1 ] && OS_NAME="CYGWIN" || OS_NAME=`uname -s`
+function pclip() {
+    if [ $OS_NAME == CYGWIN ]; then
+        putclip $@;
+    elif [ $OS_NAME == Darwin ]; then
+        pbcopy $@;
+    else
+        if [ -x /usr/bin/xsel ]; then
+            xsel -ib $@;
+        else
+            if [ -x /usr/bin/xclip ]; then
+                xclip -selection c $@;
+            else
+                echo "Neither xsel or xclip is installed!"
+            fi
+        fi
+    fi
+}
+
+function ff()
+{
+    local fullpath=$*
+    local filename=${fullpath##*/} # remove "/" from the beginning
+    filename=${filename##*./} # remove  ".../" from the beginning
+    echo file=$filename
+    #  only the filename without path is needed
+    # filename should be reasonable
+    local cli=`find $PWD -not -iwholename '*/target/*' -not -iwholename '*.svn*' -not -iwholename '*.git*' -not -iwholename '*.sass-cache*' -not -iwholename '*.hg*' -type f -iwholename '*'${filename}'*' -print 2>/dev/null | percol `
+    echo ${cli}
+    echo -n ${cli} |pclip;
+}
+# Search the bash history.
+function hh () {
+    # reverse history, pick up one line, remove new line characters and put it into clipboard
+    if [ -z "$1" ]; then
+        history | sed '1!G;h;$!d' | percol | sed -n 's/^ *[0-9][0-9]* *\(.*\)$/\1/p'| tr -d '\n' | pclip
+    else
+        history | grep "$1" | sed '1!G;h;$!d' | percol | sed -n 's/^ *[0-9][0-9]* *\(.*\)$/\1/p'| tr -d '\n' | pclip
+    fi
+}
+
+replace_by_history() {
+    declare l=$(HISTTIMEFORMAT= history | sort -k1,1nr | perl -ne 'BEGIN { my @lines = (); } s/^\s*\d+\s*//; $in=$_; if (!(grep {$in eq $_} @lines)) { push(@lines, $in); print $in; }' | percol --query "$READLINE_LINE")
+    READLINE_LINE="$l"
+    READLINE_POINT=${#l}
+}
+bind -x '"\C-r": replace_by_history'
+
+# Select a file in git commit
+function gf () {
+    local str=`git --no-pager log --oneline --stat $* |  percol --match-method pinyin`
+    if [[ $str =~ ^[[:space:]]*([a-z0-9A-Z_.\/-]*).*$ ]]; then
+        echo -n ${BASH_REMATCH[1]} |pclip;
+        echo ${BASH_REMATCH[1]}
+    fi
+}
+
+# Find progress.
+function ppgrep() {
+    if [[ $1 == "" ]]; then
+        PERCOL=percol
+    else
+        PERCOL="percol --query $1"
+    fi
+    ps aux | eval $PERCOL | awk '{ print $2 }'
+}
+
+function ppkill() {
+    if [[ $1 =~ "^-" ]]; then
+        QUERY=""            # options only
+    else
+        QUERY=$1            # with a query
+        [[ $# > 0 ]] && shift
+    fi
+    ppgrep $QUERY | xargs kill $*
+}
+
+# Aliases for percol.
+alias cdp='cd ./$(ls -F ./ | grep / | percol --match-method pinyin)'
+alias pc='percol --match-method pinyin'
