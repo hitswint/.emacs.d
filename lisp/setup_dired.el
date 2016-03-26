@@ -324,7 +324,7 @@
       (start-process "Urxvt" nil shell-file-name shell-command-switch
                      (concat "tabbed -c " "urxvt" " -cd " "\""
                              (expand-file-name default-directory) "\"" " -embed")))
-    (global-set-key (kbd "C-s-m") 'urxvt-default-directory))
+    (global-set-key (kbd "C-s-<return>") 'urxvt-default-directory))
    (is-win
     ;; ==========在当前目录下打开urxvt=========
     (use-package w32-browser

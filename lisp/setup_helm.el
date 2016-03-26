@@ -462,7 +462,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   ;; ================helm-pinyin================
   ;; ==============total commander==============
   ;;使用tc打开当前文件夹。
-  (global-set-key (kbd "C-s-c") '(lambda ()
+  (global-set-key (kbd "C-s-m") '(lambda ()
                                    (interactive)
                                    (cond
                                     (is-win (w32-shell-execute
