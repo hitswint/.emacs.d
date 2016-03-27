@@ -1,4 +1,4 @@
-;; ===============切换cap和大小写===================
+;; ===============切换cap和大小写==================
 (global-set-key (kbd "M-c") 'toggle-letter-case)
 (global-set-key (kbd "M-C") 'capitalize-word)
 (defun toggle-letter-case ()
@@ -28,8 +28,8 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
      ((string= "all caps" (get this-command 'state))
       (downcase-region p1 p2) (put this-command 'state "all lower")))
     ))
-;; ===============切换cap和大小写===================
-;; ==================compact-uncompact-block===================
+;; ===============切换cap和大小写==================
+;; ===========compact-uncompact-block==============
 (global-set-key (kbd "C-M-q") 'compact-uncompact-block)
 (defun compact-uncompact-block ()
   "Remove or add line ending chars on current paragraph.
@@ -55,8 +55,8 @@ When there is a text selection, act on the region."
           (let ((fill-column bigFillColumnVal))
             (fill-paragraph nil))))
       (put this-command 'stateIsCompact-p (if currentStateIsCompact nil t)))))
-;; ==================compact-uncompact-block===================
-;; ======================复制和粘贴行======================
+;; ===========compact-uncompact-block==============
+;; =================复制和粘贴行===================
 ;; (defun copy-line-or-region ()
 ;;   "Copy current line, or current text selection."
 ;;   (interactive)
@@ -71,8 +71,8 @@ When there is a text selection, act on the region."
     (kill-region (line-beginning-position) (line-beginning-position 2))))
 ;; (global-set-key (kbd "M-w") 'copy-line-or-region)
 (global-set-key (kbd "C-w") 'cut-line-or-region)
-;; ======================复制和粘贴行======================
-;; =============光标不动，窗口上下移动两三行=========================
+;; =================复制和粘贴行===================
+;; ========光标不动，窗口上下移动两三行============
 (defun window-move-up (&optional arg)
   "Current window move-up 2 lines."
   (interactive "P")
@@ -87,14 +87,14 @@ When there is a text selection, act on the region."
     (scroll-down 3)))
 (global-set-key [(meta n)] 'window-move-up)
 (global-set-key [(meta p)] 'window-move-down)
-;; =============光标不动，窗口上下移动两三行=========================
-;; ====================合并一行============================
+;; ========光标不动，窗口上下移动两三行============
+;; ===================合并一行=====================
 (global-set-key (kbd "M-Q")
                 (lambda()
                   (interactive)
                   (join-line -1)))
-;; ====================合并一行============================
-;; ====================移除行尾的空格并indent======================================
+;; ===================合并一行=====================
+;; ============移除行尾的空格并indent==============
 (defun cleanup-buffer-safe ()
   "Perform a bunch of safe operations on the whitespace content of a buffer.
 Does not indent buffer, because it is used for a before-save-hook, and that
@@ -112,8 +112,8 @@ Including indent-buffer, which should not be called automatically on save."
   (cleanup-buffer-safe)
   (indent-region (point-min) (point-max)))
 (global-set-key (kbd "C-x C-;") 'cleanup-buffer)
-;; ====================移除行尾的空格并indent======================================
-;; ======================临时标记===================================
+;; ============移除行尾的空格并indent==============
+;; ==================临时标记======================
 (defun ska-point-to-register()
   "Store cursorposition _fast_ in a register.
 Use ska-jump-to-register to jump back to the stored
@@ -129,8 +129,8 @@ that was stored with ska-point-to-register."
   (let ((tmp (point-marker)))
     (jump-to-register 1)
     (set-register 8 tmp)))
-;; ======================临时标记===================================
-;; ====================跳转到某行时行号暂时可见===============
+;; ==================临时标记======================
+;; ============跳转到某行时行号暂时可见============
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
 (defun goto-line-with-feedback ()
   "Show line numbers temporarily, while prompting for the line number input"
@@ -140,8 +140,8 @@ that was stored with ska-point-to-register."
         (linum-mode 1)
         (goto-line (read-number "Goto line: ")))
     (linum-mode -1)))
-;; ====================跳转到某行时行号暂时可见===============
-;; ====================注释/反注释-行或区域===================
+;; ============跳转到某行时行号暂时可见============
+;; ==============注释/反注释-行或区域==============
 (defun comment-or-uncomment-region-or-line ()
   "Like comment-or-uncomment-region, but if there's no mark \(that means no
 region\) apply comment-or-uncomment to the current line"
@@ -153,8 +153,8 @@ region\) apply comment-or-uncomment to the current line"
         (comment-or-uncomment-region (point) (mark))
       (comment-or-uncomment-region (mark) (point)))))
 (global-set-key (kbd "M-:") 'comment-or-uncomment-region-or-line)
-;; ====================注释/反注释-行或区域===================
-;; ====================smart-beginning-of-line=============
+;; ==============注释/反注释-行或区域==============
+;; =============smart-beginning-of-line============
 ;; "smart" home, i.e., home toggles b/w 1st non-blank character and 1st column
 (defun smart-beginning-of-line ()
   "Move point to first non-whitespace character or beginning-of-line."
@@ -164,8 +164,8 @@ region\) apply comment-or-uncomment to the current line"
     (and (= oldpos (point))
          (beginning-of-line))))
 (global-set-key (kbd "C-a") 'smart-beginning-of-line)
-;; ====================smart-beginning-of-line=============
-;; ======================滚动更流畅=======================
+;; =============smart-beginning-of-line============
+;; ==================滚动更流畅====================
 ;; (setq redisplay-dont-pause t
 ;;       scroll-margin 1
 ;;       scroll-step 1
@@ -173,8 +173,8 @@ region\) apply comment-or-uncomment to the current line"
 ;;       scroll-preserve-screen-position 1)
 ;; (setq mouse-wheel-follow-mouse 't)
 ;; (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
-;; ======================滚动更流畅=======================
-;; ;; =================上下移动行=========================
+;; ==================滚动更流畅====================
+;; ==================上下移动行====================
 ;; ;; 使用 drag-stuff-mode 替代
 ;; (defun move-line-down ()
 ;;   (interactive)
@@ -193,8 +193,8 @@ region\) apply comment-or-uncomment to the current line"
 ;;     (move-to-column col)))
 ;; (global-set-key (kbd "M-N") 'move-line-down)
 ;; (global-set-key (kbd "M-P") 'move-line-up)
-;; ;; =================上下移动行=========================
-;; =================添加连接线和下划线==================
+;; ==================上下移动行====================
+;; ===============添加连接线和下划线===============
 (defun jcs-dashify ()
   "Place hyphens between words in region."
   (interactive)
@@ -209,8 +209,8 @@ region\) apply comment-or-uncomment to the current line"
   (replace-regexp "[ \n]+" "_" nil (region-beginning) (region-end)))
 (global-set-key (kbd "C-x -") 'jcs-dashify)
 (global-set-key (kbd "C-x _") 'jcs-dashify-underline)
-;; =================添加连接线和下划线==================
-;; ===============复制矩形区域==============
+;; ===============添加连接线和下划线===============
+;; ==================复制矩形区域==================
 (defun copy-rectangle-as-kill ()
   (interactive)
   (save-excursion
@@ -222,8 +222,8 @@ region\) apply comment-or-uncomment to the current line"
 ;; 1. 使用C-x rrr复制，使用C-x rir粘贴。
 ;; 2. 使用multiple-cursors复制，使用C-x ry粘贴。
 ;; 3. 使用C-x SPC直接矩形复制，使用C-y粘贴。
-;; ===============复制矩形区域==============
-;; ===============合并C-j和C-o===============
+;; ==================复制矩形区域==================
+;; ==================合并C-j和C-o==================
 (defun open-line-or-new-line-dep-pos ()
   "if point is in head of line then open-line
 if point is at end of line , new-line-and-indent"
@@ -243,8 +243,8 @@ if point is at end of line , new-line-and-indent"
            (newline nil t)
            (indent-according-to-mode)))))
 (global-set-key (kbd "C-j") 'open-line-or-new-line-dep-pos)
-;; ===============合并C-j和C-o===============
-;; =================jump to mark==================
+;; ==================合并C-j和C-o==================
+;; ==================jump to mark==================
 (global-set-key (kbd "M-m") 'pop-to-mark-command)
 (global-set-key (kbd "M-M") 'unpop-to-mark-command)
 (defun unpop-to-mark-command ()
@@ -267,8 +267,8 @@ if point is at end of line , new-line-and-indent"
   (let ((p (point)))
     (dotimes (i 10)
       (when (= p (point)) ad-do-it))))
-;; =================jump to mark==================
-;; ===============diff two regions==================
+;; ==================jump to mark==================
+;; ================diff two regions================
 ;; Step 1: Select a region and `M-x diff-region-tag-selected-as-a'
 ;; Step 2: Select another region and `M-x diff-region-compare-with-b'
 (defvar swint-diff-region-tag nil
@@ -352,4 +352,4 @@ if point is at end of line , new-line-and-indent"
                                  (if swint-diff-region-tag
                                      (diff-region-compare-with-b)
                                    (diff-region-tag-selected-as-a))))
-;; ===============diff two regions==================
+;; ================diff two regions================

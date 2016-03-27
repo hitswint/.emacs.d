@@ -1,4 +1,4 @@
-;; ===============退出shell时关闭buffer===============
+;; ==============退出shell时关闭buffer=============
 (defun kill-shell-buffer(process event)
   "The one actually kill shell buffer when exit. "
   (kill-buffer (process-buffer process)))
@@ -7,8 +7,8 @@
   (set-process-sentinel (get-buffer-process (current-buffer))
                         #'kill-shell-buffer))
 (add-hook 'shell-mode-hook 'kill-shell-buffer-after-exit t)
-;; ===============退出shell时关闭buffer===============
-;; ===============上一个下一个buffer=================
+;; ==============退出shell时关闭buffer=============
+;; ===============上一个下一个buffer===============
 (defun next-user-buffer ()
   "Switch to the next user buffer.
 User buffers are those whose name does not start with *."
@@ -46,8 +46,8 @@ Emacs buffers are those whose name starts with *."
 (global-set-key (kbd "<C-next>") 'next-user-buffer) ; Ctrl+PageDown
 ;; (global-set-key (kbd "<C-S-prior>") 'previous-emacs-buffer) ; Ctrl+Shift+PageUp
 ;; (global-set-key (kbd "<C-S-next>") 'next-emacs-buffer) ; Ctrl+Shift+PageDown
-;; ===============上一个下一个buffer=================
-;; ======================intuitive window resizing=======================
+;; ===============上一个下一个buffer===============
+;; ===========intuitive window resizing============
 (defun xor (b1 b2)
   (or (and b1 b2)
       (and (not b1) (not b2))))
@@ -86,8 +86,8 @@ Emacs buffers are those whose name starts with *."
 (global-set-key (kbd "M-L") 'move-border-right)
 (global-set-key (kbd "M-K") 'move-border-up)
 (global-set-key (kbd "M-J") 'move-border-down)
-;; ======================intuitive window resizing=======================
-;; ======================切换窗口分割模式========================
+;; ===========intuitive window resizing============
+;; ===============切换窗口分割模式=================
 (global-set-key (kbd "C-x C-i") 'toggle-window-split)
 ;; (defun window-toggle-split-direction ()
 ;;   "Switch window split from horizontally to vertically, or vice versa.
@@ -139,8 +139,8 @@ Emacs buffers are those whose name starts with *."
           (set-window-buffer (next-window) next-win-buffer)
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
-;; ======================切换窗口分割模式========================
-;; ======================循环窗口============================
+;; ===============切换窗口分割模式=================
+;; ===================循环窗口=====================
 (global-set-key (kbd "C-x C-o") 'rotate-windows)
 (defun rotate-windows ()
   "Rotate your windows"
@@ -164,8 +164,8 @@ Emacs buffers are those whose name starts with *."
              (set-window-start w1 s2)
              (set-window-start w2 s1)
              (setq i (1+ i)))))))
-;; ======================循环窗口============================
-;; ======================关闭buffer并删除文件================
+;; ===================循环窗口=====================
+;; ==============关闭buffer并删除文件==============
 (defun delete-current-buffer-file ()
   "Removes file connected to current buffer and kills buffer."
   (interactive)
@@ -179,8 +179,8 @@ Emacs buffers are those whose name starts with *."
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
 (global-set-key (kbd "C-x C-k") 'delete-current-buffer-file)
-;; ======================关闭buffer并删除文件================
-;; ====================重命名当前buffer======================
+;; ==============关闭buffer并删除文件==============
+;; ================重命名当前buffer================
 (defun rename-current-buffer-file ()
   "Renames current buffer and file it is visiting."
   (interactive)
@@ -198,8 +198,8 @@ Emacs buffers are those whose name starts with *."
           (message "File '%s' successfully renamed to '%s'"
                    name (file-name-nondirectory new-name)))))))
 (global-set-key (kbd "C-x C-r") 'rename-current-buffer-file)
-;; ====================重命名当前buffer======================
-;; ===================获得当前buffer的major-mode======================
+;; ================重命名当前buffer================
+;; ===========获得当前buffer的major-mode===========
 (defun buffer-mode (&optional buffer-or-name)
   "Returns the major mode associated with a buffer.
 If buffer-or-name is nil return current buffer's mode."
@@ -207,11 +207,11 @@ If buffer-or-name is nil return current buffer's mode."
                       (if buffer-or-name
                           (get-buffer buffer-or-name)
                         (current-buffer))))
-;; ===================获得当前buffer的major-mode======================
-;; ====================获得不包括扩展名的文件名=======================
+;; ===========获得当前buffer的major-mode===========
+;; ============获得不包括扩展名的文件名============
 (defun file-name-base (&optional filename)
   "Return the base name of the FILENAME: no directory, no extension.
 FILENAME defaults to `buffer-file-name'."
   (file-name-sans-extension
    (file-name-nondirectory (or filename (buffer-file-name)))))
-;; ====================获得不包括扩展名的文件名=======================
+;; ============获得不包括扩展名的文件名============

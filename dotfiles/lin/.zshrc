@@ -191,5 +191,6 @@ alias -s xlsx=et
 alias -s ppt=wpp
 alias -s pptx=wpp
 alias -s pdf=llpp
-# 载入percol相关函数。
-source ~/.zsh_percol.sh
+# 载入相关函数。
+source ~/.zsh/percol.sh
+source ~/.zsh/xsel.sh

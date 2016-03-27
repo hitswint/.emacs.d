@@ -1,11 +1,12 @@
-;; ==============从xsel剪切板粘贴===============
-;; 解决无法从llpp中粘贴的问题，但未写入kill-ring。
+;; =================从xsel复制粘贴=================
+;; 通过xsel与其他程序进行复制粘贴。
+;; 在emacs中需要选中复制，直接使用easy-kill无法写入xsel。
 (defun xsel-paste-function()
   (interactive)
-  (insert (shell-command-to-string "xsel -o")))
-(global-set-key (kbd "<S-insert>") 'xsel-paste-function)
-;; ==============从xsel剪切板粘贴===============
-;; ==============WordsCount===============
+  (insert (shell-command-to-string "xsel -o -p </dev/null")))
+(global-set-key (kbd "C-x C-y") 'xsel-paste-function)
+;; =================从xsel复制粘贴=================
+;; ===================WordsCount===================
 (defvar wc-regexp-chinese-char-and-punc
   (rx (category chinese)))
 (defvar wc-regexp-chinese-punc
@@ -63,4 +64,4 @@
              (+ chinese-char english-word)
              (+ chinese-char-and-punc english-word)))))
 (global-set-key (kbd "M-=") 'swint-count-words-region)
-;; ==============WordsCount===============
+;; ===================WordsCount===================
