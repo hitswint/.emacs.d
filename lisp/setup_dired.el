@@ -337,7 +337,6 @@
               (("C-j" . swint-w32-browser-open)
                ("C-i" . w32explore)))
   :config
-  (message "haha")
   (defun w32-browser-open ()
     (interactive)
     (w32-browser
