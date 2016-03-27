@@ -236,9 +236,8 @@
              (setcdr pos (remove "unison-sync-backups " (cdr pos)))))))))
   (global-set-key (kbd "C-c M-/") 'swint-unison-sync-backups)
   ;; ================unison====================
-  ;; ==============默认程序打开文件============
-  (cond
-   (is-lin
+  (when is-lin
+    ;; ==============默认程序打开文件============
     (add-hook 'dired-mode-hook
               (lambda ()
                 (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-for-alternate-file)))
@@ -318,65 +317,43 @@
            (list "\\.ods$" "libreoffice * >/dev/null 2>&1 &")
            (list "\\.tex$" "xelatex * >/dev/null 2>&1 &")
            (list "\\.c$" "gcc -Wall")))
-    ;; ==========在当前目录下打开urxvt=========
+    ;; ==============默认程序打开文件============
+    ;; ==========在当前目录下打开urxvt===========
     (defun urxvt-default-directory ()
       (interactive)
       (start-process "Urxvt" nil shell-file-name shell-command-switch
                      (concat "tabbed -c " "urxvt" " -cd " "\""
                              (expand-file-name default-directory) "\"" " -embed")))
-    (global-set-key (kbd "C-s-<return>") 'urxvt-default-directory))
-   (is-win
-    ;; ==========在当前目录下打开urxvt=========
-    (use-package w32-browser
-      ;; Enabled at commands.
-      :defer t
-      :bind (:map dired-mode-map
-                  ("C-j" . swint-w32-browser-open)
-                  ("C-i" . w32explore))
-      ;; (eval-after-load "dired"
-      ;;   '(define-key dired-mode-map (kbd "TAB") (lambda ()
-      ;;                                             (interactive)
-      ;;                                             (w32-browser
-      ;;                                              (dired-replace-in-string
-      ;;                                               "/" "\\"
-      ;;                                               (dired-get-filename))))))
-      :config
-      (defun w32-browser-open ()
-        (interactive)
-        (w32-browser
-         (dired-replace-in-string
-          "/" "\\"
-          (dired-get-filename))))
-      (defun swint-w32-browser-open ()
-        "Fix problems of openning word"
-        (interactive)
-        (if (and (or (string-equal (file-name-extension (dired-get-filename)) "doc")
-                     (string-equal (file-name-extension (dired-get-filename)) "docx"))
-                 (not (string-match "WINWORD.EXE" (concat (prin1-to-string (proced-process-attributes))))))
-            (progn (w32-shell-execute "open" "word")
-                   (sit-for 5)))
-        (w32-browser-open)))
-    ;; 默认程序打开，但是emacs会冻结
-    ;; (eval-after-load "dired"
-    ;;   '(progn
-    ;;      ;; Dired 原来的 “o” 对我来说基本没用。
-    ;;      (define-key dired-mode-map (kbd "TAB") 'chunyu-dired-open-explorer)))
-    ;; (defun chunyu-dired-open-explorer ()
-    ;;   (interactive)
-    ;;   (let ((file-name (dired-get-file-for-visit)))
-    ;;     (if (file-exists-p file-name)
-    ;;      (start-process "dir" nil
-    ;;                     "cmd.exe" "/c" "start" file-name))))
-    ;; 用如下的方法解决空格问题
-    ;; (defun chunyu-dired-open-explorer ()
-    ;;   (interactive)
-    ;;   (let ((file-name (dired-get-file-for-visit)))
-    ;;     (if (file-exists-p file-name)
-    ;;      (shell-command (format "\"%s\"" file-name) ))))
+    (global-set-key (kbd "C-s-<return>") 'urxvt-default-directory)
+    ;; ==========在当前目录下打开urxvt============
     ))
-  ;; ==============默认程序打开文件============
-  )
 ;; ====================dired======================
+;; ==================w32-browser==================
+(use-package w32-browser
+  ;; Enabled at commands.
+  :if is-win
+  :defer t
+  :bind (:map dired-mode-map
+              (("C-j" . swint-w32-browser-open)
+               ("C-i" . w32explore)))
+  :config
+  (message "haha")
+  (defun w32-browser-open ()
+    (interactive)
+    (w32-browser
+     (dired-replace-in-string
+      "/" "\\"
+      (dired-get-filename))))
+  (defun swint-w32-browser-open ()
+    "Fix problems of openning word"
+    (interactive)
+    (if (and (or (string-equal (file-name-extension (dired-get-filename)) "doc")
+                 (string-equal (file-name-extension (dired-get-filename)) "docx"))
+             (not (string-match "WINWORD.EXE" (concat (prin1-to-string (proced-process-attributes))))))
+        (progn (w32-shell-execute "open" "word")
+               (sit-for 5)))
+    (w32-browser-open)))
+;; ==================w32-browser==================
 ;; ==================peep-dired===================
 (use-package peep-dired
   ;; Enabled at commands.

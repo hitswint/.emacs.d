@@ -142,6 +142,7 @@
   ;; Enabled at commands.
   :load-path "site-lisp/everything/"
   :if is-win
+  :defer t
   :bind ("C-x F" . everything)
   :init
   (global-set-key (kbd "C-x C-S-f") '(lambda () (interactive)
