@@ -133,7 +133,7 @@ fi
 
 export PATH=/usr/local/MATLAB/R2011b/bin:$PATH
 export PATH=$PATH:/opt/emacs24/bin
-# bind Space:magic-space
+bindkey " " magic-space
 
 # wine
 export WINEPREFIX=$HOME/.wine
@@ -143,54 +143,7 @@ export WINEARCH=win32
 autoload -U select-word-style
 select-word-style bash
 
-# Some more ls aliases
-alias pp='percol --match-method pinyin'
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias ag='ag --path-to-agignore=~/.agignore'
-alias -s htm=firefox
-alias -s html=firefox
-alias -s el=emacsclient
-alias -s py=emacsclient
-alias -s js=emacsclient
-alias -s c=emacsclient
-alias -s h=emacsclient
-alias -s java=emacsclient
-alias -s m=emacsclient
-alias -s dot=emacsclient
-alias -s gp=emacsclient
-alias -s org=emacsclient
-alias -s tex=emacsclient
-alias -s txt=emacsclient
-alias -s rmvb=mplayer
-alias -s rm=mplayer
-alias -s mp4=mplayer
-alias -s avi=mplayer
-alias -s flv=mplayer
-alias -s f4v=mplayer
-alias -s mpg=mplayer
-alias -s mkv=mplayer
-alias -s 3gp=mplayer
-alias -s wmv=mplayer
-alias -s mov=mplayer
-alias -s dat=mplayer
-alias -s asf=mplayer
-alias -s mpeg=mplaye
-alias -s wma=mplayer
-alias -s jpg="~/feh.sh"
-alias -s png="~/feh.sh"
-alias -s bmp="~/feh.sh"
-alias -s jpeg="~/feh.sh"
-alias -s eps=gv
-alias -s ps=gv
-alias -s doc=wps
-alias -s docx=wps
-alias -s xls=et
-alias -s xlsx=et
-alias -s ppt=wpp
-alias -s pptx=wpp
-alias -s pdf=llpp
 # 载入相关函数。
 source ~/.zsh/percol.sh
+source ~/.zsh/alias.sh
 source ~/.zsh/xsel.sh

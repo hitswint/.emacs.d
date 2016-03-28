@@ -571,6 +571,7 @@ is named like ODF with the extension turned to pdf."
 (use-package proced
   ;; Enabled at commands.
   :defer t
+  :commands proced-process-attributes
   :bind ("C-M-4" . proced)
   :config
   (define-key proced-mode-map (kbd "q") 'kill-buffer-and-window)

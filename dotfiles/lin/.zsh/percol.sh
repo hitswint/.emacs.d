@@ -32,7 +32,7 @@ function swint-find-file()
     zle reset-prompt
 }
 zle -N swint-find-file
-bindkey '^x^f' swint-find-file
+bindkey '^xf' swint-find-file
 function swint-locate-file()
 {
     local selected=$(locate ~/ | percol)
@@ -44,7 +44,15 @@ function swint-locate-file()
     zle reset-prompt
 }
 zle -N swint-locate-file
-bindkey '^xf' swint-locate-file
+bindkey '^xF' swint-locate-file
+
+function swint-find-file-current-dir(){
+    LBUFFER=$LBUFFER$(ls -Ap | grep -v / | percol --match-method pinyin | tr '\n' ' ' | \
+                             sed 's/[[:space:]]*$//') # delete trailing space
+    zle -R -c
+}
+zle -N swint-find-file-current-dir
+bindkey '^x^f' swint-find-file-current-dir
 
 # Search the history.
 function exists { which $1 &> /dev/null }
@@ -182,3 +190,40 @@ function percol_cd_upper_dirs() {
 }
 zle -N percol_cd_upper_dirs
 bindkey '^x^j' percol_cd_upper_dirs
+
+# Ag.
+# 显示ag所有结果，然后使用percol过滤。缺点是如果文件名中含有关键词，无法剔除。
+function swint-ag() {
+    LBUFFER=$LBUFFER$(ag -C 1000 ./ | percol | tr '\n' ' ' | \
+                             sed 's/[[:space:]]*$//' | cut -f1 -d ":")
+    zle -R -c
+}
+zle -N swint-ag
+bindkey '^xg' swint-ag
+# 在命令行中输入关键词，然后显示该关键词对应的搜索结果，不包含文件名含有关键词的结果。
+function swint-do-ag() {
+    LBUFFER=$(ag $LBUFFER ./ | percol | tr '\n' ' ' | \
+                     sed 's/[[:space:]]*$//' | cut -f1 -d ":")
+    zle -R -c
+}
+zle -N swint-do-ag
+bindkey '^xG' swint-do-ag
+
+# Switch git branch.
+function switch-git-branch() {
+    # commiterdate:relativeを commiterdate:localに変更すると普通の時刻表示
+    local selected_line="$(git for-each-ref --format='%(refname:short) | %(committerdate:relative) | %(committername) | %(subject)' --sort=-committerdate refs/heads refs/remotes \
+            | column -t -s '|' \
+            | percol \
+            | head -n 1 \
+            | awk '{print $1}')"
+    if [ -n "$selected_line" ]; then
+        BUFFER="git checkout ${selected_line}"
+        CURSOR=$#BUFFER
+        # ↓そのまま実行の場合
+        zle accept-line
+    fi
+    zle clear-screen
+}
+zle -N switch-git-branch
+bindkey '^xb' switch-git-branch

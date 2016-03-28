@@ -7,8 +7,20 @@
 (use-package w3m
   ;; Enabled at commands.
   :defer t
-  :bind ("C-M-5" . w3m)
+  :bind (("C-M-5" . w3m)
+         ("M-@" . w3m-youdao-sample-sentences))
   :config
+  ;; Use w3m to display youdao sample sentences.
+  (defun w3m-youdao-sample-sentences ()
+    (interactive)
+    (let ((word (swint-get-words-at-points)))
+      (browse-url
+       (concat "http://dict.youdao.com/search?le=eng&q=lj%3A"
+               (cond
+                (is-lin word)
+                ;; 解决w3m无法解析网址的问题
+                (is-win (w3m-url-encode-string word 'utf-8)))
+               "&keyfrom=dict.top"))))
   (setq w3m-use-form t)
   (setq w3m-tab-width 8)
   (setq w3m-use-cookies t)

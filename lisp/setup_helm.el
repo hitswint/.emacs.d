@@ -615,7 +615,10 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 (use-package helm-ag
   ;; Enabled at commands.
   :defer t
-  :bind ("C-x g" . helm-do-ag)
+  ;; helm-do-ag 互动式搜索，但只能搜索一个词。
+  ;; helm-ag 先输入词，可以在结果中搜索第二个词。
+  :bind (("C-x g" . helm-do-ag)
+         ("C-x G" . helm-ag))
   :config
   (define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)
   (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)

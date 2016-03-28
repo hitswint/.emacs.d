@@ -153,17 +153,4 @@
   (setq google-translate-translation-directions-alist
         '(("en" . "zh-CN") ("zh-CN" . "en"))))
 ;; ===============google-translate===============
-;; ====================youdao====================
-(defun youdao-sample-sentences ()
-  (interactive)
-  (let ((word (swint-get-words-at-points)))
-    (browse-url
-     (concat "http://dict.youdao.com/search?le=eng&q=lj%3A"
-             (cond
-              (is-lin word)
-              ;; 解决w3m无法解析网址的问题
-              (is-win (w3m-url-encode-string word 'utf-8)))
-             "&keyfrom=dict.top"))))
-(global-set-key (kbd "M-@") 'youdao-sample-sentences)
-;; ====================youdao====================
 (provide 'setup_dict)
