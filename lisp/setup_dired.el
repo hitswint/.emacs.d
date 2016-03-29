@@ -334,8 +334,8 @@
   :if is-win
   :defer t
   :bind (:map dired-mode-map
-              (("C-j" . swint-w32-browser-open)
-               ("C-i" . w32explore)))
+              ("C-j" . swint-w32-browser-open)
+              ("C-i" . w32explore))
   :config
   (defun w32-browser-open ()
     (interactive)
