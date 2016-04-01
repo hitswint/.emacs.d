@@ -112,5 +112,20 @@
                   graphviz-dot-mode-hook))
     (add-hook hook 'rainbow-delimiters-mode)))
 ;; ==============rainbow-delimiters=============
+;; ============highlight-parentheses============
+(use-package highlight-parentheses
+  ;; Enabled in modes.
+  :defer t
+  :commands highlight-parentheses-mode
+  :init
+  (dolist (hook '(org-mode-hook
+                  dired-mode-hook
+                  octave-mode-hook
+                  gnuplot-mode-hook
+                  emacs-lisp-mode-hook
+                  c-mode-hook
+                  graphviz-dot-mode-hook))
+    (add-hook hook 'highlight-parentheses-mode)))
+;; ============highlight-parentheses============
 ;; ====================括号========================
 (provide 'setup_parenthesis)

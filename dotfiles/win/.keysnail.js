@@ -118,7 +118,7 @@ key.setGlobalKey(["C-x", "K"], function (ev) {
     closeWindow(true);
 }, 'Close the window', false);
 
-key.setGlobalKey(['C-x', 'C-,'], function (ev) {
+key.setGlobalKey(['C-x', 'C-/'], function (ev) {
     undoCloseTab();
 }, 'Undo closed tab', false);
 

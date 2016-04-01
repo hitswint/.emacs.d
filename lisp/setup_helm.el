@@ -227,9 +227,10 @@
             :truncate-lines t)))
   ;; ============helm-dired-buffer==============
   ;; =========helm-related-to-persp=============
-  (defun helm-switch-persp/buffer (buffer)
-    "Helm-switch to persp/buffer simultaneously"
-    (let ((swint-all-persps (nreverse (cons  "i" (nreverse (delete "i" (persp-names)))))))
+  (defun helm-switch-persp/buffer (BUFFER-OR-NAME)
+    "Helm-switch to persp/buffer simultaneously."
+    (let ((swint-all-persps (nreverse (cons  "i" (nreverse (delete "i" (persp-names))))))
+          (buffer (get-buffer BUFFER-OR-NAME)))
       (cl-loop for persp in swint-all-persps
                when (or (memq buffer (persp-buffers (gethash persp perspectives-hash)))
                         (string-equal persp "i"))

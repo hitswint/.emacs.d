@@ -29,8 +29,6 @@
 (use-package hl-line
   :config
   (global-hl-line-mode t))
-;; Press Tab once to indent and again to complete.
-(setq tab-always-indent 'complete)
 ;; (setq debug-on-error t)
 ;; ==================DEFAULT====================
 ;; ===================快捷键====================

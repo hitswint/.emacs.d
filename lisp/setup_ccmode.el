@@ -30,6 +30,7 @@
                                                          (setq-local compilation-read-command nil)
                                                          (call-interactively 'compile)))
               (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
+              (define-key c-mode-base-map (kbd "C-M-h") nil)
               (define-key c-mode-base-map (kbd "(") nil)
               (define-key c-mode-base-map (kbd "{") nil)))
   ;; Available C style:

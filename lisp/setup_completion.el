@@ -214,6 +214,7 @@
   (add-to-list 'ac-modes 'octave-mode)
   (add-to-list 'ac-modes 'shell-mode)
   (add-to-list 'ac-modes 'eshell-mode)
+  (add-to-list 'ac-modes 'gnuplot-mode)
   (add-to-list 'ac-modes 'graphviz-dot-mode)
   ;; 上述auto-complete-mode-hook函数在ac打开时运行。
   ;; 将初始化语句放在最后，使global-auto-complete-mode打开时加载上述设定，即使某buffer已经打开。

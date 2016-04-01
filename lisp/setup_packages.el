@@ -68,12 +68,9 @@
   ;; Enabled at commands.
   :load-path "site-lisp/breadcrumb/"
   :defer t
-  :bind (("C-x C-," . bc-previous)
-         ("C-x C-." . bc-next))
   :commands bc-set
   :config
-  ;; 默认被session-jump-to-last-change占用。
-  (bind-key "C-x C-/" 'bc-set))
+  (bind-key "C-x C-/" 'bc-previous))
 ;; 删除breadcrumb.el源文件中(message "breadcrumb bookmark is set for the current position.")，使bc-set不出现提示。
 ;; (global-set-key (kbd "C-x C-/") 'bc-list) ;; C-x M-j for the bookmark menu list
 ;; (global-set-key (kbd "C-x C-/") 'bc-local-previous) ;; M-up-arrow for local previous
@@ -196,7 +193,7 @@
   ;; Enabled at commands.
   ;; Enabled automatically actually.
   :defer t
-  :bind ("C-M-'" . help-command)
+  :bind ("C-M-h" . help-command)
   :config
   (define-key 'help-command (kbd "C-l") 'find-library)
   (define-key 'help-command (kbd "C-f") 'find-function)
@@ -505,25 +502,39 @@ is named like ODF with the extension turned to pdf."
   (define-key easy-kill-base-map (kbd "C-w") 'easy-kill-region))
 ;; M-w ?: help 查看M-w prefix快捷键。
 ;; =====================easy-kill==================
-;; ========================smex====================
+;; ======================smex======================
 (use-package smex
   ;; Enabled at commands.
   :defer t
   :bind (("C-x M-x" . smex)
          ("C-c M-x" . smex-major-mode-commands)))
-;; ========================smex====================
-;; =========================bm=====================
+;; ======================smex======================
+;; =======================bm=======================
 (use-package bm
   ;; Enabled at commands.
   :defer t
   :commands (bm-toggle bm-previous bm-next)
   :init
-  (smartrep-define-key global-map "M-s"
-    '(("/" . bm-toggle)
-      ("," . bm-previous)
-      ("." . bm-next))))
-;; (setq temporary-bookmark-p t)
-;; =========================bm=====================
+  (smartrep-define-key global-map "C-x"
+    '(("C-'" . bm-toggle)
+      ("\"" . bm-previous)
+      ("'" . bm-next)))
+  :config
+  (setq bm-cycle-all-buffers nil)
+  (setq bm-highlight-style 'bm-highlight-only-fringe))
+;; =======================bm=======================
+;; ====================helm-bm=====================
+(use-package helm-bm
+  :defer t
+  :bind ("C-M-'" . helm-bm)
+  :config
+  (defun helm-bm-action-switch-to-buffer (candidate)
+    "Switch to buffer of CANDIDATE."
+    (helm-bm-with-candidate candidates
+      (helm-switch-persp/buffer bufname)
+      (goto-char (point-min))
+      (forward-line (1- lineno)))))
+;; ====================helm-bm=====================
 ;; ================operate-on-number===============
 ;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字。
 (use-package operate-on-number
@@ -562,7 +573,7 @@ is named like ODF with the extension turned to pdf."
     (condition-case e
         (smartrep-read-event-loop
          '(("M-?" . goto-last-change)
-           ("?" . goto-last-change-reverse)))
+           ("M-/" . goto-last-change-reverse)))
       (quit nil))
     ;; (finalize-event-loop)
     ))
@@ -677,4 +688,27 @@ is named like ODF with the extension turned to pdf."
         (call-interactively 'quickrun-region)
       (call-interactively 'quickrun))))
 ;; ===================quickrun=====================
+;; =============auto-highlight-symbol==============
+(use-package auto-highlight-symbol
+  ;; Enabled at idle.
+  :defer 2
+  :bind (("C-x C-," . ahs-backward)
+         ("C-x C-." . ahs-forward))
+  :init
+  (setq ahs-default-range 'ahs-range-whole-buffer)
+  :config
+  (global-auto-highlight-symbol-mode t)
+  (add-to-list 'ahs-modes 'octave-mode)
+  (define-key auto-highlight-symbol-mode-map (kbd "M--") nil)
+  (define-key auto-highlight-symbol-mode-map (kbd "C-x C-'") nil)
+  (define-key auto-highlight-symbol-mode-map (kbd "C-x C-a") nil))
+;; =============auto-highlight-symbol==============
+;; ==================dumb-jump=====================
+(use-package dumb-jump
+  ;; Enabled at commands.
+  :defer t
+  :bind (("C-c ," . dumb-jump-go)
+         ("C-c ." . dumb-jump-back)
+         ("C-c /" . dumb-jump-quick-look)))
+;; ==================dumb-jump=====================
 (provide 'setup_packages)

@@ -31,6 +31,7 @@
             auto-complete-auctex
             auto-complete-c-headers
             auto-complete-clang
+            auto-highlight-symbol
             avy
             avy-menu
             avy-zap
@@ -56,6 +57,7 @@
             diredful
             dirtree
             drag-stuff
+            dumb-jump
             function-args
             easy-kill
             elisp-slime-nav
@@ -77,6 +79,7 @@
             helm
             helm-ag
             helm-bibtex
+            helm-bm
             helm-core
             helm-descbinds
             helm-firefox
@@ -86,6 +89,7 @@
             helm-projectile
             helm-swoop
             helm-unicode
+            highlight-parentheses
             highlight-symbol
             hungry-delete
             ido-at-point
