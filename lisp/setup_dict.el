@@ -11,21 +11,9 @@
   (local-set-key (kbd "d") 'kid-sdcv-to-buffer)
   (local-set-key (kbd "q") 'kill-buffer-and-window)
   (run-hooks 'sdcv-mode-hook))
-(defun swint-get-words-at-points ()
-  "Get words at point, use pyim-get-words-list-at-point to deal with chinese."
-  (interactive)
-  (if mark-active
-      (buffer-substring-no-properties (region-beginning) (region-end))
-    (let ((words-at-point (if (equal (point) (point-at-eol))
-                              (pyim-get-words-list-at-point)
-                            (pyim-get-words-list-at-point t))))
-      (if (<= (length words-at-point) 1)
-          (read-string (format "Search the dictionary for (default %s): " (car (car words-at-point)))
-                       nil nil (car (car words-at-point)))
-        (ido-completing-read "Get Words:" (mapcar 'car words-at-point))))))
 (defun swint-sdcv-to-buffer ()
   (interactive)
-  (let ((word (swint-get-words-at-points)))
+  (let ((word (swint-get-words-at-point)))
     (cond
      (is-lin
       (set-buffer (get-buffer-create "*sdcv*"))
@@ -41,8 +29,6 @@
              (yasdcv--output-cleaner:common)
              (sdcv-mode)
              (show-all)
-             (while (re-search-forward "*** Collins Cobuild English Dictionary " nil t)
-               (hide-entry))
              (indent-region (point-min) (point-max))
              (goto-char (point-min)))))))
      (is-win
@@ -67,7 +53,7 @@
   :config
   (defun swint-bing-google-translate ()
     (interactive)
-    (let ((word (swint-get-words-at-points)))
+    (let ((word (swint-get-words-at-point)))
       (when (internet-active-p)
         (unless (equal (buffer-name) "*bing-google*")
           (switch-to-buffer-other-window "*bing-google*"))

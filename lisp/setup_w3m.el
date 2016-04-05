@@ -13,7 +13,7 @@
   ;; Use w3m to display youdao sample sentences.
   (defun w3m-youdao-sample-sentences ()
     (interactive)
-    (let ((word (swint-get-words-at-points)))
+    (let ((word (swint-get-words-at-point)))
       (browse-url
        (concat "http://dict.youdao.com/search?le=eng&q=lj%3A"
                (cond

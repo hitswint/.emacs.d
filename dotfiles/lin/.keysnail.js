@@ -110,7 +110,7 @@ key.setGlobalKey('C-r', function (ev) {
     command.iSearchBackwardKs(ev);
 }, 'Emacs like incremental search backward', true);
 
-key.setGlobalKey("C-q", function (ev) {
+key.setGlobalKey('C-q', function (ev) {
     BrowserCloseTabOrWindow();
 }, 'Close tab / window', false);
 
@@ -118,7 +118,7 @@ key.setGlobalKey(["C-x", "K"], function (ev) {
     closeWindow(true);
 }, 'Close the window', false);
 
-key.setGlobalKey(['C-x', 'C-/'], function (ev) {
+key.setGlobalKey('C-M-q', function (ev) {
     undoCloseTab();
 }, 'Undo closed tab', false);
 
@@ -126,11 +126,11 @@ key.setGlobalKey(["C-x", "n"], function (ev) {
     OpenBrowserWindow();
 }, 'Open new window', false);
 
-key.setGlobalKey(['C-x', 'C-l'], function (ev) {
+key.setGlobalKey(["C-x", "C-l"], function (ev) {
     getBrowser().mTabContainer.advanceSelectedTab(1, true);
 }, 'Select next tab', false);
 
-key.setGlobalKey(['C-x', 'C-h'], function (ev) {
+key.setGlobalKey(["C-x", "C-h"], function (ev) {
     getBrowser().mTabContainer.advanceSelectedTab(-1, true);
 }, 'Select previous tab', false);
 
@@ -142,7 +142,7 @@ key.setGlobalKey(["C-x", "o"], function (ev, arg) {
     command.focusOtherFrame(arg);
 }, 'Select next frame', false);
 
-key.setGlobalKey("M-,", function (ev) {
+key.setGlobalKey('M-,', function (ev) {
     window.loadURI(ev.target.ownerDocument.location.href);
 }, 'Show current frame only', true);
 
@@ -533,18 +533,18 @@ ext.add("next-page", function () {
     }
 }, "Next page");
 
-key.setViewKey(['<'], function(ev, arg) {
+key.setViewKey('<', function(ev, arg) {
     ext.exec("previous-page", arg, ev);
 }, "Previous page");
 
-key.setViewKey(['>'], function(ev, arg) {
+key.setViewKey('>', function(ev, arg) {
     ext.exec("next-page", arg, ev);
 }, "Next page");
 
 // caret模式，下面这句会导致自动进入caret模式
 // util.setBoolPref("accessibility.browsewithcaret", true);
 //this add some visual effect indicating the caret mode
-key.setViewKey(['C-c', 'C-c'], function (ev) {
+key.setViewKey(["C-c", "C-c"], function (ev) {
     children = document.getElementById("nav-bar").children;
     for (i = 0; i < children.length; i++) {
         children[i].style.backgroundColor = "pink";
@@ -552,7 +552,7 @@ key.setViewKey(['C-c', 'C-c'], function (ev) {
     util.setBoolPref("accessibility.browsewithcaret", true);
 }, 'Start Caret-Browse Mode');
 
-key.setCaretKey(['C-c', 'C-c'], function (ev) {
+key.setCaretKey(["C-c", "C-c"], function (ev) {
     children = document.getElementById("nav-bar").children;
     for (i = 0; i < children.length; i++) {
         children[i].style.backgroundColor = "transparent";
@@ -570,7 +570,7 @@ ext.add("paste-and-go", function() {
     }
 }, "Paste the URL or keyword from clipboard and Go");
 
-key.setViewKey(['C-c', 'p'], function(ev, arg) {
+key.setViewKey(["C-c", "p"], function(ev, arg) {
     ext.exec("paste-and-go");
 }, "Paste and Go", true);
 
@@ -585,34 +585,34 @@ ext.add("paste-to-tab-and-go", function() {
     }
 }, "Paste the URL or keyword from clipboard to a new tab and Go");
 
-key.setViewKey(['C-c', 'P'], function(ev, arg) {
+key.setViewKey(["C-c", "P"], function(ev, arg) {
     ext.exec("paste-to-tab-and-go");
 }, "Paste to tab and Go", true);
 
 // open and tabopen
-key.setGlobalKey(['C-c', 'o'], function (ev, arg) {
+key.setGlobalKey(["C-c", "o"], function (ev, arg) {
     shell.input("open http://");
 }, 'Open URL (with search engine)');
 
-key.setGlobalKey(['C-c', 't'], function (ev, arg) {
+key.setGlobalKey(["C-c", "t"], function (ev, arg) {
     shell.input("tabopen http://");
 }, 'Open URL (with search engine) in new tab');
 
-key.setGlobalKey(['C-c', 'O'], function (ev, arg) {
+key.setGlobalKey(["C-c", "O"], function (ev, arg) {
     var url = window._content.document.location;
     shell.input("open " + url);
 }, 'Edit current url and open it');
 
 // 书签
-key.setGlobalKey(['C-\''], function (ev, arg) {
+key.setGlobalKey('C-\'', function (ev, arg) {
     ext.exec("bmany-list-all-bookmarks", arg, ev);
 }, 'bmany - List all bookmarks');
 
-key.setGlobalKey(['C-x', 'C-\''], function (ev, arg) {
+key.setGlobalKey(["C-x", "C-\'"], function (ev, arg) {
     ext.exec("bmany-list-toolbar-bookmarks", arg, ev);
 }, 'bmany - List all bookmarklets');
 
-key.setGlobalKey(['C-c', 'C-\''], function (ev, arg) {
+key.setGlobalKey(["C-c", "C-\'"], function (ev, arg) {
     ext.exec("bmany-list-bookmarks-with-keyword", arg, ev);
 }, 'bmany - List bookmarks with keyword');
 
@@ -622,11 +622,11 @@ key.setGlobalKey('C-,', function (ev, arg) {
 }, 'view all tabs ', true);
 
 // hok
-key.setGlobalKey(['C-h'], function (ev, arg) {
+key.setGlobalKey('C-h', function (ev, arg) {
     ext.exec('hok-start-foreground-mode', arg, ev);
 }, 'Start Hit a Hint foreground mode', true);
 
-key.setGlobalKey(['C-c', 'C-h'], function (ev, arg) {
+key.setGlobalKey(["C-c", "C-h"], function (ev, arg) {
     ext.exec('hok-start-background-mode', arg, ev);
 }, 'Start Hit a Hint background mode', true);
 
@@ -639,14 +639,14 @@ key.setGlobalKey('C-M-h', function (ev, arg) {
     ext.exec("hok-start-extended-mode", arg);
 }, 'Start Hit a Hint Extented mode', true);
 
-key.setGlobalKey(['C-o', 'b'], function (ev, arg) {
+key.setGlobalKey(["C-o", "b"], function (ev, arg) {
     var myUrl = "http://cn.bing.com";
     var ff= document.getElementById("content");
     var tab = ff.addTab(myUrl);
     ff.selectedTab = tab;
 }, 'Open Bing', true);
 
-key.setGlobalKey(['C-o', 'g'], function (ev, arg) {
+key.setGlobalKey(["C-o", "g"], function (ev, arg) {
     var myUrl = "http://www.google.com";
     var ff= document.getElementById("content");
     var tab = ff.addTab(myUrl);

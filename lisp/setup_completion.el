@@ -3,11 +3,11 @@
   ;; Enabled at commands.
   :defer t
   :after (yasnippet ac-ispell)
-  :bind ("M-s M-U" . swint-auto-complete)
+  :bind ("M-U" . swint-auto-complete)
   :config
   (defun swint-auto-complete ()
     (interactive)
-    (if (boundp 'company-mode)
+    (if (featurep 'company)
         (company-abort))
     (auto-complete))
   (setq ac-auto-start nil)
@@ -45,14 +45,18 @@
 (use-package ac-ispell
   ;; Enabled at commands.
   :defer t
-  :bind ("M-U" . swint-auto-complete-ispell)
+  :after auto-complete
+  :commands swint-auto-complete-ispell
   :config
+  (bind-key "M-U" 'swint-auto-complete-ispell ac-completing-map)
   (defun swint-auto-complete-ispell ()
     (interactive)
+    (if (featurep 'hippie-exp)
+        (he-reset-string))
     (unless (or (boundp 'ac-source-ispell)
                 (boundp 'ac-source-ispell-fuzzy))
       (ac-ispell-setup))
-    (if (boundp 'company-mode)
+    (if (featurep 'company)
         (company-abort))
     (auto-complete '(ac-source-ispell-fuzzy
                      ac-source-ispell))))
@@ -265,8 +269,16 @@
 (use-package hippie-exp
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s M-?" . hippie-expand)
+  :bind ("M-?" . swint-hippie-expand-with-prefix)
   :config
+  (defun swint-hippie-expand-with-prefix (&optional arg)
+    (interactive)
+    (hippie-expand arg)
+    (condition-case e
+        (smartrep-read-event-loop
+         '(("M-?" . hippie-expand)
+           ("M-/" . swint-auto-complete-ispell)))
+      (quit nil)))
   ;; 打开.english-words方式进行补全。
   (setq hippie-expand-try-functions-list
         '(try-expand-by-dict

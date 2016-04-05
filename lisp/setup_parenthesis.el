@@ -125,7 +125,27 @@
                   emacs-lisp-mode-hook
                   c-mode-hook
                   graphviz-dot-mode-hook))
-    (add-hook hook 'highlight-parentheses-mode)))
+    (add-hook hook 'highlight-parentheses-mode))
+  :config
+  (set-face-attribute 'hl-paren-face nil
+                      :weight 'bold :strike-through t)
+  (defun hl-paren-create-overlays ()
+    (let ((fg hl-paren-colors)
+          (bg hl-paren-background-colors)
+          attributes)
+      (while (or fg bg)
+        (setq attributes (face-attr-construct 'hl-paren-face))
+        ;; 取消改变括号前景颜色。
+        ;; (when (car fg)
+        ;;   (setq attributes (plist-put attributes :foreground (car fg))))
+        (pop fg)
+        (when (car bg)
+          (setq attributes (plist-put attributes :background (car bg))))
+        (pop bg)
+        (dotimes (i 2) ;; front and back
+          (push (make-overlay 0 0 nil t) hl-paren-overlays)
+          (overlay-put (car hl-paren-overlays) 'font-lock-face attributes)))
+      (setq hl-paren-overlays hl-paren-overlays))))
 ;; ============highlight-parentheses============
 ;; ====================括号========================
 (provide 'setup_parenthesis)

@@ -30,7 +30,7 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
     ))
 ;; ===============切换cap和大小写==================
 ;; ===========compact-uncompact-block==============
-(global-set-key (kbd "C-M-q") 'compact-uncompact-block)
+(global-set-key (kbd "C-x C-'") 'compact-uncompact-block)
 (defun compact-uncompact-block ()
   "Remove or add line ending chars on current paragraph.
 This command is similar to a toggle of `fill-paragraph'.
@@ -56,6 +56,12 @@ When there is a text selection, act on the region."
             (fill-paragraph nil))))
       (put this-command 'stateIsCompact-p (if currentStateIsCompact nil t)))))
 ;; ===========compact-uncompact-block==============
+;; ===================合并一行=====================
+(global-set-key (kbd "C-x '")
+                (lambda()
+                  (interactive)
+                  (join-line -1)))
+;; ===================合并一行=====================
 ;; =================复制和粘贴行===================
 ;; (defun copy-line-or-region ()
 ;;   "Copy current line, or current text selection."
@@ -88,12 +94,6 @@ When there is a text selection, act on the region."
 (global-set-key [(meta n)] 'window-move-up)
 (global-set-key [(meta p)] 'window-move-down)
 ;; ========光标不动，窗口上下移动两三行============
-;; ===================合并一行=====================
-(global-set-key (kbd "M-Q")
-                (lambda()
-                  (interactive)
-                  (join-line -1)))
-;; ===================合并一行=====================
 ;; ============移除行尾的空格并indent==============
 (defun cleanup-buffer-safe ()
   "Perform a bunch of safe operations on the whitespace content of a buffer.
@@ -111,7 +111,7 @@ Including indent-buffer, which should not be called automatically on save."
   (interactive)
   (cleanup-buffer-safe)
   (indent-region (point-min) (point-max)))
-(global-set-key (kbd "C-x C-;") 'cleanup-buffer)
+(global-set-key (kbd "C-x C-l") 'cleanup-buffer)
 ;; ============移除行尾的空格并indent==============
 ;; ==================临时标记======================
 (defun ska-point-to-register()

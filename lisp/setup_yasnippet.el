@@ -6,7 +6,7 @@
   :config
   (defun swint-yas-insert-snippet ()
     (interactive)
-    (if (boundp 'company-mode)
+    (if (featurep 'company)
         (company-abort))
     (unless (auto-complete '(ac-source-yasnippet))
       (yas-insert-snippet)))

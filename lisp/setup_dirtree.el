@@ -23,16 +23,17 @@
   (defun dirtree-kill-this-buffer ()
     "switch to dirtree after killing this buffer."
     (interactive)
-    (let ((swint-previous-buffer (get-buffer (car (swint-iswitchb-make-buflist)))))
+    (let ((swint-previous-buffer (get-buffer (car (swint-iswitchb-make-buflist))))
+          (swint-current-buffer (current-buffer)))
       (bc-set)
-      ;; kill-buffer后不加参数会直接切换到之前所在的buffer，可能导致persp混乱，加参数则不会产生这个问题。
-      ;; 可以使用kill-this-buffer和kill-buffer-and-window，因为这两个函数中都使用了kill-buffer加参数的形式。
-      (kill-this-buffer)
       (if (equal (buffer-name (other-buffer (current-buffer) t)) "*dirtree*")
           (other-window 1)
-        (progn
-          ;; 关闭当前buffer之后切换到之前所在的buffer。
-          (switch-to-buffer swint-previous-buffer)))))
+        ;; 切换到之前所在的buffer。
+        (switch-to-buffer swint-previous-buffer))
+      ;; kill-buffer后不加参数会直接切换到之前所在的buffer，可能导致persp混乱，加参数则不会产生这个问题。
+      ;; 可以使用kill-this-buffer和kill-buffer-and-window，因为这两个函数中都使用了kill-buffer加参数的形式。
+      ;; 更新：kill-this-buffer有时仍然会切换到之前的buffer，有时不会。改为先切换，再kill-buffer。
+      (kill-buffer swint-current-buffer)))
   ;; =========关闭buffer后切换到之前的buffer=======
   ;; 原始的关闭buffer存在两个问题：
   ;; 一是会切换到helm buffer中，二是在persp之间切换时会切换到上一个persp的buffer中。

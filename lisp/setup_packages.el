@@ -70,7 +70,9 @@
   :defer t
   :commands bc-set
   :config
-  (bind-key "C-x C-/" 'bc-previous))
+  (bind-key "C-M-q" 'bc-previous)
+  (define-key emacs-lisp-mode-map "\e\C-q" nil)
+  (define-key lisp-interaction-mode-map "\e\C-q" nil))
 ;; 删除breadcrumb.el源文件中(message "breadcrumb bookmark is set for the current position.")，使bc-set不出现提示。
 ;; (global-set-key (kbd "C-x C-/") 'bc-list) ;; C-x M-j for the bookmark menu list
 ;; (global-set-key (kbd "C-x C-/") 'bc-local-previous) ;; M-up-arrow for local previous
@@ -249,15 +251,15 @@
   (define-key drag-stuff-mode-map (kbd "M-B") 'drag-stuff-left)
   (define-key drag-stuff-mode-map (kbd "M-F") 'drag-stuff-right))
 ;; ===================drag stuff===================
-;; ===================popup-kill-ring==============
+;; ================popup-kill-ring=================
 (use-package popup-kill-ring
   ;; Enabled at commands.
   :defer t
   :bind ("M-Y" . popup-kill-ring)
   :config
   (setq popup-kill-ring-interactive-insert t))
-;; ===================popup-kill-ring==============
-;; ========================popup===================
+;; ================popup-kill-ring=================
+;; ====================popup=======================
 (use-package popup
   ;; Enabled at commands.
   :defer 2
@@ -266,27 +268,13 @@
   (define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
   (define-key popup-menu-keymap (kbd "M-n") 'popup-next)
   (define-key popup-menu-keymap (kbd "TAB") 'popup-next))
-;; ========================popup===================
-;; =======================pos-tip==================
+;; ====================popup=======================
+;; ===================pos-tip======================
 (use-package pos-tip
   ;; Enabled at commands.
   :defer 2
   :commands (pos-tip-show pos-tip-show-no-propertize))
-;; =======================pos-tip==================
-;; ===================highlight-symbol=============
-(use-package highlight-symbol
-  ;; Enabled at commands.
-  :defer t
-  :commands (highlight-symbol-at-point highlight-symbol-prev highlight-symbol-next)
-  :init
-  (smartrep-define-key global-map "C-x"
-    '(("/" . highlight-symbol-at-point)
-      ("," . highlight-symbol-prev)
-      ("." . highlight-symbol-next)))
-  ;; (global-set-key (kbd "C-c ") 'highlight-symbol-query-replace)
-  :config
-  (setq highlight-symbol-foreground-color "gray30"))
-;; ===================highlight-symbol=============
+;; ===================pos-tip======================
 ;; ===================elmacro======================
 ;; 需要先打开elmacro-mode，然后F3/F4录制宏。
 ;; 然后使用elmacro-show-last-macro来将操作转换为elisp。
@@ -516,9 +504,9 @@ is named like ODF with the extension turned to pdf."
   :commands (bm-toggle bm-previous bm-next)
   :init
   (smartrep-define-key global-map "C-x"
-    '(("C-'" . bm-toggle)
-      ("\"" . bm-previous)
-      ("'" . bm-next)))
+    '(("C-;" . bm-toggle)
+      ("C-," . bm-previous)
+      ("C-." . bm-next)))
   :config
   (setq bm-cycle-all-buffers nil)
   (setq bm-highlight-style 'bm-highlight-only-fringe))
@@ -557,11 +545,11 @@ is named like ODF with the extension turned to pdf."
 ;; ================operate-on-number===============
 ;; =================goto-last-change===============
 (use-package goto-chg
-  ;; Enabled at commands.
-  :defer t
-  :bind ("M-?" . swint-goto-chg-command-with-prefix)
+  ;; Enabled at idle.
+  :defer 2
   :config
-  (defun swint-goto-chg-command-with-prefix (&optional arg)
+  (bind-key "C-x C-/" 'swint-goto-last-change-with-prefix)
+  (defun swint-goto-last-change-with-prefix (&optional arg)
     (interactive)
     (goto-last-change arg)
     (setq last-command 'goto-last-change)
@@ -572,8 +560,8 @@ is named like ODF with the extension turned to pdf."
     ;; finalization code is run.
     (condition-case e
         (smartrep-read-event-loop
-         '(("M-?" . goto-last-change)
-           ("M-/" . goto-last-change-reverse)))
+         '(("C-/" . goto-last-change)
+           ("C-M-/" . goto-last-change-reverse)))
       (quit nil))
     ;; (finalize-event-loop)
     ))
@@ -688,17 +676,54 @@ is named like ODF with the extension turned to pdf."
         (call-interactively 'quickrun-region)
       (call-interactively 'quickrun))))
 ;; ===================quickrun=====================
+;; ================highlight-symbol================
+(use-package highlight-symbol
+  ;; Enabled at commands.
+  :defer t
+  :commands (highlight-symbol-prev highlight-symbol-next highlight-symbol-at-point highlight-symbol-get-symbol)
+  :init
+  (smartrep-define-key global-map "C-x"
+    '(("," . highlight-symbol-prev)
+      ("." . highlight-symbol-next)
+      (";" . highlight-symbol-at-point)))
+  :config
+  (setq highlight-symbol-foreground-color "gray30"))
+;; ================highlight-symbol================
 ;; =============auto-highlight-symbol==============
 (use-package auto-highlight-symbol
   ;; Enabled at idle.
   :defer 2
-  :bind (("C-x C-," . ahs-backward)
-         ("C-x C-." . ahs-forward))
   :init
   (setq ahs-default-range 'ahs-range-whole-buffer)
   :config
   (global-auto-highlight-symbol-mode t)
+  (set-face-attribute 'ahs-face nil
+                      :foreground "white"
+                      :background "DarkMagenta")
+  (set-face-attribute 'ahs-plugin-whole-buffer-face nil
+                      :foreground "white"
+                      :background "DarkBlue")
   (add-to-list 'ahs-modes 'octave-mode)
+  (defun swint-ahs-backward ()
+    (interactive)
+    (let ((symbol (highlight-symbol-get-symbol)))
+      (unless ahs-highlighted
+        (ahs-highlight-now))
+      (call-interactively 'ahs-backward)
+      (highlight-symbol-count symbol t)))
+  (defun swint-ahs-forward ()
+    (interactive)
+    (let ((symbol (highlight-symbol-get-symbol)))
+      (unless ahs-highlighted
+        (ahs-highlight-now))
+      (call-interactively 'ahs-forward)
+      (highlight-symbol-count symbol t)))
+  (add-to-list 'ahs-unhighlight-allowed-commands 'swint-ahs-forward)
+  (add-to-list 'ahs-unhighlight-allowed-commands 'swint-ahs-backward)
+  (smartrep-define-key auto-highlight-symbol-mode-map "C-x"
+    '(("," . swint-ahs-backward)
+      ("." . swint-ahs-forward)
+      ("/" . ahs-edit-mode)))
   (define-key auto-highlight-symbol-mode-map (kbd "M--") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "C-x C-'") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "C-x C-a") nil))

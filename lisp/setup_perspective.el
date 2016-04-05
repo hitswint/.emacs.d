@@ -65,7 +65,7 @@ Has no effect when `persp-show-modestring' is nil."
             (buffer-list))
     (swint-persp-switch "i")))
 (defun swint-persp-switch (name)
-  (if (if (boundp 'helm--minor-mode)
+  (if (if (featurep 'helm)
           helm--minor-mode)
       (helm-run-after-quit #'(lambda (swint-persp-name) (persp-switch swint-persp-name)) name)
     (persp-switch name)))

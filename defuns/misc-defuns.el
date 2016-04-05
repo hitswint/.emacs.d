@@ -65,3 +65,17 @@
              (+ chinese-char-and-punc english-word)))))
 (global-set-key (kbd "M-=") 'swint-count-words-region)
 ;; ===================WordsCount===================
+;; ===============Get-words-at-point===============
+(defun swint-get-words-at-point ()
+  "Get words at point, use pyim-get-words-list-at-point to deal with chinese."
+  (interactive)
+  (if mark-active
+      (buffer-substring-no-properties (region-beginning) (region-end))
+    (let ((words-at-point (if (equal (point) (point-at-eol))
+                              (pyim-get-words-list-at-point)
+                            (pyim-get-words-list-at-point t))))
+      (if (<= (length words-at-point) 1)
+          (read-string (format "Get Words (default %s): " (car (car words-at-point)))
+                       nil nil (car (car words-at-point)))
+        (ido-completing-read "Get Words:" (mapcar 'car words-at-point))))))
+;; ===============Get-words-at-point===============

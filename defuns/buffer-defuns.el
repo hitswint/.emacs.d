@@ -215,3 +215,34 @@ FILENAME defaults to `buffer-file-name'."
   (file-name-sans-extension
    (file-name-nondirectory (or filename (buffer-file-name)))))
 ;; ============获得不包括扩展名的文件名============
+;; ================优先纵向分割窗口================
+;; 设置split-xxx-threshold无法达到要求。
+;; (setq split-height-threshold nil)
+;; (setq split-width-threshold 0)
+(defun display-new-buffer (buffer force-other-window)
+  "If BUFFER is visible, select it.
+If it's not visible and there's only one window, split the
+current window and select BUFFER in the new window. If the
+current window (before the split) is more than 100 columns wide,
+split horizontally(left/right), else split vertically(up/down).
+If the current buffer contains more than one window, select
+BUFFER in the least recently used window.
+This function returns the window which holds BUFFER.
+FORCE-OTHER-WINDOW is ignored."
+  (or (get-buffer-window buffer)
+      (if (one-window-p)
+          (let ((new-win
+                 (if (> (window-width) 100)
+                     (split-window-horizontally)
+                   (split-window-vertically))))
+            (set-window-buffer new-win buffer)
+            new-win)
+        (let ((new-win (get-lru-window)))
+          (set-window-buffer new-win buffer)
+          new-win))))
+;; 直接设置display-buffer-function会影响其他package，可以设置display-buffer-alist。
+;; (setq display-buffer-function 'display-new-buffer)
+(add-to-list 'display-buffer-alist '("\\`\\*magit.*\\'" display-new-buffer))
+(add-to-list 'display-buffer-alist '("\\`\\*sdcv\\*\\'" display-new-buffer))
+(add-to-list 'display-buffer-alist '("\\`\\*bing-google\\*\\'" display-new-buffer))
+;; ================优先纵向分割窗口================

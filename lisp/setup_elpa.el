@@ -17,6 +17,7 @@
 ;; 借自prelude。
 (defvar prelude-packages
   (append '(ace-jump-mode
+            ace-link
             ace-pinyin
             ace-popup-menu
             ac-ispell

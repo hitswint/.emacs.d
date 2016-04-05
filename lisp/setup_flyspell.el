@@ -21,6 +21,7 @@
       (setq ispell-alternate-dictionary (file-truename "~/.english-words")))
   (define-key flyspell-mode-map (kbd "C-,") nil)
   (define-key flyspell-mode-map (kbd "C-.") nil)
+  (define-key flyspell-mode-map (kbd "C-;") nil)
   (smartrep-define-key flyspell-mode-map "M-s"
     '(("M-p" . flyspell-goto-previous-error)
       ("M-n" . flyspell-goto-next-error)

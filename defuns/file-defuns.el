@@ -14,9 +14,9 @@
 ;; dired-mode：M(dired-do-chmod)改变权限；O(dired-do-chown)改变owner；G(dired-do-chgrp)改变group。
 ;; =============以root打开当前文件/文件夹==========
 ;; ===================改变文件编码=================
-(fset 'swint-coding-system
-      [?\C-x return ?r ?u ?t ?f ?- ?8 ?- ?u ?n ?i ?x ?\C-m ?y])
-(global-set-key (kbd "M-s u") 'swint-coding-system)
+(global-set-key (kbd "C-x RET RET") '(lambda ()
+                                       (interactive)
+                                       (revert-buffer-with-coding-system 'utf-8)))
 ;; ===================改变文件编码=================
 ;; =====================dos2unix===================
 (defun save-buffer-with-dos2unix ()

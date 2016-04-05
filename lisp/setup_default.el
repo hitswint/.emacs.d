@@ -44,8 +44,8 @@
 (global-set-key (kbd "C-M-#") 'calculator)
 (global-set-key (kbd "C-M-5") 'w3m)
 (global-set-key (kbd "C-M-6") 'calendar)
+;; C-x SPC 矩形复制模式。
 (global-set-key (kbd "C-;") 'set-mark-command)
-(global-set-key (kbd "C-x ;") 'rectangle-mark-mode)
 (global-set-key [f9] 'menu-bar-mode)
 (global-set-key (kbd "M-S-SPC") 'just-one-space)
 (global-set-key (kbd "C-SPC") nil)

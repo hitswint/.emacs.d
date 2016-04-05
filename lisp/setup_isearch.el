@@ -46,6 +46,8 @@
   (defun isearch-thing ()
     "Search for the current thing."
     (interactive)
+    (if (region-active-p)
+        (deactivate-mark))
     (isearch-yank-string swint-isearch-current-thing))
   (define-key isearch-mode-map (kbd "C-t") 'isearch-thing)
   ;; ==========Isearch thing at point===========

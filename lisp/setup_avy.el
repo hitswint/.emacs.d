@@ -52,6 +52,8 @@
       (call-interactively 'avy-goto-word-0))
      ((= query-char ?\C-c)
       (call-interactively 'avy-goto-word-1))
+     ((= query-char ?\C-i)
+      (call-interactively 'ace-link))
      (t (cond (ace-pinyin-mode
                (ace-pinyin--jump-impl query-char))
               (ace-pinyin-use-avy
@@ -139,5 +141,11 @@ This function obeys `avy-all-windows' setting."
          (swint-avy--read-candidates)
          (avy--style-fn avy-style))))))
 ;; =================ace-pinyin==================
+;; ==================ace-link===================
+(use-package ace-link
+  ;; Enabled at commands.
+  :defer t
+  :commands ace-link)
+;; ==================ace-link===================
 ;; =====================avy========================
 (provide 'setup_avy)
