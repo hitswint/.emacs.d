@@ -11,39 +11,55 @@
   (local-set-key (kbd "d") 'kid-sdcv-to-buffer)
   (local-set-key (kbd "q") 'kill-buffer-and-window)
   (run-hooks 'sdcv-mode-hook))
+(setq sdcv-dictionary-list '("朗道英汉字典5.0"
+                             "朗道汉英字典5.0"
+                             "XDICT英汉辞典"
+                             "XDICT汉英辞典"
+                             "新世纪英汉科技大词典"
+                             "新世纪汉英科技大词典"
+                             "Collins\\ Cobuild\\ English\\ Dictionary"
+                             ))
+(defun sdcv-search-with-dictionary (word dictionary-list)
+  "Search some WORD with dictionary list."
+  (mapconcat (lambda (dict)
+               (replace-regexp-in-string "^对不起，没有发现和.*\n" ""
+                                         (shell-command-to-string
+                                          (format "sdcv -n %s %s"
+                                                  (concat "-u " dict) word))))
+             dictionary-list "\n"))
 (defun swint-sdcv-to-buffer ()
   (interactive)
   (let ((word (swint-get-words-at-point)))
     (cond
      (is-lin
-      (set-buffer (get-buffer-create "*sdcv*"))
+      (unless (equal (buffer-name) "*sdcv*")
+        (switch-to-buffer-other-window "*sdcv*"))
+      (set-buffer "*sdcv*")
       (buffer-disable-undo)
       (erase-buffer)
-      (let ((process (start-process-shell-command "sdcv" "*sdcv*" "sdcv" "-n --data-dir ~/.stardict/dict" word)))
-        (set-process-sentinel
-         process
-         (lambda (process signal)
-           (when (memq (process-status process) '(exit signal))
-             (unless (equal (buffer-name) "*sdcv*")
-               (switch-to-buffer-other-window "*sdcv*"))
-             (yasdcv--output-cleaner:common)
-             (sdcv-mode)
-             (show-all)
-             (indent-region (point-min) (point-max))
-             (goto-char (point-min)))))))
+      (insert (sdcv-search-with-dictionary word sdcv-dictionary-list))
+      (yasdcv--output-cleaner:common)
+      (sdcv-mode)
+      (show-all)
+      (indent-region (point-min) (point-max))
+      (goto-char (point-min)))
      (is-win
       (w32-shell-execute "open" "sdcv" (concat "--data-dir c:/Users/swint/.stardict " word " stardict"))))))
 (defun yasdcv--output-cleaner:common ()
   "从yasdcv借来的函数。"
   (goto-char (point-min))
+  (while (re-search-forward "Found\\ .*\\ items,\\ similar\\ to\\ \\(.*\\)\\.\n-->\\(.*\\)\n-->\\(.*\\)" nil t)
+    (replace-match "*** \\2-(\\1) \n**** \\3"))
+  (goto-char (point-min))
   (while (re-search-forward "-->\\(.*\\)\n-->\\(.*\\)" nil t)
-    (replace-match "*** \\1 (\\2)"))
+    (replace-match "**** \\2"))
+  (goto-char (point-min))
+  (while (re-search-forward "^\n" nil t)
+    (replace-match ""))
   (goto-char (point-min))
   (while (re-search-forward "\n+" nil t)
     (replace-match "\n"))
-  (goto-char (point-min))
-  (when is-lin
-    (kill-line 1)))
+  (goto-char (point-min)))
 ;; ==================stardict====================
 ;; ==================bing-dict===================
 (use-package bing-dict
