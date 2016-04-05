@@ -242,7 +242,6 @@ FORCE-OTHER-WINDOW is ignored."
           new-win))))
 ;; 直接设置display-buffer-function会影响其他package，可以设置display-buffer-alist。
 ;; (setq display-buffer-function 'display-new-buffer)
-(add-to-list 'display-buffer-alist '("\\`\\*magit.*\\'" display-new-buffer))
 (add-to-list 'display-buffer-alist '("\\`\\*sdcv\\*\\'" display-new-buffer))
 (add-to-list 'display-buffer-alist '("\\`\\*bing-google\\*\\'" display-new-buffer))
 ;; ================优先纵向分割窗口================
