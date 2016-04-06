@@ -31,7 +31,7 @@
     (add-hook 'shell-mode-hook 'pcomplete-shell-setup)
     (add-hook 'eshell-mode-hook 'ac-eshell-mode-setup)
     (add-hook 'auto-complete-mode-hook '(lambda ()
-                                          (if (memq (buffer-mode) '(eshell-mode))
+                                          (if (eq (buffer-mode) 'eshell-mode)
                                               (ac-eshell-mode-setup))))
     (defun ac-eshell-mode-setup ()
       (add-to-list 'ac-sources 'ac-source-eshell-pcomplete))
@@ -121,7 +121,7 @@
   :after auto-complete
   :config
   (add-hook 'auto-complete-mode-hook '(lambda ()
-                                        (if (memq (buffer-mode) '(latex-mode))
+                                        (if (eq (buffer-mode) 'latex-mode)
                                             (ac-auctex-setup)))))
 ;; lin上的ac-auctex会自动启闭latex-math-mode，造成`输入公式的方法失效，两种解决方法：
 ;; 1. 去掉(init . LaTeX-math-mode)项，这样会导致有时ac失效。
@@ -156,7 +156,7 @@
   :config
   (add-hook 'org-mode-hook 'ac-org-mode-setup)
   (add-hook 'auto-complete-mode-hook '(lambda ()
-                                        (if (memq (buffer-mode) '(org-mode))
+                                        (if (eq (buffer-mode) 'org-mode)
                                             (ac-org-mode-setup))))
   (defun ac-org-mode-setup ()
     (add-to-list 'ac-sources 'ac-source-math-unicode)))
@@ -187,7 +187,7 @@
   :after auto-complete
   :config
   (add-hook 'auto-complete-mode-hook '(lambda ()
-                                        (if (memq (buffer-mode) '(octave-mode))
+                                        (if (eq (buffer-mode) 'octave-mode)
                                             (add-to-list 'ac-sources 'ac-source-octave)))))
 ;; ============auto-complete-octave============
 ;; ===================shell====================
@@ -201,7 +201,7 @@
   (setq comint-process-echoes nil)
   (add-hook 'shell-mode-hook 'ac-rlc-setup-sources)
   (add-hook 'auto-complete-mode-hook '(lambda ()
-                                        (if (memq (buffer-mode) '(shell-mode))
+                                        (if (eq (buffer-mode) 'shell-mode)
                                             (ac-rlc-setup-sources)))))
 ;; ===================shell====================
 ;; ===========auto-complete-config=============

@@ -114,7 +114,7 @@
 ;;   (try-require 'setup_wicd t)
 ;;   (try-require 'setup_windows t)
 ;;   (try-require 'setup_completion t)
-;;   (try-require 'setup_eshell t)
+;;   (try-require 'setup_shell t)
 ;;   (try-require 'setup_packages t)
 ;;   ;; Report package statistics.
 ;;   (message "\n\nShowing package initialization statistics:\n%s"
@@ -171,6 +171,6 @@
 (require 'setup_wicd)
 (require 'setup_windows)
 (require 'setup_completion)
-(require 'setup_eshell)
+(require 'setup_shell)
 (require 'setup_packages)
 ;; =================END====================

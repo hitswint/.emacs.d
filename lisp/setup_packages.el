@@ -518,10 +518,11 @@ is named like ODF with the extension turned to pdf."
   :config
   (defun helm-bm-action-switch-to-buffer (candidate)
     "Switch to buffer of CANDIDATE."
-    (helm-bm-with-candidate candidates
-      (helm-switch-persp/buffer bufname)
-      (goto-char (point-min))
-      (forward-line (1- lineno)))))
+    (helm-bm-with-candidate
+     candidates
+     (helm-switch-persp/buffer bufname)
+     (goto-char (point-min))
+     (forward-line (1- lineno)))))
 ;; ====================helm-bm=====================
 ;; ================operate-on-number===============
 ;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字。
