@@ -1,7 +1,8 @@
 # Some aliases.
-alias | sed -E "s/^(.*)='?(.*)/alias \1 \2/" | sed -E "s/'$//" >~/.eshell/alias
+# 将zsh的alias导入eshell。
+alias | sed -E "s/^(.*)='?(.*)/alias \1 \2/" | sed -E "s/'$//" >~/.emacs.d/eshell/alias
 # Compatible with bash.
-# alias | sed -E "s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;" >~/.eshell/alias
+# alias | sed -E "s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;" >~/.emacs.d/eshell/alias
 # 不将以空格开始的命令记入历史。
 setopt hist_ignore_space
 alias cd=' cd'
