@@ -54,7 +54,6 @@
               (imenu-add-menubar-index)
               (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-parse-all)
               (define-key LaTeX-mode-map (kbd "C-c f") 'TeX-font)
-              (define-key LaTeX-mode-map (kbd "TAB") 'TeX-complete-symbol)
               (define-key LaTeX-mode-map (kbd "C-q") 'swint-kill-tex-buffer)
               (define-key LaTeX-mode-map (kbd "C-c C-x C-v") 'iimage-mode)
               (define-key LaTeX-mode-map (kbd "C-c C-x p") 'preview-at-point)
@@ -159,6 +158,10 @@
   )
 ;; =====================auctex=====================
 ;; =====================outline====================
+(use-package outline-magic
+  ;; Enabled at commands.
+  :defer t
+  :commands outline-cycle)
 (use-package outline
   ;; Enabled in latex-mode.
   :defer t
@@ -166,17 +169,42 @@
   :init
   (add-hook 'TeX-mode-hook 'outline-minor-mode)
   :config
-  ;; (setq outline-minor-mode-prefix "\C-o")
   (add-hook 'outline-minor-mode-hook
             (lambda ()
-              (use-package outline-magic)
-              (define-key outline-minor-mode-map (kbd "C-M-i") 'outline-cycle)
               (define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
               (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
               (smartrep-define-key outline-minor-mode-map "C-c"
                 '(("C-u" . outline-up-heading)
                   ("C-b" . outline-backward-same-level)
-                  ("C-f" . outline-forward-same-level))))))
+                  ("C-f" . outline-forward-same-level)))
+              (define-key outline-minor-mode-map "\C-i" '(menu-item "maybe-latex/hide-show" nil :filter
+                                                                    (lambda (&rest _)
+                                                                      (when (latex//header-at-point)
+                                                                        #'outline-cycle))))))
+  ;; Copied from latex-extra.
+  (defcustom latex/section-hierarchy
+    '("\\\\headerbox\\_>"
+      "\\\\subparagraph\\*?\\_>"
+      "\\\\paragraph\\*?\\_>"
+      "\\\\subsubsection\\*?\\_>"
+      "\\\\subsection\\*?\\_>"
+      "\\\\section\\*?\\_>"
+      "\\\\chapter\\*?\\_>"
+      "\\\\part\\*?\\_>"
+      ;; "\\\\maketitle\\_>"
+      "\\\\appendix\\_>\\|\\\\\\(begin\\|end\\){document}"
+      "\\\\documentclass\\_>")
+    "List of regexps which define what a section can be.Ordered from deepest to highest level.")
+  (defun latex/section-regexp ()
+    "Return a regexp matching anything in `latex/section-hierarchy'."
+    (format "^\\(%s\\)" (mapconcat 'identity latex/section-hierarchy "\\|")))
+  (defun latex//header-at-point ()
+    "Return header under point or nil, as per `latex/section-hierarchy'."
+    (save-match-data
+      (save-excursion
+        (goto-char (line-beginning-position))
+        (when (looking-at (latex/section-regexp))
+          (match-string-no-properties 0))))))
 ;; =====================outline====================
 ;; =================auctex-latexmk=================
 ;; 安装了texlive2009及更高的版本之后，默认就有latexmk，不用做任何改变。只需要加入.latexmkrc的配置文件和这个auctex-latexmk。

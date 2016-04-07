@@ -20,7 +20,6 @@
   :defer t
   :bind ("C-M-1" . eshell)
   :config
-  (message "eshell")
   (add-hook 'eshell-mode-hook (lambda()
                                 (outline-minor-mode 1)
                                 (setq outline-regexp "^[^#$\n]* [#>]+ "
@@ -32,4 +31,15 @@
                                 (define-key eshell-mode-map (kbd "C-M-r") 'helm-eshell-history)
                                 (define-key eshell-mode-map (kbd "M-s") nil))))
 ;; =====================eshell=====================
+;; ==============eshell-prompt-extras==============
+(use-package eshell-prompt-extras
+  ;; Enabled after features.
+  :defer t
+  :after eshell
+  :config
+  (with-eval-after-load "esh-opt"
+    (autoload 'epe-theme-lambda "eshell-prompt-extras")
+    (setq eshell-highlight-prompt nil
+          eshell-prompt-function 'epe-theme-lambda)))
+;; ==============eshell-prompt-extras==============
 (provide 'setup_shell)

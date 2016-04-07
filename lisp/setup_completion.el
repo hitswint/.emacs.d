@@ -26,9 +26,13 @@
   ;; 放在auto-complete中，使其只有当ac开启时才能够执行。
   (use-package pcomplete
     ;; Enabled after features.
+    :defer t
     :after auto-complete
     :config
     (add-hook 'shell-mode-hook 'pcomplete-shell-setup)
+    (add-hook 'auto-complete-mode-hook '(lambda ()
+                                          (if (eq (buffer-mode) 'shell-mode)
+                                              (pcomplete-shell-setup))))
     (add-hook 'eshell-mode-hook 'ac-eshell-mode-setup)
     (add-hook 'auto-complete-mode-hook '(lambda ()
                                           (if (eq (buffer-mode) 'eshell-mode)
@@ -66,6 +70,7 @@
 ;; =========auto-complete-c-headers============
 (use-package auto-complete-c-headers
   ;; Enabled after features.
+  :defer t
   :after auto-complete
   :config
   (add-hook 'c++-mode-hook 'ac-c-header-init)
@@ -88,6 +93,7 @@
 ;; ===========auto-complete-clang==============
 (use-package auto-complete-clang
   ;; Enabled after features.
+  :defer t
   :after auto-complete
   :config
   (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
@@ -118,8 +124,10 @@
 ;; ================ac-auctex===================
 (use-package auto-complete-auctex
   ;; Enabled after features.
+  :defer t
   :after auto-complete
   :config
+  (add-hook 'LaTeX-mode-hook 'ac-auctex-setup)
   (add-hook 'auto-complete-mode-hook '(lambda ()
                                         (if (eq (buffer-mode) 'latex-mode)
                                             (ac-auctex-setup)))))
@@ -152,6 +160,7 @@
 ;; 在org-mode中使用ac-math激活unicode输入。
 (use-package ac-math
   ;; Enabled after features.
+  :defer t
   :after auto-complete
   :config
   (add-hook 'org-mode-hook 'ac-org-mode-setup)
@@ -184,11 +193,15 @@
 (use-package auto-complete-octave
   ;; Enabled after features.
   :load-path "site-lisp/auto-complete-octave/"
+  :defer t
   :after auto-complete
   :config
+  (add-hook 'octave-mode-hook 'ac-octave-mode-setup)
   (add-hook 'auto-complete-mode-hook '(lambda ()
                                         (if (eq (buffer-mode) 'octave-mode)
-                                            (add-to-list 'ac-sources 'ac-source-octave)))))
+                                            (ac-octave-mode-setup))))
+  (defun ac-octave-mode-setup ()
+    (add-to-list 'ac-sources 'ac-source-octave)))
 ;; ============auto-complete-octave============
 ;; ===================shell====================
 ;; 下面这句会导致octave运行时emacs hang。
@@ -196,6 +209,7 @@
 ;; prevent echoed commands from being printed (t).
 (use-package readline-complete
   ;; Enabled after features.
+  :defer t
   :after auto-complete
   :config
   (setq comint-process-echoes nil)
@@ -207,6 +221,7 @@
 ;; ===========auto-complete-config=============
 (use-package auto-complete-config
   ;; Enabled after features.
+  :defer t
   :after auto-complete
   :config
   ;; ============ac-modes============

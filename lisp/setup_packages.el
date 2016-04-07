@@ -72,7 +72,8 @@
   :config
   (bind-key "C-M-q" 'bc-previous)
   (define-key emacs-lisp-mode-map "\e\C-q" nil)
-  (define-key lisp-interaction-mode-map "\e\C-q" nil))
+  (define-key lisp-interaction-mode-map "\e\C-q" nil)
+  (define-key prog-mode-map "\e\C-q" nil))
 ;; 删除breadcrumb.el源文件中(message "breadcrumb bookmark is set for the current position.")，使bc-set不出现提示。
 ;; (global-set-key (kbd "C-x C-/") 'bc-list) ;; C-x M-j for the bookmark menu list
 ;; (global-set-key (kbd "C-x C-/") 'bc-local-previous) ;; M-up-arrow for local previous

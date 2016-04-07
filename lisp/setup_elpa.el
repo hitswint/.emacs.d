@@ -65,6 +65,7 @@
             elmacro
             emms
             epl
+            eshell-prompt-extras
             expand-region
             f
             flx

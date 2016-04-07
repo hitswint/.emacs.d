@@ -1,8 +1,8 @@
 ;; =====================avy========================
 (use-package avy
   ;; Enabled at commands.
-  :after ace-pinyin
   :defer t
+  :after ace-pinyin
   :bind (:map isearch-mode-map
               ("C-h" . avy-isearch))
   :config
