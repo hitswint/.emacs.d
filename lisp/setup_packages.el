@@ -738,4 +738,36 @@ is named like ODF with the extension turned to pdf."
          ("C-c ." . dumb-jump-back)
          ("C-c /" . dumb-jump-quick-look)))
 ;; ==================dumb-jump=====================
+;; ===================diff-hl======================
+(use-package diff-hl
+  ;; Enabled at idle.
+  :defer 2
+  :commands (diff-hl-previous-hunk diff-hl-next-hunk diff-hl-revert-hunk)
+  :init
+  (smartrep-define-key global-map "C-x v"
+    '(("," . diff-hl-previous-hunk)
+      ("." . diff-hl-next-hunk)
+      ("/" . diff-hl-revert-hunk)))
+  :config
+  (global-diff-hl-mode)
+  (add-hook 'prog-mode-hook 'diff-hl-flydiff-mode)
+  (add-hook 'text-mode-hook 'diff-hl-flydiff-mode)
+  (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+  (set-face-attribute 'diff-hl-insert nil
+                      :foreground "gray"
+                      :background "dark green")
+  (set-face-attribute 'diff-hl-delete nil
+                      :foreground "gray"
+                      :background "dark red")
+  (set-face-attribute 'diff-hl-change nil
+                      :foreground "gray"
+                      :background "dark blue"))
+;; ===================diff-hl======================
+;; =============evil-nerd-commenter================
+(use-package evil-nerd-commenter
+  ;; Enabled at commands.
+  :defer t
+  :bind ("M-:" . evilnc-comment-or-uncomment-lines))
+;; =============evil-nerd-commenter================
 (provide 'setup_packages)

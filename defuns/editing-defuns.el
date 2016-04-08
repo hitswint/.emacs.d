@@ -152,7 +152,7 @@ region\) apply comment-or-uncomment to the current line"
     (if (< (point) (mark))
         (comment-or-uncomment-region (point) (mark))
       (comment-or-uncomment-region (mark) (point)))))
-(global-set-key (kbd "M-:") 'comment-or-uncomment-region-or-line)
+(global-set-key (kbd "M-s M-;") 'comment-or-uncomment-region-or-line)
 ;; ==============注释/反注释-行或区域==============
 ;; =============smart-beginning-of-line============
 ;; "smart" home, i.e., home toggles b/w 1st non-blank character and 1st column

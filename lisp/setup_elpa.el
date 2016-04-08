@@ -51,6 +51,7 @@
             company-c-headers
             company-quickhelp
             dash
+            diff-hl
             diminish
             dired-details
             dired-narrow
@@ -66,6 +67,7 @@
             emms
             epl
             eshell-prompt-extras
+            evil-nerd-commenter
             expand-region
             f
             flx
