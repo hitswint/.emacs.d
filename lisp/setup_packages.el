@@ -502,12 +502,9 @@ is named like ODF with the extension turned to pdf."
 (use-package bm
   ;; Enabled at commands.
   :defer t
-  :commands (bm-toggle bm-previous bm-next)
-  :init
-  (smartrep-define-key global-map "C-x"
-    '(("C-;" . bm-toggle)
-      ("C-," . bm-previous)
-      ("C-." . bm-next)))
+  :bind (("C-x C-;" . bm-toggle)
+         ("C-x C-," . bm-previous)
+         ("C-x C-." . bm-next))
   :config
   (setq bm-cycle-all-buffers nil)
   (setq bm-highlight-style 'bm-highlight-only-fringe))
@@ -742,17 +739,21 @@ is named like ODF with the extension turned to pdf."
 (use-package diff-hl
   ;; Enabled at idle.
   :defer 2
-  :commands (diff-hl-previous-hunk diff-hl-next-hunk diff-hl-revert-hunk)
-  :init
-  (smartrep-define-key global-map "C-x v"
+  :config
+  (smartrep-define-key global-map "M-s"
     '(("," . diff-hl-previous-hunk)
       ("." . diff-hl-next-hunk)
-      ("/" . diff-hl-revert-hunk)))
-  :config
+      ("/" . diff-hl-revert-hunk)
+      (";" . diff-hl-mark-hunk)))
   (global-diff-hl-mode)
   (add-hook 'prog-mode-hook 'diff-hl-flydiff-mode)
   (add-hook 'text-mode-hook 'diff-hl-flydiff-mode)
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (eq major-mode 'dired-mode)
+        (diff-hl-dired-mode)
+        (revert-buffer))))
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
   (set-face-attribute 'diff-hl-insert nil
                       :foreground "gray"

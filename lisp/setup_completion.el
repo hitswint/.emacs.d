@@ -31,11 +31,11 @@
     :config
     (add-hook 'shell-mode-hook 'pcomplete-shell-setup)
     (add-hook 'auto-complete-mode-hook '(lambda ()
-                                          (if (eq (buffer-mode) 'shell-mode)
+                                          (if (eq major-mode 'shell-mode)
                                               (pcomplete-shell-setup))))
     (add-hook 'eshell-mode-hook 'ac-eshell-mode-setup)
     (add-hook 'auto-complete-mode-hook '(lambda ()
-                                          (if (eq (buffer-mode) 'eshell-mode)
+                                          (if (eq major-mode 'eshell-mode)
                                               (ac-eshell-mode-setup))))
     (defun ac-eshell-mode-setup ()
       (add-to-list 'ac-sources 'ac-source-eshell-pcomplete))
@@ -49,21 +49,22 @@
 (use-package ac-ispell
   ;; Enabled at commands.
   :defer t
-  :after auto-complete
-  :commands swint-auto-complete-ispell
+  :bind ("M-?" . swint-auto-complete-ispell)
   :config
-  (bind-key "M-U" 'swint-auto-complete-ispell ac-completing-map)
-  (defun swint-auto-complete-ispell ()
+  (bind-key "M-?" 'hippie-expand ac-completing-map)
+  (defun swint-auto-complete-ispell (&optional arg)
     (interactive)
-    (if (featurep 'hippie-exp)
-        (he-reset-string))
-    (unless (or (boundp 'ac-source-ispell)
-                (boundp 'ac-source-ispell-fuzzy))
-      (ac-ispell-setup))
     (if (featurep 'company)
         (company-abort))
-    (auto-complete '(ac-source-ispell-fuzzy
-                     ac-source-ispell))))
+    (cond
+     ((equal last-command 'hippie-expand)
+      (he-reset-string)
+      (hippie-expand arg))
+     ((equal last-command 'swint-auto-complete-ispell)
+      (hippie-expand arg))
+     (t (auto-complete '(ac-source-ispell-fuzzy
+                         ac-source-ispell)))))
+  (ac-ispell-setup))
 ;; 也可以加下句，使用ac-source-dictionary补全单词。
 ;; (add-to-list 'ac-dictionary-files "~/.english-words")
 ;; ==================ac-ispell=================
@@ -76,8 +77,8 @@
   (add-hook 'c++-mode-hook 'ac-c-header-init)
   (add-hook 'c-mode-hook 'ac-c-header-init)
   (add-hook 'auto-complete-mode-hook '(lambda ()
-                                        (if (memq (buffer-mode) '(c++-mode
-                                                                  c-mode))
+                                        (if (memq major-mode '(c++-mode
+                                                               c-mode))
                                             (ac-c-header-init))))
   (defun ac-c-header-init ()
     (add-to-list 'ac-sources 'ac-source-c-headers)
@@ -98,8 +99,8 @@
   :config
   (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
   (add-hook 'auto-complete-mode-hook '(lambda ()
-                                        (if (memq (buffer-mode) '(c++-mode
-                                                                  c-mode))
+                                        (if (memq major-mode '(c++-mode
+                                                               c-mode))
                                             (ac-cc-mode-setup))))
   (defun ac-cc-mode-setup ()
     (setq ac-sources
@@ -129,7 +130,7 @@
   :config
   (add-hook 'LaTeX-mode-hook 'ac-auctex-setup)
   (add-hook 'auto-complete-mode-hook '(lambda ()
-                                        (if (eq (buffer-mode) 'latex-mode)
+                                        (if (eq major-mode 'latex-mode)
                                             (ac-auctex-setup)))))
 ;; lin上的ac-auctex会自动启闭latex-math-mode，造成`输入公式的方法失效，两种解决方法：
 ;; 1. 去掉(init . LaTeX-math-mode)项，这样会导致有时ac失效。
@@ -165,7 +166,7 @@
   :config
   (add-hook 'org-mode-hook 'ac-org-mode-setup)
   (add-hook 'auto-complete-mode-hook '(lambda ()
-                                        (if (eq (buffer-mode) 'org-mode)
+                                        (if (eq major-mode 'org-mode)
                                             (ac-org-mode-setup))))
   (defun ac-org-mode-setup ()
     (add-to-list 'ac-sources 'ac-source-math-unicode)))
@@ -198,7 +199,7 @@
   :config
   (add-hook 'octave-mode-hook 'ac-octave-mode-setup)
   (add-hook 'auto-complete-mode-hook '(lambda ()
-                                        (if (eq (buffer-mode) 'octave-mode)
+                                        (if (eq major-mode 'octave-mode)
                                             (ac-octave-mode-setup))))
   (defun ac-octave-mode-setup ()
     (add-to-list 'ac-sources 'ac-source-octave)))
@@ -215,7 +216,7 @@
   (setq comint-process-echoes nil)
   (add-hook 'shell-mode-hook 'ac-rlc-setup-sources)
   (add-hook 'auto-complete-mode-hook '(lambda ()
-                                        (if (eq (buffer-mode) 'shell-mode)
+                                        (if (eq major-mode 'shell-mode)
                                             (ac-rlc-setup-sources)))))
 ;; ===================shell====================
 ;; ===========auto-complete-config=============
@@ -284,16 +285,8 @@
 (use-package hippie-exp
   ;; Enabled at commands.
   :defer t
-  :bind ("M-?" . swint-hippie-expand-with-prefix)
+  :commands hippie-expand
   :config
-  (defun swint-hippie-expand-with-prefix (&optional arg)
-    (interactive)
-    (hippie-expand arg)
-    (condition-case e
-        (smartrep-read-event-loop
-         '(("M-?" . hippie-expand)
-           ("M-/" . swint-auto-complete-ispell)))
-      (quit nil)))
   ;; 打开.english-words方式进行补全。
   (setq hippie-expand-try-functions-list
         '(try-expand-by-dict
