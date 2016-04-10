@@ -502,25 +502,29 @@ is named like ODF with the extension turned to pdf."
 (use-package bm
   ;; Enabled at commands.
   :defer t
-  :bind (("C-x C-;" . bm-toggle)
-         ("C-x C-," . bm-previous)
-         ("C-x C-." . bm-next))
+  :commands (bm-toggle bm-previous bm-next)
+  :init
+  (smartrep-define-key global-map "C-x"
+    '(("C-'" . bm-toggle)
+      ("'" . bm-previous)
+      ("\"" . bm-next)))
   :config
   (setq bm-cycle-all-buffers nil)
   (setq bm-highlight-style 'bm-highlight-only-fringe))
 ;; =======================bm=======================
 ;; ====================helm-bm=====================
 (use-package helm-bm
+  ;; Enabled at commands.
   :defer t
   :bind ("C-M-'" . helm-bm)
   :config
   (defun helm-bm-action-switch-to-buffer (candidate)
     "Switch to buffer of CANDIDATE."
     (helm-bm-with-candidate
-     candidates
-     (helm-switch-persp/buffer bufname)
-     (goto-char (point-min))
-     (forward-line (1- lineno)))))
+        candidates
+      (helm-switch-persp/buffer bufname)
+      (goto-char (point-min))
+      (forward-line (1- lineno)))))
 ;; ====================helm-bm=====================
 ;; ================operate-on-number===============
 ;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字。
@@ -544,10 +548,12 @@ is named like ODF with the extension turned to pdf."
 ;; ================operate-on-number===============
 ;; =================goto-last-change===============
 (use-package goto-chg
-  ;; Enabled at idle.
-  :defer 2
+  ;; Enabled at commands.
+  :defer t
+  :bind ("C-x C-m" . swint-goto-last-change-with-prefix)
+  :init
+  (define-key ctl-x-map (kbd "<return>") mule-keymap)
   :config
-  (bind-key "C-x C-/" 'swint-goto-last-change-with-prefix)
   (defun swint-goto-last-change-with-prefix (&optional arg)
     (interactive)
     (goto-last-change arg)
@@ -559,8 +565,8 @@ is named like ODF with the extension turned to pdf."
     ;; finalization code is run.
     (condition-case e
         (smartrep-read-event-loop
-         '(("C-/" . goto-last-change)
-           ("C-M-/" . goto-last-change-reverse)))
+         '(("C-m" . goto-last-change)
+           ("C-M-m" . goto-last-change-reverse)))
       (quit nil))
     ;; (finalize-event-loop)
     ))
@@ -740,11 +746,11 @@ is named like ODF with the extension turned to pdf."
   ;; Enabled at idle.
   :defer 2
   :config
-  (smartrep-define-key global-map "M-s"
-    '(("," . diff-hl-previous-hunk)
-      ("." . diff-hl-next-hunk)
-      ("/" . diff-hl-revert-hunk)
-      (";" . diff-hl-mark-hunk)))
+  (smartrep-define-key global-map "C-x"
+    '(("C-," . diff-hl-previous-hunk)
+      ("C-." . diff-hl-next-hunk)
+      ("C-/" . diff-hl-revert-hunk)
+      ("C-;" . diff-hl-mark-hunk)))
   (global-diff-hl-mode)
   (add-hook 'prog-mode-hook 'diff-hl-flydiff-mode)
   (add-hook 'text-mode-hook 'diff-hl-flydiff-mode)
