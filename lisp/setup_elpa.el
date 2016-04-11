@@ -109,6 +109,7 @@
             magit-popup
             math-symbol-lists
             matlab-mode
+            mew
             multifiles
             multiple-cursors
             names
