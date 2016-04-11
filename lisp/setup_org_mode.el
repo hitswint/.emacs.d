@@ -167,10 +167,10 @@
   (global-set-key (kbd "C-x P") 'my-screenshot)
   ;; ===================截图====================
   ;; ================org插入截图================
-  ;; 1. suspend current emacs window
-  ;; 2. call scrot to capture the screen and save as a file in $HOME/.emacs.img/
-  ;; 3. put the png file reference in current buffer, like this:  [[/home/path/.emacs.img/1q2w3e.png]]
-  (add-hook 'org-mode-hook 'iimage-mode) ; enable iimage-mode for org-mode
+  ;; 如果有#+ATTR_LATEX: :width 100则设置为图片宽度为100，否则显示原尺寸。
+  ;; 设置尺寸之后使用org-redisplay-inline-images(C-c C-x C-M-v)更新图片。
+  (setq org-image-actual-width nil)
+  (add-hook 'org-mode-hook 'iimage-mode)
   (add-hook 'org-mode-hook 'org-display-inline-images)
   (define-key org-mode-map (kbd "C-c C-x C-v") '(lambda ()
                                                   (interactive)
