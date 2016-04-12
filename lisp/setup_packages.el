@@ -1,11 +1,11 @@
-;; =====================SERVER=====================
+;; =====================server=====================
 (use-package server
   ;; Enabled at idle.
   :defer 2
   :config
   (unless (server-running-p)
     (server-start)))
-;; =====================SERVER=====================
+;; =====================server=====================
 ;; ====================文件加密====================
 (use-package epa-file
   ;; Enabled at idle.
@@ -45,7 +45,10 @@
 (use-package expand-region
   ;; Enabled at commands.
   :defer t
-  :bind ("C-M-;" . er/expand-region))
+  :bind ("C-M-;" . er/expand-region)
+  :config
+  (setq expand-region-contract-fast-key ":")
+  (setq expand-region-reset-fast-key "'"))
 ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end。
 ;; =================expand-region==================
 ;; ===================回收站=======================
@@ -299,7 +302,7 @@
   :config
   (setq imenu-anywhere-delimiter-helm " | "))
 ;; ===================imenu-anywhere===============
-;; ====================fcitx.el====================
+;; ======================fcitx=====================
 (use-package fcitx
   ;; Enabled automatically.
   :if is-lin
@@ -314,7 +317,7 @@
   ;; (fcitx-aggressive-minibuffer-turn-on)
   ;; 会导致tramp问题，使需要在minibuffer输入密码时hang。
   )
-;; ====================fcitx.el====================
+;; ======================fcitx=====================
 ;; ================aggressive-indent===============
 (use-package aggressive-indent
   ;; Enabled at idle.
@@ -459,15 +462,22 @@ is named like ODF with the extension turned to pdf."
 ;; vlf把大文件分成多个batch，以改善性能。
 (use-package vlf
   ;; Enabled at idle.
-  :defer 2
+  :defer t
+  :bind-keymap ("C-c C-v" . vlf-mode-map)
   :init
   ;; Enable vlf when opening files bigger than 100MB.
   (setq large-file-warning-threshold 100000000)
   :config
   (use-package vlf-setup)
+  (define-key vlf-prefix-map "\C-c\C-v" vlf-mode-map)
+  (smartrep-define-key vlf-mode-map ""
+    '(("n" . vlf-next-batch)
+      ("p" . vlf-prev-batch)
+      ("<" . vlf-beginning-of-file)
+      (">" . vlf-end-of-file)
+      ("RET" . dired-vlf)))
   (custom-set-variables '(vlf-application 'dont-ask))
-  (add-to-list 'vlf-forbidden-modes-list 'pdf-view-mode)
-  (define-key vlf-prefix-map "\C-c\C-v" vlf-mode-map))
+  (add-to-list 'vlf-forbidden-modes-list 'pdf-view-mode))
 ;; C-c C-v n and C-c C-v p move batch by batch.
 ;; C-c C-v SPC displays batch starting from current point.
 ;; C-c C-v [ and C-c C-v ] take you to the beginning and end of file respectively.
@@ -488,7 +498,9 @@ is named like ODF with the extension turned to pdf."
   (global-set-key [remap kill-ring-save] 'easy-kill)
   (global-set-key [remap mark-sexp] 'easy-mark)
   :config
-  (define-key easy-kill-base-map (kbd "C-w") 'easy-kill-region))
+  (define-key easy-kill-base-map (kbd "C-w") 'easy-kill-region)
+  (define-key easy-kill-base-map (kbd ",") 'easy-kill-shrink)
+  (define-key easy-kill-base-map (kbd ".") 'easy-kill-expand))
 ;; M-w ?: help 查看M-w prefix快捷键。
 ;; =====================easy-kill==================
 ;; ======================smex======================
@@ -521,10 +533,10 @@ is named like ODF with the extension turned to pdf."
   (defun helm-bm-action-switch-to-buffer (candidate)
     "Switch to buffer of CANDIDATE."
     (helm-bm-with-candidate
-        candidates
-      (helm-switch-persp/buffer bufname)
-      (goto-char (point-min))
-      (forward-line (1- lineno)))))
+     candidates
+     (helm-switch-persp/buffer bufname)
+     (goto-char (point-min))
+     (forward-line (1- lineno)))))
 ;; ====================helm-bm=====================
 ;; ================operate-on-number===============
 ;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字。

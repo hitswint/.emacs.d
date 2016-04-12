@@ -33,6 +33,7 @@
   (add-to-list 'desktop-minor-mode-table '(undo-tree-mode nil))
   (add-to-list 'desktop-minor-mode-table '(TeX-PDF-mode nil))
   (add-to-list 'desktop-minor-mode-table '(org-cdlatex-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(org-indent-mode nil))
   (add-to-list 'desktop-minor-mode-table '(iimage-mode nil))
   (add-to-list 'desktop-minor-mode-table '(wrap-region-mode nil))
   (add-to-list 'desktop-minor-mode-table '(paredit-everywhere-mode nil))

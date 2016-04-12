@@ -25,6 +25,7 @@
                ;; (setq org-startup-indented t)
                (setq truncate-lines nil)
                (setq org-hide-leading-stars t)
+               (setq org-startup-folded 'content)
                (setq org-imenu-depth 8)
                (turn-on-font-lock)
                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
