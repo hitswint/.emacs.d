@@ -3,10 +3,17 @@
   ;; Enabled in org-mode.
   :defer t
   :config
+  ;; =================Appearance================
   (set-face-attribute 'org-level-5 nil :bold nil :foreground "cyan" :height 1.0)
   (set-face-attribute 'org-level-6 nil :bold nil :foreground "magenta" :height 1.0)
   (set-face-attribute 'org-level-7 nil :bold nil :foreground "purple" :height 1.0)
   (set-face-attribute 'org-level-8 nil :bold nil :foreground "gray" :height 1.0)
+  (setq org-hide-emphasis-markers t)
+  (font-lock-add-keywords 'org-mode
+                          '(("^ +\\([-*]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  ;; =================Appearance================
+  ;; =================Capture===================
   (global-set-key (kbd "M-s o") nil)
   (global-set-key (kbd "M-s o l") 'org-store-link)
   (global-set-key (kbd "M-s o c") 'org-capture)
@@ -17,6 +24,8 @@
           ("c" "Computer" entry (file+headline "~/org/notes-computer.org" "Computer") "* %? %U %^g")
           ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others") "* %? %U %^g")
           ("j" "Journal" entry (file+datetree "~/org/journal.org.gpg") "* %? %U")))
+  ;; =================Capture===================
+  ;; ===============Keybindings=================
   ;; %^{Description}
   (add-hook 'org-mode-hook
             '(lambda ()
@@ -53,6 +62,7 @@
                (define-key org-mode-map [(control \#)] nil)
                (define-key org-mode-map [(control tab)] nil)
                (define-key org-mode-map [(control \')] nil)))
+  ;; ===============Keybindings=================
   ;; ===================GTD=====================
   ;; Do not show title of task in mode-line when using org-clock.
   (setq org-clock-heading-function
