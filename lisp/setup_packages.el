@@ -294,7 +294,11 @@
               (setq hungry-delete-mode nil))))
 ;; ===================hungry-delete================
 ;; ===================imenu-anywhere===============
-;; imenu-anywhere与imenu额区别在于，前者包括所有打开的相同mode的buffer，而后者只限于当前buffer。
+(use-package imenu
+  ;; Enabled at commands.
+  :defer t
+  :commands imenu-choose-buffer-index)
+;; imenu-anywhere包括所有打开的相同mode的buffer，imenu限于当前buffer。
 (use-package imenu-anywhere
   ;; Enabled at commands.
   :defer t
@@ -741,6 +745,10 @@ is named like ODF with the extension turned to pdf."
     '(("," . swint-ahs-backward)
       ("." . swint-ahs-forward)
       ("/" . ahs-edit-mode)))
+  (define-key auto-highlight-symbol-mode-map (kbd "M-<left>") nil)
+  (define-key auto-highlight-symbol-mode-map (kbd "M-<right>") nil)
+  (define-key auto-highlight-symbol-mode-map (kbd "M-S-<left>") nil)
+  (define-key auto-highlight-symbol-mode-map (kbd "M-S-<right>") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "M--") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "C-x C-'") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "C-x C-a") nil))

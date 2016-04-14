@@ -53,8 +53,9 @@
               (define-key inferior-octave-mode-map [down] 'comint-next-input)
               (define-key inferior-octave-mode-map (kbd "M-.") nil)
               (define-key inferior-octave-mode-map (kbd "C-h") nil)))
-  (setq octave-comment-start "%% ")       ;使用%注释
-  (setq octave-comment-char 37)           ;使用%注释
+  ;; 使用%注释。
+  (setq octave-comment-start "%")
+  (setq octave-comment-char ?%)
   ;; 退出octave时关闭buffer。
   (add-hook 'inferior-octave-mode-hook 'kill-shell-buffer-after-exit t))
 ;; ======================octave====================

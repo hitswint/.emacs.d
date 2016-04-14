@@ -113,9 +113,12 @@
             multifiles
             multiple-cursors
             names
+            navi-mode
             nyan-mode
             operate-on-number
             outline-magic
+            outorg
+            outshine
             paredit
             paredit-everywhere
             parsebib

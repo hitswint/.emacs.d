@@ -43,13 +43,11 @@
                (define-key org-mode-map (kbd "C-c i") 'org-open-at-point-with-apps)
                (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-org-open-at-point t)))
                (define-key org-mode-map (kbd "C-c C-x p") 'org-preview-latex-fragment)
-               (define-key org-mode-map (kbd "C-M-i") 'org-cycle)
                (define-key org-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
                (define-key org-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
-               (smartrep-define-key org-mode-map "C-c"
-                 '(("C-u" . outline-up-heading)
-                   ("C-b" . org-backward-heading-same-level)
-                   ("C-f" . org-forward-heading-same-level)))
+               (define-key org-mode-map (kbd "C-c C-u") 'outline-up-heading)
+               (define-key org-mode-map (kbd "C-c C-b") 'org-backward-heading-same-level)
+               (define-key org-mode-map (kbd "C-c C-f") 'org-forward-heading-same-level)
                (define-key org-mode-map (kbd "C-a") nil)
                (define-key org-mode-map (kbd "C-e") 'end-of-line)
                (define-key org-mode-map (kbd "C-j") nil)
@@ -651,4 +649,121 @@ depending on the last command issued."
       (switch-to-buffer-other-window (current-buffer))
       (swint-org-annotate-file (abbreviate-file-name (buffer-file-name)))))))
 ;; =================org标注工具====================
+;; ==============org-speed-commands================
+;; Activate single letter commands at beginning of a headline.
+(setq org-use-speed-commands t)
+;; ? org-speed-command-help
+;; n/p/f/b/u navigation commands
+;; U/D/R/L org-shiftmeta up/down/right/left
+;; c org-cycle
+;; C org-shifttab
+;; @ org-mark-subtree
+;; i C-RET
+;; w org-refile
+;; I/O org-clock-in/out
+;; t org-todo
+;; ;/0/1/2/3 org-priority/A/B/C
+;; v org-agenda
+;; : org-set-tags-command
+;; ==============org-speed-commands================
+;; =====================outline====================
+(use-package outline-magic
+  ;; Enabled at commands.
+  :defer t
+  :commands outline-cycle)
+(use-package outline
+  ;; Enabled in latex-mode.
+  :defer t
+  :commands outline-minor-mode
+  :init
+  (add-hook 'TeX-mode-hook 'outline-minor-mode)
+  (add-hook 'emacs-lisp-mode-hook 'outline-minor-mode)
+  (add-hook 'picolisp-mode-hook 'outline-minor-mode)
+  (add-hook 'clojure-mode-hook 'outline-minor-mode)
+  (add-hook 'ess-mode-hook 'outline-minor-mode)
+  (add-hook 'ledger-mode-hook 'outline-minor-mode)
+  (add-hook 'message-mode-hook 'outline-minor-mode)
+  (add-hook 'octave-mode-hook 'outline-minor-mode)
+  (defvar outline-minor-mode-prefix "\M-#")
+  :config
+  (add-hook 'outline-minor-mode-hook
+            (lambda ()
+              ;; 在latex-mode和lisp-interaction-mode中不开启outshine。
+              (unless (memq major-mode '(latex-mode lisp-interaction-mode))
+                (outshine-hook-function))
+              (define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
+              (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
+              (define-key outline-minor-mode-map (kbd "C-c C-u") 'outline-up-heading)
+              (define-key outline-minor-mode-map (kbd "C-c C-b") 'outline-backward-same-level)
+              (define-key outline-minor-mode-map (kbd "C-c C-f") 'outline-forward-same-level)
+              (define-key outline-minor-mode-map (kbd "C-c C-m") 'outline-insert-heading)
+              (define-key outline-minor-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
+              (define-key outline-minor-mode-map (kbd "C-M-i") nil)))
+  (add-hook 'TeX-mode-hook
+            (lambda ()
+              (define-key outline-minor-mode-map (kbd "\C-i") '(menu-item "maybe-latex/hide-show" nil :filter
+                                                                          (lambda (&rest _)
+                                                                            (when (latex//header-at-point)
+                                                                              #'outline-cycle))))))
+  ;; Copied from latex-extra.
+  (defcustom latex/section-hierarchy
+    '("\\\\headerbox\\_>"
+      "\\\\subparagraph\\*?\\_>"
+      "\\\\paragraph\\*?\\_>"
+      "\\\\subsubsection\\*?\\_>"
+      "\\\\subsection\\*?\\_>"
+      "\\\\section\\*?\\_>"
+      "\\\\chapter\\*?\\_>"
+      "\\\\part\\*?\\_>"
+      ;; "\\\\maketitle\\_>"
+      "\\\\appendix\\_>\\|\\\\\\(begin\\|end\\){document}"
+      "\\\\documentclass\\_>")
+    "List of regexps which define what a section can be.Ordered from deepest to highest level.")
+  (defun latex/section-regexp ()
+    "Return a regexp matching anything in `latex/section-hierarchy'."
+    (format "^\\(%s\\)" (mapconcat 'identity latex/section-hierarchy "\\|")))
+  (defun latex//header-at-point ()
+    "Return header under point or nil, as per `latex/section-hierarchy'."
+    (save-match-data
+      (save-excursion
+        (goto-char (line-beginning-position))
+        (when (looking-at (latex/section-regexp))
+          (match-string-no-properties 0))))))
+;; =====================outline====================
+;; =====================outshine===================
+(use-package outshine
+  ;; Enabled at commands.
+  :defer t
+  :commands (outshine-hook-function outshine-cycle-buffer)
+  :config
+  (setq outshine-use-speed-commands t)
+  (setq outshine-imenu-show-headlines-p nil)
+  (defconst outshine-octave-outline-regexp-base
+    (format "[%%]\\{1,%d\\}" outshine-max-level)
+    "Oldschool Emacs Lisp base for calculating the outline-regexp")
+  (defun outshine-set-octave-regexp-base ()
+    "Return the actual outline-regexp-base for octave-mode."
+    (if (eq major-mode 'octave-mode)
+        (progn
+          (setq outshine-enforce-no-comment-padding-p t)
+          (setq outshine-outline-regexp-base
+                outshine-octave-outline-regexp-base))))
+  (advice-add 'outshine-set-outline-regexp-base :after #'outshine-set-octave-regexp-base))
+(use-package outorg
+  ;; Enabled after features.
+  ;; M-# # current heading.
+  ;; C-u M-# # current buffer.
+  :defer t
+  :after outshine)
+(use-package navi-mode
+  ;; Enabled after features.
+  :defer t
+  :after outshine
+  :config
+  (define-key outline-mode-prefix-map (kbd "i") 'navi-search-and-switch)
+  (define-key outline-mode-prefix-map (kbd "o") 'navi-switch-to-twin-buffer)
+  (global-set-key (kbd "M-s n") nil)
+  (global-set-key (kbd "M-s s") nil)
+  (global-set-key (kbd "M-s M-s") 'helm-swoop))
+;; =====================outshine===================
 (provide 'setup_org_mode)
