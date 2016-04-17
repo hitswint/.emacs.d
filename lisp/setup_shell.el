@@ -1,3 +1,4 @@
+;;; shell
 ;; =====================shell======================
 (use-package shell
   ;; Enabled at commands.
@@ -14,6 +15,7 @@
     (setq explicit-shell-file-name "bash")
     (setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash")))))
 ;; =====================shell======================
+;;; eshell
 ;; =====================eshell=====================
 (use-package eshell
   ;; Enabled at commands.
@@ -31,6 +33,7 @@
                                 (define-key eshell-mode-map (kbd "C-M-r") 'helm-eshell-history)
                                 (define-key eshell-mode-map (kbd "M-s") nil))))
 ;; =====================eshell=====================
+;;; eshell-prompt-extras
 ;; ==============eshell-prompt-extras==============
 (use-package eshell-prompt-extras
   ;; Enabled after features.

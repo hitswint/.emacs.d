@@ -1,3 +1,4 @@
+;;; server
 ;; =====================server=====================
 (use-package server
   ;; Enabled at idle.
@@ -6,6 +7,7 @@
   (unless (server-running-p)
     (server-start)))
 ;; =====================server=====================
+;;; 文件加密
 ;; ====================文件加密====================
 (use-package epa-file
   ;; Enabled at idle.
@@ -16,6 +18,7 @@
   (setq epa-file-cache-passphrase-for-symmetric-encryption t)
   (setq epa-file-inhibit-auto-save nil))
 ;; ====================文件加密====================
+;;; multiple-cursors
 ;; ================multiple-cursors================
 (use-package multiple-cursors
   ;; Enabled at commands.
@@ -41,6 +44,7 @@
   :config
   (define-key mc/keymap (kbd "C-`") 'mc-hide-unmatched-lines-mode))
 ;; ================multiple-cursors================
+;;; expand-region
 ;; =================expand-region==================
 (use-package expand-region
   ;; Enabled at commands.
@@ -51,11 +55,13 @@
   (setq expand-region-reset-fast-key "'"))
 ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end。
 ;; =================expand-region==================
+;;; 回收站
 ;; ===================回收站=======================
 (use-package trashcan
   ;; Enabled automatically.
   :load-path "site-lisp/trashcan/")
 ;; ===================回收站=======================
+;;; undo-tree
 ;; ==================undo-tree=====================
 (use-package undo-tree
   ;; Enabled at commands.
@@ -66,6 +72,7 @@
   (global-undo-tree-mode)
   (define-key undo-tree-map (kbd "M-_") nil))
 ;; ==================undo-tree=====================
+;;; breadcrumb
 ;; ==================breadcrumb====================
 (use-package breadcrumb
   ;; Enabled at commands.
@@ -83,6 +90,7 @@
 ;; (global-set-key (kbd "C-x C-/") 'bc-local-next)     ;; M-down-arrow for local next
 ;; (global-set-key (kbd "C-x C-/") 'bc-goto-current) ;; C-c j for jump to current bookmark
 ;; ==================breadcrumb====================
+;;; auto-mark
 ;; ==================auto-mark=====================
 (use-package auto-mark
   ;; Enabled at commands.
@@ -103,6 +111,7 @@
   ;;                   'ignore))))
   (global-auto-mark-mode 1))
 ;; ==================auto-mark=====================
+;;; visible-mark
 ;; ================visible-mark====================
 (use-package visible-mark
   ;; Enabled automatically.
@@ -125,6 +134,7 @@
     :group 'visible-mark)
   (setq visible-mark-forward-faces '(swint-visible-mark-forward-face-1 swint-visible-mark-forward-face-2)))
 ;; ================visible-mark====================
+;;; unicad
 ;; =====================unicad=====================
 ;; lin中不会出现乱码，不需要，这个包会拖慢启动速度。
 (use-package unicad
@@ -140,6 +150,7 @@
   (setq save-buffer-coding-system 'utf-8)
   (setq coding-system-for-write 'utf-8))
 ;; =====================unicad=====================
+;;; everything
 ;; ===================everything===================
 (use-package everything
   ;; Enabled at commands.
@@ -160,6 +171,7 @@
   (setq everything-matchpath t)
   (setq everything-cmd "c:/Program Files/Everything/es.exe"))
 ;; ===================everything===================
+;;; popwin
 ;; =====================popwin=====================
 (use-package popwin
   ;; Enabled at idle.
@@ -167,6 +179,7 @@
   :config
   (popwin-mode 1))
 ;; =====================popwin=====================
+;;; anchored-transpose
 ;; ================anchored-transpose==============
 (use-package anchored-transpose
   ;; Enabled at commands.
@@ -179,6 +192,7 @@
 ;; You can select the anchor phrase first followed by the phrase to be transposed if more convenient. Or select the 2 phrases independently. If you select 2 overlapping sections it ignores the overlap and swaps the non-overlapping sections. It even supports SecondarySelection. Somehow it can always tell what you want ;-)
 ;; 另外，可以分别选择两部分交换的内容。
 ;; ================anchored-transpose==============
+;;; God-mode
 ;; ====================God-mode====================
 (use-package god-mode
   ;; Enabled at commands.
@@ -194,6 +208,7 @@
   (add-hook 'god-mode-disabled-hook 'my-update-cursor)
   (add-to-list 'god-exempt-major-modes 'dired-mode))
 ;; ====================God-mode====================
+;;; elisp-slime-nav
 ;; =================elisp-slime-nav================
 (use-package help
   ;; Enabled at commands.
@@ -227,6 +242,7 @@
   (define-key elisp-slime-nav-mode-map (kbd "C-c C-d d") nil)
   (define-key elisp-slime-nav-mode-map (kbd "C-c C-d C-d") nil))
 ;; =================elisp-slime-nav================
+;;; drag stuff
 ;; ===================drag stuff===================
 (use-package drag-stuff
   ;; Enabled in modes.
@@ -255,6 +271,7 @@
   (define-key drag-stuff-mode-map (kbd "M-B") 'drag-stuff-left)
   (define-key drag-stuff-mode-map (kbd "M-F") 'drag-stuff-right))
 ;; ===================drag stuff===================
+;;; popup-kill-ring
 ;; ================popup-kill-ring=================
 (use-package popup-kill-ring
   ;; Enabled at commands.
@@ -263,6 +280,7 @@
   :config
   (setq popup-kill-ring-interactive-insert t))
 ;; ================popup-kill-ring=================
+;;; popup
 ;; ====================popup=======================
 (use-package popup
   ;; Enabled at commands.
@@ -273,16 +291,19 @@
   (define-key popup-menu-keymap (kbd "M-n") 'popup-next)
   (define-key popup-menu-keymap (kbd "TAB") 'popup-next))
 ;; ====================popup=======================
+;;; pos-tip
 ;; ===================pos-tip======================
 (use-package pos-tip
   ;; Enabled at commands.
   :defer 2
   :commands (pos-tip-show pos-tip-show-no-propertize))
 ;; ===================pos-tip======================
+;;; elmacro
 ;; ===================elmacro======================
 ;; 需要先打开elmacro-mode，然后F3/F4录制宏。
 ;; 然后使用elmacro-show-last-macro来将操作转换为elisp。
 ;; ===================elmacro======================
+;;; hungry-delete
 ;; ===================hungry-delete================
 (use-package hungry-delete
   ;; Enabled at idle.
@@ -293,6 +314,7 @@
             (lambda ()
               (setq hungry-delete-mode nil))))
 ;; ===================hungry-delete================
+;;; imenu-anywhere
 ;; ===================imenu-anywhere===============
 (use-package imenu
   ;; Enabled at commands.
@@ -306,6 +328,7 @@
   :config
   (setq imenu-anywhere-delimiter-helm " | "))
 ;; ===================imenu-anywhere===============
+;;; fcitx
 ;; ======================fcitx=====================
 (use-package fcitx
   ;; Enabled automatically.
@@ -322,6 +345,7 @@
   ;; 会导致tramp问题，使需要在minibuffer输入密码时hang。
   )
 ;; ======================fcitx=====================
+;;; aggressive-indent
 ;; ================aggressive-indent===============
 (use-package aggressive-indent
   ;; Enabled at idle.
@@ -329,6 +353,7 @@
   :config
   (global-aggressive-indent-mode 1))
 ;; ================aggressive-indent===============
+;;; clean-aindent-mode
 ;; ===============clean-aindent-mode===============
 (use-package clean-aindent-mode
   ;; Enabled in prog-mode.
@@ -343,18 +368,21 @@
 ;; RET：自动清除white space，光标停留在前一行indentation处。
 ;; M-DEL：unindent，回到前一行indentation处。
 ;; ===============clean-aindent-mode===============
+;;; multifiles
 ;; ===================multifiles===================
 (use-package multifiles
   ;; Enabled at commands.
   :defer t
   :bind ("M-s t" . mf/mirror-region-in-multifile))
 ;; ===================multifiles===================
+;;; ztree
 ;; =====================ztree======================
 (use-package ztree-diff
   ;; Enabled at commands.
   :defer t
   :bind ("M-s z" . ztree-diff))
 ;; =====================ztree======================
+;;; which-key
 ;; ====================which-key===================
 ;; 原用guide-key，改用which-key，显示更好。
 ;; (require 'guide-key)
@@ -379,6 +407,7 @@ Usually this is `describe-prefix-bindings'."
       (which-key--hide-popup-ignore-command)
       (helm-descbinds which-key--current-prefix))))
 ;; ====================which-key===================
+;;; pdf-tools
 ;; ====================pdf-tools===================
 (use-package pdf-tools
   ;; Enabled in pdf-view-mode.
@@ -415,6 +444,7 @@ Usually this is `describe-prefix-bindings'."
 ;;                (pdf-history-goto 0)))))
 ;; (add-hook 'persp-activated-hook 'swint-pdf-history-goto-beginning)
 ;; ====================pdf-tools===================
+;;; doc-view-mode
 ;; ==================doc-view-mode=================
 ;; lin上使用soffice转换；win上使用unoconv转换。
 ;; pdf文件使用gs转换成png。
@@ -444,6 +474,7 @@ is named like ODF with the extension turned to pdf."
                                     (concat (doc-view--current-cache-dir) (file-name-base odf) ".pdf") odf)
                               callback))))
 ;; ==================doc-view-mode=================
+;;; backup
 ;; ======================backup====================
 (use-package backup-walker
   ;; Enabled at commands.
@@ -454,6 +485,7 @@ is named like ODF with the extension turned to pdf."
   :defer t
   :bind ("C-x b" . git-timemachine))
 ;; ======================backup====================
+;;; visual-regexp
 ;; ===================visual-regexp================
 (use-package visual-regexp
   ;; Enabled at commands.
@@ -462,6 +494,7 @@ is named like ODF with the extension turned to pdf."
          ("M-s C-r" . vr/query-replace)
          ("M-s C-;" . vr/mc-mark)))
 ;; ===================visual-regexp================
+;;; vlf
 ;; =======================vlf======================
 ;; vlf把大文件分成多个batch，以改善性能。
 (use-package vlf
@@ -493,6 +526,7 @@ is named like ODF with the extension turned to pdf."
 ;; M-x vlf-ediff-files and M-x vlf-ediff-buffers to compare files/buffers batch by batch.
 ;; C-c C-v o builds index over whole file for given regular expression just like M-x occur.
 ;; =======================vlf======================
+;;; easy-kill
 ;; =====================easy-kill==================
 (use-package easy-kill
   ;; Enabled at commands.
@@ -507,6 +541,7 @@ is named like ODF with the extension turned to pdf."
   (define-key easy-kill-base-map (kbd ".") 'easy-kill-expand))
 ;; M-w ?: help 查看M-w prefix快捷键。
 ;; =====================easy-kill==================
+;;; smex
 ;; ======================smex======================
 (use-package smex
   ;; Enabled at commands.
@@ -514,6 +549,7 @@ is named like ODF with the extension turned to pdf."
   :bind (("C-x M-x" . smex)
          ("C-c M-x" . smex-major-mode-commands)))
 ;; ======================smex======================
+;;; bm
 ;; =======================bm=======================
 (use-package bm
   ;; Enabled at commands.
@@ -528,6 +564,7 @@ is named like ODF with the extension turned to pdf."
   (setq bm-cycle-all-buffers nil)
   (setq bm-highlight-style 'bm-highlight-only-fringe))
 ;; =======================bm=======================
+;;; helm-bm
 ;; ====================helm-bm=====================
 (use-package helm-bm
   ;; Enabled at commands.
@@ -542,6 +579,7 @@ is named like ODF with the extension turned to pdf."
      (goto-char (point-min))
      (forward-line (1- lineno)))))
 ;; ====================helm-bm=====================
+;;; operate-on-number
 ;; ================operate-on-number===============
 ;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字。
 (use-package operate-on-number
@@ -562,6 +600,7 @@ is named like ODF with the extension turned to pdf."
       ("%" . apply-operation-to-number-at-point)
       ("=" . operate-on-number-at-point))))
 ;; ================operate-on-number===============
+;;; goto-last-change
 ;; =================goto-last-change===============
 (use-package goto-chg
   ;; Enabled at commands.
@@ -587,6 +626,7 @@ is named like ODF with the extension turned to pdf."
     ;; (finalize-event-loop)
     ))
 ;; =================goto-last-change===============
+;;; Proced
 ;; =====================Proced=====================
 (use-package proced
   ;; Enabled at commands.
@@ -600,6 +640,7 @@ is named like ODF with the extension turned to pdf."
     (proced-toggle-auto-update 1))
   (add-hook 'proced-mode-hook 'proced-settings))
 ;; =====================Proced=====================
+;;; bbyac
 ;; =====================bbyac======================
 (use-package bbyac
   ;; Enabled at commands.
@@ -617,6 +658,7 @@ is named like ODF with the extension turned to pdf."
   (define-key bbyac-mode-map (kbd "M-s s") nil)
   (define-key bbyac-mode-map (kbd "M-s p") nil))
 ;; =====================bbyac======================
+;;; avy-menu
 ;; ===================avy-menu=====================
 (use-package avy-menu
   ;; Enabled at idle.
@@ -629,6 +671,7 @@ is named like ODF with the extension turned to pdf."
   (ace-popup-menu-mode 1)
   (setq ace-popup-menu-show-pane-header t))
 ;; ===================avy-menu=====================
+;;; char-menu
 ;; ===================char-menu====================
 (use-package char-menu
   ;; Enabled at commands.
@@ -644,6 +687,7 @@ is named like ODF with the extension turned to pdf."
                     ("Greek capital"
                      "Α" "Β" "Γ" "Δ" "Ε" "Ζ" "Η" "Θ" "Ι" "Κ" "Λ" "Μ" "Ν" "Ξ" "Ο" "Π" "Ρ" "Σ" "Τ" "Υ" "Φ" "Χ" "Ψ" "Ω"))))
 ;; ===================char-menu====================
+;;; vimish-fold
 ;; ==================vimish-fold===================
 (use-package vimish-fold
   ;; Enabled at commands.
@@ -651,6 +695,7 @@ is named like ODF with the extension turned to pdf."
   :bind (("M-s v" . vimish-fold)
          ("M-s V" . vimish-fold-delete)))
 ;; ==================vimish-fold===================
+;;; clipmon
 ;; ====================clipmon=====================
 (use-package clipmon
   ;; Enabled after features.
@@ -678,6 +723,7 @@ is named like ODF with the extension turned to pdf."
         (if (null v) nil
           (substring-no-properties v))))))
 ;; ====================clipmon=====================
+;;; volatile-highlights
 ;; ==============volatile-highlights===============
 (use-package volatile-highlights
   ;; Enabled at idle.
@@ -685,6 +731,7 @@ is named like ODF with the extension turned to pdf."
   :config
   (volatile-highlights-mode t))
 ;; ==============volatile-highlights===============
+;;; quickrun
 ;; ===================quickrun=====================
 (use-package quickrun
   :defer t
@@ -697,6 +744,7 @@ is named like ODF with the extension turned to pdf."
         (call-interactively 'quickrun-region)
       (call-interactively 'quickrun))))
 ;; ===================quickrun=====================
+;;; highlight-symbol
 ;; ================highlight-symbol================
 (use-package highlight-symbol
   ;; Enabled at commands.
@@ -710,6 +758,7 @@ is named like ODF with the extension turned to pdf."
   :config
   (setq highlight-symbol-foreground-color "gray30"))
 ;; ================highlight-symbol================
+;;; auto-highlight-symbol
 ;; =============auto-highlight-symbol==============
 (use-package auto-highlight-symbol
   ;; Enabled at idle.
@@ -753,6 +802,7 @@ is named like ODF with the extension turned to pdf."
   (define-key auto-highlight-symbol-mode-map (kbd "C-x C-'") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "C-x C-a") nil))
 ;; =============auto-highlight-symbol==============
+;;; dumb-jump
 ;; ==================dumb-jump=====================
 (use-package dumb-jump
   ;; Enabled at commands.
@@ -761,6 +811,7 @@ is named like ODF with the extension turned to pdf."
          ("C-c ." . dumb-jump-back)
          ("C-c /" . dumb-jump-quick-look)))
 ;; ==================dumb-jump=====================
+;;; diff-hl
 ;; ===================diff-hl======================
 (use-package diff-hl
   ;; Enabled at idle.
@@ -791,6 +842,7 @@ is named like ODF with the extension turned to pdf."
                       :foreground "gray"
                       :background "dark blue"))
 ;; ===================diff-hl======================
+;;; evil-nerd-commenter
 ;; =============evil-nerd-commenter================
 (use-package evil-nerd-commenter
   ;; Enabled at commands.

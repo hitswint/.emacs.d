@@ -1,3 +1,4 @@
+;;; chinese-fonts-setup
 ;; ==========chinese-fonts-setup===========
 (use-package chinese-fonts-setup
   ;; Enabled automatically.
@@ -22,6 +23,7 @@
     (add-hook 'window-setup-hook
               'swint-cfs-set-font-with-saved-size)))
 ;; ==========chinese-fonts-setup===========
+;;; chinese-pyim
 ;; =============chinese-pyim===============
 (use-package chinese-pyim
   ;; Enabled at commands.

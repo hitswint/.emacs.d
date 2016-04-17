@@ -1,4 +1,5 @@
-;; ==================paredit=========================
+;;; paredit
+;; ==================paredit=======================
 (use-package paredit
   ;; Enabled in emacs-lisp-mode.
   :defer t
@@ -44,6 +45,9 @@
   (define-key paredit-mode-map (kbd "M-D") 'paredit-splice-sexp))
 ;; (autoload 'enable-paredit-mode "paredit" t)
 ;; M-( M-) M-[ M-] M-{ M-} M-" M-S M-R M-A M-D C-) C-} C-( C-{ C-M-d C-M-u C-M-p C-M-n
+;; ==================paredit=======================
+;;; paredit-everywhere
+;; ===============paredit-everything===============
 ;; 在其他mode中使用paredit。
 (use-package paredit-everywhere
   ;; Enabled in modes.
@@ -79,5 +83,5 @@
   (define-key paredit-everywhere-mode-map (kbd "M-A") 'paredit-join-sexps)
   (define-key paredit-everywhere-mode-map (kbd "M-D") 'paredit-splice-sexp))
 ;; M-( M-) M-[ M-] M-{ M-} M-" M-S M-R M-A M-D C-) C-} C-( C-{ M-DEL M-d
-;; ==================paredit=========================
+;; ===============paredit-everything===============
 (provide 'setup_paredit)

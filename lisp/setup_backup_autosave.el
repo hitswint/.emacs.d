@@ -1,3 +1,4 @@
+;;; BACKUP-AUTOSAVE
 ;; ============BACKUP-AUTOSAVE=============
 ;; 将backup和autosave文件都放在~/.emacs.d/.saves文件夹下。
 (setq backup-by-copying t               ;don't clobber symlinks

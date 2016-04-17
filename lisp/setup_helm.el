@@ -1,4 +1,5 @@
-;; ======================helm======================
+;;; helm
+;; ====================helm=====================
 (use-package helm
   ;; Enabled automatically.
   :init
@@ -18,6 +19,7 @@
   (global-set-key (kbd "C-x C-f") 'swint-helm-find-files)
   (global-set-key (kbd "C-x f") 'helm-locate)
   (global-set-key (kbd "M-x") 'helm-M-x)
+;;;; helm-file-buffer
   ;; ============helm-file-buffer===============
   (defun swint-helm-file-buffers-list--init/curr-persp ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
@@ -120,6 +122,7 @@
     (let ((helm-ff-transformer-show-only-basename nil))
       (helm-other-buffer swint-helm-file-buffers-sources "*helm file buffers-swint*")))
   ;; ============helm-file-buffer===============
+;;;; helm-dired-buffer
   ;; ============helm-dired-buffer==============
   (defun swint-helm-dired-buffers-list--init/curr-persp ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
@@ -226,6 +229,7 @@
             :keymap helm-buffer-map
             :truncate-lines t)))
   ;; ============helm-dired-buffer==============
+;;;; helm-related-to-persp
   ;; =========helm-related-to-persp=============
   (defun helm-switch-persp/buffer (BUFFER-OR-NAME)
     "Helm-switch to persp/buffer simultaneously."
@@ -264,6 +268,7 @@
     (with-helm-alive-p
       (helm-exit-and-execute-action 'persp-remove-buffer)))
   ;; =========helm-related-to-persp=============
+;;;; helm-bookmarks
   ;; ============helm-bookmarks=================
   (defcustom swint-helm-bookmarks-list
     '(helm-source-bookmarks)
@@ -276,6 +281,7 @@
     (let ((helm-ff-transformer-show-only-basename t))
       (helm-other-buffer swint-helm-bookmarks-list "*helm bookmarks-swint*")))
   ;; ============helm-bookmarks=================
+;;;; helm-find-file
   ;; ============helm-find-file=================
   (defun swint-helm-find-files ()
     "Preconfigured `helm' for opening files.
@@ -285,6 +291,8 @@ Run all sources defined in `helm-for-files-preferred-list'."
           :ff-transformer-show-only-basename t
           :buffer "*helm find files-swint*"))
   ;; ============helm-find-file=================
+;;;; helm-locate
+  ;; ==============helm-locate==================
   ;; (global-set-key (kbd "C-x l") 'locate)
   ;; win上locate似乎搜索中文有问题，改用es。但是es似乎仍然搜索不了中文，而且会导致emacs死掉，放弃。
   ;; win上面的linux工具包括grep/locate/find都不能够搜索中文。
@@ -301,6 +309,8 @@ Run all sources defined in `helm-for-files-preferred-list'."
     ;; 下面的命令建立locate数据库的时候，会导致cygwin警告ms dos path sytle，无妨，时间稍长；locate命令无法识别这种ms dos path sytle。
     (setq helm-locate-create-db-command "updatedb --output=c:/Users/swint/.helm-locate.db --localpaths='c:/Users/swint/'")
     (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.helm-locate.db")))
+  ;; ==============helm-locate==================
+;;;; 在别的helm-buffer中运行helm命令
   ;; ======在别的helm-buffer中运行helm命令======
   (defun swint-helm-file-buffers-after-quit ()
     "List swint-helm-file-buffers."
@@ -382,6 +392,8 @@ from its directory."
   (define-key helm-find-files-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
   (define-key helm-find-files-map (kbd "C-x C-f") 'swint-helm-find-files-after-quit)
   ;; ======在别的helm-buffer中运行helm命令======
+;;;; keybindings
+  ;; ===============keybindings=================
   (define-key helm-map (kbd "C-;") 'helm-toggle-visible-mark)
   (define-key helm-map (kbd "C-l") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-M-p") 'helm-previous-source)
@@ -424,6 +436,8 @@ from its directory."
   ;; C-] toggle basename/fullpath
   ;; C-backspace 开启关闭自动补全
   ;; C-{ C-} 放大缩小helm窗口
+  ;; ===============keybindings=================
+;;;; helm-pinyin
   ;; ================helm-pinyin================
   ;; iswitchb-pinyin给iswitchb增加拼音头字母搜索的，使用pinyin-initials-string-match函数。
   (load "iswitchb-pinyin")
@@ -461,6 +475,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
                                    (pinyin-initials-string-match regexp str)
                                  (invalid-regexp nil))))))
   ;; ================helm-pinyin================
+;;;; total commander
   ;; ==============total commander==============
   ;;使用tc打开当前文件夹。
   (global-set-key (kbd "C-s-m") '(lambda ()
@@ -510,7 +525,9 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
   ;; ==============total commander==============
   )
-;; =================helm_lacarte===================
+;; ====================helm=====================
+;;; helm_lacarte
+;; ================helm_lacarte=================
 (use-package lacarte
   ;; Enabled at commands.
   :defer t
@@ -540,8 +557,9 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
     (helm '(helm-source-lacarte-math)
           (thing-at-point 'symbol) "Symbol: "
           nil nil "*helm math symbols*")))
-;; =================helm_lacarte===================
-;; =================helm-bibtex====================
+;; ================helm_lacarte=================
+;;; helm-bibtex
+;; ================helm-bibtex==================
 (use-package helm-bibtex
   ;; Enabled at commands.
   :defer t
@@ -578,8 +596,9 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   (defun swint-helm-bibtex-format-citation-cite (keys)
     "Formatter for LaTeX citation macro."
     (format "\\citep{%s}" (s-join ", " keys))))
-;; =================helm-bibtex====================
-;; =================helm-swoop=====================
+;; ================helm-bibtex==================
+;;; helm-swoop
+;; ================helm-swoop===================
 (use-package helm-swoop
   ;; Enabled at commands.
   :defer t
@@ -603,14 +622,16 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   (setq helm-swoop-split-direction 'split-window-vertically)
   ;; If nil, you can slightly boost invoke speed in exchange for text color
   (setq helm-swoop-speed-or-color nil))
-;; =================helm-swoop=====================
-;; ================helm-unicode====================
+;; ================helm-swoop===================
+;;; helm-unicode
+;; ===============helm-unicode==================
 (use-package helm-unicode
   ;; Enabled at commands.
   :defer t
   :bind ("M-s m" . helm-unicode))
-;; ================helm-unicode====================
-;; ==================helm-ag=======================
+;; ===============helm-unicode==================
+;;; helm-ag
+;; =================helm-ag=====================
 ;; 使用helm-ag代替helm-grep。
 ;; (global-set-key (kbd "C-x g") 'helm-do-grep) ;加C-u为递归
 (use-package helm-ag
@@ -627,14 +648,14 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   (when is-win
     (custom-set-variables
      '(helm-ag-base-command "pt -e --nocolor --nogroup"))))
-;; ==================helm-ag=======================
-;; ==============helm-descbinds====================
+;; =================helm-ag=====================
+;;; helm-descbinds
+;; ==============helm-descbinds=================
 (use-package helm-descbinds
   ;; Enabled at commands.
   :defer t
   :commands helm-descbinds
   :config
   (helm-descbinds-mode))
-;; ==============helm-descbinds====================
-;; ======================helm======================
+;; ==============helm-descbinds=================
 (provide 'setup_helm)

@@ -1,3 +1,4 @@
+;;; w3m
 ;; ===================w3m=====================
 ;; (add-to-list 'exec-path "c:/Program Files (x86)/w3m") ;;指定w3m可执行程序，所在的执行路径
 ;; 上面那句不好用，无法确定w3m的程序执行路径。customize-group选择w3m，在W3m Command中添加c:/Program Files (x86)/w3m/w3m.exe，确定w3m程序。
@@ -67,6 +68,8 @@
                                                          (w3m-new-tab)
                                                          (w3m-browse-url "www.google.com")))
                (define-key w3m-mode-map (kbd "'") 'helm-firefox-bookmarks))))
+;; ===================w3m=====================
+;;; helm-firefox
 ;; ===============helm-firefox================
 (use-package helm-firefox
   ;; Enabled after features.
@@ -77,5 +80,4 @@
   (when is-win
     (setq helm-firefox-default-directory "~/AppData/Roaming/Mozilla/Firefox/")))
 ;; ===============helm-firefox================
-;; ===================w3m=====================
 (provide 'setup_w3m)

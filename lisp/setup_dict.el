@@ -1,3 +1,4 @@
+;;; stardict
 ;; ==================stardict====================
 ;; Major mode for sdcv.
 (define-derived-mode sdcv-mode org-mode
@@ -61,6 +62,7 @@
     (replace-match "\n"))
   (goto-char (point-min)))
 ;; ==================stardict====================
+;;; bing-dict
 ;; ==================bing-dict===================
 (use-package bing-dict
   ;; Enabled at commands.
@@ -142,6 +144,7 @@
                     `(,(decode-coding-string keyword 'utf-8))
                     t t))))
 ;; ==================bing-dict===================
+;;; google-translate
 ;; ===============google-translate===============
 (use-package google-translate
   ;; Enabled at commands.

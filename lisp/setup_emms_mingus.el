@@ -1,3 +1,4 @@
+;;; emms
 ;; ================emms==================
 (use-package emms
   ;; Enabled at commands.
@@ -27,6 +28,7 @@
   (setq emms-mode-line-format ""
         emms-lyrics-display-format ""
         emms-playing-time-display-format "") ;关闭emms在mode-line上的显示
+;;;; emms-mpd
   ;; ==============emms-mpd================
   (use-package emms-player-mpd)
   (setq emms-player-mpd-server-name "localhost")
@@ -46,6 +48,7 @@
   (global-set-key (kbd "C-s-<right>") 'emms-next)
   (global-set-key (kbd "C-s-SPC") 'emms-stop))
 ;; ================emms==================
+;;; mingus
 ;; ===============mingus=================
 (use-package mingus
   ;; Enabled at commands.

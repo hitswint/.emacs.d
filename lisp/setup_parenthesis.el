@@ -1,4 +1,5 @@
-;; ====================括号========================
+;;; parenthesis
+;; =================parenthesis=================
 ;; (setq show-paren-style 'parenthesis)    ;highlight just brackets
 ;; (setq show-paren-style 'expression)     ;highlight entire bracket expression
 ;; (setq skeleton-pair t)                  ;自动插入匹配的括号
@@ -66,6 +67,8 @@
 (add-hook 'org-mode-hook
           '(lambda ()
              (define-key org-mode-map (kbd "$") 'insert-pair-math-bracket)))
+;; =================parenthesis=================
+;;; wrap-region
 ;; ================wrap-region==================
 (use-package wrap-region
   ;; Enabled in modes.
@@ -95,6 +98,7 @@
      ("_" "_" nil org-mode)
      ("$" "$" nil (org-mode latex-mode)))))
 ;; ================wrap-region==================
+;;; rainbow-delimiters
 ;; ==============rainbow-delimiters=============
 (use-package rainbow-delimiters
   ;; Enabled in modes.
@@ -112,6 +116,7 @@
                   graphviz-dot-mode-hook))
     (add-hook hook 'rainbow-delimiters-mode)))
 ;; ==============rainbow-delimiters=============
+;;; highlight-parentheses
 ;; ============highlight-parentheses============
 (use-package highlight-parentheses
   ;; Enabled in modes.
@@ -147,5 +152,4 @@
           (overlay-put (car hl-paren-overlays) 'font-lock-face attributes)))
       (setq hl-paren-overlays hl-paren-overlays))))
 ;; ============highlight-parentheses============
-;; ====================括号========================
 (provide 'setup_parenthesis)

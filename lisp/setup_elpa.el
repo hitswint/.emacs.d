@@ -1,3 +1,4 @@
+;;; elpa
 ;; ====================elpa=========================
 (require 'package)
 (unless package--initialized
@@ -193,6 +194,7 @@ Missing packages are installed automatically."
 ;; run package installation
 (prelude-install-packages)
 ;; ====================elpa=========================
+;;; USE-PACKAGE
 ;; =================USE-PACKAGE=====================
 ;; :bind或:commands中需使用package或:config中的函数。
 (eval-when-compile

@@ -1,3 +1,4 @@
+;;; gnuplot
 ;; ===========================gnuplot=================================
 (use-package gnuplot-mode
   ;; Enabled in gnuplot-mode.

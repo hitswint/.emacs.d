@@ -1,9 +1,11 @@
-;; =========================ido===========================
+;;; ido
+;; =========================ido========================
 (use-package ido
   ;; Enabled automatically.
   :config
   (ido-mode t)
   ;; (global-set-key (kbd "C-x f") 'ido-find-file)
+;;;; ido-back-to-home
   ;; =================ido-back-to-home=================
   (add-hook 'ido-setup-hook
             (lambda ()
@@ -16,6 +18,7 @@
                       (insert "~/")
                     (call-interactively 'self-insert-command))))))
   ;; =================ido-back-to-home=================
+;;;; ido-find-file:open-file-with-external-app
   ;; ====ido-find-file:open-file-with-external-app=====
   (defvar ido-fallback-function nil "The fallback function that will be explicitly check and can be externally modified
 this variable is introduced to enhance ido-find-file functionality
@@ -216,6 +219,8 @@ especially for extending ido-find-file functionality
       (exit-minibuffer))))
   ;; ====ido-find-file:open-file-with-external-app=====
   )
+;; =========================ido========================
+;;; ido-tips
 ;; ======================ido-tips======================
 (use-package ido-ubiquitous
   ;; Enabled after features.
@@ -245,5 +250,4 @@ especially for extending ido-find-file functionality
   :config
   (ido-at-point-mode))
 ;; ======================ido-tips======================
-;; =========================ido===========================
 (provide 'setup_ido)

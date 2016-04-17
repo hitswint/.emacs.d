@@ -1,3 +1,4 @@
+;;; dirtree
 ;; ====================dirtree=====================
 (use-package dirtree
   ;; Enabled at commands.
@@ -34,6 +35,7 @@
       ;; 可以使用kill-this-buffer和kill-buffer-and-window，因为这两个函数中都使用了kill-buffer加参数的形式。
       ;; 更新：kill-this-buffer有时仍然会切换到之前的buffer，有时不会。改为先切换，再kill-buffer。
       (kill-buffer swint-current-buffer)))
+;;;; 关闭buffer后切换到之前的buffer
   ;; =========关闭buffer后切换到之前的buffer=======
   ;; 原始的关闭buffer存在两个问题：
   ;; 一是会切换到helm buffer中，二是在persp之间切换时会切换到上一个persp的buffer中。
@@ -116,7 +118,6 @@ swint-`iswitchb-all-frames'."
     :type '(repeat (choice regexp function)))
   (setq swint-iswitchb-buffer-ignore '("\\` " "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'"))
   ;; =========关闭buffer后切换到之前的buffer=======
-  :config
   (defun dirtree-shell-command ()
     "open file with external app"
     (interactive)

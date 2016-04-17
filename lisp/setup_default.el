@@ -1,3 +1,4 @@
+;;; DEFAULT
 ;; ==================DEFAULT====================
 (setq default-major-mode 'text-mode)    ;默认使用text模式。
 (global-font-lock-mode t)               ;语法高亮。
@@ -31,6 +32,7 @@
   (global-hl-line-mode t))
 ;; (setq debug-on-error t)
 ;; ==================DEFAULT====================
+;;; 快捷键
 ;; ===================快捷键====================
 (global-set-key (kbd "C-x C-M-j") 'speedbar-get-focus)
 (global-set-key (kbd "M-,") 'delete-other-windows)
@@ -49,6 +51,7 @@
 (define-key lisp-interaction-mode-map (kbd "C-j") nil)
 (global-set-key (kbd "<C-M-backspace>") '(lambda () (interactive) (kill-sexp -1)))
 ;; ===================快捷键====================
+;;; smartrep
 ;; ==================smartrep===================
 (use-package smartrep
   ;; Enabled automatically.

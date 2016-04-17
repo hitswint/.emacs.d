@@ -1,3 +1,4 @@
+;;; auto-complete
 ;; ================auto-complete===============
 (use-package auto-complete
   ;; Enabled at commands.
@@ -21,7 +22,8 @@
   ;; (define-key ac-completing-map (kbd "TAB") nil)
   ;; 2. 切换menu的选项。取消TAB切换menu选项。
   ;; (define-key ac-menu-map (kbd "TAB") nil)
-  ;; ===================eshell===================
+;;;; eshell
+  ;; ==================eshell==================
   ;; pcomplete会自动启动，造成打开eshell时读取ac-sources错误。
   ;; 放在auto-complete中，使其只有当ac开启时才能够执行。
   (use-package pcomplete
@@ -41,9 +43,10 @@
       (add-to-list 'ac-sources 'ac-source-eshell-pcomplete))
     (defvar ac-source-eshell-pcomplete
       '((candidates . (pcomplete-completions)))))
-  ;; ===================eshell===================
+  ;; ==================eshell==================
   )
 ;; ================auto-complete===============
+;;; ac-ispell
 ;; ==================ac-ispell=================
 ;; Completion words longer than 4 characters
 (use-package ac-ispell
@@ -68,6 +71,7 @@
 ;; 也可以加下句，使用ac-source-dictionary补全单词。
 ;; (add-to-list 'ac-dictionary-files "~/.english-words")
 ;; ==================ac-ispell=================
+;;; auto-complete-c-headers
 ;; =========auto-complete-c-headers============
 (use-package auto-complete-c-headers
   ;; Enabled after features.
@@ -91,6 +95,7 @@
     (add-to-list 'achead:include-directories '"/usr/include/x86_64-linux-gnu")
     (add-to-list 'achead:include-directories '"/usr/include")))
 ;; =========auto-complete-c-headers============
+;;; auto-complete-clang
 ;; ===========auto-complete-clang==============
 (use-package auto-complete-clang
   ;; Enabled after features.
@@ -122,6 +127,7 @@
 "
                  ))))
 ;; ===========auto-complete-clang==============
+;;; ac-auctex
 ;; ================ac-auctex===================
 (use-package auto-complete-auctex
   ;; Enabled after features.
@@ -139,6 +145,7 @@
 ;; win中不存在这个问题，没有修改，在tex中使用ac-auctex。
 ;; lin上emacs升级新版本之后解决上述问题，而ac-math在tex中自动补全选项有长有短，最后在tex中使用ac-auctex。
 ;; ================ac-auctex===================
+;;; ac-math
 ;; =================ac-math====================
 ;; ac-math中输入一个字母ac就开启的问题是因为所有\之后的字母都被识别做ac-source中的math、unicode和commands，忽略了中间的空格。
 ;; 即$/alpha$中/alpla识别为公式，$\alpha beta$中的beta也被识别为公式，而且因为前面的字符数足够，只要输入b就启动ac。
@@ -171,6 +178,7 @@
   (defun ac-org-mode-setup ()
     (add-to-list 'ac-sources 'ac-source-math-unicode)))
 ;; =================ac-math====================
+;;; ac-octave
 ;; ================ac-octave===================
 ;; ac-octave.el里面并没有定义关键词，似乎是通过和octave的沟通来补全，需要打开octave。
 ;; (require 'ac-octave)
@@ -189,6 +197,7 @@
 ;;   (add-to-list 'ac-sources 'ac-source-octave))
 ;; (add-hook 'matlab-mode-hook 'ac-matlab-mode-setup)
 ;; ================ac-octave===================
+;;; auto-complete-octave
 ;; ============auto-complete-octave============
 ;; ac-octave有问题，使用auto-complete-octave。
 (use-package auto-complete-octave
@@ -204,6 +213,7 @@
   (defun ac-octave-mode-setup ()
     (add-to-list 'ac-sources 'ac-source-octave)))
 ;; ============auto-complete-octave============
+;;; shell
 ;; ===================shell====================
 ;; 下面这句会导致octave运行时emacs hang。
 ;; (setq comint-process-echoes t)
@@ -219,6 +229,7 @@
                                         (if (eq major-mode 'shell-mode)
                                             (ac-rlc-setup-sources)))))
 ;; ===================shell====================
+;;; auto-complete-config
 ;; ===========auto-complete-config=============
 (use-package auto-complete-config
   ;; Enabled after features.
@@ -244,6 +255,7 @@
                              ac-source-words-in-same-mode-buffers
                              ac-source-files-in-current-dir)))
 ;; ===========auto-complete-config=============
+;;; company
 ;; ================company=====================
 (use-package company
   ;; Enabled at commands.
@@ -281,6 +293,7 @@
   ;; If you use Helm, you can easily insert absolute path by C-c i at the current path in helm-find-files.
   )
 ;; ================company=====================
+;;; hippie-expand
 ;; ==============hippie-expand=================
 (use-package hippie-exp
   ;; Enabled at commands.

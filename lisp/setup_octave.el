@@ -1,3 +1,4 @@
+;;; octave
 ;; ======================octave====================
 (use-package octave
   ;; Enabled in octave-mode.

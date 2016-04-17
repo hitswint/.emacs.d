@@ -1,3 +1,4 @@
+;;; flycheck
 ;; ===============flycheck====================
 (use-package flycheck
   ;; Enabled at commands.
@@ -46,11 +47,12 @@ threaded system and the forced deferred makes errors never show
 up before you execute another command."
     (flycheck-clear-idle-change-timer)
     (flycheck-buffer-automatically 'idle-change)))
+;; ===============flycheck====================
+;;; helm-flycheck
 ;; ==============helm-flycheck================
 (use-package helm-flycheck
   ;; Enabled at commands.
   :defer t
   :commands helm-flycheck)
 ;; ==============helm-flycheck================
-;; ===============flycheck====================
 (provide 'setup_flycheck)

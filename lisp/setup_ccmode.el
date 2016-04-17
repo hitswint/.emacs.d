@@ -1,4 +1,5 @@
-;; =====================ccmode=====================
+;;; ccmode
+;; ===================ccmode====================
 (use-package cc-mode
   ;; Enabled in cc-mode.
   :defer t
@@ -45,6 +46,8 @@
   ;; “java”: The default style for java-mode (see below)
   ;; “user”: When you want to define your own style
   (setq c-default-style "linux"))
+;; ===================ccmode====================
+;;; gdb
 ;; =====================gdb=====================
 (use-package gdb-mi
   ;; Enabled at commands.
@@ -83,6 +86,7 @@
   ;; 直接使用gdb-or-gud-go会显示gud-comint-buffer变量未定义，需要先使用gdb一次，然后才能使用gdb-or-gud-go。
   )
 ;; =====================gdb=====================
+;;; function-args
 ;; ==================function-args==============
 (use-package function-args
   ;; Enabled in cc-mode.
@@ -98,6 +102,7 @@
   (define-key function-args-mode-map (kbd "M-n") nil)
   (define-key function-args-mode-map (kbd "M-u") nil))
 ;; ==================function-args==============
+;;; hs-minor-mode
 ;; ==================hs-minor-mode==============
 (use-package hideshow
   ;; Enabled in cc-mode.
@@ -110,6 +115,7 @@
             (lambda ()
               (define-key hs-minor-mode-map (kbd "C-M-i") 'hs-toggle-hiding))))
 ;; ==================hs-minor-mode==============
+;;; semantic
 ;; ===================semantic==================
 (use-package semantic
   ;; Enabled at idle.
@@ -126,6 +132,7 @@
   ;; 所有semantic的快捷键均以C-c ,为前缀，可以考虑用M-s s代替。
   (define-key semantic-mode-map (kbd "C-c ,") nil))
 ;; ===================semantic==================
+;;; helm-gtags
 ;; ==================helm-gtags=================
 ;; helm-man-woman: C-x c m
 ;; helm-semantic-or-imenu: C-x c i
@@ -158,5 +165,4 @@
   (define-key helm-gtags-mode-map (kbd "C-c /") 'helm-gtags-show-stack)
   (define-key helm-gtags-mode-map (kbd "M-.") nil))
 ;; ==================helm-gtags=================
-;; =====================ccmode=====================
 (provide 'setup_ccmode)

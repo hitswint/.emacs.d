@@ -1,3 +1,4 @@
+;;; recentf
 ;; =====================recentf====================
 (use-package recentf
   ;; Enabled at commands.
@@ -26,6 +27,7 @@
         (find-file (cdr (assoc filename
                                file-assoc-list)))))))
 ;; =====================recentf====================
+;;; recent file/recent directory
 ;; ======recent file/recent directory==============
 (use-package recentf-ext
   ;; Enabled automatically.

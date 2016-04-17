@@ -1,4 +1,5 @@
-;; ====================ace-jump=========================
+;;; ace-jump
+;; ===================ace-jump==================
 ;; 使用avy替代ace-jump。
 (use-package ace-jump-mode
   :disabled
@@ -216,8 +217,9 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
                        collect (make-aj-visual-area :buffer (window-buffer w)
                                                     :window w
                                                     :frame f)))))
-;; ====================ace-jump=========================
-;; ===================MATLAB==================
+;; ===================ace-jump==================
+;;; MATLAB
+;; ====================MATLAB===================
 (use-package matlab-mode
   :disabled
   :defer t
@@ -248,8 +250,9 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
                (define-key matlab-mode-map [(meta \q)] nil)
                (define-key matlab-mode-map [(control meta \e)] nil)
                )))
-;; ===================MATLAB==================
-;; =========================tabbar================================
+;; ====================MATLAB===================
+;;; tabbar
+;; ====================tabbar===================
 (use-package tabbar
   :disabled
   :config
@@ -336,8 +339,9 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
       tabbar-on-dired-only-mode tabbar-on-dired-only-mode-on)
     ;; Eventually, switch on this global filter for tabbars:
     (global-tabbar-on-dired-only-mode 1)))
-;; =========================tabbar================================
-;; ==================color-theme===================
+;; ====================tabbar===================
+;;; color-theme
+;; ==================color-theme================
 ;; 用于emacs23以下。
 (use-package color-theme
   :disabled
@@ -349,8 +353,9 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
   ;; (add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0/themes/")
   ;; (color-theme-tango-light)
   (color-theme-tangotango))
-;; ==================color-theme===================
-;; ============原win语言环境字符集设置==============
+;; ==================color-theme================
+;;; 原win语言环境字符集设置
+;; ===========原win语言环境字符集设置===========
 ;; (defun qiang-font-existsp (font)
 ;;   (if (null (x-list-fonts font))
 ;;       nil t))
@@ -397,5 +402,5 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
 ;; ;; Chinese Font
 ;; ;;(dolist (charset '(kana han symbol cjk-misc bopomofo))  (set-fontset-font (frame-parameter nil 'font)         charset                   (font-spec :family "Microsoft Yahei" :size 12)))
 ;; ;;处理shell-mode乱码,好像没作用
-;; ============原win语言环境字符集设置==============
+;; ===========原win语言环境字符集设置===========
 (provide 'setup_abandoned)

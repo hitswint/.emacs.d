@@ -1,8 +1,10 @@
-;; ==================org-mode======================
+;;; org-mode
+;; =================org-mode====================
 (use-package org
   ;; Enabled in org-mode.
   :defer t
   :config
+;;;; Appearance
   ;; =================Appearance================
   (set-face-attribute 'org-level-5 nil :bold nil :foreground "cyan" :height 1.0)
   (set-face-attribute 'org-level-6 nil :bold nil :foreground "magenta" :height 1.0)
@@ -13,6 +15,7 @@
                           '(("^ +\\([-*]\\) "
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
   ;; =================Appearance================
+;;;; Capture
   ;; =================Capture===================
   (global-set-key (kbd "M-s o") nil)
   (global-set-key (kbd "M-s o l") 'org-store-link)
@@ -25,6 +28,7 @@
           ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others") "* %? %U %^g")
           ("j" "Journal" entry (file+datetree "~/org/journal.org.gpg") "* %? %U")))
   ;; =================Capture===================
+;;;; Keybindings
   ;; ===============Keybindings=================
   ;; %^{Description}
   (add-hook 'org-mode-hook
@@ -61,6 +65,7 @@
                (define-key org-mode-map [(control tab)] nil)
                (define-key org-mode-map [(control \')] nil)))
   ;; ===============Keybindings=================
+;;;; GTD
   ;; ===================GTD=====================
   ;; Do not show title of task in mode-line when using org-clock.
   (setq org-clock-heading-function
@@ -78,7 +83,8 @@
         '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")))
   ;; |后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔。
   ;; ===================GTD=====================
-  ;; ========org使用ditaa输出ascii图片==========
+;;;; 使用ditaa输出ascii图片
+  ;; ===========使用ditaa输出ascii图片==========
   (setq org-ditaa-jar-path "~/.emacs.d/org-8.2.1/contrib/scripts/ditaa.jar")
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
   (org-babel-do-load-languages
@@ -98,7 +104,8 @@
            (latex . t))))
   (setq org-confirm-babel-evaluate nil)
   ;; win中似乎不好使，应该是没装java。
-  ;; ========org使用ditaa输出ascii图片==========
+  ;; ===========使用ditaa输出ascii图片==========
+;;;; org中输入公式
   ;; =============org中输入公式=================
   (use-package cdlatex
     ;; Enabled in org-mode.
@@ -112,6 +119,7 @@
   ;; Pressing the backquote ` followed by a character inserts math macros, also outside LaTeX fragments. If you wait more than 1.5 seconds after the backquote, a help window will pop up.
   ;; Pressing the single-quote ' followed by another character modifies the symbol before point with an accent or a font. If you wait more than 1.5 seconds after the single-quote, a help window will pop up. Character modification will work only inside LaTeX fragments; outside the quote is normal.
   ;; =============org中输入公式=================
+;;;; 截图
   ;; ===================截图====================
   ;; screenshot-local截图到./pic文件夹中，screenshot截图到home/swint/org/pic文件夹中。
   (defun my-screenshot ()
@@ -175,6 +183,7 @@
   (global-set-key (kbd "C-x p") 'my-screenshot-local)
   (global-set-key (kbd "C-x P") 'my-screenshot)
   ;; ===================截图====================
+;;;; org插入截图
   ;; ================org插入截图================
   ;; 如果有#+ATTR_LATEX: :width 100则设置为图片宽度为100，否则显示原尺寸。
   ;; 设置尺寸之后使用org-redisplay-inline-images(C-c C-x C-M-v)更新图片。
@@ -255,7 +264,8 @@
   ;; org中打开和关闭图片显示(org-display-inline-images)和(org-remove-inline-images)。
   ;; 可以使用(org-toggle-inline-images)快捷键为C-c C-x C-v。
   ;; ================org插入截图================
-  ;; =========org中使用外部程序打开文件=========
+;;;; 使用外部程序打开文件
+  ;; ============使用外部程序打开文件===========
   (defun swint-org-open-at-point (&optional in-emacs)
     "Open annotated file if annotation storage file exists."
     (interactive)
@@ -314,7 +324,8 @@
       (interactive)
       (let (org-file-apps w32-browser)
         (swint-org-open-at-point)))))
-  ;; =========org中使用外部程序打开文件=========
+  ;; ============使用外部程序打开文件===========
+;;;; mobileorg
   ;; =================mobileorg=================
   ;; Set to the location of your Org files on your local system.
   (setq org-directory "~/org")
@@ -394,25 +405,21 @@
   (define-key org-mode-map (kbd "C-c M-,") 'swint-org-mobile-pull)
   (define-key org-mode-map (kbd "C-c M-.") 'swint-org-mobile-push)
   ;; =================mobileorg=================
+;;;; org输出doc
   ;; =================org输出doc================
   ;; 先生成odt文件(需要zip支持)，然后使用libreoffice转化成doc文件。
   ;; 在win上转doc格式路径名中不能有中文。
   (setq org-odt-preferred-output-format "doc") ;v8
   (define-key org-mode-map (kbd "C-c C-S-e") 'org-odt-export-to-odt)
   ;; =================org输出doc================
+;;;; org-latex-preview
   ;; =============org-latex-preview=============
   ;; C-c C-x C-l org-preview-latex-fragment表示preview当前位置。
   ;; 加C-u表示当前节，两个C-u表示当前head。
   (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境
   ;; =============org-latex-preview=============
-  ;; 定义org markup(*_+/=~)等的转换。
-  (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
-                                      (code . verb)
-                                      (italic . "\\emph{%s}")
-                                      (strike-through . "\\sout{%s}")
-                                      (underline . "\\underline{%s}")
-                                      (verbatim . protectedtexttt)))
-  ;; ===============org输出latex===================
+;;;; org输出latex
+  ;; ==============org输出latex=================
   ;; (require 'org-install)
   ;; (require 'org-latex)
   ;; 使用上面的两个命令会导致输出成beamer的选项出不来。
@@ -459,7 +466,16 @@ depending on the last command issued."
   ;;   (setq org-export-latex-classes nil))
   (unless (boundp 'org-latex-classes)
     (setq org-latex-classes nil))
-  ;; ================article设置===================
+  ;; 定义org markup(*_+/=~)等的转换。
+  (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
+                                      (code . verb)
+                                      (italic . "\\emph{%s}")
+                                      (strike-through . "\\sout{%s}")
+                                      (underline . "\\underline{%s}")
+                                      (verbatim . protectedtexttt)))
+  ;; ==============org输出latex=================
+;;;; article设置
+  ;; ==============article设置==================
   (add-to-list 'org-latex-classes
                '("org-article"
                  "\\documentclass[11pt]{ctexart}
@@ -509,7 +525,9 @@ depending on the last command issued."
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 ;; 使用Listings宏包格式化源代码(只是把代码框用listing环境框起来，还需要额外的设置。
 (setq org-export-latex-listings t)
-;; =============beamer设置================
+;; ================article设置==================
+;;;; beamer设置
+;; =================beamer设置==================
 ;; beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)。
 ;; 设定mainfont会导致公式环境中变量变成正体。
 ;; 设定setsansfont使用Times New Roman无法使用英文斜体和粗体。
@@ -592,9 +610,12 @@ depending on the last command issued."
   (add-to-list 'org-beamer-environments-extra
                '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
   (add-to-list 'org-beamer-environments-extra
-               '("uncoverenv" "U" "\\begin{uncoverenv}%a" "\\end{uncoverenv}"))))
-;; ==================org-mode======================
-;; =================org标注工具====================
+               '("uncoverenv" "U" "\\begin{uncoverenv}%a" "\\end{uncoverenv}")))
+;; =================beamer设置==================
+)
+;; =================org-mode====================
+;;; org标注工具
+;; ================org标注工具==================
 ;; Display annotated files with mark.
 (use-package dired-x-annotated
   ;; Enabled automatically.
@@ -648,8 +669,9 @@ depending on the last command issued."
      (t
       (switch-to-buffer-other-window (current-buffer))
       (swint-org-annotate-file (abbreviate-file-name (buffer-file-name)))))))
-;; =================org标注工具====================
-;; ==============org-speed-commands================
+;; ================org标注工具==================
+;;; org-speed-commands
+;; =============org-speed-commands==============
 ;; Activate single letter commands at beginning of a headline.
 (setq org-use-speed-commands t)
 ;; ? org-speed-command-help
@@ -665,8 +687,9 @@ depending on the last command issued."
 ;; ;/0/1/2/3 org-priority/A/B/C
 ;; v org-agenda
 ;; : org-set-tags-command
-;; ==============org-speed-commands================
-;; =====================outline====================
+;; =============org-speed-commands==============
+;;; outline
+;; ==================outline====================
 (use-package outline-magic
   ;; Enabled at commands.
   :defer t
@@ -729,8 +752,9 @@ depending on the last command issued."
         (goto-char (line-beginning-position))
         (when (looking-at (latex/section-regexp))
           (match-string-no-properties 0))))))
-;; =====================outline====================
-;; =====================outshine===================
+;; ==================outline====================
+;;; outshine
+;; ==================outshine===================
 (use-package outshine
   ;; Enabled at commands.
   :defer t
@@ -765,5 +789,5 @@ depending on the last command issued."
   (global-set-key (kbd "M-s n") nil)
   (global-set-key (kbd "M-s s") nil)
   (global-set-key (kbd "M-s M-s") 'helm-swoop))
-;; =====================outshine===================
+;; ==================outshine===================
 (provide 'setup_org_mode)

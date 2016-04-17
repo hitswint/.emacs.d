@@ -1,3 +1,4 @@
+;;; winner-mode
 ;; =================winner-mode=================
 (use-package winner
   ;; Enabled at commands.
@@ -7,6 +8,7 @@
   :config
   (winner-mode 1))
 ;; =================winner-mode=================
+;;; window-numbering
 ;; ==============window-numbering===============
 (use-package window-numbering
   ;; Enabled automatically.
@@ -92,12 +94,14 @@ If prefix ARG is given, delete the window instead of selecting it."
    (is-lin (global-set-key (kbd "<C-S-iso-lefttab>") 'transpose-with-previously-selected-window))
    (is-win (global-set-key (kbd "C-S-<tab>") 'transpose-with-previously-selected-window))))
 ;; ==============window-numbering===============
+;;; switch-window
 ;; ===============switch-window=================
 (use-package switch-window
   ;; Enabled at commands.
   :defer t
   :bind ("C-x o" . switch-window))
 ;; ===============switch-window=================
+;;; windmove
 ;; ================windmove=====================
 (use-package windmove
   ;; Enabled at commands.
@@ -143,6 +147,7 @@ If prefix ARG is given, delete the window instead of selecting it."
     (setq previously-selected-window (selected-window))
     (funcall (ignore-error-wrapper 'windmove-down))))
 ;; ================windmove=====================
+;;; 三窗口设置
 ;; ================三窗口设置===================
 (defun split-window-3-horizontally (&optional arg)
   "Split window into 3 while largest one is in horizon"

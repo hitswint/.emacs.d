@@ -1,4 +1,5 @@
-;; ===========================ibuffer==================================
+;;; ibuffer
+;; =========================ibuffer==============================
 (use-package ibuffer
   ;; Enabled at commands.
   :defer t
@@ -8,10 +9,11 @@
         ibuffer-expert t
         ibuffer-show-empty-filter-groups nil)
   (define-key ibuffer-mode-map (kbd "A") 'ibuffer-do-view-horizontally)
+;;;; ibuffer分组
+  ;; ======================ibuffer分组===========================
   (use-package ibuf-ext
     ;; Enabled automatically.
     :config
-    ;; =====================ibuffer分组==========================
     ;; Enable ibuffer-filter-by-filename to filter on directory names too.
     ;; 这个版本的ibuffer有问题，dired的路径为"~/"，而文件的路径为"/home/swint/"，所以要分开设置。
     (define-ibuffer-filter filename
@@ -57,9 +59,9 @@
                              (filename . "c:/Users/swint/Pictures"))))))))
     (add-hook 'ibuffer-mode-hook
               (lambda ()
-                (ibuffer-switch-to-saved-filter-groups "default")))
-    ;; =====================ibuffer分组==========================
-    )
+                (ibuffer-switch-to-saved-filter-groups "default"))))
+  ;; ======================ibuffer分组===========================
+;;;; 按路径排列
   ;; ========================按路径排列==========================
   (define-ibuffer-sorter filename-or-dired
     "Sort the buffers by their pathname."
@@ -80,5 +82,5 @@
   (define-key ibuffer-mode-map (kbd ";") 'ibuffer-do-sort-by-filename-or-dired)
   ;; ========================按路径排列==========================
   )
-;; ===========================ibuffer==================================
+;; =========================ibuffer==============================
 (provide 'setup_ibuffer)

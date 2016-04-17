@@ -1,3 +1,4 @@
+;;; desktop-and-session
 ;; =====================desktop-and-session========================
 (use-package session
   ;; Enabled automatically.
@@ -64,6 +65,7 @@
   (add-to-list 'desktop-minor-mode-table '(diff-hl-mode nil))
   (add-to-list 'desktop-minor-mode-table '(diff-hl-flydiff-mode nil))
   (add-to-list 'desktop-minor-mode-table '(diff-hl-dired-mode nil)))
+;;;; 打开文件时自动跳转到上次的位置(不好用)
 ;; ==========打开文件时自动跳转到上次的位置(不好用)===========
 ;; ;; Save point position between sessions
 ;; (require 'saveplace)

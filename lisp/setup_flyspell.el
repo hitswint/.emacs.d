@@ -1,3 +1,4 @@
+;;; flyspell
 ;; ================flyspell==================
 (use-package flyspell
   ;; Enabled at commands.
@@ -62,11 +63,12 @@
             (progn
               (message "No more miss-spelled word!")
               (setq arg 0)))))))
+;; ================flyspell==================
+;;; helm-flyspell
 ;; =============helm-flyspell================
 (use-package helm-flyspell
   ;; Enabled at commands.
   :defer t
   :bind ("M-s M-f" . helm-flyspell-correct))
 ;; =============helm-flyspell================
-;; ================flyspell==================
 (provide 'setup_flyspell)

@@ -1,4 +1,5 @@
-;; ====================dired======================
+;;; dired
+;; ==================dired=====================
 (use-package dired
   ;; Enabled automatically.
   :config
@@ -11,6 +12,7 @@
     (diredful-mode 1))
   (setq dired-recursive-copies 'top)
   (setq dired-recursive-deletes 'top)
+;;;; Auto-revert-mode
   ;; =============Auto-revert-mode=============
   ;; Auto refresh buffers
   (global-auto-revert-mode 1)
@@ -23,6 +25,8 @@
   ;; 使用dired-mode自带的auto-revert。
   (setq dired-auto-revert-buffer t)
   ;; =============Auto-revert-mode=============
+;;;; setup-and-keybindings
+  ;; ==========setup-and-keybindings===========
   (put 'dired-find-alternate-file 'disabled nil)
   ;; 显示文件大小
   (setq dired-listing-switches "-alh")
@@ -59,6 +63,8 @@
                (define-key dired-mode-map (kbd "C-c C-p") 'dired-k--previous-annotated-file)
                (define-key dired-mode-map (kbd "C-c C-n") 'dired-k--next-annotated-file)
                (define-key dired-mode-map (kbd "C-/") 'helm-dired-current-file)))
+  ;; ==========setup-and-keybindings===========
+;;;; Kill subdir
   ;; ===============Kill subdir================
   (defun file-basename (file)
     (let ((file-no-ending-slash (replace-regexp-in-string "/$" "" file)))
@@ -72,6 +78,7 @@
       (dired-goto-subdir parent-dir)
       (search-forward search-term)))
   ;; ===============Kill subdir================
+;;;; helm-dired-current-file
   ;; ==========helm-dired-current-file=========
   (defun helm-dired-current-file ()
     (interactive)
@@ -82,6 +89,7 @@
                            (if helm-ff-transformer-show-only-basename
                                (helm-basename swint-dired-current-file) swint-dired-current-file)))))
   ;; ==========helm-dired-current-file=========
+;;;; 默认文件夹排在最前面
   ;; =========默认文件夹排在最前面=============
   (defun sof/dired-sort ()
     "Dired sort hook to list directories first."
@@ -95,6 +103,7 @@
     (set-buffer-modified-p nil))
   (add-hook 'dired-after-readin-hook 'sof/dired-sort)
   ;; =========默认文件夹排在最前面=============
+;;;; 文件夹排序
   ;; =============文件夹排序===================
   (add-hook 'dired-mode-hook (lambda ()
                                (interactive)
@@ -118,6 +127,7 @@
                                     (interactive)
                                     (dired-sort-other (concat dired-listing-switches ""))))))
   ;; =============文件夹排序===================
+;;;; 跳转至dired顶部和尾部
   ;; ========跳转至dired顶部和尾部=============
   (defun dired-back-to-top ()
     (interactive)
@@ -140,6 +150,7 @@
   (define-key dired-mode-map
     (vector 'remap 'smart-beginning-of-line) 'dired-beginning-of-line)
   ;; ========跳转至dired顶部和尾部=============
+;;;; webdav_sync同步文件
   ;; =========webdav_sync同步文件==============
   (defun swint-webdav-sync-down ()
     "Sync files in webdav server to ~/Nutstore-sync."
@@ -214,6 +225,7 @@
   (global-set-key (kbd "C-x M-.") 'swint-webdav-sync-up)
   (global-set-key (kbd "C-x M-/") 'swint-webdav-sync-bi)
   ;; =========webdav_sync同步文件==============
+;;;; unison
   ;; ================unison====================
   (defun swint-unison-sync-backups ()
     "Sync files in ~/Nutstore-sync to webdav server."
@@ -237,7 +249,8 @@
   (global-set-key (kbd "C-c M-/") 'swint-unison-sync-backups)
   ;; ================unison====================
   (when is-lin
-    ;; ==============默认程序打开文件============
+;;;; 默认程序打开文件
+    ;; ============默认程序打开文件============
     (add-hook 'dired-mode-hook
               (lambda ()
                 (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-for-alternate-file)))
@@ -317,18 +330,20 @@
            (list "\\.ods$" "libreoffice * >/dev/null 2>&1 &")
            (list "\\.tex$" "xelatex * >/dev/null 2>&1 &")
            (list "\\.c$" "gcc -Wall")))
-    ;; ==============默认程序打开文件============
-    ;; ==========在当前目录下打开urxvt===========
+    ;; ============默认程序打开文件============
+;;;; 在当前目录下打开urxvt
+    ;; ========在当前目录下打开urxvt===========
     (defun urxvt-default-directory ()
       (interactive)
       (start-process "Urxvt" nil shell-file-name shell-command-switch
                      (concat "tabbed -c " "urxvt" " -cd " "\""
                              (expand-file-name default-directory) "\"" " -embed")))
     (global-set-key (kbd "C-s-<return>") 'urxvt-default-directory)
-    ;; ==========在当前目录下打开urxvt============
+    ;; ========在当前目录下打开urxvt===========
     ))
-;; ====================dired======================
-;; ==================w32-browser==================
+;; ==================dired=====================
+;;; w32-browser
+;; ================w32-browser=================
 (use-package w32-browser
   ;; Enabled at commands.
   :if is-win
@@ -352,8 +367,9 @@
         (progn (w32-shell-execute "open" "word")
                (sit-for 5)))
     (w32-browser-open)))
-;; ==================w32-browser==================
-;; ==================peep-dired===================
+;; ================w32-browser=================
+;;; peep-dired
+;; ================peep-dired==================
 (use-package peep-dired
   ;; Enabled at commands.
   :defer t
@@ -412,8 +428,9 @@
                (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)
                (define-key peep-dired-mode-map (kbd "C-p") nil)
                (define-key peep-dired-mode-map (kbd "C-n") nil))))
-;; ==================peep-dired===================
-;; =====================async=====================
+;; ================peep-dired==================
+;;; async
+;; ==================async=====================
 ;; async: Simple library for asynchronous processing in Emacs.
 ;; async-start async-start-process async-get async-ready async-wait
 (use-package dired-async
@@ -451,8 +468,9 @@
                              nil dired-copy-how-to-fn))
     (dired-async-mode 1)))
 ;; (autoload 'dired-async-mode "dired-async.el" nil t)
-;; =====================async=====================
-;; ==================dired-narrow=================
+;; ==================async=====================
+;;; dired-narrow
+;; ===============dired-narrow=================
 (use-package dired-narrow
   ;; Enabled at commands.
   :defer t
@@ -465,8 +483,9 @@
                                   (unless (or (string-match "[iuv]" it) ;当字符串中有iuv时，不转换string
                                               (string-empty-p (pinyin-search--pinyin-to-regexp it))) ;当搜索中文或符号时，不转换string
                                     (re-search-forward (pinyin-search--pinyin-to-regexp it) (line-end-position) t)))) words))))
-;; ==================dired-narrow=================
-;; ==================dired-ranger=================
+;; ===============dired-narrow=================
+;;; dired-ranger
+;; ===============dired-ranger=================
 (use-package dired-ranger
   ;; Enabled at commands.
   :defer t
@@ -480,8 +499,9 @@
   ;; 加C-u不清除clipboards。
   (bind-key "C-y" 'dired-ranger-paste dired-mode-map)
   (bind-key "C-M-y" 'dired-ranger-move dired-mode-map))
-;; ==================dired-ranger=================
-;; ==============dired-view-file-or-dir===========
+;; ===============dired-ranger=================
+;;; dired-view-file-or-dir
+;; ===========dired-view-file-or-dir===========
 (defconst +kilobyte+ 1024.0)
 (defconst +megabyte+ (* 1024 1024.0))
 (defconst +gigabyte+ (* 1024 1024 1024.0))
@@ -534,5 +554,5 @@ Assuming .. and . is a current directory (like in FAR)"
                                  " bytes)"))
               (message (concat "Cannot determine size of " filename)))))
       (view-file file))))
-;; ==============dired-view-file-or-dir===========
+;; ===========dired-view-file-or-dir===========
 (provide 'setup_dired)

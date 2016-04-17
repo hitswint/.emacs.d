@@ -1,3 +1,4 @@
+;;; Anzu
 ;; =====================Anzu=======================
 (use-package anzu
   ;; Enabled at commands.
@@ -15,6 +16,7 @@
    '(anzu-search-threshold 1000)
    '(anzu-replace-to-string-separator " => ")))
 ;; =====================Anzu=======================
+;;; pinyin-search
 ;; ==================pinyin-search=================
 ;; 安装时由于isearch-mode-map中已经设定M-s为helm-swoop，导致快捷键设定失败，修改之。
 (use-package pinyin-search
@@ -76,6 +78,7 @@
             (lambda ()
               (setq pinyin-search-activated nil))))
 ;; ==================pinyin-search=================
+;;; 拼音首字母搜索
 ;; =================拼音首字母搜索=================
 ;; 使用pinyin-search替代，但这个可以同时搜索中英文，保留之。
 (defun swint-pinyin-search-forward (&optional bound noerror count)

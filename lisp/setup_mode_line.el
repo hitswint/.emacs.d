@@ -1,3 +1,4 @@
+;;; smart-mode-line
 ;; ================smart-mode-line=================
 (use-package smart-mode-line
   ;; Enabled automatically.
@@ -66,6 +67,7 @@
   (add-to-list 'sml/hidden-modes " HS")
   (add-to-list 'sml/hidden-modes " HSA"))
 ;; ================smart-mode-line=================
+;;; abbrev-for-mode-line
 ;; =============abbrev-for-mode-line===============
 (defvar mode-line-cleaner-alist
   '((dired-mode . "Dr")
@@ -92,6 +94,7 @@ want to use in the modeline *in lieu of* the original.")
                   (setq mode-name mode-str)))))
 (add-hook 'after-change-major-mode-hook 'clean-mode-line)
 ;; =============abbrev-for-mode-line===============
+;;; nyan-mode
 ;; ===================nyan-mode====================
 (use-package nyan-mode
   ;; Enabled automatically.

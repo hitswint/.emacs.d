@@ -1,3 +1,4 @@
+;;; 全屏和最大化
 ;; ================全屏和最大化===============
 (when is-lin
   ;; 启动全屏的快捷键。
@@ -24,6 +25,7 @@
   ;;    '((height . 30) (width . 75) (menu-bar-lines . 20) (tool-bar-lines . 0)))
   )
 ;; ================全屏和最大化===============
+;;; tangotango-theme
 ;; ==============tangotango-theme=============
 (load-theme 'tangotango t)
 ;; ==============tangotango-theme=============

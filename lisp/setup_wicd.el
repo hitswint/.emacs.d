@@ -1,3 +1,4 @@
+;;; wicd-mode
 ;; ================wicd-mode=================
 (use-package wicd-mode
   ;; Enabled at commands.

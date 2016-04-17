@@ -1,3 +1,4 @@
+;;; graphviz-dot-mode
 ;; ====================graphviz-dot-mode=========================
 (use-package graphviz-dot-mode
   ;; Enabled in graphviz-dot-mode.
