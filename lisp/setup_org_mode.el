@@ -759,9 +759,30 @@ depending on the last command issued."
   ;; Enabled at commands.
   :defer t
   :commands (outshine-hook-function outshine-cycle-buffer)
+  :bind ("M-s C-i" . imenu-outshine)
   :config
   (setq outshine-use-speed-commands t)
   (setq outshine-imenu-show-headlines-p nil)
+  (defun imenu-outshine--make-index-alist ()
+    "Create an index alist for the outshine headings."
+    (imenu--generic-function `((nil ,(concat (outshine-calc-outline-regexp) "\\(.*$\\)") 1))))
+  (defun imenu-outshine (index-item)
+    "Jump to a outshine heading in the buffer."
+    (interactive (list (imenu-choose-buffer-index
+                        nil (imenu-outshine--make-index-alist))))
+    (if (stringp index-item)
+        (setq index-item (assoc index-item (imenu-outshine--make-index-alist))))
+    (when index-item
+      (push-mark nil t)
+      (let* ((is-special-item (listp (cdr index-item)))
+             (function
+              (if is-special-item
+                  (nth 2 index-item) imenu-default-goto-function))
+             (position (if is-special-item
+                           (cadr index-item) (cdr index-item)))
+             (args (if is-special-item (cdr (cddr index-item)))))
+        (apply function (car index-item) position args))
+      (run-hooks 'imenu-after-jump-hook)))
   (defconst outshine-octave-outline-regexp-base
     (format "[%%]\\{1,%d\\}" outshine-max-level)
     "Oldschool Emacs Lisp base for calculating the outline-regexp")

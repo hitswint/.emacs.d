@@ -12,6 +12,7 @@
   (helm-mode 1)
   (setq helm-imenu-delimiter " | ")
   (global-set-key (kbd "M-s i") 'helm-semantic-or-imenu)
+  (global-set-key (kbd "M-s I") 'helm-imenu-in-all-buffers)
   (global-set-key (kbd "C-M-y") 'helm-show-kill-ring)
   (global-set-key (kbd "C-,") 'swint-helm-file-buffers-list)
   (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)

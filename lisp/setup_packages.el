@@ -324,7 +324,7 @@
 (use-package imenu-anywhere
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s I" . helm-imenu-anywhere)
+  :bind ("M-s M-I" . helm-imenu-anywhere)
   :config
   (setq imenu-anywhere-delimiter-helm " | "))
 ;; ===================imenu-anywhere===============
