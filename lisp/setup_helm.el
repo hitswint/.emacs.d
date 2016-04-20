@@ -10,9 +10,6 @@
   :config
   (use-package helm-config)
   (helm-mode 1)
-  (setq helm-imenu-delimiter " | ")
-  (global-set-key (kbd "M-s i") 'helm-semantic-or-imenu)
-  (global-set-key (kbd "M-s I") 'helm-imenu-in-all-buffers)
   (global-set-key (kbd "C-M-y") 'helm-show-kill-ring)
   (global-set-key (kbd "C-,") 'swint-helm-file-buffers-list)
   (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
@@ -659,4 +656,62 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   :config
   (helm-descbinds-mode))
 ;; ==============helm-descbinds=================
+;;; helm-imenu
+;; ================helm-imenu===================
+(use-package helm-imenu
+  ;; Enabled at commands.
+  :defer t
+  :bind (("M-s i" . helm-semantic-or-imenu)
+         ("M-s I" . helm-imenu-in-all-buffers)
+         ("M-s C-i" . helm-imenu-outshine))
+  :config
+  (setq helm-imenu-delimiter " | ")
+  ;; helm-imenu-outshine.
+  (defvar helm-source-imenu-outshine nil)
+  (defvar helm-cached-imenu-outshine-tick nil)
+  (defvar helm-cached-imenu-outshine-candidates nil)
+  (defvar-local imenu-outshine--index-alist nil)
+  (defun imenu-outshine--make-index-alist ()
+    "Create an index alist for the outshine headings."
+    (setq imenu-outshine--index-alist
+          (save-excursion
+            (save-restriction
+              (widen)
+              (imenu--generic-function `((nil ,(concat (outshine-calc-outline-regexp) "\\(.*$\\)") 1))))))
+    (imenu--truncate-items imenu-outshine--index-alist))
+  (defun helm-imenu-outshine-candidates (&optional buffer)
+    (with-current-buffer (or buffer helm-current-buffer)
+      (let ((tick (buffer-modified-tick)))
+        (if (eq helm-cached-imenu-outshine-tick tick)
+            helm-cached-imenu-outshine-candidates
+          (setq imenu-outshine--index-alist nil)
+          (prog1 (setq helm-cached-imenu-outshine-candidates
+                       (let ((index (imenu-outshine--make-index-alist)))
+                         (helm-imenu--candidates-1
+                          (delete (assoc "*Rescan*" index) index))))
+            (setq helm-cached-imenu-outshine-tick tick))))))
+  (defclass helm-imenu-outshine-source (helm-source-sync)
+    ((candidates :initform 'helm-imenu-outshine-candidates)
+     (candidate-transformer :initform 'helm-imenu-transformer)
+     (persistent-action :initform 'helm-imenu-persistent-action)
+     (persistent-help :initform "Show this entry")
+     (keymap :initform helm-imenu-map)
+     (help-message :initform 'helm-imenu-help-message)
+     (action :initform 'helm-imenu-action)))
+  (defun helm-imenu-outshine ()
+    "Preconfigured `helm' for `imenu'."
+    (interactive)
+    (unless helm-source-imenu-outshine
+      (setq helm-source-imenu-outshine
+            (helm-make-source "Imenu outshine" 'helm-imenu-outshine-source
+              :fuzzy-match helm-imenu-fuzzy-match)))
+    (let ((imenu-auto-rescan t)
+          (str (thing-at-point 'symbol))
+          (helm-execute-action-at-once-if-one
+           helm-imenu-execute-action-at-once-if-one))
+      (helm :sources 'helm-source-imenu-outshine
+            :default (list (concat "\\_<" str "\\_>") str)
+            :preselect str
+            :buffer "*helm imenu outshine*"))))
+;; ================helm-imenu===================
 (provide 'setup_helm)
