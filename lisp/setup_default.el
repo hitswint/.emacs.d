@@ -58,4 +58,11 @@
   :config
   (setq smartrep-mode-line-string-activated nil))
 ;; ==================smartrep===================
+;; ==============Local Variables================
+;;; Local variables.
+;; add-file-local-variable/-prop-line分别在尾首加local variables。
+(setq safe-local-variable-values '((eval org-redisplay-inline-images)
+                                   (org-image-actual-width . t)
+                                   (zotero-collection . #("0" 0 1 (name "*ALL*")))))
+;; ==============Local Variables================
 (provide 'setup_default)
