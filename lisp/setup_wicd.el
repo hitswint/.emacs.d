@@ -7,6 +7,7 @@
   :defer t
   :bind ("C-M-$" . wicd)
   :config
+  (setq wicd-wireless-max-id 100)
   (defvar dbus-object-end-scan nil)
   (defvar dbus-object-start-scan nil)
   (defvar dbus-object-connect nil)

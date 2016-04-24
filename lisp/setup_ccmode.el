@@ -31,6 +31,7 @@
                                                          (setq-local compilation-read-command nil)
                                                          (call-interactively 'compile)))
               (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
+              (define-key c-mode-base-map (kbd "C-M-q") nil)
               (define-key c-mode-base-map (kbd "C-M-h") nil)
               (define-key c-mode-base-map (kbd "(") nil)
               (define-key c-mode-base-map (kbd "{") nil)))
@@ -95,10 +96,14 @@
   :init
   (add-hook 'c-mode-hook 'fa-config-default)
   :config
-  (define-key function-args-mode-map (kbd "C-c o") 'moo-complete)
-  (define-key function-args-mode-map (kbd "C-c O") 'fa-show)
-  (define-key function-args-mode-map (kbd "C-j") 'fa-jump-maybe)
+  (define-key function-args-mode-map (kbd "C-c u") 'moo-complete)
   (define-key function-args-mode-map (kbd "C-c i") 'moo-jump-local)
+  (define-key function-args-mode-map (kbd "C-c o") '(lambda ()
+                                                      (interactive)
+                                                      (if (overlayp fa-overlay)
+                                                          (fa-abort)
+                                                        (fa-show))))
+  (define-key function-args-mode-map (kbd "C-j") 'fa-jump-maybe)
   (define-key function-args-mode-map (kbd "M-n") nil)
   (define-key function-args-mode-map (kbd "M-u") nil))
 ;; ==================function-args==============
@@ -118,27 +123,29 @@
 ;;; semantic
 ;; ===================semantic==================
 (use-package semantic
-  ;; Enabled at idle.
-  :defer 2
+  ;; Enabled in modes.
+  :defer t
+  :init
+  (dolist (hook '(c-mode-hook
+                  c++-mode-hook))
+    (add-hook hook 'semantic-mode))
   :config
-  (global-semanticdb-minor-mode 1)
+  (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
   ;; 在空闲时分析buffer。
-  (global-semantic-idle-scheduler-mode 1)
+  (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
   ;; 在minibuffer显示函数。
-  (global-semantic-idle-summary-mode 1)
-  ;; 在header-line显示函数，显示有问题。可以用which-function-mode代替。
-  (global-semantic-stickyfunc-mode 1)
-  (semantic-mode 1)
-  ;; 所有semantic的快捷键均以C-c ,为前缀，可以考虑用M-s s代替。
+  (add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
+  ;; 在header-line显示函数。
+  (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+  ;; 默认semantic快捷键以C-c ,为前缀。
   (define-key semantic-mode-map (kbd "C-c ,") nil))
 ;; ===================semantic==================
 ;;; helm-gtags
 ;; ==================helm-gtags=================
 ;; helm-man-woman: C-x c m
 ;; helm-semantic-or-imenu: C-x c i
-;; 可以使用senator-previous-tag和senator-next-tag跳转tag。
 (use-package helm-gtags
-  ;; Enabled in cc-mode.
+  ;; Enabled in modes.
   :defer t
   :commands helm-gtags-mode
   :init
@@ -156,13 +163,14 @@
         helm-gtags-pulse-at-cursor t
         helm-gtags-prefix-key "\C-c"
         helm-gtags-suggested-key-mapping t)
-  (define-key helm-gtags-mode-map (kbd "C-c a") 'helm-gtags-tags-in-this-function)
   (define-key helm-gtags-mode-map (kbd "C-c C-,") 'helm-gtags-dwim)
   (define-key helm-gtags-mode-map (kbd "C-c C-.") 'helm-gtags-pop-stack)
   (define-key helm-gtags-mode-map (kbd "C-c C-/") 'helm-gtags-select)
-  (define-key helm-gtags-mode-map (kbd "C-c ,") 'helm-gtags-previous-history)
-  (define-key helm-gtags-mode-map (kbd "C-c .") 'helm-gtags-next-history)
-  (define-key helm-gtags-mode-map (kbd "C-c /") 'helm-gtags-show-stack)
+  (define-key helm-gtags-mode-map (kbd "C-c C-M-/") 'helm-gtags-tags-in-this-function)
+  (smartrep-define-key helm-gtags-mode-map "C-c"
+    '(("," . helm-gtags-previous-history)
+      ("." . helm-gtags-next-history)
+      ("/" . helm-gtags-show-stack)))
   (define-key helm-gtags-mode-map (kbd "M-.") nil))
 ;; ==================helm-gtags=================
 (provide 'setup_ccmode)
