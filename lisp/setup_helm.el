@@ -601,11 +601,11 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   ;; Enabled at commands.
   :defer t
   :bind (("M-s M-s" . helm-swoop)
-         ("M-s M-S" . helm-swoop-back-to-last-point)
+         ("M-s M-S" . helm-multi-swoop-all)
          ("M-s C-s" . helm-multi-swoop)
-         ("M-s C-S-s" . helm-multi-swoop-all))
+         ("M-s C-m" . helm-swoop-back-to-last-point))
   :config
-  ;; helm-swoop 中使用C-c C-e编辑，C-x C-s保存
+  ;; helm-swoop 中使用C-c C-e编辑，C-x C-s保存。
   ;; When doing isearch, hand the word over to helm-swoop
   (define-key isearch-mode-map (kbd "M-s M-s") 'helm-swoop-from-isearch)
   ;; From helm-swoop to helm-multi-swoop-all
@@ -637,8 +637,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   :defer t
   ;; helm-do-ag 互动式搜索，但只能搜索一个词。
   ;; helm-ag 先输入词，可以在结果中搜索第二个词。
-  :bind (("C-x g" . helm-do-ag)
-         ("C-x G" . helm-ag))
+  :bind ("C-x g" . helm-do-ag)
   :config
   (define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)
   (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)

@@ -51,6 +51,7 @@
             company
             company-c-headers
             company-quickhelp
+            counsel
             dash
             diff-hl
             diminish
@@ -97,11 +98,13 @@
             highlight-parentheses
             highlight-symbol
             hungry-delete
+            hydra
             ido-at-point
             ido-hacks
             ido-ubiquitous
             ido-vertical-mode
             imenu-anywhere
+            ivy
             lacarte
             latex-preview-pane
             let-alist
@@ -143,6 +146,7 @@
             smart-mode-line
             smartrep
             smex
+            swiper
             switch-window
             tangotango-theme
             tree-mode

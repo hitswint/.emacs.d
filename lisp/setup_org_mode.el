@@ -712,7 +712,7 @@ depending on the last command issued."
   (add-hook 'outline-minor-mode-hook
             (lambda ()
               ;; 在latex-mode和lisp-interaction-mode中不开启outshine。
-              (unless (memq major-mode '(latex-mode lisp-interaction-mode))
+              (unless (memq major-mode '(latex-mode lisp-interaction-mode eshell-mode))
                 (outshine-hook-function))
               (define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
               (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
@@ -788,7 +788,7 @@ depending on the last command issued."
   (define-key outline-mode-prefix-map (kbd "i") 'navi-search-and-switch)
   (define-key outline-mode-prefix-map (kbd "o") 'navi-switch-to-twin-buffer)
   (global-set-key (kbd "M-s n") nil)
-  (global-set-key (kbd "M-s s") nil)
+  (global-set-key (kbd "M-s s") 'swint-swiper)
   (global-set-key (kbd "M-s M-s") 'helm-swoop))
 ;; ==================outshine===================
 (provide 'setup_org_mode)

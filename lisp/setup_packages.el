@@ -157,17 +157,14 @@
   :load-path "site-lisp/everything/"
   :if is-win
   :defer t
-  :bind ("C-x F" . everything)
-  :init
-  (global-set-key (kbd "C-x C-S-f") '(lambda () (interactive)
-                                       (w32-shell-execute
-                                        "open" "c:/Program Files/Everything/Everything.exe")))
-  (global-set-key (kbd "C-x C-M-f") '(lambda () (interactive)
-                                       (w32-shell-execute
-                                        "open" "c:/Program Files/Everything/Everything.exe"
-                                        (concat "-p " (expand-file-name default-directory)))))
+  :bind ("C-s-s" . everything-default-directory)
   :config
-  (setq everything-ffap-integration nil) ;; to disable ffap integration
+  (defun everything-default-directory ()
+    (interactive)
+    (w32-shell-execute
+     "open" "c:/Program Files/Everything/Everything.exe"
+     (concat "-p " (expand-file-name default-directory))))
+  (setq everything-ffap-integration nil)
   (setq everything-matchpath t)
   (setq everything-cmd "c:/Program Files/Everything/es.exe"))
 ;; ===================everything===================
@@ -278,7 +275,11 @@
   :defer t
   :bind ("M-Y" . popup-kill-ring)
   :config
-  (setq popup-kill-ring-interactive-insert t))
+  (setq popup-kill-ring-interactive-insert nil)
+  (setq popup-kill-ring-popup-width 30)
+  (setq popup-kill-ring-popup-margin-left 0)
+  (setq popup-kill-ring-popup-margin-right 0)
+  (setq popup-kill-ring-timeout 0.5))
 ;; ================popup-kill-ring=================
 ;;; popup
 ;; ====================popup=======================
@@ -692,8 +693,8 @@ is named like ODF with the extension turned to pdf."
 (use-package vimish-fold
   ;; Enabled at commands.
   :defer t
-  :bind (("M-s v" . vimish-fold)
-         ("M-s V" . vimish-fold-delete)))
+  :bind (("C-x C-`" . vimish-fold)
+         ("C-x C-~" . vimish-fold-delete)))
 ;; ==================vimish-fold===================
 ;;; clipmon
 ;; ====================clipmon=====================
@@ -849,4 +850,50 @@ is named like ODF with the extension turned to pdf."
   :defer t
   :bind ("M-:" . evilnc-comment-or-uncomment-lines))
 ;; =============evil-nerd-commenter================
+;;; ivy/swiper/counsel/hydra
+;; ===========ivy/swiper/counsel/hydra=============
+(use-package ivy
+  ;; Enabled after features.
+  :defer t
+  :after (swiper counsel)
+  :config
+  (bind-key "M-O" 'ivy-dispatching-done ivy-minibuffer-map)
+  (bind-key "M-I" 'ivy-insert-current ivy-minibuffer-map)
+  (bind-key "C-h" 'ivy-avy ivy-minibuffer-map)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-height 10)
+  (setq ivy-count-format "%d/%d "))
+(use-package swiper
+  ;; Enabled at commands.
+  :defer t
+  :bind (("M-s s" . swint-swiper)
+         ("M-s S" . swiper-all)
+         :map isearch-mode-map
+         ("M-s s" . swiper-from-isearch))
+  :config
+  (defun swint-swiper ()
+    (interactive)
+    (let ((swint-swiper-current-thing
+           (if (region-active-p)
+               (buffer-substring (region-beginning) (region-end))
+             (symbol-name-at-point))))
+      (deactivate-mark)
+      (swiper swint-swiper-current-thing))))
+(use-package counsel
+  ;; Enabled at commands.
+  :defer t
+  :bind (("C-x G" . swint-counsel-ag)
+         ("C-x F" . counsel-locate)
+         ("M-X" . counsel-M-x))
+  :config
+  (defun swint-counsel-ag ()
+    (interactive)
+    (if is-win
+        (call-interactively 'counsel-pt)
+      (call-interactively 'counsel-ag))))
+(use-package hydra
+  ;; Enabled after features.
+  :defer t
+  :after ivy-hydra)
+;; ===========ivy/swiper/counsel/hydra=============
 (provide 'setup_packages)

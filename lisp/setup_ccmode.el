@@ -118,7 +118,7 @@
   :config
   (add-hook 'c-mode-hook
             (lambda ()
-              (define-key hs-minor-mode-map (kbd "C-M-i") 'hs-toggle-hiding))))
+              (define-key hs-minor-mode-map (kbd "C-c C-`") 'hs-toggle-hiding))))
 ;; ==================hs-minor-mode==============
 ;;; semantic
 ;; ===================semantic==================

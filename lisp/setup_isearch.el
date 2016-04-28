@@ -22,24 +22,11 @@
 (use-package pinyin-search
   ;; Enabled at commands.
   :defer t
-  :commands pinyin-search--pinyin-to-regexp
-  :bind (("C-s" . swint-isearch-forward)
-         ("C-r" . swint-isearch-backward))
+  :commands (pinyin-search--pinyin-to-regexp symbol-name-at-point)
+  :bind (("C-s" . isearch-forward-pinyin)
+         ("C-r" . isearch-backward-pinyin))
   :config
-  (defun swint-isearch-forward ()
-    (interactive)
-    (if (region-active-p)
-        (setq swint-isearch-current-thing (buffer-substring (region-beginning) (region-end)))
-      (setq swint-isearch-current-thing (symbol-name-at-point)))
-    (isearch-forward-pinyin))
-  (defun swint-isearch-backward ()
-    (interactive)
-    (if (region-active-p)
-        (setq swint-isearch-current-thing (buffer-substring (region-beginning) (region-end)))
-      (setq swint-isearch-current-thing (symbol-name-at-point)))
-    (isearch-backward-pinyin))
   ;; ==========Isearch thing at point===========
-  (defvar swint-isearch-current-thing nil)
   (defun symbol-name-at-point ()
     (let ((symbol (symbol-at-point)))
       (if symbol
@@ -48,9 +35,12 @@
   (defun isearch-thing ()
     "Search for the current thing."
     (interactive)
-    (if (region-active-p)
-        (deactivate-mark))
-    (isearch-yank-string swint-isearch-current-thing))
+    (let ((swint-isearch-current-thing
+           (if (region-active-p)
+               (buffer-substring (region-beginning) (region-end))
+             (symbol-name-at-point))))
+      (deactivate-mark)
+      (isearch-yank-string swint-isearch-current-thing)))
   (define-key isearch-mode-map (kbd "C-t") 'isearch-thing)
   ;; ==========Isearch thing at point===========
   (define-key isearch-mode-map (kbd "C-q") #'isearch-toggle-pinyin)
