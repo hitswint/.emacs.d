@@ -104,6 +104,7 @@
             ido-ubiquitous
             ido-vertical-mode
             imenu-anywhere
+            interleave
             ivy
             lacarte
             latex-preview-pane

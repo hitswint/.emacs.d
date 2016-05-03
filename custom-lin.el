@@ -14,12 +14,6 @@
  '(dirtree-windata (quote (frame left 0.3 delete)))
  '(display-time-mode nil)
  '(emms-lyrics-display-on-modeline nil)
- '(helm-bibtex-format-citation-functions
-   (quote
-    ((org-mode . helm-bibtex-format-citation-ebib)
-     (latex-mode . swint-helm-bibtex-format-citation-cite)
-     (markdown-mode . helm-bibtex-format-citation-pandoc-citeproc)
-     (default . helm-bibtex-format-citation-default))))
  '(helm-buffer-details-flag nil)
  '(helm-completing-read-handlers-alist
    (quote

@@ -75,8 +75,10 @@
   ;; Enabled after features.
   :defer t
   :after w3m
+  :commands helm-get-firefox-user-init-dir
   :config
-  (bind-key "'" 'helm-firefox-bookmarks w3m-mode-map)
+  (add-hook 'w3m-mode-hook '(lambda ()
+                              (bind-key "'" 'helm-firefox-bookmarks w3m-mode-map)))
   (when is-win
     (setq helm-firefox-default-directory "~/AppData/Roaming/Mozilla/Firefox/")))
 ;; ===============helm-firefox================

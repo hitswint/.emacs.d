@@ -64,7 +64,9 @@
   (add-to-list 'desktop-minor-mode-table '(auto-highlight-symbol-mode nil))
   (add-to-list 'desktop-minor-mode-table '(diff-hl-mode nil))
   (add-to-list 'desktop-minor-mode-table '(diff-hl-flydiff-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(diff-hl-dired-mode nil)))
+  (add-to-list 'desktop-minor-mode-table '(diff-hl-dired-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(interleave nil))
+  (add-to-list 'desktop-minor-mode-table '(interleave-pdf-mode nil)))
 ;;;; 打开文件时自动跳转到上次的位置(不好用)
 ;; ==========打开文件时自动跳转到上次的位置(不好用)===========
 ;; ;; Save point position between sessions

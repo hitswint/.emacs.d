@@ -184,11 +184,38 @@
 (use-package zotelo
   ;; Enabled in latex-mode.
   :defer t
-  :commands zotelo-minor-mode
+  :commands (zotelo-minor-mode zotelo-set-collection)
+  :bind ("C-c z U" .  swint-zotelo-update-database)
   :init
-  (add-hook 'TeX-mode-hook 'zotelo-minor-mode))
-;; 使用方法，C-c z c建立bib文件，C-c z u更新bib文件，C-c [引用。
-;; 刚添加bib时会显示没有有效的bib文件，需要重新打开或者重启emacs。
+  ;; C-c z c建立bib文件，C-c z u更新bib文件，C-c [引用。
+  (add-hook 'TeX-mode-hook 'zotelo-minor-mode)
+  (add-hook 'org-mode-hook 'zotelo-minor-mode)
+  :config
+  ;; 使用zotero-better-bibtex自动更新bib文件，使用zotelo手动更新bib文件。
+  (defun swint-zotelo-update-database ()
+    (interactive)
+    (zotero-update-collection-hash)
+    (maphash #'(lambda (key value)
+                 (zotelo-update-database nil (concat "~/.bib/zotelo/" value) key))
+             zotero-collection-hash))
+  (defvar zotero-collection-hash nil)
+  (defun zotero-update-collection-hash ()
+    (let ((buf (get-buffer-create "*moz-command-output*"))
+          colls name id)
+      ;; set up the collection list
+      (moz-command (format zotelo--render-collection-js
+                           (process-get (zotelo--moz-process) 'moz-prompt)))
+      (moz-command "zotelo_render_collection()" buf)
+      (setq zotero-collection-hash (make-hash-table :test 'equal))
+      (with-current-buffer buf
+        (goto-char (point-min))
+        (zotelo--message (format "Collections:\n %s"
+                                 (buffer-substring-no-properties (point-min) (min 500 (point-max)))))
+        (while (re-search-forward "^\\([0-9]+\\) /\\(.*\\)$" nil t)
+          (setq id (match-string-no-properties 1)
+                name (replace-regexp-in-string "/" "_" (match-string-no-properties 2) t t))
+          (puthash id name zotero-collection-hash)))
+      (puthash "0" "ALL" zotero-collection-hash))))
 ;; ====================zotelo======================
 ;;; latex-preview-pane
 ;; ==============latex-preview-pane================

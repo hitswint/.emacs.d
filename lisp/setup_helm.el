@@ -562,38 +562,57 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   ;; Enabled at commands.
   :defer t
   :commands swint-helm-bibtex
+  :bind ("C-c B" . swint-helm-bibtex)
   :init
   (add-hook 'LaTeX-mode-hook
             '(lambda ()
-               (define-key LaTeX-mode-map (kbd "C-c b") 'swint-helm-bibtex)))
+               (define-key LaTeX-mode-map (kbd "C-c b") 'swint-helm-bibtex-local)))
+  (add-hook 'org-mode-hook
+            '(lambda ()
+               (define-key org-mode-map (kbd "C-c b") 'swint-helm-bibtex-local)))
   :config
+  (defun swint-helm-bibtex-local ()
+    (interactive)
+    (let ((helm-bibtex-bibliography "./literature.bib"))
+      (unless (file-exists-p helm-bibtex-bibliography)
+        (zotelo-set-collection))
+      (helm-bibtex)))
   (defun swint-helm-bibtex ()
     (interactive)
-    (unless (file-exists-p helm-bibtex-bibliography)
-      (zotelo-set-collection))
-    (helm-bibtex))
-  (setq helm-bibtex-bibliography "./literature.bib")
+    (let ((helm-bibtex-bibliography
+           (read-file-name "File: " (expand-file-name "~/.bib/"))))
+      (helm-bibtex)))
+  (setq helm-bibtex-notes-path (concat (helm-get-firefox-user-init-dir) "zotero/storage/TKM9D893/notes.org")
+        helm-bibtex-cite-default-command "citep"
+        helm-bibtex-cite-prompt-for-optional-arguments nil
+        helm-bibtex-additional-search-fields '(keywords)
+        helm-bibtex-pdf-field "file")
+  ;; Added helm-bibtex-open-pdf-externally.
+  (defcustom helm-bibtex-pdf-open-externally-function '(lambda (fpath)
+                                                         (cond
+                                                          (is-lin (async-shell-command-no-output-buffer-from-file fpath))
+                                                          (is-win (w32-browser fpath))))
+    "The function used for opening PDF files externally."
+    :group 'helm-bibtex
+    :type 'function)
+  (defun helm-bibtex-open-pdf-externally (_)
+    "Open the PDFs associated with the marked entries externally."
+    (--if-let
+        (-flatten
+         (-map 'helm-bibtex-find-pdf (helm-marked-candidates :with-wildcard t)))
+        (-each it helm-bibtex-pdf-open-externally-function)
+      (message "No PDF(s) found.")))
+  ;; Added  swint-helm-bibtex-edit-notes.
+  (defun helm-bibtex-edit-notes-interleave (key)
+    (helm-bibtex-edit-notes key)
+    (org-set-property "INTERLEAVE_PDF" (file-relative-name (car (helm-bibtex-find-pdf-in-field key)))))
+  ;; 设置.bib文件的编码格式，否则出现乱码。
   ;; (zotelo-translator-charsets (quote ((BibTeX . "Unicode") (Default . "Unicode"))))
-  ;; 设置.bib文件的编码格式，否则出现乱码
-  (setq helm-source-bibtex
-        '((name                                      . "BibTeX entries")
-          (init                                      . helm-bibtex-init)
-          (candidates                                . helm-bibtex-candidates)
-          (filtered-candidate-transformer            . helm-bibtex-candidates-formatter)
-          (action . (("Insert citation"              . helm-bibtex-insert-citation)
-                     ("Open PDF file (if present)"   . helm-bibtex-open-pdf)
-                     ("Open URL or DOI in browser"   . helm-bibtex-open-url-or-doi)
-                     ("Insert reference"             . helm-bibtex-insert-reference)
-                     ("Insert BibTeX key"            . helm-bibtex-insert-key)
-                     ("Insert BibTeX entry"          . helm-bibtex-insert-bibtex)
-                     ("Attach PDF to email"          . helm-bibtex-add-PDF-attachment)
-                     ("Edit notes"                   . helm-bibtex-edit-notes)
-                     ("Show entry"                   . helm-bibtex-show-entry)))))
   ;; 因为没有使用xpdf索引pdf文件，无法直接打开pdf文件。设置insert-citation为默认选项。
-  ;; 重新定义插入citation命令为\citep{}。
-  (defun swint-helm-bibtex-format-citation-cite (keys)
-    "Formatter for LaTeX citation macro."
-    (format "\\citep{%s}" (s-join ", " keys))))
+  (helm-delete-action-from-source "Insert citation" helm-source-bibtex)
+  (helm-add-action-to-source "Insert citation" 'helm-bibtex-insert-citation helm-source-bibtex 0)
+  (helm-add-action-to-source "Open PDF file externally (if present)" 'helm-bibtex-open-pdf-externally helm-source-bibtex 2)
+  (helm-add-action-to-source "Edit notes (interleave)" 'helm-bibtex-edit-notes-interleave helm-source-bibtex 8))
 ;; ================helm-bibtex==================
 ;;; helm-swoop
 ;; ================helm-swoop===================

@@ -432,7 +432,8 @@ Usually this is `describe-prefix-bindings'."
   (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
   (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
   (define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
-  (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3))))
+  (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
+  (define-key pdf-view-mode-map (kbd ";") 'interleave--open-notes-file-for-pdf))
 ;; Failed to fix the bug of pdf-view-mode.
 ;; (defun swint-pdf-history-goto-beginning ()
 ;;   "Fix the bug of reverting to beginning of pdf after persp-switch."
@@ -456,10 +457,12 @@ Usually this is `describe-prefix-bindings'."
   :defer t
   :config
   (setq doc-view-continuous t)
+  (define-key doc-view-mode-map (kbd "i") 'imenu)
   (define-key doc-view-mode-map (kbd "M-v") 'doc-view-scroll-down-or-previous-page)
   (define-key doc-view-mode-map (kbd "C-v") 'doc-view-scroll-up-or-next-page)
   (define-key doc-view-mode-map (kbd "C-p") '(lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
   (define-key doc-view-mode-map (kbd "C-n") '(lambda () (interactive) (doc-view-next-line-or-next-page 3)))
+  (define-key doc-view-mode-map (kbd ";") 'interleave--open-notes-file-for-pdf)
   (when is-win
     ;; 使用libreoffice自带python.exe运行unoconv脚本。
     (setq doc-view-odf->pdf-converter-program "c:/Program Files (x86)/LibreOffice 5/program/python.exe")

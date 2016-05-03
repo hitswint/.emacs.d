@@ -266,15 +266,17 @@
   ;; ================org插入截图================
 ;;;; 使用外部程序打开文件
   ;; ============使用外部程序打开文件===========
+  (defun swint-get-annotated-file ()
+    (let ((annotated-file-link (org-get-heading)))
+      (concat "~"
+              (if (string-prefix-p "annotated-(" (file-name-nondirectory (buffer-file-name)))
+                  (replace-regexp-in-string
+                   "_" "/" (substring-no-properties (file-name-nondirectory (buffer-file-name)) 11 -5)))
+              (car (last (split-string (substring-no-properties annotated-file-link nil -2) "\\[file:") 1)))))
   (defun swint-org-open-at-point (&optional in-emacs)
     "Open annotated file if annotation storage file exists."
     (interactive)
-    (let* ((annotated-file-link (org-get-heading))
-           (annotated-file (concat "~"
-                                   (if (string-prefix-p "annotated-(" (file-name-nondirectory (buffer-file-name)))
-                                       (replace-regexp-in-string
-                                        "_" "/" (substring-no-properties (file-name-nondirectory (buffer-file-name)) 11 -5)))
-                                   (car (last (split-string (substring-no-properties annotated-file-link nil -2) "\\[file:") 1)))))
+    (let ((annotated-file (swint-get-annotated-file)))
       (if (and (org-at-heading-p)
                (file-exists-p annotated-file))
           (org-open-file annotated-file in-emacs)
@@ -614,8 +616,8 @@ depending on the last command issued."
 ;; =================beamer设置==================
 )
 ;; =================org-mode====================
-;;; org标注工具
-;; ================org标注工具==================
+;;; org-annotate
+;; ===============org-annotate==================
 ;; Display annotated files with mark.
 (use-package dired-x-annotated
   ;; Enabled automatically.
@@ -669,7 +671,7 @@ depending on the last command issued."
      (t
       (switch-to-buffer-other-window (current-buffer))
       (swint-org-annotate-file (abbreviate-file-name (buffer-file-name)))))))
-;; ================org标注工具==================
+;; ===============org-annotate==================
 ;;; org-speed-commands
 ;; =============org-speed-commands==============
 ;; Activate single letter commands at beginning of a headline.
@@ -707,12 +709,14 @@ depending on the last command issued."
   (add-hook 'ledger-mode-hook 'outline-minor-mode)
   (add-hook 'message-mode-hook 'outline-minor-mode)
   (add-hook 'octave-mode-hook 'outline-minor-mode)
+  (add-hook 'lisp-interaction-mode-hook
+            (lambda () (outline-minor-mode -1)))
   (defvar outline-minor-mode-prefix "\M-#")
   :config
   (add-hook 'outline-minor-mode-hook
             (lambda ()
               ;; 在latex-mode和lisp-interaction-mode中不开启outshine。
-              (unless (memq major-mode '(latex-mode lisp-interaction-mode eshell-mode))
+              (unless (memq major-mode '(latex-mode eshell-mode))
                 (outshine-hook-function))
               (define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
               (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
@@ -791,4 +795,52 @@ depending on the last command issued."
   (global-set-key (kbd "M-s s") 'swint-swiper)
   (global-set-key (kbd "M-s M-s") 'helm-swoop))
 ;; ==================outshine===================
+;;; interleave
+;; =================interleave==================
+(use-package interleave
+  ;; Enabled at commands.
+  :defer t
+  :commands interleave--open-notes-file-for-pdf
+  :bind ("M-s :" . interleave)
+  :init
+  (add-hook 'org-mode-hook '(lambda ()
+                              (define-key org-mode-map (kbd "M-s ;") 'swint-interleave)))
+  ;; 在加载interleave包之前必须先加载pdf-tools。
+  (defun swint-interleave ()
+    (interactive)
+    (when is-lin
+      (use-package pdf-tools))
+    (let ((annotated-file (swint-get-annotated-file)))
+      (when (and (not (org-entry-get nil "interleave_pdf"))
+                 (org-at-heading-p)
+                 (file-exists-p annotated-file))
+        (org-set-property "INTERLEAVE_PDF" annotated-file))
+      (call-interactively 'interleave)))
+  :config
+  (smartrep-define-key interleave-map "M-s"
+    '(("/" . interleave--sync-pdf-page-current)
+      ("," . interleave--sync-pdf-page-previous)
+      ("." . interleave--sync-pdf-page-next)
+      (";" . interleave)))
+  (smartrep-define-key interleave-pdf-mode-map "M-s"
+    '(("/" . interleave--sync-pdf-page-current)
+      ("," . interleave--sync-pdf-page-previous)
+      ("." . interleave--sync-pdf-page-next)
+      (";" . interleave-add-note)))
+  (smartrep-define-key interleave-pdf-mode-map ""
+    '(("/" . interleave--sync-pdf-page-current)
+      ("," . interleave--sync-pdf-page-previous)
+      ("." . interleave--sync-pdf-page-next)
+      (";" . interleave-add-note)))
+  (define-key interleave-map (kbd "M-.") nil)
+  (define-key interleave-map (kbd "M-p") nil)
+  (define-key interleave-map (kbd "M-n") nil)
+  (define-key interleave-pdf-mode-map (kbd "i") nil)
+  (define-key interleave-pdf-mode-map (kbd "M-.") nil)
+  (define-key interleave-pdf-mode-map (kbd "M-p") nil)
+  (define-key interleave-pdf-mode-map (kbd "M-n") nil)
+  (define-key doc-view-mode-map (kbd "i") 'imenu)
+  (when is-lin
+    (define-key pdf-view-mode-map (kbd "i") 'imenu)))
+;; =================interleave==================
 (provide 'setup_org_mode)
