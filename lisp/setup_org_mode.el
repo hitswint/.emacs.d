@@ -810,11 +810,16 @@ depending on the last command issued."
     (interactive)
     (when is-lin
       (use-package pdf-tools))
-    (let ((annotated-file (swint-get-annotated-file)))
-      (when (and (not (org-entry-get nil "interleave_pdf"))
-                 (org-at-heading-p)
-                 (file-exists-p annotated-file))
-        (org-set-property "INTERLEAVE_PDF" annotated-file))
+    (let* ((annotated-file (swint-get-annotated-file))
+           (key (org-entry-get nil "Custom_ID"))
+           (helm-bibtex-bibliography "~/.bib/ALL.bib")
+           (pdf-file (save-excursion (car (helm-bibtex-find-pdf-in-field key)))))
+      (unless (org-entry-get nil "interleave_pdf")
+        (cond
+         ((file-exists-p annotated-file)
+          (org-set-property "INTERLEAVE_PDF" annotated-file))
+         (pdf-file
+          (org-set-property "INTERLEAVE_PDF" (file-relative-name pdf-file)))))
       (call-interactively 'interleave)))
   :config
   (smartrep-define-key interleave-map "M-s"

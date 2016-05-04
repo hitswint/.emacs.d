@@ -561,7 +561,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 (use-package helm-bibtex
   ;; Enabled at commands.
   :defer t
-  :commands swint-helm-bibtex
+  :commands (swint-helm-bibtex helm-bibtex-find-pdf-in-field)
   :bind ("C-c B" . swint-helm-bibtex)
   :init
   (add-hook 'LaTeX-mode-hook
@@ -587,6 +587,40 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
         helm-bibtex-cite-prompt-for-optional-arguments nil
         helm-bibtex-additional-search-fields '(keywords)
         helm-bibtex-pdf-field "file")
+  ;; 修改helm-bibtex-find-pdf-in-field以解决不同系统中pdf文件路径问题。
+  (defun helm-bibtex-find-pdf-in-field (key-or-entry)
+    "Returns the path of the PDF specified in the field."
+    (when helm-bibtex-pdf-field
+      (let* ((entry (if (stringp key-or-entry)
+                        (helm-bibtex-get-entry1 key-or-entry t)
+                      key-or-entry))
+             (value (helm-bibtex-get-value helm-bibtex-pdf-field entry)))
+        (cond
+         ((not value) nil)
+         ((f-file? value) value)
+         (t
+          (cond
+           (is-lin (cl-loop
+                    for record in (s-split ";" value)
+                    for record = (s-split ":" record)
+                    for file-name = (nth 0 record)
+                    for path = (or (nth 1 record) "")
+                    if (f-file? (f-full path))
+                    collect (f-full path)
+                    else if (f-file? (f-full (f-join path file-name)))
+                    collect (f-full (f-join path file-name))))
+           (is-win (let ((value-win (replace-regexp-in-string
+                                     "\\\\:" ":"
+                                     (replace-regexp-in-string "\\\\\\\\" "/" value))))
+                     (cl-loop
+                      for record in (s-split ";" value-win)
+                      for record = (s-split ":" record)
+                      for file-name = (nth 0 record)
+                      for path = (or (concat (nth 1 record) ":" (nth 2 record)) "")
+                      if (f-file? (f-full path))
+                      collect (f-full path)
+                      else if (f-file? (f-full (f-join path file-name)))
+                      collect (f-full (f-join path file-name)))))))))))
   ;; Added helm-bibtex-open-pdf-externally.
   (defcustom helm-bibtex-pdf-open-externally-function '(lambda (fpath)
                                                          (cond
@@ -602,17 +636,12 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
          (-map 'helm-bibtex-find-pdf (helm-marked-candidates :with-wildcard t)))
         (-each it helm-bibtex-pdf-open-externally-function)
       (message "No PDF(s) found.")))
-  ;; Added  swint-helm-bibtex-edit-notes.
-  (defun helm-bibtex-edit-notes-interleave (key)
-    (helm-bibtex-edit-notes key)
-    (org-set-property "INTERLEAVE_PDF" (file-relative-name (car (helm-bibtex-find-pdf-in-field key)))))
   ;; 设置.bib文件的编码格式，否则出现乱码。
   ;; (zotelo-translator-charsets (quote ((BibTeX . "Unicode") (Default . "Unicode"))))
   ;; 因为没有使用xpdf索引pdf文件，无法直接打开pdf文件。设置insert-citation为默认选项。
   (helm-delete-action-from-source "Insert citation" helm-source-bibtex)
   (helm-add-action-to-source "Insert citation" 'helm-bibtex-insert-citation helm-source-bibtex 0)
-  (helm-add-action-to-source "Open PDF file externally (if present)" 'helm-bibtex-open-pdf-externally helm-source-bibtex 2)
-  (helm-add-action-to-source "Edit notes (interleave)" 'helm-bibtex-edit-notes-interleave helm-source-bibtex 8))
+  (helm-add-action-to-source "Open PDF file externally (if present)" 'helm-bibtex-open-pdf-externally helm-source-bibtex 2))
 ;; ================helm-bibtex==================
 ;;; helm-swoop
 ;; ================helm-swoop===================
