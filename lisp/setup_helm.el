@@ -529,14 +529,14 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 (use-package lacarte
   ;; Enabled at commands.
   :defer t
-  :bind ("C-x m" . helm-browse-menubar)
+  :bind ("C-x `" . helm-browse-menubar)
   :init
   (add-hook 'LaTeX-mode-hook
             '(lambda ()
-               (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)))
+               (define-key LaTeX-mode-map (kbd "C-c `") 'helm-insert-latex-math)))
   (add-hook 'org-mode-hook
             '(lambda ()
-               (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)))
+               (define-key org-mode-map (kbd "C-c `") 'helm-insert-latex-math)))
   (setq LaTeX-math-menu-unicode t)
   :config
   ;; 使用helm自带的程序而不使用下列自定义的命令。
@@ -561,8 +561,9 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 (use-package helm-bibtex
   ;; Enabled at commands.
   :defer t
-  :commands (swint-helm-bibtex helm-bibtex-find-pdf-in-field)
-  :bind ("C-c B" . swint-helm-bibtex)
+  :commands (swint-helm-bibtex-local helm-bibtex-find-pdf-in-field helm-bibtex-get-entry-for-pdf)
+  :bind (("C-x b" . swint-helm-bibtex)
+         ("C-x B" . helm-bibtex))
   :init
   (add-hook 'LaTeX-mode-hook
             '(lambda ()
@@ -571,22 +572,57 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
             '(lambda ()
                (define-key org-mode-map (kbd "C-c b") 'swint-helm-bibtex-local)))
   :config
+  (define-key helm-map (kbd "C-c i") '(lambda () (interactive)
+                                        (with-helm-alive-p
+                                          (helm-exit-and-execute-action 'helm-bibtex-open-pdf-externally))))
+  (define-key helm-map (kbd "C-c o") '(lambda () (interactive)
+                                        (with-helm-alive-p
+                                          (helm-exit-and-execute-action 'helm-bibtex-open-pdf))))
+  (define-key helm-map (kbd "C-c l") '(lambda () (interactive)
+                                        (with-helm-alive-p
+                                          (helm-exit-and-execute-action 'helm-bibtex-edit-notes))))
   (defun swint-helm-bibtex-local ()
     (interactive)
-    (let ((helm-bibtex-bibliography "./literature.bib"))
-      (unless (file-exists-p helm-bibtex-bibliography)
+    (let* ((bibfile (or (car (zotelo--locate-bibliography-files))
+                        (file-name-base)))
+           (actual-bibfile (if (string-match (concat "\\." "bib" "$") bibfile)
+                               (expand-file-name bibfile)
+                             (concat (expand-file-name bibfile) "." "bib"))))
+      (unless (file-exists-p actual-bibfile)
         (zotelo-set-collection))
-      (helm-bibtex)))
+      (unless zotelo-minor-mode
+        (zotelo-minor-mode t))
+      (let ((helm-bibtex-bibliography actual-bibfile))
+        (helm-bibtex))))
   (defun swint-helm-bibtex ()
     (interactive)
     (let ((helm-bibtex-bibliography
            (read-file-name "File: " (expand-file-name "~/.bib/"))))
       (helm-bibtex)))
-  (setq helm-bibtex-notes-path (concat (helm-get-firefox-user-init-dir) "zotero/storage/TKM9D893/notes.org")
-        helm-bibtex-cite-default-command "citep"
+  (setq helm-bibtex-cite-default-command "citep"
         helm-bibtex-cite-prompt-for-optional-arguments nil
         helm-bibtex-additional-search-fields '(keywords)
-        helm-bibtex-pdf-field "file")
+        helm-bibtex-pdf-field "file"
+        helm-bibtex-bibliography "~/.bib/ALL.bib"
+        helm-bibtex-notes-path (concat (helm-get-firefox-user-init-dir)
+                                       "zotero/storage/TKM9D893/notes.org"))
+  ;; 通过pdf文件找到对应entry，供swint-interleave--open-notes-file-for-pdf使用。
+  (defun helm-bibtex-get-entry-for-pdf (pdf-file)
+    "Find entry for pdf-file in .bib file."
+    (with-temp-buffer
+      (mapc #'insert-file-contents
+            (-flatten (list helm-bibtex-bibliography)))
+      (goto-char (point-min))
+      (when (re-search-forward (cond
+                                (is-lin pdf-file)
+                                (is-win (replace-regexp-in-string
+                                         ":" "\\\\:"
+                                         (replace-regexp-in-string "/" "\\\\\\\\" pdf-file)))))
+        (re-search-backward (concat "^@\\(" parsebib--bibtex-identifier
+                                    "\\)[[:space:]]*[\(\{][[:space:]]*"
+                                    parsebib--key-regexp "[[:space:]]*,"))
+        (let ((entry-type (match-string 1)))
+          (reverse (helm-bibtex-prepare-entry (parsebib-read-entry entry-type) nil nil))))))
   ;; 修改helm-bibtex-find-pdf-in-field以解决不同系统中pdf文件路径问题。
   (defun helm-bibtex-find-pdf-in-field (key-or-entry)
     "Returns the path of the PDF specified in the field."
@@ -638,7 +674,6 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
       (message "No PDF(s) found.")))
   ;; 设置.bib文件的编码格式，否则出现乱码。
   ;; (zotelo-translator-charsets (quote ((BibTeX . "Unicode") (Default . "Unicode"))))
-  ;; 因为没有使用xpdf索引pdf文件，无法直接打开pdf文件。设置insert-citation为默认选项。
   (helm-delete-action-from-source "Insert citation" helm-source-bibtex)
   (helm-add-action-to-source "Insert citation" 'helm-bibtex-insert-citation helm-source-bibtex 0)
   (helm-add-action-to-source "Open PDF file externally (if present)" 'helm-bibtex-open-pdf-externally helm-source-bibtex 2))
@@ -674,7 +709,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 (use-package helm-unicode
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s m" . helm-unicode))
+  :bind ("M-s `" . helm-unicode))
 ;; ===============helm-unicode==================
 ;;; helm-ag
 ;; =================helm-ag=====================

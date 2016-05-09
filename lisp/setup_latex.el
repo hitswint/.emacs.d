@@ -7,6 +7,7 @@
   ;; Enabled in latex-mode.
   ;; 使用package原设定。
   :defer t
+  :commands LaTeX-math-mode
   :config
 ;;;; reftex
   ;; ===================reftex=====================
@@ -60,9 +61,10 @@
               (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-parse-all)
               (define-key LaTeX-mode-map (kbd "C-c f") 'TeX-font)
               (define-key LaTeX-mode-map (kbd "C-q") 'swint-kill-tex-buffer)
-              (define-key LaTeX-mode-map (kbd "C-c C-x C-v") 'iimage-mode)
-              (define-key LaTeX-mode-map (kbd "C-c C-x p") 'preview-at-point)
-              (define-key LaTeX-mode-map (kbd "C-c C-x P") 'preview-clearout-buffer)
+              (define-key LaTeX-mode-map (kbd "C-c i") 'swint-open-at-point-with-apps)
+              (define-key LaTeX-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
+              (define-key LaTeX-mode-map (kbd "C-c C-x l") 'preview-at-point)
+              (define-key LaTeX-mode-map (kbd "C-c C-x L") 'preview-clearout-buffer)
               (define-key LaTeX-mode-map (kbd "\"") nil)))
   (setq TeX-view-program-list
         '(("Llpp" "llpp %o")
@@ -92,77 +94,11 @@
         (kill-process (TeX-active-process)))
     (dirtree-kill-this-buffer))
   ;; ================关闭tex buffer================
-;;;; latex插入截图
-  ;; ================latex插入截图=================
-  ;; 1. suspend current emacs window
-  ;; 2. call scrot to capture the screen and save as a file in $HOME/.emacs.img/
-  ;; 3. put the png file reference in current buffer, like this:  [[/home/path/.emacs.img/1q2w3e.png]]
-  (defun my-screenshot-tex ()
-    "Take a screenshot into a unique-named file in the current buffer file
-  directory and insert a link to this file."
-    (interactive)
-    ;; 将截图名字定义为buffer名字加日期。
-    (cond
-     (is-lin
-      (setq filename
-            (concat (make-temp-name
-                     (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
-                             "_"
-                             (format-time-string "%Y%m%d_"))) ".png"))
-      (suspend-frame)
-      (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
-                                                                  "\"" filename "\"" )))
-     (is-win
-      ;; turn into path in windows type
-      (setq filename
-            (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
-                    "_"
-                    (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      (setq windows-filename
-            (replace-regexp-in-string "/" "\\" filename t t))
-      (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
-                                                                                    "/clippaste /convert=" windows-filename))))
-    (insert filename))
-  (defun my-screenshot-tex-local ()
-    "Take a screenshot into a unique-named file in the current buffer file
-  directory and insert a link to this file."
-    (interactive)
-    ;; 将截图名字定义为buffer名字加日期
-    (unless (file-exists-p "./pic")
-      ;; 建立pic文件夹
-      (dired-create-directory "./pic"))
-    (cond
-     (is-lin
-      (setq filename
-            (concat (make-temp-name
-                     (concat "./pic/" (file-name-base (buffer-name))
-                             "_"
-                             (format-time-string "%Y%m%d_"))) ".png"))
-      (suspend-frame)
-      (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
-                                                                  "\"" filename "\"" )))
-     (is-win
-      (setq filename
-            (concat  "./pic/" (file-name-base (buffer-name))
-                     "_"
-                     (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      ;; turn into path in windows type
-      (setq windows-filename
-            (replace-regexp-in-string "/" "\\" filename t t))
-      (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
-                                                                                    "/clippaste /convert=" windows-filename))))
-    (insert filename))
-  (add-hook 'LaTeX-mode-hook
-            '(lambda ()
-               (define-key LaTeX-mode-map (kbd "C-c p") 'my-screenshot-tex-local)
-               (define-key LaTeX-mode-map (kbd "C-c P") 'my-screenshot-tex)))
-  ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p。
-  ;; ================latex插入截图=================
 ;;;; pandoc
   ;; ===================pandoc=====================
   (defun pandoc-latex-to-doc ()
     (interactive)
-    (shell-command (concat "pandoc -o " (file-name-base (buffer-name)) ".docx " (buffer-name))))
+    (shell-command (concat "pandoc -o " (file-name-base) ".docx " (file-name-nondirectory (buffer-file-name)))))
   (add-hook 'LaTeX-mode-hook
             '(lambda ()
                (define-key LaTeX-mode-map (kbd "C-c C-S-e") 'pandoc-latex-to-doc)))
@@ -181,15 +117,12 @@
 ;; =================auctex-latexmk=================
 ;;; zotelo
 ;; ====================zotelo======================
+;; C-c z c建立bib文件，C-c z u更新bib文件，C-c [引用。
 (use-package zotelo
-  ;; Enabled in latex-mode.
+  ;; Enabled at commands.
   :defer t
-  :commands (zotelo-minor-mode zotelo-set-collection)
+  :commands (zotelo--locate-bibliography-files zotelo-set-collection)
   :bind ("C-c z U" .  swint-zotelo-update-database)
-  :init
-  ;; C-c z c建立bib文件，C-c z u更新bib文件，C-c [引用。
-  (add-hook 'TeX-mode-hook 'zotelo-minor-mode)
-  (add-hook 'org-mode-hook 'zotelo-minor-mode)
   :config
   ;; 使用zotero-better-bibtex自动更新bib文件，使用zotelo手动更新bib文件。
   (defun swint-zotelo-update-database ()

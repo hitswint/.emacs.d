@@ -44,8 +44,8 @@
                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
                (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
                (define-key org-mode-map (kbd "C-c C-v") 'swint-org-open-export-pdf)
-               (define-key org-mode-map (kbd "C-c i") 'org-open-at-point-with-apps)
-               (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-org-open-at-point t)))
+               (define-key org-mode-map (kbd "C-c i") 'swint-open-at-point-with-apps)
+               (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
                (define-key org-mode-map (kbd "C-c C-x p") 'org-preview-latex-fragment)
                (define-key org-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
                (define-key org-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
@@ -85,7 +85,6 @@
   ;; ===================GTD=====================
 ;;;; 使用ditaa输出ascii图片
   ;; ===========使用ditaa输出ascii图片==========
-  (setq org-ditaa-jar-path "~/.emacs.d/org-8.2.1/contrib/scripts/ditaa.jar")
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
   (org-babel-do-load-languages
    (quote org-babel-load-languages)
@@ -105,8 +104,8 @@
   (setq org-confirm-babel-evaluate nil)
   ;; win中似乎不好使，应该是没装java。
   ;; ===========使用ditaa输出ascii图片==========
-;;;; org中输入公式
-  ;; =============org中输入公式=================
+;;;; cdlatex
+  ;; ================cdlatex====================
   (use-package cdlatex
     ;; Enabled in org-mode.
     :defer t
@@ -118,78 +117,53 @@
   ;; Pressing _ and ^ inside a LaTeX fragment will insert these characters together with a pair of braces. If you use <TAB> to move out of the braces, and if the braces surround only a single character or macro, they are removed again (depending on the variable cdlatex-simplify-sub-super-scripts).
   ;; Pressing the backquote ` followed by a character inserts math macros, also outside LaTeX fragments. If you wait more than 1.5 seconds after the backquote, a help window will pop up.
   ;; Pressing the single-quote ' followed by another character modifies the symbol before point with an accent or a font. If you wait more than 1.5 seconds after the single-quote, a help window will pop up. Character modification will work only inside LaTeX fragments; outside the quote is normal.
-  ;; =============org中输入公式=================
+  ;; ================cdlatex====================
 ;;;; 截图
   ;; ===================截图====================
   ;; screenshot-local截图到./pic文件夹中，screenshot截图到home/swint/org/pic文件夹中。
-  (defun my-screenshot ()
+  (defun swint-screenshot (&optional arg)
     "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
-    (interactive)
+    (interactive "P")
     ;; 将截图名字定义为buffer名字加日期。
-    (cond
-     (is-lin
-      (setq filename
-            (concat (make-temp-name
-                     (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
-                             "_"
-                             (format-time-string "%Y%m%d_"))) ".png"))
-      (suspend-frame)
-      (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
-                                                                  "\"" filename "\"" )))
-     (is-win
-      (setq filename
-            ;; 注释掉原来make-temp-name的方法，因为在win上对于某些prefix无法生成随机名字。
-            ;; (concat (make-temp-name
-            ;;          (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
-            ;;                  "_"
-            ;;                  (format-time-string "%Y%m%d_"))) ".png")
-            (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
-                    "_"
-                    (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      ;; Turn into path in windows type.
-      (setq windows-filename
-            (replace-regexp-in-string "/" "\\" filename t t))
-      (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil
-                    (concat "/clippaste /convert=" windows-filename)))))
-  (defun my-screenshot-local ()
-    "Take a screenshot into a unique-named file in the current buffer file
-  directory and insert a link to this file."
-    (interactive)
-    ;; 将截图名字定义为buffer名字加日期。
-    (unless (file-exists-p "./pic")
-      ;; 建立pic文件夹。
-      (dired-create-directory "./pic"))
-    (cond
-     (is-lin
-      (setq filename
-            (concat (make-temp-name
-                     (concat "./pic/" (file-name-base (buffer-name))
-                             "_"
-                             (format-time-string "%Y%m%d_"))) ".png"))
-      (suspend-frame)
-      (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
-                                                                  "\"" filename "\"" )))
-     (is-win
-      (setq filename
-            (concat "./pic/" (file-name-base (buffer-name))
-                    "_"
-                    (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      ;; Turn into path in windows type.
-      (setq windows-filename
-            (replace-regexp-in-string "/" "\\" filename t t))
-      (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil
-                    (concat "/clippaste /convert=" windows-filename)))))
-  (global-set-key (kbd "C-x p") 'my-screenshot-local)
-  (global-set-key (kbd "C-x P") 'my-screenshot)
+    (let ((screen-file-path (if arg
+                                (concat (getenv "HOME") "/org/pic/")
+                              (progn (unless (file-exists-p "./pic")
+                                       ;; 建立pic文件夹。
+                                       (dired-create-directory "./pic"))
+                                     "./pic/")))
+          screen-file)
+      (cond (is-lin
+             (setq screen-file (concat (make-temp-name
+                                        (concat screen-file-path (file-name-base)
+                                                "_" (format-time-string "%Y%m%d_"))) ".png"))
+             (suspend-frame)
+             (call-process-shell-command "scrot" nil nil nil nil " -s " (concat "\"" screen-file "\"" )))
+            (is-win
+             (setq screen-file
+                   ;; 注释掉原来make-temp-name的方法，因为在win上对于某些prefix无法生成随机名字。
+                   ;; (concat (make-temp-name
+                   ;;          (concat (getenv "HOME") "/org/pic/" (file-name-base)
+                   ;;                  "_"
+                   ;;                  (format-time-string "%Y%m%d_"))) ".png")
+                   (replace-regexp-in-string "/" "\\" (concat screen-file-path (file-name-base) "_"
+                                                              (format-time-string "%Y%m%d_") (make-temp-name "") ".png") t t))
+             (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil
+                           (concat "/clippaste /convert=" screen-file))))
+      screen-file))
+  (global-set-key (kbd "C-x M-p") 'swint-screenshot)
+  (global-set-key (kbd "C-x M-P") '(lambda ()
+                                     (interactive)
+                                     (swint-screenshot t)))
   ;; ===================截图====================
-;;;; org插入截图
-  ;; ================org插入截图================
+;;;; 插入截图
+  ;; =================插入截图==================
   ;; 如果有#+ATTR_LATEX: :width 100则设置为图片宽度为100，否则显示原尺寸。
   ;; 设置尺寸之后使用org-redisplay-inline-images(C-c C-x C-M-v)更新图片。
   (setq org-image-actual-width nil)
   (add-hook 'org-mode-hook 'iimage-mode)
   (add-hook 'org-mode-hook 'org-display-inline-images)
+  (global-set-key (kbd "C-c C-x C-v") 'iimage-mode)
   (define-key org-mode-map (kbd "C-c C-x C-v") '(lambda ()
                                                   (interactive)
                                                   (if (iimage-mode)
@@ -197,136 +171,115 @@
                                                     (turn-on-iimage-mode))
                                                   (org-toggle-inline-images)))
   ;; 图片显示受到两个因素的影响，只有iimage-mode和org-display-inline-images都打开才能显示图片。
-  (defun my-screenshot-org ()
+  (defun swint-insert-screenshot (&optional arg)
     "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
-    (interactive)
-    ;; 将截图名字定义为buffer名字加日期。
-    (cond
-     (is-lin
-      (setq filename
-            (concat (make-temp-name
-                     (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
-                             "_"
-                             (format-time-string "%Y%m%d_"))) ".png"))
-      (suspend-frame)
-      (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
-                                                                  "\"" filename "\"" )))
-     (is-win
-      (setq filename
-            ;; 在org文件中显示图片只需要/Users/...，而不需要前面的c:。
-            (concat (getenv "HOME") "/org/pic/" (file-name-base (buffer-name))
-                    "_"
-                    (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      ;; Turn into path in windows type
-      (setq windows-filename
-            (replace-regexp-in-string "/" "\\" filename t t))
-      (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
-                                                                                    "/clippaste /convert=" windows-filename))))
-    (insert (concat "[[" (abbreviate-file-name filename) "]]"))
-    (org-display-inline-images))
-  (defun my-screenshot-org-local ()
-    "Take a screenshot into a unique-named file in the current buffer file
-  directory and insert a link to this file."
-    (interactive)
-    ;; 将截图名字定义为buffer名字加日期。
-    (if (file-exists-p "./pic")
-        ()
-      ;; 建立pic文件夹。
-      (dired-create-directory "./pic"))
-    (cond
-     (is-lin
-      (setq filename
-            (concat (make-temp-name
-                     (concat "./pic/" (file-name-base (buffer-name))
-                             "_"
-                             (format-time-string "%Y%m%d_"))) ".png"))
-      (suspend-frame)
-      (call-process-shell-command "scrot" nil nil nil nil " -s " (concat
-                                                                  "\"" filename "\"" )))
-     (is-win
-      (setq filename
-            (concat "./pic/" (file-name-base (buffer-name))
-                    "_"
-                    (format-time-string "%Y%m%d_") (make-temp-name "") ".png"))
-      ;; Turn into path in windows type.
-      (setq windows-filename
-            (replace-regexp-in-string "/" "\\" filename t t))
-      (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil (concat
-                                                                                    "/clippaste /convert=" windows-filename))))
-    (insert (concat "[[" filename "]]"))
-    (org-display-inline-images))
-  (add-hook 'org-mode-hook
-            '(lambda ()
-               (define-key org-mode-map (kbd "C-c p") 'my-screenshot-org-local)
-               (define-key org-mode-map (kbd "C-c P") 'my-screenshot-org)))
-  ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后C-c p。
+    (interactive "P")
+    (let ((screen-file-name (swint-screenshot arg)))
+      (if (eq major-mode 'org-mode)
+          (progn (insert (concat "[[" (abbreviate-file-name screen-file-name) "]]"))
+                 (org-redisplay-inline-images))
+        (insert (abbreviate-file-name screen-file-name)))))
+  (global-set-key (kbd "C-x p") 'swint-insert-screenshot)
+  (global-set-key (kbd "C-x P") '(lambda ()
+                                   (interactive)
+                                   (swint-insert-screenshot t)))
+  ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后调用insert-screenshot。
   ;; org中打开和关闭图片显示(org-display-inline-images)和(org-remove-inline-images)。
   ;; 可以使用(org-toggle-inline-images)快捷键为C-c C-x C-v。
-  ;; ================org插入截图================
-;;;; 使用外部程序打开文件
-  ;; ============使用外部程序打开文件===========
+  ;; =================插入截图==================
+;;;; swint-open-at-point
+  ;; =============swint-open-at-point===========
+  (defun org-at-top-heading-p ()
+    "Go back to top heading and return that point. If already on top heading, return nil."
+    (let ((headline (org-element-at-point)))
+      (and (org-at-heading-p)
+           (equal (org-element-type headline) 'headline)
+           (equal (org-element-property :level headline) 1))))
   (defun swint-get-annotated-file ()
-    (let ((annotated-file-link (org-get-heading)))
-      (concat "~"
-              (if (string-prefix-p "annotated-(" (file-name-nondirectory (buffer-file-name)))
-                  (replace-regexp-in-string
-                   "_" "/" (substring-no-properties (file-name-nondirectory (buffer-file-name)) 11 -5)))
-              (car (last (split-string (substring-no-properties annotated-file-link nil -2) "\\[file:") 1)))))
-  (defun swint-org-open-at-point (&optional in-emacs)
+    (if (org-at-top-heading-p)
+        (concat "~"
+                (if (string-prefix-p "annotated-(" (file-name-nondirectory (buffer-file-name)))
+                    (replace-regexp-in-string
+                     "_" "/" (substring-no-properties (file-name-nondirectory (buffer-file-name)) 11 -5)))
+                (car (last (split-string (substring-no-properties (org-get-heading) nil -2) "\\[file:") 1)))))
+  (defun swint-key-at-point ()
+    "Find citation key at point."
+    (interactive)
+    (let ((current-point (point))
+          (citation-format (cond
+                            ((eq major-mode 'org-mode)
+                             "ebib:")
+                            ((eq major-mode 'latex-mode)
+                             "\\\\citep{")))
+          key)
+      (save-excursion
+        (beginning-of-line)
+        (while (re-search-forward
+                (concat "\\(" citation-format "\\)" "\\("
+                        ;; 匹配Roller_Physiology_International_1999_2014-02-27T02:02:21Z形式的key。
+                        "\\([^^\"@\\&$#%',={} \t\n\f]*_\\)\\{4\\}\\(19\\|20\\)[[:digit:]]\\{2\\}\\(-[[:digit:]]\\{2\\}\\)\\{2\\}T\\([[:digit:]]\\{2\\}:\\)\\{2\\}[[:digit:]]\\{2\\}Z"
+                        "\\)") nil t)
+          (let ((beg (match-beginning 0))
+                (end (match-end 0)))
+            (if (and (>= current-point beg) (<= current-point end))
+                (setq key (match-string 2))))))
+      key))
+  (defun swint-open-at-point (&optional in-emacs)
     "Open annotated file if annotation storage file exists."
     (interactive)
-    (let ((annotated-file (swint-get-annotated-file)))
-      (if (and (org-at-heading-p)
-               (file-exists-p annotated-file))
-          (org-open-file annotated-file in-emacs)
-        (org-open-at-point in-emacs))))
-  (cond
-   (is-lin
-    (defun org-open-at-point-with-apps ()
-      (interactive)
-      (let ((org-file-apps '(("\\.pdf\\'" . "llpp %s")
-                             ("\\.djvu\\'" . "llpp %s")
-                             ("\\.png\\'" . "~/feh.sh %s")
-                             ("\\.jpg\\'" . "~/feh.sh %s")
-                             ("\\.bmp\\'" . "~/feh.sh %s")
-                             ("\\.jpeg\\'" . "~/feh.sh %s")
-                             ("\\.eps\\'" . "gv %s")
-                             ("\\.ps\\'" . "gv %s")
-                             ("\\.rmvb\\'" . "mplayer %s")
-                             ("\\.rm\\'" . "mplayer %s")
-                             ("\\.mp4\\'" . "mplayer %s")
-                             ("\\.avi\\'" . "mplayer %s")
-                             ("\\.flv\\'" . "mplayer %s")
-                             ("\\.f4v\\'" . "mplayer %s")
-                             ("\\.mpg\\'" . "mplayer %s")
-                             ("\\.mkv\\'" . "mplayer %s")
-                             ("\\.3gp\\'" . "mplayer %s")
-                             ("\\.wmv\\'" . "mplayer %s")
-                             ("\\.mov\\'" . "mplayer %s")
-                             ("\\.dat\\'" . "mplayer %s")
-                             ("\\.asf\\'" . "mplayer %s")
-                             ("\\.mpeg\\'" . "mplayer %s")
-                             ("\\.wma\\'" . "mplayer %s")
-                             ("\\.doc\\'" . "libreoffice %s")
-                             ("\\.ppt\\'" . "libreoffice %s")
-                             ("\\.xls\\'" . "libreoffice %s")
-                             ("\\.ods\\'" . "libreoffice %s")
-                             ("\\.odt\\'" . "libreoffice %s")
-                             ("\\.docx\\'" . "libreoffice %s")
-                             ("\\.pptx\\'" . "libreoffice %s")
-                             ("\\.xlsx\\'" . "libreoffice %s")
-                             ("\\.dxf\\'" . "librecad %s")
-                             ("\\.html\\'" . "firefox %s")
-                             ("\\.htm\\'" . "firefox %s")
-                             )))
-        (swint-org-open-at-point))))
-   (is-win
-    (defun org-open-at-point-with-apps ()
-      (interactive)
-      (let (org-file-apps w32-browser)
-        (swint-org-open-at-point)))))
-  ;; ============使用外部程序打开文件===========
+    (let ((annotated-file (swint-get-annotated-file))
+          (key (swint-key-at-point)))
+      (cond
+       ((and annotated-file (file-exists-p annotated-file))
+        (org-open-file annotated-file in-emacs))
+       (key (let ((pdf-file (save-excursion (car (helm-bibtex-find-pdf-in-field key)))))
+              (if pdf-file
+                  (org-open-file pdf-file in-emacs)
+                (message "No available pdf file for this citation."))))
+       (t
+        (org-open-at-point in-emacs)))))
+  (defun swint-open-at-point-with-apps ()
+    (interactive)
+    (let ((org-file-apps
+           (cond (is-lin '(("\\.pdf\\'" . "llpp %s")
+                           ("\\.djvu\\'" . "llpp %s")
+                           ("\\.png\\'" . "~/feh.sh %s")
+                           ("\\.jpg\\'" . "~/feh.sh %s")
+                           ("\\.bmp\\'" . "~/feh.sh %s")
+                           ("\\.jpeg\\'" . "~/feh.sh %s")
+                           ("\\.eps\\'" . "gv %s")
+                           ("\\.ps\\'" . "gv %s")
+                           ("\\.rmvb\\'" . "mplayer %s")
+                           ("\\.rm\\'" . "mplayer %s")
+                           ("\\.mp4\\'" . "mplayer %s")
+                           ("\\.avi\\'" . "mplayer %s")
+                           ("\\.flv\\'" . "mplayer %s")
+                           ("\\.f4v\\'" . "mplayer %s")
+                           ("\\.mpg\\'" . "mplayer %s")
+                           ("\\.mkv\\'" . "mplayer %s")
+                           ("\\.3gp\\'" . "mplayer %s")
+                           ("\\.wmv\\'" . "mplayer %s")
+                           ("\\.mov\\'" . "mplayer %s")
+                           ("\\.dat\\'" . "mplayer %s")
+                           ("\\.asf\\'" . "mplayer %s")
+                           ("\\.mpeg\\'" . "mplayer %s")
+                           ("\\.wma\\'" . "mplayer %s")
+                           ("\\.doc\\'" . "libreoffice %s")
+                           ("\\.ppt\\'" . "libreoffice %s")
+                           ("\\.xls\\'" . "libreoffice %s")
+                           ("\\.ods\\'" . "libreoffice %s")
+                           ("\\.odt\\'" . "libreoffice %s")
+                           ("\\.docx\\'" . "libreoffice %s")
+                           ("\\.pptx\\'" . "libreoffice %s")
+                           ("\\.xlsx\\'" . "libreoffice %s")
+                           ("\\.dxf\\'" . "librecad %s")
+                           ("\\.html\\'" . "firefox %s")
+                           ("\\.htm\\'" . "firefox %s")
+                           ))
+                 (is-win w32-browser))))
+      (swint-open-at-point)))
+  ;; =============swint-open-at-point===========
 ;;;; mobileorg
   ;; =================mobileorg=================
   ;; Set to the location of your Org files on your local system.
@@ -444,8 +397,8 @@ The viewer is started either on region or master file,
 depending on the last command issued."
     (interactive)
     (let ((output-file (cond
-                        (is-lin (concat (file-name-base (buffer-name)) ".pdf"))
-                        (is-win (concat (file-name-directory buffer-file-name) (file-name-base (buffer-name)) ".pdf")))))
+                        (is-lin (concat (file-name-base) ".pdf"))
+                        (is-win (concat (file-name-directory buffer-file-name) (file-name-base) ".pdf")))))
       (if (file-exists-p output-file)
           (cond
            (is-lin (async-shell-command-no-output-buffer-from-file output-file))
@@ -800,50 +753,81 @@ depending on the last command issued."
 (use-package interleave
   ;; Enabled at commands.
   :defer t
-  :commands interleave--open-notes-file-for-pdf
-  :bind ("M-s :" . interleave)
+  :commands swint-interleave--open-notes-file-for-pdf
+  :bind ("C-c L" . interleave)
   :init
   (add-hook 'org-mode-hook '(lambda ()
-                              (define-key org-mode-map (kbd "M-s ;") 'swint-interleave)))
+                              (define-key org-mode-map (kbd "C-c l") 'swint-interleave)))
   ;; 在加载interleave包之前必须先加载pdf-tools。
   (defun swint-interleave ()
     (interactive)
     (when is-lin
       (use-package pdf-tools))
-    (let* ((annotated-file (swint-get-annotated-file))
-           (key (org-entry-get nil "Custom_ID"))
-           (helm-bibtex-bibliography "~/.bib/ALL.bib")
-           (pdf-file (save-excursion (car (helm-bibtex-find-pdf-in-field key)))))
-      (unless (org-entry-get nil "interleave_pdf")
-        (cond
-         ((file-exists-p annotated-file)
-          (org-set-property "INTERLEAVE_PDF" annotated-file))
-         (pdf-file
-          (org-set-property "INTERLEAVE_PDF" (file-relative-name pdf-file)))))
-      (call-interactively 'interleave)))
+    (let ((note-page (ignore-errors
+                       (string-to-number (org-entry-get nil "interleave_page_note" t)))))
+      (unless (org-at-top-heading-p)
+        (re-search-backward "^\* " nil t))
+      (let* ((annotated-file (swint-get-annotated-file))
+             (key (org-entry-get nil "Custom_ID"))
+             (pdf-file (save-excursion (car (helm-bibtex-find-pdf-in-field key)))))
+        (unless (org-entry-get nil "interleave_pdf")
+          (cond
+           ((and annotated-file (file-exists-p annotated-file))
+            (org-set-property "INTERLEAVE_PDF" annotated-file))
+           (pdf-file
+            (org-set-property "INTERLEAVE_PDF" (file-relative-name pdf-file))))))
+      (call-interactively 'interleave)
+      (if note-page
+          (progn
+            (interleave--go-to-page-note note-page)
+            (interleave--sync-pdf-page-current)))))
   :config
-  (smartrep-define-key interleave-map "M-s"
-    '(("/" . interleave--sync-pdf-page-current)
-      ("," . interleave--sync-pdf-page-previous)
-      ("." . interleave--sync-pdf-page-next)
-      (";" . interleave)))
-  (smartrep-define-key interleave-pdf-mode-map "M-s"
-    '(("/" . interleave--sync-pdf-page-current)
-      ("," . interleave--sync-pdf-page-previous)
-      ("." . interleave--sync-pdf-page-next)
-      (";" . interleave-add-note)))
-  (smartrep-define-key interleave-pdf-mode-map ""
-    '(("/" . interleave--sync-pdf-page-current)
-      ("," . interleave--sync-pdf-page-previous)
-      ("." . interleave--sync-pdf-page-next)
-      (";" . interleave-add-note)))
+  (defun swint-interleave--open-notes-file-for-pdf ()
+    (interactive)
+    (if (file-in-directory-p (buffer-file-name) (helm-get-firefox-user-init-dir))
+        (when (or (derived-mode-p 'doc-view-mode)
+                  (derived-mode-p 'pdf-view-mode))
+          (let* ((current-pdf buffer-file-name)
+                 (entry-for-pdf (helm-bibtex-get-entry-for-pdf current-pdf))
+                 (key-for-pdf (helm-bibtex-get-value "=key=" entry-for-pdf)))
+            (if entry-for-pdf
+                (progn (helm-bibtex-edit-notes key-for-pdf)
+                       (org-back-to-heading)
+                       (swint-interleave))
+              (message "Current pdf file is not in bibliography."))))
+      (interleave--open-notes-file-for-pdf)))
+  (defun interleave--go-to-page-note (page)
+    "Searches the notes buffer for an headline with the `interleave_page_note'
+property set to PAGE. It narrows the subtree when found."
+    (with-current-buffer *interleave--org-buffer*
+      (save-excursion
+        (widen)
+        (interleave--goto-search-position)
+        (if *interleave--multi-pdf-notes-file*
+            (org-narrow-to-subtree))
+        (when (re-search-forward (format "^\[ \t\r\]*\:interleave_page_note\: %s$"
+                                         page)
+                                 nil t)
+          (org-narrow-to-subtree)
+          (org-show-entry)
+          t))))
+  (smartrep-define-key interleave-map "C-c"
+    '(("m" . interleave--sync-pdf-page-current)
+      ("p" . interleave--sync-pdf-page-previous)
+      ("n" . interleave--sync-pdf-page-next)
+      ("l" . interleave)))
+  (smartrep-define-key interleave-pdf-mode-map "C-c"
+    '(("m" . interleave--sync-pdf-page-current)
+      ("p" . interleave--sync-pdf-page-previous)
+      ("n" . interleave--sync-pdf-page-next)
+      ("l" . interleave-add-note)))
   (define-key interleave-map (kbd "M-.") nil)
   (define-key interleave-map (kbd "M-p") nil)
   (define-key interleave-map (kbd "M-n") nil)
-  (define-key interleave-pdf-mode-map (kbd "i") nil)
   (define-key interleave-pdf-mode-map (kbd "M-.") nil)
   (define-key interleave-pdf-mode-map (kbd "M-p") nil)
   (define-key interleave-pdf-mode-map (kbd "M-n") nil)
+  (define-key interleave-pdf-mode-map (kbd "i") nil)
   (define-key doc-view-mode-map (kbd "i") 'imenu)
   (when is-lin
     (define-key pdf-view-mode-map (kbd "i") 'imenu)))
