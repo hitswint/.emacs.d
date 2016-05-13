@@ -122,8 +122,10 @@ This function obeys `avy-all-windows' setting."
                                        (match-end 0))))
                               (setq found t)
                               (push ov overlays)
-                              (overlay-put ov 'window (selected-window))
-                              (overlay-put ov 'face 'avy-goto-char-timer-face)))))))
+                              (overlay-put
+                               ov 'window (selected-window))
+                              (overlay-put
+                               ov 'face 'avy-goto-char-timer-face)))))))
                   ;; No matches at all, so there's surely a typo in the input.
                   (unless found (beep)))))
             (nreverse (mapcar (lambda (ov)

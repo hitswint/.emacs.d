@@ -348,6 +348,7 @@
   ;; Enabled at commands.
   :if is-win
   :defer t
+  :commands w32-browser
   :bind (:map dired-mode-map
               ("C-j" . swint-w32-browser-open)
               ("C-i" . w32explore))

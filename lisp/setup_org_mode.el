@@ -233,7 +233,7 @@
       (cond
        ((and annotated-file (file-exists-p annotated-file))
         (org-open-file annotated-file in-emacs))
-       (key (let ((pdf-file (save-excursion (car (helm-bibtex-find-pdf-in-field key)))))
+       (key (let ((pdf-file (save-excursion (car (bibtex-completion-find-pdf-in-field key)))))
               (if pdf-file
                   (org-open-file pdf-file in-emacs)
                 (message "No available pdf file for this citation."))))
@@ -769,7 +769,7 @@ depending on the last command issued."
         (re-search-backward "^\* " nil t))
       (let* ((annotated-file (swint-get-annotated-file))
              (key (org-entry-get nil "Custom_ID"))
-             (pdf-file (save-excursion (car (helm-bibtex-find-pdf-in-field key)))))
+             (pdf-file (save-excursion (car (bibtex-completion-find-pdf-in-field key)))))
         (unless (org-entry-get nil "interleave_pdf")
           (cond
            ((and annotated-file (file-exists-p annotated-file))
@@ -788,10 +788,10 @@ depending on the last command issued."
         (when (or (derived-mode-p 'doc-view-mode)
                   (derived-mode-p 'pdf-view-mode))
           (let* ((current-pdf buffer-file-name)
-                 (entry-for-pdf (helm-bibtex-get-entry-for-pdf current-pdf))
-                 (key-for-pdf (helm-bibtex-get-value "=key=" entry-for-pdf)))
+                 (entry-for-pdf (bibtex-completion-get-entry-for-pdf current-pdf))
+                 (key-for-pdf (bibtex-completion-get-value "=key=" entry-for-pdf)))
             (if entry-for-pdf
-                (progn (helm-bibtex-edit-notes key-for-pdf)
+                (progn (bibtex-completion-edit-notes key-for-pdf)
                        (org-back-to-heading)
                        (swint-interleave))
               (message "Current pdf file is not in bibliography."))))

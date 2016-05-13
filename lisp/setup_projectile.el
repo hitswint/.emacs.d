@@ -26,10 +26,7 @@
                                                                             (projectile-switch-project-by-name project))))
   ;; 设置切换project的默认操作。
   ;; 在helm-projectile中C-d为打开project的根目录。
-  (setq projectile-switch-project-action 'helm-projectile)
-  ;; windows下的缓存方式从native改到alien，加快缓存速度。
-  (when is-win
-    (setq projectile-indexing-method 'alien)))
+  (setq projectile-switch-project-action 'helm-projectile))
 ;; ==============helm-projectile================
 ;;; persp-projectile
 ;; ================persp-projectile=============

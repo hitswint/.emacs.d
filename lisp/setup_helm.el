@@ -561,7 +561,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 (use-package helm-bibtex
   ;; Enabled at commands.
   :defer t
-  :commands (swint-helm-bibtex-local helm-bibtex-find-pdf-in-field helm-bibtex-get-entry-for-pdf)
+  :commands (swint-helm-bibtex-local bibtex-completion-find-pdf-in-field bibtex-completion-get-entry-for-pdf)
   :bind (("C-x b" . swint-helm-bibtex)
          ("C-x B" . helm-bibtex))
   :init
@@ -580,7 +580,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
                                           (helm-exit-and-execute-action 'helm-bibtex-open-pdf))))
   (define-key helm-map (kbd "C-c l") '(lambda () (interactive)
                                         (with-helm-alive-p
-                                          (helm-exit-and-execute-action 'helm-bibtex-edit-notes))))
+                                          (helm-exit-and-execute-action 'bibtex-completion-edit-notes))))
   (defun swint-helm-bibtex-local ()
     (interactive)
     (let* ((bibfile (or (car (zotelo--locate-bibliography-files))
@@ -592,26 +592,26 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
         (zotelo-set-collection))
       (unless zotelo-minor-mode
         (zotelo-minor-mode t))
-      (let ((helm-bibtex-bibliography actual-bibfile))
+      (let ((bibtex-completion-bibliography actual-bibfile))
         (helm-bibtex))))
   (defun swint-helm-bibtex ()
     (interactive)
-    (let ((helm-bibtex-bibliography
+    (let ((bibtex-completion-bibliography
            (read-file-name "File: " (expand-file-name "~/.bib/"))))
       (helm-bibtex)))
-  (setq helm-bibtex-cite-default-command "citep"
-        helm-bibtex-cite-prompt-for-optional-arguments nil
-        helm-bibtex-additional-search-fields '(keywords)
-        helm-bibtex-pdf-field "file"
-        helm-bibtex-bibliography "~/.bib/ALL.bib"
-        helm-bibtex-notes-path (concat (helm-get-firefox-user-init-dir)
-                                       "zotero/storage/TKM9D893/notes.org"))
+  (setq bibtex-completion-cite-default-command "citep"
+        bibtex-completion-cite-prompt-for-optional-arguments nil
+        bibtex-completion-additional-search-fields '(keywords)
+        bibtex-completion-pdf-field "file"
+        bibtex-completion-bibliography "~/.bib/ALL.bib"
+        bibtex-completion-notes-path (concat (helm-get-firefox-user-init-dir)
+                                             "zotero/storage/TKM9D893/notes.org"))
   ;; 通过pdf文件找到对应entry，供swint-interleave--open-notes-file-for-pdf使用。
-  (defun helm-bibtex-get-entry-for-pdf (pdf-file)
+  (defun bibtex-completion-get-entry-for-pdf (pdf-file)
     "Find entry for pdf-file in .bib file."
     (with-temp-buffer
       (mapc #'insert-file-contents
-            (-flatten (list helm-bibtex-bibliography)))
+            (-flatten (list bibtex-completion-bibliography)))
       (goto-char (point-min))
       (when (re-search-forward (cond
                                 (is-lin pdf-file)
@@ -622,56 +622,24 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
                                     "\\)[[:space:]]*[\(\{][[:space:]]*"
                                     parsebib--key-regexp "[[:space:]]*,"))
         (let ((entry-type (match-string 1)))
-          (reverse (helm-bibtex-prepare-entry (parsebib-read-entry entry-type) nil nil))))))
-  ;; 修改helm-bibtex-find-pdf-in-field以解决不同系统中pdf文件路径问题。
-  (defun helm-bibtex-find-pdf-in-field (key-or-entry)
-    "Returns the path of the PDF specified in the field."
-    (when helm-bibtex-pdf-field
-      (let* ((entry (if (stringp key-or-entry)
-                        (helm-bibtex-get-entry1 key-or-entry t)
-                      key-or-entry))
-             (value (helm-bibtex-get-value helm-bibtex-pdf-field entry)))
-        (cond
-         ((not value) nil)
-         ((f-file? value) value)
-         (t
-          (cond
-           (is-lin (cl-loop
-                    for record in (s-split ";" value)
-                    for record = (s-split ":" record)
-                    for file-name = (nth 0 record)
-                    for path = (or (nth 1 record) "")
-                    if (f-file? (f-full path))
-                    collect (f-full path)
-                    else if (f-file? (f-full (f-join path file-name)))
-                    collect (f-full (f-join path file-name))))
-           (is-win (let ((value-win (replace-regexp-in-string
-                                     "\\\\:" ":"
-                                     (replace-regexp-in-string "\\\\\\\\" "/" value))))
-                     (cl-loop
-                      for record in (s-split ";" value-win)
-                      for record = (s-split ":" record)
-                      for file-name = (nth 0 record)
-                      for path = (or (concat (nth 1 record) ":" (nth 2 record)) "")
-                      if (f-file? (f-full path))
-                      collect (f-full path)
-                      else if (f-file? (f-full (f-join path file-name)))
-                      collect (f-full (f-join path file-name)))))))))))
+          (reverse (bibtex-completion-prepare-entry (parsebib-read-entry entry-type) nil nil))))))
   ;; Added helm-bibtex-open-pdf-externally.
   (defcustom helm-bibtex-pdf-open-externally-function '(lambda (fpath)
                                                          (cond
                                                           (is-lin (async-shell-command-no-output-buffer-from-file fpath))
                                                           (is-win (w32-browser fpath))))
     "The function used for opening PDF files externally."
-    :group 'helm-bibtex
+    :group 'bibtex-completion
     :type 'function)
-  (defun helm-bibtex-open-pdf-externally (_)
+  (defun bibtex-completion-open-pdf-externally (candidates)
     "Open the PDFs associated with the marked entries externally."
     (--if-let
         (-flatten
-         (-map 'helm-bibtex-find-pdf (helm-marked-candidates :with-wildcard t)))
+         (-map 'bibtex-completion-find-pdf
+               (if (listp candidates) candidates (list candidates))))
         (-each it helm-bibtex-pdf-open-externally-function)
       (message "No PDF(s) found.")))
+  (helm-bibtex-helmify-action bibtex-completion-open-pdf-externally helm-bibtex-open-pdf-externally)
   ;; 设置.bib文件的编码格式，否则出现乱码。
   ;; (zotelo-translator-charsets (quote ((BibTeX . "Unicode") (Default . "Unicode"))))
   (helm-delete-action-from-source "Insert citation" helm-source-bibtex)

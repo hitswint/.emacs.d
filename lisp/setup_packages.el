@@ -337,11 +337,7 @@
   :config
   (fcitx-prefix-keys-add "M-s")
   (fcitx-default-setup)
-  (fcitx-M-x-turn-on)
-  (fcitx-shell-command-turn-on)
-  (fcitx-eval-expression-turn-on)
   (fcitx-isearch-turn-on)
-  (fcitx-read-funcs-turn-on)
   ;; (fcitx-aggressive-minibuffer-turn-on)
   ;; 会导致tramp问题，使需要在minibuffer输入密码时hang。
   )
