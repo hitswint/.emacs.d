@@ -1,9 +1,12 @@
-;;; desktop-and-session
-;; =====================desktop-and-session========================
+;;; session
+;; ===================session====================
 (use-package session
   ;; Enabled automatically.
   :config
   (add-hook 'after-init-hook 'session-initialize))
+;; ===================session====================
+;;; desktop
+;; ===================desktop====================
 (use-package desktop
   ;; Enabled automatically.
   :config
@@ -67,12 +70,15 @@
   (add-to-list 'desktop-minor-mode-table '(diff-hl-dired-mode nil))
   (add-to-list 'desktop-minor-mode-table '(interleave nil))
   (add-to-list 'desktop-minor-mode-table '(interleave-pdf-mode nil)))
-;;;; 打开文件时自动跳转到上次的位置(不好用)
-;; ==========打开文件时自动跳转到上次的位置(不好用)===========
-;; ;; Save point position between sessions
-;; (require 'saveplace)
-;; (setq-default save-place t)
-;; (setq save-place-file (expand-file-name ".places" user-emacs-directory))
-;; ==========打开文件时自动跳转到上次的位置(不好用)===========
-;; =====================desktop-and-session========================
+;; ===================desktop====================
+;;; saveplace
+;; ==================saveplace===================
+;; Save point position between sessions.
+;; (use-package saveplace
+;;   ;; Enabled at idle.
+;;   :defer 2
+;;   :config
+;;   (setq-default save-place t)
+;;   (setq save-place-file (expand-file-name ".places" user-emacs-directory)))
+;; ==================saveplace===================
 (provide 'setup_desktop_session)

@@ -615,9 +615,9 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
       (goto-char (point-min))
       (when (re-search-forward (cond
                                 (is-lin pdf-file)
-                                (is-win (replace-regexp-in-string
-                                         ":" "\\\\:"
-                                         (replace-regexp-in-string "/" "\\\\\\\\" pdf-file)))))
+                                (is-win (regexp-quote (replace-regexp-in-string
+                                                       ":" "\\\\:"
+                                                       (replace-regexp-in-string "/" "\\\\\\\\" pdf-file))))) nil t)
         (re-search-backward (concat "^@\\(" parsebib--bibtex-identifier
                                     "\\)[[:space:]]*[\(\{][[:space:]]*"
                                     parsebib--key-regexp "[[:space:]]*,"))

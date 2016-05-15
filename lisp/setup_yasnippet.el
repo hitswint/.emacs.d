@@ -25,7 +25,7 @@
   ;;         ;;         "/path/to/yasnippet/snippets"         ;; the default collection
   ;;         ))
   ;; 使用ac的popup代替yas/choose-value自带的弹出菜单。
-  (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
+  (defun yas-popup-prompt (prompt choices &optional display-fn)
     (when (featurep 'popup)
       (popup-menu*
        (mapcar
@@ -36,8 +36,8 @@
            :value choice))
         choices)
        :prompt prompt
-       ;; start isearch mode immediately
+       ;; Start isearch mode immediately.
        :isearch t)))
-  (setq yas-prompt-functions '(yas-popup-isearch-prompt yas-no-prompt)))
+  (setq yas-prompt-functions (append '(yas-popup-prompt) yas-prompt-functions)))
 ;; ==================yasnippet===================
 (provide 'setup_yasnippet)

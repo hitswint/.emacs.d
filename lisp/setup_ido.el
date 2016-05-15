@@ -20,12 +20,9 @@
   ;; =================ido-back-to-home=================
 ;;;; ido-find-file:open-file-with-external-app
   ;; ====ido-find-file:open-file-with-external-app=====
-  (defvar ido-fallback-function nil "The fallback function that will be explicitly check and can be externally modified
-this variable is introduced to enhance ido-find-file functionality
-search (cond ...  ((eq ido-exit 'fallback) ... )) to see where it's used.
-2013-08-04 Sunday 19:35:45 by Scinart")
+  (defvar ido-fallback-function nil "The fallback function that will be explicitly check and can be externally modified. This variable is introduced to enhance ido-find-file functionality. Search (cond ...  ((eq ido-exit 'fallback) ... )) to see where it's used.")
   (defun ido-file-internal (method &optional fallback default prompt item initial switch-cmd)
-    ;; Internal function for ido-find-file and friends
+    ;; Internal function for ido-find-file and friends.
     (unless item
       (setq item 'file))
     (let ((ido-current-directory (ido-expand-directory default))
@@ -44,8 +41,7 @@ search (cond ...  ((eq ido-exit 'fallback) ... )) to see where it's used.
                  (or ido-use-url-at-point ido-use-filename-at-point))
         (let (fn d)
           (require 'ffap)
-          ;; Duplicate code from ffap-guesser as we want different
-          ;; behavior for files and URLs.
+          ;; Duplicate code from ffap-guesser as we want different behavior for files and URLs.
           (cond
            ((with-no-warnings
               (and ido-use-url-at-point
@@ -81,12 +77,10 @@ search (cond ...  ((eq ido-exit 'fallback) ... )) to see where it's used.
                                               'ido-file-history
                                               (and (eq method 'alt-file) buffer-file-name)
                                               (confirm-nonexistent-file-or-buffer) initial))))
-        ;; Choose the file name: either the text typed in, or the head
-        ;; of the list of matches
+        ;; Choose the file name: either the text typed in, or the head of the list of matches.
         (cond
          ((eq ido-exit 'fallback)
-          ;; Need to guard setting of default-directory here, since
-          ;; we don't want to change directory of current buffer.
+          ;; Need to guard setting of default-directory here, since we don't want to change directory of current buffer.
           (let ((default-directory ido-current-directory)
                 (read-file-name-function nil))
             (setq this-command (or fallback ido-fallback-function 'find-file))
@@ -138,7 +132,7 @@ search (cond ...  ((eq ido-exit 'fallback) ... )) to see where it's used.
                 (make-directory-internal dirname)
                 (funcall method dirname))
                (t
-                ;; put make-directory command on history
+                ;; Put make-directory command on history.
                 (ido-record-command 'make-directory dirname))))
              (t (error "No such directory")))))
          ((eq method 'write)
@@ -179,13 +173,11 @@ search (cond ...  ((eq ido-exit 'fallback) ... )) to see where it's used.
   (cond
    (is-lin
     (defun ido-my-keys ()
-      "My Keybindings for ido
-especially for extending ido-find-file functionality
-2013-08-04 Sunday 17:25:03"
+      "My Keybindings for ido especially for extending ido-find-file functionality."
       (define-key ido-completion-map (kbd "RET") 'ido-exit-minibuffer) ;; for find-file
       (define-key ido-completion-map (kbd "C-j") 'ido-magic-open-using-external-app))
     (defun ido-magic-open-using-external-app ()
-      "This should be used when ido-minibuffer is active"
+      "This should be used when ido-minibuffer is active."
       (interactive)
       ;;   (let ((i (length ido-text)))
       ;;     (while (> i 0)
@@ -199,13 +191,11 @@ especially for extending ido-find-file functionality
       (exit-minibuffer)))
    (is-win
     (defun ido-my-keys ()
-      "My Keybindings for ido
-especially for extending ido-find-file functionality
-2013-08-04 Sunday 17:25:03"
+      "My Keybindings for ido especially for extending ido-find-file functionality."
       (define-key ido-completion-map (kbd "RET") 'ido-exit-minibuffer) ;; for find-file
       (define-key ido-completion-map (kbd "C-j") 'ido-magic-open-using-w32))
     (defun ido-magic-open-using-w32 ()
-      "This should be used when ido-minibuffer is active"
+      "This should be used when ido-minibuffer is active."
       (interactive)
       ;;   (let ((i (length ido-text)))
       ;;     (while (> i 0)

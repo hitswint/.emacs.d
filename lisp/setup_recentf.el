@@ -30,7 +30,7 @@
 ;;; recent file/recent directory
 ;; ======recent file/recent directory==============
 (use-package recentf-ext
-  ;; Enabled automatically.
+  ;; Enabled at idle.
   :defer 2
   :config
   ;; 定义swint-helm-source-recentf-file。

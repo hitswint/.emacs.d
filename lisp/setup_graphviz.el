@@ -11,7 +11,7 @@
     ;; 注意：路径/bin 后面一定要有那个分号;，不用将路径加到环境变量中。
     (setenv "PATH" (concat "c:/Program Files (x86)/Graphviz2.36/bin;" (getenv "PATH"))))
   (setq graphviz-dot-view-command "feh")
-  (defun swint-graphviz-output ()
+  (defun swint-graphviz-open-output-file ()
     "Start a viewer without confirmation.
 The viewer is started either on region or master file,
 depending on the last command issued."
@@ -25,6 +25,6 @@ depending on the last command issued."
   (add-hook 'graphviz-dot-mode-hook
             '(lambda ()
                (define-key graphviz-dot-mode-map (kbd "C-c C-c") 'compile)
-               (define-key graphviz-dot-mode-map (kbd "C-c C-v") 'swint-graphviz-output))))
+               (define-key graphviz-dot-mode-map (kbd "C-c C-v") 'swint-graphviz-open-output-file))))
 ;; ====================graphviz-dot-mode=========================
 (provide 'setup_graphviz)

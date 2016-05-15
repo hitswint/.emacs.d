@@ -18,8 +18,7 @@
                              "XDICT汉英辞典"
                              "新世纪英汉科技大词典"
                              "新世纪汉英科技大词典"
-                             "Collins\\ Cobuild\\ English\\ Dictionary"
-                             ))
+                             "Collins\\ Cobuild\\ English\\ Dictionary"))
 (defun sdcv-search-with-dictionary (word dictionary-list)
   "Search some WORD with dictionary list."
   (mapconcat (lambda (dict)

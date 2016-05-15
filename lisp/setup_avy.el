@@ -7,14 +7,16 @@
   :bind (:map isearch-mode-map
               ("C-h" . avy-isearch))
   :config
-  ;; at-full会造成ace-pinyin显示不正确。
   (setq avy-keys (number-sequence ?a ?z))
+  ;; at-full会造成ace-pinyin显示不正确。
   (setq avy-styles-alist '((avy-goto-char . at)
                            (avy-goto-char-2 . at)
                            (avy-goto-word-0 . at)))
-  (setq avy-dispatch-alist '((?\C-w . avy-action-kill)
+  (setq avy-dispatch-alist '((?\C-\M-w . avy-action-kill-move)
+                             (?\C-w . avy-action-kill-stay)
                              (?\C-\; . avy-action-mark)
-                             (?\M-w . avy-action-copy))))
+                             (?\M-w . avy-action-copy)
+                             (?\M-f . avy-action-ispell))))
 ;; =====================avy=====================
 ;;; avy-zap
 ;; ===================avy-zap===================

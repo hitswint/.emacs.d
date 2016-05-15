@@ -826,11 +826,12 @@ is named like ODF with the extension turned to pdf."
   (add-hook 'prog-mode-hook 'diff-hl-flydiff-mode)
   (add-hook 'text-mode-hook 'diff-hl-flydiff-mode)
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
-  (dolist (buf (buffer-list))
+  (dolist (buf (remove-if-not (lambda (x)
+                                (equal (buffer-mode x) 'dired-mode))
+                              (helm-buffer-list)))
     (with-current-buffer buf
-      (when (eq major-mode 'dired-mode)
-        (diff-hl-dired-mode)
-        (revert-buffer))))
+      (diff-hl-dired-mode)
+      (diff-hl-dired-update)))
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
   (set-face-attribute 'diff-hl-insert nil
                       :foreground "gray"

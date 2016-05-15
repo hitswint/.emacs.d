@@ -61,13 +61,12 @@
   (setq mew-biff-interval 5) ;这个值一定要小于下面的timer-unit和lifetime值，这个可以使用
   (setq mew-pop-biff-interval 3)
   ;; 其他
+  ;; (setq mew-debug t)
   (setq mew-pop-delete nil)
   (setq mew-pop-size 0)
   (setq mew-use-unread-mark t)
   (setq toolbar-mail-reader 'Mew)
   (set-default 'mew-decode-quoted 't)
-  (setq sml/active-background-color "#222222")
-  ;; (setq mew-debug t)
-  )
+  (setq sml/active-background-color "#222222"))
 ;; ========================Mew=========================
 (provide 'setup_mew)

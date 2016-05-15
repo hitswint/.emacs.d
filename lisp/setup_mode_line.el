@@ -3,7 +3,7 @@
 (use-package smart-mode-line
   ;; Enabled automatically.
   :config
-  ;; 设定theme为dark/light/respectful/automatic
+  ;; 设定theme为dark/light/respectful/automatic。
   (sml/setup)
   (sml/apply-theme nil)
   (setq column-number-mode t)
@@ -25,7 +25,7 @@
     (add-to-list 'sml/replacer-regexp-list '("^c:/Users/swint/org/" ":O:"))
     (add-to-list 'sml/replacer-regexp-list '("^c:/Users/swint/tex/" ":T:"))
     (add-to-list 'sml/replacer-regexp-list '("^c:/Users/swint/" "~/"))))
-  ;; only hide minor mode
+  ;; Only hide minor mode.
   (add-to-list 'sml/hidden-modes " yas")
   (add-to-list 'sml/hidden-modes " iImg")
   (add-to-list 'sml/hidden-modes " Fill")

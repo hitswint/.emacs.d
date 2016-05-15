@@ -18,7 +18,6 @@
 ;; =====================Anzu=======================
 ;;; pinyin-search
 ;; ==================pinyin-search=================
-;; 安装时由于isearch-mode-map中已经设定M-s为helm-swoop，导致快捷键设定失败，修改之。
 (use-package pinyin-search
   ;; Enabled at commands.
   :defer t
@@ -62,7 +61,7 @@
                         're-search-forward
                       're-search-backward)
                     (swint-pinyin-search--pinyin-to-regexp string) bound noerror))
-      ;; Return default function
+      ;; Return default function.
       (isearch-search-fun-default)))
   (add-hook 'isearch-mode-end-hook
             (lambda ()

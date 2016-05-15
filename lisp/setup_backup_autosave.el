@@ -8,10 +8,8 @@
       version-control t)                ;use versioned backups
 (defconst temp-files-save-dir
   (format "%s%s/" (expand-file-name user-emacs-directory) ".saves"))
-(setq backup-directory-alist
-      `((".*" . ,temp-files-save-dir)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temp-files-save-dir t)))
+(setq backup-directory-alist `((".*" . ,temp-files-save-dir)))
+(setq auto-save-file-name-transforms `((".*" ,temp-files-save-dir t)))
 (setq tramp-backup-directory-alist backup-directory-alist)
 (setq auto-save-list-file-prefix temp-files-save-dir)
 ;; Automatically purge backup files not accessed in a week.

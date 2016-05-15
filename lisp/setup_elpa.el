@@ -8,7 +8,7 @@
                            ;; ("elpa" . "http://tromey.com/elpa/")
                            ;; ("marmalade" . "http://marmalade-repo.org/packages/")
                            ))
-  ;; optimization, no need to activate all the packages so early
+  ;; Optimization, no need to activate all the packages so early.
   (setq package-enable-at-startup nil)
   ;; 激活所有packages，也可以使用package-activate单独激活。
   (package-initialize)
@@ -190,13 +190,13 @@ Missing packages are installed automatically."
 (defun prelude-install-packages ()
   "Install all packages listed in `prelude-packages'."
   (unless (prelude-packages-installed-p)
-    ;; check for new packages (package versions)
+    ;; Check for new packages (package versions).
     (message "%s" "Emacs Prelude is now refreshing its package database...")
     (package-refresh-contents)
     (message "%s" " done.")
-    ;; install the missing packages
+    ;; Install the missing packages.
     (prelude-require-packages prelude-packages)))
-;; run package installation
+;; Run package installation.
 (prelude-install-packages)
 ;; ====================elpa=========================
 ;;; USE-PACKAGE

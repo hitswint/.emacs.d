@@ -15,7 +15,7 @@
     (cond
      (is-lin (gnuplot-run-buffer))
      (is-win (w32-browser (buffer-file-name)))))
-  (defun swint-open-gnuplot-output-file ()
+  (defun swint-gnuplot-open-output-file ()
     "Swint open gnuplot output file."
     (interactive)
     (let* ((output-png-file (concat (file-name-sans-extension (buffer-file-name)) ".png"))
@@ -30,6 +30,6 @@
   (add-hook 'gnuplot-mode-hook
             '(lambda ()
                (define-key gnuplot-mode-map (kbd "C-c C-c") 'swint-gnuplot-run-buffer)
-               (define-key gnuplot-mode-map (kbd "C-c C-v") 'swint-open-gnuplot-output-file))))
+               (define-key gnuplot-mode-map (kbd "C-c C-v") 'swint-gnuplot-open-output-file))))
 ;; ===========================gnuplot=================================
 (provide 'setup_gnuplot)

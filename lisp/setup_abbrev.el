@@ -4,21 +4,20 @@
   ;; Enabled at idle.
   :defer 2
   :config
-  ;; turn on abbrev mode globally
+  ;; Turn on abbrev mode globally.
   (setq-default abbrev-mode t)
-  ;; stop asking whether to save newly added abbrev when quitting emacs
+  ;; Stop asking whether to save newly added abbrev when quitting emacs.
   (setq save-abbrevs t)
+  (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
   (if (file-exists-p abbrev-file-name)
       (quietly-read-abbrev-file))
-  (setq abbrev-file-name
-        "~/.emacs.d/abbrev_defs")
-  ;; sample use of emacs abbreviation feature
+  ;; Sample use of emacs abbreviation feature.
   (define-abbrev-table 'global-abbrev-table
-    '(("emqq" "278064399@qq.com")
-      ("emhml" "wguiqiang@hotmail.com")
-      ("emgml" "guiqiangw2013@gmail.com")
-      ("em126" "wgq_hit@126.com")
-      ("em163" "wgq_713@163.com")
+    '(("mqq" "278064399@qq.com")
+      ("mgg" "guiqiangw2013@gmail.com")
+      ("mhot" "wguiqiang@hotmail.com")
+      ("m126" "wgq_hit@126.com")
+      ("m163" "wgq_713@163.com")
       ("wgq" "Guiqiang Wang"))))
 ;; 编辑abbrev-table：C-x a g 为当前位置之前词语，全局加入abbrev。
 ;; C-x a + 为当前位置之前词语，在当前mode下加入abbrev。
