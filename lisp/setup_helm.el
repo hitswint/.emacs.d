@@ -708,6 +708,10 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 ;; ==============helm-descbinds=================
 ;;; helm-imenu
 ;; ================helm-imenu===================
+(use-package imenu
+  ;; Enabled at commands.
+  :defer t
+  :commands imenu-choose-buffer-index)
 (use-package helm-imenu
   ;; Enabled at commands.
   :defer t

@@ -103,9 +103,9 @@
             ido-hacks
             ido-ubiquitous
             ido-vertical-mode
-            imenu-anywhere
             interleave
             ivy
+	    ivy-hydra
             lacarte
             latex-preview-pane
             let-alist

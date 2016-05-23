@@ -211,7 +211,7 @@
   ;; Enabled at commands.
   ;; Enabled automatically actually.
   :defer t
-  :bind ("C-M-'" . help-command)
+  :commands help-command
   :config
   (define-key 'help-command (kbd "C-l") 'find-library)
   (define-key 'help-command (kbd "C-f") 'find-function)
@@ -315,20 +315,6 @@
             (lambda ()
               (setq hungry-delete-mode nil))))
 ;; ===================hungry-delete================
-;;; imenu-anywhere
-;; ===================imenu-anywhere===============
-(use-package imenu
-  ;; Enabled at commands.
-  :defer t
-  :commands imenu-choose-buffer-index)
-;; imenu-anywhere包括所有打开的相同mode的buffer，imenu限于当前buffer。
-(use-package imenu-anywhere
-  ;; Enabled at commands.
-  :defer t
-  :bind ("M-s M-I" . helm-imenu-anywhere)
-  :config
-  (setq imenu-anywhere-delimiter-helm " | "))
-;; ===================imenu-anywhere===============
 ;;; fcitx
 ;; ======================fcitx=====================
 (use-package fcitx
@@ -557,10 +543,9 @@ is named like ODF with the extension turned to pdf."
   :commands (bm-toggle bm-previous bm-next)
   :init
   (smartrep-define-key global-map "C-x"
-    '(("C-;" . bm-toggle)
-      ("C-," . bm-previous)
-      ("C-." . bm-next)
-      ("C-/" . helm-bm)))
+    '(("C-'" . bm-toggle)
+      ("'" . bm-previous)
+      ("\"" . bm-next)))
   :config
   (setq bm-cycle-all-buffers nil)
   (setq bm-highlight-style 'bm-highlight-only-fringe))
@@ -570,14 +555,11 @@ is named like ODF with the extension turned to pdf."
 (use-package helm-bm
   ;; Enabled after features.
   :defer t
-  :after bm
-  :commands helm-bm
+  :bind ("C-M-'" . helm-bm)
   :config
-  (bind-key "C-x C-/" 'helm-bm)
   (defun helm-bm-action-switch-to-buffer (candidate)
     "Switch to buffer of CANDIDATE."
-    (helm-bm-with-candidate
-        candidates
+    (helm-bm-with-candidate candidates
       (helm-switch-persp/buffer bufname)
       (goto-char (point-min))
       (forward-line (1- lineno)))))
@@ -820,11 +802,11 @@ is named like ODF with the extension turned to pdf."
   ;; Enabled at idle.
   :defer 2
   :config
-  (smartrep-define-key global-map "M-s"
-    '((";" . diff-hl-mark-hunk)
-      ("," . diff-hl-previous-hunk)
-      ("." . diff-hl-next-hunk)
-      ("/" . diff-hl-revert-hunk)))
+  (smartrep-define-key global-map "C-x"
+    '(("C-;" . diff-hl-mark-hunk)
+      ("C-," . diff-hl-previous-hunk)
+      ("C-." . diff-hl-next-hunk)
+      ("C-/" . diff-hl-revert-hunk)))
   (global-diff-hl-mode)
   (add-hook 'prog-mode-hook 'diff-hl-flydiff-mode)
   (add-hook 'text-mode-hook 'diff-hl-flydiff-mode)
@@ -860,8 +842,7 @@ is named like ODF with the extension turned to pdf."
   :defer t
   :after (swiper counsel)
   :config
-  (bind-key "M-O" 'ivy-dispatching-done ivy-minibuffer-map)
-  (bind-key "M-I" 'ivy-insert-current ivy-minibuffer-map)
+  (bind-key "C-c C-r" 'ivy-resume)
   (bind-key "C-h" 'ivy-avy ivy-minibuffer-map)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-height 10)
@@ -894,6 +875,10 @@ is named like ODF with the extension turned to pdf."
     (if is-win
         (call-interactively 'counsel-pt)
       (call-interactively 'counsel-ag))))
+(use-package ivy-hydra
+  ;; Enabled after features.
+  :defer t
+  :after ivy)
 (use-package hydra
   ;; Enabled after features.
   :defer t

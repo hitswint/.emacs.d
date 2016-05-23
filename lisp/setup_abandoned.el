@@ -403,4 +403,15 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
 ;; ;;(dolist (charset '(kana han symbol cjk-misc bopomofo))  (set-fontset-font (frame-parameter nil 'font)         charset                   (font-spec :family "Microsoft Yahei" :size 12)))
 ;; ;;处理shell-mode乱码,好像没作用
 ;; ===========原win语言环境字符集设置===========
+;;; imenu-anywhere
+;; ===================imenu-anywhere===============
+;; imenu-anywhere包括所有打开的相同mode的buffer，imenu限于当前buffer。
+(use-package imenu-anywhere
+  ;; Enabled at commands.
+  :disabled
+  :defer t
+  :bind ("M-s M-I" . helm-imenu-anywhere)
+  :config
+  (setq imenu-anywhere-delimiter-helm " | "))
+;; ===================imenu-anywhere===============
 (provide 'setup_abandoned)
