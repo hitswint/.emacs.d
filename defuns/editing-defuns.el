@@ -1,3 +1,4 @@
+;;; 切换cap和大小写
 ;; ===============切换cap和大小写==================
 (global-set-key (kbd "M-c") 'toggle-letter-case)
 (global-set-key (kbd "M-C") 'capitalize-word)
@@ -29,6 +30,7 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
       (downcase-region p1 p2) (put this-command 'state "all lower")))
     ))
 ;; ===============切换cap和大小写==================
+;;; compact-uncompact-block
 ;; ===========compact-uncompact-block==============
 (global-set-key (kbd "C-S-q") 'compact-uncompact-block)
 (defun compact-uncompact-block ()
@@ -56,12 +58,14 @@ When there is a text selection, act on the region."
             (fill-paragraph nil))))
       (put this-command 'stateIsCompact-p (if currentStateIsCompact nil t)))))
 ;; ===========compact-uncompact-block==============
+;;; 合并一行
 ;; ===================合并一行=====================
 (global-set-key (kbd "M-Q")
                 (lambda()
                   (interactive)
                   (join-line -1)))
 ;; ===================合并一行=====================
+;;; 复制和粘贴行
 ;; =================复制和粘贴行===================
 ;; (defun copy-line-or-region ()
 ;;   "Copy current line, or current text selection."
@@ -78,6 +82,7 @@ When there is a text selection, act on the region."
 ;; (global-set-key (kbd "M-w") 'copy-line-or-region)
 (global-set-key (kbd "C-w") 'cut-line-or-region)
 ;; =================复制和粘贴行===================
+;;; 光标不动，窗口上下移动两三行
 ;; ========光标不动，窗口上下移动两三行============
 (defun window-move-up (&optional arg)
   "Current window move-up 2 lines."
@@ -94,6 +99,7 @@ When there is a text selection, act on the region."
 (global-set-key [(meta n)] 'window-move-up)
 (global-set-key [(meta p)] 'window-move-down)
 ;; ========光标不动，窗口上下移动两三行============
+;;; 移除行尾的空格并indent
 ;; ============移除行尾的空格并indent==============
 (defun cleanup-buffer-safe ()
   "Perform a bunch of safe operations on the whitespace content of a buffer.
@@ -113,6 +119,7 @@ Including indent-buffer, which should not be called automatically on save."
   (indent-region (point-min) (point-max)))
 (global-set-key (kbd "C-x C-l") 'cleanup-buffer)
 ;; ============移除行尾的空格并indent==============
+;;; 临时标记
 ;; ==================临时标记======================
 (defun ska-point-to-register()
   "Store cursorposition _fast_ in a register.
@@ -130,6 +137,7 @@ that was stored with ska-point-to-register."
     (jump-to-register 1)
     (set-register 8 tmp)))
 ;; ==================临时标记======================
+;;; 跳转到某行时行号暂时可见
 ;; ============跳转到某行时行号暂时可见============
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
 (defun goto-line-with-feedback ()
@@ -141,6 +149,7 @@ that was stored with ska-point-to-register."
         (goto-line (read-number "Goto line: ")))
     (linum-mode -1)))
 ;; ============跳转到某行时行号暂时可见============
+;;; 注释/反注释-行或区域
 ;; ==============注释/反注释-行或区域==============
 (defun comment-or-uncomment-region-or-line ()
   "Like comment-or-uncomment-region, but if there's no mark \(that means no
@@ -154,6 +163,7 @@ region\) apply comment-or-uncomment to the current line"
       (comment-or-uncomment-region (mark) (point)))))
 (global-set-key (kbd "M-s M-;") 'comment-or-uncomment-region-or-line)
 ;; ==============注释/反注释-行或区域==============
+;;; smart-beginning-of-line
 ;; =============smart-beginning-of-line============
 ;; "smart" home, i.e., home toggles b/w 1st non-blank character and 1st column
 (defun smart-beginning-of-line ()
@@ -165,7 +175,8 @@ region\) apply comment-or-uncomment to the current line"
          (beginning-of-line))))
 (global-set-key (kbd "C-a") 'smart-beginning-of-line)
 ;; =============smart-beginning-of-line============
-;; ==================滚动更流畅====================
+;;; 流畅滚动
+;; ===================流畅滚动=====================
 ;; (setq redisplay-dont-pause t
 ;;       scroll-margin 1
 ;;       scroll-step 1
@@ -173,7 +184,8 @@ region\) apply comment-or-uncomment to the current line"
 ;;       scroll-preserve-screen-position 1)
 ;; (setq mouse-wheel-follow-mouse 't)
 ;; (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
-;; ==================滚动更流畅====================
+;; ===================流畅滚动=====================
+;;; 上下移动行
 ;; ==================上下移动行====================
 ;; ;; 使用 drag-stuff-mode 替代
 ;; (defun move-line-down ()
@@ -194,6 +206,7 @@ region\) apply comment-or-uncomment to the current line"
 ;; (global-set-key (kbd "M-N") 'move-line-down)
 ;; (global-set-key (kbd "M-P") 'move-line-up)
 ;; ==================上下移动行====================
+;;; 添加连接线和下划线
 ;; ===============添加连接线和下划线===============
 (defun jcs-dashify ()
   "Place hyphens between words in region."
@@ -207,9 +220,10 @@ region\) apply comment-or-uncomment to the current line"
   (unless (use-region-p)
     (error "No region specified"))
   (replace-regexp "[ \n]+" "_" nil (region-beginning) (region-end)))
-(global-set-key (kbd "C-x -") 'jcs-dashify)
-(global-set-key (kbd "C-x _") 'jcs-dashify-underline)
+(global-set-key (kbd "M-s -") 'jcs-dashify)
+(global-set-key (kbd "M-s _") 'jcs-dashify-underline)
 ;; ===============添加连接线和下划线===============
+;;; 复制矩形区域
 ;; ==================复制矩形区域==================
 (defun copy-rectangle-as-kill ()
   (interactive)
@@ -223,6 +237,7 @@ region\) apply comment-or-uncomment to the current line"
 ;; 2. 使用multiple-cursors复制，使用C-x ry粘贴。
 ;; 3. 使用C-x SPC直接矩形复制，使用C-y粘贴。
 ;; ==================复制矩形区域==================
+;;; 合并C-j和C-o
 ;; ==================合并C-j和C-o==================
 (defun open-line-or-new-line-dep-pos ()
   "if point is in head of line then open-line
@@ -244,6 +259,7 @@ if point is at end of line , new-line-and-indent"
            (indent-according-to-mode)))))
 (global-set-key (kbd "C-j") 'open-line-or-new-line-dep-pos)
 ;; ==================合并C-j和C-o==================
+;;; jump to mark
 ;; ==================jump to mark==================
 (global-set-key (kbd "M-m") 'pop-to-mark-command)
 (global-set-key (kbd "M-M") 'unpop-to-mark-command)
@@ -268,6 +284,7 @@ if point is at end of line , new-line-and-indent"
     (dotimes (i 10)
       (when (= p (point)) ad-do-it))))
 ;; ==================jump to mark==================
+;;; diff two regions
 ;; ================diff two regions================
 ;; Step 1: Select a region and `M-x diff-region-tag-selected-as-a'
 ;; Step 2: Select another region and `M-x diff-region-compare-with-b'

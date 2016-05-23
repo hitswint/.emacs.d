@@ -1,3 +1,4 @@
+;;; 以root打开当前文件/文件夹
 ;; =============以root打开当前文件/文件夹==========
 (defun sudo-edit (&optional arg)
   (interactive "p")
@@ -13,11 +14,13 @@
       (dired (concat "/sudo::" dir)))))
 ;; dired-mode：M(dired-do-chmod)改变权限；O(dired-do-chown)改变owner；G(dired-do-chgrp)改变group。
 ;; =============以root打开当前文件/文件夹==========
+;;; 改变文件编码
 ;; ===================改变文件编码=================
 (global-set-key (kbd "C-x RET RET") '(lambda ()
                                        (interactive)
                                        (revert-buffer-with-coding-system 'utf-8)))
 ;; ===================改变文件编码=================
+;;; dos2unix
 ;; =====================dos2unix===================
 (defun save-buffer-with-dos2unix ()
   (interactive)

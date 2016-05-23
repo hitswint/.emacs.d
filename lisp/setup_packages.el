@@ -211,7 +211,7 @@
   ;; Enabled at commands.
   ;; Enabled automatically actually.
   :defer t
-  :bind ("C-M-h" . help-command)
+  :bind ("C-M-'" . help-command)
   :config
   (define-key 'help-command (kbd "C-l") 'find-library)
   (define-key 'help-command (kbd "C-f") 'find-function)
@@ -224,7 +224,7 @@
   :config
   (define-key help-mode-map (kbd "q") 'kill-buffer-and-window))
 (use-package elisp-slime-nav
-  ;; Enabled in emacs-lisp-mode.
+  ;; Enabled in modes.
   :defer t
   :commands elisp-slime-nav-mode
   :init
@@ -353,7 +353,7 @@
 ;;; clean-aindent-mode
 ;; ===============clean-aindent-mode===============
 (use-package clean-aindent-mode
-  ;; Enabled in prog-mode.
+  ;; Enabled in modes.
   :defer t
   :commands clean-aindent-mode
   :init
@@ -407,7 +407,7 @@ Usually this is `describe-prefix-bindings'."
 ;;; pdf-tools
 ;; ====================pdf-tools===================
 (use-package pdf-tools
-  ;; Enabled in pdf-view-mode.
+  ;; Enabled in modes.
   :if is-lin
   :defer t
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
@@ -449,7 +449,7 @@ Usually this is `describe-prefix-bindings'."
 ;; win下使用doc-view查看office和pdf文件时，文件名都不可以包含中文字符。
 ;; 默认的缓存文件夹分别为/tmp和c:/Users/swint/AppData/Local/Temp，使用doc-view-clear-cache清理。
 (use-package doc-view
-  ;; Enabled in doc-view-mode.
+  ;; Enabled in modes.
   :defer t
   :config
   (setq doc-view-continuous t)
@@ -490,8 +490,8 @@ is named like ODF with the extension turned to pdf."
 (use-package visual-regexp
   ;; Enabled at commands.
   :defer t
-  :bind (("M-s r" . vr/replace)
-         ("M-s C-r" . vr/query-replace)
+  :bind (("M-s r" . vr/query-replace)
+         ("M-s R" . vr/replace)
          ("M-s C-;" . vr/mc-mark)))
 ;; ===================visual-regexp================
 ;;; vlf
@@ -557,9 +557,10 @@ is named like ODF with the extension turned to pdf."
   :commands (bm-toggle bm-previous bm-next)
   :init
   (smartrep-define-key global-map "C-x"
-    '(("C-'" . bm-toggle)
-      ("'" . bm-previous)
-      ("\"" . bm-next)))
+    '(("C-;" . bm-toggle)
+      ("C-," . bm-previous)
+      ("C-." . bm-next)
+      ("C-/" . helm-bm)))
   :config
   (setq bm-cycle-all-buffers nil)
   (setq bm-highlight-style 'bm-highlight-only-fringe))
@@ -567,17 +568,19 @@ is named like ODF with the extension turned to pdf."
 ;;; helm-bm
 ;; ====================helm-bm=====================
 (use-package helm-bm
-  ;; Enabled at commands.
+  ;; Enabled after features.
   :defer t
-  :bind ("C-M-'" . helm-bm)
+  :after bm
+  :commands helm-bm
   :config
+  (bind-key "C-x C-/" 'helm-bm)
   (defun helm-bm-action-switch-to-buffer (candidate)
     "Switch to buffer of CANDIDATE."
     (helm-bm-with-candidate
-     candidates
-     (helm-switch-persp/buffer bufname)
-     (goto-char (point-min))
-     (forward-line (1- lineno)))))
+        candidates
+      (helm-switch-persp/buffer bufname)
+      (goto-char (point-min))
+      (forward-line (1- lineno)))))
 ;; ====================helm-bm=====================
 ;;; operate-on-number
 ;; ================operate-on-number===============
@@ -817,11 +820,11 @@ is named like ODF with the extension turned to pdf."
   ;; Enabled at idle.
   :defer 2
   :config
-  (smartrep-define-key global-map "C-x"
-    '(("C-," . diff-hl-previous-hunk)
-      ("C-." . diff-hl-next-hunk)
-      ("C-/" . diff-hl-revert-hunk)
-      ("C-;" . diff-hl-mark-hunk)))
+  (smartrep-define-key global-map "M-s"
+    '((";" . diff-hl-mark-hunk)
+      ("," . diff-hl-previous-hunk)
+      ("." . diff-hl-next-hunk)
+      ("/" . diff-hl-revert-hunk)))
   (global-diff-hl-mode)
   (add-hook 'prog-mode-hook 'diff-hl-flydiff-mode)
   (add-hook 'text-mode-hook 'diff-hl-flydiff-mode)

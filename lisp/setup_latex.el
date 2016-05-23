@@ -4,7 +4,7 @@
 ;; (load "auctex.el" nil t t)
 ;; (load "preview-latex.el" nil t t)
 (use-package tex
-  ;; Enabled in latex-mode.
+  ;; Enabled in modes.
   ;; 使用package原设定。
   :defer t
   :commands LaTeX-math-mode
@@ -174,7 +174,7 @@
 ;;; magic-latex-buffer
 ;; ==============magic-latex-buffer================
 (use-package magic-latex-buffer
-  ;; Enabled in latex-mode.
+  ;; Enabled in modes.
   :defer t
   :commands magic-latex-buffer
   :init

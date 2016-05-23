@@ -4,7 +4,7 @@
   ;; Enabled at commands.
   :defer t
   :after (yasnippet ac-ispell)
-  :bind ("M-U" . swint-auto-complete)
+  :bind ("M-u" . swint-auto-complete)
   :config
   (defun swint-auto-complete ()
     (interactive)
@@ -261,7 +261,7 @@
   ;; Enabled at commands.
   :defer 2
   :commands company-complete-common
-  :bind ("M-O" . company-complete-common)
+  :bind ("M-s M-u" . company-complete-common)
   :config
   (global-company-mode 1)
   (setq company-show-numbers t)

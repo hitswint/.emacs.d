@@ -9,7 +9,7 @@
   ;; Enabled at commands.
   :defer t
   :bind (("C-M-5" . w3m)
-         ("M-@" . w3m-youdao-sample-sentences))
+         ("C-M-%" . w3m-youdao-sample-sentences))
   :config
   ;; Use w3m to display youdao sample sentences.
   (defun w3m-youdao-sample-sentences ()

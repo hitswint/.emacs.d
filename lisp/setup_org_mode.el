@@ -1,7 +1,7 @@
 ;;; org-mode
 ;; =================org-mode====================
 (use-package org
-  ;; Enabled in org-mode.
+  ;; Enabled in modes.
   :defer t
   :config
 ;;;; Appearance
@@ -107,7 +107,7 @@
 ;;;; cdlatex
   ;; ================cdlatex====================
   (use-package cdlatex
-    ;; Enabled in org-mode.
+    ;; Enabled in modes.
     :defer t
     :commands turn-on-org-cdlatex
     :init
@@ -650,7 +650,7 @@ depending on the last command issued."
   :defer t
   :commands outline-cycle)
 (use-package outline
-  ;; Enabled in latex-mode.
+  ;; Enabled in modes.
   :defer t
   :commands outline-minor-mode
   :init
@@ -796,21 +796,6 @@ depending on the last command issued."
                        (swint-interleave))
               (message "Current pdf file is not in bibliography."))))
       (interleave--open-notes-file-for-pdf)))
-  (defun interleave--go-to-page-note (page)
-    "Searches the notes buffer for an headline with the `interleave_page_note'
-property set to PAGE. It narrows the subtree when found."
-    (with-current-buffer *interleave--org-buffer*
-      (save-excursion
-        (widen)
-        (interleave--goto-search-position)
-        (if *interleave--multi-pdf-notes-file*
-            (org-narrow-to-subtree))
-        (when (re-search-forward (format "^\[ \t\r\]*\:interleave_page_note\: %s$"
-                                         page)
-                                 nil t)
-          (org-narrow-to-subtree)
-          (org-show-entry)
-          t))))
   (smartrep-define-key interleave-map "C-c"
     '(("m" . interleave--sync-pdf-page-current)
       ("p" . interleave--sync-pdf-page-previous)

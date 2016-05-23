@@ -435,7 +435,7 @@
 ;; async: Simple library for asynchronous processing in Emacs.
 ;; async-start async-start-process async-get async-ready async-wait
 (use-package dired-async
-  ;; Enabled in dired-mode.
+  ;; Enabled in modes.
   :defer t
   :commands dired-async-mode
   :init

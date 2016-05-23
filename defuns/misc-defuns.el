@@ -1,3 +1,4 @@
+;;; 从xsel复制粘贴
 ;; =================从xsel复制粘贴=================
 ;; 通过xsel与其他程序进行复制粘贴。
 ;; 在emacs中需要选中复制，直接使用easy-kill无法写入xsel。
@@ -6,6 +7,7 @@
   (insert (shell-command-to-string "xsel -o -p </dev/null")))
 (global-set-key (kbd "C-x C-y") 'xsel-paste-function)
 ;; =================从xsel复制粘贴=================
+;;; WordsCount
 ;; ===================WordsCount===================
 (defvar wc-regexp-chinese-char-and-punc
   (rx (category chinese)))
@@ -63,8 +65,9 @@
              chinese-char chinese-char-and-punc english-word
              (+ chinese-char english-word)
              (+ chinese-char-and-punc english-word)))))
-(global-set-key (kbd "M-=") 'swint-count-words-region)
+(global-set-key (kbd "C-x -") 'swint-count-words-region)
 ;; ===================WordsCount===================
+;;; Get-words-at-point
 ;; ===============Get-words-at-point===============
 (defun swint-get-words-at-point ()
   "Get words at point, use pyim-get-words-list-at-point to deal with chinese."

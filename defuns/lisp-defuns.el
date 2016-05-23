@@ -1,3 +1,4 @@
+;;; eval-expression
 ;; =================eval-expression================
 (global-set-key (kbd "C-x e") 'replace-last-sexp)
 (defun replace-last-sexp ()
@@ -6,6 +7,7 @@
     (kill-sexp -1)
     (insert (format "%s" value))))
 ;; =================eval-expression================
+;;; 解决C-n卡顿的问题
 ;; ================解决C-n卡顿的问题===============
 ;; 参考http://www.tuicool.com/articles/q6j263
 ;; 作者说得并不对，问题在于next-line时需要自动调整窗口滚动的数值，进而对较高的行(图片)更好的查看。
@@ -16,6 +18,7 @@
 (setq auto-window-vscroll nil)
 ;; auto-window-vscroll: Non-nil means to automatically adjust `window-vscroll' to view tall lines.
 ;; ================解决C-n卡顿的问题===============
+;;; Determination internet status
 ;; ==========Determination internet status=========
 (defun internet-active-p ()
   "Return non-nil if internet can be reached."

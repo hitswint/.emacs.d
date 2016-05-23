@@ -1,7 +1,7 @@
 ;;; gnuplot
 ;; ===========================gnuplot=================================
 (use-package gnuplot-mode
-  ;; Enabled in gnuplot-mode.
+  ;; Enabled in modes.
   :defer t
   :commands gnuplot-mode
   :init

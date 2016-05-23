@@ -1,7 +1,7 @@
 ;;; octave
 ;; ======================octave====================
 (use-package octave
-  ;; Enabled in octave-mode.
+  ;; Enabled in modes.
   :defer t
   :commands octave-mode
   :init

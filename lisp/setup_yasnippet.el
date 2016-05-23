@@ -3,7 +3,7 @@
 (use-package yasnippet
   ;; Enabled at commands.
   :defer t
-  :bind ("M-I" . swint-yas-insert-snippet)
+  :bind ("M-U" . swint-yas-insert-snippet)
   :config
   (defun swint-yas-insert-snippet ()
     (interactive)

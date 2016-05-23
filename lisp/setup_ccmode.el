@@ -1,7 +1,7 @@
 ;;; ccmode
 ;; ===================ccmode====================
 (use-package cc-mode
-  ;; Enabled in cc-mode.
+  ;; Enabled in modes.
   :defer t
   :commands (c-mode c++-mode)
   :init
@@ -90,7 +90,7 @@
 ;;; function-args
 ;; ==================function-args==============
 (use-package function-args
-  ;; Enabled in cc-mode.
+  ;; Enabled in modes.
   :defer t
   :commands fa-config-default
   :init
@@ -110,7 +110,7 @@
 ;;; hs-minor-mode
 ;; ==================hs-minor-mode==============
 (use-package hideshow
-  ;; Enabled in cc-mode.
+  ;; Enabled in modes.
   :defer t
   :commands hs-minor-mode
   :init
