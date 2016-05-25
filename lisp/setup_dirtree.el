@@ -7,6 +7,11 @@
          ("C-x J" . dirtree-home)
          ("C-q" . dirtree-kill-this-buffer))
   :config
+  ;; 放弃使用键盘宏。
+  ;; (fset 'dirtree-local
+  ;;       [?\C-c return return ?\c ?\C-a ?\M-f ?\M-b])
+  ;; (fset 'dirtree-home
+  ;;       [?\C-c return ?\C-a ?\C-f ?\C-f ?\C-k ?\C-m ?\C-n])
   (defun dirtree-local ()
     (interactive)
     (let* ((file buffer-file-name)
@@ -37,8 +42,7 @@
       (kill-buffer swint-current-buffer)))
 ;;;; 关闭buffer后切换到之前的buffer
   ;; =========关闭buffer后切换到之前的buffer=======
-  ;; 原始的关闭buffer存在两个问题：
-  ;; 一是会切换到helm buffer中，二是在persp之间切换时会切换到上一个persp的buffer中。
+  ;; 原始的kill-buffer存在两个问题：1. 会切换到helm buffer中；2. 在persp之间切换时会切换到上一个persp的buffer中。
   (defvar swint-iswitchb-buflist nil
     "Stores the current list of buffers that will be searched through.")
   (defvar swint-iswitchb-bufs-in-frame nil
@@ -149,10 +153,5 @@ swint-`iswitchb-all-frames'."
                (define-key dirtree-mode-map "\C-j" 'dirtree-shell-command)
                (define-key dirtree-mode-map (kbd "q") 'kill-buffer-and-window)
                (define-key dirtree-mode-map (kbd "i") 'tree-mode-toggle-expand))))
-;; 放弃使用键盘宏
-;; (fset 'dirtree-local
-;;       [?\C-c return return ?\c ?\C-a ?\M-f ?\M-b])
-;; (fset 'dirtree-home
-;;       [?\C-c return ?\C-a ?\C-f ?\C-f ?\C-k ?\C-m ?\C-n])
 ;; ====================dirtree=====================
 (provide 'setup_dirtree)

@@ -65,7 +65,7 @@
              chinese-char chinese-char-and-punc english-word
              (+ chinese-char english-word)
              (+ chinese-char-and-punc english-word)))))
-(global-set-key (kbd "C-x -") 'swint-count-words-region)
+(global-set-key (kbd "M-+") 'swint-count-words-region)
 ;; ===================WordsCount===================
 ;;; Get-words-at-point
 ;; ===============Get-words-at-point===============

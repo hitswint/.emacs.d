@@ -750,6 +750,7 @@ depending on the last command issued."
 ;; ==================outshine===================
 ;;; interleave
 ;; =================interleave==================
+;; 安装interleave时应确保pdf-tools已经加载，否则无法识别pdf-view中定义的函数。
 (use-package interleave
   ;; Enabled at commands.
   :defer t

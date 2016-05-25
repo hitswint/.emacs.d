@@ -30,7 +30,7 @@
                                       eshell-scroll-show-maximum-output t)
                                 (add-to-list 'eshell-output-filter-functions
                                              'eshell-postoutput-scroll-to-bottom)
-                                (define-key eshell-mode-map (kbd "C-M-r") 'helm-eshell-history)
+                                (define-key eshell-mode-map (kbd "C-x C-r") 'helm-eshell-history)
                                 (define-key eshell-mode-map (kbd "M-s") nil))))
 ;; =====================eshell=====================
 ;;; eshell-prompt-extras
