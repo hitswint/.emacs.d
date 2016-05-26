@@ -23,4 +23,5 @@ xmodmap ~/.xmodmap
 # [ ! -s ~/.mpd/mpd.pid ] && mpd  # Fail to startup sometime
 [ ! -s ~/.mpd/mpd.pid ] ; mpd
 
+dwm-multi-mon.sh single
 exec dwm
