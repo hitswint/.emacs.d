@@ -277,7 +277,7 @@
                   ("pptx" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/POWERPNT.EXE")
                   ("ods" . "libreoffice")("odt" . "libreoffice")
                   ("dwg" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/AutoCAD\\ 2004/acad.exe")
-                  ("dxf" . "librecad")
+                  ("dxf" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/AutoCAD\\ 2004/acad.exe")
                   ("caj" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
                   ("nh" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
                   ("kdh" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
@@ -296,7 +296,7 @@
         (let ((command (cdr (assoc file-exten file-extension-app-alist))))
           (start-process "Shell" nil shell-file-name shell-command-switch
                          (concat command " " "\""
-                                 (if (member file-exten '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "dwg" "caj" "nh" "kdh"))
+                                 (if (member file-exten '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "dwg" "dxf" "caj" "nh" "kdh"))
                                      (file-name-nondirectory file)
                                    file)
                                  "\"")))))
@@ -316,7 +316,8 @@
            (list "\\.png$" "display -flatten * >/dev/null 2>&1 &")
            (list "\\.bmp$" "display -flatten * >/dev/null 2>&1 &")
            (list "\\.html$" "firefox * >/dev/null 2>&1 &")
-           (list "\\.dxf$" "librecad * >/dev/null 2>&1 &")
+           (list "\\.dwg$" "wine-development /home/swint/.wine/drive_c/Program\\ Files/AutoCAD\\ 2008/acad.exe * >/dev/null 2>&1 &")
+           (list "\\.dxf$" "wine-development /home/swint/.wine/drive_c/Program\\ Files/AutoCAD\\ 2008/acad.exe * >/dev/null 2>&1 &")
            (list "\\.mp3$" "mpg321 * >/dev/null 2>&1 &")
            (list "\\.ape$" "mplayer * >/dev/null 2>&1 &")
            (list "\\.avi$" "mplayer * >/dev/null 2>&1 &")
@@ -340,6 +341,24 @@
                              (expand-file-name default-directory) "\"" " -embed")))
     (global-set-key (kbd "C-s-<return>") 'urxvt-default-directory)
     ;; ========在当前目录下打开urxvt===========
+;;;; cad文件版本转换
+    ;; ===========cad文件版本转换==============
+    (defun swint-dired-cad-converter (&optional arg)
+      "Convert cad file version in dired-mode."
+      (interactive "P")
+      (let ((swint-dired-current-file (file-name-nondirectory (dired-get-filename))))
+        (start-process-shell-command
+         "TeighaFileConverter" "*TeighaFileConverter*"
+         (concat "TeighaFileConverter ./ ./dwg ACAD2004 DWG 0 1 "
+                 (unless arg
+                   swint-dired-current-file)))))
+    (add-hook 'dired-mode-hook
+              (lambda ()
+                (define-key dired-mode-map (kbd "C-c c") 'swint-dired-cad-converter)
+                (define-key dired-mode-map (kbd "C-c C") '(lambda ()
+                                                            (interactive)
+                                                            (swint-dired-cad-converter t)))))
+    ;; ===========cad文件版本转换==============
     ))
 ;; ==================dired=====================
 ;;; w32-browser
