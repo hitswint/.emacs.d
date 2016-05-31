@@ -154,11 +154,11 @@ key.setGlobalKey(["C-x", "C-s"], function (ev) {
     saveDocument(window.content.document);
 }, 'Save current page to the file', true);
 
-key.setGlobalKey(["C-c", "C-c", "C-v"], function (ev) {
+key.setGlobalKey(["C-c", "C-x", "C-v"], function (ev) {
     toJavaScriptConsole();
 }, 'Display JavaScript console', true);
 
-key.setGlobalKey(["C-c", "C-c", "C-c"], function (ev) {
+key.setGlobalKey(["C-c", "C-x", "C-c"], function (ev) {
     command.clearConsole();
 }, 'Clear Javascript console', true);
 
@@ -603,6 +603,11 @@ key.setGlobalKey(["C-c", "O"], function (ev, arg) {
     shell.input("open " + url);
 }, 'Edit current url and open it');
 
+key.setGlobalKey(["C-c", "T"], function (ev, arg) {
+    var url = window._content.document.location;
+    shell.input("tabopen " + url);
+}, 'Edit current url and open it in new tab');
+
 // 书签
 key.setGlobalKey('C-\'', function (ev, arg) {
     ext.exec("bmany-list-all-bookmarks", arg, ev);
@@ -630,7 +635,7 @@ key.setGlobalKey(["C-c", "C-h"], function (ev, arg) {
     ext.exec('hok-start-background-mode', arg, ev);
 }, 'Start Hit a Hint background mode', true);
 
-key.setGlobalKey('C-M-h', function (ev, arg) {
+key.setGlobalKey(["C-c", "h"], function (ev, arg) {
     children = document.getElementById("nav-bar").children;
     for (i = 0; i < children.length; i++) {
         children[i].style.backgroundColor = "pink";
