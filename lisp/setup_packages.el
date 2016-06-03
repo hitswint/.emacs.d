@@ -37,10 +37,10 @@
       ("C-M-;" . mc/mark-all-like-this)
       ("C-M-/" . mc/edit-lines)
       ("C-M-'" . mc/mark-more-like-this-extended)
-      ("M-m" . mc/mark-pop)
       ("M-:" . mc/insert-numbers)
       ("M-\"" . mc/insert-letters)
-      ("M-?" . mc/sort-regions)))
+      ("M-?" . mc/sort-regions)
+      ("M-m" . mc/mark-pop)))
   :config
   (define-key mc/keymap (kbd "C-`") 'mc-hide-unmatched-lines-mode))
 ;; ================multiple-cursors================
@@ -356,7 +356,7 @@
 (use-package multifiles
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s t" . mf/mirror-region-in-multifile))
+  :bind ("M-s m" . mf/mirror-region-in-multifile))
 ;; ===================multifiles===================
 ;;; ztree
 ;; =====================ztree======================
@@ -559,10 +559,11 @@ is named like ODF with the extension turned to pdf."
   :config
   (defun helm-bm-action-switch-to-buffer (candidate)
     "Switch to buffer of CANDIDATE."
-    (helm-bm-with-candidate candidates
-      (helm-switch-persp/buffer bufname)
-      (goto-char (point-min))
-      (forward-line (1- lineno)))))
+    (helm-bm-with-candidate
+     candidates
+     (helm-switch-persp/buffer bufname)
+     (goto-char (point-min))
+     (forward-line (1- lineno)))))
 ;; ====================helm-bm=====================
 ;;; operate-on-number
 ;; ================operate-on-number===============
@@ -590,9 +591,7 @@ is named like ODF with the extension turned to pdf."
 (use-package goto-chg
   ;; Enabled at commands.
   :defer t
-  :bind ("C-x C-m" . swint-goto-last-change-with-prefix)
-  :init
-  (define-key ctl-x-map (kbd "<return>") mule-keymap)
+  :bind ("M-s M-m" . swint-goto-last-change-with-prefix)
   :config
   (defun swint-goto-last-change-with-prefix (&optional arg)
     (interactive)
@@ -605,8 +604,8 @@ is named like ODF with the extension turned to pdf."
     ;; finalization code is run.
     (condition-case e
         (smartrep-read-event-loop
-         '(("C-m" . goto-last-change)
-           ("C-M-m" . goto-last-change-reverse)))
+         '(("M-m" . goto-last-change)
+           ("M-M" . goto-last-change-reverse)))
       (quit nil))
     ;; (finalize-event-loop)
     ))
@@ -630,13 +629,13 @@ is named like ODF with the extension turned to pdf."
 (use-package bbyac
   ;; Enabled at commands.
   :defer t
-  :bind (("M-s <M-return>" . bbyac-expand-partial-lines)
-         ("M-s <return>" . bbyac-expand-lines))
+  :bind (("M-s u" . bbyac-expand-partial-lines)
+         ("M-s U" . bbyac-expand-lines))
   :config
   (bbyac-global-mode 1)
   (setq browse-kill-ring-display-style 'one-line)
-  (define-key bbyac-mode-map (kbd "M-s <M-return>") 'bbyac-expand-partial-lines)
-  (define-key bbyac-mode-map (kbd "M-s <return>") 'bbyac-expand-lines)
+  (define-key bbyac-mode-map (kbd "M-s u") 'bbyac-expand-partial-lines)
+  (define-key bbyac-mode-map (kbd "M-s U") 'bbyac-expand-lines)
   (define-key bbyac-mode-map (kbd "M-g <return>") nil)
   (define-key bbyac-mode-map (kbd "M-g x") nil)
   (define-key bbyac-mode-map (kbd "M-s l") nil)
