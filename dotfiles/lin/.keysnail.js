@@ -657,3 +657,8 @@ key.setGlobalKey(["C-o", "g"], function (ev, arg) {
     var tab = ff.addTab(myUrl);
     ff.selectedTab = tab;
 }, 'Open Google', true);
+
+// history
+key.setGlobalKey('C-.', function (ev, arg) {
+    ext.exec("history-show", arg);
+}, "Show history", true);
