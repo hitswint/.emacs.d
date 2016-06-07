@@ -135,7 +135,7 @@
           screen-file)
       (cond (is-lin
              (setq screen-file (concat (make-temp-name
-                                        (concat screen-file-path (file-name-base)
+                                        (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
                                                 "_" (format-time-string "%Y%m%d_"))) ".png"))
              (suspend-frame)
              (call-process-shell-command "scrot" nil nil nil nil " -s " (concat "\"" screen-file "\"" )))
@@ -146,8 +146,8 @@
                    ;;          (concat (getenv "HOME") "/org/pic/" (file-name-base)
                    ;;                  "_"
                    ;;                  (format-time-string "%Y%m%d_"))) ".png")
-                   (replace-regexp-in-string "/" "\\" (concat screen-file-path (file-name-base) "_"
-                                                              (format-time-string "%Y%m%d_") (make-temp-name "") ".png") t t))
+                   (replace-regexp-in-string "/" "\\" (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
+                                                              "_" (format-time-string "%Y%m%d_") (make-temp-name "") ".png") t t))
              (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil
                            (concat "/clippaste /convert=" screen-file))))
       screen-file))
