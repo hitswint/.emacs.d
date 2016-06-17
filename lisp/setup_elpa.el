@@ -26,6 +26,7 @@
             aggressive-indent
             anchored-transpose
             anzu
+	    arduino-mode
             async
             auctex
             auctex-latexmk

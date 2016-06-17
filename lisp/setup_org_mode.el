@@ -265,6 +265,7 @@
                            ("\\.asf\\'" . "mplayer %s")
                            ("\\.mpeg\\'" . "mplayer %s")
                            ("\\.wma\\'" . "mplayer %s")
+                           ("\\.gif\\'" . "mplayer %s")
                            ("\\.doc\\'" . "libreoffice %s")
                            ("\\.ppt\\'" . "libreoffice %s")
                            ("\\.xls\\'" . "libreoffice %s")
@@ -277,7 +278,7 @@
                            ("\\.html\\'" . "firefox %s")
                            ("\\.htm\\'" . "firefox %s")
                            ))
-                 (is-win w32-browser))))
+                 (is-win '((w32-browser))))))
       (swint-open-at-point)))
   ;; =============swint-open-at-point===========
 ;;;; mobileorg

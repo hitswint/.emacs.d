@@ -138,6 +138,7 @@
 (require 'setup_default)
 (require 'setup_abandoned)
 (require 'setup_abbrev)
+(require 'setup_arduino)
 (require 'setup_avy)
 (require 'setup_appearance)
 (require 'setup_ccmode)

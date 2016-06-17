@@ -262,9 +262,8 @@
       (if (not (boundp 'file-extension-app-alist))
           (setq file-extension-app-alist
                 '(("pdf" . "llpp") ("djvu" . "llpp")
-                  ("rmvb" . "mplayer") ("rm" . "mplayer") ("mp4" . "mplayer") ("avi" . "mplayer") ("flv" . "mplayer") ("f4v" . "mplayer") ("mpg" . "mplayer") ("mkv" . "mplayer") ("3gp" . "mplayer") ("wmv" . "mplayer") ("mov" . "mplayer") ("dat" . "mplayer") ("asf" . "mplayer") ("mpeg" . "mplayer") ("wma" . "mplayer")
-                  ("mp3" . "mpg321")
-                  ("ape" . "mplayer")
+                  ("rmvb" . "mplayer") ("rm" . "mplayer") ("mp4" . "mplayer") ("avi" . "mplayer") ("flv" . "mplayer") ("f4v" . "mplayer") ("mpg" . "mplayer") ("mkv" . "mplayer") ("3gp" . "mplayer") ("wmv" . "mplayer") ("mov" . "mplayer") ("dat" . "mplayer") ("asf" . "mplayer") ("mpeg" . "mplayer") ("wma" . "mplayer") ("gif" . "mplayer")
+                  ("mp3" . "mpg321") ("ape" . "mplayer")
                   ("xoj" . "xournal")
                   ("jpg" . "~/feh.sh") ("png" . "~/feh.sh") ("bmp" . "~/feh.sh") ("jpeg" . "~/feh.sh")
                   ("eps" . "gv") ("ps" . "gv")
