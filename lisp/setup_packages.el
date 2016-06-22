@@ -465,11 +465,11 @@ is named like ODF with the extension turned to pdf."
 (use-package git-timemachine
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s b" . git-timemachine))
+  :bind ("M-s M-b" . git-timemachine))
 (use-package backup-walker
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s B" . backup-walker-start))
+  :bind ("M-s M-B" . backup-walker-start))
 ;; ======================backup====================
 ;;; visual-regexp
 ;; ===================visual-regexp================
@@ -486,13 +486,14 @@ is named like ODF with the extension turned to pdf."
 (use-package vlf
   ;; Enabled at idle.
   :defer t
-  :bind-keymap ("C-c C-v" . vlf-mode-map)
+  :bind-keymap ("M-s v" . vlf-mode-map)
   :init
   ;; Enable vlf when opening files bigger than 100MB.
   (setq large-file-warning-threshold 100000000)
   :config
   (use-package vlf-setup)
-  (define-key vlf-prefix-map "\C-c\C-v" vlf-mode-map)
+  (define-key vlf-prefix-map "\C-c\C-v" nil)
+  (define-key vlf-prefix-map "\M-sv" vlf-mode-map)
   (smartrep-define-key vlf-mode-map ""
     '(("n" . vlf-next-batch)
       ("p" . vlf-prev-batch)
@@ -629,14 +630,17 @@ is named like ODF with the extension turned to pdf."
 (use-package bbyac
   ;; Enabled at commands.
   :defer t
-  :bind (("M-s u" . bbyac-expand-partial-lines)
-         ("M-s U" . bbyac-expand-lines))
+  :bind (("M-s M-u" . bbyac-expand-partial-lines)
+         ("M-s M-U" . bbyac-expand-lines))
   :config
   (bbyac-global-mode 1)
   (setq browse-kill-ring-display-style 'one-line)
-  (define-key bbyac-mode-map (kbd "M-s u") 'bbyac-expand-partial-lines)
-  (define-key bbyac-mode-map (kbd "M-s U") 'bbyac-expand-lines)
+  (define-key bbyac-mode-map (kbd "M-s M-u") 'bbyac-expand-partial-lines)
+  (define-key bbyac-mode-map (kbd "M-s M-U") 'bbyac-expand-lines)
   (define-key bbyac-mode-map (kbd "M-g <return>") nil)
+  (define-key bbyac-mode-map (kbd "M-g RET") nil)
+  (define-key bbyac-mode-map (kbd "M-s <return>") nil)
+  (define-key bbyac-mode-map (kbd "M-s <RET>") nil)
   (define-key bbyac-mode-map (kbd "M-g x") nil)
   (define-key bbyac-mode-map (kbd "M-s l") nil)
   (define-key bbyac-mode-map (kbd "M-s s") nil)
@@ -789,11 +793,23 @@ is named like ODF with the extension turned to pdf."
 ;;; dumb-jump
 ;; ==================dumb-jump=====================
 (use-package dumb-jump
-  ;; Enabled at commands.
+  ;; Enabled in modes.
   :defer t
-  :bind (("C-c ," . dumb-jump-go)
-         ("C-c ." . dumb-jump-back)
-         ("C-c /" . dumb-jump-quick-look)))
+  :commands dumb-jump-mode
+  :init
+  (dolist (hook '(emacs-lisp-mode-hook
+                  python-mode-hook
+                  js-mode-hook
+                  ruby-mode-hook
+                  clojure-mode-hook))
+    (add-hook hook 'dumb-jump-mode))
+  :config
+  (define-key dumb-jump-mode-map (kbd "C-c ,") 'dumb-jump-go)
+  (define-key dumb-jump-mode-map (kbd "C-c .") 'dumb-jump-back)
+  (define-key dumb-jump-mode-map (kbd "C-c /") 'dumb-jump-quick-look)
+  (define-key dumb-jump-mode-map (kbd "C-M-g") nil)
+  (define-key dumb-jump-mode-map (kbd "C-M-p") nil)
+  (define-key dumb-jump-mode-map (kbd "C-M-q") nil))
 ;; ==================dumb-jump=====================
 ;;; diff-hl
 ;; ===================diff-hl======================
@@ -841,7 +857,7 @@ is named like ODF with the extension turned to pdf."
   :defer t
   :after (swiper counsel)
   :config
-  (bind-key "C-c C-r" 'ivy-resume)
+  (bind-key "C-x c B" 'ivy-resume)
   (bind-key "C-h" 'ivy-avy ivy-minibuffer-map)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-height 10)

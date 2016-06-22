@@ -26,7 +26,7 @@
             aggressive-indent
             anchored-transpose
             anzu
-	    arduino-mode
+            arduino-mode
             async
             auctex
             auctex-latexmk
@@ -67,12 +67,14 @@
             easy-kill
             elisp-slime-nav
             elmacro
+            elpy
             emms
             epl
             eshell-prompt-extras
             evil-nerd-commenter
             expand-region
             f
+            find-file-in-project
             flx
             flx-ido
             flycheck
@@ -96,6 +98,7 @@
             helm-projectile
             helm-swoop
             helm-unicode
+            highlight-indentation
             highlight-parentheses
             highlight-symbol
             hungry-delete
@@ -106,7 +109,7 @@
             ido-vertical-mode
             interleave
             ivy
-	    ivy-hydra
+            ivy-hydra
             lacarte
             latex-preview-pane
             let-alist
@@ -138,6 +141,7 @@
             popwin
             pos-tip
             projectile
+            pyvenv
             quickrun
             rainbow-delimiters
             readline-complete

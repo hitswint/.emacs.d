@@ -4,8 +4,8 @@
   ;; Enabled at commands.
   :defer t
   :after pinyin-search
-  :bind (("M-s C-r" . anzu-query-replace)
-         ("M-s C-R" . anzu-query-replace-regexp))
+  :bind (("M-s M-r" . anzu-query-replace)
+         ("M-s M-R" . anzu-query-replace-regexp))
   :config
   (global-anzu-mode 1)
   (set-face-attribute 'anzu-mode-line nil

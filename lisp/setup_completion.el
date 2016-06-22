@@ -261,17 +261,27 @@
   ;; Enabled at commands.
   :defer 2
   :commands company-complete-common
-  :bind ("M-s M-u" . company-complete-common)
+  :bind ("M-U" . company-complete-common)
   :config
   (global-company-mode 1)
   (setq company-show-numbers t)
+  (define-key company-active-map (kbd "<tab>") nil)
+  (define-key company-active-map (kbd "TAB") nil)
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (dotimes (i 10)
     (define-key company-active-map (read-kbd-macro (format "C-%d" i)) 'company-complete-number))
-  ;; company-quickhelp-mode
+  (setq company-backends (delete 'company-semantic company-backends))
+  ;; To complete for projects, you need to tell Clang your include paths.
+  ;; Create a file named .dir-locals.el at your project root:
+  ;; ((nil . ((company-clang-arguments . ("-I/home/<user>/project_root/include1/"
+  ;;                                      "-I/home/<user>/project_root/include2/")))))
+  ;; If you use Helm, you can easily insert absolute path by C-c i at the current path in helm-find-files.
+;;;; company-quickhelp-mode
+  ;; ==========company-quickhelp-mode==========
   (use-package company-quickhelp
     ;; Enabled at commands.
+    ;; 在弹出popup的情况下，C-h 打开*Help*，C-w 进入文件，C-o弹出pos-tip，C-s 搜索，C-M-s 过滤。
     :defer t
     :commands company-quickhelp-manual-begin
     :init
@@ -279,18 +289,16 @@
     (setq company-quickhelp-delay nil)
     :config
     (company-quickhelp-mode 1))
-  ;; 在弹出popup的情况下，C-h 打开*Help*，C-w 进入文件，C-o弹出pos-tip，C-s 搜索，C-M-s 过滤。
-  ;; company-c-headers
+  ;; ==========company-quickhelp-mode==========
+;;;; company-c-headers
+  ;; ============company-c-headers=============
   (use-package company-c-headers
-    ;; Enabled automatically.
+    ;; Enabled after features.
+    :defer t
+    :after company
     :config
     (add-to-list 'company-backends 'company-c-headers))
-  (setq company-backends (delete 'company-semantic company-backends))
-  ;; To complete for projects, you need to tell Clang your include paths.
-  ;; Create a file named .dir-locals.el at your project root:
-  ;; ((nil . ((company-clang-arguments . ("-I/home/<user>/project_root/include1/"
-  ;;                                      "-I/home/<user>/project_root/include2/")))))
-  ;; If you use Helm, you can easily insert absolute path by C-c i at the current path in helm-find-files.
+  ;; ============company-c-headers=============
   )
 ;; ================company=====================
 ;;; hippie-expand

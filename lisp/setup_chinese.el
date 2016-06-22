@@ -31,6 +31,8 @@
   :commands pyim-get-words-list-at-point
   :bind (("C-M-SPC" . pyim-convert-pinyin-at-point)
          ("S-SPC" . pyim-punctuation-translate-at-point))
+  :init
+  (bind-key "C-S-SPC" 'toggle-input-method)
   :config
   (setq default-input-method "chinese-pyim")
   ;; 使用pyim-fuzzy-pinyin-alist设置模糊音。

@@ -29,8 +29,9 @@
   (when is-win
     (setq preview-image-type 'pnm)
     (setq preview-gs-command "c:/Program Files (x86)/gs/gs9.09/bin/gswin32c.exe"))
-  ;; C-c C-x p preview选中或者全部。
-  ;; C-c C-x P 取消buffer的preview。
+  ;; C-c C-p C-p preview-at-point。
+  ;; C-c C-p C-c C-p preview-clearout-at-point。
+  ;; C-c C-p C-c C-b preview-clearout-buffer。
   ;; ==================preview=====================
 ;;;; setup-and-keybindings
   ;; ============setup-and-keybindings=============
@@ -49,7 +50,7 @@
               'turn-on-reftex
               'turn-on-orgtbl
               'LaTeX-install-toolbar))
-  ;; 在 LaTeX mode 中，默认开启 PDF mode，即默认使用 xelatex 直接生成 pdf 文件，而不用每次用 'C-c C-t C-p' 进行切换。设置 'Tex-show-compilation' 为t，在另一个窗口显示编译信息，对于错误的排除很方便。另外，编译时默认直接保存文件，绑定补全符号到 TAB 键。
+  ;; 在LaTeX-mode中，默认开启PDF-mode，即默认使用xelatex直接生成pdf文件，而不用每次用'C-c C-t C-p'进行切换。设置'Tex-show-compilation'为t，在另一个窗口显示编译信息，对于错误的排除很方便。另外，编译时默认直接保存文件，绑定补全符号到TAB键。
   (add-hook 'LaTeX-mode-hook
             (lambda ()
               (setq TeX-auto-untabify t  ; remove all tabs before saving
@@ -63,8 +64,6 @@
               (define-key LaTeX-mode-map (kbd "C-q") 'swint-kill-tex-buffer)
               (define-key LaTeX-mode-map (kbd "C-c i") 'swint-open-at-point-with-apps)
               (define-key LaTeX-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
-              (define-key LaTeX-mode-map (kbd "C-c C-x l") 'preview-at-point)
-              (define-key LaTeX-mode-map (kbd "C-c C-x L") 'preview-clearout-buffer)
               (define-key LaTeX-mode-map (kbd "\"") nil)))
   (setq TeX-view-program-list
         '(("Llpp" "llpp %o")
@@ -121,8 +120,14 @@
 (use-package zotelo
   ;; Enabled at commands.
   :defer t
-  :commands (zotelo--locate-bibliography-files zotelo-set-collection)
-  :bind ("C-c z U" .  swint-zotelo-update-database)
+  :commands (swint-zotelo-update-database zotelo--locate-bibliography-files zotelo-set-collection)
+  :init
+  (add-hook 'LaTeX-mode-hook
+            '(lambda ()
+               (define-key LaTeX-mode-map (kbd "C-c z U") 'swint-zotelo-update-database)))
+  (add-hook 'org-mode-hook
+            '(lambda ()
+               (define-key org-mode-map (kbd "C-c z U") 'swint-zotelo-update-database)))
   :config
   ;; 使用zotero-better-bibtex自动更新bib文件，使用zotelo手动更新bib文件。
   (defun swint-zotelo-update-database ()

@@ -147,3 +147,7 @@ select-word-style bash
 source ~/.zsh/percol.sh
 source ~/.zsh/alias.sh
 source ~/.zsh/xsel.sh
+
+# virtualenv和virtualenvwrapper设置。
+export WORKON_HOME=$HOME/.virtualenvs
+source /usr/local/bin/virtualenvwrapper.sh

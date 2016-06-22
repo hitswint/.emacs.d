@@ -65,7 +65,9 @@
   (add-to-list 'sml/hidden-modes " h")
   (add-to-list 'sml/hidden-modes " VHl")
   (add-to-list 'sml/hidden-modes " HS")
-  (add-to-list 'sml/hidden-modes " HSA"))
+  (add-to-list 'sml/hidden-modes " HSA")
+  (add-to-list 'sml/hidden-modes " ||")
+  (add-to-list 'sml/hidden-modes " Elpy"))
 ;; ================smart-mode-line=================
 ;;; abbrev-for-mode-line
 ;; =============abbrev-for-mode-line===============

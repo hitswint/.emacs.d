@@ -222,7 +222,7 @@ If prefix ARG is given, delete the window instead of selecting it."
 ;; ===========intuitive window resizing============
 ;;; 切换窗口分割模式
 ;; ===============切换窗口分割模式=================
-(global-set-key (kbd "C-x C-i") 'toggle-window-split)
+(global-set-key (kbd "C-\\") 'toggle-window-split)
 ;; (defun window-toggle-split-direction ()
 ;;   "Switch window split from horizontally to vertically, or vice versa.
 ;; i.e. change right window to bottom, or change bottom window to right."
@@ -276,7 +276,7 @@ If prefix ARG is given, delete the window instead of selecting it."
 ;; ===============切换窗口分割模式=================
 ;;; 循环窗口
 ;; ===================循环窗口=====================
-(global-set-key (kbd "C-x C-o") 'rotate-windows)
+(global-set-key (kbd "C-x O") 'rotate-windows)
 (defun rotate-windows ()
   "Rotate your windows"
   (interactive)

@@ -652,9 +652,9 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   ;; Enabled at commands.
   :defer t
   :bind (("M-s M-s" . helm-swoop)
-         ("M-s M-S" . helm-multi-swoop-all)
+         ("M-s M-S" . helm-swoop-back-to-last-point)
          ("M-s C-s" . helm-multi-swoop)
-         ("M-s C-m" . helm-swoop-back-to-last-point))
+         ("M-s C-S-s" . helm-multi-swoop-all))
   :config
   ;; helm-swoop 中使用C-c C-e编辑，C-x C-s保存。
   ;; When doing isearch, hand the word over to helm-swoop

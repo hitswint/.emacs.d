@@ -46,12 +46,11 @@
                (define-key org-mode-map (kbd "C-c C-v") 'swint-org-open-export-pdf)
                (define-key org-mode-map (kbd "C-c i") 'swint-open-at-point-with-apps)
                (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
-               (define-key org-mode-map (kbd "C-c C-x p") 'org-preview-latex-fragment)
-               (define-key org-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
-               (define-key org-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
-               (define-key org-mode-map (kbd "C-c C-u") 'outline-up-heading)
-               (define-key org-mode-map (kbd "C-c C-b") 'org-backward-heading-same-level)
-               (define-key org-mode-map (kbd "C-c C-f") 'org-forward-heading-same-level)
+               (define-key org-mode-map (kbd "M-s p") 'outline-previous-visible-heading)
+               (define-key org-mode-map (kbd "M-s n") 'outline-next-visible-heading)
+               (define-key org-mode-map (kbd "M-s u") 'outline-up-heading)
+               (define-key org-mode-map (kbd "M-s b") 'org-backward-heading-same-level)
+               (define-key org-mode-map (kbd "M-s f") 'org-forward-heading-same-level)
                (define-key org-mode-map (kbd "C-a") nil)
                (define-key org-mode-map (kbd "C-e") 'end-of-line)
                (define-key org-mode-map (kbd "C-j") nil)
@@ -663,6 +662,10 @@ depending on the last command issued."
   (add-hook 'ledger-mode-hook 'outline-minor-mode)
   (add-hook 'message-mode-hook 'outline-minor-mode)
   (add-hook 'octave-mode-hook 'outline-minor-mode)
+  (add-hook 'python-mode-hook 'outline-minor-mode)
+  (add-hook 'c-mode-hook 'outline-minor-mode)
+  (add-hook 'c++-mode-hook 'outline-minor-mode)
+  (add-hook 'arduino-mode-hook 'outline-minor-mode)
   (add-hook 'lisp-interaction-mode-hook
             (lambda () (outline-minor-mode -1)))
   (defvar outline-minor-mode-prefix "\M-#")
@@ -672,12 +675,12 @@ depending on the last command issued."
               ;; 在latex-mode和lisp-interaction-mode中不开启outshine。
               (unless (memq major-mode '(latex-mode eshell-mode))
                 (outshine-hook-function))
-              (define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
-              (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
-              (define-key outline-minor-mode-map (kbd "C-c C-u") 'outline-up-heading)
-              (define-key outline-minor-mode-map (kbd "C-c C-b") 'outline-backward-same-level)
-              (define-key outline-minor-mode-map (kbd "C-c C-f") 'outline-forward-same-level)
-              (define-key outline-minor-mode-map (kbd "C-c C-m") 'outline-insert-heading)
+              (define-key outline-minor-mode-map (kbd "M-s p") 'outline-previous-visible-heading)
+              (define-key outline-minor-mode-map (kbd "M-s n") 'outline-next-visible-heading)
+              (define-key outline-minor-mode-map (kbd "M-s u") 'outline-up-heading)
+              (define-key outline-minor-mode-map (kbd "M-s b") 'outline-backward-same-level)
+              (define-key outline-minor-mode-map (kbd "M-s f") 'outline-forward-same-level)
+              (define-key outline-minor-mode-map (kbd "M-s RET") 'outline-insert-heading)
               (define-key outline-minor-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
               (define-key outline-minor-mode-map (kbd "C-M-i") nil)))
   (add-hook 'TeX-mode-hook
@@ -718,20 +721,9 @@ depending on the last command issued."
   :defer t
   :commands (outshine-hook-function outshine-cycle-buffer outshine-calc-outline-regexp)
   :config
+  ;; heading格式随mode不同，通常是M-;加*加空格。
   (setq outshine-use-speed-commands t)
-  (setq outshine-imenu-show-headlines-p nil)
-  ;; octave-mode。
-  (defconst outshine-octave-outline-regexp-base
-    (format "[%%]\\{1,%d\\}" outshine-max-level)
-    "Oldschool Emacs Lisp base for calculating the outline-regexp")
-  (defun outshine-set-octave-regexp-base ()
-    "Return the actual outline-regexp-base for octave-mode."
-    (if (eq major-mode 'octave-mode)
-        (progn
-          (setq outshine-enforce-no-comment-padding-p t)
-          (setq outshine-outline-regexp-base
-                outshine-octave-outline-regexp-base))))
-  (advice-add 'outshine-set-outline-regexp-base :after #'outshine-set-octave-regexp-base))
+  (setq outshine-imenu-show-headlines-p nil))
 (use-package outorg
   ;; Enabled after features.
   ;; M-# # current heading.

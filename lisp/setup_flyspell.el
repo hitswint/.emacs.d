@@ -3,7 +3,7 @@
 (use-package flyspell
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s f" . swint-toggle-flyspell-mode)
+  :bind ("M-g f" . swint-toggle-flyspell-mode)
   :config
   (defun swint-toggle-flyspell-mode ()
     (interactive)
@@ -14,7 +14,7 @@
   (define-key flyspell-mode-map (kbd "C-,") nil)
   (define-key flyspell-mode-map (kbd "C-.") nil)
   (define-key flyspell-mode-map (kbd "C-;") nil)
-  (smartrep-define-key flyspell-mode-map "M-s"
+  (smartrep-define-key flyspell-mode-map "M-g"
     '(("M-p" . flyspell-goto-previous-error)
       ("M-n" . flyspell-goto-next-error)
       ("M-f" . helm-flyspell-correct)))
@@ -75,6 +75,6 @@
 (use-package helm-flyspell
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s M-f" . helm-flyspell-correct))
+  :bind ("M-g M-f" . helm-flyspell-correct))
 ;; =============helm-flyspell================
 (provide 'setup_flyspell)

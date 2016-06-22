@@ -26,11 +26,11 @@
                          file)))))
   (add-hook 'c-mode-hook
             (lambda ()
-              (define-key c-mode-base-map (kbd "<f5>") (lambda ()
-                                                         (interactive)
-                                                         (setq-local compilation-read-command nil)
-                                                         (call-interactively 'compile)))
               (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
+              (define-key c-mode-base-map (kbd "C-c C-C") (lambda ()
+                                                            (interactive)
+                                                            (setq-local compilation-read-command nil)
+                                                            (call-interactively 'compile)))
               (define-key c-mode-base-map (kbd "C-M-q") nil)
               (define-key c-mode-base-map (kbd "C-M-h") nil)
               (define-key c-mode-base-map (kbd "(") nil)
@@ -173,4 +173,14 @@
       ("/" . helm-gtags-show-stack)))
   (define-key helm-gtags-mode-map (kbd "M-.") nil))
 ;; ==================helm-gtags=================
+;;; arduino
+;; ===================arduino===================
+(use-package arduino-mode
+  ;; Enabled in modes.
+  :defer t
+  :commands arduino-mode
+  :init
+  (add-to-list 'auto-mode-alist '("\\.pde\\'" . arduino-mode))
+  (add-to-list 'auto-mode-alist '("\\.ino\\'" . arduino-mode)))
+;; ===================arduino===================
 (provide 'setup_ccmode)
