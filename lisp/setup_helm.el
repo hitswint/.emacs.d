@@ -572,10 +572,10 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
             '(lambda ()
                (define-key org-mode-map (kbd "C-c b") 'swint-helm-bibtex-local)))
   :config
-  (define-key helm-map (kbd "C-c i") '(lambda () (interactive)
+  (define-key helm-map (kbd "C-c j") '(lambda () (interactive)
                                         (with-helm-alive-p
                                           (helm-exit-and-execute-action 'helm-bibtex-open-pdf-externally))))
-  (define-key helm-map (kbd "C-c o") '(lambda () (interactive)
+  (define-key helm-map (kbd "C-c m") '(lambda () (interactive)
                                         (with-helm-alive-p
                                           (helm-exit-and-execute-action 'helm-bibtex-open-pdf))))
   (define-key helm-map (kbd "C-c l") '(lambda () (interactive)

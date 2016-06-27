@@ -44,8 +44,8 @@
                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
                (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
                (define-key org-mode-map (kbd "C-c C-v") 'swint-org-open-export-pdf)
-               (define-key org-mode-map (kbd "C-c i") 'swint-open-at-point-with-apps)
-               (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
+               (define-key org-mode-map (kbd "C-c j") 'swint-open-at-point-with-apps)
+               (define-key org-mode-map (kbd "C-c m") '(lambda () (interactive) (swint-open-at-point t)))
                (define-key org-mode-map (kbd "M-s p") 'outline-previous-visible-heading)
                (define-key org-mode-map (kbd "M-s n") 'outline-next-visible-heading)
                (define-key org-mode-map (kbd "M-s u") 'outline-up-heading)
@@ -573,8 +573,10 @@ depending on the last command issued."
 ;; ===============org-annotate==================
 ;; Display annotated files with mark.
 (use-package dired-x-annotated
-  ;; Enabled automatically.
+  ;; Enabled after features.
   :load-path "site-lisp/org-annotate-file/"
+  :defer t
+  :after dired
   :config
   (defun swint-org-annotate-file-storage-file ()
     "Modified from var to function"
