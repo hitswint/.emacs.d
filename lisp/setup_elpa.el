@@ -47,6 +47,8 @@
             cdlatex
             char-menu
             chinese-pyim
+            chinese-pyim-basedict
+            chinese-pyim-greatdict
             clean-aindent-mode
             clipmon
             company

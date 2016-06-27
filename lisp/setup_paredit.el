@@ -61,11 +61,18 @@
   :commands paredit-everywhere-mode
   :init
   (dolist (hook '(LaTeX-mode-hook
-                  org-mode-hook
+                  arduino-mode-hook
+                  c++-mode-hook
+                  c-mode-hook
+                  clojure-mode-hook
+                  ess-mode-hook
                   octave-mode-hook
                   gnuplot-mode-hook
-                  c-mode-hook
                   graphviz-dot-mode-hook
+                  ledger-mode-hook
+                  org-mode-hook
+                  picolisp-mode-hook
+                  python-mode-hook
                   lisp-interaction-mode-hook))
     (add-hook hook 'paredit-everywhere-mode))
   :config

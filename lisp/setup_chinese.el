@@ -70,5 +70,17 @@
   ;; 关闭拼音搜索功能并取消其对isearch-search-fun-function的设置。
   (setq pyim-isearch-enable-pinyin-search nil)
   (setq isearch-search-fun-function 'isearch-function-with-pinyin))
+;;; chinese-pyim-basedict
+(use-package chinese-pyim-basedict
+  ;; Enabled after features.
+  :after chinese-pyim
+  :config
+  (chinese-pyim-basedict-enable))
+;;; chinese-pyim-greatdict
+(use-package chinese-pyim-greatdict
+  ;; Enabled after features.
+  :after chinese-pyim
+  :config
+  (chinese-pyim-greatdict-enable))
 ;; =============chinese-pyim===============
 (provide 'setup_chinese)

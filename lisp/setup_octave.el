@@ -51,6 +51,7 @@
               (turn-on-font-lock)
               (define-key inferior-octave-mode-map (kbd "C-c C-,") 'octave-find-definition)
               (define-key inferior-octave-mode-map (kbd "C-c C-/") 'octave-help)
+              (define-key inferior-octave-mode-map (kbd "C-q") 'comint-send-eof)
               (define-key inferior-octave-mode-map [up] 'comint-previous-input)
               (define-key inferior-octave-mode-map [down] 'comint-next-input)
               (define-key inferior-octave-mode-map (kbd "M-.") nil)

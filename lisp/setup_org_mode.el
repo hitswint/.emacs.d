@@ -683,6 +683,14 @@ depending on the last command issued."
               (define-key outline-minor-mode-map (kbd "M-s RET") 'outline-insert-heading)
               (define-key outline-minor-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
               (define-key outline-minor-mode-map (kbd "C-M-i") nil)))
+  (add-hook 'outline-insert-heading-hook (lambda ()
+                                           (if (string-equal "" head)
+                                               (progn (call-interactively 'comment-dwim)
+                                                      (insert "* "))
+                                             (when (memq major-mode '(c++-mode
+                                                                      c-mode
+                                                                      arduino-mode))
+                                               (save-excursion (insert " */"))))))
   (add-hook 'TeX-mode-hook
             (lambda ()
               (define-key outline-minor-mode-map (kbd "\C-i") '(menu-item "maybe-latex/hide-show" nil :filter
