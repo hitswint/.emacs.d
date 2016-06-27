@@ -670,7 +670,7 @@ depending on the last command issued."
   (add-hook 'arduino-mode-hook 'outline-minor-mode)
   (add-hook 'lisp-interaction-mode-hook
             (lambda () (outline-minor-mode -1)))
-  (defvar outline-minor-mode-prefix "\M-#")
+  (defvar outline-minor-mode-prefix "\M-so")
   :config
   (add-hook 'outline-minor-mode-hook
             (lambda ()
@@ -736,8 +736,9 @@ depending on the last command issued."
   (setq outshine-imenu-show-headlines-p nil))
 (use-package outorg
   ;; Enabled after features.
-  ;; M-# # current heading.
-  ;; C-u M-# # current buffer.
+  ;; M-s o # current heading.
+  ;; C-u M-s o # current buffer.
+  ;; M-# outorg-copy-edits-and-exit.
   :defer t
   :after outshine)
 (use-package navi-mode
