@@ -46,11 +46,12 @@
                (define-key org-mode-map (kbd "C-c C-v") 'swint-org-open-export-pdf)
                (define-key org-mode-map (kbd "C-c j") 'swint-open-at-point-with-apps)
                (define-key org-mode-map (kbd "C-c m") '(lambda () (interactive) (swint-open-at-point t)))
-               (define-key org-mode-map (kbd "M-s p") 'outline-previous-visible-heading)
-               (define-key org-mode-map (kbd "M-s n") 'outline-next-visible-heading)
-               (define-key org-mode-map (kbd "M-s u") 'outline-up-heading)
-               (define-key org-mode-map (kbd "M-s b") 'org-backward-heading-same-level)
-               (define-key org-mode-map (kbd "M-s f") 'org-forward-heading-same-level)
+               (smartrep-define-key org-mode-map "M-s"
+                 '(("p" . outline-previous-visible-heading)
+                   ("n" . outline-next-visible-heading)
+                   ("u" . outline-up-heading)
+                   ("b" . org-backward-heading-same-level)
+                   ("f" . org-forward-heading-same-level)))
                (define-key org-mode-map (kbd "C-a") nil)
                (define-key org-mode-map (kbd "C-e") 'end-of-line)
                (define-key org-mode-map (kbd "C-j") nil)
@@ -677,12 +678,13 @@ depending on the last command issued."
               ;; 在latex-mode和lisp-interaction-mode中不开启outshine。
               (unless (memq major-mode '(latex-mode eshell-mode))
                 (outshine-hook-function))
-              (define-key outline-minor-mode-map (kbd "M-s p") 'outline-previous-visible-heading)
-              (define-key outline-minor-mode-map (kbd "M-s n") 'outline-next-visible-heading)
-              (define-key outline-minor-mode-map (kbd "M-s u") 'outline-up-heading)
-              (define-key outline-minor-mode-map (kbd "M-s b") 'outline-backward-same-level)
-              (define-key outline-minor-mode-map (kbd "M-s f") 'outline-forward-same-level)
-              (define-key outline-minor-mode-map (kbd "M-s RET") 'outline-insert-heading)
+              (smartrep-define-key outline-minor-mode-map "M-s"
+                '(("p" . outline-previous-visible-heading)
+                  ("n" . outline-next-visible-heading)
+                  ("u" . outline-up-heading)
+                  ("b" . outline-backward-same-level)
+                  ("f" . outline-forward-same-level)
+                  ("RET" . outline-insert-heading)))
               (define-key outline-minor-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
               (define-key outline-minor-mode-map (kbd "C-M-i") nil)))
   (add-hook 'outline-insert-heading-hook (lambda ()
@@ -754,7 +756,7 @@ depending on the last command issued."
 ;; ==================outshine===================
 ;;; interleave
 ;; =================interleave==================
-;; 安装interleave时应确保pdf-tools已经加载，否则无法识别pdf-view中定义的函数。
+;; 安装和升级interleave时应确保pdf-tools已经加载，否则无法识别pdf-view中定义的函数。
 (use-package interleave
   ;; Enabled at commands.
   :defer t
@@ -798,16 +800,17 @@ depending on the last command issued."
             (if entry-for-pdf
                 (progn (bibtex-completion-edit-notes key-for-pdf)
                        (org-back-to-heading)
-                       (swint-interleave))
+                       (swint-interleave)
+                       (interleave-add-note))
               (message "Current pdf file is not in bibliography."))))
       (interleave--open-notes-file-for-pdf)))
   (smartrep-define-key interleave-map "C-c"
-    '(("m" . interleave--sync-pdf-page-current)
+    '(("c" . interleave--sync-pdf-page-current)
       ("p" . interleave--sync-pdf-page-previous)
       ("n" . interleave--sync-pdf-page-next)
       ("l" . interleave)))
   (smartrep-define-key interleave-pdf-mode-map "C-c"
-    '(("m" . interleave--sync-pdf-page-current)
+    '(("c" . interleave--sync-pdf-page-current)
       ("p" . interleave--sync-pdf-page-previous)
       ("n" . interleave--sync-pdf-page-next)
       ("l" . interleave-add-note)))

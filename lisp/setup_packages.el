@@ -541,15 +541,26 @@ is named like ODF with the extension turned to pdf."
 (use-package bm
   ;; Enabled at commands.
   :defer t
-  :commands (bm-toggle bm-previous bm-next)
+  :commands (bm-toggle bm-previous bm-next bm-bookmark-annotate)
   :init
   (smartrep-define-key global-map "C-x"
     '(("C-'" . bm-toggle)
       ("'" . bm-previous)
-      ("\"" . bm-next)))
+      ("\"" . bm-next)
+      ("M-'" . bm-bookmark-annotate)))
+  (setq bm-restore-repository-on-load t)
   :config
+  (setq-default bm-buffer-persistence t)
+  (add-hook 'find-file-hooks 'bm-buffer-restore)
+  (add-hook 'kill-buffer-hook 'bm-buffer-save)
+  (add-hook 'kill-emacs-hook '(lambda ()
+                                (bm-buffer-save-all)
+                                (bm-repository-save)))
+  (add-hook 'after-save-hook 'bm-buffer-save)
+  (add-hook 'after-revert-hook 'bm-buffer-restore)
   (setq bm-cycle-all-buffers nil)
-  (setq bm-highlight-style 'bm-highlight-only-fringe))
+  (setq bm-highlight-style 'bm-highlight-only-fringe)
+  (bm-buffer-restore-all))
 ;; =======================bm=======================
 ;;; helm-bm
 ;; ====================helm-bm=====================
@@ -561,10 +572,10 @@ is named like ODF with the extension turned to pdf."
   (defun helm-bm-action-switch-to-buffer (candidate)
     "Switch to buffer of CANDIDATE."
     (helm-bm-with-candidate
-     candidates
-     (helm-switch-persp/buffer bufname)
-     (goto-char (point-min))
-     (forward-line (1- lineno)))))
+        candidates
+      (helm-switch-persp/buffer bufname)
+      (goto-char (point-min))
+      (forward-line (1- lineno)))))
 ;; ====================helm-bm=====================
 ;;; operate-on-number
 ;; ================operate-on-number===============

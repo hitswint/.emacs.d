@@ -52,9 +52,26 @@ DISABLE_AUTO_UPDATE="true"
 plugins=(extract git sudo web-search z)
 
 # User configuration
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:$PATH"
+export MANPATH="/usr/local/man:$MANPATH"
 
-export PATH="/usr/local/MATLAB/R2011b/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/emacs24/bin"
-# export MANPATH="/usr/local/man:$MANPATH"
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+
+PATH=/usr/local/texlive/2012/bin/i386‐linux:$PATH; export PATH
+MANPATH=/usr/local/texlive/2012/texmf/doc/man:$MANPATH; export MANPATH
+INFOPATH=/usr/local/texlive/2012/texmf/doc/info:$INFOPATH; export INFOPATH
+
+export PATH=/usr/local/MATLAB/R2011b/bin:$PATH
+export PATH=/opt/emacs24/bin:$PATH
+
+bindkey " " magic-space
 
 source $ZSH/oh-my-zsh.sh
 
@@ -130,10 +147,6 @@ if [[ -z "$DISPLAY" ]] && [[ $(tty) = /dev/tty1 ]]; then
     startx
     logout
 fi
-
-export PATH=/usr/local/MATLAB/R2011b/bin:$PATH
-export PATH=$PATH:/opt/emacs24/bin
-bindkey " " magic-space
 
 # wine
 export WINEPREFIX=$HOME/.wine

@@ -32,7 +32,7 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 ;; ===============切换cap和大小写==================
 ;;; compact-uncompact-block
 ;; ===========compact-uncompact-block==============
-(global-set-key (kbd "C-S-q") 'compact-uncompact-block)
+(global-set-key (kbd "M-Q") 'compact-uncompact-block)
 (defun compact-uncompact-block ()
   "Remove or add line ending chars on current paragraph.
 This command is similar to a toggle of `fill-paragraph'.
@@ -60,7 +60,7 @@ When there is a text selection, act on the region."
 ;; ===========compact-uncompact-block==============
 ;;; 合并一行
 ;; ===================合并一行=====================
-(global-set-key (kbd "M-Q")
+(global-set-key (kbd "C-S-Q")
                 (lambda()
                   (interactive)
                   (join-line -1)))

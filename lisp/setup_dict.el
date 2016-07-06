@@ -154,6 +154,8 @@
         "http://translate.google.cn/translate_a/single")
   (setq google-translate-listen-url
         "http://translate.google.cn/translate_tts")
+  (setq google-translate--tkk-url
+        "http://translate.google.cn/")
   (setq google-translate-translation-directions-alist
         '(("en" . "zh-CN") ("zh-CN" . "en"))))
 ;; ===============google-translate===============

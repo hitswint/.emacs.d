@@ -28,6 +28,7 @@
   ;; 默认不启用系统已安装packages，使用--system-site-packages启用系统packages。
   ;; 启动虚拟环境：cd ENV ; source ./bin/activate
   ;; 使用pyvenv-activate/pyvenv-deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换。
+  ;; 建立python3环境：virtualenv [虚拟环境名称] -p /usr/bin/python3，但启用系统packages失败。
   (defalias 'workon 'pyvenv-workon))
 ;; ====================elpy====================
 (provide 'setup_python)

@@ -13,7 +13,8 @@
     (setq explicit-shell-file-name "bash.exe"))
    (is-lin
     (setq explicit-shell-file-name "bash")
-    (setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash")))))
+    (setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash"))))
+  (define-key shell-mode-map (kbd "C-q") 'comint-send-eof))
 ;; =====================shell======================
 ;;; eshell
 ;; =====================eshell=====================

@@ -27,10 +27,10 @@
   (add-hook 'c-mode-hook
             (lambda ()
               (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
-              (define-key c-mode-base-map (kbd "C-c C-C") (lambda ()
-                                                            (interactive)
-                                                            (setq-local compilation-read-command nil)
-                                                            (call-interactively 'compile)))
+              (define-key c-mode-base-map (kbd "C-c C-S-c") (lambda ()
+                                                              (interactive)
+                                                              (setq-local compilation-read-command nil)
+                                                              (call-interactively 'compile)))
               (define-key c-mode-base-map (kbd "C-M-q") nil)
               (define-key c-mode-base-map (kbd "C-M-h") nil)
               (define-key c-mode-base-map (kbd "(") nil)
@@ -104,8 +104,13 @@
                                                           (fa-abort)
                                                         (fa-show))))
   (define-key function-args-mode-map (kbd "C-j") 'fa-jump-maybe)
+  (define-key function-args-mode-map (kbd "M-u") nil)
+  (define-key function-args-mode-map (kbd "M-i") nil)
+  (define-key function-args-mode-map (kbd "M-o") nil)
+  (define-key function-args-mode-map (kbd "M-h") nil)
   (define-key function-args-mode-map (kbd "M-n") nil)
-  (define-key function-args-mode-map (kbd "M-u") nil))
+  (define-key function-args-mode-map (kbd "M-j") nil)
+  (define-key function-args-mode-map (kbd "C-M-j") nil))
 ;; ==================function-args==============
 ;;; hs-minor-mode
 ;; ==================hs-minor-mode==============
