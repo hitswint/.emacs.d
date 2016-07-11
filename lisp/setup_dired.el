@@ -19,7 +19,7 @@
   ;; Also auto refresh dired, but be quiet about it
   (setq global-auto-revert-non-file-buffers t)
   (setq auto-revert-verbose nil)
-  ;; dired-k--highlight会使auto-revert-mode出错，在dired-mode中禁用auto-revert-mode。
+  ;; dired-k-highlight会使auto-revert-mode出错，在dired-mode中禁用auto-revert-mode。
   ;; 已修复上述问题，在dired-mode中重新开启auto-revert-mode。
   ;; (setq global-auto-revert-ignore-modes '(dired-mode))
   ;; 使用dired-mode自带的auto-revert。
@@ -32,8 +32,8 @@
   (setq dired-listing-switches "-alh")
   ;; 文件夹间复制
   (setq dired-dwim-target t)
-  ;; 将annotated显示加hook放在前面，使其出现在dired-after-readin-hook中函数列表最后，进而最后生效。
-  (add-hook 'dired-after-readin-hook 'dired-k--highlight)
+  ;; 将dired-k--highlight-buffer加hook放在前面，使其出现在dired-after-readin-hook中函数列表最后，以便最后生效。
+  (add-hook 'dired-after-readin-hook 'dired-k--highlight-buffer)
   ;; 不折行显示
   (add-hook 'dired-after-readin-hook '(lambda ()
                                         (setq truncate-lines t)))
@@ -56,9 +56,10 @@
                                                        (revert-buffer)))
                (define-key dired-mode-map (kbd "l") 'swint-org-annotate-file-current)
                (define-key dired-mode-map (kbd "L") 'org-annotate-file-current)
+               (define-key dired-mode-map (kbd "C-c l") 'swint-dired-open-interleave-notes)
                (smartrep-define-key dired-mode-map "C-c"
-                 '(("p" . dired-k--previous-annotated-file)
-                   ("n" . dired-k--next-annotated-file)))
+                 '(("p" . dired-k--previous-highlighted-file)
+                   ("n" . dired-k--next-highlighted-file)))
                (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
                (define-key dired-mode-map (kbd "C-/") 'helm-dired-current-file)
                ;; 在dired对mark的多个文件内容进行查找。
@@ -517,12 +518,12 @@ Assuming .. and . is a current directory (like in FAR)"
   (add-hook 'dired-mode-hook '(lambda () (dired-async-mode 1)))
   :config
   (defun dired-do-copy (&optional arg)
-    "Redefine dired-do-copy to fix conflict between dired-async-mode and dired-sync-annotated."
+    "Redefine dired-do-copy to fix conflict between dired-async-mode and dired-sync-highlight."
     (interactive "P")
     (let* ((fn-list (dired-get-marked-files nil arg))
            (fn-list-nodirectory (mapcar 'file-name-nondirectory fn-list))
-           (annotated-file-list (if (dired-k--parse-annotated-status)
-                                    (hash-table-keys (dired-k--parse-annotated-status))))
+           (annotated-file-list (if (dired-k--parse-status t)
+                                    (hash-table-keys (dired-k--parse-status t))))
            (fn-list-annotated (remove-if-not (lambda (x)
                                                (member x annotated-file-list))
                                              fn-list-nodirectory))

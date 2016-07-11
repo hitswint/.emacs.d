@@ -16,12 +16,7 @@
     '(("M-p" . flycheck-previous-error)
       ("M-n" . flycheck-next-error)
       ("M-c" . helm-flycheck)))
-  ;; C-c ! c flycheck-buffer
-  ;; C-c ! p flycheck-previous-error
-  ;; C-c ! n flycheck-next-error
-  ;; C-c ! l flycheck-list-errors
-  ;; C-c ! ? flycheck-describe-checker
-  ;; From Emacsrocks
+  ;; From Emacsrocks.
   (defun magnars/adjust-flycheck-automatic-syntax-eagerness ()
     "Adjust how often we check for errors based on if there are any.
 This lets us fix any errors as quickly as possible, but in a

@@ -35,7 +35,7 @@
 ;;
 ;; To change the location of the annotation file:
 ;;
-;; (setq swint-org-annotate-file-storage-file "~/annotated.org")
+;; (setq swint-org-annotation-storage-file "~/annotated.org")
 ;;
 ;; Then when you visit any file and hit C-c C-l you will find yourself
 ;; in an org buffer on a headline which links to the file you were
@@ -57,9 +57,9 @@
 
 (require 'org)
 
-;; (defvar swint-org-annotate-file-storage-file "~/.org-annotate-file.org"
+;; (defvar swint-org-annotation-storage-file "~/.org-annotate-file.org"
 ;;   "File in which to keep annotations.")
-(defun swint-org-annotate-file-storage-file ()
+(defun swint-org-annotation-storage-file ()
   "Modified from var to function"
   (concat "~/org/annotated/annotated-("
           (replace-regexp-in-string
@@ -72,7 +72,7 @@ location in the file")
 
 (defvar swint-org-annotate-file-always-open t
   "non-nil means always expand the full tree when you visit
-`swint-org-annotate-file-storage-file'.")
+`swint-org-annotation-storage-file'.")
 
 (defvar swint-org-annotate-file-append-to-end t
   "If non-nil add each second-level link to the end of the file.")
@@ -104,7 +104,7 @@ after the 60th with '...'"
     (error "This buffer has no associated file.")))
 
 (defun swint-org-annotate-file-show-section (&optional buffer-or-file)
-  "Visit the buffer named `swint-org-annotate-file-storage-file' and
+  "Visit the buffer named `swint-org-annotation-storage-file' and
 show the relevant section"
   (let* ((line (buffer-substring-no-properties (point-at-bol) (point-at-eol)))
          (filename (if (stringp buffer-or-file)
@@ -115,7 +115,7 @@ show the relevant section"
                        (concat "file:" filename "::" line)
                        (swint-org-annotate-file-prettyfy-desc line))))
     (swint-show-annotations filename link)
-    (with-current-buffer (find-file (swint-org-annotate-file-storage-file))
+    (with-current-buffer (find-file (swint-org-annotation-storage-file))
       ;; deal with a '::' search if need be
       (when swint-org-annotate-file-add-search
         (unless (search-forward-regexp
@@ -165,7 +165,7 @@ clobbering sucessive entries."
     (swint-show-annotations filename link)))
 
 (defun swint-show-annotations (filename link)
-  (with-current-buffer (find-file (swint-org-annotate-file-storage-file))
+  (with-current-buffer (find-file (swint-org-annotation-storage-file))
     (unless (org-mode)
       (org-mode))
     (widen)                             ;交换上下两句，解决无法显示已建注释

@@ -347,7 +347,13 @@
   :config
   (clean-aindent-mode t)
   (setq clean-aindent-is-simple-indent t)
-  (define-key global-map (kbd "RET") 'newline-and-indent))
+  (define-key global-map (kbd "RET") 'newline-and-indent)
+  (define-key clean-aindent-mode--keymap (kbd "M-DEL") '(lambda ()
+                                                          (interactive)
+                                                          (if (or paredit-mode
+                                                                  paredit-everywhere-mode)
+                                                              (swint-backward-kill-word)
+                                                            (clean-aindent--bsunindent)))))
 ;; RET：自动清除white space，光标停留在前一行indentation处。
 ;; M-DEL：unindent，回到前一行indentation处。
 ;; ===============clean-aindent-mode===============
@@ -572,10 +578,10 @@ is named like ODF with the extension turned to pdf."
   (defun helm-bm-action-switch-to-buffer (candidate)
     "Switch to buffer of CANDIDATE."
     (helm-bm-with-candidate
-        candidates
-      (helm-switch-persp/buffer bufname)
-      (goto-char (point-min))
-      (forward-line (1- lineno)))))
+     candidates
+     (helm-switch-persp/buffer bufname)
+     (goto-char (point-min))
+     (forward-line (1- lineno)))))
 ;; ====================helm-bm=====================
 ;;; operate-on-number
 ;; ================operate-on-number===============

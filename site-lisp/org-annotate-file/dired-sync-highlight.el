@@ -1,4 +1,4 @@
-;; dired-sync-annotated.el --- Sync annotated files status.
+;; dired-sync-highlight.el --- Sync highlighted files status.
 (require 'dired-aux)
 (require 'wdired)
 
@@ -10,8 +10,8 @@
   (dired-handle-overwrite to)
   (dired-copy-file-recursive from to ok-flag dired-copy-preserve-time t
                              dired-recursive-copies)
-  (let ((annotated-file-list (if (dired-k--parse-annotated-status)
-                                 (hash-table-keys (dired-k--parse-annotated-status))))
+  (let ((annotated-file-list (if (dired-k--parse-status t)
+                                 (hash-table-keys (dired-k--parse-status t))))
         (annotation-storage-files
          (directory-files "~/org/annotated/" t
                           (concat "annotated-("
@@ -122,7 +122,7 @@
                      (= (length files-renamed) 1))
             (setq dired-directory (cdr (car files-renamed))))
           ;; Re-sort the buffer.
-          (dired-sync-annotated-status files-renamed)
+          (dired-sync-highlight-status files-renamed)
           (revert-buffer)
           (let ((inhibit-read-only t))
             (dired-mark-remembered wdired-old-marks)))
@@ -139,10 +139,10 @@
   (set-buffer-modified-p nil)
   (setq buffer-undo-list nil))
 
-(defun dired-sync-annotated-status (files-renamed)
+(defun dired-sync-highlight-status (files-renamed)
   "Sync dired annotated status in wdired-mode."
-  (let ((annotated-file-list (if (dired-k--parse-annotated-status)
-                                 (hash-table-keys (dired-k--parse-annotated-status)))))
+  (let ((annotated-file-list (if (dired-k--parse-status t)
+                                 (hash-table-keys (dired-k--parse-status t)))))
     (loop for file-renamed in files-renamed
           do (let ((file-renamed-old (car file-renamed))
                    (file-renamed-new (cdr file-renamed))
@@ -154,7 +154,7 @@
 
                (cond
                 ((member (file-name-nondirectory file-renamed-old) annotated-file-list)
-                 (with-current-buffer (find-file (swint-org-annotate-file-storage-file))
+                 (with-current-buffer (find-file (swint-org-annotation-storage-file))
                    (widen)
                    (goto-char (point-min))
                    (replace-string
@@ -194,8 +194,8 @@ non-empty directories is allowed."
                 (setq files-to-be-deleted (dired-map-over-marks (cons (dired-get-filename) (point))
                                                                 nil))
                 nil t)
-               (let ((annotated-file-list (if (dired-k--parse-annotated-status)
-                                              (hash-table-keys (dired-k--parse-annotated-status)))))
+               (let ((annotated-file-list (if (dired-k--parse-status t)
+                                              (hash-table-keys (dired-k--parse-status t)))))
                  (loop for file-to-be-deleted in files-to-be-deleted
                        do (let ((file-being-deleted (car file-to-be-deleted))
                                 (annotation-storage-files
@@ -203,20 +203,19 @@ non-empty directories is allowed."
                                                   (concat "annotated-("
                                                           (replace-regexp-in-string
                                                            "/" "_" (substring-no-properties (abbreviate-file-name (car file-to-be-deleted)) 1)) "_"))))
-
                             (cond
                              ((member (file-name-nondirectory file-being-deleted) annotated-file-list)
-                              (progn (with-current-buffer (find-file (swint-org-annotate-file-storage-file))
-                                       (widen)
-                                       (goto-char (point-min))
-                                       (search-forward (org-make-link-string (concat "file:" (file-name-nondirectory file-being-deleted))) nil t)
-                                       (org-delete-entity-at-point)
-                                       (if is-win
-                                           (save-buffer-with-dos2unix)
-                                         (save-buffer))
-                                       (kill-buffer))
-                                     (unless (hash-table-keys (dired-k--parse-annotated-status))
-                                       (delete-file (swint-org-annotate-file-storage-file)))))
+                              (with-current-buffer (find-file (swint-org-annotation-storage-file))
+                                (widen)
+                                (goto-char (point-min))
+                                (search-forward (org-make-link-string (concat "file:" (file-name-nondirectory file-being-deleted))) nil t)
+                                (org-delete-entity-at-point)
+                                (if is-win
+                                    (save-buffer-with-dos2unix)
+                                  (save-buffer))
+                                (kill-buffer))
+                              (unless (dired-k--parse-status t)
+                                (delete-file (swint-org-annotation-storage-file))))
                              (annotation-storage-files
                               (mapcar 'delete-file annotation-storage-files)))))
                  files-to-be-deleted))
@@ -231,5 +230,5 @@ non-empty directories is allowed."
          (end (org-element-property :end el)))
     (delete-region beg end)))
 
-(provide 'dired-sync-annotated)
-;;; dired-sync-annotated.el ends here
+(provide 'dired-sync-highlight)
+;;; dired-sync-highlight.el ends here

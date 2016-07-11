@@ -7,8 +7,8 @@
 ;;;; Appearance
   ;; =================Appearance================
   (set-face-attribute 'org-level-5 nil :bold nil :foreground "cyan" :height 1.0)
-  (set-face-attribute 'org-level-6 nil :bold nil :foreground "magenta" :height 1.0)
-  (set-face-attribute 'org-level-7 nil :bold nil :foreground "purple" :height 1.0)
+  (set-face-attribute 'org-level-6 nil :bold nil :foreground "violet" :height 1.0)
+  (set-face-attribute 'org-level-7 nil :bold nil :foreground "orange" :height 1.0)
   (set-face-attribute 'org-level-8 nil :bold nil :foreground "gray" :height 1.0)
   (setq org-hide-emphasis-markers t)
   (font-lock-add-keywords 'org-mode
@@ -573,20 +573,20 @@ depending on the last command issued."
 ;;; org-annotate
 ;; ===============org-annotate==================
 ;; Display annotated files with mark.
-(use-package dired-x-annotated
+(use-package dired-x-highlight
   ;; Enabled after features.
   :load-path "site-lisp/org-annotate-file/"
   :defer t
   :after dired
   :config
-  (defun swint-org-annotate-file-storage-file ()
+  (defun swint-org-annotation-storage-file ()
     "Modified from var to function"
     (concat "~/org/annotated/annotated-("
             (replace-regexp-in-string
              "/" "_" (substring-no-properties (abbreviate-file-name default-directory) 1))
             ").org"))
   ;; Sync annotated status as operating.
-  (use-package dired-sync-annotated
+  (use-package dired-sync-highlight
     :load-path "site-lisp/org-annotate-file/"))
 ;; 原有org-annotate-file用于全局注释。
 (use-package org-annotate-file
@@ -788,6 +788,11 @@ depending on the last command issued."
           (progn
             (interleave--go-to-page-note note-page)
             (interleave--sync-pdf-page-current)))))
+  (defun swint-dired-open-interleave-notes ()
+    (interactive)
+    (let ((pdf-file-interleaved (concat "~/org/interleave_notes/" (file-name-base (dired-get-file-for-visit)) ".org")))
+      (if (file-exists-p pdf-file-interleaved)
+          (find-file pdf-file-interleaved))))
   :config
   (defun swint-interleave--open-notes-file-for-pdf ()
     (interactive)
