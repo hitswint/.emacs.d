@@ -80,5 +80,5 @@
       (if (<= (length words-at-point) 1)
           (read-string (format "Get Words (default %s): " (car (car words-at-point)))
                        nil nil (car (car words-at-point)))
-        (ido-completing-read "Get Words:" (mapcar 'car words-at-point))))))
+        (ido-completing-read "Get Words:" (remove-duplicates (mapcar 'car words-at-point)))))))
 ;; ===============Get-words-at-point===============

@@ -41,23 +41,14 @@
   ;; lin下使用gtk绘制选词框，通过修改~/.emacs.d/gtkrc改变pos-tip字体。
   (when is-lin
     (setq x-gtk-use-system-tooltips t))
-  ;; 设置词语联想方式。guess-word需要安装guess-dict词库。
-  (setq pyim-enable-words-predict
-        '(dabbrev pinyin-shouzimu pinyin-similar pinyin-znabc)) ;guess-words
-  ;; 设置词库文件路径。guess-word速度较慢，暂停使用。
-  ;; (:name "guessdict" :file "/home/swint/.emacs.d/pyim/dicts/pyim-guessdict.gpyim"
-  ;;     :coding utf-8-unix :dict-type guess-dict)
-  (cond
-   (is-lin (setq pyim-dicts '((:name "bigdict" :file "/home/swint/.emacs.d/pyim/dicts/pyim-bigdict.pyim"
-                                     :coding utf-8-unix :dict-type pinyin-dict))))
-   (is-win (setq pyim-dicts '((:name "bigdict" :file "c:/Users/swint/.emacs.d/pyim/dicts/pyim-bigdict.pyim"
-                                     :coding utf-8-unix :dict-type pinyin-dict)))))
+  ;; 设置词语联想方式。
+  ;; (setq pyim-enable-words-predict '(pinyin-shouzimu pinyin-znabc))
   ;; 使用探针(probe)函数判断当前语境以确定当前输入法和标点形式。
   (setq-default pyim-english-input-switch-functions
-                '(pyim-probe-org-speed-commands
-                  pyim-probe-org-structure-template
+                '(pyim-probe-program-mode
+                  pyim-probe-org-speed-commands
                   pyim-probe-isearch-mode
-                  pyim-probe-program-mode
+                  pyim-probe-org-structure-template
                   pyim-probe-dynamic-english
                   ;; 在minibuffer关闭中文输入。
                   window-minibuffer-p))
