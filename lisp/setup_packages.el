@@ -252,6 +252,9 @@
                   gnuplot-mode-hook
                   emacs-lisp-mode-hook
                   c-mode-hook
+                  c++-mode-hook
+                  asm-mode-hook
+                  python-mode-hook
                   graphviz-dot-mode-hook
                   LaTeX-mode-hook))
     (add-hook hook 'drag-stuff-mode))
@@ -334,6 +337,7 @@
   ;; Enabled at idle.
   :defer 2
   :config
+  (add-to-list 'aggressive-indent-excluded-modes 'asm-mode)
   (global-aggressive-indent-mode 1))
 ;; ================aggressive-indent===============
 ;;; clean-aindent-mode
@@ -352,8 +356,8 @@
                                                           (interactive)
                                                           (if (or paredit-mode
                                                                   paredit-everywhere-mode)
-                                                              (swint-backward-kill-word)
-                                                            (clean-aindent--bsunindent)))))
+                                                              (call-interactively 'swint-backward-kill-word)
+                                                            (call-interactively 'clean-aindent--bsunindent)))))
 ;; RET：自动清除white space，光标停留在前一行indentation处。
 ;; M-DEL：unindent，回到前一行indentation处。
 ;; ===============clean-aindent-mode===============

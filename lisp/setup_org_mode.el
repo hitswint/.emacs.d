@@ -668,6 +668,7 @@ depending on the last command issued."
   (add-hook 'python-mode-hook 'outline-minor-mode)
   (add-hook 'c-mode-hook 'outline-minor-mode)
   (add-hook 'c++-mode-hook 'outline-minor-mode)
+  (add-hook 'asm-mode-hook 'outline-minor-mode)
   (add-hook 'arduino-mode-hook 'outline-minor-mode)
   (add-hook 'lisp-interaction-mode-hook
             (lambda () (outline-minor-mode -1)))
@@ -683,8 +684,8 @@ depending on the last command issued."
                   ("n" . outline-next-visible-heading)
                   ("u" . outline-up-heading)
                   ("b" . outline-backward-same-level)
-                  ("f" . outline-forward-same-level)
-                  ("RET" . outline-insert-heading)))
+                  ("f" . outline-forward-same-level)))
+              (define-key outline-minor-mode-map (kbd "<M-S-return>") 'outline-insert-heading)
               (define-key outline-minor-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
               (define-key outline-minor-mode-map (kbd "C-M-i") nil)))
   (add-hook 'outline-insert-heading-hook (lambda ()

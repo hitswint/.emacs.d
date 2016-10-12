@@ -41,7 +41,7 @@
 (global-set-key (kbd "M-s M-.") 'split-window-horizontally)
 (global-set-key (kbd "C-M-2") 'swint-sdcv-to-buffer)
 (global-set-key (kbd "C-M-3") 'run-octave)
-(global-set-key (kbd "C-M-#") 'calculator)
+(global-set-key (kbd "C-M-#") 'run-python)
 (global-set-key (kbd "C-M-6") 'calendar)
 ;; C-x SPC 矩形复制模式。
 (global-set-key (kbd "C-;") 'set-mark-command)
