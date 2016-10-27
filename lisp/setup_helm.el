@@ -15,7 +15,8 @@
   (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
   (global-set-key (kbd "C-'") 'swint-helm-bookmarks)
   (global-set-key (kbd "C-x C-f") 'swint-helm-find-files)
-  (global-set-key (kbd "C-x f") 'helm-locate)
+  (global-set-key (kbd "C-x f") 'helm-find)
+  (global-set-key (kbd "C-x F") 'swint-helm-locate)
   (global-set-key (kbd "M-x") 'helm-M-x)
 ;;;; helm-file-buffer
   ;; ============helm-file-buffer===============
@@ -307,6 +308,20 @@ Run all sources defined in `helm-for-files-preferred-list'."
     ;; 下面的命令建立locate数据库的时候，会导致cygwin警告ms dos path sytle，无妨，时间稍长；locate命令无法识别这种ms dos path sytle。
     (setq helm-locate-create-db-command "updatedb --output=c:/Users/swint/.helm-locate.db --localpaths='c:/Users/swint/'")
     (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.helm-locate.db")))
+  (defun swint-helm-locate (&optional arg)
+    (interactive "P")
+    (if arg
+        ;; 使用~/helm-locate-db.sh脚本更新~/.helm-locate.db文件。
+        (let* ((locat-db-file (expand-file-name "~/.helm-locate.db"))
+               (process (start-process-shell-command
+                         "Updating-locate-db-file" "*Updating-locate-db-file*"
+                         (concat "bash " (expand-file-name "~/helm-locate-db.sh")))))
+          (set-process-sentinel
+           process
+           (lambda (process signal)
+             (when (memq (process-status process) '(exit signal))
+               (helm-locate nil)))))
+      (call-interactively 'helm-locate)))
   ;; ==============helm-locate==================
 ;;;; 在别的helm-buffer中运行helm命令
   ;; ======在别的helm-buffer中运行helm命令======
@@ -580,7 +595,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
                                           (helm-exit-and-execute-action 'helm-bibtex-open-pdf))))
   (define-key helm-map (kbd "C-c l") '(lambda () (interactive)
                                         (with-helm-alive-p
-                                          (helm-exit-and-execute-action 'bibtex-completion-edit-notes))))
+                                          (helm-exit-and-execute-action 'helm-bibtex-edit-notes))))
   (defun swint-helm-bibtex-local ()
     (interactive)
     (let* ((bibfile (or (car (zotelo--locate-bibliography-files))
@@ -652,25 +667,11 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   ;; Enabled at commands.
   :defer t
   :bind (("M-s M-s" . helm-swoop)
-         ("M-s M-S" . helm-swoop-back-to-last-point)
-         ("M-s C-s" . helm-multi-swoop)
-         ("M-s C-S-s" . helm-multi-swoop-all))
+         ("M-s M-S" . helm-multi-swoop-all))
   :config
   ;; helm-swoop 中使用C-c C-e编辑，C-x C-s保存。
-  ;; When doing isearch, hand the word over to helm-swoop
   (define-key isearch-mode-map (kbd "M-s M-s") 'helm-swoop-from-isearch)
-  ;; From helm-swoop to helm-multi-swoop-all
-  (define-key helm-swoop-map (kbd "M-s M-s") 'helm-multi-swoop-all-from-helm-swoop)
-  ;; When doing evil-search, hand the word over to helm-swoop
-  ;; (define-key evil-motion-state-map (kbd "M-i") 'helm-swoop-from-evil-search)
-  ;; Save buffer when helm-multi-swoop-edit complete
-  (setq helm-multi-swoop-edit-save t)
-  ;; If this value is t, split window inside the current window
-  (setq helm-swoop-split-with-multiple-windows nil)
-  ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
-  (setq helm-swoop-split-direction 'split-window-vertically)
-  ;; If nil, you can slightly boost invoke speed in exchange for text color
-  (setq helm-swoop-speed-or-color nil))
+  (define-key helm-swoop-map (kbd "M-S") 'helm-multi-swoop-all-from-helm-swoop))
 ;; ================helm-swoop===================
 ;;; helm-unicode
 ;; ===============helm-unicode==================
@@ -688,7 +689,8 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   :defer t
   ;; helm-do-ag 互动式搜索，但只能搜索一个词。
   ;; helm-ag 先输入词，可以在结果中搜索第二个词。
-  :bind ("C-x g" . helm-do-ag)
+  :bind (("C-x g" . helm-do-ag)
+         ("C-x G" . helm-do-ag-buffers))
   :config
   (define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)
   (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)
@@ -712,12 +714,17 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   ;; Enabled at commands.
   :defer t
   :commands imenu-choose-buffer-index)
+(use-package imenu-anywhere
+  ;; Enabled at commands.
+  :defer t
+  :bind ("M-s I" . helm-imenu-anywhere)
+  :config
+  (setq imenu-anywhere-delimiter " | "))
 (use-package helm-imenu
   ;; Enabled at commands.
   :defer t
   :bind (("M-s i" . helm-semantic-or-imenu)
-         ("M-s I" . helm-imenu-in-all-buffers)
-         ("M-s C-i" . helm-imenu-outshine))
+         ("M-s M-I" . helm-imenu-outshine))
   :config
   (setq helm-imenu-delimiter " | ")
   ;; helm-imenu-outshine.

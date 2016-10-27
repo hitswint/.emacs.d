@@ -53,8 +53,7 @@
 (use-package gdb-mi
   ;; Enabled at commands.
   :defer t
-  :bind (("M-s M-g" . gdb)
-         ("M-s g" . gdb-or-gud-go)
+  :bind (("M-s g" . gdb-or-gud-go)
          ("M-s G" . gud-kill))
   :config
   ;; 默认打开多窗口会有问题。
@@ -78,7 +77,7 @@
     (kill-buffer (gdb-stack-buffer-name))
     (kill-buffer (gdb-breakpoints-buffer-name))
     (kill-buffer (gdb-inferior-io-name))
-    ;; 关闭gdb buffer
+    ;; 关闭gdb buffer。
     (with-current-buffer gud-comint-buffer (comint-skip-input))
     (kill-process (get-buffer-process gud-comint-buffer))
     (delete-window))

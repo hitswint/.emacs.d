@@ -36,19 +36,6 @@
                   day))
       (message "%s" file)
       (delete-file file)))
-  ;; 每周更新locate db文件，使用~/helm-locate-db.sh脚本更新~/.helm-locate.db文件。
-  (let ((locat-db-file (expand-file-name "~/.helm-locate.db")))
-    (when (or (not (file-exists-p locat-db-file))
-              (> (- current (float-time (cl-sixth (file-attributes locat-db-file))))
-                 ;; lin上每周/win上每月升级locate db文件。
-                 (cond
-                  (is-lin week)
-                  (is-win month))))
-      (message "Updating locate db file: %s" locat-db-file)
-      (get-buffer-create "*Updating-locate-db-file*")
-      (start-process-shell-command
-       "Updating-locate-db-file" "*Updating-locate-db-file*"
-       (concat "bash " (expand-file-name "~/helm-locate-db.sh")))))
   ;; 每周更新file system tree，win和lin都有各自的tree命令，格式不同。
   ;; win中shell-file-name为cmd，默认使用cmd执行命令，执行的是win自带的tree。
   ;; 若命令前面加bash，则使用cygwin的bash执行命令，执行的是cygwin的tree，输出文件存在编码问题。

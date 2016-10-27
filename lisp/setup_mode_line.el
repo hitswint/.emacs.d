@@ -77,6 +77,7 @@
     (gnuplot-mode . "Gp")
     (latex-mode . "Tx")
     (emacs-lisp-mode . "El")
+    (python-mode . "Py")
     (inferior-octave-mode . "Ic")
     (lisp-interaction-mode . "Li"))
   "Alist for `clean-mode-line'.

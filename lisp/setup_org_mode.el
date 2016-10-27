@@ -802,7 +802,7 @@ depending on the last command issued."
                   (derived-mode-p 'pdf-view-mode))
           (let* ((current-pdf buffer-file-name)
                  (entry-for-pdf (bibtex-completion-get-entry-for-pdf current-pdf))
-                 (key-for-pdf (bibtex-completion-get-value "=key=" entry-for-pdf)))
+                 (key-for-pdf (list (bibtex-completion-get-value "=key=" entry-for-pdf))))
             (if entry-for-pdf
                 (progn (bibtex-completion-edit-notes key-for-pdf)
                        (org-back-to-heading)

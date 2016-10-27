@@ -902,15 +902,7 @@ is named like ODF with the extension turned to pdf."
 (use-package counsel
   ;; Enabled at commands.
   :defer t
-  :bind (("C-x G" . swint-counsel-ag)
-         ("C-x F" . counsel-locate)
-         ("M-X" . counsel-M-x))
-  :config
-  (defun swint-counsel-ag ()
-    (interactive)
-    (if is-win
-        (call-interactively 'counsel-pt)
-      (call-interactively 'counsel-ag))))
+  :bind ("M-X" . counsel-M-x))
 (use-package ivy-hydra
   ;; Enabled after features.
   :defer t
