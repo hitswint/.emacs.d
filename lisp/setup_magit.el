@@ -118,35 +118,28 @@
 ;;; 初始化远程库和克隆远程库
   ;; ===========初始化远程库和克隆远程库===========
   ;; 在git remote add和git clone中需要使用cygwin的路径名称 file:///cygdrive/c/Users/swint/ 。
-  ;; 建立的远程仓库remote.git， 初始化时使用git --bare init，直接使用remote.git文件夹作为.git文件夹。
-  (defun magit-clone-remote ()
+  ;; 使用magit-status建立本地仓库，建立远程仓库时使用git --bare init初始化。
+  (defun swint-magit-clone-nutstore ()
+    "clone操作需要打开两个窗口一个是目标位置一个是Nutstore中远程库。"
     (interactive)
     (cond
      (is-lin
       (shell-command (concat "git clone ~/Nutstore/" (buffer-name (window-buffer (next-window))))))
      (is-win
       (shell-command (concat "git clone file:///cygdrive/c/Users/swint/Nutstore/" (buffer-name (window-buffer (next-window))))))))
-  (defun magit-bare-init-remote ()
+  (defun swint-magit-remote-nutstore ()
+    "使用本地库名字在~/Nutstore中建立远程库，并加为remote repo。"
     (interactive)
-    (cond
-     (is-lin
-      (shell-command (concat "git --bare init ~/Nutstore/"  (buffer-name) ".git")))
-     (is-win
-      (shell-command (concat "git --bare init /cygdrive/c/Users/swint/Nutstore/"  (buffer-name) ".git")))))
-  ;; clone操作需要打开两个窗口一个是目标位置一个是Nutstore中远程库。
-  (global-set-key (kbd "M-g ,") 'magit-clone-remote)
-  ;; init操作不需要打开两个窗口，远程库自动生成在Nutstore中。
-  (global-set-key (kbd "M-g .") 'magit-bare-init-remote)
-  (defun magit-remote-add (remote url)
-    "Add the REMOTE and fetch it.
-\('git remote add REMOTE URL')."
-    (interactive (list (read-string "Remote name: " "origin")
-                       (read-string "Remote url: "
-                                    (cond
-                                     (is-lin (concat "~/Nutstore/" (buffer-name (window-buffer (next-window)))))
-                                     (is-win (read-string "Remote url: " (concat "file:///cygdrive/c/Users/swint/Nutstore/" (buffer-name (window-buffer (next-window))))))))))
-    (magit-run-git-async "remote" "add" "-f" remote url))
-  ;; 使magit-remote-add默认以另一个窗口的buffer为remote。
+    (let ((remote-repository-name (concat (file-name-nondirectory (directory-file-name (magit-toplevel))) ".git")))
+      (shell-command (concat "git --bare init" (cond (is-lin " ~/Nutstore/")
+                                                     (is-win " /cygdrive/c/Users/swint/Nutstore/"))
+                             remote-repository-name))
+      (magit-remote-add (read-string "Remote name: " "origin")
+                        (read-string "Remote url: " (cond
+                                                     (is-lin (concat "~/Nutstore/" remote-repository-name))
+                                                     (is-win (concat "file:///cygdrive/c/Users/swint/Nutstore/" remote-repository-name)))))))
+  (global-set-key (kbd "M-g ,") 'swint-magit-clone-nutstore)
+  (global-set-key (kbd "M-g .") 'swint-magit-remote-nutstore)
   ;; ===========初始化远程库和克隆远程库===========
   (setq magit-last-seen-setup-instructions "1.4.0")
 ;;; 使用git管理doc文件
