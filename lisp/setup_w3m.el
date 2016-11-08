@@ -1,6 +1,6 @@
 ;;; w3m
 ;; ===================w3m=====================
-;; (add-to-list 'exec-path "c:/Program Files (x86)/w3m") ;;指定w3m可执行程序，所在的执行路径
+;; (add-to-list 'exec-path "c:/Program Files (x86)/w3m") ;;指定w3m可执行程序，所在的执行路径。
 ;; 上面那句不好用，无法确定w3m的程序执行路径。customize-group选择w3m，在W3m Command中添加c:/Program Files (x86)/w3m/w3m.exe，确定w3m程序。
 ;; 还是不行，因为anything-config.el中居然默认修改w3m-command为/usr/bin/w3m，导致上述修改在重启后失效。
 ;; 修改anything-config.el中的(defvar w3m-command "/usr/bin/w3m")为(defvar w3m-command "c:/Program Files (x86)/w3m/w3m.exe")，问题解决。
@@ -19,7 +19,7 @@
        (concat "http://dict.youdao.com/search?le=eng&q=lj%3A"
                (cond
                 (is-lin word)
-                ;; 解决w3m无法解析网址的问题
+                ;; 解决w3m无法解析网址的问题。
                 (is-win (w3m-url-encode-string word 'utf-8)))
                "&keyfrom=dict.top"))))
   (setq w3m-use-form t)
@@ -35,13 +35,13 @@
   (setq w3m-view-this-url-new-session-in-background t)
   (setq w3m-command-arguments '("-cookie" "-F"))
   (defun w3m-open-site-current-session (site)
-    "Open site in current session with ‘http://’ appended"
+    "Open site in current session with‘http://’appended."
     (interactive
      (list (read-string "Enter website address(default: w3m-home):" nil nil "www.baidu.com" nil )))
     (w3m-goto-url
      (concat "http://" site)))
   (defun w3m-open-site-new-session (site)
-    "Open site in new w3m session with ‘http://’ appended"
+    "Open site in new w3m session with‘http://’appended."
     (interactive
      (list (read-string "Enter website address(default: w3m-home):" nil nil "www.baidu.com" nil )))
     (w3m-goto-url-new-session

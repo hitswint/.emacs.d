@@ -22,7 +22,7 @@
 ;; ================multiple-cursors================
 (use-package multiple-cursors
   ;; Enabled at commands.
-  ;; mc/函数都不在mc包中，但都激活mcc包。
+  ;; mc/xxx函数都不在mc包中，但能激活mc包。
   :defer t
   :after multiple-cursors-core
   :init
@@ -259,7 +259,7 @@
                   LaTeX-mode-hook))
     (add-hook hook 'drag-stuff-mode))
   :config
-  ;; 重新定义drag-stuff.el文件中的 drag-stuff-define-keys 函数，取消关于 M+方向键 的快捷键定义。
+  ;; 重新定义drag-stuff.el文件中的drag-stuff-define-keys函数，取消关于 M+方向键 的快捷键定义。
   (defun drag-stuff-define-keys ()
     "Defines keys for `drag-stuff-mode'."
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'up) nil)
@@ -551,13 +551,12 @@ is named like ODF with the extension turned to pdf."
 (use-package bm
   ;; Enabled at commands.
   :defer t
-  :commands (bm-toggle bm-previous bm-next bm-bookmark-annotate)
+  :commands (bm-toggle bm-previous bm-next)
   :init
   (smartrep-define-key global-map "C-x"
-    '(("C-'" . bm-toggle)
+    '(("C-;" . bm-toggle)
       ("'" . bm-previous)
-      ("\"" . bm-next)
-      ("M-'" . bm-bookmark-annotate)))
+      ("\"" . bm-next)))
   (setq bm-restore-repository-on-load t)
   :config
   (setq-default bm-buffer-persistence t)
@@ -577,15 +576,14 @@ is named like ODF with the extension turned to pdf."
 (use-package helm-bm
   ;; Enabled after features.
   :defer t
-  :bind ("C-M-'" . helm-bm)
+  :bind ("C-x C-'" . helm-bm)
   :config
   (defun helm-bm-action-switch-to-buffer (candidate)
     "Switch to buffer of CANDIDATE."
-    (helm-bm-with-candidate
-     candidates
-     (helm-switch-persp/buffer bufname)
-     (goto-char (point-min))
-     (forward-line (1- lineno)))))
+    (helm-bm-with-candidate candidates
+      (helm-switch-persp/buffer bufname)
+      (goto-char (point-min))
+      (forward-line (1- lineno)))))
 ;; ====================helm-bm=====================
 ;;; operate-on-number
 ;; ================operate-on-number===============
@@ -814,23 +812,16 @@ is named like ODF with the extension turned to pdf."
 ;;; dumb-jump
 ;; ==================dumb-jump=====================
 (use-package dumb-jump
-  ;; Enabled in modes.
-  :defer t
-  :commands dumb-jump-mode
-  :init
-  (dolist (hook '(emacs-lisp-mode-hook
-                  python-mode-hook
-                  js-mode-hook
-                  ruby-mode-hook
-                  clojure-mode-hook))
-    (add-hook hook 'dumb-jump-mode))
+  ;; Enabled at idle.
+  :defer 2
   :config
-  (define-key dumb-jump-mode-map (kbd "C-c ,") 'dumb-jump-go)
-  (define-key dumb-jump-mode-map (kbd "C-c .") 'dumb-jump-back)
-  (define-key dumb-jump-mode-map (kbd "C-c /") 'dumb-jump-quick-look)
+  (dumb-jump-mode)
   (define-key dumb-jump-mode-map (kbd "C-M-g") nil)
   (define-key dumb-jump-mode-map (kbd "C-M-p") nil)
-  (define-key dumb-jump-mode-map (kbd "C-M-q") nil))
+  (define-key dumb-jump-mode-map (kbd "C-M-q") nil)
+  (define-key dumb-jump-mode-map (kbd "C-x C-,") 'dumb-jump-go)
+  (define-key dumb-jump-mode-map (kbd "C-x C-.") 'dumb-jump-back)
+  (define-key dumb-jump-mode-map (kbd "C-x C-/") 'dumb-jump-quick-look))
 ;; ==================dumb-jump=====================
 ;;; diff-hl
 ;; ===================diff-hl======================
@@ -838,11 +829,7 @@ is named like ODF with the extension turned to pdf."
   ;; Enabled at idle.
   :defer 2
   :config
-  (smartrep-define-key global-map "C-x"
-    '(("C-;" . diff-hl-mark-hunk)
-      ("C-," . diff-hl-previous-hunk)
-      ("C-." . diff-hl-next-hunk)
-      ("C-/" . diff-hl-revert-hunk)))
+  ;; 默认快捷键以C-x v为前缀。
   (global-diff-hl-mode)
   (add-hook 'prog-mode-hook 'diff-hl-flydiff-mode)
   (add-hook 'text-mode-hook 'diff-hl-flydiff-mode)

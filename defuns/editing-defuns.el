@@ -110,7 +110,7 @@ might be bad."
   (delete-trailing-whitespace)
   (set-buffer-file-coding-system 'utf-8))
 ;; Various superfluous white-space. Just say no.
-;; (add-hook 'before-save-hook 'cleanup-buffer-safe) ;会导致mew发送附件时，保存失败，进而发送失败
+;; (add-hook 'before-save-hook 'cleanup-buffer-safe) ;会导致mew发送附件时，保存失败，进而发送失败。
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
 Including indent-buffer, which should not be called automatically on save."
