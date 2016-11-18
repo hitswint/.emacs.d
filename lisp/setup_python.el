@@ -18,7 +18,6 @@
          ("C-x C-M-#" . pyvenv-deactivate))
   :config
   (elpy-enable)
-  (setq elpy-rpc-python-command "python3")
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (define-key elpy-mode-map (kbd "M-.") nil)
   (define-key elpy-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
