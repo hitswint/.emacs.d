@@ -20,6 +20,9 @@
   (elpy-enable)
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (define-key elpy-mode-map (kbd "M-.") nil)
+  (define-key elpy-mode-map (kbd "C-c C-c") '(lambda () (interactive) (elpy-use-ipython)
+                                               (let ((python-shell-interpreter-args "--simple-prompt --pylab"))
+                                                 (call-interactively 'elpy-shell-send-region-or-buffer))))
   (define-key elpy-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key elpy-mode-map (kbd "C-c C-.") 'pop-tag-mark)
   (define-key elpy-mode-map (kbd "C-c C-/") 'elpy-doc)
@@ -35,7 +38,7 @@
     (unless pyvenv-virtual-env
       (call-interactively 'pyvenv-workon))
     (elpy-use-ipython)
-    (let ((python-shell-interpreter-args "--simple-prompt -pylab"))
+    (let ((python-shell-interpreter-args "--simple-prompt --pylab"))
       (call-interactively 'elpy-shell-switch-to-shell)))
   (defun swint-cpython ()
     (interactive)
