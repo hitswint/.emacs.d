@@ -2,12 +2,17 @@
 ;; ====================elpa=========================
 (require 'package)
 (unless package--initialized
-  (setq package-archives '(("melpa" . "http://melpa.org/packages/")
-                           ("gnu" . "http://elpa.gnu.org/packages/")
-                           ("org" . "http://orgmode.org/elpa/")
-                           ;; ("elpa" . "http://tromey.com/elpa/")
-                           ;; ("marmalade" . "http://marmalade-repo.org/packages/")
-                           ))
+  ;; 使用http://elpa.emacs-china.org镜像源。
+  (setq package-archives '(("melpa" . "http://elpa.emacs-china.org/melpa/")
+			   ("gnu" . "http://elpa.emacs-china.org/gnu/")
+			   ("org" . "http://elpa.emacs-china.org/org/")
+			   ("marmalade" . "http://elpa.emacs-china.org/marmalade/")))
+  ;; 使用官方源。
+  ;; (setq package-archives '(("melpa" . "http://melpa.org/packages/")
+  ;;                          ("gnu" . "http://elpa.gnu.org/packages/")
+  ;;                          ("org" . "http://orgmode.org/elpa/")
+  ;;                          ("elpa" . "http://tromey.com/elpa/")
+  ;;                          ("marmalade" . "http://marmalade-repo.org/packages/")))
   ;; Optimization, no need to activate all the packages so early.
   (setq package-enable-at-startup nil)
   ;; 激活所有packages，也可以使用package-activate单独激活。
