@@ -30,7 +30,7 @@
   (define-key inferior-python-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key inferior-python-mode-map (kbd "C-c C-.") 'pop-tag-mark)
   (define-key inferior-python-mode-map (kbd "C-c C-/") 'elpy-doc)
-  ;; 使用pyvenv-activate/pyvenv-deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换。
+  ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换。
   (defalias 'workon 'pyvenv-workon)
   ;; ipython默认设置有bug，需要加--simple-prompt选项。
   (defun swint-ipython ()

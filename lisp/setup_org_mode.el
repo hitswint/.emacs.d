@@ -47,7 +47,7 @@
                (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
                (define-key org-mode-map (kbd "C-c C-v") 'swint-org-open-export-pdf)
                (define-key org-mode-map (kbd "C-c j") 'swint-open-at-point-with-apps)
-               (define-key org-mode-map (kbd "C-c m") '(lambda () (interactive) (swint-open-at-point t)))
+               (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
                (smartrep-define-key org-mode-map "M-s"
                  '(("p" . outline-previous-visible-heading)
                    ("n" . outline-next-visible-heading)

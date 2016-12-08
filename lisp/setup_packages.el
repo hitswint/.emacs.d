@@ -366,7 +366,7 @@
 (use-package multifiles
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s m" . mf/mirror-region-in-multifile))
+  :bind ("M-s t" . mf/mirror-region-in-multifile))
 ;; ===================multifiles===================
 ;;; ztree
 ;; =====================ztree======================
@@ -377,7 +377,7 @@
 ;; =====================ztree======================
 ;;; which-key
 ;; ====================which-key===================
-;; 原用guide-key，改用which-key，显示更好。
+;; 原用guide-key，改用which-key。
 ;; (require 'guide-key)
 ;; (setq guide-key/guide-key-sequence
 ;;       '("C-c" (org-mode "C-c C-x")))
@@ -417,7 +417,7 @@ Usually this is `describe-prefix-bindings'."
   (add-hook 'pdf-view-mode-hook 'pdf-outline-minor-mode)
   ;; pdf-view-auto-slice-minor-mode 翻页自动切边。
   ;; (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
-  ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。取消。
+  ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。
   ;; (add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
   (define-key pdf-view-mode-map (kbd "i") 'imenu)
   (define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save)
@@ -486,8 +486,8 @@ is named like ODF with the extension turned to pdf."
 (use-package visual-regexp
   ;; Enabled at commands.
   :defer t
-  :bind (("M-s r" . vr/query-replace)
-         ("M-s R" . vr/replace)
+  :bind (("M-s M-%" . vr/query-replace)
+         ("M-s C-M-%" . vr/replace)
          ("M-s C-;" . vr/mc-mark)))
 ;; ===================visual-regexp================
 ;;; vlf
@@ -683,7 +683,7 @@ is named like ODF with the extension turned to pdf."
 (use-package char-menu
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s ~" . char-menu)
+  :bind ("M-s m" . char-menu)
   :config
   (setq char-menu '(;; "—" "‘’" "“”" "…" "«»" "–"
                     ("Typography" "•" "©" "†" "‡" "°" "·" "§" "№" "★")
@@ -742,8 +742,8 @@ is named like ODF with the extension turned to pdf."
 ;; ===================quickrun=====================
 (use-package quickrun
   :defer t
-  :bind (("C-x q" . swint-quickrun)
-         ("C-x Q" . quickrun-shell))
+  :bind (("M-s q" . swint-quickrun)
+         ("M-s Q" . quickrun-shell))
   :config
   (defun swint-quickrun ()
     (interactive)
@@ -830,6 +830,12 @@ is named like ODF with the extension turned to pdf."
   :defer 2
   :config
   ;; 默认快捷键以C-x v为前缀。
+  (smartrep-define-key global-map "M-s"
+    '(("'" . diff-hl-diff-goto-hunk)
+      (";" . diff-hl-mark-hunk)
+      ("," . diff-hl-previous-hunk)
+      ("." . diff-hl-next-hunk)
+      ("/" . diff-hl-revert-hunk)))
   (global-diff-hl-mode)
   (add-hook 'prog-mode-hook 'diff-hl-flydiff-mode)
   (add-hook 'text-mode-hook 'diff-hl-flydiff-mode)
@@ -889,7 +895,43 @@ is named like ODF with the extension turned to pdf."
 (use-package counsel
   ;; Enabled at commands.
   :defer t
-  :bind ("M-X" . counsel-M-x))
+  ;; 按键逻辑：helm(C-x c x)/counsel(C-x c X)。
+  :bind (("M-X" . counsel-M-x)
+	 ("C-x ~" . counsel-tmm)
+	 ("C-x M" . counsel-unicode-char)
+	 ("C-x C-r" . swint-counsel-history)
+         ("C-x c B" . ivy-resume)
+	 ("C-x c L" . counsel-locate)
+	 ("C-x c o" . counsel-outline)
+	 ("C-x c D" . counsel-dpkg)
+	 ("C-x c g" . counsel-ag)
+	 ("C-x c P" . counsel-list-processes)
+	 ("C-x c M-Y" . counsel-yank-pop))
+  :config
+  (defun swint-counsel-history ()
+    "List command history based on major-mode."
+    (interactive)
+    (cond
+     ((memq major-mode '(shell-mode inferior-python-mode inferior-octave-mode))
+      (call-interactively 'counsel-shell-history))
+     ((eq major-mode 'eshell-mode)
+      (call-interactively 'counsel-esh-history))
+     (t (call-interactively 'swint-counsel-bash-history))))
+  (defun swint-counsel-bash-history ()
+    "Insert the bash history."
+    (interactive)
+    (let (hist-cmd collection val)
+      (shell-command "history -r") ; reload history
+      (setq collection
+            (nreverse
+             (split-string (with-temp-buffer (insert-file-contents (file-truename "~/.bash_history"))
+                                             (buffer-string))
+                           "\n"
+                           t)))
+      (when (and collection (> (length collection) 0)
+                 (setq val (if (= 1 (length collection)) (car collection)
+                             (ivy-read (format "Bash history:") collection))))
+        (insert val)))))
 (use-package ivy-hydra
   ;; Enabled after features.
   :defer t

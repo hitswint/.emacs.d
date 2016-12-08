@@ -63,7 +63,7 @@ Emacs buffers are those whose name starts with *."
         (delete-file filename)
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
-(global-set-key (kbd "C-x C-k") 'delete-current-buffer-file)
+(global-set-key (kbd "C-x M-d") 'delete-current-buffer-file)
 ;; ==============关闭buffer并删除文件==============
 ;;; 重命名当前buffer
 ;; ================重命名当前buffer================
@@ -83,7 +83,7 @@ Emacs buffers are those whose name starts with *."
           (set-buffer-modified-p nil)
           (message "File '%s' successfully renamed to '%s'"
                    name (file-name-nondirectory new-name)))))))
-(global-set-key (kbd "C-x C-r") 'rename-current-buffer-file)
+(global-set-key (kbd "C-x M-r") 'rename-current-buffer-file)
 ;; ================重命名当前buffer================
 ;;; 获得当前buffer的major-mode
 ;; ===========获得当前buffer的major-mode===========

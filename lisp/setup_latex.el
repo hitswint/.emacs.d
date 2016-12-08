@@ -63,7 +63,7 @@
               (define-key LaTeX-mode-map (kbd "C-c f") 'TeX-font)
               (define-key LaTeX-mode-map (kbd "C-q") 'swint-kill-tex-buffer)
               (define-key LaTeX-mode-map (kbd "C-c j") 'swint-open-at-point-with-apps)
-              (define-key LaTeX-mode-map (kbd "C-c m") '(lambda () (interactive) (swint-open-at-point t)))
+              (define-key LaTeX-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
               (define-key LaTeX-mode-map (kbd "\"") nil)))
   (setq TeX-view-program-list
         '(("Llpp" "llpp %o")

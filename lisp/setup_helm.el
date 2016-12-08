@@ -18,6 +18,7 @@
   (global-set-key (kbd "C-x f") 'helm-find)
   (global-set-key (kbd "C-x F") 'swint-helm-locate)
   (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "C-x c d") 'helm-apt)
 ;;;; helm-file-buffer
   ;; ============helm-file-buffer===============
   (defun swint-helm-file-buffers-list--init/curr-persp ()
@@ -370,7 +371,7 @@ from its directory."
                                       default-directory)))
        (cond
         ;; Buffer.
-        (buf (or (buffer-file-name sel)
+        (buf (or (buffer-file-name (get-buffer sel))
                  (car (rassoc (get-buffer buf) dired-buffers))
                  (and (with-current-buffer buf
                         (eq major-mode 'org-agenda-mode))
@@ -548,10 +549,10 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   :init
   (add-hook 'LaTeX-mode-hook
             '(lambda ()
-               (define-key LaTeX-mode-map (kbd "C-c `") 'helm-insert-latex-math)))
+               (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)))
   (add-hook 'org-mode-hook
             '(lambda ()
-               (define-key org-mode-map (kbd "C-c `") 'helm-insert-latex-math)))
+               (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)))
   (setq LaTeX-math-menu-unicode t)
   :config
   ;; 使用helm自带的程序而不使用下列自定义的命令。
@@ -590,7 +591,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   (define-key helm-map (kbd "C-c j") '(lambda () (interactive)
                                         (with-helm-alive-p
                                           (helm-exit-and-execute-action 'helm-bibtex-open-pdf-externally))))
-  (define-key helm-map (kbd "C-c m") '(lambda () (interactive)
+  (define-key helm-map (kbd "C-c o") '(lambda () (interactive)
                                         (with-helm-alive-p
                                           (helm-exit-and-execute-action 'helm-bibtex-open-pdf))))
   (define-key helm-map (kbd "C-c l") '(lambda () (interactive)
@@ -678,7 +679,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
 (use-package helm-unicode
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s `" . helm-unicode))
+  :bind ("C-x m" . helm-unicode))
 ;; ===============helm-unicode==================
 ;;; helm-ag
 ;; =================helm-ag=====================

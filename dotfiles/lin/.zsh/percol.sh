@@ -65,7 +65,7 @@ if exists percol; then
         zle -R -c               # refresh
     }
     zle -N percol_select_history
-    bindkey '^R' percol_select_history
+    bindkey '^x^r' percol_select_history
 fi
 
 # Grep or kill process.
