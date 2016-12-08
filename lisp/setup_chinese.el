@@ -28,8 +28,8 @@
 (use-package chinese-pyim
   ;; Enabled at commands.
   :defer t
-  :commands pyim-get-words-list-at-point
-  :bind (("C-M-SPC" . pyim-convert-pinyin-at-point)
+  :commands pyim-cwords-at-point
+  :bind (("C-M-SPC" . pyim-convert-code-at-point)
          ("S-SPC" . pyim-punctuation-translate-at-point))
   :init
   (bind-key "C-S-SPC" 'toggle-input-method)
@@ -37,12 +37,12 @@
   (setq default-input-method "chinese-pyim")
   ;; 使用pyim-fuzzy-pinyin-alist设置模糊音。
   ;; 设置选词框显示方式popup/pos-tip/nil。
-  (setq pyim-use-tooltip 'pos-tip)
+  (setq pyim-page-tooltip 'pos-tip)
   ;; lin下使用gtk绘制选词框，通过修改~/.emacs.d/gtkrc改变pos-tip字体。
   (when is-lin
     (setq x-gtk-use-system-tooltips t))
-  ;; 设置词语联想方式。
-  ;; (setq pyim-enable-words-predict '(pinyin-shouzimu pinyin-znabc))
+  ;; 设置词条获取方式。
+  ;; (setq pyim-backends '(dcache-personal dcache-common pinyin-chars pinyin-shortcode pinyin-znabc))
   ;; 使用探针(probe)函数判断当前语境以确定当前输入法和标点形式。
   (setq-default pyim-english-input-switch-functions
                 '(pyim-probe-program-mode
@@ -58,13 +58,13 @@
   ;; 关闭拼音搜索功能并取消其对isearch-search-fun-function的设置。
   (setq pyim-isearch-enable-pinyin-search nil)
   (setq isearch-search-fun-function 'isearch-function-with-pinyin))
-;;; chinese-pyim-basedict
+;;;; chinese-pyim-basedict
 (use-package chinese-pyim-basedict
   ;; Enabled after features.
   :after chinese-pyim
   :config
   (chinese-pyim-basedict-enable))
-;;; chinese-pyim-greatdict
+;;;; chinese-pyim-greatdict
 (use-package chinese-pyim-greatdict
   ;; Enabled after features.
   :after chinese-pyim

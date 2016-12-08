@@ -75,8 +75,8 @@
   (if mark-active
       (buffer-substring-no-properties (region-beginning) (region-end))
     (let ((words-at-point (if (equal (point) (point-at-eol))
-                              (pyim-get-words-list-at-point)
-                            (pyim-get-words-list-at-point t))))
+                              (pyim-cwords-at-point)
+                            (pyim-cwords-at-point t))))
       (if (<= (length words-at-point) 1)
           (read-string (format "Get Words (default %s): " (car (car words-at-point)))
                        nil nil (car (car words-at-point)))
