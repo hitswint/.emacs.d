@@ -55,9 +55,6 @@
   (setq-default pyim-punctuation-half-width-functions
                 '(pyim-probe-punctuation-line-beginning
                   pyim-probe-punctuation-after-punctuation))
-  ;; 添加company支持，使其可以更加准确的补全。
-  (require 'chinese-pyim-company)
-  (setq pyim-company-max-length 10)
   ;; 关闭拼音搜索功能并取消其对isearch-search-fun-function的设置。
   (setq pyim-isearch-enable-pinyin-search nil)
   (setq isearch-search-fun-function 'isearch-function-with-pinyin))
