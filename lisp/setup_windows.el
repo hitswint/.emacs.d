@@ -112,7 +112,11 @@ If prefix ARG is given, delete the window instead of selecting it."
     '(("H" . swint-windmove-left)
       ("L" . swint-windmove-right)
       ("K" . swint-windmove-up)
-      ("J" . swint-windmove-down)))
+      ("J" . swint-windmove-down)
+      ("h" . move-border-left)
+      ("l" . move-border-right)
+      ("k" . move-border-up)
+      ("j" . move-border-down)))
   :config
   (defun swint-windmove-left ()
     "Funtion return new function that ignore errors.
@@ -139,37 +143,6 @@ If prefix ARG is given, delete the window instead of selecting it."
     (setq previously-selected-window (selected-window))
     (funcall (ignore-error-wrapper 'windmove-down))))
 ;; ================windmove=====================
-;;; 三窗口设置
-;; ================三窗口设置===================
-(defun split-window-3-horizontally (&optional arg)
-  "Split window into 3 while largest one is in horizon"
-  ;; (interactive "P")
-  (delete-other-windows)
-  (split-window-horizontally)
-  (if arg (other-window 1))
-  (split-window-vertically))
-(defun split-window-3-vertically (&optional arg)
-  "Split window into 3 while largest one is in vertical"
-  ;; (interactive "P")
-  (delete-other-windows)
-  (split-window-vertically)
-  (if arg (other-window 1))
-  (split-window-horizontally))
-(defun change-split-type (split-fn &optional arg)
-  "Change 3 window style from horizontal to vertical and vice-versa"
-  (let ((bufList (mapcar 'window-buffer (window-list))))
-    (select-window (get-largest-window))
-    (funcall split-fn arg)
-    (mapcar* 'set-window-buffer (window-list) bufList)))
-(defun change-split-type-3-v (&optional arg)
-  "change 3 window style from horizon to vertical"
-  (interactive "P")
-  (change-split-type 'split-window-3-horizontally arg))
-(defun change-split-type-3-h (&optional arg)
-  "change 3 window style from vertical to horizon"
-  (interactive "P")
-  (change-split-type 'split-window-3-vertically arg))
-;; ================三窗口设置===================
 ;;; intuitive window resizing
 ;; ===========intuitive window resizing============
 (defun xor (b1 b2)
@@ -205,13 +178,38 @@ If prefix ARG is given, delete the window instead of selecting it."
 (defun move-border-down (arg)
   (interactive "P")
   (move-border-up-or-down arg nil))
-;; Keybindings for window resizing.
-(smartrep-define-key global-map "M-s"
-  '(("h" . swint-windmove-left)
-    ("l" . swint-windmove-right)
-    ("k" . swint-windmove-up)
-    ("j" . swint-windmove-down)))
 ;; ===========intuitive window resizing============
+;;; 三窗口设置
+;; ================三窗口设置===================
+(defun split-window-3-horizontally (&optional arg)
+  "Split window into 3 while largest one is in horizon"
+  ;; (interactive "P")
+  (delete-other-windows)
+  (split-window-horizontally)
+  (if arg (other-window 1))
+  (split-window-vertically))
+(defun split-window-3-vertically (&optional arg)
+  "Split window into 3 while largest one is in vertical"
+  ;; (interactive "P")
+  (delete-other-windows)
+  (split-window-vertically)
+  (if arg (other-window 1))
+  (split-window-horizontally))
+(defun change-split-type (split-fn &optional arg)
+  "Change 3 window style from horizontal to vertical and vice-versa"
+  (let ((bufList (mapcar 'window-buffer (window-list))))
+    (select-window (get-largest-window))
+    (funcall split-fn arg)
+    (mapcar* 'set-window-buffer (window-list) bufList)))
+(defun change-split-type-3-v (&optional arg)
+  "change 3 window style from horizon to vertical"
+  (interactive "P")
+  (change-split-type 'split-window-3-horizontally arg))
+(defun change-split-type-3-h (&optional arg)
+  "change 3 window style from vertical to horizon"
+  (interactive "P")
+  (change-split-type 'split-window-3-vertically arg))
+;; ================三窗口设置===================
 ;;; 切换窗口分割模式
 ;; ===============切换窗口分割模式=================
 (global-set-key (kbd "C-\\") 'toggle-window-split)
