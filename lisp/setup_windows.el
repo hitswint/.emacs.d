@@ -109,19 +109,11 @@ If prefix ARG is given, delete the window instead of selecting it."
   :commands (swint-windmove-left swint-windmove-right swint-windmove-up swint-windmove-down)
   :init
   (smartrep-define-key global-map "M-s"
-    '(("h" . swint-windmove-left)
-      ("l" . swint-windmove-right)
-      ("k" . swint-windmove-up)
-      ("j" . swint-windmove-down)))
+    '(("H" . swint-windmove-left)
+      ("L" . swint-windmove-right)
+      ("K" . swint-windmove-up)
+      ("J" . swint-windmove-down)))
   :config
-  (defun ignore-error-wrapper (fn)
-    "Funtion return new function that ignore errors.
-   The function wraps a function with `ignore-errors' macro."
-    (lexical-let ((fn fn))
-      (lambda ()
-        (interactive)
-        (ignore-errors
-          (funcall fn)))))
   (defun swint-windmove-left ()
     "Funtion return new function that ignore errors.
    The function wraps a function with `ignore-errors' macro."
@@ -214,10 +206,11 @@ If prefix ARG is given, delete the window instead of selecting it."
   (interactive "P")
   (move-border-up-or-down arg nil))
 ;; Keybindings for window resizing.
-(global-set-key (kbd "M-H") 'move-border-left)
-(global-set-key (kbd "M-L") 'move-border-right)
-(global-set-key (kbd "M-K") 'move-border-up)
-(global-set-key (kbd "M-J") 'move-border-down)
+(smartrep-define-key global-map "M-s"
+  '(("h" . swint-windmove-left)
+    ("l" . swint-windmove-right)
+    ("k" . swint-windmove-up)
+    ("j" . swint-windmove-down)))
 ;; ===========intuitive window resizing============
 ;;; 切换窗口分割模式
 ;; ===============切换窗口分割模式=================

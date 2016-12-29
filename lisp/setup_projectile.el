@@ -3,9 +3,9 @@
 (use-package projectile
   ;; Enabled at commands.
   :defer t
-  :bind-keymap ("M-s M-'" . projectile-command-map)
+  :bind-keymap ("M-\"" . projectile-command-map)
   :init
-  (setq projectile-keymap-prefix (kbd "M-s M-'"))
+  (setq projectile-keymap-prefix (kbd "M-\""))
   :config
   (projectile-global-mode)
   (setq projectile-enable-caching t)
@@ -35,6 +35,6 @@
   :defer t
   :after projectile
   :config
-  (bind-key "C-M-'" 'projectile-persp-switch-project))
+  (bind-key "M-s M-'" 'projectile-persp-switch-project))
 ;; ================persp-projectile=============
 (provide 'setup_projectile)

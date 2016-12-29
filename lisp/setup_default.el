@@ -45,6 +45,8 @@
 ;; C-x SPC 矩形复制模式。
 (global-set-key (kbd "C-;") 'set-mark-command)
 (global-set-key [f9] 'menu-bar-mode)
+(global-set-key (kbd "M-g o") 'occur)
+(global-set-key (kbd "C-x C-l") 'reposition-window)
 (global-set-key (kbd "M-S-SPC") 'just-one-space)
 (global-set-key (kbd "M-s SPC") 'delete-horizontal-space)
 (global-set-key (kbd "C-SPC") nil)

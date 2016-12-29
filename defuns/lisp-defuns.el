@@ -30,3 +30,14 @@
     (not (and (equal (vector 0 0 0 0 0) (cdr (assoc "eth0" (network-interface-list))))
               (equal (vector 0 0 0 0 0) (cdr (assoc "wlan0" (network-interface-list)))))))))
 ;; ==========Determination internet status=========
+;;; ignore-error-wrapper
+;; ==============ignore-error-wrapper==============
+(defun ignore-error-wrapper (fn)
+  "Funtion return new function that ignore errors.
+   The function wraps a function with `ignore-errors' macro."
+  (lexical-let ((fn fn))
+    (lambda ()
+      (interactive)
+      (ignore-errors
+	(funcall fn)))))
+;; ==============ignore-error-wrapper==============

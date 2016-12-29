@@ -554,7 +554,7 @@ is named like ODF with the extension turned to pdf."
   :commands (bm-toggle bm-previous bm-next)
   :init
   (smartrep-define-key global-map "C-x"
-    '(("C-;" . bm-toggle)
+    '(("C-'" . bm-toggle)
       ("'" . bm-previous)
       ("\"" . bm-next)))
   (setq bm-restore-repository-on-load t)
@@ -576,7 +576,7 @@ is named like ODF with the extension turned to pdf."
 (use-package helm-bm
   ;; Enabled after features.
   :defer t
-  :bind ("C-x C-'" . helm-bm)
+  :bind ("C-M-'" . helm-bm)
   :config
   (defun helm-bm-action-switch-to-buffer (candidate)
     "Switch to buffer of CANDIDATE."
@@ -831,7 +831,7 @@ is named like ODF with the extension turned to pdf."
   :config
   ;; 默认快捷键以C-x v为前缀。
   (smartrep-define-key global-map "M-s"
-    '(("'" . diff-hl-diff-goto-hunk)
+    '((":" . diff-hl-diff-goto-hunk)
       (";" . diff-hl-mark-hunk)
       ("," . diff-hl-previous-hunk)
       ("." . diff-hl-next-hunk)

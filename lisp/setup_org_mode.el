@@ -17,9 +17,10 @@
   ;; =================Appearance================
 ;;;; Capture
   ;; =================Capture===================
-  (global-set-key (kbd "M-O l") 'org-store-link)
-  (global-set-key (kbd "M-O c") 'org-capture)
-  (global-set-key (kbd "M-O a") 'org-agenda)
+  (global-set-key (kbd "M-s o") nil)
+  (global-set-key (kbd "M-s o l") 'org-store-link)
+  (global-set-key (kbd "M-s o c") 'org-capture)
+  (global-set-key (kbd "M-s o a") 'org-agenda)
   (setq org-capture-templates
         '(("i" "Idea" entry (file+headline "~/org/task.org" "Idea List") "* TODO %? %^g")
           ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
@@ -674,7 +675,7 @@ depending on the last command issued."
   (add-hook 'lisp-interaction-mode-hook
             (lambda () (outline-minor-mode -1)))
   ;; 会覆盖掉M-o设置字体的快捷键，使用ESC o。
-  (defvar outline-minor-mode-prefix "\M-O")
+  (defvar outline-minor-mode-prefix "\M-so")
   :config
   (add-hook 'outline-minor-mode-hook
             (lambda ()

@@ -1,7 +1,6 @@
 ;;; 切换cap和大小写
 ;; ===============切换cap和大小写==================
 (global-set-key (kbd "M-c") 'toggle-letter-case)
-(global-set-key (kbd "M-C") 'capitalize-word)
 (defun toggle-letter-case ()
   "Toggle the letter case of current word or text selection.
 Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
@@ -27,8 +26,7 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
      ((string= "init caps" (get this-command 'state))
       (upcase-region p1 p2) (put this-command 'state "all caps"))
      ((string= "all caps" (get this-command 'state))
-      (downcase-region p1 p2) (put this-command 'state "all lower")))
-    ))
+      (downcase-region p1 p2) (put this-command 'state "all lower")))))
 ;; ===============切换cap和大小写==================
 ;;; compact-uncompact-block
 ;; ===========compact-uncompact-block==============
@@ -117,7 +115,7 @@ Including indent-buffer, which should not be called automatically on save."
   (interactive)
   (cleanup-buffer-safe)
   (indent-region (point-min) (point-max)))
-(global-set-key (kbd "C-x C-l") 'cleanup-buffer)
+(global-set-key (kbd "C-x C-;") 'cleanup-buffer)
 ;; ============移除行尾的空格并indent==============
 ;;; 临时标记
 ;; ==================临时标记======================
