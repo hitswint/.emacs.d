@@ -60,7 +60,8 @@
 ;; Backup at each save.
 (defun force-backup-of-buffer ()
   (let ((buffer-backed-up nil))
-    (backup-buffer)))
+    (unless (eq major-mode 'ein:notebook-multilang-mode)
+      (backup-buffer))))
 (add-hook 'before-save-hook 'force-backup-of-buffer)
 ;; ============BACKUP-AUTOSAVE=============
 (provide 'setup_backup_autosave)

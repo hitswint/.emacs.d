@@ -4,9 +4,9 @@
 (unless package--initialized
   ;; 使用http://elpa.emacs-china.org镜像源。
   (setq package-archives '(("melpa" . "http://elpa.emacs-china.org/melpa/")
-			   ("gnu" . "http://elpa.emacs-china.org/gnu/")
-			   ("org" . "http://elpa.emacs-china.org/org/")
-			   ("marmalade" . "http://elpa.emacs-china.org/marmalade/")))
+                           ("gnu" . "http://elpa.emacs-china.org/gnu/")
+                           ("org" . "http://elpa.emacs-china.org/org/")
+                           ("marmalade" . "http://elpa.emacs-china.org/marmalade/")))
   ;; 使用官方源。
   ;; (setq package-archives '(("melpa" . "http://melpa.org/packages/")
   ;;                          ("gnu" . "http://elpa.gnu.org/packages/")
@@ -72,6 +72,7 @@
             dumb-jump
             function-args
             easy-kill
+            ein
             elisp-slime-nav
             elmacro
             elpy

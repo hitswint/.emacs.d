@@ -53,8 +53,8 @@
 (use-package gdb-mi
   ;; Enabled at commands.
   :defer t
-  :bind (("M-s g" . gdb-or-gud-go)
-         ("M-s G" . gud-kill))
+  :bind (("M-g g" . gdb-or-gud-go)
+         ("M-g G" . gud-kill))
   :config
   ;; 默认打开多窗口会有问题。
   (setq gdb-many-windows t)

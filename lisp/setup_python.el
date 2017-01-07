@@ -38,13 +38,50 @@
     (unless pyvenv-virtual-env
       (call-interactively 'pyvenv-workon))
     (elpy-use-ipython)
-    (let ((python-shell-interpreter-args "--simple-prompt --pylab"))
-      (call-interactively 'elpy-shell-switch-to-shell)))
+    (setq python-shell-interpreter-args "--simple-prompt --pylab")
+    (call-interactively 'elpy-shell-switch-to-shell))
   (defun swint-cpython ()
     (interactive)
     (unless pyvenv-virtual-env
       (call-interactively 'pyvenv-workon))
     (elpy-use-cpython)
+    (setq python-shell-interpreter-args "-i")
     (call-interactively 'elpy-shell-switch-to-shell)))
 ;; ====================elpy====================
+;;; emacs-ipython-notebook
+;; ====================ein=====================
+(use-package ein
+  ;; Enabled at at commands.
+  :defer t
+  :bind ("M-s 3" . swint-ein:notebooklist-open)
+  :config
+  ;; (setq ein:use-auto-complete t)
+  ;; Enable "superpack" (a little bit hacky improvements).
+  (setq ein:use-auto-complete-superpack t)
+  ;; (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
+  (setq ein:use-smartrep t)
+  (defun swint-ein:notebooklist-open ()
+    (interactive)
+    (unless (and (boundp 'pyvenv-virtual-env) pyvenv-virtual-env)
+      (call-interactively 'pyvenv-workon))
+    (unless (get-process "IPYNB")
+      (start-process-shell-command
+       "IPYNB" "*IPYNB*" "cd ~/Documents/Python/ipynb; jupyter notebook --no-browser"))
+    (ein:notebooklist-open))
+  (use-package ein-notebook
+    :config
+    (define-key ein:notebook-mode-map (kbd "M-,") nil)
+    (define-key ein:notebook-mode-map (kbd "M-.") nil)
+    (define-key ein:notebook-mode-map (kbd "C-c C-,") 'ein:pytools-jump-to-source-command)
+    (define-key ein:notebook-mode-map (kbd "C-c C-.") 'ein:pytools-jump-back-command)))
+(use-package ein-connect
+  ;; Enabled at at commands.
+  :defer t
+  :bind ("M-s #" . ein:connect-to-notebook-buffer)
+  :config
+  (define-key ein:connect-mode-map (kbd "M-,") nil)
+  (define-key ein:connect-mode-map (kbd "M-.") nil)
+  (define-key ein:connect-mode-map (kbd "C-c C-,") 'ein:pytools-jump-to-source-command)
+  (define-key ein:connect-mode-map (kbd "C-c C-.") 'ein:pytools-jump-back-command))
+;; ====================ein=====================
 (provide 'setup_python)

@@ -314,9 +314,9 @@
   :defer 2
   :config
   (global-hungry-delete-mode)
-  (add-hook 'wdired-mode-hook
-            (lambda ()
-              (setq hungry-delete-mode nil))))
+  (dolist (hook '(wdired-mode-hook ein:notebook-mode-hook))
+    (add-hook hook '(lambda ()
+		      (setq hungry-delete-mode nil)))))
 ;; ===================hungry-delete================
 ;;; fcitx
 ;; ======================fcitx=====================
@@ -486,8 +486,8 @@ is named like ODF with the extension turned to pdf."
 (use-package visual-regexp
   ;; Enabled at commands.
   :defer t
-  :bind (("M-s M-%" . vr/query-replace)
-         ("M-s C-M-%" . vr/replace)
+  :bind (("M-s r" . vr/query-replace)
+         ("M-s R" . vr/replace)
          ("M-s C-;" . vr/mc-mark)))
 ;; ===================visual-regexp================
 ;;; vlf
