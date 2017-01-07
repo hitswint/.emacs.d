@@ -66,7 +66,7 @@
       (call-interactively 'pyvenv-workon))
     (unless (get-process "IPYNB")
       (start-process-shell-command
-       "IPYNB" "*IPYNB*" "cd ~/Documents/Python/ipynb; jupyter notebook --no-browser"))
+       "IPYNB" "*IPYNB*" "jupyter notebook --no-browser"))
     (ein:notebooklist-open))
   (use-package ein-notebook
     :config
