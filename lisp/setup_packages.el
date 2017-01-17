@@ -52,7 +52,7 @@
   :bind ("C-M-;" . er/expand-region)
   :config
   (setq expand-region-contract-fast-key ":")
-  (setq expand-region-reset-fast-key "'"))
+  (setq expand-region-reset-fast-key "C-;"))
 ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end。
 ;; =================expand-region==================
 ;;; 回收站

@@ -575,6 +575,6 @@ Assuming .. and . is a current directory (like in FAR)"
     (call-interactively 'dired-ranger-copy))
   ;; 加C-u不清除clipboards。
   (bind-key "C-y" 'dired-ranger-paste dired-mode-map)
-  (bind-key "C-M-y" 'dired-ranger-move dired-mode-map))
+  (bind-key "M-y" 'dired-ranger-move dired-mode-map))
 ;; ===============dired-ranger=================
 (provide 'setup_dired)
