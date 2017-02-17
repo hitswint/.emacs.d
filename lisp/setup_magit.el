@@ -157,7 +157,7 @@
   (defun swint-magit-pull-current (remote branch &optional args)
     "Fetch and merge into current branch."
     (interactive (magit-pull-read-args t))
-    (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-git/ -d ~/Nutstore-git/")))
+    (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_6.jar -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-git/ -d ~/Nutstore-git/")))
       (set-process-sentinel
        process
        (lambda (process signal)
@@ -177,7 +177,7 @@
 If the upstream isn't set, then read the remote branch."
     (interactive (magit-push-read-args t t))
     (magit-push branch remote remote-branch args)
-    (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_4.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-git/ -d ~/Nutstore-git/")))
+    (let ((process (start-process-shell-command "webdav_sync" "*webdav_sync*" "java -Dderby.system.home=/home/swint/.webdav_sync/ -Dbe.re.http.no-compress -jar ~/.webdav_sync/webdav_sync1_1_6.jar -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-git/ -d ~/Nutstore-git/")))
       (set-process-sentinel
        process
        (lambda (process signal)

@@ -32,6 +32,8 @@
   (setq dired-listing-switches "-alh")
   ;; 文件夹间复制
   (setq dired-dwim-target t)
+  ;; Allow editing file permissions.
+  (setq wdired-allow-to-change-permissions t)
   ;; 将dired-k--highlight-buffer加hook放在前面，使其出现在dired-after-readin-hook中函数列表最后，以便最后生效。
   (add-hook 'dired-after-readin-hook 'dired-k--highlight-buffer)
   ;; 不折行显示
@@ -161,8 +163,8 @@
            (start-process-shell-command
             "webdav_sync" "*webdav_sync*"
             (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
-                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
-                    " -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
+                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
+                    " -r -down -e orgzly\.org -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
                     (expand-file-name "~/Nutstore-sync/"))))
           (pos (memq 'mode-line-modes mode-line-format)))
       (setcdr pos (cons "webdav-sync-down " (cdr pos)))
@@ -184,8 +186,8 @@
            (start-process-shell-command
             "webdav_sync" "*webdav_sync*"
             (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
-                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
-                    " -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
+                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
+                    " -r -up -e orgzly\.org -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
                     (expand-file-name "~/Nutstore-sync/"))))
           (pos (memq 'mode-line-modes mode-line-format)))
       (setcdr pos (cons "webdav-sync-up " (cdr pos)))
@@ -201,13 +203,13 @@
                (message "swint-webdav-sync-up failed"))
              (setcdr pos (remove "webdav-sync-up " (cdr pos)))))))))
   (defun swint-webdav-sync-bi ()
-    "Sync files in ~/Nutstore-sync to webdav server."
+    "Sync files in ~/Nutstore-sync with webdav server."
     (interactive)
     (let ((process
            (start-process-shell-command
             "webdav_sync" "*webdav_sync*"
             (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
-                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
+                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
                     " -r -bi -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
                     (expand-file-name "~/Nutstore-sync/"))))
           (pos (memq 'mode-line-modes mode-line-format)))
@@ -230,7 +232,7 @@
 ;;;; unison
   ;; ================unison====================
   (defun swint-unison-sync-backups ()
-    "Sync files in ~/Nutstore-sync to webdav server."
+    "Sync files in ~/org/backups with ~/Nutstore/backups."
     (interactive)
     (let ((process
            (start-process-shell-command
@@ -267,21 +269,21 @@
                   ("rmvb" . "mplayer") ("rm" . "mplayer") ("mp4" . "mplayer") ("avi" . "mplayer") ("flv" . "mplayer") ("f4v" . "mplayer") ("mpg" . "mplayer") ("mkv" . "mplayer") ("3gp" . "mplayer") ("wmv" . "mplayer") ("mov" . "mplayer") ("dat" . "mplayer") ("asf" . "mplayer") ("mpeg" . "mplayer") ("wma" . "mplayer") ("gif" . "mplayer")
                   ("mp3" . "mpg321") ("ape" . "mplayer")
                   ("xoj" . "xournal")
-                  ("jpg" . "~/feh.sh") ("png" . "~/feh.sh") ("bmp" . "~/feh.sh") ("jpeg" . "~/feh.sh")
+                  ("jpg" . "feh.sh") ("png" . "feh.sh") ("bmp" . "feh.sh") ("jpeg" . "feh.sh")
                   ("eps" . "gv") ("ps" . "gv")
                   ("html" . "firefox") ("htm" . "firefox")
-                  ("doc" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/WINWORD.EXE")
-                  ("docx" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/WINWORD.EXE")
-                  ("xls" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/EXCEL.EXE")
-                  ("xlsx" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/EXCEL.EXE")
-                  ("ppt" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/POWERPNT.EXE")
-                  ("pptx" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/Microsoft\\ Office/Office12/POWERPNT.EXE")
+                  ("doc" . "word.sh")
+                  ("docx" . "word.sh")
+                  ("xls" . "excel.sh")
+                  ("xlsx" . "excel.sh")
+                  ("ppt" . "ppt.sh")
+                  ("pptx" . "ppt.sh")
                   ("ods" . "libreoffice")("odt" . "libreoffice")
-                  ("dwg" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/AutoCAD\\ 2004/acad.exe")
-                  ("dxf" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/AutoCAD\\ 2004/acad.exe")
-                  ("caj" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
-                  ("nh" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
-                  ("kdh" . "wine-development /home/swint/.wine/drive_c/Program\\ Files/CAJViewer/CAJViewer.exe")
+                  ("dwg" . "cad-2004.sh")
+                  ("dxf" . "cad-2004.sh")
+                  ("caj" . "caj.sh")
+                  ("nh" . "caj.sh")
+                  ("kdh" . "caj.sh")
                   ("gp" . "gnuplot")
                   ("rar" . "unrar x -o+")
                   ("zip" . "unzip")
@@ -304,7 +306,7 @@
     ;; 设置一些文件的默认打开方式，此功能必须在(require 'dired-x)之后。
     (setq dired-guess-shell-alist-user
           (list
-           (list "\\.pdf$" "/home/swint/adobe.sh * >/dev/null 2>&1 &")
+           (list "\\.pdf$" "adobe.sh * >/dev/null 2>&1 &")
            (list "\\.doc$" "wps * >/dev/null 2>&1 &")
            (list "\\.docx$" "wps * >/dev/null 2>&1 &")
            (list "\\.ppt$" "wpp * >/dev/null 2>&1 &")
@@ -317,8 +319,8 @@
            (list "\\.png$" "display -flatten * >/dev/null 2>&1 &")
            (list "\\.bmp$" "display -flatten * >/dev/null 2>&1 &")
            (list "\\.html$" "firefox * >/dev/null 2>&1 &")
-           (list "\\.dwg$" "wine-development /home/swint/.wine/drive_c/Program\\ Files/AutoCAD\\ 2008/acad.exe * >/dev/null 2>&1 &")
-           (list "\\.dxf$" "wine-development /home/swint/.wine/drive_c/Program\\ Files/AutoCAD\\ 2008/acad.exe * >/dev/null 2>&1 &")
+           (list "\\.dwg$" "cad-2008.sh * >/dev/null 2>&1 &")
+           (list "\\.dxf$" "cad-2008.sh * >/dev/null 2>&1 &")
            (list "\\.mp3$" "mpg321 * >/dev/null 2>&1 &")
            (list "\\.ape$" "mplayer * >/dev/null 2>&1 &")
            (list "\\.avi$" "mplayer * >/dev/null 2>&1 &")

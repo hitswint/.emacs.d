@@ -324,7 +324,7 @@
   ;; Enabled automatically.
   :if is-lin
   :config
-  (fcitx-prefix-keys-add "M-s")
+  (fcitx-prefix-keys-add "M-s" "M-g")
   (fcitx-default-setup)
   (fcitx-isearch-turn-on)
   ;; (fcitx-aggressive-minibuffer-turn-on)

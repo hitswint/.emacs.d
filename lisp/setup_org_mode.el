@@ -246,10 +246,10 @@
     (let ((org-file-apps
            (cond (is-lin '(("\\.pdf\\'" . "llpp %s")
                            ("\\.djvu\\'" . "llpp %s")
-                           ("\\.png\\'" . "~/feh.sh %s")
-                           ("\\.jpg\\'" . "~/feh.sh %s")
-                           ("\\.bmp\\'" . "~/feh.sh %s")
-                           ("\\.jpeg\\'" . "~/feh.sh %s")
+                           ("\\.png\\'" . "feh.sh %s")
+                           ("\\.jpg\\'" . "feh.sh %s")
+                           ("\\.bmp\\'" . "feh.sh %s")
+                           ("\\.jpeg\\'" . "feh.sh %s")
                            ("\\.eps\\'" . "gv %s")
                            ("\\.ps\\'" . "gv %s")
                            ("\\.rmvb\\'" . "mplayer %s")
@@ -315,7 +315,7 @@
            (start-process-shell-command
             "webdav_sync" "*webdav_sync*"
             (concat "java -Dderby.system.home="  (expand-file-name "~/.webdav_sync/")
-                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
+                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
                     " -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d "
                     (expand-file-name "~/Nutstore-mobileorg/"))))
           (pos (memq 'mode-line-modes mode-line-format)))
@@ -344,7 +344,7 @@
            (start-process-shell-command
             "webdav_sync" "*webdav_sync*"
             (concat "java -Dderby.system.home="  (expand-file-name "~/.webdav_sync/")
-                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_4.jar")
+                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
                     " -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d "
                     (expand-file-name "~/Nutstore-mobileorg/"))))
           (pos (memq 'mode-line-modes mode-line-format)))

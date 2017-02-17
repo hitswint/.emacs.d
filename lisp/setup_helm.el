@@ -312,11 +312,11 @@ Run all sources defined in `helm-for-files-preferred-list'."
   (defun swint-helm-locate (&optional arg)
     (interactive "P")
     (if arg
-        ;; 使用~/helm-locate-db.sh脚本更新~/.helm-locate.db文件。
+        ;; 使用helm-locate-db.sh脚本更新~/.helm-locate.db文件。
         (let* ((locat-db-file (expand-file-name "~/.helm-locate.db"))
                (process (start-process-shell-command
                          "Updating-locate-db-file" "*Updating-locate-db-file*"
-                         (concat "bash " (expand-file-name "~/helm-locate-db.sh")))))
+                         "helm-locate-db.sh")))
           (set-process-sentinel
            process
            (lambda (process signal)
