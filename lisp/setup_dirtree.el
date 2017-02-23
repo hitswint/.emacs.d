@@ -27,72 +27,33 @@
     (interactive)
     (dirtree "~/" nil))
   (defun dirtree-kill-this-buffer ()
-    "switch to dirtree after killing this buffer."
+    "Switch to dirtree after killing this buffer."
     (interactive)
-    (let ((swint-previous-buffer (get-buffer (car (swint-iswitchb-make-buflist))))
-          (swint-current-buffer (current-buffer)))
+    (let ((curr-buf (current-buffer))
+          (prev-buf (car (or (swint-filter-buffer-list (mapcar '(lambda (x) (car x)) (window-prev-buffers)))
+                             (swint-filter-buffer-list (buffer-list (selected-frame)) t)))))
       (bc-set)
-      (if (equal (buffer-name (other-buffer (current-buffer) t)) "*dirtree*")
-          (other-window 1)
-        ;; 切换到之前所在的buffer。
-        (switch-to-buffer swint-previous-buffer))
-      ;; kill-buffer后不加参数会直接切换到之前所在的buffer，可能导致persp混乱，加参数则不会产生这个问题。
-      ;; 可以使用kill-this-buffer和kill-buffer-and-window，因为这两个函数中都使用了kill-buffer加参数的形式。
-      ;; 更新：kill-this-buffer有时仍然会切换到之前的buffer，有时不会。改为先切换，再kill-buffer。
-      (kill-buffer swint-current-buffer)))
+      ;; 先切换到前一个buffer，再关闭当前buffer。
+      (switch-to-buffer prev-buf)
+      (kill-buffer curr-buf)
+      (if (member "*dirtree*" (ido-get-buffers-in-frames 'current))
+          (select-window (get-buffer-window "*dirtree*")) )))
 ;;;; 关闭buffer后切换到之前的buffer
   ;; =========关闭buffer后切换到之前的buffer=======
   ;; 原始的kill-buffer存在两个问题：1. 会切换到helm buffer中；2. 在persp之间切换时会切换到上一个persp的buffer中。
-  (defvar swint-iswitchb-buflist nil
-    "Stores the current list of buffers that will be searched through.")
-  (defvar swint-iswitchb-bufs-in-frame nil
-    "List of the buffers visible in the current frame.")
-  (defcustom swint-iswitchb-all-frames 'visible
-    "Argument to pass to `walk-windows' when iswitchb is finding buffers.
-See documentation of `walk-windows' for useful values."
-    :type '(choice (const :tag "Selected frame only" nil)
-                   (const :tag "All existing frames" t)
-                   (const :tag "All visible frames" visible)
-                   (const :tag "All frames on this terminal" 0)))
-  (defun swint-iswitchb-get-bufname (win)
-    "Used by `swint-iswitchb-get-buffers-in-frames' to walk through all windows."
-    (let ((buf (buffer-name (window-buffer win))))
-      (if (not (member buf swint-iswitchb-bufs-in-frame))
-          ;; Only add buf if it is not already in list.
-          ;; This prevents same buf in two different windows being
-          ;; put into the list twice.
-          (setq swint-iswitchb-bufs-in-frame
-                (cons buf swint-iswitchb-bufs-in-frame)))))
-  (defun swint-iswitchb-get-buffers-in-frames (&optional current)
-    "Return the list of buffers that are visible in the current frame.
-If optional argument CURRENT is given, restrict searching to the
-current frame, rather than all frames, regardless of value of
-swint-`iswitchb-all-frames'."
-    (let ((swint-iswitchb-bufs-in-frame nil))
-      (walk-windows 'swint-iswitchb-get-bufname nil
-                    (if current
-                        nil
-                      swint-iswitchb-all-frames))
-      swint-iswitchb-bufs-in-frame))
-  (defun swint-iswitchb-make-buflist ()
-    "该函数使关闭当前buffer之后切换到之前访问过的buffer"
-    (setq swint-iswitchb-buflist
-          (let* ((swint-iswitchb-current-buffers (swint-iswitchb-get-buffers-in-frames))
-                 (swint-iswitchb-temp-buflist
-                  (delq nil
-                        (mapcar
-                         (lambda (x)
-                           (if (not
-                                (or
-                                 (swint-iswitchb-ignore-buffername-p x)
-                                 (memq x swint-iswitchb-current-buffers)))
-                               x))
-                         ;; 只使用(persp-buffers persp-curr)产生的buffer list顺序不对，无法切换回之前的buffer。
-                         (remove-if-not (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
-                                        (helm-buffer-list))))))
-            (setq swint-iswitchb-temp-buflist
-                  (nconc swint-iswitchb-temp-buflist swint-iswitchb-current-buffers))
-            swint-iswitchb-temp-buflist)))
+  (defun swint-filter-buffer-list (buffers &optional include-current)
+    "Remove buffers that are ignored or belong to other persps from buffers."
+    (let ((curr-buf-name (buffer-name (current-buffer))))
+      (append (delete curr-buf-name
+                      (delq nil
+                            (mapcar
+                             (lambda (x)
+                               (unless (swint-iswitchb-ignore-buffername-p x) x))
+                             ;; 只使用(persp-buffers persp-curr)产生的buffer list顺序不对，无法切换回之前的buffer。
+                             (remove-if-not (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
+                                            (mapcar 'buffer-name buffers)))))
+              (if include-current
+                  curr-buf-name))))
   (defun swint-iswitchb-ignore-buffername-p (bufname)
     "Return t if the buffer BUFNAME should be ignored."
     (let ((data       (match-data))
@@ -120,7 +81,7 @@ swint-`iswitchb-all-frames'."
     '("^ ")
     "Define ignore list."
     :type '(repeat (choice regexp function)))
-  (setq swint-iswitchb-buffer-ignore '("\\` " "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'"))
+  (setq swint-iswitchb-buffer-ignore '("\\` " "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`\\*dirtree\\*\\'"))
   ;; =========关闭buffer后切换到之前的buffer=======
   (defun dirtree-shell-command ()
     "open file with external app"
