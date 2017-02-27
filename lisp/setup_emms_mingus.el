@@ -8,7 +8,7 @@
          ("M-s e o" . emms-play-file))
   :config
   (defun swint-emms-playlist-mode-go ()
-    "swint-playlist."
+    "Swint-playlist."
     (interactive)
     (emms-player-mpd-connect)
     (emms-playlist-mode-go))
@@ -37,7 +37,7 @@
   (add-to-list 'emms-info-functions 'emms-info-mpd)
   (add-to-list 'emms-player-list 'emms-player-mpd)
   ;; ==============emms-mpd================
-  ;; emms-mpd快捷键设置
+  ;; Emms-mpd快捷键设置。
   (global-set-key (kbd "M-s e c") 'emms-player-mpd-connect)
   (global-set-key (kbd "s-/") 'emms-pause)
   (global-set-key (kbd "s-?") 'emms-stop)

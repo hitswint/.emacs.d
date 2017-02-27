@@ -9,7 +9,7 @@
   ;; =================ido-back-to-home=================
   (add-hook 'ido-setup-hook
             (lambda ()
-              ;; Go straight home
+              ;; Go straight home.
               (define-key ido-file-completion-map
                 (kbd "/")
                 (lambda ()

@@ -53,10 +53,10 @@
   ;; 在LaTeX-mode中，默认开启PDF-mode，即默认使用xelatex直接生成pdf文件，而不用每次用'C-c C-t C-p'进行切换。设置'Tex-show-compilation'为t，在另一个窗口显示编译信息，对于错误的排除很方便。另外，编译时默认直接保存文件，绑定补全符号到TAB键。
   (add-hook 'LaTeX-mode-hook
             (lambda ()
-              (setq TeX-auto-untabify t  ; remove all tabs before saving
-                    TeX-engine 'xetex    ; use xelatex default
-                    TeX-show-compilation t) ; display compilation windows
-              (TeX-global-PDF-mode t)    ; PDF mode enable, not plain
+              (setq TeX-auto-untabify t     ; Remove all tabs before saving.
+                    TeX-engine 'xetex       ; Use xelatex default.
+                    TeX-show-compilation t) ; Display compilation windows.
+              (TeX-global-PDF-mode t)       ; PDF mode enable, not plain.
               (setq TeX-save-query nil)
               (imenu-add-menubar-index)
               (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-parse-all)
@@ -87,7 +87,7 @@
   ;; ================关闭tex buffer================
   ;; 关闭tex的同时关闭latexmk编译进程。
   (defun swint-kill-tex-buffer ()
-    "kill tex buffer with active process"
+    "Kill tex buffer with active process."
     (interactive)
     (if (TeX-active-process)
         (kill-process (TeX-active-process)))
@@ -140,7 +140,7 @@
   (defun zotero-update-collection-hash ()
     (let ((buf (get-buffer-create "*moz-command-output*"))
           colls name id)
-      ;; set up the collection list
+      ;; Set up the collection list.
       (moz-command (format zotelo--render-collection-js
                            (process-get (zotelo--moz-process) 'moz-prompt)))
       (moz-command "zotelo_render_collection()" buf)

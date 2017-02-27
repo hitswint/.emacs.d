@@ -153,7 +153,6 @@
   :defer t
   :commands helm-gtags-mode
   :init
-  ;; Enable helm-gtags-mode
   (dolist (hook '(;; dired-mode-hook
                   ;; eshell-mode-hook
                   c-mode-hook

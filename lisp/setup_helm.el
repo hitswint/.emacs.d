@@ -3,7 +3,7 @@
 (use-package helm
   ;; Enabled automatically.
   :init
-  ;; emacs24中tramp存在问题，helm-files调用tramp-loaddefs会花费很长时间。
+  ;; Emacs24中tramp存在问题，helm-files调用tramp-loaddefs会花费很长时间。
   ;; 无网络时不存在问题，有网络时偶尔出现。下句解决helm启动变慢问题，源自水木。
   (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
   ;; Stack Exchange上提供：(setq tramp-ssh-controlmaster-options "")。
@@ -245,7 +245,7 @@
                         (select-window (get-buffer-window buffer))
                       (switch-to-buffer buffer))))))
   (defun swint-switch-persp/other-window (buffer)
-    "Helm-switch to persp/other-window simultaneously"
+    "Helm-switch to persp/other-window simultaneously."
     (if (memq buffer (persp-buffers persp-curr))
         (helm-switch-to-buffers buffer t)
       (let ((curr-buf (current-buffer)))

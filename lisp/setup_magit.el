@@ -44,7 +44,7 @@
   ;;   ;;                       args)))
   ;;   ;;   (append magit-git-global-arguments args))
   ;;   )
-  ;; Subtler highlight
+  ;; Subtler highlight.
   (set-face-background 'diff-file-header "#121212")
   (set-face-foreground 'diff-context "#666666")
   (set-face-foreground 'diff-added "#00cc33")
@@ -61,7 +61,7 @@
        (set-face-background 'ediff-odd-diff-A "#292521")
        (set-face-foreground 'ediff-even-diff-A "#ffffff")
        (set-face-background 'ediff-even-diff-A "#292527")))
-  ;; git config --add magit.extension svn
+  ;; Git config --add magit.extension svn.
   (add-hook 'magit-mode-hook 'magit-load-config-extensions)
   (defun magit-save-and-exit-commit-mode ()
     (interactive)
@@ -82,14 +82,14 @@
        (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
   (eval-after-load "magit"
     '(define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend))
-  ;; full screen magit-status
+  ;; Full screen magit-status.
   (defadvice magit-status (around magit-fullscreen activate)
     (window-configuration-to-register :magit-fullscreen)
     ad-do-it
     (delete-other-windows))
-  ;; full screen vc-annotate
+  ;; Full screen vc-annotate.
   (defun vc-annotate-quit ()
-    "Restores the previous window configuration and kills the vc-annotate buffer"
+    "Restores the previous window configuration and kills the vc-annotate buffer."
     (interactive)
     (dirtree-kill-this-buffer)
     (jump-to-register :vc-annotate-fullscreen))
@@ -100,7 +100,7 @@
          ad-do-it
          (delete-other-windows))
        (define-key vc-annotate-mode-map (kbd "q") 'vc-annotate-quit)))
-  ;; ignore whitespace
+  ;; Ignore whitespace.
   (defun magit-toggle-whitespace ()
     (interactive)
     (if (member "-w" magit-diff-options)
@@ -120,7 +120,7 @@
   ;; 在git remote add和git clone中需要使用cygwin的路径名称 file:///cygdrive/c/Users/swint/ 。
   ;; 使用magit-status建立本地仓库，建立远程仓库时使用git --bare init初始化。
   (defun swint-magit-clone-nutstore ()
-    "clone操作需要打开两个窗口一个是目标位置一个是Nutstore中远程库。"
+    "Clone操作需要打开两个窗口一个是目标位置一个是Nutstore中远程库。"
     (interactive)
     (cond
      (is-lin

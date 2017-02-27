@@ -84,7 +84,7 @@ Has no effect when `persp-show-modestring' is nil."
 (global-set-key (kbd "C-&") '(lambda () (interactive) (persp-push-current-buffer "i")))
 (global-set-key (kbd "C-`") 'senny-persp-last)
 (global-set-key (kbd "C-~") 'persp-push-current-buffer-to-last)
-;; 放弃使用键盘宏分配buffers到perspective的做法
+;; 放弃使用键盘宏分配buffers到perspective的做法。
 ;; (global-set-key (kbd "M-s s") 'swint-persp-start)
 ;; (fset 'swint-persp-all
 ;;       [?\M-s ?s

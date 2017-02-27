@@ -14,9 +14,9 @@
   (setq dired-recursive-deletes 'top)
 ;;;; Auto-revert-mode
   ;; =============Auto-revert-mode=============
-  ;; Auto refresh buffers
+  ;; Auto refresh buffers.
   (global-auto-revert-mode 1)
-  ;; Also auto refresh dired, but be quiet about it
+  ;; Also auto refresh dired, but be quiet about it.
   (setq global-auto-revert-non-file-buffers t)
   (setq auto-revert-verbose nil)
   ;; dired-k-highlight会使auto-revert-mode出错，在dired-mode中禁用auto-revert-mode。
@@ -370,7 +370,7 @@
   (defconst +gigabyte+ (* 1024 1024 1024.0))
   (defconst +terabyte+ (* 1024 1024 1024.0 1024.0))
   (defun txm-format-file-size (size)
-    "Return string with formatted file size"
+    "Return string with formatted file size."
     (cl-flet ((float-to-string (x)
                                (format "%.2f" x)))
       (cond ((< size +kilobyte+)
@@ -383,7 +383,7 @@
              (concat (float-to-string (/ size +gigabyte+)) " Gb"))
             (t "Unknown size"))))
   (defun txm-file-or-dir-size (path)
-    "Calculate size of the directory or file using Unix 'wc' tool"
+    "Calculate size of the directory or file using Unix 'wc' tool."
     (message (concat "Processing " path "..."))
     (let ((du-command
            (if (eq system-type 'darwin)
@@ -393,7 +393,7 @@
         (if (zerop (apply 'call-process
                           du-command
                           (list nil t nil "-s" "-b" path)))
-            ;; possibly more complicated processing here
+            ;; Possibly more complicated processing here.
             (string-to-number (car (split-string (buffer-string))))
           -1))))
   (defun txm-dired-view-file-or-dir ()
@@ -438,7 +438,7 @@ Assuming .. and . is a current directory (like in FAR)"
       "/" "\\"
       (dired-get-filename))))
   (defun swint-w32-browser-open ()
-    "Fix problems of openning word"
+    "Fix problems of openning word."
     (interactive)
     (if (and (or (string-equal (file-name-extension (dired-get-filename)) "doc")
                  (string-equal (file-name-extension (dired-get-filename)) "docx"))
@@ -471,7 +471,7 @@ Assuming .. and . is a current directory (like in FAR)"
     (setq image-dired-cmd-create-temp-image-program "imgconvert"))
   (defcustom peep-dired-image-extensions
     '("png" "PNG" "JPG" "jpg" "bmp" "BMP" "jpeg" "JPEG")
-    "Extensions to not try to open"
+    "Extensions to not try to open."
     :group 'peep-dired
     :type 'list)
   (defun peep-dired-display-file-other-window ()

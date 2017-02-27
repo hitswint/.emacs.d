@@ -18,7 +18,7 @@
   (window-numbering-mode 1)
   ;; 当按键大于现有窗口数目时，选中最后一个窗口。
   (defvar previously-selected-window nil
-    "previously-selected-window.")
+    "Previously-selected-window.")
   (defun select-window-by-number (i &optional arg)
     "Select window given number I by `window-numbering-mode'.
 If prefix ARG is given, delete the window instead of selecting it."
@@ -66,13 +66,15 @@ If prefix ARG is given, delete the window instead of selecting it."
   (defun select-previously-selected-window ()
     "Select previously selected window."
     (interactive)
-    (let ((current-selected-window (selected-window)))
-      (if (and
-           (memq previously-selected-window (window-list) ;; (append (car (gethash (selected-frame) window-numbering-table)) nil)
-                 ) ;之前选择window在当前window列表中
-           (not (equal previously-selected-window (selected-window)))) ;之前选择window与当前window不同
-          (select-window previously-selected-window)
-        (other-window 1))
+    (let ((current-selected-window (selected-window))
+          (prev-buf (car (or (swint-filter-buffer-list (mapcar '(lambda (x) (car x)) (window-prev-buffers)))
+                             (swint-filter-buffer-list (buffer-list (selected-frame)) t)))))
+      (if (one-window-p)
+          (switch-to-buffer prev-buf)
+        (if (and (memq previously-selected-window (window-list))
+                 (not (equal previously-selected-window (selected-window))))
+            (select-window previously-selected-window)
+          (other-window 1)))
       (setq previously-selected-window current-selected-window)))
   (defun transpose-with-previously-selected-window ()
     "Select previously selected window."
@@ -182,21 +184,21 @@ If prefix ARG is given, delete the window instead of selecting it."
 ;;; 三窗口设置
 ;; ================三窗口设置===================
 (defun split-window-3-horizontally (&optional arg)
-  "Split window into 3 while largest one is in horizon"
+  "Split window into 3 while largest one is in horizon."
   ;; (interactive "P")
   (delete-other-windows)
   (split-window-horizontally)
   (if arg (other-window 1))
   (split-window-vertically))
 (defun split-window-3-vertically (&optional arg)
-  "Split window into 3 while largest one is in vertical"
+  "Split window into 3 while largest one is in vertical."
   ;; (interactive "P")
   (delete-other-windows)
   (split-window-vertically)
   (if arg (other-window 1))
   (split-window-horizontally))
 (defun change-split-type (split-fn &optional arg)
-  "Change 3 window style from horizontal to vertical and vice-versa"
+  "Change 3 window style from horizontal to vertical and vice-versa."
   (let ((bufList (mapcar 'window-buffer (window-list))))
     (select-window (get-largest-window))
     (funcall split-fn arg)
@@ -268,7 +270,7 @@ If prefix ARG is given, delete the window instead of selecting it."
 ;; ===================循环窗口=====================
 (global-set-key (kbd "C-x O") 'rotate-windows)
 (defun rotate-windows ()
-  "Rotate your windows"
+  "Rotate your windows."
   (interactive)
   (cond ((not (> (count-windows)1))
          (message "You can't rotate a single window!"))

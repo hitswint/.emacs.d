@@ -29,23 +29,23 @@
       (utf-translate-cjk-mode 1))
   (setq user-full-name "Guiqiang Wang")
   (setq user-mail-address "wguiqiang@hotmail.com")
-  ;; Gmail的引用格式
+  ;; Gmail的引用格式。
   (setq mew-cite-fields '("Date:"  "From:"))
   (setq mew-cite-format "On %s %s wrote:\n\n")
-  ;; 密码设置
+  ;; 密码设置。
   (when is-lin
-    (setq mew-use-master-passwd t))     ;使用主密码，win提示主密码错误
+    (setq mew-use-master-passwd t))     ;使用主密码，win提示主密码错误。
   (setq mew-use-cached-passwd t)
   (setq mew-passwd-timer-unit 60)
   (setq mew-passwd-lifetime 24)         ;timer-unit x 24 = 24 hours
   ;; (setq mew-passwd-alist '(("wgq_713@163.com" "xxx" 0)
   ;;                          ("wgq_hit@126.com" "xxx" 0)))
-  ;; 编码设置
+  ;; 编码设置。
   (setq mew-charset-m17n "utf-8")
   (setq mew-internal-utf-8p t)
-  ;; html设置
+  ;; Html设置。
   (use-package mew-w3m
-    :load-path "site-lisp/mew-w3m/")    ;需要w3m支持，看html邮件
+    :load-path "site-lisp/mew-w3m/")    ;需要w3m支持，看html邮件。
   (setq mew-use-w3m-minor-mode t)
   (add-hook 'mew-message-hook 'mew-w3m-minor-mode-setter)
   (define-key mew-summary-mode-map "T" 'mew-w3m-view-inline-image)
@@ -55,12 +55,12 @@
   (setq w3m-default-display-inline-images t)
   (setq mew-prog-html '(mew-mime-text/html-w3m nil nil))
   (setq mew-mime-multipart-alternative-list '("Text/Html" "Text/Plan" ".*"))
-  ;; biff设置(邮件提醒)
+  ;; Biff设置(邮件提醒)。
   (setq mew-use-biff t)
   (setq mew-use-biff-bell t)
-  (setq mew-biff-interval 5) ;这个值一定要小于下面的timer-unit和lifetime值，这个可以使用
+  (setq mew-biff-interval 5) ;这个值一定要小于下面的timer-unit和lifetime值，这个可以使用。
   (setq mew-pop-biff-interval 3)
-  ;; 其他
+  ;; 其他。
   ;; (setq mew-debug t)
   (setq mew-pop-delete nil)
   (setq mew-pop-size 0)

@@ -1,8 +1,8 @@
 ;;; parenthesis
 ;; =================parenthesis=================
-;; (setq show-paren-style 'parenthesis)    ;highlight just brackets
-;; (setq show-paren-style 'expression)     ;highlight entire bracket expression
-;; (setq skeleton-pair t)                  ;自动插入匹配的括号
+;; (setq show-paren-style 'parenthesis)    ;Highlight just brackets.
+;; (setq show-paren-style 'expression)     ;Highlight entire bracket expression.
+;; (setq skeleton-pair t)                  ;自动插入匹配的括号。
 ;; (global-set-key (kbd "(") 'skeleton-pair-insert-maybe)
 ;; (global-set-key (kbd "[") 'skeleton-pair-insert-maybe)
 ;; (global-set-key (kbd "{") 'skeleton-pair-insert-maybe)
@@ -147,7 +147,7 @@
         (when (car bg)
           (setq attributes (plist-put attributes :background (car bg))))
         (pop bg)
-        (dotimes (i 2) ;; front and back
+        (dotimes (i 2) ;; Front and back.
           (push (make-overlay 0 0 nil t) hl-paren-overlays)
           (overlay-put (car hl-paren-overlays) 'font-lock-face attributes)))
       (setq hl-paren-overlays hl-paren-overlays))))

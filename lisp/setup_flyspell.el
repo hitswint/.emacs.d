@@ -28,13 +28,13 @@
                  (eq pos flyspell-old-pos-error))
             (progn
               (if (= flyspell-old-pos-error min)
-                  ;; goto beginning of buffer
+                  ;; Goto beginning of buffer.
                   (progn
                     (message "Restarting from end of buffer")
                     (goto-char (point-max)))
                 (backward-word 1))
               (setq pos (point))))
-        ;; seek the next error
+        ;; Seek the next error.
         (while (and (> pos min)
                     (let ((ovs (overlays-at pos))
                           (r '()))
@@ -45,7 +45,7 @@
                       (not r)))
           (backward-word 1)
           (setq pos (point)))
-        ;; save the current location for next invocation
+        ;; Save the current location for next invocation.
         (setq arg (1- arg))
         (setq flyspell-old-pos-error pos)
         (setq flyspell-old-buffer-error (current-buffer))

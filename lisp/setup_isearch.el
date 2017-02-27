@@ -55,7 +55,7 @@
   (defun isearch-function-with-pinyin ()
     "Wrap for Pinyin searching."
     (if pinyin-search-activated
-        ;; Return the function to use for pinyin search
+        ;; Return the function to use for pinyin search.
         `(lambda (string bound noerror)
            (funcall (if ,isearch-forward
                         're-search-forward

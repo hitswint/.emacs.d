@@ -3,6 +3,7 @@
 (use-package dirtree
   ;; Enabled at commands.
   :defer t
+  :commands swint-filter-buffer-list
   :bind (("C-x j" . dirtree-local)
          ("C-x J" . dirtree-home)
          ("C-q" . dirtree-kill-this-buffer))
@@ -84,7 +85,7 @@
   (setq swint-iswitchb-buffer-ignore '("\\` " "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`\\*dirtree\\*\\'"))
   ;; =========关闭buffer后切换到之前的buffer=======
   (defun dirtree-shell-command ()
-    "open file with external app"
+    "Open file with external app."
     (interactive)
     (let ((widget (widget-at (1- (line-end-position))))
           file)
@@ -101,7 +102,7 @@
                          (sit-for 5)))
               (w32-browser file)))))))
   (defun dirtree-open-and-kill-dirtree ()
-    "go to the position of buffer"
+    "Go to the position of buffer."
     (interactive)
     (dirtree-display)
     (kill-buffer (other-buffer (current-buffer) t))

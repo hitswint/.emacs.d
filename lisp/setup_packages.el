@@ -144,9 +144,9 @@
   :config
   ;; 解决关emacs时保存.session的编码问题
   (setq session-save-file-coding-system 'utf-8)
-  ;; set default encoding to utf-8
+  ;; Set default encoding to utf-8.
   (setq-default buffer-file-coding-system 'utf-8)
-  ;; set writing buffer default to utf-8, or emacs always show encoding problem when saving files.
+  ;; Set writing buffer default to utf-8, or emacs always show encoding problem when saving files.
   (setq save-buffer-coding-system 'utf-8)
   (setq coding-system-for-write 'utf-8))
 ;; =====================unicad=====================
@@ -316,7 +316,7 @@
   (global-hungry-delete-mode)
   (dolist (hook '(wdired-mode-hook ein:notebook-mode-hook))
     (add-hook hook '(lambda ()
-		      (setq hungry-delete-mode nil)))))
+                      (setq hungry-delete-mode nil)))))
 ;; ===================hungry-delete================
 ;;; fcitx
 ;; ======================fcitx=====================
@@ -326,10 +326,9 @@
   :config
   (fcitx-prefix-keys-add "M-s" "M-g")
   (fcitx-default-setup)
-  (fcitx-isearch-turn-on)
   ;; (fcitx-aggressive-minibuffer-turn-on)
   ;; 会导致tramp问题，使需要在minibuffer输入密码时hang。
-  )
+  (fcitx-isearch-turn-on))
 ;; ======================fcitx=====================
 ;;; aggressive-indent
 ;; ================aggressive-indent===============
@@ -408,7 +407,7 @@ Usually this is `describe-prefix-bindings'."
   :defer t
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :init
-  ;; pdf-tools会默认设置x-gtk-use-system-tooltips为nil，导致chinese-pyim选词框失效。
+  ;; Pdf-tools会默认设置x-gtk-use-system-tooltips为nil，导致chinese-pyim选词框失效。
   (setq pdf-annot-tweak-tooltips nil)
   :config
   (pdf-tools-install)
@@ -440,9 +439,9 @@ Usually this is `describe-prefix-bindings'."
 ;; ====================pdf-tools===================
 ;;; doc-view-mode
 ;; ==================doc-view-mode=================
-;; lin上使用soffice转换；win上使用unoconv转换。
-;; pdf文件使用gs转换成png。
-;; win下使用doc-view查看office和pdf文件时，文件名都不可以包含中文字符。
+;; Lin上使用soffice转换；win上使用unoconv转换。
+;; Pdf文件使用gs转换成png。
+;; Win下使用doc-view查看office和pdf文件时，文件名都不可以包含中文字符。
 ;; 默认的缓存文件夹分别为/tmp和c:/Users/swint/AppData/Local/Temp，使用doc-view-clear-cache清理。
 (use-package doc-view
   ;; Enabled in modes.
@@ -581,9 +580,9 @@ is named like ODF with the extension turned to pdf."
   (defun helm-bm-action-switch-to-buffer (candidate)
     "Switch to buffer of CANDIDATE."
     (helm-bm-with-candidate candidates
-      (helm-switch-persp/buffer bufname)
-      (goto-char (point-min))
-      (forward-line (1- lineno)))))
+                            (helm-switch-persp/buffer bufname)
+                            (goto-char (point-min))
+                            (forward-line (1- lineno)))))
 ;; ====================helm-bm=====================
 ;;; operate-on-number
 ;; ================operate-on-number===============
@@ -720,13 +719,13 @@ is named like ODF with the extension turned to pdf."
     ;; note: (x-get-selection 'CLIPBOARD) doesn't work on Windows.
     (if (eq window-system 'w32)
         (ignore-errors (x-get-selection-value)) ; can be nil
-      ;; don't add contents to kill-ring if emacs already owns this item,
-      ;; as emacs will handle doing that.
+      ;; Don't add contents to kill-ring if emacs already owns this item,
+      ;; As emacs will handle doing that.
       (let ((v (if (x-selection-owner-p 'CLIPBOARD)
                    nil
                  ;; 默认的'STRING导致中文乱码，改为'UTF8_STRING。
                  (ignore-errors (x-get-selection 'CLIPBOARD 'UTF8_STRING)))))
-        ;; need to remove properties or selection won't work.
+        ;; Need to remove properties or selection won't work.
         (if (null v) nil
           (substring-no-properties v))))))
 ;; ====================clipmon=====================
@@ -897,16 +896,16 @@ is named like ODF with the extension turned to pdf."
   :defer t
   ;; 按键逻辑：helm(C-x c x)/counsel(C-x c X)。
   :bind (("M-X" . counsel-M-x)
-	 ("C-x ~" . counsel-tmm)
-	 ("C-x M" . counsel-unicode-char)
-	 ("C-x C-r" . swint-counsel-history)
+         ("C-x ~" . counsel-tmm)
+         ("C-x M" . counsel-unicode-char)
+         ("C-x C-r" . swint-counsel-history)
          ("C-x c B" . ivy-resume)
-	 ("C-x c L" . counsel-locate)
-	 ("C-x c o" . counsel-outline)
-	 ("C-x c D" . counsel-dpkg)
-	 ("C-x c g" . counsel-ag)
-	 ("C-x c P" . counsel-list-processes)
-	 ("C-x c M-Y" . counsel-yank-pop))
+         ("C-x c L" . counsel-locate)
+         ("C-x c o" . counsel-outline)
+         ("C-x c D" . counsel-dpkg)
+         ("C-x c g" . counsel-ag)
+         ("C-x c P" . counsel-list-processes)
+         ("C-x c M-Y" . counsel-yank-pop))
   :config
   (defun swint-counsel-history ()
     "List command history based on major-mode."

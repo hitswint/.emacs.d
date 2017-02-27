@@ -122,7 +122,7 @@
   ;; ================cdlatex====================
 ;;;; 截图
   ;; ===================截图====================
-  ;; screenshot-local截图到./pic文件夹中，screenshot截图到home/swint/org/pic文件夹中。
+  ;; Screenshot-local截图到./pic文件夹中，screenshot截图到home/swint/org/pic文件夹中。
   (defun swint-screenshot (&optional arg)
     "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
@@ -291,7 +291,7 @@
   (setq org-mobile-inbox-for-pull "~/org/task-from-mobile.org")
   ;; Set to <your Dropbox root directory>/MobileOrg.
   (setq org-mobile-directory "~/Nutstore-mobileorg")
-  ;; 加密
+  ;; 加密。
   (setq org-mobile-encryption-tempfile "~/org/orgtmpcrypt")
   (unless (file-exists-p org-mobile-encryption-tempfile)
     (shell-command (concat "touch " (expand-file-name org-mobile-encryption-tempfile))))
@@ -308,7 +308,7 @@
   (defun swint-org-mobile-pull ()
     "Operate on multiple PCs."
     (interactive)
-    ;; webdav会造成文件conflict，在pull之前先删除本地mobileorg文件。
+    ;; Webdav会造成文件conflict，在pull之前先删除本地mobileorg文件。
     (mapcar 'delete-file (directory-files org-mobile-directory t
                                           ".+\\.\\(org\\|dat\\)"))
     (let ((process
@@ -336,7 +336,7 @@
                (message "swint-org-mobile-pull failed"))
              (setcdr pos (remove "org-mobile-pull " (cdr pos)))))))))
   (defun swint-org-mobile-push ()
-    "Operate on multiple PCs"
+    "Operate on multiple PCs."
     (interactive)
     (with-current-buffer "task.org"
       (org-mobile-push))
@@ -374,7 +374,7 @@
   ;; =============org-latex-preview=============
   ;; C-c C-x C-l org-preview-latex-fragment表示preview当前位置。
   ;; 加C-u表示当前节，两个C-u表示当前head。
-  (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境
+  (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境。
   ;; =============org-latex-preview=============
 ;;;; org输出latex
   ;; ==============org输出latex=================
@@ -486,7 +486,7 @@ depending on the last command issued."
 ;; ================article设置==================
 ;;;; beamer设置
 ;; =================beamer设置==================
-;; beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)。
+;; Beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)。
 ;; 设定mainfont会导致公式环境中变量变成正体。
 ;; 设定setsansfont使用Times New Roman无法使用英文斜体和粗体。
 ;; 使用某些字体可以实现粗斜体，例如DejaVu Sans/DejaVu Sans Mono/DejaVu Serif等。
@@ -582,7 +582,7 @@ depending on the last command issued."
   :after dired
   :config
   (defun swint-org-annotation-storage-file ()
-    "Modified from var to function"
+    "Modified from var to function."
     (concat "~/org/annotated/annotated-("
             (replace-regexp-in-string
              "/" "_" (substring-no-properties (abbreviate-file-name default-directory) 1))
@@ -737,7 +737,7 @@ depending on the last command issued."
   :defer t
   :commands (outshine-hook-function outshine-cycle-buffer outshine-calc-outline-regexp)
   :config
-  ;; heading格式随mode不同，通常是M-;加*加空格。
+  ;; Heading格式随mode不同，通常是M-;加*加空格。
   (setq outshine-use-speed-commands t)
   (setq outshine-imenu-show-headlines-p nil))
 (use-package outorg

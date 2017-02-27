@@ -48,7 +48,7 @@
 ;; ================auto-complete===============
 ;;; ac-ispell
 ;; ==================ac-ispell=================
-;; Completion words longer than 4 characters
+;; Completion words longer than 4 characters.
 (use-package ac-ispell
   ;; Enabled at commands.
   :defer t
