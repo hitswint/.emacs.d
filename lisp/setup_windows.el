@@ -67,7 +67,7 @@ If prefix ARG is given, delete the window instead of selecting it."
     "Select previously selected window."
     (interactive)
     (let ((current-selected-window (selected-window))
-          (prev-buf (car (or (swint-filter-buffer-list (mapcar '(lambda (x) (car x)) (window-prev-buffers)))
+          (prev-buf (car (or (swint-filter-buffer-list (mapcar #'(lambda (x) (car x)) (window-prev-buffers)))
                              (swint-filter-buffer-list (buffer-list (selected-frame)) t)))))
       (if (one-window-p)
           (switch-to-buffer prev-buf)

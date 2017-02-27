@@ -31,7 +31,7 @@
     "Switch to dirtree after killing this buffer."
     (interactive)
     (let ((curr-buf (current-buffer))
-          (prev-buf (car (or (swint-filter-buffer-list (mapcar '(lambda (x) (car x)) (window-prev-buffers)))
+          (prev-buf (car (or (swint-filter-buffer-list (mapcar #'(lambda (x) (car x)) (window-prev-buffers)))
                              (swint-filter-buffer-list (buffer-list (selected-frame)) t)))))
       (bc-set)
       ;; 先切换到前一个buffer，再关闭当前buffer。
