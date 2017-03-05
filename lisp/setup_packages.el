@@ -325,9 +325,7 @@
   :if is-lin
   :config
   (fcitx-prefix-keys-add "M-s" "M-g")
-  (fcitx-default-setup)
-  ;; (fcitx-aggressive-minibuffer-turn-on)
-  ;; 会导致tramp问题，使需要在minibuffer输入密码时hang。
+  (fcitx-aggressive-setup)
   (fcitx-isearch-turn-on))
 ;; ======================fcitx=====================
 ;;; aggressive-indent
@@ -495,7 +493,8 @@ is named like ODF with the extension turned to pdf."
 (use-package vlf
   ;; Enabled at idle.
   :defer t
-  :bind-keymap ("M-s v" . vlf-mode-map)
+  :bind (:map dired-mode-map
+              ("M-s v" . dired-vlf))
   :init
   ;; Enable vlf when opening files bigger than 100MB.
   (setq large-file-warning-threshold 100000000)
@@ -507,8 +506,7 @@ is named like ODF with the extension turned to pdf."
     '(("n" . vlf-next-batch)
       ("p" . vlf-prev-batch)
       ("<" . vlf-beginning-of-file)
-      (">" . vlf-end-of-file)
-      ("RET" . dired-vlf)))
+      (">" . vlf-end-of-file)))
   (custom-set-variables '(vlf-application 'dont-ask))
   (add-to-list 'vlf-forbidden-modes-list 'pdf-view-mode))
 ;; C-c C-v n and C-c C-v p move batch by batch.
@@ -648,13 +646,13 @@ is named like ODF with the extension turned to pdf."
 (use-package bbyac
   ;; Enabled at commands.
   :defer t
-  :bind (("M-s M-u" . bbyac-expand-partial-lines)
-         ("M-s M-U" . bbyac-expand-lines))
+  :bind (("M-s M-u" . bbyac-expand-substring)
+         ("M-s M-U" . bbyac-expand-symbols))
   :config
   (bbyac-global-mode 1)
   (setq browse-kill-ring-display-style 'one-line)
-  (define-key bbyac-mode-map (kbd "M-s M-u") 'bbyac-expand-partial-lines)
-  (define-key bbyac-mode-map (kbd "M-s M-U") 'bbyac-expand-lines)
+  (define-key bbyac-mode-map (kbd "M-s M-u") 'bbyac-expand-substring)
+  (define-key bbyac-mode-map (kbd "M-s M-U") 'bbyac-expand-symbols)
   (define-key bbyac-mode-map (kbd "M-g <return>") nil)
   (define-key bbyac-mode-map (kbd "M-g RET") nil)
   (define-key bbyac-mode-map (kbd "M-s <return>") nil)

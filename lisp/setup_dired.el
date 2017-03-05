@@ -337,11 +337,20 @@
     ;; ============默认程序打开文件============
 ;;;; 在当前目录下打开urxvt
     ;; ========在当前目录下打开urxvt===========
-    (defun urxvt-default-directory ()
-      (interactive)
+    (defun urxvt-default-directory (&optional arg)
+      (interactive "P")
       (start-process "Urxvt" nil shell-file-name shell-command-switch
-                     (concat "tabbed -c " "urxvt" " -cd " "\""
-                             (expand-file-name default-directory) "\"" " -embed")))
+                     (concat "$(tabbed -c -d > /tmp/tabbed.xid);urxvt -embed $(</tmp/tabbed.xid) -cd "
+                             "\"" (expand-file-name default-directory) "\""
+                             ;; 启动bash终端同时开启virtualenv。
+                             (if arg (let ((pyvenv-virtual-env-for-bash
+                                            (or pyvenv-virtual-env
+                                                (file-name-as-directory
+                                                 (format "%s/%s" (pyvenv-workon-home)
+                                                         (completing-read "Work on: " (pyvenv-virtualenv-list)
+                                                                          nil t nil 'pyvenv-workon-history nil nil))))))
+                                       (concat " -e bash" " --init-file <( printf '%s\\n' 'source ~/.bashrc' 'source "
+                                               pyvenv-virtual-env-for-bash "bin/activate' )"))))))
     (global-set-key (kbd "C-s-<return>") 'urxvt-default-directory)
     ;; ========在当前目录下打开urxvt===========
 ;;;; cad文件版本转换

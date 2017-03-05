@@ -324,10 +324,10 @@
           ))
   ;; Bin Chen写的补全单词函数，但无法使用ido界面，显示undo次数过多。
   (defun try-expand-by-dict (old)
-    ;; old is true if we have already attempted an expansion
+    ;; Old is true if we have already attempted an expansion.
     (unless (bound-and-true-p ispell-minor-mode)
       (ispell-minor-mode 1))
-    ;; english-words.txt is the fallback dicitonary
+    ;; English-words.txt is the fallback dicitonary.
     (if (not ispell-alternate-dictionary)
         (setq ispell-alternate-dictionary (file-truename "~/.english-words")))
     (let ((lookup-func (if (fboundp 'ispell-lookup-words)

@@ -13,7 +13,12 @@
     (setq explicit-shell-file-name "bash.exe"))
    (is-lin
     (setq explicit-shell-file-name "bash")
-    (setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash"))))
+    (setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash"))
+    (add-hook 'shell-mode-hook '(lambda ()
+				  ;; 若virtualenvs开启，启动相应虚拟环境，并使用auto-complete补全命令。
+                                  (if (and (boundp 'pyvenv-virtual-env) pyvenv-virtual-env)
+                                      (process-send-string (get-process "shell")
+                                                           (concat "source " pyvenv-virtual-env "bin/activate\n")))))))
   (define-key shell-mode-map (kbd "C-q") 'comint-send-eof))
 ;; =====================shell======================
 ;;; eshell
