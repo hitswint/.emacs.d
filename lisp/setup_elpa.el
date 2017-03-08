@@ -119,6 +119,7 @@
             interleave
             ivy
             ivy-hydra
+            js2-mode
             lacarte
             latex-preview-pane
             let-alist
@@ -173,6 +174,7 @@
             vlf
             volatile-highlights
             w3m
+            web-mode
             which-key
             windata
             window-numbering

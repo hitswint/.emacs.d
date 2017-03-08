@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# contributor: David Miller <david@deadpansincerity.com>
+# group: django
+# name : django-super
+# key : super-django
+# --
+{{ block.super }}$0

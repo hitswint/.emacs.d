@@ -3,9 +3,8 @@
 (use-package gnuplot-mode
   ;; Enabled in modes.
   :defer t
-  :commands gnuplot-mode
+  :mode ("\\.\\(gp\\|gnuplot\\)$" . gnuplot-mode)
   :init
-  (add-to-list 'auto-mode-alist '("\\.\\(gp\\|gnuplot\\)$" . gnuplot-mode))
   (when is-win
     (setq gnuplot-program "c:/Program Files (x86)/gnuplot/bin/gnuplot.exe"))
   :config

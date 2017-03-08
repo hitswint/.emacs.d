@@ -485,7 +485,7 @@ is named like ODF with the extension turned to pdf."
   :defer t
   :bind (("M-s r" . vr/query-replace)
          ("M-s R" . vr/replace)
-         ("M-s C-;" . vr/mc-mark)))
+         ("M-s ;" . vr/mc-mark)))
 ;; ===================visual-regexp================
 ;;; vlf
 ;; =======================vlf======================
@@ -680,7 +680,7 @@ is named like ODF with the extension turned to pdf."
 (use-package char-menu
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s m" . char-menu)
+  :bind ("M-s M" . char-menu)
   :config
   (setq char-menu '(;; "—" "‘’" "“”" "…" "«»" "–"
                     ("Typography" "•" "©" "†" "‡" "°" "·" "§" "№" "★")
@@ -827,9 +827,8 @@ is named like ODF with the extension turned to pdf."
   :defer 2
   :config
   ;; 默认快捷键以C-x v为前缀。
-  (smartrep-define-key global-map "M-s"
-    '((":" . diff-hl-diff-goto-hunk)
-      (";" . diff-hl-mark-hunk)
+  (smartrep-define-key global-map "C-x v"
+    '((";" . diff-hl-mark-hunk)
       ("," . diff-hl-previous-hunk)
       ("." . diff-hl-next-hunk)
       ("/" . diff-hl-revert-hunk)))
@@ -868,7 +867,7 @@ is named like ODF with the extension turned to pdf."
   :defer t
   :after (swiper counsel)
   :config
-  (bind-key "C-x c B" 'ivy-resume)
+  (bind-key "M-s y" 'ivy-resume)
   (bind-key "C-h" 'ivy-avy ivy-minibuffer-map)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-height 10)
@@ -892,18 +891,17 @@ is named like ODF with the extension turned to pdf."
 (use-package counsel
   ;; Enabled at commands.
   :defer t
-  ;; 按键逻辑：helm(C-x c x)/counsel(C-x c X)。
+  ;; 按键逻辑：helm(C-x c x)/counsel(M-s c x)。
   :bind (("M-X" . counsel-M-x)
-         ("C-x ~" . counsel-tmm)
-         ("C-x M" . counsel-unicode-char)
          ("C-x C-r" . swint-counsel-history)
-         ("C-x c B" . ivy-resume)
-         ("C-x c L" . counsel-locate)
-         ("C-x c o" . counsel-outline)
-         ("C-x c D" . counsel-dpkg)
-         ("C-x c g" . counsel-ag)
-         ("C-x c P" . counsel-list-processes)
-         ("C-x c M-Y" . counsel-yank-pop))
+         ("M-s `" . counsel-tmm)
+         ("M-s m" . counsel-unicode-char)
+         ("M-s c l" . counsel-locate)
+         ("M-s c o" . counsel-outline)
+         ("M-s c d" . counsel-dpkg)
+         ("M-s c g" . counsel-ag)
+         ("M-s c p" . counsel-list-processes)
+         ("M-s c M-y" . counsel-yank-pop))
   :config
   (defun swint-counsel-history ()
     "List command history based on major-mode."
@@ -923,8 +921,7 @@ is named like ODF with the extension turned to pdf."
             (nreverse
              (split-string (with-temp-buffer (insert-file-contents (file-truename "~/.bash_history"))
                                              (buffer-string))
-                           "\n"
-                           t)))
+                           "\n" t)))
       (when (and collection (> (length collection) 0)
                  (setq val (if (= 1 (length collection)) (car collection)
                              (ivy-read (format "Bash history:") collection))))

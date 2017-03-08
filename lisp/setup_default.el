@@ -30,6 +30,8 @@
 (use-package hl-line
   :config
   (global-hl-line-mode t))
+;; Enable all disabled commands.
+(setq disabled-command-function nil)
 ;; (setq debug-on-error t)
 ;; ==================DEFAULT====================
 ;;; 快捷键

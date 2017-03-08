@@ -169,6 +169,7 @@
 (require 'setup_yasnippet)
 (require 'setup_dict)
 (require 'setup_w3m)
+(require 'setup_web)
 (require 'setup_wicd)
 (require 'setup_windows)
 (require 'setup_completion)

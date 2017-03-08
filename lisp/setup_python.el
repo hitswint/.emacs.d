@@ -3,7 +3,6 @@
 (use-package python
   ;; Enabled in modes.
   :defer t
-  :commands python-mode
   :mode ("\\.py\\'" . python-mode))
 ;; =================python-mode================
 ;;; elpy

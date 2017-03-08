@@ -672,6 +672,11 @@ depending on the last command issued."
   (add-hook 'c++-mode-hook 'outline-minor-mode)
   (add-hook 'asm-mode-hook 'outline-minor-mode)
   (add-hook 'arduino-mode-hook 'outline-minor-mode)
+  (add-hook 'web-mode-hook 'outline-minor-mode)
+  (add-hook 'html-mode-hook 'outline-minor-mode)
+  (add-hook 'js-mode-hook 'outline-minor-mode)
+  (add-hook 'js2-mode-hook 'outline-minor-mode)
+  (add-hook 'css-mode-hook 'outline-minor-mode)
   (add-hook 'lisp-interaction-mode-hook
             (lambda () (outline-minor-mode -1)))
   ;; 会覆盖掉M-o设置字体的快捷键，使用ESC o。

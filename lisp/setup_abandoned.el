@@ -232,7 +232,6 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
                "~/.emacs.d/matlab-emacs/matlab-emacs")
   (require 'matlab-load)
   (autoload 'matlab-mode "matlab" "Enter MATLAB mode." t)
-  (setq auto-mode-alist (cons '("\\.m\\'" . matlab-mode) auto-mode-alist))
   (autoload 'matlab-shell "matlab" "Interactive MATLAB mode." t)
   (setq matlab-indent-function-body t)    ; if you want function bodies indented
   (setq matlab-verify-on-save-flag nil)   ; turn off auto-verify on save

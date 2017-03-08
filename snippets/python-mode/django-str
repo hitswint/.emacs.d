@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# contributor: starenka starenka0@gmail.com
+# name: django-str
+# key: str-django
+# group: django
+# --
+
+_(u\'${str}\')$0

@@ -3,16 +3,14 @@
 (use-package cc-mode
   ;; Enabled in modes.
   :defer t
-  :commands (c-mode c++-mode)
-  :init
-  (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-mode))
-  (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-mode))
-  (add-to-list 'auto-mode-alist '("\\.[ch]\\'" . c-mode))
-  (add-to-list 'auto-mode-alist '("\\.y\\(acc\\)?\\'" . c-mode))
-  (add-to-list 'auto-mode-alist '("\\.lex\\'" . c-mode))
-  (add-to-list 'auto-mode-alist '("\\.i\\'" . c-mode))
-  (add-to-list 'auto-mode-alist '("\\.ii\\'" . c++-mode))
+  :mode (("\\.\\(cc\\|hh\\)\\'" . c++-mode)
+         ("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode)
+         ("\\.\\(CC?\\|HH?\\)\\'" . c++-mode)
+         ("\\.[ch]\\'" . c-mode)
+         ("\\.y\\(acc\\)?\\'" . c-mode)
+         ("\\.lex\\'" . c-mode)
+         ("\\.i\\'" . c-mode)
+         ("\\.ii\\'" . c++-mode))
   :config
   (defun c-compile-current-file ()
     (interactive)
@@ -146,44 +144,45 @@
 ;; ===================semantic==================
 ;;; helm-gtags
 ;; ==================helm-gtags=================
-;; helm-man-woman: C-x c m
-;; helm-semantic-or-imenu: C-x c i
 (use-package helm-gtags
   ;; Enabled in modes.
   :defer t
   :commands helm-gtags-mode
   :init
-  (dolist (hook '(;; dired-mode-hook
-                  ;; eshell-mode-hook
+  (dolist (hook '(dired-mode-hook
+                  eshell-mode-hook
                   c-mode-hook
                   c++-mode-hook
-                  asm-mode-hook))
+                  asm-mode-hook
+                  octave-mode-hook
+                  java-mode-hook
+                  LaTeX-mode-hook
+                  python-mode-hook
+                  js-mode-hook
+                  js2-mode-hook
+                  emacs-lisp-mode-hook
+                  sh-mode-hook))
     (add-hook hook 'helm-gtags-mode))
   :config
   (setq helm-gtags-ignore-case t
         helm-gtags-auto-update t
         helm-gtags-use-input-at-cursor t
         helm-gtags-pulse-at-cursor t
-        helm-gtags-prefix-key "\C-c"
-        helm-gtags-suggested-key-mapping t)
-  (define-key helm-gtags-mode-map (kbd "C-c C-,") 'helm-gtags-dwim)
-  (define-key helm-gtags-mode-map (kbd "C-c C-.") 'helm-gtags-pop-stack)
-  (define-key helm-gtags-mode-map (kbd "C-c C-/") 'helm-gtags-select)
-  (define-key helm-gtags-mode-map (kbd "C-c C-M-/") 'helm-gtags-tags-in-this-function)
-  (smartrep-define-key helm-gtags-mode-map "C-c"
-    '(("," . helm-gtags-previous-history)
-      ("." . helm-gtags-next-history)
-      ("/" . helm-gtags-show-stack)))
-  (define-key helm-gtags-mode-map (kbd "M-.") nil))
+        helm-gtags-prefix-key "\M-s")
+  (smartrep-define-key helm-gtags-mode-map "M-s"
+    '(("," . helm-gtags-dwim)
+      ("." . helm-gtags-pop-stack)
+      ("/" . helm-gtags-select)
+      ("C-," . helm-gtags-previous-history)
+      ("C-." . helm-gtags-next-history)
+      ("C-/" . helm-gtags-show-stack))))
 ;; ==================helm-gtags=================
 ;;; arduino
 ;; ===================arduino===================
 (use-package arduino-mode
   ;; Enabled in modes.
   :defer t
-  :commands arduino-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.pde\\'" . arduino-mode))
-  (add-to-list 'auto-mode-alist '("\\.ino\\'" . arduino-mode)))
+  :mode (("\\.pde\\'" . arduino-mode)
+         ("\\.ino\\'" . arduino-mode)))
 ;; ===================arduino===================
 (provide 'setup_ccmode)

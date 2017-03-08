@@ -19,6 +19,7 @@
   (global-set-key (kbd "C-x F") 'swint-helm-locate)
   (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-x c d") 'helm-apt)
+  (global-set-key (kbd "C-x y") 'helm-resume)
 ;;;; helm-file-buffer
   ;; ============helm-file-buffer===============
   (defun swint-helm-file-buffers-list--init/curr-persp ()

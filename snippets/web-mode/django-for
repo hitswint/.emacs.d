@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# contributor: David Miller <david@deadpansincerity.com>
+# group: django
+# name : django-for
+# key : for-django
+# --
+{% for ${1:item} in ${2:object} %}
+   $0
+{% endfor %}

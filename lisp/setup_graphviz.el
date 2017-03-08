@@ -3,9 +3,7 @@
 (use-package graphviz-dot-mode
   ;; Enabled in modes.
   :defer t
-  :commands graphviz-dot-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
+  :mode ("\\.dot\\'" . graphviz-dot-mode)
   :config
   (when is-win
     ;; 注意：路径/bin 后面一定要有那个分号;，不用将路径加到环境变量中。

@@ -1,0 +1,7 @@
+# -*- coding: utf-8; mode: snippet -*-
+# key: url-django
+# name: django-url
+# group: django
+# contributor: MyFreeWeb
+# --
+(r'${1:^page/$}', '${2:myview}'),

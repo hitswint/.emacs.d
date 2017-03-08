@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# contributor: David Miller <david@deadpansincerity.com>
+# key : bn-django
+# name : django-bn
+# group: django
+# --
+blank=True, null=True$0

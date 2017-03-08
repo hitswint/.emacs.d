@@ -3,9 +3,7 @@
 (use-package octave
   ;; Enabled in modes.
   :defer t
-  :commands octave-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
+  :mode ("\\.m$" . octave-mode)
   :config
   ;; (setenv "PATH" (concat (getenv "PATH") "c:/Octave/Octave3.6.4_gcc4.6.2/bin/"))
   ;; (setq exec-path (append exec-path '("c:/Octave/Octave3.6.4_gcc4.6.2/bin/")))

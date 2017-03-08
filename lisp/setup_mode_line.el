@@ -79,7 +79,8 @@
     (emacs-lisp-mode . "El")
     (python-mode . "Py")
     (inferior-octave-mode . "Ic")
-    (lisp-interaction-mode . "Li"))
+    (lisp-interaction-mode . "Li")
+    (js2-mode . "js2"))
   "Alist for `clean-mode-line'.
 When you add a new element to the alist, keep in mind that you
 must pass the correct minor/major mode symbol and a string you
