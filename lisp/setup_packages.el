@@ -244,32 +244,19 @@
 (use-package drag-stuff
   ;; Enabled in modes.
   :defer t
-  :commands drag-stuff-mode
-  :init
-  (dolist (hook '(dired-mode-hook
-                  octave-mode-hook
-                  org-mode-hook
-                  gnuplot-mode-hook
-                  emacs-lisp-mode-hook
-                  c-mode-hook
-                  c++-mode-hook
-                  asm-mode-hook
-                  python-mode-hook
-                  graphviz-dot-mode-hook
-                  LaTeX-mode-hook))
-    (add-hook hook 'drag-stuff-mode))
+  :bind (("M-P" . drag-stuff-up)
+         ("M-N" . drag-stuff-down)
+         ("M-B" . drag-stuff-left)
+         ("M-F" . drag-stuff-right))
   :config
-  ;; 重新定义drag-stuff.el文件中的drag-stuff-define-keys函数，取消关于 M+方向键 的快捷键定义。
+  (drag-stuff-global-mode t)
+  ;; 重新定义drag-stuff-define-keys函数，取消 M+方向键 的快捷键。
   (defun drag-stuff-define-keys ()
     "Defines keys for `drag-stuff-mode'."
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'up) nil)
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'down) nil)
-    (define-key drag-stuff-mode-map (drag-stuff--kbd 'right) nil)
-    (define-key drag-stuff-mode-map (drag-stuff--kbd 'left) nil))
-  (define-key drag-stuff-mode-map (kbd "M-P") 'drag-stuff-up)
-  (define-key drag-stuff-mode-map (kbd "M-N") 'drag-stuff-down)
-  (define-key drag-stuff-mode-map (kbd "M-B") 'drag-stuff-left)
-  (define-key drag-stuff-mode-map (kbd "M-F") 'drag-stuff-right))
+    (define-key drag-stuff-mode-map (drag-stuff--kbd 'left) nil)
+    (define-key drag-stuff-mode-map (drag-stuff--kbd 'right) nil)))
 ;; ===================drag stuff===================
 ;;; popup-kill-ring
 ;; ================popup-kill-ring=================
