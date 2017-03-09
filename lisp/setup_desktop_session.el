@@ -68,7 +68,7 @@
   (add-to-list 'desktop-minor-mode-table '(diff-hl-mode nil))
   (add-to-list 'desktop-minor-mode-table '(diff-hl-flydiff-mode nil))
   (add-to-list 'desktop-minor-mode-table '(diff-hl-dired-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(interleave nil))
+  (add-to-list 'desktop-minor-mode-table '(interleave-mode nil))
   (add-to-list 'desktop-minor-mode-table '(interleave-pdf-mode nil)))
 ;; ===================desktop====================
 ;;; saveplace

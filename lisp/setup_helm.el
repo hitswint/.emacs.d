@@ -623,7 +623,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
         bibtex-completion-bibliography "~/.bib/ALL.bib"
         bibtex-completion-notes-path (concat (helm-get-firefox-user-init-dir)
                                              "zotero/storage/TKM9D893/notes.org"))
-  ;; 通过pdf文件找到对应entry，供swint-interleave--open-notes-file-for-pdf使用。
+  ;; 通过pdf文件找到对应entry，供swint-interleave-open-notes-file-for-pdf使用。
   (defun bibtex-completion-get-entry-for-pdf (pdf-file)
     "Find entry for pdf-file in .bib file."
     (with-temp-buffer

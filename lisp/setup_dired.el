@@ -58,7 +58,7 @@
                                                        (revert-buffer)))
                (define-key dired-mode-map (kbd "l") 'swint-org-annotate-file-current)
                (define-key dired-mode-map (kbd "L") 'org-annotate-file-current)
-               (define-key dired-mode-map (kbd "C-c l") 'swint-dired-open-interleave-notes)
+               (define-key dired-mode-map (kbd "C-c l") 'swint-dired-interleave)
                (smartrep-define-key dired-mode-map "C-c"
                  '(("p" . dired-k--previous-highlighted-file)
                    ("n" . dired-k--next-highlighted-file)))

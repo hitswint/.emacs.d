@@ -165,13 +165,13 @@
   (setq org-image-actual-width nil)
   (add-hook 'org-mode-hook 'iimage-mode)
   (add-hook 'org-mode-hook 'org-display-inline-images)
-  (global-set-key (kbd "C-c C-x C-v") 'iimage-mode)
-  (define-key org-mode-map (kbd "C-c C-x C-v") '(lambda ()
-                                                  (interactive)
-                                                  (if (iimage-mode)
-                                                      (turn-off-iimage-mode)
-                                                    (turn-on-iimage-mode))
-                                                  (org-toggle-inline-images)))
+  (global-set-key (kbd "C-x C-M-v") 'iimage-mode)
+  (define-key org-mode-map (kbd "C-x C-M-v") '(lambda ()
+                                                (interactive)
+                                                (if (iimage-mode)
+                                                    (turn-off-iimage-mode)
+                                                  (turn-on-iimage-mode))
+                                                (org-toggle-inline-images)))
   ;; 图片显示受到两个因素的影响，只有iimage-mode和org-display-inline-images都打开才能显示图片。
   (defun swint-insert-screenshot (&optional arg)
     "Take a screenshot into a unique-named file in the current buffer file
@@ -769,11 +769,11 @@ depending on the last command issued."
 (use-package interleave
   ;; Enabled at commands.
   :defer t
-  :commands swint-interleave--open-notes-file-for-pdf
-  :bind ("C-c L" . interleave)
+  :commands (swint-dired-interleave swint-interleave-open-notes-file-for-pdf)
   :init
   (add-hook 'org-mode-hook '(lambda ()
-                              (define-key org-mode-map (kbd "C-c l") 'swint-interleave)))
+                              (define-key org-mode-map (kbd "C-c l") 'swint-interleave)
+                              (define-key org-mode-map (kbd "C-c L") 'interleave-mode)))
   ;; 在加载interleave包之前必须先加载pdf-tools。
   (defun swint-interleave ()
     (interactive)
@@ -792,18 +792,21 @@ depending on the last command issued."
             (org-set-property "INTERLEAVE_PDF" annotated-file))
            (pdf-file
             (org-set-property "INTERLEAVE_PDF" (file-relative-name pdf-file))))))
-      (call-interactively 'interleave)
+      (call-interactively 'interleave-mode)
       (if note-page
           (progn
             (interleave--go-to-page-note note-page)
-            (interleave--sync-pdf-page-current)))))
-  (defun swint-dired-open-interleave-notes ()
-    (interactive)
-    (let ((pdf-file-interleaved (concat "~/org/interleave_notes/" (file-name-base (dired-get-file-for-visit)) ".org")))
-      (if (file-exists-p pdf-file-interleaved)
-          (find-file pdf-file-interleaved))))
+            (interleave-sync-pdf-page-current)))))
   :config
-  (defun swint-interleave--open-notes-file-for-pdf ()
+  (defun swint-dired-interleave ()
+    (interactive)
+    (let* ((pdf-file (dired-get-file-for-visit))
+           (note-file (concat "~/org/interleave_notes/" (file-name-base pdf-file) ".org")))
+      (if (file-exists-p note-file)
+          (find-file note-file)
+        (find-file pdf-file)
+        (interleave-open-notes-file-for-pdf))))
+  (defun swint-interleave-open-notes-file-for-pdf ()
     (interactive)
     (if (file-in-directory-p (buffer-file-name) (helm-get-firefox-user-init-dir))
         (when (or (derived-mode-p 'doc-view-mode)
@@ -817,20 +820,20 @@ depending on the last command issued."
                        (swint-interleave)
                        (interleave-add-note))
               (message "Current pdf file is not in bibliography."))))
-      (interleave--open-notes-file-for-pdf)))
-  (smartrep-define-key interleave-map "C-c"
-    '(("c" . interleave--sync-pdf-page-current)
-      ("p" . interleave--sync-pdf-page-previous)
-      ("n" . interleave--sync-pdf-page-next)
-      ("l" . interleave)))
+      (interleave-open-notes-file-for-pdf)))
+  (smartrep-define-key interleave-mode-map "C-c"
+    '(("c" . interleave-sync-pdf-page-current)
+      ("p" . interleave-sync-pdf-page-previous)
+      ("n" . interleave-sync-pdf-page-next)
+      ("l" . interleave-mode)))
   (smartrep-define-key interleave-pdf-mode-map "C-c"
-    '(("c" . interleave--sync-pdf-page-current)
-      ("p" . interleave--sync-pdf-page-previous)
-      ("n" . interleave--sync-pdf-page-next)
+    '(("c" . interleave-sync-pdf-page-current)
+      ("p" . interleave-sync-pdf-page-previous)
+      ("n" . interleave-sync-pdf-page-next)
       ("l" . interleave-add-note)))
-  (define-key interleave-map (kbd "M-.") nil)
-  (define-key interleave-map (kbd "M-p") nil)
-  (define-key interleave-map (kbd "M-n") nil)
+  (define-key interleave-mode-map (kbd "M-.") nil)
+  (define-key interleave-mode-map (kbd "M-p") nil)
+  (define-key interleave-mode-map (kbd "M-n") nil)
   (define-key interleave-pdf-mode-map (kbd "M-.") nil)
   (define-key interleave-pdf-mode-map (kbd "M-p") nil)
   (define-key interleave-pdf-mode-map (kbd "M-n") nil)

@@ -14,7 +14,12 @@
   :config
   (setq web-mode-engines-alist
         '(("django"    . "\\.html\\'")
-          ("django"  . "\\.djhtml\\."))))
+          ("django"  . "\\.djhtml\\.")))
+  (smartrep-define-key web-mode-map "C-c"
+    '(("n" . web-mode-element-next)
+      ("p" . web-mode-element-previous)
+      ("u" . web-mode-element-parent)
+      ("d" . web-mode-element-child))))
 ;; ====================web=====================
 ;;; js2-mode
 ;; =================js2-mode===================
