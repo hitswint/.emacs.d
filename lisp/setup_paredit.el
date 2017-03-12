@@ -76,27 +76,13 @@
 ;; ==================paredit=======================
 ;;; paredit-everywhere
 ;; ===============paredit-everything===============
-;; 在其他mode中使用paredit。
 (use-package paredit-everywhere
   ;; Enabled in modes.
   :defer t
   :commands paredit-everywhere-mode
   :init
-  (dolist (hook '(LaTeX-mode-hook
-                  arduino-mode-hook
-                  c++-mode-hook
-                  c-mode-hook
-                  clojure-mode-hook
-                  ess-mode-hook
-                  octave-mode-hook
-                  gnuplot-mode-hook
-                  graphviz-dot-mode-hook
-                  ledger-mode-hook
-                  org-mode-hook
-                  picolisp-mode-hook
-                  python-mode-hook
-                  lisp-interaction-mode-hook))
-    (add-hook hook 'paredit-everywhere-mode))
+  (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
+  (add-hook 'text-mode-hook 'paredit-everywhere-mode)
   :config
   (define-key paredit-everywhere-mode-map (kbd "M-s") nil)
   (define-key paredit-everywhere-mode-map (kbd "M-r") nil)

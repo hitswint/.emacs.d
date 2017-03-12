@@ -147,23 +147,28 @@
 (use-package helm-gtags
   ;; Enabled in modes.
   :defer t
-  :commands helm-gtags-mode
-  :init
-  (dolist (hook '(dired-mode-hook
-                  eshell-mode-hook
-                  c-mode-hook
-                  c++-mode-hook
-                  asm-mode-hook
-                  octave-mode-hook
-                  java-mode-hook
-                  LaTeX-mode-hook
-                  python-mode-hook
-                  js-mode-hook
-                  js2-mode-hook
-                  emacs-lisp-mode-hook
-                  sh-mode-hook))
-    (add-hook hook 'helm-gtags-mode))
+  :bind (("M-s ," . swint-helm-gtags-dwim)
+         ("M-s ." . swint-helm-gtags-pop-stack)
+         ("M-s /" . swint-helm-gtags-select))
   :config
+  (defun swint-helm-gtags-dwim ()
+    (interactive)
+    (unless helm-gtags-mode
+      (helm-gtags-mode t))
+    (add-hook (derived-mode-hook-name major-mode) 'helm-gtags-mode)
+    (call-interactively 'helm-gtags-dwim))
+  (defun swint-helm-gtags-pop-stack ()
+    (interactive)
+    (unless helm-gtags-mode
+      (helm-gtags-mode t))
+    (add-hook (derived-mode-hook-name major-mode) 'helm-gtags-mode)
+    (call-interactively 'helm-gtags-pop-stack))
+  (defun swint-helm-gtags-select ()
+    (interactive)
+    (unless helm-gtags-mode
+      (helm-gtags-mode t))
+    (add-hook (derived-mode-hook-name major-mode) 'helm-gtags-mode)
+    (call-interactively 'helm-gtags-select))
   (setq helm-gtags-ignore-case t
         helm-gtags-auto-update t
         helm-gtags-use-input-at-cursor t

@@ -38,7 +38,7 @@
   ;; 使用pyim-fuzzy-pinyin-alist设置模糊音。
   ;; 设置选词框显示方式popup/pos-tip/nil。
   (setq pyim-page-tooltip 'pos-tip)
-  ;; lin下使用gtk绘制选词框，通过修改~/.emacs.d/gtkrc改变pos-tip字体。
+  ;; Lin下使用gtk绘制选词框，通过修改~/.emacs.d/gtkrc改变pos-tip字体。
   (when is-lin
     (setq x-gtk-use-system-tooltips t))
   ;; 设置词条获取方式。

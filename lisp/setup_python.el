@@ -17,6 +17,8 @@
          ("C-x C-M-#" . pyvenv-deactivate))
   :config
   (elpy-enable)
+  (add-hook 'python-mode-hook '(lambda ()
+				 (add-hook 'before-save-hook 'elpy-format-code nil t)))
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (define-key elpy-mode-map (kbd "M-.") nil)
   (define-key elpy-mode-map (kbd "C-c C-c") '(lambda () (interactive) (elpy-use-ipython)

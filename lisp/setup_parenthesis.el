@@ -105,32 +105,17 @@
   :defer t
   :commands rainbow-delimiters-mode
   :init
-  ;; (global-rainbow-delimiters-mode)
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'text-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'dired-mode-hook 'rainbow-delimiters-mode)
   ;; 在org-mode中打开rainbow会让org本身的highlight失效。
-  (dolist (hook '(;; org-mode-hook
-                  dired-mode-hook
-                  octave-mode-hook
-                  gnuplot-mode-hook
-                  emacs-lisp-mode-hook
-                  c-mode-hook
-                  graphviz-dot-mode-hook))
-    (add-hook hook 'rainbow-delimiters-mode)))
+  (add-hook 'org-mode-hook 'rainbow-delimiters-mode-disable))
 ;; ==============rainbow-delimiters=============
 ;;; highlight-parentheses
 ;; ============highlight-parentheses============
 (use-package highlight-parentheses
-  ;; Enabled in modes.
-  :defer t
-  :commands highlight-parentheses-mode
-  :init
-  (dolist (hook '(org-mode-hook
-                  dired-mode-hook
-                  octave-mode-hook
-                  gnuplot-mode-hook
-                  emacs-lisp-mode-hook
-                  c-mode-hook
-                  graphviz-dot-mode-hook))
-    (add-hook hook 'highlight-parentheses-mode))
+  ;; Enabled at idle.
+  :defer 2
   :config
   (set-face-attribute 'hl-paren-face nil
                       :weight 'bold :strike-through t)
@@ -150,6 +135,7 @@
         (dotimes (i 2) ;; Front and back.
           (push (make-overlay 0 0 nil t) hl-paren-overlays)
           (overlay-put (car hl-paren-overlays) 'font-lock-face attributes)))
-      (setq hl-paren-overlays hl-paren-overlays))))
+      (setq hl-paren-overlays hl-paren-overlays)))
+  (global-highlight-parentheses-mode))
 ;; ============highlight-parentheses============
 (provide 'setup_parenthesis)

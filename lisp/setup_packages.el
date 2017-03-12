@@ -300,10 +300,9 @@
   ;; Enabled at idle.
   :defer 2
   :config
-  (global-hungry-delete-mode)
-  (dolist (hook '(wdired-mode-hook ein:notebook-mode-hook))
-    (add-hook hook '(lambda ()
-                      (setq hungry-delete-mode nil)))))
+  (add-to-list 'hungry-delete-except-modes 'wdired-mode-hook)
+  (add-to-list 'hungry-delete-except-modes 'ein:notebook-mode-hook)
+  (global-hungry-delete-mode))
 ;; ===================hungry-delete================
 ;;; fcitx
 ;; ======================fcitx=====================
@@ -397,8 +396,6 @@ Usually this is `describe-prefix-bindings'."
   :config
   (pdf-tools-install)
   (setq pdf-outline-imenu-use-flat-menus t)
-  (add-hook 'pdf-view-mode-hook 'pdf-annot-minor-mode)
-  (add-hook 'pdf-view-mode-hook 'pdf-outline-minor-mode)
   ;; pdf-view-auto-slice-minor-mode 翻页自动切边。
   ;; (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
   ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。
@@ -693,26 +690,24 @@ is named like ODF with the extension turned to pdf."
   :defer t
   :after easy-kill
   :config
-  ;; (add-to-list 'after-init-hook 'clipmon-mode-start)
-  ;; (add-to-list 'after-init-hook 'clipmon-persist)
   (clipmon-mode-start)
   (clipmon-persist)
-  (defun clipmon--clipboard-contents ()
-    "Get current contents of system clipboard - returns a string, or nil."
-    ;; when the OS is first started x-get-selection-value will throw (error "No
-    ;; selection is available"), so ignore errors.
-    ;; note: (x-get-selection 'CLIPBOARD) doesn't work on Windows.
-    (if (eq window-system 'w32)
-        (ignore-errors (x-get-selection-value)) ; can be nil
-      ;; Don't add contents to kill-ring if emacs already owns this item,
-      ;; As emacs will handle doing that.
-      (let ((v (if (x-selection-owner-p 'CLIPBOARD)
-                   nil
-                 ;; 默认的'STRING导致中文乱码，改为'UTF8_STRING。
-                 (ignore-errors (x-get-selection 'CLIPBOARD 'UTF8_STRING)))))
-        ;; Need to remove properties or selection won't work.
-        (if (null v) nil
-          (substring-no-properties v))))))
+  (defun clipmon--get-selection ()
+    "Get the clipboard contents"
+    ;; Note: When the OS is first started these functions will throw
+    ;; (error "No selection is available"), so need to ignore errors.
+    (cond ((fboundp 'gui-get-selection) ; emacs25
+                                        ; better to (setq selection-coding-system 'utf-8) to handle chinese,
+                                        ; which is the default value for gui-get-selection etc
+                                        ; because windows needs STRING. same below.
+                                        ; (ignore-errors (gui-get-selection 'CLIPBOARD 'UTF8_STRING)))
+           (ignore-errors (gui-get-selection 'CLIPBOARD))) ; for windows needs STRING
+          ((eq window-system 'w32) ; windows/emacs24
+           ;; Note: (x-get-selection 'CLIPBOARD) doesn't work on Windows.
+           (ignore-errors (x-get-selection-value))) ; can be nil
+          (t ; linux+osx/emacs24
+                                        ; (ignore-errors (x-get-selection 'CLIPBOARD 'UTF8_STRING)))))
+           (ignore-errors (x-get-selection 'CLIPBOARD 'UTF8_STRING))))))
 ;; ====================clipmon=====================
 ;;; volatile-highlights
 ;; ==============volatile-highlights===============
