@@ -659,27 +659,11 @@ depending on the last command issued."
   :defer t
   :commands outline-minor-mode
   :init
+  (add-hook 'prog-mode-hook 'outline-minor-mode)
   (add-hook 'TeX-mode-hook 'outline-minor-mode)
-  (add-hook 'emacs-lisp-mode-hook 'outline-minor-mode)
-  (add-hook 'picolisp-mode-hook 'outline-minor-mode)
-  (add-hook 'clojure-mode-hook 'outline-minor-mode)
-  (add-hook 'ess-mode-hook 'outline-minor-mode)
-  (add-hook 'ledger-mode-hook 'outline-minor-mode)
   (add-hook 'message-mode-hook 'outline-minor-mode)
-  (add-hook 'octave-mode-hook 'outline-minor-mode)
-  (add-hook 'python-mode-hook 'outline-minor-mode)
-  (add-hook 'c-mode-hook 'outline-minor-mode)
-  (add-hook 'c++-mode-hook 'outline-minor-mode)
-  (add-hook 'asm-mode-hook 'outline-minor-mode)
-  (add-hook 'arduino-mode-hook 'outline-minor-mode)
-  (add-hook 'web-mode-hook 'outline-minor-mode)
-  (add-hook 'html-mode-hook 'outline-minor-mode)
-  (add-hook 'js-mode-hook 'outline-minor-mode)
-  (add-hook 'js2-mode-hook 'outline-minor-mode)
-  (add-hook 'css-mode-hook 'outline-minor-mode)
   (add-hook 'lisp-interaction-mode-hook
             (lambda () (outline-minor-mode -1)))
-  ;; 会覆盖掉M-o设置字体的快捷键，使用ESC o。
   (defvar outline-minor-mode-prefix "\M-so")
   :config
   (add-hook 'outline-minor-mode-hook

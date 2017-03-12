@@ -6,7 +6,7 @@
   :config
   (cond
    (is-lin (setq cfs--current-profile-name "profile-lin"))
-   (is-win (setq cfs--current-profile-name "profile-win")) ;win下需要安装libreoffice。
+   (is-win (setq cfs--current-profile-name "profile-win")) ;Win下需要安装libreoffice。
    (is-mac (setq cfs--current-profile-name "profile-mac")))
   ;; Emacs启动时自动设定fontsize。
   (defun swint-cfs-set-font-with-saved-size ()
