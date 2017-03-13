@@ -19,7 +19,8 @@
     '(("n" . web-mode-element-next)
       ("p" . web-mode-element-previous)
       ("u" . web-mode-element-parent)
-      ("d" . web-mode-element-child))))
+      ("d" . web-mode-element-child)
+      ("`" . web-mode-fold-or-unfold))))
 ;; ====================web=====================
 ;;; js2-mode
 ;; =================js2-mode===================
