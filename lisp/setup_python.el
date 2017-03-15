@@ -19,9 +19,11 @@
   (elpy-enable)
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (define-key elpy-mode-map (kbd "M-.") nil)
-  (define-key elpy-mode-map (kbd "C-c C-c") '(lambda () (interactive) (elpy-use-ipython)
-                                               (let ((python-shell-interpreter-args "--simple-prompt --pylab"))
-                                                 (call-interactively 'elpy-shell-send-region-or-buffer))))
+  (define-key elpy-mode-map (kbd "C-c C-c") '(lambda (arg) (interactive "P")
+                                               (if arg (elpy-use-cpython)
+                                                 (elpy-use-ipython)
+                                                 (setq python-shell-interpreter-args "--simple-prompt --pylab"))
+                                               (call-interactively 'elpy-shell-send-region-or-buffer)))
   (define-key elpy-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key elpy-mode-map (kbd "C-c C-.") 'pop-tag-mark)
   (define-key elpy-mode-map (kbd "C-c C-/") 'elpy-doc)
@@ -37,15 +39,14 @@
     (unless pyvenv-virtual-env
       (call-interactively 'pyvenv-workon))
     (elpy-use-ipython)
-    (setq python-shell-interpreter-args "--simple-prompt --pylab")
-    (call-interactively 'elpy-shell-switch-to-shell))
+    (let ((python-shell-interpreter-args "--simple-prompt --pylab"))
+      (elpy-shell-switch-to-shell)))
   (defun swint-cpython ()
     (interactive)
     (unless pyvenv-virtual-env
       (call-interactively 'pyvenv-workon))
     (elpy-use-cpython)
-    (setq python-shell-interpreter-args "-i")
-    (call-interactively 'elpy-shell-switch-to-shell)))
+    (elpy-shell-switch-to-shell)))
 ;; ====================elpy====================
 ;;; emacs-ipython-notebook
 ;; ====================ein=====================
@@ -57,7 +58,6 @@
   ;; (setq ein:use-auto-complete t)
   ;; Enable "superpack" (a little bit hacky improvements).
   (setq ein:use-auto-complete-superpack t)
-  ;; (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
   (setq ein:use-smartrep t)
   (defun swint-ein:notebooklist-open ()
     (interactive)
@@ -65,10 +65,12 @@
       (call-interactively 'pyvenv-workon))
     (unless (get-process "IPYNB")
       (start-process-shell-command
-       "IPYNB" "*IPYNB*" "jupyter notebook --no-browser"))
+       "IPYNB" "*IPYNB*" (concat "jupyter notebook --no-browser --notebook-dir=" (expand-file-name "~/Documents/Python/Jupyter"))))
     (ein:notebooklist-open))
   (use-package ein-notebook
     :config
+    (add-hook 'ein:notebook-mode-hook '(lambda ()
+                                         (setq company-idle-delay nil)))
     (define-key ein:notebook-mode-map (kbd "M-,") nil)
     (define-key ein:notebook-mode-map (kbd "M-.") nil)
     (define-key ein:notebook-mode-map (kbd "C-c C-,") 'ein:pytools-jump-to-source-command)
@@ -78,6 +80,7 @@
   :defer t
   :bind ("M-s #" . ein:connect-to-notebook-buffer)
   :config
+  ;; (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
   ;; 在ein:connect中关闭company的自动补全。
   (add-hook 'ein:connect-mode-hook '(lambda ()
                                       (setq company-idle-delay nil)))

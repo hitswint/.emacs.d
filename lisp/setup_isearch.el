@@ -47,8 +47,8 @@
   (defun swint-pinyin-search--pinyin-to-regexp (string)
     "Wrap for Pinyin searching."
     (let ((swint-regexp ""))
-      (if (or (string-match "[iuv]" string) ;当字符串中有iuv时，不转换string
-              (string-empty-p (pinyin-search--pinyin-to-regexp string))) ;当搜索中文或符号时，不转换string
+      (if (or (string-match "[iuv]" string) ;当字符串中有iuv时，不转换string。
+              (string-empty-p (pinyin-search--pinyin-to-regexp string))) ;当搜索中文或符号时，不转换string。
           (setq swint-regexp string)
         (setq swint-regexp (concat string "\\|" (pinyin-search--pinyin-to-regexp string))))
       swint-regexp))
