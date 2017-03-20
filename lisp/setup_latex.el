@@ -122,12 +122,10 @@
   :defer t
   :commands (swint-zotelo-update-database zotelo--locate-bibliography-files zotelo-set-collection)
   :init
-  (add-hook 'LaTeX-mode-hook
-            '(lambda ()
-               (define-key LaTeX-mode-map (kbd "C-c z U") 'swint-zotelo-update-database)))
-  (add-hook 'org-mode-hook
-            '(lambda ()
-               (define-key org-mode-map (kbd "C-c z U") 'swint-zotelo-update-database)))
+  (add-hook 'LaTeX-mode-hook '(lambda ()
+                                (define-key LaTeX-mode-map (kbd "C-c z U") 'swint-zotelo-update-database)))
+  (add-hook 'org-mode-hook '(lambda ()
+                              (define-key org-mode-map (kbd "C-c z U") 'swint-zotelo-update-database)))
   :config
   ;; 使用zotero-better-bibtex自动更新bib文件，使用zotelo手动更新bib文件。
   (defun swint-zotelo-update-database ()

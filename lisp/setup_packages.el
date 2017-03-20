@@ -300,8 +300,8 @@
   ;; Enabled at idle.
   :defer 2
   :config
-  (add-to-list 'hungry-delete-except-modes 'wdired-mode-hook)
-  (add-to-list 'hungry-delete-except-modes 'ein:notebook-mode-hook)
+  (add-to-list 'hungry-delete-except-modes 'dired-mode)
+  (add-to-list 'hungry-delete-except-modes 'ein:notebook-mode)
   (global-hungry-delete-mode))
 ;; ===================hungry-delete================
 ;;; fcitx
@@ -321,6 +321,7 @@
   :defer 2
   :config
   (add-to-list 'aggressive-indent-excluded-modes 'asm-mode)
+  (add-to-list 'aggressive-indent-excluded-modes 'python-mode)
   (global-aggressive-indent-mode 1))
 ;; ================aggressive-indent===============
 ;;; clean-aindent-mode
