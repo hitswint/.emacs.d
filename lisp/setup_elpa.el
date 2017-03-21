@@ -159,6 +159,7 @@
             rich-minority
             s
             session
+	    skewer-mode
             smart-mode-line
             smartrep
             smex

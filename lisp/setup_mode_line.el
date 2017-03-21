@@ -67,7 +67,10 @@
   (add-to-list 'sml/hidden-modes " HS")
   (add-to-list 'sml/hidden-modes " HSA")
   (add-to-list 'sml/hidden-modes " ||")
-  (add-to-list 'sml/hidden-modes " Elpy"))
+  (add-to-list 'sml/hidden-modes " Elpy")
+  (add-to-list 'sml/hidden-modes " skewer")
+  (add-to-list 'sml/hidden-modes " skewer-css")
+  (add-to-list 'sml/hidden-modes " skewer-html"))
 ;; ================smart-mode-line=================
 ;;; abbrev-for-mode-line
 ;; =============abbrev-for-mode-line===============

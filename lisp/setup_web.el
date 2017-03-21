@@ -15,6 +15,18 @@
   (setq web-mode-engines-alist
         '(("django"    . "\\.html\\'")
           ("django"  . "\\.djhtml\\.")))
+  (define-key web-mode-map (kbd "C-c C-v") 'browse-url-of-buffer)
+  ;; 在web-mode下，html或嵌入js/css文件的eval实时展现。
+  (define-key web-mode-map (kbd "C-c s") '(lambda () (interactive)
+                                            (let ((skewer-declaration
+                                                   (format "<script src=\"http://localhost:%d/skewer\"></script>\n"
+                                                           httpd-port)))
+                                              (save-excursion
+                                                (goto-char (point-min))
+                                                (unless (re-search-forward skewer-declaration nil t)
+                                                  (insert skewer-declaration)))
+                                              (httpd-start)
+                                              (browse-url-of-buffer))))
   (smartrep-define-key web-mode-map "C-c"
     '(("n" . web-mode-element-next)
       ("p" . web-mode-element-previous)
@@ -28,6 +40,22 @@
   :defer t
   :mode ("\\.js\\'" . js2-mode)
   :config
-  (add-hook 'js2-mode-hook 'js2-imenu-extras-mode))
+  (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+  (define-key js2-mode-map (kbd "M-.") nil)
+  (define-key js2-mode-map (kbd "C-c C-,") 'js2-jump-to-definition)
+  ;; 在js2-mode下，run-skewer打开空白网页，eval实时展现。
+  (define-key js2-mode-map (kbd "C-c s") 'run-skewer))
 ;; =================js2-mode===================
+;;; skewer-mode
+;; ================skewer-mode=================
+(use-package skewer-mode
+  ;; Enabled in modes.
+  :defer t
+  :commands (skewer-mode skewer-css-mode skewer-html-mode)
+  :init
+  (add-hook 'js2-mode-hook 'skewer-mode)
+  (add-hook 'css-mode-hook 'skewer-css-mode)
+  (add-hook 'html-mode-hook 'skewer-html-mode)
+  (add-hook 'web-mode-hook 'skewer-html-mode))
+;; ================skewer-mode=================
 (provide 'setup_web)
