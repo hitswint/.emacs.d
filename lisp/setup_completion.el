@@ -10,6 +10,8 @@
     (interactive)
     (if (featurep 'company)
         (company-abort))
+    (unless auto-complete-mode
+      (auto-complete-mode t))
     (auto-complete))
   (setq ac-auto-start nil)
   (setq ac-use-menu-map t)
@@ -59,6 +61,8 @@
     (interactive)
     (if (featurep 'company)
         (company-abort))
+    (unless auto-complete-mode
+      (auto-complete-mode t))
     (cond
      ((equal last-command 'hippie-expand)
       (he-reset-string)

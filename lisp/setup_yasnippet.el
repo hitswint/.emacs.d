@@ -9,6 +9,8 @@
     (interactive)
     (if (featurep 'company)
         (company-abort))
+    (unless (and (boundp 'auto-complete-mode) auto-complete-mode)
+      (auto-complete-mode t))
     (unless (auto-complete '(ac-source-yasnippet))
       (yas-insert-snippet)))
   ;; (yas-initialize)

@@ -76,10 +76,8 @@
   ;; 显示两周的agenda。
   (setq org-agenda-span 14)
   ;; 设定todo的子项完成后主项自动完成。
-  (defun my-org-autodone (n-done n-not-done)
-    (let (org-log-done org-log-states)
-      (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
-  (add-hook 'org-after-todo-statistics-hook 'my-org-autodone)
+  (add-hook 'org-after-todo-statistics-hook '(lambda ()
+					       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
   ;; 设定todo关键词。
   (setq org-todo-keywords
         '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")))

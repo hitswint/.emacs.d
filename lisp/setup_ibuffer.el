@@ -21,11 +21,11 @@
     (defun ibuffer-create-saved-filter-groups-with-persp ()
       (interactive)
       (let* ((ibuffer-saved-filter-groups-without-persp
-              (remove-if '(lambda (x)
-                            (equal (car x) "Persp"))
+              (remove-if #'(lambda (x)
+                             (equal (car x) "Persp"))
                          ibuffer-saved-filter-groups))
-             (it (mapcar '(lambda (x)
-                            (list x (cons 'persp x))) (delete "i" (persp-names))))
+             (it (mapcar #'(lambda (x)
+                             (list x (cons 'persp x))) (delete "i" (persp-names))))
              (itt (push "Persp" it)))
         (setq ibuffer-saved-filter-groups
               (push itt ibuffer-saved-filter-groups-without-persp))))

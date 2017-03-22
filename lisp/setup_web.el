@@ -16,17 +16,21 @@
         '(("django"    . "\\.html\\'")
           ("django"  . "\\.djhtml\\.")))
   (define-key web-mode-map (kbd "C-c C-v") 'browse-url-of-buffer)
-  ;; 在web-mode下，html或嵌入js/css文件的eval实时展现。
-  (define-key web-mode-map (kbd "C-c s") '(lambda () (interactive)
-                                            (let ((skewer-declaration
-                                                   (format "<script src=\"http://localhost:%d/skewer\"></script>\n"
-                                                           httpd-port)))
-                                              (save-excursion
-                                                (goto-char (point-min))
-                                                (unless (re-search-forward skewer-declaration nil t)
-                                                  (insert skewer-declaration)))
-                                              (httpd-start)
-                                              (browse-url-of-buffer))))
+  ;; 在html-mode下，html或嵌入js/css文件的eval实时展现，与web-mode兼容不好。
+  (define-key html-mode-map (kbd "C-c s") 'swint-run-skewer)
+  (define-key web-mode-map (kbd "C-c s") 'swint-run-skewer)
+  (defun swint-run-skewer (&optional arg)
+    (interactive "P")
+    (let ((skewer-declaration
+           (format "<script src=\"http://localhost:%d/skewer\"></script>\n"
+                   httpd-port)))
+      (when arg (html-mode))
+      (save-excursion
+        (goto-char (point-min))
+        (unless (re-search-forward skewer-declaration nil t)
+          (insert skewer-declaration)))
+      (httpd-start)
+      (browse-url-of-buffer)))
   (smartrep-define-key web-mode-map "C-c"
     '(("n" . web-mode-element-next)
       ("p" . web-mode-element-previous)
