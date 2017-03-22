@@ -1,5 +1,5 @@
 ;;; web-mode
-;; ====================web=====================
+;; ==================web-mode==================
 (use-package web-mode
   ;; Enabled in modes.
   :defer t
@@ -15,10 +15,24 @@
   (setq web-mode-engines-alist
         '(("django"    . "\\.html\\'")
           ("django"  . "\\.djhtml\\.")))
-  (define-key web-mode-map (kbd "C-c C-v") 'browse-url-of-buffer)
-  ;; 在html-mode下，html或嵌入js/css文件的eval实时展现，与web-mode兼容不好。
-  (define-key html-mode-map (kbd "C-c s") 'swint-run-skewer)
+  ;; skewer与web-mode兼容性不好。
   (define-key web-mode-map (kbd "C-c s") 'swint-run-skewer)
+  (define-key web-mode-map (kbd "C-c C-v") 'browse-url-of-buffer)
+  (smartrep-define-key web-mode-map "C-c"
+    '(("n" . web-mode-element-next)
+      ("p" . web-mode-element-previous)
+      ("u" . web-mode-element-parent)
+      ("d" . web-mode-element-child))))
+;; ==================web-mode==================
+;;; html-mode
+;; =================html-mode==================
+(use-package sgml-mode
+  ;; Enabled at commands.
+  :defer t
+  :commands swint-run-skewer
+  :config
+  (define-key html-mode-map (kbd "C-c s") 'swint-run-skewer)
+  ;; 在html-mode下，使用skewer实现html/js/css代码的实时eval。
   (defun swint-run-skewer (&optional arg)
     (interactive "P")
     (let ((skewer-declaration
@@ -30,13 +44,8 @@
         (unless (re-search-forward skewer-declaration nil t)
           (insert skewer-declaration)))
       (httpd-start)
-      (browse-url-of-buffer)))
-  (smartrep-define-key web-mode-map "C-c"
-    '(("n" . web-mode-element-next)
-      ("p" . web-mode-element-previous)
-      ("u" . web-mode-element-parent)
-      ("d" . web-mode-element-child))))
-;; ====================web=====================
+      (browse-url-of-buffer))))
+;; =================html-mode==================
 ;;; js2-mode
 ;; =================js2-mode===================
 (use-package js2-mode
