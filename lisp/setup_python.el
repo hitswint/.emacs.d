@@ -59,18 +59,22 @@
   ;; Enable "superpack" (a little bit hacky improvements).
   (setq ein:use-auto-complete-superpack t)
   (setq ein:use-smartrep t)
+  ;; ein:url-or-port可取port(8888)或url(http://127.0.0.1:8888)。
+  ;; http://127.0.0.1:8888与http://localhost:8888指向相同。
   (defun swint-ein:notebooklist-open ()
     (interactive)
-    (unless (and (boundp 'pyvenv-virtual-env) pyvenv-virtual-env)
-      (call-interactively 'pyvenv-workon))
-    (unless (get-process "IPYNB")
-      (start-process-shell-command
-       "IPYNB" "*IPYNB*" (concat "jupyter notebook --no-browser --notebook-dir=" (expand-file-name "~/Documents/Python/Jupyter"))))
-    (ein:notebooklist-open))
+    (let ((ein:default-url-or-port "http://127.0.0.1:8888"))
+      (unless (and (boundp 'pyvenv-virtual-env) pyvenv-virtual-env)
+        (call-interactively 'pyvenv-workon))
+      (unless (get-process "IPYNB")
+        (start-process-shell-command
+         "IPYNB" "*IPYNB*" (concat "jupyter notebook --no-browser --notebook-dir="
+                                   (expand-file-name "~/Documents/Python/Jupyter"))))
+      (call-interactively 'ein:notebooklist-open)))
   (use-package ein-notebook
     :config
     (add-hook 'ein:notebook-mode-hook '(lambda ()
-                                         (setq company-idle-delay nil)))
+                                         (set (make-local-variable 'company-idle-delay) nil)))
     (define-key ein:notebook-mode-map (kbd "M-,") nil)
     (define-key ein:notebook-mode-map (kbd "M-.") nil)
     (define-key ein:notebook-mode-map (kbd "C-c C-,") 'ein:pytools-jump-to-source-command)
@@ -78,12 +82,20 @@
 (use-package ein-connect
   ;; Enabled at at commands.
   :defer t
-  :bind ("M-s #" . ein:connect-to-notebook-buffer)
+  :bind ("M-s #" . swint-ein:connect-to-notebook)
   :config
+  ;; ein:connect-to-notebook无法获取notebooks列表。
+  (defun swint-ein:connect-to-notebook ()
+    (interactive)
+    (ein:connect-to-notebook
+     (completing-read "Notebook to connect [URL-OR-PORT/NAME]: "
+                      (mapcar #'(lambda (x) (concat "8888/" x))
+                              (directory-files "~/Documents/Python/Jupyter" nil ".+\\.ipynb"))
+                      nil t nil nil nil nil)))
   ;; (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
   ;; 在ein:connect中关闭company的自动补全。
   (add-hook 'ein:connect-mode-hook '(lambda ()
-                                      (setq company-idle-delay nil)))
+                                      (set (make-local-variable 'company-idle-delay) nil)))
   ;; 取消ein:connect-mode-map默认快捷键，以免与elpy冲突。
   (define-key ein:connect-mode-map "\C-c\C-c" nil)
   (define-key ein:connect-mode-map "\C-c\C-l" nil)
