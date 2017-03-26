@@ -370,8 +370,9 @@
   ;; =================org输出doc================
 ;;;; org-latex-preview
   ;; =============org-latex-preview=============
-  ;; C-c C-x C-l org-preview-latex-fragment表示preview当前位置。
+  ;; org-preview-latex-fragment表示preview当前位置。
   ;; 加C-u表示当前节，两个C-u表示当前head。
+  (define-key org-mode-map (kbd "C-c v") 'org-preview-latex-fragment)
   (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境。
   ;; =============org-latex-preview=============
 ;;;; org输出latex

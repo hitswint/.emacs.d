@@ -17,12 +17,7 @@
           ("django"  . "\\.djhtml\\.")))
   ;; skewer与web-mode兼容性不好。
   (define-key web-mode-map (kbd "C-c s") 'swint-run-skewer)
-  (define-key web-mode-map (kbd "C-c C-v") 'browse-url-of-buffer)
-  (smartrep-define-key web-mode-map "C-c"
-    '(("n" . web-mode-element-next)
-      ("p" . web-mode-element-previous)
-      ("u" . web-mode-element-parent)
-      ("d" . web-mode-element-child))))
+  (define-key web-mode-map (kbd "C-c C-v") 'browse-url-of-buffer))
 ;; ==================web-mode==================
 ;;; html-mode
 ;; =================html-mode==================
@@ -71,4 +66,22 @@
   (add-hook 'html-mode-hook 'skewer-html-mode)
   (add-hook 'web-mode-hook 'skewer-html-mode))
 ;; ================skewer-mode=================
+;;; emmet-mode
+;; ================emmet-mode==================
+(use-package emmet-mode
+  ;; Enabled in modes.
+  :defer t
+  :diminish emmet-mode
+  :commands emmet-mode
+  :init
+  (add-hook 'html-mode-hook 'emmet-mode)
+  (add-hook 'web-mode-hook 'emmet-mode)
+  (add-hook 'css-mode-hook 'emmet-mode)
+  :config
+  (define-key emmet-mode-keymap (kbd "C-j") nil)
+  (define-key emmet-mode-keymap (kbd "C-c v") 'emmet-preview)
+  (smartrep-define-key emmet-mode-keymap "C-c"
+    '(("M-m" . emmet-prev-edit-point)
+      ("M-M" . emmet-next-edit-point))))
+;; ================emmet-mode==================
 (provide 'setup_web)

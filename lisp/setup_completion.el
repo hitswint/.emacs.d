@@ -262,10 +262,8 @@
 ;;; company
 ;; ================company=====================
 (use-package company
-  ;; Enabled at commands.
+  ;; Enabled at idle.
   :defer 2
-  :commands company-complete-common
-  :bind ("M-U" . company-complete-common)
   :config
   (global-company-mode 1)
   (setq company-show-numbers t)
@@ -281,6 +279,15 @@
   ;; ((nil . ((company-clang-arguments . ("-I/home/<user>/project_root/include1/"
   ;;                                      "-I/home/<user>/project_root/include2/")))))
   ;; If you use Helm, you can easily insert absolute path by C-c i at the current path in helm-find-files.
+;;;; company-try-hard
+  ;; ============company-try-hard==============
+  (use-package company-try-hard
+    ;; Enabled at commands.
+    :defer t
+    :bind ("M-U" . company-try-hard)
+    :config
+    (define-key company-active-map (kbd "M-U") 'company-try-hard))
+  ;; ============company-try-hard==============
 ;;;; company-quickhelp-mode
   ;; ==========company-quickhelp-mode==========
   (use-package company-quickhelp
@@ -303,6 +310,24 @@
     :config
     (add-to-list 'company-backends 'company-c-headers))
   ;; ============company-c-headers=============
+;;;; company-web
+  ;; ==============company-web=================
+  (use-package company-web
+    ;; Enabled after features.
+    :defer t
+    :after company
+    :config
+    (add-to-list 'company-backends 'company-web-html)
+    (add-to-list 'company-backends 'company-web-jade)
+    (add-to-list 'company-backends 'company-web-slim))
+  ;; ==============company-web=================
+;;;; ac-html-bootstrap
+  ;; ===========ac-html-bootstrap==============
+  (use-package ac-html-bootstrap
+    ;; Enabled at commands.
+    :defer t
+    :bind ("C-c b" . company-web-bootstrap+))
+  ;; ===========ac-html-bootstrap==============
   )
 ;; ================company=====================
 ;;; hippie-expand

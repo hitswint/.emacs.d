@@ -26,6 +26,7 @@
             ace-link
             ace-pinyin
             ace-popup-menu
+            ac-html-bootstrap
             ac-ispell
             ac-math
             aggressive-indent
@@ -59,6 +60,8 @@
             company
             company-c-headers
             company-quickhelp
+            company-try-hard
+            company-web
             counsel
             dash
             diff-hl
@@ -76,6 +79,7 @@
             elisp-slime-nav
             elmacro
             elpy
+            emmet-mode
             emms
             epl
             eshell-prompt-extras
@@ -159,7 +163,7 @@
             rich-minority
             s
             session
-	    skewer-mode
+            skewer-mode
             smart-mode-line
             smartrep
             smex

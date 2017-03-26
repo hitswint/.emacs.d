@@ -24,14 +24,10 @@
   ;; ===================reftex=====================
 ;;;; preview
   ;; ==================preview=====================
-  (set-default 'preview-scale-function 1.5)
   (setq preview-auto-cache-preamble t)
   (when is-win
     (setq preview-image-type 'pnm)
     (setq preview-gs-command "c:/Program Files (x86)/gs/gs9.09/bin/gswin32c.exe"))
-  ;; C-c C-p C-p preview-at-point。
-  ;; C-c C-p C-c C-p preview-clearout-at-point。
-  ;; C-c C-p C-c C-b preview-clearout-buffer。
   ;; ==================preview=====================
 ;;;; setup-and-keybindings
   ;; ============setup-and-keybindings=============
@@ -61,6 +57,8 @@
               (imenu-add-menubar-index)
               (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-parse-all)
               (define-key LaTeX-mode-map (kbd "C-c f") 'TeX-font)
+              (define-key LaTeX-mode-map (kbd "C-c v") 'preview-at-point)
+              (define-key LaTeX-mode-map (kbd "C-c V") 'preview-clearout-buffer)
               (define-key LaTeX-mode-map (kbd "C-q") 'swint-kill-tex-buffer)
               (define-key LaTeX-mode-map (kbd "C-c j") 'swint-open-at-point-with-apps)
               (define-key LaTeX-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))

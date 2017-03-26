@@ -55,22 +55,23 @@
   :defer t
   :bind ("M-s 3" . swint-ein:notebooklist-open)
   :config
+  ;; ein:url-or-port可取8888或http://127.0.0.1(localhost):8888。
+  (defun swint-ein:notebooklist-open ()
+    (interactive)
+    (unless (and (boundp 'pyvenv-virtual-env) pyvenv-virtual-env)
+      (call-interactively 'pyvenv-workon))
+    (unless (get-process "IPYNB")
+      (start-process-shell-command
+       "IPYNB" "*IPYNB*" (concat "jupyter notebook --no-browser --notebook-dir="
+                                 (expand-file-name "~/Documents/Python/Jupyter"))))
+    (if (boundp 'ein:notebooklist-first-open-hook)
+        (ein:notebooklist-open)
+      (unless (ein:notebooklist-open nil nil t)
+        (ein:force-ipython-version-check))))
   ;; (setq ein:use-auto-complete t)
   ;; Enable "superpack" (a little bit hacky improvements).
   (setq ein:use-auto-complete-superpack t)
   (setq ein:use-smartrep t)
-  ;; ein:url-or-port可取port(8888)或url(http://127.0.0.1:8888)。
-  ;; http://127.0.0.1:8888与http://localhost:8888指向相同。
-  (defun swint-ein:notebooklist-open ()
-    (interactive)
-    (let ((ein:default-url-or-port "http://127.0.0.1:8888"))
-      (unless (and (boundp 'pyvenv-virtual-env) pyvenv-virtual-env)
-        (call-interactively 'pyvenv-workon))
-      (unless (get-process "IPYNB")
-        (start-process-shell-command
-         "IPYNB" "*IPYNB*" (concat "jupyter notebook --no-browser --notebook-dir="
-                                   (expand-file-name "~/Documents/Python/Jupyter"))))
-      (call-interactively 'ein:notebooklist-open)))
   (use-package ein-notebook
     :config
     (add-hook 'ein:notebook-mode-hook '(lambda ()
@@ -85,13 +86,16 @@
   :bind ("M-s #" . swint-ein:connect-to-notebook)
   :config
   ;; ein:connect-to-notebook无法获取notebooks列表。
-  (defun swint-ein:connect-to-notebook ()
-    (interactive)
-    (ein:connect-to-notebook
-     (completing-read "Notebook to connect [URL-OR-PORT/NAME]: "
-                      (mapcar #'(lambda (x) (concat "8888/" x))
-                              (directory-files "~/Documents/Python/Jupyter" nil ".+\\.ipynb"))
-                      nil t nil nil nil nil)))
+  (defun swint-ein:connect-to-notebook (&optional arg)
+    (interactive "P")
+    (let ((ein:connect-default-notebook "8888/Default.ipynb"))
+      (if arg
+          (ein:connect-to-notebook
+           (completing-read "Notebook to connect [URL-OR-PORT/NAME]: "
+                            (mapcar #'(lambda (x) (concat "8888/" x))
+                                    (directory-files "~/Documents/Python/Jupyter" nil ".+\\.ipynb"))
+                            nil t nil nil nil nil))
+        (ein:connect-to-default-notebook))))
   ;; (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
   ;; 在ein:connect中关闭company的自动补全。
   (add-hook 'ein:connect-mode-hook '(lambda ()
@@ -117,14 +121,14 @@
   (define-key ein:connect-mode-map "\C-cl" 'ein:connect-reload-buffer)
   (define-key ein:connect-mode-map "\C-cr" 'ein:connect-eval-region)
   (define-key ein:connect-mode-map "\C-ce" 'ein:shared-output-eval-string)
-  (define-key ein:connect-mode-map "\C-co" 'ein:pytools-request-tooltip-or-help)
+  (define-key ein:connect-mode-map "\C-co" 'ein:console-open)
   (define-key ein:connect-mode-map "\C-cu" 'ein:completer-complete)
-  (define-key ein:connect-mode-map "\C-c3" 'ein:connect-pop-to-notebook)
+  (define-key ein:connect-mode-map "\C-cs" 'ein:notebook-scratchsheet-open)
   (define-key ein:connect-mode-map "\C-ca" 'ein:connect-toggle-autoexec)
-  (define-key ein:connect-mode-map "\C-cz" 'ein:console-open)
+  (define-key ein:connect-mode-map "\C-cz" 'ein:connect-pop-to-notebook)
   (define-key ein:connect-mode-map "\C-cx" 'ein:tb-show)
   (define-key ein:connect-mode-map (kbd "C-c ,") 'ein:pytools-jump-to-source-command)
   (define-key ein:connect-mode-map (kbd "C-c .") 'ein:pytools-jump-back-command)
-  (define-key ein:connect-mode-map (kbd "C-c /") 'ein:notebook-scratchsheet-open))
+  (define-key ein:connect-mode-map (kbd "C-c /") 'ein:pytools-request-tooltip-or-help))
 ;; ====================ein=====================
 (provide 'setup_python)
