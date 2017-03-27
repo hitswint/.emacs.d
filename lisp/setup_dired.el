@@ -588,4 +588,49 @@ Assuming .. and . is a current directory (like in FAR)"
   (bind-key "C-y" 'dired-ranger-paste dired-mode-map)
   (bind-key "M-y" 'dired-ranger-move dired-mode-map))
 ;; ===============dired-ranger=================
+;;; neotree
+;; =================neotree====================
+(use-package neotree
+  ;; Enabled at commands.
+  :defer t
+  :bind ("C-x j" . neotree-project-or-current-dir)
+  :config
+  (setq neo-smart-open nil)
+  (setq neo-show-hidden-files nil)
+  (setq neo-confirm-change-root 'off-p)
+  (define-key neotree-mode-map "\C-j" 'neotree-shell-command)
+  (define-key neotree-mode-map (kbd "b") 'neotree-select-previous-sibling-node)
+  (define-key neotree-mode-map (kbd "f") 'neotree-select-next-sibling-node)
+  (define-key neotree-mode-map (kbd "RET") (neotree-make-executor :file-fn 'neo-open-file
+                                                                  :dir-fn  'neo-open-dired))
+  (define-key neotree-mode-map (kbd "a") 'neotree-stretch-toggle)
+  (define-key neotree-mode-map (kbd "u") 'neotree-select-up-node)
+  (define-key neotree-mode-map (kbd "d") 'neotree-select-down-node)
+  (define-key neotree-mode-map (kbd "h") 'neotree-hidden-file-toggle)
+  (defun neotree-project-or-current-dir ()
+    "Open NeoTree using project root or current directory."
+    (interactive)
+    (let ((project-dir (ignore-errors (projectile-project-root)))
+          (find-file-name (if (eq major-mode 'dired-mode)
+                              (dired-get-filename)
+                            (buffer-file-name)))
+          (current-dir default-directory))
+      (if (neo-global--window-exists-p)
+          (neotree-hide)
+        (progn (neotree-show)
+               (neotree-dir (or project-dir current-dir))
+               (when find-file-name
+                 (neotree-find find-file-name))))))
+  (defun neotree-shell-command ()
+    "Open file with external app."
+    (interactive)
+    (let ((file (neo-buffer--get-filename-current-line)))
+      (cond (is-lin (async-shell-command-no-output-buffer-from-file file))
+            (is-win (progn (if (and (or (string-equal (file-name-extension file) "doc")
+                                        (string-equal (file-name-extension file) "docx"))
+                                    (not (string-match "WINWORD.EXE" (concat (prin1-to-string (proced-process-attributes))))))
+                               (progn (w32-shell-execute "open" "word")
+                                      (sit-for 5)))
+                           (w32-browser file)))))))
+;; =================neotree====================
 (provide 'setup_dired)

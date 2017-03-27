@@ -89,7 +89,7 @@
     (interactive)
     (if (TeX-active-process)
         (kill-process (TeX-active-process)))
-    (dirtree-kill-this-buffer))
+    (swint-kill-this-buffer))
   ;; ================关闭tex buffer================
 ;;;; pandoc
   ;; ===================pandoc=====================

@@ -11,7 +11,6 @@
  '(custom-safe-themes
    (quote
     ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default)))
- '(dirtree-windata (quote (frame left 0.3 delete)))
  '(display-time-mode nil)
  '(emms-lyrics-display-on-modeline nil)
  '(helm-buffer-details-flag nil)
@@ -29,7 +28,6 @@
      (swint-org-annotate-file)
      (dired-do-copy)
      (iswitchb-buffer)
-     (dirtree)
      (dired-create-directory))))
  '(helm-external-programs-associations
    (quote

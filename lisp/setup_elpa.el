@@ -70,7 +70,6 @@
             dired-narrow
             dired-ranger
             diredful
-            dirtree
             drag-stuff
             dumb-jump
             function-args
@@ -137,6 +136,7 @@
             multiple-cursors
             names
             navi-mode
+            neotree
             nyan-mode
             operate-on-number
             outline-magic
@@ -170,7 +170,6 @@
             swiper
             switch-window
             tangotango-theme
-            tree-mode
             undo-tree
             use-package
             vimish-fold
@@ -181,7 +180,6 @@
             w3m
             web-mode
             which-key
-            windata
             window-numbering
             with-editor
             wrap-region

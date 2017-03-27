@@ -326,7 +326,7 @@
   (use-package ac-html-bootstrap
     ;; Enabled at commands.
     :defer t
-    :bind ("C-c b" . company-web-bootstrap+))
+    :commands company-web-bootstrap+)
   ;; ===========ac-html-bootstrap==============
   )
 ;; ================company=====================

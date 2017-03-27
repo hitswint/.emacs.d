@@ -17,6 +17,7 @@
           ("django"  . "\\.djhtml\\.")))
   ;; skewer与web-mode兼容性不好。
   (define-key web-mode-map (kbd "C-c s") 'swint-run-skewer)
+  (define-key web-mode-map (kbd "C-c b") 'company-web-bootstrap+)
   (define-key web-mode-map (kbd "C-c C-v") 'browse-url-of-buffer))
 ;; ==================web-mode==================
 ;;; html-mode

@@ -27,11 +27,12 @@
         helm-marked-buffer-name
         projects
         (mapc (lambda (p)
-		(persp-kill (file-basename p)))
+                (persp-kill (file-basename p)))
               projects))))
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-j") '(lambda (project)
                                                                           (let ((projectile-completion-system 'helm))
                                                                             (projectile-switch-project-by-name project))))
+  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-x j") '(lambda (project) (neotree-dir project)))
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-s") 'helm-projectile-ag)
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-M-k") 'helm-projectile-kill-persp)
   (defvar helm-source-projectile-projects-with-persp

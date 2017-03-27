@@ -134,3 +134,56 @@ FORCE-OTHER-WINDOW is ignored."
 (add-to-list 'display-buffer-alist '("\\`\\*sdcv\\*\\'" display-new-buffer))
 (add-to-list 'display-buffer-alist '("\\`\\*bing-google\\*\\'" display-new-buffer))
 ;; ================优先纵向分割窗口================
+;;; 关闭buffer后切换到之前的buffer
+;; ==========关闭buffer后切换到之前的buffer========
+(global-set-key (kbd "C-q") 'swint-kill-this-buffer)
+;; kill-buffer存在问题：1. 会切换到helm buffer；2. 切换persp时会切换到前一个persp的buffer。
+(defcustom swint-iswitchb-buffer-ignore '("^ " "\\` " "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'")
+  "Define ignore list."
+  :type '(repeat (choice regexp function)))
+(defun swint-kill-this-buffer ()
+  "Switch to prev buffer before killing current."
+  (interactive)
+  (let ((curr-buf (current-buffer))
+        (prev-buf (car (or (swint-filter-buffer-list (mapcar #'(lambda (x) (car x)) (window-prev-buffers)))
+                           (swint-filter-buffer-list (buffer-list (selected-frame)) t)))))
+    (bc-set)
+    (switch-to-buffer prev-buf)
+    (kill-buffer curr-buf)))
+(defun swint-filter-buffer-list (buffers &optional include-current)
+  "Remove buffers that are ignored or belong to other persps from buffers."
+  (let ((curr-buf-name (buffer-name (current-buffer))))
+    (append (delete curr-buf-name
+                    (delq nil
+                          (mapcar
+                           (lambda (x)
+                             (unless (swint-iswitchb-ignore-buffername-p x) x))
+                           ;; 只使用(persp-buffers persp-curr)产生的buffer list顺序不对，无法切换回之前的buffer。
+                           (remove-if-not (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
+                                          (mapcar 'buffer-name buffers)))))
+            (if include-current
+                curr-buf-name))))
+(defun swint-iswitchb-ignore-buffername-p (bufname)
+  "Return t if the buffer BUFNAME should be ignored."
+  (let ((data       (match-data))
+        (re-list    swint-iswitchb-buffer-ignore)
+        ignorep
+        nextstr)
+    (while re-list
+      (setq nextstr (car re-list))
+      (cond
+       ((stringp nextstr)
+        (if (string-match nextstr bufname)
+            (progn
+              (setq ignorep t)
+              (setq re-list nil))))
+       ((functionp nextstr)
+        (if (funcall nextstr bufname)
+            (progn
+              (setq ignorep t)
+              (setq re-list nil)))))
+      (setq re-list (cdr re-list)))
+    (set-match-data data)
+    ;; return the result
+    ignorep))
+;; ==========关闭buffer后切换到之前的buffer========
