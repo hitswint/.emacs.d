@@ -64,10 +64,10 @@
       (start-process-shell-command
        "IPYNB" "*IPYNB*" (concat "jupyter notebook --no-browser --notebook-dir="
                                  (expand-file-name "~/Documents/Python/Jupyter"))))
-    (if (boundp 'ein:notebooklist-first-open-hook)
-        (ein:notebooklist-open)
-      (unless (ein:notebooklist-open nil nil t)
-        (ein:force-ipython-version-check))))
+    (unless (if (boundp 'ein:notebooklist-first-open-hook)
+                (ein:notebooklist-open)
+              (ein:notebooklist-open nil nil t))
+      (ein:force-ipython-version-check)))
   ;; (setq ein:use-auto-complete t)
   ;; Enable "superpack" (a little bit hacky improvements).
   (setq ein:use-auto-complete-superpack t)

@@ -30,8 +30,6 @@
   ;; (autoload 'octave-mode "octave-mod" nil t) ;显示无法找到octave-mod。
   (add-hook 'octave-mode-hook
             '(lambda ()
-               (abbrev-mode 1)
-               (auto-fill-mode 1)
                (if (eq window-system 'x)
                    (font-lock-mode 1))
                (define-key octave-mode-map (kbd "C-c C-,") 'octave-find-definition)

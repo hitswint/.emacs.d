@@ -40,9 +40,7 @@
   ;; 为 LaTeX 模式 hook 自动换行，数学公式，reftex 和显示行号的功能。
   (mapc (lambda (mode)
           (add-hook 'TeX-mode-hook mode))
-        (list 'auto-fill-mode
-              'turn-on-auto-fill
-              'LaTeX-math-mode
+        (list 'LaTeX-math-mode
               'turn-on-reftex
               'turn-on-orgtbl
               'LaTeX-install-toolbar))

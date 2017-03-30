@@ -137,6 +137,7 @@ that was stored with ska-point-to-register."
 ;; ==================临时标记======================
 ;;; 跳转到某行时行号暂时可见
 ;; ============跳转到某行时行号暂时可见============
+(global-set-key (kbd "M-g g") 'linum-mode)
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
 (defun goto-line-with-feedback ()
   "Show line numbers temporarily, while prompting for the line number input"

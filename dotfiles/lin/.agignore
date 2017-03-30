@@ -24,8 +24,6 @@
 *.jpeg
 *.eps
 *.ps
-*.html
-*.htm
 *.doc
 *.docx
 *.xls
