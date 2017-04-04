@@ -118,6 +118,7 @@ Has no effect when `persp-show-modestring' is nil."
     (when is-win
       (insert ";;; -*- coding: utf-8; -*-\n"))
     (insert "(setq swint-persp-names '" (prin1-to-string (persp-names)) ")\n")
+    (insert "(setq persp-projectile-hash '" (prin1-to-string persp-projectile-hash) ")\n")
     (insert "(setq persp-last-session " (prin1-to-string persp-last-session) ")\n")
     (mapcar #'(lambda (x)
                 (insert (concat (format "(setq buffers-in-perspectives-%s '" x)

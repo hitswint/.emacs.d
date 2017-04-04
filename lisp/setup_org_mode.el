@@ -55,6 +55,11 @@
                    ("u" . outline-up-heading)
                    ("b" . org-backward-heading-same-level)
                    ("f" . org-forward-heading-same-level)))
+	       (smartrep-define-key org-mode-map "C-c"
+		 '(("p" . org-previous-item)
+		   ("n" . org-next-item)
+		   ("P" . org-beginning-of-item-list)
+		   ("N" . org-end-of-item-list)))
                (define-key org-mode-map (kbd "C-a") '(lambda () (interactive)
                                                        (if (or (org-at-heading-p) (org-at-item-p))
                                                            (call-interactively 'org-beginning-of-line)

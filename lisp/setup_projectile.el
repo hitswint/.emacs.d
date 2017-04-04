@@ -27,7 +27,8 @@
         helm-marked-buffer-name
         projects
         (mapc (lambda (p)
-                (persp-kill (file-basename p)))
+                (persp-kill (file-basename p))
+                (remhash p persp-projectile-hash))
               projects))))
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-j") '(lambda (project)
                                                                           (let ((projectile-completion-system 'helm))
@@ -42,11 +43,11 @@
                         (cons (abbreviate-file-name (projectile-project-root))
                               (remove-if-not
                                (lambda (x)
-                                 (member (file-basename x) (persp-names)))
+                                 (member x (hash-table-keys persp-projectile-hash)))
                                (projectile-relevant-known-projects)))
                       (remove-if-not
                        (lambda (x)
-                         (member (file-basename x) (persp-names)))
+                         (member x (hash-table-keys persp-projectile-hash)))
                        projectile-known-projects)))
       :fuzzy-match helm-projectile-fuzzy-match
       :keymap helm-projectile-projects-map
@@ -58,7 +59,7 @@
       :candidates (lambda ()
                     (remove-if
                      (lambda (x)
-                       (member (file-basename x) (persp-names)))
+                       (member x (hash-table-keys persp-projectile-hash)))
                      projectile-known-projects))
       :fuzzy-match helm-projectile-fuzzy-match
       :keymap helm-projectile-projects-map
@@ -69,8 +70,10 @@
                                        helm-source-projectile-projects-without-persp
                                        helm-source-projectile-files-list
                                        helm-source-projectile-buffers-list))
-  (helm-add-action-to-source "Projectile persp switch project" 'projectile-persp-switch-project helm-source-projectile-projects-with-persp 0)
-  (helm-add-action-to-source "Projectile persp switch project" 'projectile-persp-switch-project helm-source-projectile-projects-without-persp 0)
+  (helm-add-action-to-source "Projectile persp switch project"
+                             'projectile-persp-switch-project helm-source-projectile-projects-with-persp 0)
+  (helm-add-action-to-source "Projectile persp switch project"
+                             'projectile-persp-switch-project helm-source-projectile-projects-without-persp 0)
   ;; 设置切换project的默认操作。
   (setq projectile-switch-project-action 'helm-projectile))
 ;; ==============helm-projectile================
@@ -81,6 +84,21 @@
   :defer t
   :after projectile
   :config
-  (bind-key "M-s M-'" 'projectile-persp-switch-project))
+  (bind-key "M-s M-'" 'projectile-persp-switch-project)
+  (defun projectile-persp-switch-project-update-hash (project-to-switch)
+    (projectile-add-known-project project-to-switch)
+    (unless (and (boundp 'persp-projectile-hash) persp-projectile-hash)
+      (setq persp-projectile-hash (make-hash-table :test 'equal)))
+    ;; 将project-to-switch加入persp-projectile-hash中。
+    (puthash project-to-switch
+             (file-name-nondirectory (directory-file-name project-to-switch))
+             persp-projectile-hash)
+    ;; 删除不在projectile-known-projects中的project。
+    (mapcar '(lambda (x) (remhash x persp-projectile-hash))
+            (remove-if (lambda (x)
+                         (member x projectile-known-projects))
+                       (hash-table-keys persp-projectile-hash))))
+  (advice-add 'projectile-persp-switch-project :after
+              #'projectile-persp-switch-project-update-hash))
 ;; ================persp-projectile=============
 (provide 'setup_projectile)
