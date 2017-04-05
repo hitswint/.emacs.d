@@ -251,12 +251,13 @@
   :config
   (drag-stuff-global-mode t)
   ;; 重新定义drag-stuff-define-keys函数，取消 M+方向键 的快捷键。
-  (defun drag-stuff-define-keys ()
+  (defun drag-stuff-define-keys-cancel-keys ()
     "Defines keys for `drag-stuff-mode'."
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'up) nil)
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'down) nil)
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'left) nil)
-    (define-key drag-stuff-mode-map (drag-stuff--kbd 'right) nil)))
+    (define-key drag-stuff-mode-map (drag-stuff--kbd 'right) nil))
+  (advice-add 'drag-stuff-define-keys :override #'drag-stuff-define-keys-cancel-keys))
 ;; ===================drag stuff===================
 ;;; popup-kill-ring
 ;; ================popup-kill-ring=================
@@ -376,13 +377,13 @@
   (setq which-key-use-C-h-for-paging t
         which-key-prevent-C-h-from-cycling nil)
   ;; 默认的C-h启用describe-prefix-bindings不带prefix。
-  (defun which-key-show-standard-help ()
-    "Call the command in `which-key--prefix-help-cmd-backup'.
-Usually this is `describe-prefix-bindings'."
+  (defun which-key-show-standard-help-with-helm-descbinds ()
     (interactive)
     (let ((which-key-inhibit t))
       (which-key--hide-popup-ignore-command)
-      (helm-descbinds which-key--current-prefix))))
+      (helm-descbinds which-key--current-prefix)))
+  (advice-add 'which-key-show-standard-help :override
+              #'which-key-show-standard-help-with-helm-descbinds))
 ;; ====================which-key===================
 ;;; pdf-tools
 ;; ====================pdf-tools===================
@@ -560,12 +561,14 @@ is named like ODF with the extension turned to pdf."
   :defer t
   :bind ("C-M-'" . helm-bm)
   :config
-  (defun helm-bm-action-switch-to-buffer (candidate)
+  (defun helm-bm-action-switch-to-persp/buffer (candidate)
     "Switch to buffer of CANDIDATE."
     (helm-bm-with-candidate candidates
-                            (helm-switch-persp/buffer bufname)
-                            (goto-char (point-min))
-                            (forward-line (1- lineno)))))
+      (helm-switch-persp/buffer bufname)
+      (goto-char (point-min))
+      (forward-line (1- lineno))))
+  (advice-add 'helm-bm-action-switch-to-buffer :override
+              #'helm-bm-action-switch-to-persp/buffer))
 ;; ====================helm-bm=====================
 ;;; operate-on-number
 ;; ================operate-on-number===============

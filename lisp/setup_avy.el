@@ -210,10 +210,7 @@ This function obeys `avy-all-windows' setting."
                                    (window-end (selected-window) t)))
                       (save-excursion
                         (goto-char (car pair))
-                        (if (or (string-match "[iuv]" str) ;当字符串中有iuv时，不转换string
-                                (string-empty-p (pinyin-search--pinyin-to-regexp str))) ;当搜索中文或符号时，不转换string
-                            (setq regex (regexp-quote str))
-                          (setq regex (concat (regexp-quote str) "\\|" (pinyin-search--pinyin-to-regexp str))))
+                        (setq regex (pinyin-search--pinyin-to-regexp str))
                         (while (re-search-forward regex (cdr pair) t)
                           (unless (get-char-property (1- (point)) 'invisible)
                             (let ((ov (make-overlay

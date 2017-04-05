@@ -44,28 +44,18 @@
   ;; ==========Isearch thing at point===========
   (define-key isearch-mode-map (kbd "C-q") #'isearch-toggle-pinyin)
   ;; 同时搜索中英文，与ace-jump一样，对于.*+?等正则表达式使用的符号无效。
-  (defun swint-pinyin-search--pinyin-to-regexp (string)
+  (defun swint-pinyin-search--pinyin-to-regexp (fn string)
     "Wrap for Pinyin searching."
-    (let ((swint-regexp ""))
-      (if (or (string-match "[iuv]" string) ;当字符串中有iuv时，不转换string。
-              (string-empty-p (pinyin-search--pinyin-to-regexp string))) ;当搜索中文或符号时，不转换string。
-          (setq swint-regexp string)
-        (setq swint-regexp (concat string "\\|" (pinyin-search--pinyin-to-regexp string))))
+    (let ((swint-regexp string)
+          (string-converted (funcall fn string)))
+      ;; 当搜索中文、符号或包含iuv时，不转换string。
+      (unless (or (string-match "[iuv]" string)
+                  (string-empty-p string-converted))
+        (setq swint-regexp (concat string "\\|" string-converted)))
       swint-regexp))
-  (defun isearch-function-with-pinyin ()
-    "Wrap for Pinyin searching."
-    (if pinyin-search-activated
-        ;; Return the function to use for pinyin search.
-        `(lambda (string bound noerror)
-           (funcall (if ,isearch-forward
-                        're-search-forward
-                      're-search-backward)
-                    (swint-pinyin-search--pinyin-to-regexp string) bound noerror))
-      ;; Return default function.
-      (isearch-search-fun-default)))
-  (add-hook 'isearch-mode-end-hook
-            (lambda ()
-              (setq pinyin-search-activated nil))))
+  (advice-add 'pinyin-search--pinyin-to-regexp :around #'swint-pinyin-search--pinyin-to-regexp)
+  (add-hook 'isearch-mode-end-hook (lambda ()
+                                     (setq pinyin-search-activated nil))))
 ;; ==================pinyin-search=================
 ;;; 拼音首字母搜索
 ;; =================拼音首字母搜索=================

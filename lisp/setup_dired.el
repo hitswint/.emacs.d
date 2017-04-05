@@ -568,9 +568,9 @@ Assuming .. and . is a current directory (like in FAR)"
   (defun dired-narrow--string-filter (filter)
     (let ((words (split-string filter " ")))
       (--all? (save-excursion (or (search-forward it (line-end-position) t)
-                                  (unless (or (string-match "[iuv]" it) ;当字符串中有iuv时，不转换string
-                                              (string-empty-p (pinyin-search--pinyin-to-regexp it))) ;当搜索中文或符号时，不转换string
-                                    (re-search-forward (pinyin-search--pinyin-to-regexp it) (line-end-position) t)))) words))))
+                                  (re-search-forward (pinyin-search--pinyin-to-regexp it)
+                                                     (line-end-position) t)))
+              words))))
 ;; ===============dired-narrow=================
 ;;; dired-ranger
 ;; ===============dired-ranger=================

@@ -71,14 +71,4 @@
   (add-to-list 'desktop-minor-mode-table '(interleave-mode nil))
   (add-to-list 'desktop-minor-mode-table '(interleave-pdf-mode nil)))
 ;; ===================desktop====================
-;;; saveplace
-;; ==================saveplace===================
-;; Save point position between sessions.
-;; (use-package saveplace
-;;   ;; Enabled at idle.
-;;   :defer 2
-;;   :config
-;;   (setq-default save-place t)
-;;   (setq save-place-file (expand-file-name ".places" user-emacs-directory)))
-;; ==================saveplace===================
 (provide 'setup_desktop_session)

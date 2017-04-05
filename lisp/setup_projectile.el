@@ -1,8 +1,8 @@
 ;;; Projectile
 ;; ==================Projectile=================
 (use-package projectile
-  ;; Enabled at commands.
-  :defer t
+  ;; Enabled at idle.
+  :defer 2
   :bind-keymap ("M-\"" . projectile-command-map)
   :init
   (setq projectile-keymap-prefix (kbd "M-\""))
@@ -82,7 +82,7 @@
 (use-package persp-projectile
   ;; Enabled after features.
   :defer t
-  :after projectile
+  :after helm-projectile
   :config
   (bind-key "M-s M-'" 'projectile-persp-switch-project)
   (defun projectile-persp-switch-project-update-hash (project-to-switch)
