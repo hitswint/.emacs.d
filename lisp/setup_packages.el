@@ -564,9 +564,9 @@ is named like ODF with the extension turned to pdf."
   (defun helm-bm-action-switch-to-persp/buffer (candidate)
     "Switch to buffer of CANDIDATE."
     (helm-bm-with-candidate candidates
-      (helm-switch-persp/buffer bufname)
-      (goto-char (point-min))
-      (forward-line (1- lineno))))
+                            (helm-switch-persp/buffer bufname)
+                            (goto-char (point-min))
+                            (forward-line (1- lineno))))
   (advice-add 'helm-bm-action-switch-to-buffer :override
               #'helm-bm-action-switch-to-persp/buffer))
 ;; ====================helm-bm=====================
@@ -921,4 +921,14 @@ is named like ODF with the extension turned to pdf."
   :defer t
   :after ivy-hydra)
 ;; ===========ivy/swiper/counsel/hydra=============
+;; =================markdown-mode==================
+(use-package markdown-mode
+  ;; Enabled in modes.
+  :defer t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+;; =================markdown-mode==================
 (provide 'setup_packages)

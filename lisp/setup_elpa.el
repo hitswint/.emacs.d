@@ -129,6 +129,7 @@
             magic-latex-buffer
             magit
             magit-popup
+            markdown-mode
             math-symbol-lists
             matlab-mode
             mew
