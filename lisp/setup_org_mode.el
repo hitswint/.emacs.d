@@ -55,11 +55,11 @@
                    ("u" . outline-up-heading)
                    ("b" . org-backward-heading-same-level)
                    ("f" . org-forward-heading-same-level)))
-	       (smartrep-define-key org-mode-map "C-c"
-		 '(("p" . org-previous-item)
-		   ("n" . org-next-item)
-		   ("P" . org-beginning-of-item-list)
-		   ("N" . org-end-of-item-list)))
+               (smartrep-define-key org-mode-map "C-c"
+                 '(("p" . org-previous-item)
+                   ("n" . org-next-item)
+                   ("P" . org-beginning-of-item-list)
+                   ("N" . org-end-of-item-list)))
                (define-key org-mode-map (kbd "C-a") '(lambda () (interactive)
                                                        (if (or (org-at-heading-p) (org-at-item-p))
                                                            (call-interactively 'org-beginning-of-line)
@@ -82,7 +82,7 @@
   (setq org-agenda-span 14)
   ;; 设定todo的子项完成后主项自动完成。
   (add-hook 'org-after-todo-statistics-hook '(lambda ()
-					       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+                                               (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
   ;; 设定todo关键词。
   (setq org-todo-keywords
         '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")))
@@ -308,63 +308,43 @@
   ;;  '(org-refile-targets
   ;;    (quote
   ;;     (("Gtd-task.org" :maxlevel . 1)("Gtd-project.org" :maxlevel . 1) ("Gtd-maybe.org":maxlevel . 1) ("Gtd-done-aborted.org":maxlevel . 1)))))
-  (defun swint-org-mobile-pull ()
-    "Operate on multiple PCs."
+  (defun swint-org-mobile-sync (arg)
+    "Synchronization of org mobile."
     (interactive)
-    ;; Webdav会造成文件conflict，在pull之前先删除本地mobileorg文件。
-    (mapcar 'delete-file (directory-files org-mobile-directory t
-                                          ".+\\.\\(org\\|dat\\)"))
+    (cond ((equal arg "down")
+           ;; Webdav会造成文件conflict，在pull之前先删除本地mobileorg文件。
+           (mapcar 'delete-file (directory-files org-mobile-directory t ".+\\.\\(org\\|dat\\)")))
+          ((equal arg "up")
+           (with-current-buffer "task.org" (org-mobile-push))))
     (let ((process
            (start-process-shell-command
             "webdav_sync" "*webdav_sync*"
             (concat "java -Dderby.system.home="  (expand-file-name "~/.webdav_sync/")
                     " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
-                    " -r -down -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d "
-                    (expand-file-name "~/Nutstore-mobileorg/"))))
-          (pos (memq 'mode-line-modes mode-line-format)))
-      (setcdr pos (cons "org-mobile-pull " (cdr pos)))
-      (set-process-sentinel
-       process
-       (lambda (process signal)
-         (when (memq (process-status process) '(exit signal))
-           (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                               (buffer-substring-no-properties (- (point-max) 6) (point-max))))
-                 (pos (memq 'mode-line-modes mode-line-format)))
-             (if (string-equal webdav_sync-process-output "Done.\n")
-                 (with-current-buffer "task.org"
-                   (insert-file-contents "~/Nutstore-mobileorg/task.org" nil nil nil t)
-                   (org-mobile-pull)
-                   (org-mobile-push)
-                   (message "swint-org-mobile-pull done."))
-               (message "swint-org-mobile-pull failed"))
-             (setcdr pos (remove "org-mobile-pull " (cdr pos)))))))))
-  (defun swint-org-mobile-push ()
-    "Operate on multiple PCs."
-    (interactive)
-    (with-current-buffer "task.org"
-      (org-mobile-push))
-    (let ((process
-           (start-process-shell-command
-            "webdav_sync" "*webdav_sync*"
-            (concat "java -Dderby.system.home="  (expand-file-name "~/.webdav_sync/")
-                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
-                    " -r -up -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d "
-                    (expand-file-name "~/Nutstore-mobileorg/"))))
-          (pos (memq 'mode-line-modes mode-line-format)))
-      (setcdr pos (cons "org-mobile-push " (cdr pos)))
-      (set-process-sentinel
-       process
-       (lambda (process signal)
-         (when (memq (process-status process) '(exit signal))
-           (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                               (buffer-substring-no-properties (- (point-max) 6) (point-max))))
-                 (pos (memq 'mode-line-modes mode-line-format)))
-             (if (string-equal webdav_sync-process-output "Done.\n")
-                 (message "swint-org-mobile-push done.")
-               (message "swint-org-mobile-push failed"))
-             (setcdr pos (remove "org-mobile-push " (cdr pos)))))))))
-  (define-key org-mode-map (kbd "C-c M-,") 'swint-org-mobile-pull)
-  (define-key org-mode-map (kbd "C-c M-.") 'swint-org-mobile-push)
+                    " -r -" arg " -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d "
+                    (expand-file-name "~/Nutstore-mobileorg/")))))
+      (lexical-let ((pos (memq 'mode-line-modes mode-line-format))
+                    (sync (cond ((equal arg "down") "pull")
+                                ((equal arg "up") "push"))))
+        (setcdr pos (cons (concat "Org-mobile " sync " ") (cdr pos)))
+        (set-process-sentinel
+         process
+         (lambda (process signal)
+           (when (memq (process-status process) '(exit signal))
+             (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
+                                                 (buffer-substring-no-properties (- (point-max) 6) (point-max))))
+                   (pos (memq 'mode-line-modes mode-line-format)))
+               (if (string-equal webdav_sync-process-output "Done.\n")
+                   (with-current-buffer "task.org"
+                     (when (equal sync "pull")
+                       (insert-file-contents "~/Nutstore-mobileorg/task.org" nil nil nil t)
+                       (org-mobile-pull)
+                       (org-mobile-push))
+                     (message "Org-mobile %s done." sync))
+                 (message "Org-mobile %s failed." sync))
+               (setcdr pos (remove (concat "Org-mobile " sync " ") (cdr pos))))))))))
+  (define-key org-mode-map (kbd "C-c M-,") '(lambda () (interactive) (swint-org-mobile-sync "down")))
+  (define-key org-mode-map (kbd "C-c M-.") '(lambda () (interactive) (swint-org-mobile-sync "up")))
   ;; =================mobileorg=================
 ;;;; org输出doc
   ;; =================org输出doc================
