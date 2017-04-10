@@ -70,6 +70,7 @@
             dired-narrow
             dired-ranger
             diredful
+            disaster
             drag-stuff
             dumb-jump
             function-args

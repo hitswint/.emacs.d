@@ -29,6 +29,7 @@
                                                               (interactive)
                                                               (setq-local compilation-read-command nil)
                                                               (call-interactively 'compile)))
+              (define-key c-mode-base-map (kbd "C-c d") 'disaster)
               (define-key c-mode-base-map (kbd "C-M-q") nil)
               (define-key c-mode-base-map (kbd "C-M-h") nil)
               (define-key c-mode-base-map (kbd "(") nil)
@@ -193,4 +194,9 @@
   :mode (("\\.pde\\'" . arduino-mode)
          ("\\.ino\\'" . arduino-mode)))
 ;; ===================arduino===================
+;; ==================disaster===================
+(use-package disaster
+  :defer t
+  :commands disaster)
+;; ==================disaster===================
 (provide 'setup_ccmode)

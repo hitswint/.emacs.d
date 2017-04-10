@@ -94,7 +94,7 @@
              (file-name-nondirectory (directory-file-name project-to-switch))
              persp-projectile-hash)
     ;; 删除不在projectile-known-projects中的project。
-    (mapcar '(lambda (x) (remhash x persp-projectile-hash))
+    (mapcar #'(lambda (x) (remhash x persp-projectile-hash))
             (remove-if (lambda (x)
                          (member x projectile-known-projects))
                        (hash-table-keys persp-projectile-hash))))
