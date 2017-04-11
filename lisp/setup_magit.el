@@ -41,8 +41,8 @@
                         (read-string "Remote url: " (cond
                                                      (is-lin (concat "~/Nutstore/" remote-repository-name))
                                                      (is-win (concat "file:///cygdrive/c/Users/swint/Nutstore/" remote-repository-name)))))))
-  (global-set-key (kbd "M-g ,") 'swint-magit-clone-nutstore)
-  (global-set-key (kbd "M-g .") 'swint-magit-remote-nutstore)
+  (global-set-key (kbd "M-g M-,") 'swint-magit-clone-nutstore)
+  (global-set-key (kbd "M-g M-.") 'swint-magit-remote-nutstore)
   ;; ===========初始化远程库和克隆远程库===========
 ;;; 使用git管理doc文件
   ;; =============使用git管理doc文件===============

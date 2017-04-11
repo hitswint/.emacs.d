@@ -351,14 +351,14 @@
 (use-package multifiles
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s t" . mf/mirror-region-in-multifile))
+  :bind ("M-g m" . mf/mirror-region-in-multifile))
 ;; ===================multifiles===================
 ;;; ztree
 ;; =====================ztree======================
 (use-package ztree-diff
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s z" . ztree-diff))
+  :bind ("M-g z" . ztree-diff))
 ;; =====================ztree======================
 ;;; which-key
 ;; ====================which-key===================
@@ -475,36 +475,21 @@ is named like ODF with the extension turned to pdf."
 ;; ===================visual-regexp================
 ;;; vlf
 ;; =======================vlf======================
-;; vlf把大文件分成多个batch，以改善性能。
 (use-package vlf
-  ;; Enabled at idle.
+  ;; Enabled at commands.
   :defer t
   :bind (:map dired-mode-map
-              ("M-s v" . dired-vlf))
+              ("V" . dired-vlf))
   :init
   ;; Enable vlf when opening files bigger than 100MB.
   (setq large-file-warning-threshold 100000000)
   :config
   (use-package vlf-setup)
-  (define-key vlf-prefix-map "\C-c\C-v" nil)
-  (define-key vlf-prefix-map "\M-sv" vlf-mode-map)
   (smartrep-define-key vlf-mode-map ""
     '(("n" . vlf-next-batch)
-      ("p" . vlf-prev-batch)
-      ("<" . vlf-beginning-of-file)
-      (">" . vlf-end-of-file)))
+      ("p" . vlf-prev-batch)))
   (custom-set-variables '(vlf-application 'dont-ask))
   (add-to-list 'vlf-forbidden-modes-list 'pdf-view-mode))
-;; C-c C-v n and C-c C-v p move batch by batch.
-;; C-c C-v SPC displays batch starting from current point.
-;; C-c C-v [ and C-c C-v ] take you to the beginning and end of file respectively.
-;; C-c C-v j jumps to particular batch number.
-;; C-c C-v + and C-c C-v - control current batch size by factors of 2.
-;; C-c C-v s and C-c C-v r search forward and backward respectively over the whole file, batch by batch.
-;; C-c C-v % does search and query replace saving intermediate changes.
-;; C-c C-v l jumps to given line in file.
-;; M-x vlf-ediff-files and M-x vlf-ediff-buffers to compare files/buffers batch by batch.
-;; C-c C-v o builds index over whole file for given regular expression just like M-x occur.
 ;; =======================vlf======================
 ;;; easy-kill
 ;; =====================easy-kill==================

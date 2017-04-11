@@ -17,10 +17,9 @@
   ;; =================Appearance================
 ;;;; Capture
   ;; =================Capture===================
-  (global-set-key (kbd "M-s o") nil)
-  (global-set-key (kbd "M-s o l") 'org-store-link)
-  (global-set-key (kbd "M-s o c") 'org-capture)
-  (global-set-key (kbd "M-s o a") 'org-agenda)
+  (global-set-key (kbd "M-O l") 'org-store-link)
+  (global-set-key (kbd "M-O c") 'org-capture)
+  (global-set-key (kbd "M-O a") 'org-agenda)
   (setq org-capture-templates
         '(("i" "Idea" entry (file+headline "~/org/task.org" "Idea List") "* TODO %? %^g")
           ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
@@ -163,19 +162,12 @@
   ;; ===================截图====================
 ;;;; 插入截图
   ;; =================插入截图==================
-  ;; 如果有#+ATTR_LATEX: :width 100则设置为图片宽度为100，否则显示原尺寸。
+  ;; 如果有#+ATTR_ORG: :width 100则设置为图片宽度为100，否则显示原尺寸。
   ;; 设置尺寸之后使用org-redisplay-inline-images(C-c C-x C-M-v)更新图片。
   (setq org-image-actual-width nil)
   (add-hook 'org-mode-hook 'iimage-mode)
   (add-hook 'org-mode-hook 'org-display-inline-images)
-  (global-set-key (kbd "C-x C-M-v") 'iimage-mode)
-  (define-key org-mode-map (kbd "C-x C-M-v") '(lambda ()
-                                                (interactive)
-                                                (if (iimage-mode)
-                                                    (turn-off-iimage-mode)
-                                                  (turn-on-iimage-mode))
-                                                (org-toggle-inline-images)))
-  ;; 图片显示受到两个因素的影响，只有iimage-mode和org-display-inline-images都打开才能显示图片。
+  (global-set-key (kbd "M-g v") 'iimage-mode)
   (defun swint-insert-screenshot (&optional arg)
     "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
@@ -648,7 +640,7 @@ depending on the last command issued."
   (add-hook 'message-mode-hook 'outline-minor-mode)
   (add-hook 'lisp-interaction-mode-hook
             (lambda () (outline-minor-mode -1)))
-  (defvar outline-minor-mode-prefix "\M-so")
+  (defvar outline-minor-mode-prefix "\M-O")
   :config
   (add-hook 'outline-minor-mode-hook
             (lambda ()
