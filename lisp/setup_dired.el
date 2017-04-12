@@ -86,7 +86,8 @@
   ;; ==========helm-dired-current-file=========
   (defun helm-dired-current-file ()
     (interactive)
-    (let ((swint-dired-current-file (dired-get-filename)))
+    (let ((swint-dired-current-file (or (dired-get-filename nil t)
+                                        (expand-file-name default-directory))))
       (if (file-directory-p swint-dired-current-file)
           (helm-find-files-1 (file-name-as-directory swint-dired-current-file))
         (helm-find-files-1 (expand-file-name default-directory)

@@ -17,6 +17,9 @@
          ("C-x C-M-#" . pyvenv-deactivate))
   :config
   (elpy-enable)
+  ;; 有rope和jedi两种后端，refactor需rope，jedi对补全支持好。
+  ;; 同时安装时默认采用rope，手动设置以便采用jedi补全。
+  (setq elpy-rpc-backend "jedi")
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (define-key elpy-mode-map (kbd "M-.") nil)
   (define-key elpy-mode-map (kbd "C-c C-c") '(lambda (arg) (interactive "P")
