@@ -19,14 +19,24 @@
                                "新世纪英汉科技大词典"
                                "新世纪汉英科技大词典"
                                "Collins\\ Cobuild\\ English\\ Dictionary"))
-(defun sdcv-search-with-dictionary (word dictionary-list)
+(defun sdcv-search-with-dictionary (word dictionary-list &optional to-buffer)
   "Search some WORD with dictionary list."
   (mapconcat (lambda (dict)
                (replace-regexp-in-string "^对不起，没有发现和.*\n" ""
                                          (shell-command-to-string
                                           (format "sdcv -n %s %s"
                                                   (concat "-u " dict) word))))
-             dictionary-list "\n"))
+             (if to-buffer dictionary-list
+               (butlast dictionary-list)) (if to-buffer "\n")))
+(defun swint-sdcv-to-postip ()
+  "Search WORD simple translate result."
+  (interactive)
+  (let ((word (swint-get-words-at-point)))
+    (pos-tip-show
+     (replace-regexp-in-string "-->\\(.*\\)\n-->\\(.*\\)\n" "\\1：\\2"
+                               (replace-regexp-in-string
+                                "\\(^Found\\ [[:digit:]]+\\ items,\\ similar\\ to \\(.*\\)\\.\n\\)" ""
+                                (sdcv-search-with-dictionary word sdcv-dictionary-list))) nil nil nil 0)))
 (defun swint-sdcv-to-buffer ()
   (interactive)
   (let ((word (swint-get-words-at-point)))
@@ -37,7 +47,7 @@
       (set-buffer "*sdcv*")
       (buffer-disable-undo)
       (erase-buffer)
-      (insert (sdcv-search-with-dictionary word sdcv-dictionary-list))
+      (insert (sdcv-search-with-dictionary word sdcv-dictionary-list t))
       (yasdcv--output-cleaner:common)
       (sdcv-mode)
       (show-all)
@@ -66,7 +76,7 @@
 (use-package bing-dict
   ;; Enabled at commands.
   :defer t
-  :bind ("C-M-@" . swint-bing-google-translate)
+  :bind ("C-x C-M-2" . swint-bing-google-translate)
   :config
   (defun swint-bing-google-translate ()
     (interactive)
