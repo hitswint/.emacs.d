@@ -689,13 +689,9 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   :defer t
   ;; helm-do-ag 互动式搜索，但只能搜索一个词。
   ;; helm-ag 先输入词，可以在结果中搜索第二个词。
-  :bind (("C-x g" . swint-helm-do-ag)
+  :bind (("C-x g" . helm-do-ag)
          ("C-x G" . helm-do-ag-buffers))
   :config
-  (defun swint-helm-do-ag (&optional arg)
-    (interactive "P")
-    (if arg (call-interactively 'helm-do-ag)
-      (helm-do-ag nil default-directory)))
   (define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)
   (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)
   ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果。
