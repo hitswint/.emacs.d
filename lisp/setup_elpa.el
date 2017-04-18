@@ -73,6 +73,7 @@
             disaster
             drag-stuff
             dumb-jump
+            firefox-controller
             function-args
             easy-kill
             ein

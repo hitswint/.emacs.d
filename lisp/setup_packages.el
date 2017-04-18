@@ -915,4 +915,14 @@ is named like ODF with the extension turned to pdf."
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
 ;; =================markdown-mode==================
+;; ===============firefox-controller===============
+(use-package firefox-controller
+  ;; Enabled at commands.
+  :defer t
+  :bind (("M-s M-f" . firefox-controller-remote-mode)
+         ("M-s M-F" . firefox-controller-direct-mode))
+  :config
+  (define-key firefox-controller-remote-mode-map (kbd "C-M-g") #'firefox-controller-focus-content)
+  (define-key firefox-controller-remote-mode-map (kbd "C-g") #'firefox-controller-remote-mode-quit))
+;; ===============firefox-controller===============
 (provide 'setup_packages)
