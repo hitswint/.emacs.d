@@ -1,5 +1,5 @@
-;;; DEFAULT
-;; ==================DEFAULT====================
+;;; Default
+;; ==================Default====================
 (setq default-major-mode 'text-mode)    ;默认使用text模式。
 (global-font-lock-mode t)               ;语法高亮。
 (auto-image-file-mode t)                ;打开图片显示功能。
@@ -33,9 +33,9 @@
 ;; Enable all disabled commands.
 (setq disabled-command-function nil)
 ;; (setq debug-on-error t)
-;; ==================DEFAULT====================
-;;; 快捷键
-;; ===================快捷键====================
+;; ==================Default====================
+;;; Keybindings
+;; ================Keybindings==================
 (global-set-key (kbd "C-x C-M-j") 'speedbar-get-focus)
 (global-set-key (kbd "M-,") 'delete-other-windows)
 (global-set-key (kbd "M-.") 'delete-window)
@@ -46,24 +46,26 @@
 (global-set-key (kbd "M-s 2") 'run-octave)
 (global-set-key (kbd "M-s @") 'calculator)
 (global-set-key (kbd "C-M-6") 'calendar)
-;; C-x SPC 矩形复制模式。
+(global-set-key (kbd "C-x C-l") 'reposition-window)
 (global-set-key (kbd "C-;") 'set-mark-command)
+(global-set-key (kbd "C-x C-;") 'rectangle-mark-mode)
 (global-set-key [f9] 'menu-bar-mode)
-(global-set-key (kbd "M-S-SPC") 'just-one-space)
+(global-set-key (kbd "S-SPC") 'just-one-space)
 (global-set-key (kbd "M-s SPC") 'delete-horizontal-space)
 (global-set-key (kbd "C-SPC") nil)
 (global-set-key (kbd "<C-M-backspace>") 'backward-kill-sexp)
 (define-key lisp-interaction-mode-map (kbd "C-j") nil)
-;; ===================快捷键====================
-;;; smartrep
-;; ==================smartrep===================
-(use-package smartrep
-  ;; Enabled automatically.
-  :config
-  (setq smartrep-mode-line-string-activated nil))
-;; ==================smartrep===================
+(smartrep-define-key global-map "<escape>"
+  '(("i" . tab-to-tab-stop)
+    ("u" . upcase-word)
+    ("l" . downcase-word)
+    ("c" . capitalize-word)
+    ("q" . fill-paragraph)
+    ("h" . mark-paragraph)
+    ("k" . kill-sentence)))
+;; ================Keybindings==================
+;;; Local Variables
 ;; ==============Local Variables================
-;;; Local variables.
 ;; add-file-local-variable/-prop-line分别在尾首加local variables。
 ;; ==============Local Variables================
 (provide 'setup_default)

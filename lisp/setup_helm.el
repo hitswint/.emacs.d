@@ -724,7 +724,7 @@ i.e (identity (string-match \"foo\" \"foo bar\")) => t."
   ;; Enabled at commands.
   :defer t
   :bind (("M-s i" . helm-semantic-or-imenu)
-         ("M-s TAB" . helm-imenu-outshine))
+         ("M-s M-i" . helm-imenu-outshine))
   :config
   (setq helm-imenu-delimiter " | ")
   ;; helm-imenu-outshine.

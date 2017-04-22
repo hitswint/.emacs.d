@@ -69,6 +69,9 @@
   (add-to-list 'desktop-minor-mode-table '(diff-hl-flydiff-mode nil))
   (add-to-list 'desktop-minor-mode-table '(diff-hl-dired-mode nil))
   (add-to-list 'desktop-minor-mode-table '(interleave-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(interleave-pdf-mode nil)))
+  (add-to-list 'desktop-minor-mode-table '(interleave-pdf-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(interleave-pdf-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(highlight-indentation-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(highlight-indentation-current-column-mode nil)))
 ;; ===================desktop====================
 (provide 'setup_desktop_session)

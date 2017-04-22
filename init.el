@@ -1,38 +1,38 @@
-;; ===================OS====================
+;; ==================OS====================
 (setq is-mac (equal system-type 'darwin))
 (setq is-win (equal system-type 'windows-nt))
 (setq is-lin (equal system-type 'gnu/linux))
 (setq is-T510 (file-exists-p "~/is-T510.org"))
 (setq is-X201 (file-exists-p "~/is-X201.org"))
-;; ===================PATH==================
+;; ==================PATH==================
 (when is-win
   (setenv "HOME" "c:/Users/swint")
   ;; (setenv "PATH" "c:/Users/swint/")
   ;; 必须注销这行，因为会让latex失效。
-  ;; set the default file path
+  ;; Set the default file path.
   (setq default-directory "~/")
-  ;; 使emacs可以使用win键
+  ;; 使emacs可以使用win键。
   (setq w32-lwindow-modifier 'super)
   (run-with-idle-timer 0.0 nil 'w32-send-sys-command 61488))
-;; Set path to dependencies
+;; Set path to dependencies.
 (setq site-lisp-dir
       (expand-file-name "site-lisp" user-emacs-directory))
 (setq lisp-dir
       (expand-file-name "lisp" user-emacs-directory))
 (setq defuns-dir
       (expand-file-name "defuns" user-emacs-directory))
-(setq user-settings-dir                 ;Settings for currently logged in user
+(setq user-settings-dir
       (concat user-emacs-directory "users/" user-login-name))
-;; Set up load path
+;; Set up load path.
 (add-to-list 'load-path site-lisp-dir)
 (add-to-list 'load-path lisp-dir)
 (add-to-list 'load-path defuns-dir)
 (add-to-list 'load-path user-settings-dir)
-;; Add external projects to load path
+;; Add external projects to load path.
 (dolist (project (directory-files site-lisp-dir t "\\w+"))
   (when (file-directory-p project)
     (add-to-list 'load-path project)))
-;; Functions (load all files in defuns-dir)
+;; Functions (load all files in defuns-dir).
 (dolist (file (directory-files defuns-dir t "\\w+"))
   (when (file-regular-p file)
     (load file)))

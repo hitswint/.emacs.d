@@ -250,7 +250,7 @@
          ("M-F" . drag-stuff-right))
   :config
   (drag-stuff-global-mode t)
-  ;; 重新定义drag-stuff-define-keys函数，取消 M+方向键 的快捷键。
+  ;; 重新定义drag-stuff-define-keys函数，取消"M+方向键"的快捷键。
   (defun drag-stuff-define-keys-cancel-keys ()
     "Defines keys for `drag-stuff-mode'."
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'up) nil)
@@ -581,7 +581,7 @@ is named like ODF with the extension turned to pdf."
 (use-package goto-chg
   ;; Enabled at commands.
   :defer t
-  :bind ("M-s M-m" . swint-goto-last-change-with-prefix)
+  :bind ("M-?" . swint-goto-last-change-with-prefix)
   :config
   (defun swint-goto-last-change-with-prefix (&optional arg)
     (interactive)
@@ -594,8 +594,8 @@ is named like ODF with the extension turned to pdf."
     ;; finalization code is run.
     (condition-case e
         (smartrep-read-event-loop
-         '(("M-m" . goto-last-change)
-           ("M-M" . goto-last-change-reverse)))
+         '(("M-?" . goto-last-change)
+           ("M-/" . goto-last-change-reverse)))
       (quit nil))
     ;; (finalize-event-loop)
     ))
@@ -925,4 +925,12 @@ is named like ODF with the extension turned to pdf."
   (define-key firefox-controller-remote-mode-map (kbd "C-M-g") #'firefox-controller-focus-content)
   (define-key firefox-controller-remote-mode-map (kbd "C-g") #'firefox-controller-remote-mode-quit))
 ;; ===============firefox-controller===============
+;; =============highlight-indentation==============
+(use-package highlight-indentation
+  ;; Enabled in modes.
+  :defer t
+  :diminish (highlight-indentation-mode highlight-indentation-current-column-mode)
+  :init
+  (add-hook 'prog-mode-hook 'highlight-indentation-current-column-mode))
+;; =============highlight-indentation==============
 (provide 'setup_packages)

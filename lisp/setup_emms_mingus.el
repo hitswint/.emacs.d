@@ -4,14 +4,11 @@
   ;; Enabled at commands.
   :if is-lin
   :defer t
-  :bind (("M-s e l" . swint-emms-playlist-mode-go)
+  :bind (("M-s e l" . emms-playlist-mode-go)
          ("M-s e o" . emms-play-file))
   :config
-  (defun swint-emms-playlist-mode-go ()
-    "Swint-playlist."
-    (interactive)
-    (emms-player-mpd-connect)
-    (emms-playlist-mode-go))
+  (advice-add 'emms-playlist-mode-go :before #'emms-player-mpd-connect)
+  (advice-add 'emms-play-file :before #'(lambda (file) (emms-player-mpd-update-all)))
   (use-package emms-setup)
   (emms-devel)
   (setq emms-player-mpg321-command-name "mpg321"
@@ -41,12 +38,12 @@
   (global-set-key (kbd "M-s e c") 'emms-player-mpd-connect)
   (global-set-key (kbd "s-/") 'emms-pause)
   (global-set-key (kbd "s-?") 'emms-stop)
-  ;; (global-set-key (kbd "C-M-<up>") 'emms-volume-raise)
-  ;; (global-set-key (kbd "C-M-<down>") 'emms-volume-lower)
   (global-set-key (kbd "s-,") 'emms-seek-backward)
   (global-set-key (kbd "s-.") 'emms-seek-forward)
   (global-set-key (kbd "s-<") 'emms-previous)
-  (global-set-key (kbd "s->") 'emms-next))
+  (global-set-key (kbd "s->") 'emms-next)
+  (global-set-key (kbd "C-s-,") 'emms-volume-lower)
+  (global-set-key (kbd "C-s-.") 'emms-volume-raise))
 ;; ================emms==================
 ;;; mingus
 ;; ===============mingus=================
@@ -55,22 +52,17 @@
   :if is-win
   :defer t
   :bind (("M-s e l" . mingus)
-         ("M-s e o" . swint-mingus-browse))
+         ("M-s e o" . mingus-browse))
   :config
-  (defun swint-mingus-browse ()
-    "swint-mingus-browse."
-    (interactive)
-    (mingus)
-    (mingus-browse))
   (autoload 'mingus "mingus-stays-home" nil t)
   (global-set-key (kbd "s-/") 'mingus-toggle)
   (global-set-key (kbd "s-?") 'mingus-stop)
-  ;; (global-set-key (kbd "C-M-<up>") 'mingus-vol-up)
-  ;; (global-set-key (kbd "C-M-<down>") 'mingus-vol-down)
   (global-set-key (kbd "s-,") 'mingus-seek-backward)
   (global-set-key (kbd "s-.") 'mingus-seek)
   (global-set-key (kbd "s-<") 'mingus-prev)
   (global-set-key (kbd "s->") 'mingus-next)
+  (global-set-key (kbd "C-s-,") 'mingus-vol-down)
+  (global-set-key (kbd "C-s-.") 'mingus-vol-up)
   (add-hook 'mingus-browse-hook '(lambda ()
                                    (define-key mingus-browse-map (kbd "C-j") '(lambda () (interactive)
                                                                                 (mingus-clear t)

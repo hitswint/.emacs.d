@@ -6,7 +6,7 @@
   :config
   (cond
    (is-lin (setq cfs--current-profile-name "profile-lin"))
-   (is-win (setq cfs--current-profile-name "profile-win")) ;Win下需要安装libreoffice。
+   (is-win (setq cfs--current-profile-name "profile-win"))
    (is-mac (setq cfs--current-profile-name "profile-mac")))
   ;; Emacs启动时自动设定fontsize。
   (defun swint-cfs-set-font-with-saved-size ()
@@ -29,8 +29,8 @@
   ;; Enabled at commands.
   :defer t
   :commands pyim-cwords-at-point
-  :bind (("C-M-SPC" . pyim-convert-code-at-point)
-         ("S-SPC" . pyim-punctuation-translate-at-point))
+  :bind (("C-x SPC" . pyim-convert-code-at-point)
+         ("C-x S-SPC" . pyim-punctuation-translate-at-point))
   :init
   (bind-key "C-S-SPC" 'toggle-input-method)
   :config

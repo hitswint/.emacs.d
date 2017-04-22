@@ -84,7 +84,7 @@ LEAF is normally ((BEG . END) . WND)."
                ((string= old-str "\t")
                 (concat str (make-string (max (- tab-width len) 0) ?\ )))
                (t
-                ;; add padding for wide-width character
+                ;; Add padding for wide-width character.
                 ;; 确定是否添加padding。
                 (save-excursion
                   (goto-char beg)

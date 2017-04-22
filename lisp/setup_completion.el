@@ -54,9 +54,9 @@
 (use-package ac-ispell
   ;; Enabled at commands.
   :defer t
-  :bind ("M-?" . swint-auto-complete-ispell)
+  :bind ("M-U" . swint-auto-complete-ispell)
   :config
-  (bind-key "M-?" 'hippie-expand ac-completing-map)
+  (bind-key "M-U" 'hippie-expand ac-completing-map)
   (defun swint-auto-complete-ispell (&optional arg)
     (interactive)
     (if (featurep 'company)
@@ -284,9 +284,9 @@
   (use-package company-try-hard
     ;; Enabled at commands.
     :defer t
-    :bind ("M-U" . company-try-hard)
+    :bind ("M-i" . company-try-hard)
     :config
-    (define-key company-active-map (kbd "M-U") 'company-try-hard))
+    (define-key company-active-map (kbd "M-i") 'company-try-hard))
   ;; ============company-try-hard==============
 ;;;; company-quickhelp-mode
   ;; ==========company-quickhelp-mode==========

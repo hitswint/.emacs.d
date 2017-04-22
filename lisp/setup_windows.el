@@ -111,10 +111,14 @@ If prefix ARG is given, delete the window instead of selecting it."
   :commands (swint-windmove-left swint-windmove-right swint-windmove-up swint-windmove-down)
   :init
   (smartrep-define-key global-map "M-s"
-    '(("h" . swint-windmove-left)
-      ("l" . swint-windmove-right)
-      ("k" . swint-windmove-up)
-      ("j" . swint-windmove-down)))
+    '(("H" . swint-windmove-left)
+      ("L" . swint-windmove-right)
+      ("K" . swint-windmove-up)
+      ("J" . swint-windmove-down)
+      ("h" . move-border-left)
+      ("l" . move-border-right)
+      ("k" . move-border-up)
+      ("j" . move-border-down)))
   :config
   (defun swint-windmove-left ()
     "Funtion return new function that ignore errors.
@@ -143,10 +147,6 @@ If prefix ARG is given, delete the window instead of selecting it."
 ;; ================windmove=====================
 ;;; intuitive window resizing
 ;; ===========intuitive window resizing============
-(global-set-key (kbd "M-H") 'move-border-left)
-(global-set-key (kbd "M-L") 'move-border-right)
-(global-set-key (kbd "M-K") 'move-border-up)
-(global-set-key (kbd "M-J") 'move-border-down)
 (defun xor (b1 b2)
   (or (and b1 b2)
       (and (not b1) (not b2))))

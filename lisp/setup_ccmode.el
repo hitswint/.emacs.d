@@ -98,6 +98,7 @@
   (add-hook 'c-mode-hook 'fa-config-default)
   :config
   (define-key function-args-mode-map (kbd "C-c u") 'moo-complete)
+  (define-key function-args-mode-map (kbd "C-c j") 'moo-jump-directory)
   (define-key function-args-mode-map (kbd "C-c i") 'moo-jump-local)
   (define-key function-args-mode-map (kbd "C-c o") '(lambda ()
                                                       (interactive)
@@ -111,7 +112,8 @@
   (define-key function-args-mode-map (kbd "M-h") nil)
   (define-key function-args-mode-map (kbd "M-n") nil)
   (define-key function-args-mode-map (kbd "M-j") nil)
-  (define-key function-args-mode-map (kbd "C-M-j") nil))
+  (define-key function-args-mode-map (kbd "C-M-j") nil)
+  (define-key function-args-mode-map (kbd "C-M-k") nil))
 ;; ==================function-args==============
 ;;; hs-minor-mode
 ;; ==================hs-minor-mode==============

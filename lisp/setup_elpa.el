@@ -229,4 +229,11 @@ Missing packages are installed automatically."
 (require 'diminish)
 (require 'bind-key)
 ;; =================USE-PACKAGE=====================
+;;; smartrep
+;; ===================smartrep======================
+(use-package smartrep
+  ;; Enabled automatically.
+  :config
+  (setq smartrep-mode-line-string-activated nil))
+;; ===================smartrep======================
 (provide 'setup_elpa)

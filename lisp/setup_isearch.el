@@ -25,7 +25,6 @@
   :bind (("C-s" . isearch-forward-pinyin)
          ("C-r" . isearch-backward-pinyin))
   :config
-  ;; ==========Isearch thing at point===========
   (defun symbol-name-at-point ()
     (let ((symbol (symbol-at-point)))
       (if symbol
@@ -41,7 +40,6 @@
       (deactivate-mark)
       (isearch-yank-string swint-isearch-current-thing)))
   (define-key isearch-mode-map (kbd "C-t") 'isearch-thing)
-  ;; ==========Isearch thing at point===========
   (define-key isearch-mode-map (kbd "C-q") #'isearch-toggle-pinyin)
   ;; 同时搜索中英文，与ace-jump一样，对于.*+?等正则表达式使用的符号无效。
   (defun swint-pinyin-search--pinyin-to-regexp (fn string)
@@ -54,8 +52,7 @@
         (setq swint-regexp (concat string "\\|" string-converted)))
       swint-regexp))
   (advice-add 'pinyin-search--pinyin-to-regexp :around #'swint-pinyin-search--pinyin-to-regexp)
-  (add-hook 'isearch-mode-end-hook (lambda ()
-                                     (setq pinyin-search-activated nil))))
+  (add-hook 'isearch-mode-end-hook (lambda () (setq pinyin-search-activated nil))))
 ;; ==================pinyin-search=================
 ;;; 拼音首字母搜索
 ;; =================拼音首字母搜索=================
