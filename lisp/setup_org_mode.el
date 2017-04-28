@@ -44,7 +44,7 @@
                (setq org-special-ctrl-k t)
                (turn-on-font-lock)
                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
-               (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
+               (define-key org-mode-map (kbd "C-c C-b") 'org-beamer-select-environment)
                (define-key org-mode-map (kbd "C-c C-v") 'swint-org-open-export-pdf)
                (define-key org-mode-map (kbd "C-c j") 'swint-open-at-point-with-apps)
                (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
@@ -80,8 +80,9 @@
   ;; 显示两周的agenda。
   (setq org-agenda-span 14)
   ;; 设定todo的子项完成后主项自动完成。
-  (add-hook 'org-after-todo-statistics-hook '(lambda ()
-                                               (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+  (add-hook 'org-after-todo-statistics-hook '(lambda (n-done n-not-done)
+                                               (let (org-log-done org-log-states)
+                                                 (org-todo (if (= n-not-done 0) "DONE" "TODO")))))
   ;; 设定todo关键词。
   (setq org-todo-keywords
         '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")))

@@ -82,3 +82,11 @@
                        nil nil (car (car words-at-point)))
         (ido-completing-read "Get Words:" (remove-duplicates (mapcar 'car words-at-point)))))))
 ;; ===============Get-words-at-point===============
+;; =================pandoc-output==================
+(defun pandoc-output (&optional arg)
+  (interactive)
+  (let ((output-format (read-string "Output format (default docx): " nil nil "docx")))
+    (shell-command (concat "pandoc -o " (file-name-base) "." output-format " "
+                           (file-name-nondirectory (buffer-file-name))))))
+(global-set-key (kbd "M-g o") 'pandoc-output)
+;; =================pandoc-output==================

@@ -311,7 +311,7 @@
   ;; Enabled automatically.
   :if is-lin
   :config
-  (fcitx-prefix-keys-add "M-s" "M-g")
+  (fcitx-prefix-keys-add "M-s" "M-g" "M-O")
   (fcitx-aggressive-setup)
   (fcitx-isearch-turn-on))
 ;; ======================fcitx=====================
@@ -933,4 +933,16 @@ is named like ODF with the extension turned to pdf."
   :init
   (add-hook 'prog-mode-hook 'highlight-indentation-current-column-mode))
 ;; =============highlight-indentation==============
+;; =================rainbow-mode===================
+(use-package rainbow-mode
+  :defer t
+  :commands rainbow-mode
+  :init
+  (dolist (hook '(web-mode-hook
+                  css-mode-hook
+                  html-mode-hook
+                  web-mode-hook
+                  emacs-lisp-mode-hook))
+    (add-hook hook 'rainbow-mode)))
+;; =================rainbow-mode===================
 (provide 'setup_packages)

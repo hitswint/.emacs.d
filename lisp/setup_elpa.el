@@ -161,6 +161,7 @@
             pyvenv
             quickrun
             rainbow-delimiters
+            rainbow-mode
             readline-complete
             recentf-ext
             rich-minority

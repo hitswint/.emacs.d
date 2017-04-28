@@ -89,15 +89,6 @@
         (kill-process (TeX-active-process)))
     (swint-kill-this-buffer))
   ;; ================关闭tex buffer================
-;;;; pandoc
-  ;; ===================pandoc=====================
-  (defun pandoc-latex-to-doc ()
-    (interactive)
-    (shell-command (concat "pandoc -o " (file-name-base) ".docx " (file-name-nondirectory (buffer-file-name)))))
-  (add-hook 'LaTeX-mode-hook
-            '(lambda ()
-               (define-key LaTeX-mode-map (kbd "C-c C-S-e") 'pandoc-latex-to-doc)))
-  ;; ===================pandoc=====================
   )
 ;; =====================auctex=====================
 ;;; auctex-latexmk
