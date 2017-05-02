@@ -56,13 +56,6 @@ When there is a text selection, act on the region."
             (fill-paragraph nil))))
       (put this-command 'stateIsCompact-p (if currentStateIsCompact nil t)))))
 ;; ===========compact-uncompact-block==============
-;;; 合并一行
-;; ===================合并一行=====================
-(global-set-key (kbd "C-S-Q")
-                (lambda()
-                  (interactive)
-                  (join-line -1)))
-;; ===================合并一行=====================
 ;;; 复制和粘贴行
 ;; =================复制和粘贴行===================
 ;; (defun copy-line-or-region ()

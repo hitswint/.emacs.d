@@ -68,6 +68,7 @@
   (add-to-list 'sml/hidden-modes " HSA")
   (add-to-list 'sml/hidden-modes " ||")
   (add-to-list 'sml/hidden-modes " Elpy")
+  (add-to-list 'sml/hidden-modes " ElDoc")
   (add-to-list 'sml/hidden-modes " skewer")
   (add-to-list 'sml/hidden-modes " skewer-css")
   (add-to-list 'sml/hidden-modes " skewer-html"))
@@ -96,7 +97,7 @@ want to use in the modeline *in lieu of* the original.")
                      (old-mode-str (cdr (assq mode minor-mode-alist))))
                 (when old-mode-str
                   (setcar old-mode-str mode-str))
-                ;; major mode
+                ;; Major mode.
                 (when (eq mode major-mode)
                   (setq mode-name mode-str)))))
 (add-hook 'after-change-major-mode-hook 'clean-mode-line)

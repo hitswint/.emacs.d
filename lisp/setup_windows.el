@@ -96,13 +96,6 @@ If prefix ARG is given, delete the window instead of selecting it."
    (is-lin (global-set-key (kbd "<C-S-iso-lefttab>") 'transpose-with-previously-selected-window))
    (is-win (global-set-key (kbd "C-S-<tab>") 'transpose-with-previously-selected-window))))
 ;; ==============window-numbering===============
-;;; switch-window
-;; ===============switch-window=================
-(use-package switch-window
-  ;; Enabled at commands.
-  :defer t
-  :bind ("C-x o" . switch-window))
-;; ===============switch-window=================
 ;;; windmove
 ;; ================windmove=====================
 (use-package windmove

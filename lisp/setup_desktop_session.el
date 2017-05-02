@@ -72,6 +72,10 @@
   (add-to-list 'desktop-minor-mode-table '(interleave-pdf-mode nil))
   (add-to-list 'desktop-minor-mode-table '(interleave-pdf-mode nil))
   (add-to-list 'desktop-minor-mode-table '(highlight-indentation-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(highlight-indentation-current-column-mode nil)))
+  (add-to-list 'desktop-minor-mode-table '(highlight-indentation-current-column-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(ycmd-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(eldoc-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(ycmd-eldoc-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(rainbow-mode nil)))
 ;; ===================desktop====================
 (provide 'setup_desktop_session)

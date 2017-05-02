@@ -101,11 +101,11 @@
 ;;; 用于代替string-match。
 ;;; 假如name为"中国"，本函数就从"中国"构造出"中国|zg"，
 ;;; 该字符串不但可以跟"中国"匹配，还可以跟"zg"匹配。
-(defun pinyin-initials-string-match (regexp name)
+(defun pinyin-initials-string-match (REGEXP STRING &optional START)
   (let (
-        (pinyin-name (str-unicode-to-pinyin-initial name))
+        (PINYIN-STRING (str-unicode-to-pinyin-initial STRING))
         )
-    (string-match regexp (concat name "|" pinyin-name))
+    (string-match REGEXP (concat STRING "|" PINYIN-STRING) START)
     )
   )
 

@@ -172,7 +172,6 @@
             smartrep
             smex
             swiper
-            switch-window
             tangotango-theme
             undo-tree
             use-package
@@ -193,7 +192,10 @@
           (cond
            (is-lin '(fcitx
                      pdf-tools
-                     tablist))
+                     tablist
+                     ycmd
+                     company-ycmd
+                     flycheck-ycmd))
            (is-win '(w32-browser
                      mingus))))
   "A list of packages to ensure are installed at launch.")

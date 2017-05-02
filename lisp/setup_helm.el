@@ -245,7 +245,22 @@
                     (if (window-live-p (get-buffer-window buffer))
                         (select-window (get-buffer-window buffer))
                       (switch-to-buffer buffer))))))
-  (defun swint-switch-persp/other-window (buffer)
+  (defun swint-helm-buffer-switch-persp/other-window ()
+    "Run switch-persp/other-window action from `helm-source-buffers-list'."
+    (interactive)
+    (with-helm-alive-p
+      (helm-exit-and-execute-action 'swint-helm-switch-persp/other-window)))
+  (defun swint-helm-buffer-persp-add-buffers ()
+    "Run persp-add-buffer action from `helm-source-buffers-list'."
+    (interactive)
+    (with-helm-alive-p
+      (helm-exit-and-execute-action 'swint-helm-persp-add-buffers)))
+  (defun swint-helm-buffer-persp-remove-buffers ()
+    "Run persp-remove-buffer action from `helm-source-buffers-list'."
+    (interactive)
+    (with-helm-alive-p
+      (helm-exit-and-execute-action 'swint-helm-persp-remove-buffers)))
+  (defun swint-helm-switch-persp/other-window (buffer)
     "Helm-switch to persp/other-window simultaneously."
     (if (memq buffer (persp-buffers persp-curr))
         (helm-switch-to-buffers buffer t)
@@ -253,21 +268,22 @@
         (swint-persp-switch "i")
         (switch-to-buffer curr-buf)
         (switch-to-buffer-other-window buffer))))
-  (defun swint-helm-buffer-switch-persp/other-window ()
-    "Run switch-persp/other-window action from `helm-source-buffers-list'."
-    (interactive)
-    (with-helm-alive-p
-      (helm-exit-and-execute-action 'swint-switch-persp/other-window)))
-  (defun swint-helm-buffer-switch-to-buffers ()
-    "Run switch-to-buffers action from `helm-source-buffers-list'."
-    (interactive)
-    (with-helm-alive-p
-      (helm-exit-and-execute-action 'helm-switch-to-buffers)))
-  (defun swint-helm-buffer-persp-remove-buffer ()
-    "Run persp-remove-buffer action from `helm-source-buffers-list'."
-    (interactive)
-    (with-helm-alive-p
-      (helm-exit-and-execute-action 'persp-remove-buffer)))
+  (defun swint-helm-persp-add-buffers (_ignore)
+    (let* ((bufs (helm-marked-candidates))
+           (added-bufs (cl-count-if 'persp-add-buffer bufs)))
+      (when (buffer-live-p helm-buffer)
+        (with-helm-buffer
+          (setq helm-marked-candidates nil
+                helm-visible-mark-overlays nil)))
+      (message "Addded %s buffer(s)" added-bufs)))
+  (defun swint-helm-persp-remove-buffers (_ignore)
+    (let* ((bufs (helm-marked-candidates))
+           (removed-bufs (cl-count-if 'persp-remove-buffer bufs)))
+      (when (buffer-live-p helm-buffer)
+        (with-helm-buffer
+          (setq helm-marked-candidates nil
+                helm-visible-mark-overlays nil)))
+      (message "Removed %s buffer(s)" removed-bufs)))
   ;; =========helm-related-to-persp=============
 ;;;; helm-bookmarks
   ;; ============helm-bookmarks=================
@@ -420,8 +436,8 @@ from its directory."
   (define-key helm-find-files-map (kbd "M-U") 'helm-unmark-all)
   (define-key helm-find-files-map (kbd "M-t") 'helm-toggle-all-marks)
   (define-key helm-find-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
-  (define-key helm-buffer-map (kbd "M-RET") 'swint-helm-buffer-switch-to-buffers)
-  (define-key helm-buffer-map (kbd "C-M-k") 'swint-helm-buffer-persp-remove-buffer)
+  (define-key helm-buffer-map (kbd "C-M-j") 'swint-helm-buffer-persp-add-buffers)
+  (define-key helm-buffer-map (kbd "C-M-k") 'swint-helm-buffer-persp-remove-buffers)
   (define-key helm-buffer-map (kbd "C-o") 'swint-helm-buffer-switch-persp/other-window)
   (define-key helm-read-file-map (kbd "C-l") 'helm-execute-persistent-action)
   (define-key helm-read-file-map (kbd "C-h") 'helm-find-files-up-one-level)
@@ -456,39 +472,12 @@ from its directory."
   ;; ================helm-pinyin================
   ;; iswitchb-pinyin给iswitchb增加拼音头字母搜索的，使用pinyin-initials-string-match函数。
   (load "iswitchb-pinyin")
-  ;; 使buffer支持中文拼音首字母。
-  (defun helm-buffer--match-pattern (pattern candidate)
-    (let ((fun (if (and helm-buffers-fuzzy-matching
-                        (not (pinyin-initials-string-match "\\`\\^" pattern)))
-                   #'helm--mapconcat-candidate
-                 #'identity)))
-      (if (pinyin-initials-string-match "\\`!" pattern)
-          (not (pinyin-initials-string-match (funcall fun (substring pattern 1))
-                                             candidate))
-        (pinyin-initials-string-match (funcall fun pattern) candidate))))
-  ;; 使helm-find-files/recentf支持中文拼音首字母。
-  ;; 会破坏helm-find-files的搜索方式，匹配过多，另建swint-helm-find-files。
+  ;; 修改helm-buffer--match-pattern可使buffer支持中文拼音首字母匹配。
+  ;; 修改helm-mm-3-match可使helm支持中文拼音首字母匹配，但会导致helm-find-files匹配过多。
   ;; 直接输入xx，会产生过多的匹配结果；xx后面加空格，以xx为起始字母；xx前面加空格，搜索结果正常。
-  (cl-defun helm-mm-3-match (str &optional (pattern helm-pattern))
-    "Check if PATTERN match STR.
-When PATTERN contain a space, it is splitted and matching is done
-with the several resulting regexps against STR.
-e.g \"bar foo\" will match \"foobar\" and \"barfoo\".
-Argument PATTERN, a string, is transformed in a list of
-cons cell with `helm-mm-3-get-patterns' if it contain a space.
-e.g \"foo bar\"=>((identity . \"foo\") (identity . \"bar\")).
-Then each predicate of cons cell(s) is called with regexp of same
-cons cell against STR (a candidate).
-i.e (identity (string-match \"foo\" \"foo bar\")) => t."
-    (let ((pat (helm-mm-3-get-patterns pattern)))
-      (cl-loop for (predicate . regexp) in pat
-               always (funcall predicate
-                               (condition-case _err
-                                   ;; FIXME: Probably do nothing when
-                                   ;; using fuzzy leaving the job
-                                   ;; to the fuzzy fn.
-                                   (pinyin-initials-string-match regexp str)
-                                 (invalid-regexp nil))))))
+  (defun helm-mm-3-match-py (orig-fn str &rest args)
+    (apply orig-fn (concat str "|" (str-unicode-to-pinyin-initial str)) args))
+  (advice-add 'helm-mm-3-match :around #'helm-mm-3-match-py)
   ;; ================helm-pinyin================
 ;;;; total commander
   ;; ==============total commander==============

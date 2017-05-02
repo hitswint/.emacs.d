@@ -181,13 +181,10 @@
 (use-package anchored-transpose
   ;; Enabled at commands.
   :defer t
-  :bind ("C-x t" . anchored-transpose)
+  :bind ("M-s M-t" . anchored-transpose)
   :config
   (autoload 'anchored-transpose "anchored-transpose" nil t))
-;; First select the entire phrase and type C-x t. Then select the anchor phrase and type C-x t again. You’re done!
-;; 首先选择整个区域，然后选择锚点，锚点两侧的内容交换。
-;; You can select the anchor phrase first followed by the phrase to be transposed if more convenient. Or select the 2 phrases independently. If you select 2 overlapping sections it ignores the overlap and swaps the non-overlapping sections. It even supports SecondarySelection. Somehow it can always tell what you want ;-)
-;; 另外，可以分别选择两部分交换的内容。
+;; 首先选择整个区域，然后选择锚点，调换锚点两侧的内容；其次，分别选择两部分内容进行调换。
 ;; ================anchored-transpose==============
 ;;; God-mode
 ;; ====================God-mode====================
@@ -402,7 +399,6 @@
   ;; (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
   ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。
   ;; (add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
-  (define-key pdf-view-mode-map (kbd "i") 'imenu)
   (define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save)
   (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
   (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
@@ -432,7 +428,6 @@
   :defer t
   :config
   (setq doc-view-continuous t)
-  (define-key doc-view-mode-map (kbd "i") 'imenu)
   (define-key doc-view-mode-map (kbd "M-v") 'doc-view-scroll-down-or-previous-page)
   (define-key doc-view-mode-map (kbd "C-v") 'doc-view-scroll-up-or-next-page)
   (define-key doc-view-mode-map (kbd "C-p") '(lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
@@ -936,6 +931,7 @@ is named like ODF with the extension turned to pdf."
 ;; =================rainbow-mode===================
 (use-package rainbow-mode
   :defer t
+  :diminish rainbow-mode
   :commands rainbow-mode
   :init
   (dolist (hook '(web-mode-hook

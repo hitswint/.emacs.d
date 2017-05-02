@@ -3,6 +3,7 @@
 (use-package flycheck
   ;; Enabled at commands.
   :defer t
+  :diminish flycheck-mode
   :bind ("M-g c" . flycheck-mode)
   :config
   ;; Change the prefix.
@@ -21,4 +22,9 @@
   :defer t
   :commands helm-flycheck)
 ;; ==============helm-flycheck================
+;; ================flymake====================
+(use-package flymake
+  :diminish flymake-mode
+  :commands flymake-mode)
+;; ================flymake====================
 (provide 'setup_flycheck)

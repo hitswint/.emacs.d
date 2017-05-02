@@ -15,6 +15,8 @@
          ("C-M-#" . swint-cpython)
          ("C-x C-M-3" . pyvenv-workon)
          ("C-x C-M-#" . pyvenv-deactivate))
+  :init
+  (setq elpy-remove-modeline-lighter nil)
   :config
   (elpy-enable)
   ;; 有rope和jedi两种后端，refactor需rope，jedi对补全支持好。

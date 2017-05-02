@@ -797,10 +797,6 @@ depending on the last command issued."
   (define-key interleave-mode-map (kbd "M-n") nil)
   (define-key interleave-pdf-mode-map (kbd "M-.") nil)
   (define-key interleave-pdf-mode-map (kbd "M-p") nil)
-  (define-key interleave-pdf-mode-map (kbd "M-n") nil)
-  (define-key interleave-pdf-mode-map (kbd "i") nil)
-  (define-key doc-view-mode-map (kbd "i") 'imenu)
-  (when is-lin
-    (define-key pdf-view-mode-map (kbd "i") 'imenu)))
+  (define-key interleave-pdf-mode-map (kbd "M-n") nil))
 ;; =================interleave==================
 (provide 'setup_org_mode)
