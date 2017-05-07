@@ -8,8 +8,7 @@
   :config
   (defun swint-auto-complete ()
     (interactive)
-    (if (featurep 'company)
-        (company-abort))
+    (company-abort)
     (unless auto-complete-mode
       (auto-complete-mode t))
     (auto-complete))
@@ -59,8 +58,7 @@
   (bind-key "M-U" 'hippie-expand ac-completing-map)
   (defun swint-auto-complete-ispell (&optional arg)
     (interactive)
-    (if (featurep 'company)
-        (company-abort))
+    (company-abort)
     (unless auto-complete-mode
       (auto-complete-mode t))
     (cond
@@ -267,6 +265,7 @@
   :config
   (global-company-mode 1)
   (setq company-show-numbers t)
+  (setq company-async-timeout 10)
   (define-key company-active-map (kbd "<tab>") nil)
   (define-key company-active-map (kbd "TAB") nil)
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
@@ -405,4 +404,20 @@
     :config
     (flycheck-ycmd-setup)))
 ;; ===================ycmd=====================
+;;; yasnippet
+;; =================yasnippet==================
+(use-package yasnippet
+  ;; Enabled at commands.
+  :defer t
+  :bind ("M-I" . swint-complete-yasnippet)
+  :config
+  (yas-global-mode 1)
+  (defun swint-complete-yasnippet ()
+    (interactive)
+    (company-abort)
+    (unless (and (boundp 'auto-complete-mode) auto-complete-mode)
+      (auto-complete-mode t))
+    (unless (auto-complete '(ac-source-yasnippet))
+      (call-interactively 'company-yasnippet))))
+;; =================yasnippet==================
 (provide 'setup_completion)
