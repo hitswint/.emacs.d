@@ -67,8 +67,8 @@
              (+ chinese-char-and-punc english-word)))))
 (global-set-key (kbd "M-+") 'swint-count-words-region)
 ;; ===================WordsCount===================
-;;; Get-words-at-point
-;; ===============Get-words-at-point===============
+;;; get-words-at-point
+;; ===============get-words-at-point===============
 (defun swint-get-words-at-point ()
   "Get words at point, use pyim-get-words-list-at-point to deal with chinese."
   (interactive)
@@ -81,7 +81,8 @@
           (read-string (format "Get Words (default %s): " (car (car words-at-point)))
                        nil nil (car (car words-at-point)))
         (ido-completing-read "Get Words:" (remove-duplicates (mapcar 'car words-at-point)))))))
-;; ===============Get-words-at-point===============
+;; ===============get-words-at-point===============
+;;; pandoc-output
 ;; =================pandoc-output==================
 (defun pandoc-output (&optional arg)
   (interactive)
@@ -90,3 +91,30 @@
                            (file-name-nondirectory (buffer-file-name))))))
 (global-set-key (kbd "M-g o") 'pandoc-output)
 ;; =================pandoc-output==================
+;;; show-some-last-messages
+;; ============show-some-last-messages=============
+(defcustom default-messages-to-show 4
+  "Default number of messages for `show-some-last-messages'.")
+(defun show-some-last-messages (count)
+  "Show COUNT last lines of the `*Messages*' buffer."
+  (interactive "P")
+  (setq count (if count (prefix-numeric-value count)
+                default-messages-to-show))
+  (save-excursion
+    (set-buffer "*Messages*")
+    (let ((prev-point-max (point-max-marker))
+          (inhibit-read-only t))
+      (message "%s"
+               (progn
+                 (set-buffer "*Messages*")
+                 (buffer-substring-no-properties
+                  (progn
+                    (goto-char (point-max))
+                    (unless (bolp)
+                      (insert "\n"))
+                    (forward-line (- count))
+                    (point))
+                  (point-max))))
+      (delete-region (point-max) prev-point-max))))
+(global-set-key (kbd "M-s M-e") 'show-some-last-messages)
+;; ============show-some-last-messages=============

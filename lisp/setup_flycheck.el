@@ -22,6 +22,7 @@
   :defer t
   :commands helm-flycheck)
 ;; ==============helm-flycheck================
+;;; flymake
 ;; ================flymake====================
 (use-package flymake
   :diminish flymake-mode

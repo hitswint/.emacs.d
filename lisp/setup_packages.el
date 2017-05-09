@@ -901,6 +901,7 @@ is named like ODF with the extension turned to pdf."
   :defer t
   :after ivy-hydra)
 ;; ===========ivy/swiper/counsel/hydra=============
+;;; markdown-mode
 ;; =================markdown-mode==================
 (use-package markdown-mode
   ;; Enabled in modes.
@@ -910,6 +911,7 @@ is named like ODF with the extension turned to pdf."
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
 ;; =================markdown-mode==================
+;;; firefox-controller
 ;; ===============firefox-controller===============
 (use-package firefox-controller
   ;; Enabled at commands.
@@ -920,6 +922,7 @@ is named like ODF with the extension turned to pdf."
   (define-key firefox-controller-remote-mode-map (kbd "C-M-g") #'firefox-controller-focus-content)
   (define-key firefox-controller-remote-mode-map (kbd "C-g") #'firefox-controller-remote-mode-quit))
 ;; ===============firefox-controller===============
+;;; highlight-indentation
 ;; =============highlight-indentation==============
 (use-package highlight-indentation
   ;; Enabled in modes.
@@ -928,6 +931,7 @@ is named like ODF with the extension turned to pdf."
   :init
   (add-hook 'prog-mode-hook 'highlight-indentation-current-column-mode))
 ;; =============highlight-indentation==============
+;;; rainbow-mode
 ;; =================rainbow-mode===================
 (use-package rainbow-mode
   :defer t
