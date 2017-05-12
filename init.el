@@ -2,8 +2,6 @@
 (setq is-mac (equal system-type 'darwin))
 (setq is-win (equal system-type 'windows-nt))
 (setq is-lin (equal system-type 'gnu/linux))
-(setq is-T510 (file-exists-p "~/is-T510.org"))
-(setq is-X201 (file-exists-p "~/is-X201.org"))
 ;; ==================PATH==================
 (when is-win
   (setenv "HOME" "c:/Users/swint")
