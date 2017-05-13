@@ -239,4 +239,7 @@ Missing packages are installed automatically."
   :config
   (setq smartrep-mode-line-string-activated nil))
 ;; ===================smartrep======================
+;; =====================misc========================
+(require 'subr-x)
+;; =====================misc========================
 (provide 'setup_elpa)
