@@ -38,7 +38,7 @@
       (delete-file file)))
   (let* ((PC-dir (cond
                   (is-lin (replace-regexp-in-string
-                           "\n" "" (replace-regexp-in-string "/" ""
+                           "\n" "" (replace-regexp-in-string "\\(/\\|\\.\\)" "_"
                                                              (shell-command-to-string
                                                               "$(cat /etc/machine-id > /tmp/machine.xid); mkpasswd $(</tmp/machine.xid) -s PC"))))
                   (is-win "PC_win")))
