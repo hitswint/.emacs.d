@@ -6,9 +6,13 @@
 (fset 'yes-or-no-p 'y-or-n-p)           ;以y/n代表yes/no。
 (global-linum-mode 0)
 (show-paren-mode t)                     ;显示括号匹配。
-(tool-bar-mode 0)                       ;去掉那个大大的工具栏。
-(menu-bar-mode 0)                       ;去掉菜单栏。
-(scroll-bar-mode 0)                     ;去掉滚动条。
+(menu-bar-mode -1)
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+(when (fboundp 'horizontal-scroll-bar-mode)
+  (horizontal-scroll-bar-mode -1))
 (mouse-avoidance-mode 'animate)         ;光标靠近鼠标指针时，让鼠标指针自动让开。
 (transient-mark-mode t)                 ;高亮选中得区域。
 (setq x-select-enable-clipboard t)      ;支持emacs和外部程序的粘贴。

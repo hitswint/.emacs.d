@@ -1,4 +1,9 @@
 ;; ==================OS====================
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+;; (package-initialize)
 (setq is-mac (equal system-type 'darwin))
 (setq is-win (equal system-type 'windows-nt))
 (setq is-lin (equal system-type 'gnu/linux))
