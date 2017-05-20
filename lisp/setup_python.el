@@ -5,22 +5,27 @@
   :defer t
   :mode ("\\.py\\'" . python-mode))
 ;; =================python-mode================
+;;; pyvenv
+;; ===================pyvenv===================
+(use-package pyvenv
+  ;; Enabled at commands.
+  :defer t
+  :bind (("C-x C-M-3" . pyvenv-workon)
+         ("C-x C-M-#" . pyvenv-deactivate)))
+;; ===================pyvenv===================
 ;;; elpy
 ;; ====================elpy====================
 (use-package elpy
   ;; Enabled after features.
   :defer t
-  :after python
+  :after pyvenv
   :bind (("C-M-3" . swint-ipython)
-         ("C-M-#" . swint-cpython)
-         ("C-x C-M-3" . pyvenv-workon)
-         ("C-x C-M-#" . pyvenv-deactivate))
+         ("C-M-#" . swint-cpython))
   :init
   (setq elpy-remove-modeline-lighter nil)
   :config
   (elpy-enable)
-  ;; 有rope和jedi两种后端，refactor需rope，jedi对补全支持好。
-  ;; 同时安装时默认采用rope，手动设置以便采用jedi补全。
+  ;; 同时安装jedi/rope时默认采用rope，手动设置以便采用jedi后端。
   (setq elpy-rpc-backend "jedi")
   (setq elpy-rpc-timeout nil)
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
@@ -52,7 +57,17 @@
     (unless pyvenv-virtual-env
       (call-interactively 'pyvenv-workon))
     (elpy-use-cpython)
-    (elpy-shell-switch-to-shell)))
+    (elpy-shell-switch-to-shell))
+  ;; 使用global-elpy-mode方式开启elpy-mode。
+  ;; (define-global-minor-mode global-elpy-mode elpy-mode
+  ;;   (lambda () (when (eq major-mode 'python-mode) (elpy-mode 1))))
+  ;; (global-elpy-mode 1)
+  ;; 在opened python buffer中开启elpy-mode。
+  (dolist (buf (remove-if-not (lambda (x)
+                                (equal (buffer-mode x) 'python-mode))
+                              (helm-buffer-list)))
+    (with-current-buffer buf
+      (elpy-mode 1))))
 ;; ====================elpy====================
 ;;; emacs-ipython-notebook
 ;; ====================ein=====================

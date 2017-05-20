@@ -76,6 +76,10 @@
   (add-to-list 'desktop-minor-mode-table '(ycmd-mode nil))
   (add-to-list 'desktop-minor-mode-table '(eldoc-mode nil))
   (add-to-list 'desktop-minor-mode-table '(ycmd-eldoc-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(rainbow-mode nil)))
+  (add-to-list 'desktop-minor-mode-table '(rainbow-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(emmet-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(skewer-html-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(elpy-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(flymake-mode nil)))
 ;; ===================desktop====================
 (provide 'setup_desktop_session)

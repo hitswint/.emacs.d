@@ -802,6 +802,7 @@ is named like ODF with the extension turned to pdf."
   (add-hook 'prog-mode-hook 'diff-hl-flydiff-mode)
   (add-hook 'text-mode-hook 'diff-hl-flydiff-mode)
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+  ;; 在opened dired buffer中开启diff-hl-dired-mode。
   (dolist (buf (remove-if-not (lambda (x)
                                 (equal (buffer-mode x) 'dired-mode))
                               (helm-buffer-list)))

@@ -22,6 +22,15 @@
   :defer t
   :commands helm-flycheck)
 ;; ==============helm-flycheck================
+;;; flycheck-pos-tip
+;; =============flycheck-pos-tip==============
+(use-package flycheck-pos-tip
+  ;; Enabled after features.
+  :defer t
+  :after flycheck
+  :config
+  (flycheck-pos-tip-mode))
+;; =============flycheck-pos-tip==============
 ;;; flymake
 ;; ================flymake====================
 (use-package flymake

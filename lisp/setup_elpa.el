@@ -91,6 +91,7 @@
             flx
             flx-ido
             flycheck
+            flycheck-pos-tip
             git-commit
             git-timemachine
             gnuplot-mode
