@@ -24,6 +24,7 @@
   (setq emms-mode-line-mode-line-function nil)
   (setq emms-mode-line-format ""
         emms-lyrics-display-format ""
+        emms-lyrics-display-on-modeline nil
         emms-playing-time-display-format "") ;关闭emms在mode-line上的显示
 ;;;; emms-mpd
   ;; ==============emms-mpd================
@@ -55,6 +56,13 @@
          ("M-s e o" . mingus-browse))
   :config
   (autoload 'mingus "mingus-stays-home" nil t)
+  (setq mingus-mode-always-modeline nil
+        mingus-mode-line-show-consume-and-single-status nil
+        mingus-mode-line-show-elapsed-percentage nil
+        mingus-mode-line-show-elapsed-time nil
+        mingus-mode-line-show-random-and-repeat-status nil
+        mingus-mode-line-show-status nil
+        mingus-mode-line-show-volume nil)
   (global-set-key (kbd "s-/") 'mingus-toggle)
   (global-set-key (kbd "s-?") 'mingus-stop)
   (global-set-key (kbd "s-,") 'mingus-seek-backward)

@@ -109,7 +109,18 @@
   (add-hook 'text-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'dired-mode-hook 'rainbow-delimiters-mode)
   ;; 在org-mode中打开rainbow会让org本身的highlight失效。
-  (add-hook 'org-mode-hook 'rainbow-delimiters-mode-disable))
+  (add-hook 'org-mode-hook 'rainbow-delimiters-mode-disable)
+  :config
+  (custom-set-faces '(rainbow-delimiters-depth-1-face ((t (:foreground "yellow"))))
+                    '(rainbow-delimiters-depth-2-face ((t (:foreground "green"))))
+                    '(rainbow-delimiters-depth-3-face ((t (:foreground "DeepSkyBlue1"))))
+                    '(rainbow-delimiters-depth-4-face ((t (:foreground "#8b7500"))))
+                    '(rainbow-delimiters-depth-5-face ((t (:foreground "#8b7500"))))
+                    '(rainbow-delimiters-depth-6-face ((t (:foreground "#8b7500"))))
+                    '(rainbow-delimiters-depth-7-face ((t (:foreground "#8b7500"))))
+                    '(rainbow-delimiters-depth-8-face ((t (:foreground "#8b7500"))))
+                    '(rainbow-delimiters-depth-9-face ((t (:foreground "#8b7500"))))
+                    '(rainbow-delimiters-unmatched-face ((t (:foreground "red"))))))
 ;; ==============rainbow-delimiters=============
 ;;; highlight-parentheses
 ;; ============highlight-parentheses============
@@ -117,8 +128,7 @@
   ;; Enabled at idle.
   :defer 2
   :config
-  (set-face-attribute 'hl-paren-face nil
-                      :weight 'bold :strike-through t)
+  (set-face-attribute 'hl-paren-face nil :weight 'bold :strike-through t)
   (defun hl-paren-create-overlays ()
     (let ((fg hl-paren-colors)
           (bg hl-paren-background-colors)

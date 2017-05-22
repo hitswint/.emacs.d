@@ -10,6 +10,33 @@
   :config
   (use-package helm-config)
   (helm-mode 1)
+  (setq helm-completing-read-handlers-alist '((describe-function . helm-completing-read-symbols)
+                                              (describe-variable . helm-completing-read-symbols)
+                                              (debug-on-entry . helm-completing-read-symbols)
+                                              (find-function . helm-completing-read-symbols)
+                                              (find-tag . helm-completing-read-with-cands-in-buffer)
+                                              (ffap-alternate-file)
+                                              (tmm-menubar)
+                                              (find-file)
+                                              (org-annotate-file)
+                                              (swint-org-annotate-file)
+                                              (dired-do-copy)
+                                              (iswitchb-buffer)
+                                              (dired-create-directory)))
+  (setq helm-projectile-sources-list '(helm-source-projectile-projects
+                                       helm-source-projectile-files-list
+                                       helm-source-projectile-buffers-list))
+  (setq helm-buffer-details-flag nil)
+  (setq helm-ff-newfile-prompt-p nil)
+  (setq helm-split-window-default-side 'same)
+  (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
+                    '(helm-buffer-file ((t (:inherit font-lock-type-face))))
+                    '(helm-ff-directory ((t (:foreground "yellow" :weight bold))))
+                    '(helm-ff-dotted-directory ((t (:foreground "yellow" :weight bold))))
+                    '(helm-ff-file ((t (:foreground "white"))))
+                    '(helm-grep-file ((t (:foreground "cyan"))))
+                    '(helm-selection ((t (:background "black" :underline t))))
+                    '(helm-visible-mark ((t (:foreground "DeepSkyBlue1")))))
   (global-set-key (kbd "C-M-y") 'helm-show-kill-ring)
   (global-set-key (kbd "C-,") 'swint-helm-file-buffers-list)
   (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
@@ -685,8 +712,7 @@ from its directory."
   (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)
   ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果。
   (when is-win
-    (custom-set-variables
-     '(helm-ag-base-command "pt -e --nocolor --nogroup"))))
+    (setq helm-ag-base-command "pt -e --nocolor --nogroup")))
 ;; =================helm-ag=====================
 ;;; helm-descbinds
 ;; ==============helm-descbinds=================

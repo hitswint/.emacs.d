@@ -132,7 +132,8 @@
     '((t (:background "dark green" :foreground "white")))
     "Face for the mark."
     :group 'visible-mark)
-  (setq visible-mark-forward-faces '(swint-visible-mark-forward-face-1 swint-visible-mark-forward-face-2)))
+  (setq visible-mark-forward-faces '(swint-visible-mark-forward-face-1 swint-visible-mark-forward-face-2))
+  (set-face-attribute 'visible-mark-active nil :background "maroon" :foreground "white"))
 ;; ================visible-mark====================
 ;;; unicad
 ;; =====================unicad=====================
@@ -483,7 +484,7 @@ is named like ODF with the extension turned to pdf."
   (smartrep-define-key vlf-mode-map ""
     '(("n" . vlf-next-batch)
       ("p" . vlf-prev-batch)))
-  (custom-set-variables '(vlf-application 'dont-ask))
+  (setq vlf-application 'dont-ask)
   (add-to-list 'vlf-forbidden-modes-list 'pdf-view-mode))
 ;; =======================vlf======================
 ;;; easy-kill

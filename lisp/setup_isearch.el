@@ -3,18 +3,16 @@
 (use-package anzu
   ;; Enabled at commands.
   :defer t
+  :diminish anzu-mode
   :after pinyin-search
   :bind (("M-s M-r" . anzu-query-replace)
          ("M-s M-R" . anzu-query-replace-regexp))
   :config
   (global-anzu-mode 1)
-  (set-face-attribute 'anzu-mode-line nil
-                      :foreground "green" :weight 'bold)
-  (custom-set-variables
-   '(anzu-mode-lighter "")
-   '(anzu-deactivate-region t)
-   '(anzu-search-threshold 1000)
-   '(anzu-replace-to-string-separator " => ")))
+  (setq anzu-deactivate-region t
+        anzu-replace-to-string-separator " => "
+        anzu-search-threshold 1000)
+  (set-face-attribute 'anzu-mode-line nil :foreground "green" :weight 'bold))
 ;; =====================Anzu=======================
 ;;; pinyin-search
 ;; ==================pinyin-search=================

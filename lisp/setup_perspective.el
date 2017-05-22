@@ -5,7 +5,11 @@
 ;; (error "(persp-buffers persp) is not a valid place expression")
 (use-package perspective
   :config
-  (setq persp-interactive-completion-function 'helm--completing-read-default))
+  (setq read-buffer-function 'persp-read-buffer
+        persp-initial-frame-name "i"
+        persp-modestring-dividers (quote ("" "" ""))
+        persp-interactive-completion-function 'helm--completing-read-default)
+  (set-face-attribute 'persp-selected-face nil :foreground "green" :weight 'bold))
 (defun persp-activate (persp)
   "Activate the perspective given by the persp struct PERSP."
   (check-persp persp)

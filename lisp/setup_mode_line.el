@@ -3,10 +3,30 @@
 (use-package smart-mode-line
   ;; Enabled automatically.
   :config
+  (setq sml/no-confirm-load-theme t)
   ;; 设定theme为dark/light/respectful/automatic。
   (sml/setup)
   (sml/apply-theme nil)
   (setq column-number-mode t)
+  (setq sml/col-number-format "%3c"
+        sml/directory-truncation-string ""
+        sml/line-number-format "%4l"
+        sml/mode-width 0
+        sml/name-width 40
+        sml/new-mail-background-color "black"
+        sml/position-percentage-format ""
+        sml/projectile-replacement-format "[%s]"
+        sml/shorten-mode-string ""
+        sml/use-projectile-p 'before-prefixes)
+  (custom-set-faces '(sml/col-number ((t (:foreground "lawn green"))))
+                    '(sml/filename ((t (:inherit sml/global :foreground "yellow" :weight bold))))
+                    '(sml/line-number ((t (:foreground "gold"))))
+                    '(sml/modes ((t (:inherit sml/global :foreground "gray50"))))
+                    '(sml/numbers-separator ((t (:inherit sml/global))))
+                    '(sml/position-percentage ((t (:foreground "yellow"))))
+                    '(sml/prefix ((t (:inherit sml/global :foreground "deep sky blue" :weight bold))))
+                    '(sml/projectile ((t (:foreground "deep sky blue" :weight bold))))
+                    '(sml/read-only ((t (:inherit sml/not-modified :foreground "gray50")))))
   (cond
    (is-lin
     (add-to-list 'sml/replacer-regexp-list '("^~/Documents/MATLAB/" ":M:"))

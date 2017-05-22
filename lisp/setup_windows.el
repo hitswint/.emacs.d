@@ -16,6 +16,7 @@
   :bind ("C-<tab>" . select-previously-selected-window)
   :config
   (window-numbering-mode 1)
+  (set-face-attribute 'window-numbering-face nil :background "dark red" :foreground "white")
   ;; 当按键大于现有窗口数目时，选中最后一个窗口。
   (defvar previously-selected-window nil
     "Previously-selected-window.")

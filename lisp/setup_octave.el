@@ -55,6 +55,7 @@
   ;; 使用%注释。
   (setq octave-comment-start "%")
   (setq octave-comment-char ?%)
+  (setq octave-auto-indent t)
   ;; 退出octave时关闭buffer。
   (add-hook 'inferior-octave-mode-hook 'kill-shell-buffer-after-exit t))
 ;; ======================octave====================

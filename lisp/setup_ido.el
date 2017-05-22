@@ -5,6 +5,17 @@
   :config
   (ido-mode t)
   ;; (global-set-key (kbd "C-x f") 'ido-find-file)
+  (setq ido-auto-merge-delay-time 0.7
+        ido-default-buffer-method 'raise-frame
+        ido-default-file-method 'raise-frame
+        ido-enable-flex-matching t
+        ido-file-extensions-order nil
+        ido-separator "   "
+        ido-use-virtual-buffers nil)
+  (custom-set-faces '(ido-first-match ((t (:foreground "yellow" :weight bold))))
+                    '(ido-only-match ((((class color)) (:foreground "DeepSkyBlue1" :weight bold))))
+                    '(ido-subdir ((t (:foreground "green")))))
+  (setq ido-ignore-buffers '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Compile\\=Log\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*compilation\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\` " "\\`.english-words\\'"))
 ;;;; ido-back-to-home
   ;; =================ido-back-to-home=================
   (add-hook 'ido-setup-hook

@@ -7,6 +7,7 @@
   :bind ("C-x M-f" . recentf-ido-find-file)
   :config
   (recentf-mode 1)
+  (setq recentf-max-saved-items 50)
   ;; recentf改用helm前端。
   (defun recentf-ido-find-file ()
     "Find a recent file using Ido."

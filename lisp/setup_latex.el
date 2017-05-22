@@ -28,6 +28,8 @@
   (when is-win
     (setq preview-image-type 'pnm)
     (setq preview-gs-command "c:/Program Files (x86)/gs/gs9.09/bin/gswin32c.exe"))
+  (setq preview-gs-options '("-q" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4"))
+  (set-face-attribute 'preview-reference-face nil :background "white")
   ;; ==================preview=====================
 ;;;; setup-and-keybindings
   ;; ============setup-and-keybindings=============
@@ -114,6 +116,7 @@
   (add-hook 'org-mode-hook '(lambda ()
                               (define-key org-mode-map (kbd "C-c z U") 'swint-zotelo-update-database)))
   :config
+  (setq zotelo-translator-charsets '((BibTeX . "Unicode") (Default . "Unicode")))
   ;; 使用zotero-better-bibtex自动更新bib文件，使用zotelo手动更新bib文件。
   (defun swint-zotelo-update-database ()
     (interactive)

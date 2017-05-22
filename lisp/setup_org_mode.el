@@ -6,10 +6,10 @@
   :config
 ;;;; Appearance
   ;; =================Appearance================
-  (set-face-attribute 'org-level-5 nil :bold nil :foreground "cyan" :height 1.0)
-  (set-face-attribute 'org-level-6 nil :bold nil :foreground "violet" :height 1.0)
-  (set-face-attribute 'org-level-7 nil :bold nil :foreground "orange" :height 1.0)
-  (set-face-attribute 'org-level-8 nil :bold nil :foreground "gray" :height 1.0)
+  (set-face-attribute 'org-level-5 nil :weight 'normal :foreground "cyan" :height 1.0)
+  (set-face-attribute 'org-level-6 nil :weight 'normal :foreground "violet" :height 1.0)
+  (set-face-attribute 'org-level-7 nil :weight 'normal :foreground "orange" :height 1.0)
+  (set-face-attribute 'org-level-8 nil :weight 'normal :foreground "gray" :height 1.0)
   (setq org-hide-emphasis-markers t)
   (font-lock-add-keywords 'org-mode
                           '(("^ +\\([-*]\\) "
@@ -42,6 +42,12 @@
                (setq org-special-ctrl-a/e t)
                (setq org-special-ctrl-o t)
                (setq org-special-ctrl-k t)
+               (setq org-capture-bookmark nil)
+               (setq org-format-latex-options '(:foreground default :background default :scale 1.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+               (setq org-latex-default-figure-position "htbp")
+               (setq org-latex-image-default-width "1\\linewidth")
+               (setq org-latex-pdf-process '("xelatex -interaction nonstopmode -output-directory %o %f"))
+               (setq org-latex-remove-logfiles nil)
                (turn-on-font-lock)
                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
                (define-key org-mode-map (kbd "C-c C-b") 'org-beamer-select-environment)
@@ -296,11 +302,6 @@
   ;; 设置需要同步的文件。
   (setq org-agenda-files (list "~/org/task.org"))
   (setq org-mobile-files org-agenda-files)
-  ;; 在不同gtd文件之间refile。
-  ;; (custom-set-variables
-  ;;  '(org-refile-targets
-  ;;    (quote
-  ;;     (("Gtd-task.org" :maxlevel . 1)("Gtd-project.org" :maxlevel . 1) ("Gtd-maybe.org":maxlevel . 1) ("Gtd-done-aborted.org":maxlevel . 1)))))
   (defun swint-org-mobile-sync (arg)
     "Synchronization of org mobile."
     (interactive)

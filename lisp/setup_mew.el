@@ -7,34 +7,29 @@
   :config
   (autoload 'mew "mew" nil t)
   (autoload 'mew-send "mew" nil t)
-  ;; Optional setup (Read Mail menu for Emacs 21):
-  (if (boundp 'read-mail-command)
-      (setq read-mail-command 'mew))
-  ;; Optional setup (e.g. C-xm for sending a message):
   (autoload 'mew-user-agent-compose "mew" nil t)
-  (if (boundp 'mail-user-agent)
-      (setq mail-user-agent 'mew-user-agent))
-  (if (fboundp 'define-mail-user-agent)
-      (define-mail-user-agent
-        'mew-user-agent
-        'mew-user-agent-compose
-        'mew-draft-send-message
-        'mew-draft-kill
-        'mew-send-hook))
+  (when (boundp 'read-mail-command)
+    (setq read-mail-command 'mew))
+  (when (fboundp 'define-mail-user-agent)
+    (define-mail-user-agent
+      'mew-user-agent
+      'mew-user-agent-compose
+      'mew-draft-send-message
+      'mew-draft-kill
+      'mew-send-hook))
+  (when (boundp 'mail-user-agent)
+    (setq mail-user-agent 'mew-user-agent))
   (when (boundp 'utf-translate-cjk)
-    (setq utf-translate-cjk t)
-    (custom-set-variables
-     '(utf-translate-cjk t)))
-  (if (fboundp 'utf-translate-cjk-mode)
-      (utf-translate-cjk-mode 1))
+    (setq utf-translate-cjk t))
+  (when (fboundp 'utf-translate-cjk-mode)
+    (utf-translate-cjk-mode 1))
   (setq user-full-name "Guiqiang Wang")
   (setq user-mail-address "wguiqiang@hotmail.com")
   ;; Gmail的引用格式。
   (setq mew-cite-fields '("Date:"  "From:"))
   (setq mew-cite-format "On %s %s wrote:\n\n")
   ;; 密码设置。
-  (when is-lin
-    (setq mew-use-master-passwd t))     ;使用主密码，win提示主密码错误。
+  (when is-lin (setq mew-use-master-passwd t)) ;使用主密码，win提示主密码错误。
   (setq mew-use-cached-passwd t)
   (setq mew-passwd-timer-unit 60)
   (setq mew-passwd-lifetime 24)         ;timer-unit x 24 = 24 hours

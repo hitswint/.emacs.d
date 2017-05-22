@@ -1,9 +1,5 @@
 ;;; w3m
 ;; ===================w3m=====================
-;; (add-to-list 'exec-path "c:/Program Files (x86)/w3m") ;;指定w3m可执行程序，所在的执行路径。
-;; 上面那句不好用，无法确定w3m的程序执行路径。customize-group选择w3m，在W3m Command中添加c:/Program Files (x86)/w3m/w3m.exe，确定w3m程序。
-;; 还是不行，因为anything-config.el中居然默认修改w3m-command为/usr/bin/w3m，导致上述修改在重启后失效。
-;; 修改anything-config.el中的(defvar w3m-command "/usr/bin/w3m")为(defvar w3m-command "c:/Program Files (x86)/w3m/w3m.exe")，问题解决。
 ;; 在lin上面通过elpa安装，在win上直接使用.emacs.d/w3m中下载的已经编译好的代码。
 (use-package w3m
   ;; Enabled at commands.
@@ -22,18 +18,21 @@
                 ;; 解决w3m无法解析网址的问题。
                 (is-win (w3m-url-encode-string word 'utf-8)))
                "&keyfrom=dict.top"))))
-  (setq w3m-use-form t)
-  (setq w3m-tab-width 8)
-  (setq w3m-use-cookies t)
-  (setq w3m-use-toolbar t)
-  (setq w3m-use-mule-ucs t)
-  (setq w3m-fill-column 120)
-  (setq w3m-default-display-inline-image t)
-  (setq w3m-default-toggle-inline-images t)
-  (setq w3m-home-page "about:blank")
-  (setq browse-url-browser-function 'w3m-browse-url)
-  (setq w3m-view-this-url-new-session-in-background t)
-  (setq w3m-command-arguments '("-cookie" "-F"))
+  (when is-win
+    (setq w3m-command "c:/Program Files (x86)/w3m/w3m.exe"))
+  (setq w3m-use-form t
+        w3m-tab-width 8
+        w3m-use-cookies t
+        w3m-use-toolbar t
+        w3m-use-mule-ucs t
+        w3m-fill-column 120
+        w3m-default-display-inline-image t
+        w3m-default-toggle-inline-images t
+        w3m-home-page "about:blank"
+        browse-url-browser-function 'w3m-browse-url
+        w3m-view-this-url-new-session-in-background t
+        w3m-command-arguments '("-cookie" "-F"))
+  (set-face-attribute 'w3m-bold nil :foreground "red" :weight 'bold)
   (defun w3m-open-site-current-session (site)
     "Open site in current session with‘http://’appended."
     (interactive

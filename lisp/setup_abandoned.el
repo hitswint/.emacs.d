@@ -9,6 +9,8 @@
          ("C-M-h" . ace-jump-line-mode))
   :config
   (use-package pinyin-search)
+  (custom-set-faces '(ace-jump-face-background ((t (:foreground "#666666"))))
+                    '(ace-jump-face-foreground ((t (:foreground "yellow" :weight bold)))))
   ;; (setq ace-jump-mode-gray-background nil)
   ;; (setq ace-jump-mode-move-keys
   ;;       (nconc (loop for i from ?a to ?z collect i)
@@ -238,6 +240,8 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
   (defun my-matlab-mode-hook ()
     (setq fill-column 76)
     (imenu-add-to-menubar "Find"))        ; where auto-fill should wrap
+  (setq matlab-comment-region-s "%% ")
+  (setq matlab-fill-code nil)
   (add-hook 'matlab-mode-hook 'my-matlab-mode-hook)
   (defun my-matlab-shell-mode-hook ()
     '())

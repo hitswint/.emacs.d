@@ -31,7 +31,10 @@
 (setq bookmark-save-flag 1)
 ;; Enable all disabled commands.
 (setq disabled-command-function nil)
+(setq uniquify-buffer-name-style 'forward)
+(setq display-time-mode nil)
 ;; (setq debug-on-error t)
+(set-face-attribute 'highlight nil :background "black")
 ;; ==================Default====================
 ;;; Keybindings
 ;; ================Keybindings==================
@@ -55,14 +58,6 @@
 (global-set-key (kbd "C-SPC") nil)
 (global-set-key (kbd "<C-M-backspace>") 'backward-kill-sexp)
 (define-key lisp-interaction-mode-map (kbd "C-j") nil)
-(smartrep-define-key global-map "<escape>"
-  '(("i" . tab-to-tab-stop)
-    ("u" . upcase-word)
-    ("l" . downcase-word)
-    ("c" . capitalize-word)
-    ("q" . fill-paragraph)
-    ("h" . mark-paragraph)
-    ("k" . kill-sentence)))
 ;; ================Keybindings==================
 ;;; Local Variables
 ;; ==============Local Variables================

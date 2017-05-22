@@ -238,7 +238,15 @@ Missing packages are installed automatically."
 (use-package smartrep
   ;; Enabled automatically.
   :config
-  (setq smartrep-mode-line-string-activated nil))
+  (setq smartrep-mode-line-string-activated nil)
+  (smartrep-define-key global-map "<escape>"
+    '(("i" . tab-to-tab-stop)
+      ("u" . upcase-word)
+      ("l" . downcase-word)
+      ("c" . capitalize-word)
+      ("q" . fill-paragraph)
+      ("h" . mark-paragraph)
+      ("k" . kill-sentence))))
 ;; ===================smartrep======================
 ;; =====================misc========================
 (require 'subr-x)
