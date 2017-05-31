@@ -581,8 +581,11 @@ is named like ODF with the extension turned to pdf."
   :config
   (defun swint-goto-last-change-with-prefix (&optional arg)
     (interactive)
-    (goto-last-change arg)
-    (setq last-command 'goto-last-change)
+    (condition-case nil
+        (progn (call-interactively 'goto-last-change)
+               (setq last-command 'goto-last-change))
+      (error
+       (call-interactively 'session-jump-to-last-change)))
     ;; (invoke-prefix-command)
     ;; (initialize-event-loop)
     ;; The form (condition-case ERR FORM (quit QUIT-HANDLER))

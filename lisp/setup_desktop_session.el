@@ -5,6 +5,34 @@
   :config
   (add-hook 'after-init-hook 'session-initialize))
 ;; ===================session====================
+;;; saveplace
+;; ==================saveplace===================
+(use-package saveplace
+  ;; Enabled at idle.
+  :defer 2
+  :config
+  (if (fboundp 'save-place-mode)
+      ;; Emacs 25 has a proper mode for `save-place'
+      (save-place-mode)
+    (setq-default save-place t))
+  (setq save-place-forget-unreadable-files nil))
+;; ==================saveplace===================
+;;; savehist
+;; ==================savehist====================
+(use-package savehist
+  ;; Enabled at idle.
+  :defer 2
+  :config
+  (savehist-mode t)
+  (setq enable-recursive-minibuffers t
+        history-length 1000
+        savehist-additional-variables '(mark-ring
+                                        global-mark-ring
+                                        search-ring
+                                        regexp-search-ring
+                                        extended-command-history)
+        savehist-autosave-interval 60))
+;; ==================savehist====================
 ;;; desktop
 ;; ===================desktop====================
 (use-package desktop

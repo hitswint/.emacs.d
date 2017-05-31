@@ -201,7 +201,7 @@
            (equal (org-element-type headline) 'headline)
            (equal (org-element-property :level headline) 1))))
   (defun swint-get-annotated-file ()
-    (if (org-at-top-heading-p)
+    (if (ignore-errors (org-at-top-heading-p))
         (concat "~"
                 (if (string-prefix-p "annotated-(" (file-name-nondirectory (buffer-file-name)))
                     (replace-regexp-in-string
@@ -385,7 +385,6 @@ depending on the last command issued."
            (is-lin (async-shell-command-no-output-buffer-from-file output-file))
            (is-win (w32-browser output-file)))
         (message "Warning: No export pdf."))))
-  ;; 原来的好像有问题。
   ;; code执行免应答（Eval code without confirm）
   (setq org-confirm-babel-evaluate nil)
   (defun org-mode-article-modes ()
@@ -397,9 +396,6 @@ depending on the last command issued."
             (lambda ()
               (if (member "REFTEX" org-todo-keywords-1)
                   (org-mode-article-modes))))
-  ;; 崩溃啊，version 8的版本居然把org-export-latex-classes函数改名为org-latex-classes了。所以在新版本里面使用org-latex-classes。
-  ;; (unless (boundp 'org-export-latex-classes)
-  ;;   (setq org-export-latex-classes nil))
   (unless (boundp 'org-latex-classes)
     (setq org-latex-classes nil))
   ;; 定义org markup(*_+/=~)等的转换。

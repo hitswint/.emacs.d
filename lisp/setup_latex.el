@@ -1,36 +1,11 @@
 ;;; auctex
 ;; =====================auctex=====================
-;; 手动编译的auctex需要加下面两句，package安装不需要。
-;; (load "auctex.el" nil t t)
-;; (load "preview-latex.el" nil t t)
 (use-package tex
   ;; Enabled in modes.
-  ;; 使用package原设定。
   :defer t
+  :mode ("\\.[tT][eE][xX]\\'" . latex-mode)
   :commands LaTeX-math-mode
   :config
-;;;; reftex
-  ;; ===================reftex=====================
-  (setq reftex-plug-into-AUCTeX t
-        reftex-toc-split-windows-horizontally t
-        reftex-tocc-split-windows-fraction 0.2)
-  (setq reftex-format-cite-function
-        '(lambda (key fmt)
-           (let ((cite (replace-regexp-in-string "%l" key fmt)))
-             (if (or (= ?~ (string-to-char fmt))
-                     (member (preceding-char) '(?\ ?\t ?\n ?~)))
-                 cite
-               (concat "~" cite)))))
-  ;; ===================reftex=====================
-;;;; preview
-  ;; ==================preview=====================
-  (setq preview-auto-cache-preamble t)
-  (when is-win
-    (setq preview-image-type 'pnm)
-    (setq preview-gs-command "c:/Program Files (x86)/gs/gs9.09/bin/gswin32c.exe"))
-  (setq preview-gs-options '("-q" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4"))
-  (set-face-attribute 'preview-reference-face nil :background "white")
-  ;; ==================preview=====================
 ;;;; setup-and-keybindings
   ;; ============setup-and-keybindings=============
   (setq TeX-auto-save t)
@@ -39,58 +14,69 @@
   ;; Auctex在打开tex文件时加载，LaTeX-insert-left-brace会覆盖全局的括号定义。
   ;; 打开auctex自带的默认输入右括号的选项。
   (setq LaTeX-electric-left-right-brace t)
-  ;; 为 LaTeX 模式 hook 自动换行，数学公式，reftex 和显示行号的功能。
+  ;; 为LaTeX模式hook自动换行，数学公式，reftex和显示行号的功能。
   (mapc (lambda (mode)
           (add-hook 'TeX-mode-hook mode))
         (list 'LaTeX-math-mode
               'turn-on-reftex
               'turn-on-orgtbl
+              'TeX-fold-mode ; C-c C-o C-b打开fold，C-c C-o b关闭fold。
               'LaTeX-install-toolbar))
   ;; 在LaTeX-mode中，默认开启PDF-mode，即默认使用xelatex直接生成pdf文件，而不用每次用'C-c C-t C-p'进行切换。设置'Tex-show-compilation'为t，在另一个窗口显示编译信息，对于错误的排除很方便。另外，编译时默认直接保存文件，绑定补全符号到TAB键。
   (add-hook 'LaTeX-mode-hook
             (lambda ()
-              (setq TeX-auto-untabify t     ; Remove all tabs before saving.
-                    TeX-engine 'xetex       ; Use xelatex default.
+              (setq TeX-auto-untabify t ; Remove all tabs before saving.
+                    TeX-engine 'xetex   ; Use xelatex default.
                     TeX-show-compilation t) ; Display compilation windows.
-              (TeX-global-PDF-mode t)       ; PDF mode enable, not plain.
+              (TeX-global-PDF-mode t)   ; PDF mode enable, not plain.
               (setq TeX-save-query nil)
               (imenu-add-menubar-index)
               (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-parse-all)
               (define-key LaTeX-mode-map (kbd "C-c f") 'TeX-font)
               (define-key LaTeX-mode-map (kbd "C-c v") 'preview-at-point)
               (define-key LaTeX-mode-map (kbd "C-c V") 'preview-clearout-buffer)
-              (define-key LaTeX-mode-map (kbd "C-q") 'swint-kill-tex-buffer)
+              (define-key LaTeX-mode-map (kbd "C-q") ' (lambda () (interactive) (swint-kill-this-buffer)
+                                                         (ignore-errors (kill-process (TeX-active-process)))))
               (define-key LaTeX-mode-map (kbd "C-c j") 'swint-open-at-point-with-apps)
               (define-key LaTeX-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
               (define-key LaTeX-mode-map (kbd "\"") nil)))
-  (setq TeX-view-program-list
-        '(("Llpp" "llpp %o")
-          ("Firefox" "firefox %o")))
+  (setq TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o")))
   ;; 使用imagemagick中convert转换为图片。win中默认使用imgconvert，可以将cygwin中convert改名为imgconvert。
   (add-to-list 'TeX-command-list '("LaTeX-standalone" "%`xelatex -shell-escape%(mode)%' %t" TeX-run-TeX nil t))
-  (cond
-   ((eq system-type 'gnu/linux)
-    (add-hook 'LaTeX-mode-hook
-              (lambda ()
-                (setq TeX-view-program-selection '((output-pdf "Llpp")
-                                                   (output-dvi "Llpp")))))))
+  (when is-lin (setq TeX-view-program-selection '((output-pdf "Llpp") (output-dvi "Llpp"))))
   ;; ============setup-and-keybindings=============
-;;;; 自动fold
-  ;; ===================自动fold===================
-  (add-hook 'TeX-mode-hook
-            (lambda () (TeX-fold-mode 1))) ; Automatically activate TeX-fold-mode.
-  ;; C-c C-o C-b打开fold，C-c C-o b关闭fold。
-  ;; ===================自动fold===================
-;;;; 关闭tex buffer
-  ;; ================关闭tex buffer================
-  ;; 关闭tex的同时关闭latexmk编译进程。
-  (defun swint-kill-tex-buffer ()
-    "Kill tex buffer with active process."
-    (interactive)
-    (if (TeX-active-process)
-        (kill-process (TeX-active-process)))
-    (swint-kill-this-buffer))
-  ;; ================关闭tex buffer================
+;;;; reftex
+  ;; ===================reftex=====================
+  (use-package reftex
+    ;; Enabled after features.
+    :defer t
+    :after tex
+    :config
+    (setq reftex-plug-into-AUCTeX t
+          reftex-toc-split-windows-horizontally t
+          reftex-toc-split-windows-fraction 0.2)
+    (setq reftex-format-cite-function
+          '(lambda (key fmt)
+             (let ((cite (replace-regexp-in-string "%l" key fmt)))
+               (if (or (= ?~ (string-to-char fmt))
+                       (member (preceding-char) '(?\ ?\t ?\n ?~)))
+                   cite
+                 (concat "~" cite))))))
+  ;; ===================reftex=====================
+;;;; preview
+  ;; ==================preview=====================
+  (use-package preview
+    ;; Enabled after features.
+    :defer t
+    :after tex
+    :config
+    (setq preview-auto-cache-preamble t)
+    (when is-win
+      (setq preview-image-type 'pnm)
+      (setq preview-gs-command "c:/Program Files (x86)/gs/gs9.09/bin/gswin32c.exe"))
+    (setq preview-gs-options '("-q" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4"))
+    (set-face-attribute 'preview-reference-face nil :background "white"))
+  ;; ==================preview=====================
   )
 ;; =====================auctex=====================
 ;;; auctex-latexmk

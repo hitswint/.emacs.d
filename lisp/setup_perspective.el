@@ -5,11 +5,14 @@
 ;; (error "(persp-buffers persp) is not a valid place expression")
 (use-package perspective
   :config
-  (setq read-buffer-function 'persp-read-buffer
-        persp-initial-frame-name "i"
-        persp-modestring-dividers (quote ("" "" ""))
-        persp-interactive-completion-function 'helm--completing-read-default)
+  (setq persp-initial-frame-name "i"
+        persp-modestring-dividers '("" "" ""))
   (set-face-attribute 'persp-selected-face nil :foreground "green" :weight 'bold))
+(defun persp-format-name (name)
+  "Format the perspective name given by NAME for display in `persp-modestring'."
+  (let ((string-name (format "%s" name)))
+    (if (equal name (persp-name persp-curr))
+        (propertize string-name 'face 'persp-selected-face))))
 (defun persp-activate (persp)
   "Activate the perspective given by the persp struct PERSP."
   (check-persp persp)
@@ -28,32 +31,6 @@
   (persp-update-modestring)
   (run-hooks 'persp-activated-hook))
 ;; =================perspective=================
-;;; 模板宏
-;; ===================模板宏====================
-(defmacro senny-persp (name &rest body)
-  `(let ((initialize (not (gethash ,name perspectives-hash)))
-         (current-perspective persp-curr))
-     (persp-switch ,name)
-     (when initialize ,@body)
-     (setq persp-last current-perspective)))
-(defun persp-format-name (name)
-  "Format the perspective name given by NAME for display in `persp-modestring'."
-  (let ((string-name (format "%s" name)))
-    (if (equal name (persp-name persp-curr))
-        (propertize string-name 'face 'persp-selected-face))))
-(defun persp-update-modestring ()
-  "Update `persp-modestring' to reflect the current perspectives.
-Has no effect when `persp-show-modestring' is nil."
-  (when persp-show-modestring
-    (setq persp-modestring
-          (append '("")
-                  (persp-intersperse (mapcar 'persp-format-name (persp-names)) "")
-                  '("")))))
-;; Perspective Defuns
-(defun senny-persp-last ()
-  (interactive)
-  (persp-switch (persp-name persp-last)))
-;; ===================模板宏====================
 ;;; setup-and-keybindings
 ;; ============setup-and-keybindings============
 (defun persp-push-current-buffer (name)
@@ -67,15 +44,15 @@ Has no effect when `persp-show-modestring' is nil."
   (persp-push-current-buffer (persp-name persp-last)))
 (defun persp-push-all-buffer-to-init ()
   (interactive)
-  (let ((init-persp (gethash "i" perspectives-hash)))
+  (let ((init-persp (gethash persp-initial-frame-name perspectives-hash)))
     (mapcar #'(lambda (element)
                 (unless (member element (persp-buffers init-persp))
                   (push element (persp-buffers init-persp))))
             (buffer-list))
-    (swint-persp-switch "i")))
+    (swint-persp-switch persp-initial-frame-name)))
 (defun swint-persp-switch (name)
-  (if (if (featurep 'helm)
-          helm--minor-mode)
+  (if (and (featurep 'helm)
+           (helm-alive-p))
       (helm-run-after-quit #'(lambda (swint-persp-name) (persp-switch swint-persp-name)) name)
     (persp-switch name)))
 (global-set-key (kbd "C-8") '(lambda () (interactive) (swint-persp-switch "8")))
@@ -86,27 +63,8 @@ Has no effect when `persp-show-modestring' is nil."
 (global-set-key (kbd "C-(") '(lambda () (interactive) (persp-push-current-buffer "9")))
 (global-set-key (kbd "C-)") '(lambda () (interactive) (persp-push-current-buffer "0")))
 (global-set-key (kbd "C-&") '(lambda () (interactive) (persp-push-current-buffer "i")))
-(global-set-key (kbd "C-`") 'senny-persp-last)
+(global-set-key (kbd "C-`") '(lambda () (interactive) (swint-persp-switch (persp-name persp-last))))
 (global-set-key (kbd "C-~") 'persp-push-current-buffer-to-last)
-;; 放弃使用键盘宏分配buffers到perspective的做法。
-;; (global-set-key (kbd "M-s s") 'swint-persp-start)
-;; (fset 'swint-persp-all
-;;       [?\M-s ?s
-;;              ?% ?n ?\\ ?* ?s ?c ?r ?a ?t ?c ?h ?\\ ?* ?  ?\( ?8 ?\C-m ?% ?f ?~ ?/ ?D ?o ?c ?u ?m ?e ?n ?t ?s ?\C-m ?% ?f ?s ?w ?i ?n ?t ?/ ?D ?o ?c ?u ?m ?e ?n ?t ?s ?\C-m ?% ?f ?~ ?/ ?D ?r ?o ?p ?b ?o ?x ?\C-m ?% ?f ?s ?w ?i ?n ?t ?/ ?D ?r ?o ?p ?b ?o ?x ?\C-m ?% ?f ?~ ?/ ?N ?u ?t ?s ?t ?o ?r ?e ?\C-m ?% ?f ?s ?w ?i ?n ?t ?/ ?N ?u ?t ?s ?t ?o ?r ?e ?\C-m ?A ?\M-, ?\C-, ?\C-m ?\C-. ?\C-m
-;;              ?\C-9 M-delete ?\C-m ?% ?n ?\\ ?* ?s ?c ?r ?a ?t ?c ?h ?\\ ?* ?  ?\( ?9 ?\C-m ?% ?f ?~ ?/ ?b ?o ?o ?k ?\C-m ?% ?f ?~ ?/ ?p ?a ?p ?e ?r ?s ?\C-m ?% ?f ?~ ?/ ?l ?i ?n ?u ?x ?\C-m ?% ?f ?s ?w ?i ?n ?t ?/ ?b ?o ?o ?k ?\C-m ?% ?f ?s ?w ?i ?n ?t ?/ ?p ?a ?p ?e ?r ?s ?\C-m ?% ?f ?s ?w ?i ?n ?t ?/ ?l ?i ?n ?u ?x ?\C-m ?A ?\M-, ?\C-, ?\C-m ?\C-. ?\C-m
-;;              ?\C-0 M-delete ?\C-m ?% ?n ?\\ ?* ?s ?c ?r ?a ?t ?c ?h ?\\ ?* ?  ?\( ?0 ?\C-m ?% ?f ?~ ?/ ?t ?e ?x ?\C-m ?% ?f ?s ?w ?i ?n ?t ?/ ?t ?e ?x ?\C-m ?% ?f ?~ ?/ ?M ?u ?s ?i ?c ?\C-m ?% ?f ?s ?w ?i ?n ?t ?/ ?M ?u ?s ?i ?c ?\C-m ?% ?f ?~ ?/ ?P ?i ?c ?t ?u ?r ?e ?s ?\C-m ?% ?f ?s ?w ?i ?n ?t ?/ ?P ?i ?c ?t ?u ?r ?e ?s ?\C-m ?% ?f ?~ ?/ ?m ?y ?f ?i ?l ?e ?\C-m ?% ?f ?s ?w ?i ?n ?t ?/ ?m ?y ?f ?i ?l ?e ?\C-m ?A ?\M-, ?\C-, ?\C-m ?\C-. ?\C-m ?\C-c ?` ?q ?\C-0
-;;              ])
-;; ;; (global-set-key (kbd "S-SPC") 'swint-persp-all)
-;; ;; 所有包加载完之后，启动swint-persp-all宏。
-;; ;; 不行，虽然buffer已经加载完，但是界面上并没有显示，这个键盘宏发生作用的时候，并没有加载buffer，造成结果中没有保存的buffer。
-;; ;; 这个应该是函数和键盘宏的区别，函数是背后发生的事情，不需要界面的响应，而键盘宏是需要界面相应的，就像是一个人在操作一样。
-;; ;; (eval-after-load 'setup_desktop_session
-;; ;; '(execute-kbd-macro (symbol-function 'swint-persp-all)))
-;; ;; 先让desktop恢复buffers，然后再启动swint-persp-all。
-;; (defun swint-perspective ()
-;;   (interactive)
-;;   (execute-kbd-macro (symbol-function 'swint-persp-all)))
-;; (add-hook 'desktop-after-read-hook 'swint-perspective)
 ;; ============setup-and-keybindings============
 ;;; emacs关闭时保存perspectives
 ;; =========emacs关闭时保存perspectives=========
@@ -139,6 +97,12 @@ Has no effect when `persp-show-modestring' is nil."
 ;;; emacs开启时加载perspectives
 ;; =========emacs开启时加载perspectives=========
 (load swint-perspectives-saved-file t)
+(defmacro senny-persp (name &rest body)
+  `(let ((initialize (not (gethash ,name perspectives-hash)))
+         (current-perspective persp-curr))
+     (persp-switch ,name)
+     (when initialize ,@body)
+     (setq persp-last current-perspective)))
 (defun swint-perspective-init ()
   ;; 升级到emacs24.5之后，(persp-mode)启动初始化错误，这里重新初始化。
   (persp-mode t)

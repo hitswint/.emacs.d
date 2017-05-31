@@ -1,13 +1,14 @@
 ;;; Default
 ;; ==================Default====================
-(fset 'yes-or-no-p 'y-or-n-p)           ;以y/n代表yes/no。
+(fset 'yes-or-no-p 'y-or-n-p)
 (global-font-lock-mode t)               ;语法高亮。
 (auto-image-file-mode t)                ;打开图片显示功能。
 (transient-mark-mode t)                 ;高亮选中得区域。
 (show-paren-mode t)                     ;显示括号匹配。
 (global-linum-mode -1)
 (global-hl-line-mode t)
-(menu-bar-mode -1)
+;; 导致emacs25卡顿。
+;; (menu-bar-mode -1)
 (delete-selection-mode t)
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
@@ -16,23 +17,20 @@
 (when (fboundp 'horizontal-scroll-bar-mode)
   (horizontal-scroll-bar-mode -1))
 (mouse-avoidance-mode 'animate)         ;光标靠近鼠标指针时，让鼠标指针自动让开。
-(setq frame-title-format "Emacs@ %b")   ;在标题栏提示你目前在什么位置。
 (setq fill-column 80)                   ;默认显示 80列就换行。
 (setq inhibit-startup-screen t)         ;禁用启动信息。
 (setq visible-bell t)                   ;关闭烦人的出错时的提示声。
 (setq mouse-yank-at-point t)            ;支持中键粘贴。
 (setq kill-ring-max 200)                ;用一个很大的 kill ring。
 (setq next-line-add-newlines t)         ;最后一行自动打开新行。
-(setq make-pointer-invisible t)         ;打字时光标啊不可见。
+(setq make-pointer-invisible t)         ;打字时光标不可见。
 (setq diary-file "~/org/journal.org.gpg")
-;; 书签文件的路径及文件名。
-(setq bookmark-default-file "~/.emacs.d/.emacs.bmk")
-;; 同步更新书签文件，或者退出时保存。
-(setq bookmark-save-flag 1)
-;; Enable all disabled commands.
 (setq disabled-command-function nil)
 (setq uniquify-buffer-name-style 'forward)
-(setq display-time-mode nil)
+(setq-default indent-tabs-mode nil)
+(setq save-interprogram-paste-before-kill t)
+(setq require-final-newline t)
+(setq load-prefer-newer t)
 ;; (setq debug-on-error t)
 (set-face-attribute 'highlight nil :background "black")
 ;; ==================Default====================
