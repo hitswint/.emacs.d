@@ -24,36 +24,45 @@
   (when (fboundp 'utf-translate-cjk-mode)
     (utf-translate-cjk-mode 1))
   (setq user-full-name "Guiqiang Wang")
-  (setq user-mail-address "wguiqiang@hotmail.com")
+  (setq user-mail-address "wgq_hit@126.com")
+  (setq mew-refile-guess-alist '(("To:"
+                                  ("wgq_713@163.com" . "+Mail/netease")
+                                  ("278064399@qq.com" . "+Mail/qq")
+                                  ("wguiqiang@hotmail.com" . "+Mail/hotmail"))
+                                 ("Cc:"
+                                  ("wgq_713@163.com" . "+Mail/netease")
+                                  ("278064399@qq.com" . "+Mail/qq")
+                                  ("wguiqiang@hotmail.com" . "+Mail/hotmail"))
+                                 (nil . "+inbox")))
   ;; Gmail的引用格式。
   (setq mew-cite-fields '("Date:"  "From:"))
   (setq mew-cite-format "On %s %s wrote:\n\n")
-  ;; 密码设置。
-  (when is-lin (setq mew-use-master-passwd t)) ;使用主密码，win提示主密码错误。
+  ;; 密码设置，win提示密码错误。
+  (when is-lin (setq mew-use-master-passwd t))
   (setq mew-use-cached-passwd t)
   (setq mew-passwd-timer-unit 60)
-  (setq mew-passwd-lifetime 24)         ;timer-unit x 24 = 24 hours
-  ;; (setq mew-passwd-alist '(("wgq_713@163.com" "xxx" 0)
-  ;;                          ("wgq_hit@126.com" "xxx" 0)))
+  (setq mew-passwd-lifetime 24)
   ;; 编码设置。
   (setq mew-charset-m17n "utf-8")
   (setq mew-internal-utf-8p t)
   ;; Html设置。
   (use-package mew-w3m
-    :load-path "site-lisp/mew-w3m/")    ;需要w3m支持，看html邮件。
-  (setq mew-use-w3m-minor-mode t)
-  (add-hook 'mew-message-hook 'mew-w3m-minor-mode-setter)
-  (define-key mew-summary-mode-map "T" 'mew-w3m-view-inline-image)
-  ;; Press "T":Toggle the visibility of the images included its message only.
-  ;; Press "C-uT":Display the all images included its Text/Html part.
-  (setq mew-w3m-auto-insert-image t)
-  (setq w3m-default-display-inline-images t)
-  (setq mew-prog-html '(mew-mime-text/html-w3m nil nil))
-  (setq mew-mime-multipart-alternative-list '("Text/Html" "Text/Plan" ".*"))
+    :load-path "site-lisp/mew-w3m/"
+    :config
+    (setq mew-use-w3m-minor-mode t)
+    (add-hook 'mew-message-hook 'mew-w3m-minor-mode-setter)
+    (define-key mew-summary-mode-map (kbd "M-s") nil)
+    (define-key mew-summary-mode-map (kbd "T") 'mew-w3m-view-inline-image)
+    ;; Press "T":Toggle the visibility of the images included its message only.
+    ;; Press "C-uT":Display the all images included its Text/Html part.
+    (setq mew-w3m-auto-insert-image t)
+    (setq w3m-default-display-inline-images t)
+    (setq mew-prog-html '(mew-mime-text/html-w3m nil nil))
+    (setq mew-mime-multipart-alternative-list '("Text/Html" "Text/Plan" ".*")))
   ;; Biff设置(邮件提醒)。
   (setq mew-use-biff t)
   (setq mew-use-biff-bell t)
-  (setq mew-biff-interval 5) ;这个值一定要小于下面的timer-unit和lifetime值，这个可以使用。
+  (setq mew-biff-interval 5)
   (setq mew-pop-biff-interval 3)
   ;; 其他。
   ;; (setq mew-debug t)

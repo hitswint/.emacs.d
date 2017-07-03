@@ -7,17 +7,6 @@
   (unless (server-running-p)
     (server-start)))
 ;; =====================server=====================
-;;; 文件加密
-;; ====================文件加密====================
-(use-package epa-file
-  ;; Enabled at idle.
-  :defer 2
-  :config
-  ;;(epa-file-enable)
-  (setenv "GPG_AGENT_INFO" nil)
-  (setq epa-file-cache-passphrase-for-symmetric-encryption t)
-  (setq epa-file-inhibit-auto-save nil))
-;; ====================文件加密====================
 ;;; multiple-cursors
 ;; ================multiple-cursors================
 (use-package multiple-cursors
@@ -634,35 +623,6 @@ is named like ODF with the extension turned to pdf."
   (define-key bbyac-mode-map (kbd "M-s s") nil)
   (define-key bbyac-mode-map (kbd "M-s p") nil))
 ;; =====================bbyac======================
-;;; avy-menu
-;; ===================avy-menu=====================
-(use-package avy-menu
-  ;; Enabled at idle.
-  :defer 2)
-(use-package ace-popup-menu
-  ;; Enabled after features.
-  :defer t
-  :after avy-menu
-  :config
-  (ace-popup-menu-mode 1)
-  (setq ace-popup-menu-show-pane-header t))
-;; ===================avy-menu=====================
-;;; char-menu
-;; ===================char-menu====================
-(use-package char-menu
-  ;; Enabled at commands.
-  :defer t
-  :bind ("M-s M" . char-menu)
-  :config
-  (setq char-menu '(;; "—" "‘’" "“”" "…" "«»" "–"
-                    ("Typography" "•" "©" "†" "‡" "°" "·" "§" "№" "★")
-                    ("Math" "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√")
-                    ("Arrows" "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓")
-                    ("Greek small"
-                     "α" "β" "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ" "λ" "μ" "ν" "ξ" "ο" "π" "ρ" "σ" "τ" "υ" "φ" "χ" "ψ" "ω")
-                    ("Greek capital"
-                     "Α" "Β" "Γ" "Δ" "Ε" "Ζ" "Η" "Θ" "Ι" "Κ" "Λ" "Μ" "Ν" "Ξ" "Ο" "Π" "Ρ" "Σ" "Τ" "Υ" "Φ" "Χ" "Ψ" "Ω"))))
-;; ===================char-menu====================
 ;;; vimish-fold
 ;; ==================vimish-fold===================
 (use-package vimish-fold
@@ -689,7 +649,7 @@ is named like ODF with the extension turned to pdf."
                                         ; which is the default value for gui-get-selection etc
                                         ; because windows needs STRING. same below.
                                         ; (ignore-errors (gui-get-selection 'CLIPBOARD 'UTF8_STRING)))
-           (ignore-errors (gui-get-selection 'CLIPBOARD))) ; for windows needs STRING
+           (ignore-errors (gui-get-selection 'CLIPBOARD 'UTF8_STRING))) ; for windows needs STRING
           ((eq window-system 'w32) ; windows/emacs24
            ;; Note: (x-get-selection 'CLIPBOARD) doesn't work on Windows.
            (ignore-errors (x-get-selection-value))) ; can be nil
@@ -866,7 +826,7 @@ is named like ODF with the extension turned to pdf."
   :bind (("M-X" . counsel-M-x)
          ("C-x C-r" . swint-counsel-history)
          ("M-s `" . counsel-tmm)
-         ("M-s m" . counsel-unicode-char)
+         ("M-s c u" . counsel-unicode-char)
          ("M-s c l" . counsel-locate)
          ("M-s c o" . counsel-outline)
          ("M-s c d" . counsel-dpkg)

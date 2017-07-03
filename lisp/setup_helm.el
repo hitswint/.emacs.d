@@ -696,7 +696,7 @@ from its directory."
 (use-package helm-unicode
   ;; Enabled at commands.
   :defer t
-  :bind ("C-x m" . helm-unicode))
+  :bind ("C-x c u" . helm-unicode))
 ;; ===============helm-unicode==================
 ;;; helm-ag
 ;; =================helm-ag=====================

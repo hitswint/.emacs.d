@@ -31,6 +31,8 @@
 (setq save-interprogram-paste-before-kill t)
 (setq require-final-newline t)
 (setq load-prefer-newer t)
+(setq shift-select-mode nil)
+(setq epa-pinentry-mode 'loopback)      ;使用minibuffer输入密码。
 ;; (setq debug-on-error t)
 (set-face-attribute 'highlight nil :background "black")
 ;; ==================Default====================

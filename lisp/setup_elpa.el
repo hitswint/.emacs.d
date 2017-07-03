@@ -25,7 +25,6 @@
   (append '(ace-jump-mode
             ace-link
             ace-pinyin
-            ace-popup-menu
             ac-html-bootstrap
             ac-ispell
             ac-math
@@ -42,7 +41,6 @@
             auto-complete-clang
             auto-highlight-symbol
             avy
-            avy-menu
             avy-zap
             backup-walker
             bbyac
@@ -51,7 +49,6 @@
             bm
             buttercup
             cdlatex
-            char-menu
             chinese-pyim
             chinese-pyim-basedict
             chinese-pyim-greatdict

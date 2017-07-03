@@ -15,7 +15,7 @@
 ;; Automatically purge backup files not accessed in a week.
 (let ((day (* 60 60 24))
       (week (* 60 60 24 7))
-      (month (* 60 60 24 7 30))
+      (month (* 60 60 24 30))
       (current (float-time (current-time))))
 ;;;; 每周删除旧backup文件。
   (message "Deleting old backup files...")

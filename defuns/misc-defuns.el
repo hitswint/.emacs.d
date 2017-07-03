@@ -86,9 +86,13 @@
 ;; =================pandoc-output==================
 (defun pandoc-output (&optional arg)
   (interactive)
-  (let ((output-format (read-string "Output format (default docx): " nil nil "docx")))
-    (shell-command (concat "pandoc -o " (file-name-base) "." output-format " "
-                           (file-name-nondirectory (buffer-file-name))))))
+  (let ((output-format (read-string "Output format: ")))
+    (mapcar '(lambda (x) (shell-command (concat "pandoc -o " (file-name-base x)
+                                                "." output-format " " (file-name-nondirectory x))))
+
+            (if (eq major-mode 'dired-mode)
+                (dired-get-marked-files)
+              (list (buffer-file-name))))))
 (global-set-key (kbd "M-g o") 'pandoc-output)
 ;; =================pandoc-output==================
 ;;; show-some-last-messages
