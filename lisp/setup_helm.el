@@ -516,14 +516,14 @@ from its directory."
                                              "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T \" " (expand-file-name default-directory))))
                                     (is-lin (progn (start-process-shell-command
                                                     "tc" "*tc*"
-                                                    (concat "wine-development "
+                                                    (concat "wine "
                                                             "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T z:"
                                                             (replace-regexp-in-string " " "\\\\ " (expand-file-name default-directory))))
                                                    (let ((default-directory
                                                            "/home/swint/.wine/drive_c/Program Files/viatc/"))
                                                      (start-process-shell-command
                                                       "viatc" "*viatc*"
-                                                      "wine-development viatc.exe")))))))
+                                                      "wine viatc.exe")))))))
   ;;使用lister直接浏览文件。
   (define-key dired-mode-map (kbd "C-M-j") '(lambda ()
                                               (interactive)
@@ -532,7 +532,7 @@ from its directory."
                                                         "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T /S=L \" " (dired-get-filename))))
                                                (is-lin (start-process-shell-command
                                                         "tc" "*tc*"
-                                                        (concat "wine-development "
+                                                        (concat "wine "
                                                                 "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
                                                                 (replace-regexp-in-string " " "\\\\ "
                                                                                           (expand-file-name (dired-get-filename)))))))))
@@ -543,7 +543,7 @@ from its directory."
               "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T /S=L \" " (expand-file-name _candidate))))
      (is-lin (start-process-shell-command
               "tc" "*tc*"
-              (concat "wine-development "
+              (concat "wine "
                       "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
                       (replace-regexp-in-string " " "\\\\ "
                                                 (expand-file-name _candidate)))))))

@@ -7,6 +7,7 @@
 (show-paren-mode t)                     ;显示括号匹配。
 (global-linum-mode -1)
 (global-hl-line-mode t)
+(fringe-mode)
 ;; 导致emacs25卡顿。
 ;; (menu-bar-mode -1)
 (delete-selection-mode t)
@@ -50,7 +51,7 @@
 (global-set-key (kbd "C-M-6") 'calendar)
 (global-set-key (kbd "C-x C-l") 'reposition-window)
 (global-set-key (kbd "C-;") 'set-mark-command)
-(global-set-key (kbd "C-x C-;") 'rectangle-mark-mode)
+(global-set-key (kbd "C-x r ;") 'rectangle-mark-mode)
 (global-set-key [f9] 'menu-bar-mode)
 (global-set-key (kbd "S-SPC") 'just-one-space)
 (global-set-key (kbd "<S-return>") 'join-line)

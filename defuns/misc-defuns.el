@@ -87,8 +87,8 @@
 (defun pandoc-output (&optional arg)
   (interactive)
   (let ((output-format (read-string "Output format: ")))
-    (mapcar '(lambda (x) (shell-command (concat "pandoc -o " (file-name-base x)
-                                                "." output-format " " (file-name-nondirectory x))))
+    (mapcar #'(lambda (x) (shell-command (concat "pandoc -o " (file-name-base x)
+                                                 "." output-format " " (file-name-nondirectory x))))
 
             (if (eq major-mode 'dired-mode)
                 (dired-get-marked-files)

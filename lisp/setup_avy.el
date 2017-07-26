@@ -7,11 +7,12 @@
   :bind (:map isearch-mode-map
               ("C-h" . avy-isearch))
   :config
-  (setq avy-keys (append (number-sequence ?a ?z) '(?, ?. ?/ ?' ?\; ? )))
-  (setq avy-dispatch-alist '((?\C-w . avy-action-kill-stay)
-                             (?\C-\M-w . avy-action-kill-move)
-                             (?\M-w . avy-action-copy)
+  (setq avy-keys (append (number-sequence ?a ?z) (number-sequence ?0 ?9) '(?, ?. ?/ ?' ?\; ? )))
+  (setq avy-dispatch-alist '((?\C-\M-w . avy-action-kill-move)
+                             (?\C-w . avy-action-kill-stay)
                              (?\C-\; . avy-action-mark)
+                             (?\M-w . avy-action-copy)
+                             (?\C-y . avy-action-yank)
                              (?\M-f . avy-action-ispell)))
   ;; 默认当前窗口，加C-u时所有窗口。
   (setq avy-all-windows nil)
