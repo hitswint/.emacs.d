@@ -13,12 +13,12 @@
       (quietly-read-abbrev-file))
   ;; Sample use of emacs abbreviation feature.
   (define-abbrev-table 'global-abbrev-table
-    '(("mqq" "278064399@qq.com")
-      ("mgg" "guiqiangw2013@gmail.com")
-      ("mhot" "wguiqiang@hotmail.com")
-      ("m126" "wgq_hit@126.com")
-      ("m163" "wgq_713@163.com")
-      ("wgq" "Guiqiang Wang"))))
+    '(("abqq" "278064399@qq.com")
+      ("abgg" "guiqiangw2013@gmail.com")
+      ("abhot" "wguiqiang@hotmail.com")
+      ("ab126" "wgq_hit@126.com")
+      ("ab163" "wgq_713@163.com")
+      ("abwgq" "Guiqiang Wang"))))
 ;; 编辑abbrev-table：C-x a g 为当前位置之前词语，全局加入abbrev。
 ;; C-x a + 为当前位置之前词语，在当前mode下加入abbrev。
 ;; 上述命令前加前缀C-u 3表示当前位置之前三个词。

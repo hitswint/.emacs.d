@@ -66,9 +66,14 @@
                    ("n" . dired-k--next-highlighted-file)))
                (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
                (define-key dired-mode-map (kbd "C-/") 'helm-dired-current-file)
+               (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-for-alternate-file)
                ;; 在dired对mark的多个文件内容进行查找。
                (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
-               (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)))
+               (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
+               (define-key dired-mode-map (kbd "C-c c") 'swint-dired-cad-converter)
+               (define-key dired-mode-map (kbd "C-c C") '(lambda ()
+                                                           (interactive)
+                                                           (swint-dired-cad-converter t)))))
   ;; ==========setup-and-keybindings===========
 ;;;; Kill subdir
   ;; ===============Kill subdir================
@@ -212,9 +217,6 @@
   (when is-lin
 ;;;; 默认程序打开文件
     ;; ============默认程序打开文件============
-    (add-hook 'dired-mode-hook
-              (lambda ()
-                (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-for-alternate-file)))
     (defun dired-async-shell-command-for-alternate-file ()
       (interactive)
       (async-shell-command-no-output-buffer-from-file (dired-get-file-for-visit)))
@@ -321,12 +323,6 @@
          (concat "TeighaFileConverter ./ ./dwg ACAD2004 DWG 0 1 "
                  (unless arg
                    swint-dired-current-file)))))
-    (add-hook 'dired-mode-hook
-              (lambda ()
-                (define-key dired-mode-map (kbd "C-c c") 'swint-dired-cad-converter)
-                (define-key dired-mode-map (kbd "C-c C") '(lambda ()
-                                                            (interactive)
-                                                            (swint-dired-cad-converter t)))))
     ;; ===========cad文件版本转换==============
     )
 ;;;; dired-view-file-or-dir

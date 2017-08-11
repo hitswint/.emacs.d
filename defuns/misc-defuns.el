@@ -65,7 +65,7 @@
              chinese-char chinese-char-and-punc english-word
              (+ chinese-char english-word)
              (+ chinese-char-and-punc english-word)))))
-(global-set-key (kbd "M-+") 'swint-count-words-region)
+(global-set-key (kbd "M-g =") 'swint-count-words-region)
 ;; ===================WordsCount===================
 ;;; get-words-at-point
 ;; ===============get-words-at-point===============
@@ -82,19 +82,32 @@
                        nil nil (car (car words-at-point)))
         (ido-completing-read "Get Words:" (remove-duplicates (mapcar 'car words-at-point)))))))
 ;; ===============get-words-at-point===============
-;;; pandoc-output
-;; =================pandoc-output==================
-(defun pandoc-output (&optional arg)
+;;; swint-pandoc-output
+;; ==============swint-pandoc-output===============
+(defun swint-pandoc-output ()
   (interactive)
   (let ((output-format (read-string "Output format: ")))
     (mapcar #'(lambda (x) (shell-command (concat "pandoc -o " (file-name-base x)
                                                  "." output-format " " (file-name-nondirectory x))))
-
             (if (eq major-mode 'dired-mode)
                 (dired-get-marked-files)
               (list (buffer-file-name))))))
-(global-set-key (kbd "M-g o") 'pandoc-output)
-;; =================pandoc-output==================
+(global-set-key (kbd "M-g o") 'swint-pandoc-output)
+;; ==============swint-pandoc-output===============
+;;; swint-pdftk-output
+;; ==============swint-pdftk-output================
+(defun swint-pdftk-output ()
+  (interactive)
+  (let ((args (read-string "Pdftk args(1-2west 4 5-end): ")))
+    (mapcar #'(lambda (pdf-file)
+                (shell-command (concat "pdftk " (file-name-nondirectory pdf-file) " cat "
+                                       args " output " (concat (file-name-base pdf-file) "-new.pdf"))))
+            (remove-if-not #'(lambda (x) (string-equal (downcase (file-name-extension x)) "pdf"))
+                           (if (eq major-mode 'dired-mode)
+                               (dired-get-marked-files)
+                             (list (buffer-file-name)))))))
+(global-set-key (kbd "M-g t") 'swint-pdftk-output)
+;; ==============swint-pdftk-output================
 ;;; show-some-last-messages
 ;; ============show-some-last-messages=============
 (defcustom default-messages-to-show 4
