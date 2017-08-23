@@ -13,7 +13,7 @@
   (use-package ibuf-ext
     ;; Enabled automatically.
     :config
-;;;;; 按persp分组。
+;;;;; 按persp分组
     (define-ibuffer-filter persp
         "Toggle current view to buffers with file or directory name matching QUALIFIER."
       (:description "persp" :reader (read-from-minibuffer "Filter by persp (regexp): "))
@@ -35,7 +35,7 @@
     (define-key ibuffer-mode-map (kbd ":") '(lambda () (interactive)
                                               (ibuffer-create-saved-filter-groups-with-persp)
                                               (ibuffer-switch-to-saved-filter-groups "Persp")))
-;;;;; 按filename分组。
+;;;;; 按filename分组
     ;; 这个版本的ibuffer有问题，dired路径为"~/"，文件路径为"/home/swint/"，要分开设置。
     (define-ibuffer-filter filename
         "Toggle current view to buffers with file or directory name matching QUALIFIER."

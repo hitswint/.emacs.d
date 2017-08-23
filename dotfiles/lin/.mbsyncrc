@@ -1,0 +1,48 @@
+IMAPAccount Hotmail
+Host imap-mail.outlook.com
+Port 993
+User wguiqiang@hotmail.com
+# 首次调用mbsync -a时，采用gpg方式输入密码。
+# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==\"smtp-mail.outlook.com\" {print $NF}'"
+PassCmd "emacsclient --eval '(cadr (netrc-credentials \"smtp-mail.outlook.com\"))' | tr -d \\\""
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore hotmail-remote
+Account Hotmail
+
+MaildirStore hotmail-local
+Path ~/Maildir/Hotmail/
+Inbox ~/Maildir/Hotmail/INBOX
+
+Channel hotmail
+Master :hotmail-remote:
+Slave :hotmail-local:
+Patterns *
+Create Both
+Expunge Both
+SyncState *
+
+IMAPAccount QQ
+Host imap.qq.com
+Port 993
+User 278064399
+# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==\"smtp.qq.com\" {print $NF}'"
+PassCmd "emacsclient --eval '(cadr (netrc-credentials \"smtp.qq.com\"))' | tr -d \\\""
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore qq-remote
+Account QQ
+
+MaildirStore qq-local
+Path ~/Maildir/QQ/
+Inbox ~/Maildir/QQ/INBOX
+
+Channel qq
+Master :qq-remote:
+Slave :qq-local:
+Patterns *
+Create Both
+Expunge Both
+SyncState *

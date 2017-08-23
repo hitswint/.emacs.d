@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: comment-xxx
+# key: comx
+# --
+`(yas-with-comment "XXX: ")`

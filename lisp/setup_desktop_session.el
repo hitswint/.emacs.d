@@ -28,6 +28,7 @@
         history-length 1000
         savehist-additional-variables '(mark-ring
                                         global-mark-ring
+                                        kill-ring
                                         search-ring
                                         regexp-search-ring
                                         extended-command-history)
@@ -70,6 +71,7 @@
   (add-to-list 'desktop-minor-mode-table '(wrap-region-mode nil))
   (add-to-list 'desktop-minor-mode-table '(paredit-everywhere-mode nil))
   (add-to-list 'desktop-minor-mode-table '(flycheck-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(flycheck-pos-tip-mode nil))
   (add-to-list 'desktop-minor-mode-table '(flyspell-mode nil))
   (add-to-list 'desktop-minor-mode-table '(zotelo-minor-mode nil))
   (add-to-list 'desktop-minor-mode-table '(auto-fill-mode nil))

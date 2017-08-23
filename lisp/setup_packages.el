@@ -634,12 +634,15 @@ is named like ODF with the extension turned to pdf."
 ;;; clipmon
 ;; ====================clipmon=====================
 (use-package clipmon
-  ;; Enabled after features.
-  :defer t
-  :after easy-kill
+  ;; Enabled at idle.
+  :defer 2
+  :bind ("M-g w" . clipmon-autoinsert-toggle)
   :config
   (clipmon-mode-start)
-  (clipmon-persist)
+  (setq clipmon-timer-interval 1)
+  (setq select-enable-clipboard t
+        select-enable-primary t
+        selection-coding-system 'utf-8)
   (defun clipmon--get-selection ()
     "Get the clipboard contents"
     ;; Note: When the OS is first started these functions will throw
@@ -899,6 +902,7 @@ is named like ODF with the extension turned to pdf."
 ;;; rainbow-mode
 ;; =================rainbow-mode===================
 (use-package rainbow-mode
+  ;; Enabled in modes.
   :defer t
   :diminish rainbow-mode
   :commands rainbow-mode
@@ -910,4 +914,15 @@ is named like ODF with the extension turned to pdf."
                   emacs-lisp-mode-hook))
     (add-hook hook 'rainbow-mode)))
 ;; =================rainbow-mode===================
+;;; pass
+;; =====================pass=======================
+(use-package pass
+  ;; Enabled at commands.
+  :bind ("M-g s" . pass)
+  :config
+  (setq pass-show-keybindings nil))
+(use-package helm-pass
+  ;; Enabled at commands.
+  :bind ("M-g M-s" . helm-pass))
+;; =====================pass=======================
 (provide 'setup_packages)

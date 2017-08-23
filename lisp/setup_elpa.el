@@ -106,6 +106,7 @@
             helm-flycheck
             helm-flyspell
             helm-gtags
+            helm-pass
             helm-projectile
             helm-swoop
             helm-unicode
@@ -146,6 +147,7 @@
             paredit
             paredit-everywhere
             parsebib
+            pass
             peep-dired
             perspective
             persp-projectile
@@ -189,6 +191,8 @@
             ztree)
           (cond
            (is-lin '(fcitx
+                     helm-mu
+                     mu4e-alert
                      pdf-tools
                      tablist
                      ycmd

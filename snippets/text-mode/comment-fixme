@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: comment-fixme
+# key: comf
+# condition: (not (eq major-mode 'sh-mode))
+# --
+`(yas-with-comment "FIXME: ")`

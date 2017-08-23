@@ -19,9 +19,13 @@ wicd-client -t &
 # dbus-launch nm-applet &
 
 xmodmap ~/.xmodmap
+
 # MPD daemon start (if no other user instance exists)
 # [ ! -s ~/.mpd/mpd.pid ] && mpd  # Fail to startup sometime
 [ ! -s ~/.mpd/mpd.pid ] ; mpd
+
+export XAPIAN_CJK_NGRAM=1
+dunst &
 
 dwm-multi-mon.sh single
 exec dwm
