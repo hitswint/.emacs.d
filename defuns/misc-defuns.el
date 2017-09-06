@@ -80,7 +80,7 @@
       (if (<= (length words-at-point) 1)
           (read-string (format "Get Words (default %s): " (car (car words-at-point)))
                        nil nil (car (car words-at-point)))
-        (ido-completing-read "Get Words:" (remove-duplicates (mapcar 'car words-at-point)))))))
+        (ivy-read "Get Words:" (remove-duplicates (mapcar 'car words-at-point)))))))
 ;; ===============get-words-at-point===============
 ;;; swint-pandoc-output
 ;; ==============swint-pandoc-output===============

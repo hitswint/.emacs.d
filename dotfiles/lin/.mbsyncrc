@@ -2,9 +2,9 @@ IMAPAccount Hotmail
 Host imap-mail.outlook.com
 Port 993
 User wguiqiang@hotmail.com
-# 首次调用mbsync -a时，采用gpg方式输入密码。
-# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==\"smtp-mail.outlook.com\" {print $NF}'"
-PassCmd "emacsclient --eval '(cadr (netrc-credentials \"smtp-mail.outlook.com\"))' | tr -d \\\""
+# 首次调用mbsync -a，采用gpg方式输入密码。
+# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==\"imap-mail.outlook.com\" {print $NF}'"
+PassCmd "emacsclient --eval '(get-auth-pass \"imap-mail.outlook.com\")' | tr -d \\\""
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
@@ -27,8 +27,8 @@ IMAPAccount QQ
 Host imap.qq.com
 Port 993
 User 278064399
-# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==\"smtp.qq.com\" {print $NF}'"
-PassCmd "emacsclient --eval '(cadr (netrc-credentials \"smtp.qq.com\"))' | tr -d \\\""
+# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==\"imap.qq.com\" {print $NF}'"
+PassCmd "emacsclient --eval '(get-auth-pass \"imap.qq.com\")' | tr -d \\\""
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 

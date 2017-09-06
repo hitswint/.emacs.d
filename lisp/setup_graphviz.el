@@ -17,7 +17,7 @@ depending on the last command issued."
     (let ((output-file (concat (file-name-sans-extension (buffer-file-name)) ".png")))
       (if (file-exists-p output-file)
           (cond
-           (is-lin (async-shell-command-no-output-buffer-from-file output-file))
+           (is-lin (dired-async-shell-command output-file))
            (is-win (w32-browser output-file)))
         (message "Warning: No export file."))))
   (add-hook 'graphviz-dot-mode-hook

@@ -82,9 +82,10 @@
     (unless (and (boundp 'pyvenv-virtual-env) pyvenv-virtual-env)
       (call-interactively 'pyvenv-workon))
     (unless (get-process "IPYNB")
-      (start-process-shell-command
-       "IPYNB" "*IPYNB*" (concat "jupyter notebook --no-browser --notebook-dir="
-                                 (expand-file-name "~/Documents/Python/Jupyter"))))
+      (let ((process (start-process-shell-command
+                      "IPYNB" "*IPYNB*" (concat "jupyter notebook --no-browser --notebook-dir="
+                                                (expand-file-name "~/Documents/Python/Jupyter")))))
+        (set-process-query-on-exit-flag process nil)))
     (unless (if (boundp 'ein:notebooklist-first-open-hook)
                 (ein:notebooklist-open)
               (ein:notebooklist-open nil nil t))
@@ -95,6 +96,7 @@
   (setq ein:use-smartrep t)
   (use-package ein-notebook
     :config
+    ;; 在notebook中输入%pylab(%matplotlib) inline显示行内图片。
     (add-hook 'ein:notebook-mode-hook '(lambda ()
                                          (set (make-local-variable 'company-idle-delay) nil)))
     (define-key ein:notebook-mode-map (kbd "M-,") nil)

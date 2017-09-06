@@ -4,7 +4,6 @@
   ;; Enabled automatically.
   :config
   (ido-mode t)
-  ;; (global-set-key (kbd "C-x f") 'ido-find-file)
   (setq ido-auto-merge-delay-time 0.7
         ido-default-buffer-method 'raise-frame
         ido-default-file-method 'raise-frame
@@ -198,7 +197,7 @@
             '(lambda () (interactive)
                (let ( (dir ido-current-directory)
                       (file (car ido-matches) ))
-                 (async-shell-command-no-output-buffer-from-file (concat dir file)))))
+                 (dired-async-shell-command (concat dir file)))))
       (exit-minibuffer)))
    (is-win
     (defun ido-my-keys ()
@@ -223,7 +222,7 @@
 ;; =========================ido========================
 ;;; ido-tips
 ;; ======================ido-tips======================
-(use-package ido-ubiquitous
+(use-package ido-completing-read+
   ;; Enabled after features.
   :defer t
   :after ido

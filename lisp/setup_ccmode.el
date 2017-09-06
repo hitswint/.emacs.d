@@ -198,6 +198,7 @@
 ;; ===================arduino===================
 ;; ==================disaster===================
 (use-package disaster
+  ;; Enabled at commands.
   :defer t
   :commands disaster)
 ;; ==================disaster===================

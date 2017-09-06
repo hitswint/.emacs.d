@@ -12,16 +12,12 @@
     未包含在package中。
   + everything
     未采用package。
-  + helm-pinyin
+  + iswitchb-pinyin
     已更改包。
-  + ido-ubiquitous
-    package中新版本包与iswitchb不兼容。
   + mew-w3m
     使mew支持html格式邮件。
   + org-annotate-file
     未包含在package中。
-  + perspective
-    已更改包。
   + trashcan
     未包含在package中。
   + unicad

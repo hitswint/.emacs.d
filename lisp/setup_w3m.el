@@ -1,16 +1,15 @@
 ;;; w3m
 ;; ===================w3m=====================
-;; 在lin上面通过elpa安装，在win上直接使用.emacs.d/w3m中下载的已经编译好的代码。
 (use-package w3m
   ;; Enabled at commands.
   :defer t
   :bind (("C-M-5" . w3m)
-         ("C-x C-M-@" . w3m-youdao-sample-sentences))
+         ("C-x C-M-5" . w3m-youdao-sample-sentences))
   :config
   ;; Use w3m to display youdao sample sentences.
-  (defun w3m-youdao-sample-sentences ()
+  (defun w3m-youdao-sample-sentences (&optional _word)
     (interactive)
-    (let ((word (swint-get-words-at-point)))
+    (let ((word (or _word (swint-get-words-at-point))))
       (browse-url
        (concat "http://dict.youdao.com/search?le=eng&q=lj%3A"
                (cond
@@ -48,16 +47,14 @@
   (defun w3m-new-tab ()
     (interactive)
     (w3m-copy-buffer nil nil nil t))
-  ;; 为了在w3m下使用meta n快捷键，必须先取消w3m下原有的设定。
   (add-hook 'w3m-mode-hook
             '(lambda ()
-               (define-key w3m-mode-map [(\h)] 'w3m-previous-buffer)
-               (define-key w3m-mode-map [(\l)] 'w3m-next-buffer)
                (define-key w3m-mode-map [(meta \s)] nil)
                (define-key w3m-mode-map [(meta \n)] nil)
+               (define-key w3m-mode-map [(\h)] 'w3m-previous-buffer)
+               (define-key w3m-mode-map [(\l)] 'w3m-next-buffer)
                (define-key w3m-mode-map [(\q)] 'w3m-delete-buffer)
-               (define-key w3m-mode-map [(\Q)] '(lambda () (interactive)
-                                                  (w3m-quit 1)))
+               (define-key w3m-mode-map [(\Q)] '(lambda () (interactive) (w3m-quit 1)))
                (define-key w3m-mode-map (kbd "C-c o") 'w3m-open-site-current-session)
                (define-key w3m-mode-map (kbd "C-c t") 'w3m-open-site-new-session)
                (define-key w3m-mode-map (kbd "C-o b") '(lambda () (interactive)
@@ -71,13 +68,10 @@
 ;;; helm-firefox
 ;; ===============helm-firefox================
 (use-package helm-firefox
-  ;; Enabled after features.
+  ;; Enabled at commands.
   :defer t
-  :after w3m
-  :commands helm-get-firefox-user-init-dir
+  :commands (helm-firefox-bookmarks helm-get-firefox-user-init-dir)
   :config
-  (add-hook 'w3m-mode-hook '(lambda ()
-                              (bind-key "'" 'helm-firefox-bookmarks w3m-mode-map)))
   (when is-win
     (setq helm-firefox-default-directory "~/AppData/Roaming/Mozilla/Firefox/")))
 ;; ===============helm-firefox================

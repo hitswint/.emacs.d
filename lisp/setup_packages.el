@@ -300,7 +300,8 @@
   :config
   (fcitx-prefix-keys-add "M-s" "M-g" "M-O")
   (fcitx-aggressive-setup)
-  (fcitx-isearch-turn-on))
+  (fcitx-isearch-turn-on)
+  (fcitx--defun-maybe "sdcv"))
 ;; ======================fcitx=====================
 ;;; aggressive-indent
 ;; ================aggressive-indent===============
@@ -349,10 +350,6 @@
 ;; =====================ztree======================
 ;;; which-key
 ;; ====================which-key===================
-;; 原用guide-key，改用which-key。
-;; (require 'guide-key)
-;; (setq guide-key/guide-key-sequence
-;;       '("C-c" (org-mode "C-c C-x")))
 (use-package which-key
   ;; Enabled at idle.
   :defer 2
@@ -464,7 +461,7 @@ is named like ODF with the extension turned to pdf."
   ;; Enabled at commands.
   :defer t
   :bind (:map dired-mode-map
-              ("V" . dired-vlf))
+              ("C-c C-v" . dired-vlf))
   :init
   ;; Enable vlf when opening files bigger than 100MB.
   (setq large-file-warning-threshold 100000000)
@@ -634,31 +631,26 @@ is named like ODF with the extension turned to pdf."
 ;;; clipmon
 ;; ====================clipmon=====================
 (use-package clipmon
-  ;; Enabled at idle.
-  :defer 2
+  ;; Enabled at commands.
+  :defer t
+  :after easy-kill
   :bind ("M-g w" . clipmon-autoinsert-toggle)
   :config
-  (clipmon-mode-start)
-  (setq clipmon-timer-interval 1)
-  (setq select-enable-clipboard t
-        select-enable-primary t
-        selection-coding-system 'utf-8)
-  (defun clipmon--get-selection ()
-    "Get the clipboard contents"
-    ;; Note: When the OS is first started these functions will throw
-    ;; (error "No selection is available"), so need to ignore errors.
-    (cond ((fboundp 'gui-get-selection) ; emacs25
-                                        ; better to (setq selection-coding-system 'utf-8) to handle chinese,
-                                        ; which is the default value for gui-get-selection etc
-                                        ; because windows needs STRING. same below.
-                                        ; (ignore-errors (gui-get-selection 'CLIPBOARD 'UTF8_STRING)))
-           (ignore-errors (gui-get-selection 'CLIPBOARD 'UTF8_STRING))) ; for windows needs STRING
-          ((eq window-system 'w32) ; windows/emacs24
-           ;; Note: (x-get-selection 'CLIPBOARD) doesn't work on Windows.
-           (ignore-errors (x-get-selection-value))) ; can be nil
-          (t ; linux+osx/emacs24
-                                        ; (ignore-errors (x-get-selection 'CLIPBOARD 'UTF8_STRING)))))
-           (ignore-errors (x-get-selection 'CLIPBOARD 'UTF8_STRING))))))
+  (advice-add 'clipmon-mode-start :after #'(lambda () (xclipmon-mode 0)))
+  (advice-add 'clipmon-mode-stop :after #'(lambda () (xclipmon-mode 1)))
+  ;; 原clipmon--get-selection存在中文乱码问题，而且有时造成复制失败，即yank内容不更新。
+  (advice-add 'clipmon--get-selection :override #'(lambda () (current-kill 0)))
+  (defvar xclipmon-process nil)
+  (define-minor-mode xclipmon-mode
+    "Toggle xclipmon.sh - watch system clipboard, add changes to kill ring."
+    :global t
+    :lighter ""
+    (if (not xclipmon-mode)
+        (ignore-errors (kill-process xclipmon-process))
+      (setq xclipmon-process (start-process-shell-command
+                              "xclipmon" "*xclipmon*" "xclipmon.sh"))
+      (set-process-query-on-exit-flag xclipmon-process nil)))
+  (clipmon-mode 1))
 ;; ====================clipmon=====================
 ;;; volatile-highlights
 ;; ==============volatile-highlights===============
@@ -799,6 +791,7 @@ is named like ODF with the extension turned to pdf."
 (use-package ivy
   ;; Enabled after features.
   :defer t
+  :commands ivy-set-actions
   :after (swiper counsel)
   :config
   (bind-key "M-s y" 'ivy-resume)
@@ -831,6 +824,8 @@ is named like ODF with the extension turned to pdf."
          ("M-s `" . counsel-tmm)
          ("M-s c u" . counsel-unicode-char)
          ("M-s c l" . counsel-locate)
+         ("M-s c i" . counsel-imenu)
+         ("M-s c C-x C-f" . counsel-find-file)
          ("M-s c o" . counsel-outline)
          ("M-s c d" . counsel-dpkg)
          ("M-s c g" . counsel-ag)
@@ -910,7 +905,6 @@ is named like ODF with the extension turned to pdf."
   (dolist (hook '(web-mode-hook
                   css-mode-hook
                   html-mode-hook
-                  web-mode-hook
                   emacs-lisp-mode-hook))
     (add-hook hook 'rainbow-mode)))
 ;; =================rainbow-mode===================

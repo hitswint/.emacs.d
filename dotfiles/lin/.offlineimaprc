@@ -1,0 +1,46 @@
+[general]
+maxsyncaccounts = 2
+accounts = Default, Netease
+pythonfile = ~/.offlineimap.py
+
+[Account Default]
+localrepository = Local_default
+remoterepository = Remote_default
+
+[Repository Local_default]
+type = Maildir
+localfolders = ~/Maildir/Default
+nametrans = lambda foldername: foldername.decode('utf-8').encode('imap4-utf-7')
+
+[Repository Remote_default]
+remotehost = imap.126.com
+remoteusereval = get_user_emacs("imap.126.com")
+remotepasseval = get_password_emacs("imap.126.com")
+type = IMAP
+ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+holdconnectionopen = true
+keepalive = 120
+realdelete = yes
+nametrans = lambda foldername: foldername.decode('imap4-utf-7').encode('utf-8')
+
+[Account Netease]
+localrepository = Local_netease
+remoterepository = Remote_netease
+
+[Repository Local_netease]
+type = Maildir
+localfolders = ~/Maildir/Netease
+nametrans = lambda foldername: foldername.decode('utf-8').encode('imap4-utf-7')
+
+[Repository Remote_netease]
+remotehost = imap.163.com
+remoteusereval = get_user_emacs("imap.163.com")
+remotepasseval = get_password_emacs("imap.163.com")
+type = IMAP
+ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+holdconnectionopen = true
+keepalive = 120
+realdelete = yes
+nametrans = lambda foldername: foldername.decode('imap4-utf-7').encode('utf-8')

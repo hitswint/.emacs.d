@@ -2,6 +2,7 @@
 ;; ========================Mew=========================
 (use-package mew
   ;; Enabled at commands.
+  :if is-win
   :defer t
   :bind ("C-x C-M-7" . mew)
   :config
@@ -98,19 +99,50 @@
   (setq mu4e-change-filenames-when-moving t
         mu4e-view-prefer-html t
         mu4e-view-show-images t
-        mu4e-get-mail-command "mbsync -a"
+        mu4e-get-mail-command "mbsync -a; offlineimap"
         mu4e-confirm-quit nil
         mu4e-update-interval 600
         message-kill-buffer-on-exit t
-        netrc-file "~/.authinfo.gpg"
         mu4e-attachment-dir "~/Downloads"
-        mu4e-completing-read-function 'ivy-completing-read
-        mu4e-maildir-shortcuts '(("/Hotmail/Inbox" . ?h)
+        mu4e-completing-read-function 'completing-read
+        mu4e-maildir-shortcuts '(("/Default/INBOX" . ?d)
+                                 ("/Netease/INBOX" . ?n)
+                                 ("/Hotmail/Inbox" . ?h)
                                  ("/QQ/INBOX" . ?q))
         send-mail-function 'smtpmail-send-it
         message-send-mail-function 'smtpmail-send-it)
   (setq mu4e-contexts
         `(,(make-mu4e-context
+            :name "Default"
+            :enter-func (lambda () (mu4e-message "Switch to the Default context"))
+            :match-func (lambda (msg)
+                          (when msg
+                            (mu4e-message-contact-field-matches msg
+                                                                :to "wgq_hit@126.com")))
+            :vars '((user-mail-address . "wgq_hit@126.com" )
+                    (user-full-name . "Guiqiang Wang" )
+                    (mu4e-sent-folder . "/Default/已发送")
+                    (mu4e-drafts-folder . "/Default/草稿箱")
+                    (mu4e-trash-folder . "/Default/已删除")
+                    (smtpmail-default-smtp-server . "smtp.126.com")
+                    (smtpmail-smtp-server . "smtp.126.com")
+                    (smtpmail-smtp-service . 25)))
+          ,(make-mu4e-context
+            :name "Netease"
+            :enter-func (lambda () (mu4e-message "Switch to the Netease context"))
+            :match-func (lambda (msg)
+                          (when msg
+                            (mu4e-message-contact-field-matches msg
+                                                                :to "wgq_713@163.com")))
+            :vars '((user-mail-address . "wgq_713@163.com" )
+                    (user-full-name . "Guiqiang Wang" )
+                    (mu4e-sent-folder . "/Netease/已发送")
+                    (mu4e-drafts-folder . "/Netease/草稿箱")
+                    (mu4e-trash-folder . "/Netease/已删除")
+                    (smtpmail-default-smtp-server . "smtp.163.com")
+                    (smtpmail-smtp-server . "smtp.163.com")
+                    (smtpmail-smtp-service . 25)))
+          ,(make-mu4e-context
             :name "Hotmail"
             :enter-func (lambda () (mu4e-message "Switch to the Hotmail context"))
             :match-func (lambda (msg)
@@ -139,7 +171,17 @@
                     (mu4e-trash-folder . "/QQ/Deleted Messages")
                     (smtpmail-default-smtp-server . "smtp.qq.com")
                     (smtpmail-smtp-server . "smtp.qq.com")
-                    (smtpmail-smtp-service . 587))))))
+                    (smtpmail-smtp-service . 587)))))
+  (defun get-auth-user (host)
+    (require 'netrc)
+    (let* ((netrc (netrc-parse (expand-file-name "~/.authinfo.gpg")))
+           (hostentry (netrc-machine netrc host)))
+      (when hostentry (netrc-get hostentry "login"))))
+  (defun get-auth-pass (host)
+    (require 'netrc)
+    (let* ((netrc (netrc-parse (expand-file-name "~/.authinfo.gpg")))
+           (hostentry (netrc-machine netrc host)))
+      (when hostentry (netrc-get hostentry "password")))))
 ;; =======================mu4e=========================
 ;;; helm-mu
 ;; ======================helm-mu=======================

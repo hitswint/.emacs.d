@@ -23,7 +23,7 @@
                               ((file-exists-p output-eps-file) output-eps-file))))
       (if output-file
           (cond
-           (is-lin (async-shell-command-no-output-buffer-from-file output-file))
+           (is-lin (dired-async-shell-command output-file))
            (is-win (w32-browser output-file)))
         (message "Warning: No export file."))))
   (add-hook 'gnuplot-mode-hook

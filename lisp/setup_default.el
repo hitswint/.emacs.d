@@ -44,8 +44,6 @@
 (global-set-key (kbd "M-.") 'delete-window)
 (global-set-key (kbd "M-s M-,") 'split-window-vertically)
 (global-set-key (kbd "M-s M-.") 'split-window-horizontally)
-(global-set-key (kbd "C-M-2") 'swint-sdcv-to-postip)
-(global-set-key (kbd "C-M-@") 'swint-sdcv-to-buffer)
 (global-set-key (kbd "M-s 2") 'run-octave)
 (global-set-key (kbd "M-s @") 'calculator)
 (global-set-key (kbd "C-M-6") 'calendar)

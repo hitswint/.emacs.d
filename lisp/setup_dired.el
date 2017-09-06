@@ -66,14 +66,9 @@
                    ("n" . dired-k--next-highlighted-file)))
                (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
                (define-key dired-mode-map (kbd "C-/") 'helm-dired-current-file)
-               (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-for-alternate-file)
                ;; 在dired对mark的多个文件内容进行查找。
                (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
-               (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
-               (define-key dired-mode-map (kbd "C-c c") 'swint-dired-cad-converter)
-               (define-key dired-mode-map (kbd "C-c C") '(lambda ()
-                                                           (interactive)
-                                                           (swint-dired-cad-converter t)))))
+               (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)))
   ;; ==========setup-and-keybindings===========
 ;;;; Kill subdir
   ;; ===============Kill subdir================
@@ -217,10 +212,12 @@
   (when is-lin
 ;;;; 默认程序打开文件
     ;; ============默认程序打开文件============
-    (defun dired-async-shell-command-for-alternate-file ()
+    (defun dired-async-shell-command-on-files ()
       (interactive)
-      (async-shell-command-no-output-buffer-from-file (dired-get-file-for-visit)))
-    (defun async-shell-command-no-output-buffer-from-file (file)
+      (mapcar #'(lambda (file) (dired-async-shell-command file))
+              (dired-get-marked-files))
+      (dired-unmark-all-files ?*))
+    (defun dired-async-shell-command (file)
       (interactive)
       (if (not (boundp 'file-extension-app-alist))
           (setq file-extension-app-alist
@@ -262,7 +259,7 @@
                                      (file-name-nondirectory file)
                                    file)
                                  "\"")))))
-    ;; 设置一些文件的默认打开方式，此功能必须在(require 'dired-x)之后。
+    ;; 设置文件的默认打开方式。
     (setq dired-guess-shell-alist-user
           (list
            (list "\\.pdf$" "adobe.sh * >/dev/null 2>&1 &")
@@ -293,6 +290,7 @@
            (list "\\.ods$" "libreoffice * >/dev/null 2>&1 &")
            (list "\\.tex$" "xelatex * >/dev/null 2>&1 &")
            (list "\\.c$" "gcc -Wall")))
+    (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-on-files)
     ;; ============默认程序打开文件============
 ;;;; 在当前目录下打开urxvt
     ;; ========在当前目录下打开urxvt===========
@@ -323,6 +321,9 @@
          (concat "TeighaFileConverter ./ ./dwg ACAD2004 DWG 0 1 "
                  (unless arg
                    swint-dired-current-file)))))
+    (define-key dired-mode-map (kbd "C-c c") 'swint-dired-cad-converter)
+    (define-key dired-mode-map (kbd "C-c C") '(lambda () (interactive)
+                                                (swint-dired-cad-converter t)))
     ;; ===========cad文件版本转换==============
     )
 ;;;; dired-view-file-or-dir
@@ -390,24 +391,21 @@ Assuming .. and . is a current directory (like in FAR)"
   :defer t
   :commands w32-browser
   :bind (:map dired-mode-map
-              ("C-j" . swint-w32-browser-open)
-              ("C-i" . w32explore))
+              ("C-i" . w32explore)
+              ("C-j" . dired-w32-browser-on-files))
   :config
-  (defun w32-browser-open ()
+  (defun dired-w32-browser-on-files ()
+    "Fix problems of opening word."
     (interactive)
-    (w32-browser
-     (dired-replace-in-string
-      "/" "\\"
-      (dired-get-filename))))
-  (defun swint-w32-browser-open ()
-    "Fix problems of openning word."
-    (interactive)
-    (if (and (or (string-equal (file-name-extension (dired-get-filename)) "doc")
-                 (string-equal (file-name-extension (dired-get-filename)) "docx"))
-             (not (string-match "WINWORD.EXE" (concat (prin1-to-string (proced-process-attributes))))))
-        (progn (w32-shell-execute "open" "word")
-               (sit-for 5)))
-    (w32-browser-open)))
+    (mapcar #'(lambda (file)
+                (if (and (or (string-equal (file-name-extension file) "doc")
+                             (string-equal (file-name-extension file) "docx"))
+                         (not (string-match "WINWORD.EXE" (concat (prin1-to-string (proced-process-attributes))))))
+                    (progn (w32-shell-execute "open" "word")
+                           (sit-for 5)))
+                (w32-browser (dired-replace-in-string "/" "\\" file)))
+            (dired-get-marked-files))
+    (dired-unmark-all-files ?*)))
 ;; ================w32-browser=================
 ;;; peep-dired
 ;; ================peep-dired==================
@@ -477,6 +475,7 @@ Assuming .. and . is a current directory (like in FAR)"
 (use-package dired-async
   ;; Enabled in modes.
   :defer t
+  :diminish dired-async-mode
   :commands dired-async-mode
   :init
   (add-hook 'dired-mode-hook '(lambda () (dired-async-mode 1)))
@@ -578,7 +577,7 @@ Assuming .. and . is a current directory (like in FAR)"
     "Open file with external app."
     (interactive)
     (let ((file (neo-buffer--get-filename-current-line)))
-      (cond (is-lin (async-shell-command-no-output-buffer-from-file file))
+      (cond (is-lin (dired-async-shell-command file))
             (is-win (progn (if (and (or (string-equal (file-name-extension file) "doc")
                                         (string-equal (file-name-extension file) "docx"))
                                     (not (string-match "WINWORD.EXE" (concat (prin1-to-string (proced-process-attributes))))))

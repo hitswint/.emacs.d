@@ -49,9 +49,8 @@
             bm
             buttercup
             cdlatex
-            chinese-pyim
-            chinese-pyim-basedict
-            chinese-pyim-greatdict
+            pyim
+            pyim-basedict
             clean-aindent-mode
             clipmon
             company
@@ -116,8 +115,8 @@
             hungry-delete
             hydra
             ido-at-point
+            ido-completing-read+
             ido-hacks
-            ido-ubiquitous
             ido-vertical-mode
             imenu-anywhere
             interleave
@@ -133,7 +132,6 @@
             markdown-mode
             math-symbol-lists
             matlab-mode
-            mew
             multifiles
             multiple-cursors
             names
@@ -187,6 +185,7 @@
             with-editor
             wrap-region
             yasnippet
+            youdao-dictionary
             zotelo
             ztree)
           (cond
@@ -199,6 +198,7 @@
                      company-ycmd
                      flycheck-ycmd))
            (is-win '(w32-browser
+                     mew
                      mingus))))
   "A list of packages to ensure are installed at launch.")
 (defun prelude-packages-installed-p ()

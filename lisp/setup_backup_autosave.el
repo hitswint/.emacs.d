@@ -30,7 +30,8 @@
   (dolist (file (directory-files
                  (cond
                   (is-lin "~/.Trash")
-                  (is-win "c:/TRASHCAN")) t))
+                  (is-win "c:/TRASHCAN"))
+                 t))
     (when (and (backup-file-name-p file)
                (> (- current (float-time (cl-sixth (file-attributes file))))
                   day))
@@ -67,7 +68,8 @@
        (concat "tree " (expand-file-name "~")
                (cond
                 (is-lin " -o ")
-                (is-win " /f /a > ")) PC-tree-file)))))
+                (is-win " /f /a > "))
+               PC-tree-file)))))
 ;;;; 每次保存备份文件。
 (defun force-backup-of-buffer ()
   (let ((buffer-backed-up nil))

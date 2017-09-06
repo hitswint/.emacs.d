@@ -42,13 +42,12 @@
   ;; 同时搜索中英文，与ace-jump一样，对于.*+?等正则表达式使用的符号无效。
   (defun swint-pinyin-search--pinyin-to-regexp (fn string)
     "Wrap for Pinyin searching."
-    (let ((swint-regexp string)
-          (string-converted (funcall fn string)))
+    (let ((string-converted (funcall fn string)))
       ;; 当搜索中文、符号或包含iuv时，不转换string。
-      (unless (or (string-match "[iuv]" string)
-                  (string-empty-p string-converted))
-        (setq swint-regexp (concat string "\\|" string-converted)))
-      swint-regexp))
+      (or (unless (or (string-match "[iuv]" string)
+                      (string-empty-p string-converted))
+            (concat string "\\|" string-converted))
+          string)))
   (advice-add 'pinyin-search--pinyin-to-regexp :around #'swint-pinyin-search--pinyin-to-regexp)
   (add-hook 'isearch-mode-end-hook (lambda () (setq pinyin-search-activated nil))))
 ;; ==================pinyin-search=================

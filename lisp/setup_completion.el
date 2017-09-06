@@ -293,11 +293,10 @@
     ;; Enabled at commands.
     ;; 在弹出popup的情况下，C-h 打开*Help*，C-w 进入文件，C-o弹出pos-tip，C-s 搜索，C-M-s 过滤。
     :defer t
-    :commands company-quickhelp-manual-begin
-    :init
-    (bind-key "C-o" 'company-quickhelp-manual-begin company-active-map)
-    (setq company-quickhelp-delay nil)
+    :bind (:map company-active-map
+                ("C-o" . company-quickhelp-manual-begin))
     :config
+    (setq company-quickhelp-delay nil)
     (company-quickhelp-mode 1))
   ;; ==========company-quickhelp-mode==========
 ;;;; company-c-headers

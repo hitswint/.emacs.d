@@ -29,6 +29,7 @@
   (setq helm-buffer-details-flag nil)
   (setq helm-ff-newfile-prompt-p nil)
   (setq helm-split-window-default-side 'same)
+  (setq helm-kill-ring-threshold 1)
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))
                     '(helm-ff-directory ((t (:foreground "yellow" :weight bold))))
@@ -497,11 +498,12 @@ from its directory."
   ;; ===============keybindings=================
 ;;;; helm-pinyin
   ;; ================helm-pinyin================
-  ;; iswitchb-pinyin给iswitchb增加拼音头字母搜索的，使用pinyin-initials-string-match函数。
+  ;; 拼音首字母搜索，使用pinyin-initials-string-match函数。
   (load "iswitchb-pinyin")
-  ;; 修改helm-buffer--match-pattern可使buffer支持中文拼音首字母匹配。
-  ;; 修改helm-mm-3-match可使helm支持中文拼音首字母匹配，但会导致helm-find-files匹配过多。
-  ;; 直接输入xx，会产生过多的匹配结果；xx后面加空格，以xx为起始字母；xx前面加空格，搜索结果正常。
+  (defun helm-default-match-function-py (candidate)
+    (pinyin-initials-string-match helm-pattern candidate))
+  (advice-add 'helm-default-match-function :override #'helm-default-match-function-py)
+  ;; 修改helm-mm-3-match使helm支持中文拼音首字母匹配，会导致helm-find-files匹配过多。
   (defun helm-mm-3-match-py (orig-fn str &rest args)
     (apply orig-fn (concat str "|" (str-unicode-to-pinyin-initial str)) args))
   (advice-add 'helm-mm-3-match :around #'helm-mm-3-match-py)
@@ -659,7 +661,7 @@ from its directory."
   ;; Added helm-bibtex-open-pdf-externally.
   (defcustom helm-bibtex-pdf-open-externally-function '(lambda (fpath)
                                                          (cond
-                                                          (is-lin (async-shell-command-no-output-buffer-from-file fpath))
+                                                          (is-lin (dired-async-shell-command fpath))
                                                           (is-win (w32-browser fpath))))
     "The function used for opening PDF files externally."
     :group 'bibtex-completion

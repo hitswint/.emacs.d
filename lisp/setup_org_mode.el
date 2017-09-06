@@ -382,7 +382,7 @@ depending on the last command issued."
                         (is-win (concat (file-name-directory buffer-file-name) (file-name-base) ".pdf")))))
       (if (file-exists-p output-file)
           (cond
-           (is-lin (async-shell-command-no-output-buffer-from-file output-file))
+           (is-lin (dired-async-shell-command output-file))
            (is-win (w32-browser output-file)))
         (message "Warning: No export pdf."))))
   ;; code执行免应答（Eval code without confirm）
