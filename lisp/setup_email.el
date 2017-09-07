@@ -4,7 +4,7 @@
   ;; Enabled at commands.
   :if is-win
   :defer t
-  :bind ("C-x C-M-7" . mew)
+  :bind ("C-M-7" . mew)
   :config
   (autoload 'mew "mew" nil t)
   (autoload 'mew-send "mew" nil t)
@@ -26,7 +26,7 @@
     (utf-translate-cjk-mode 1))
   (setq user-full-name "Guiqiang Wang")
   (setq user-mail-address "wgq_hit@126.com")
-  ;; +/$/%,-对应local/pop/imap/nntp。
+  ;; +/$/%/-对应local/pop/imap/nntp。
   (setq mew-refile-guess-alist '(("To:"
                                   ("wgq_713@163.com" . "+inbox_netease")
                                   ("wguiqiang@hotmail.com" . "+inbox_hotmail")
@@ -39,11 +39,12 @@
   ;; Gmail的引用格式。
   (setq mew-cite-fields '("Date:"  "From:"))
   (setq mew-cite-format "On %s %s wrote:\n\n")
-  ;; 密码设置，win提示密码错误。
-  (when is-lin (setq mew-use-master-passwd t))
+  ;; 使用主密码，win会提示主密码错误。
+  ;; (setq mew-use-master-passwd t)
   (setq mew-use-cached-passwd t)
   (setq mew-passwd-timer-unit 60)
   (setq mew-passwd-lifetime 24)
+  (setq mew-prog-ssl-arg "CAfile=/usr/ssl/certs/ca-bundle.crt\n")
   ;; 编码设置。
   (setq mew-charset-m17n "utf-8")
   (setq mew-internal-utf-8p t)

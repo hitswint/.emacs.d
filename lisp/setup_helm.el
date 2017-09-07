@@ -38,16 +38,77 @@
                     '(helm-grep-file ((t (:foreground "cyan"))))
                     '(helm-selection ((t (:background "black" :underline t))))
                     '(helm-visible-mark ((t (:foreground "DeepSkyBlue1")))))
+;;;; keybindings
+  ;; ===============keybindings=================
   (global-set-key (kbd "C-M-y") 'helm-show-kill-ring)
+  (global-set-key (kbd "C-'") 'helm-bookmarks)
   (global-set-key (kbd "C-,") 'swint-helm-file-buffers-list)
   (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
-  (global-set-key (kbd "C-'") 'swint-helm-bookmarks)
-  (global-set-key (kbd "C-x C-f") 'swint-helm-find-files)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
   (global-set-key (kbd "C-x f") 'helm-find)
   (global-set-key (kbd "C-x F") 'swint-helm-locate)
   (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-x c d") 'helm-apt)
   (global-set-key (kbd "C-x y") 'helm-resume)
+  (define-key helm-map (kbd "C-;") 'helm-toggle-visible-mark)
+  (define-key helm-map (kbd "C-l") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-M-p") 'helm-previous-source)
+  (define-key helm-map (kbd "C-M-n") 'helm-next-source)
+  (define-key helm-map (kbd "M-U") 'helm-unmark-all)
+  (define-key helm-map (kbd "M-t") 'helm-toggle-all-marks)
+  (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)
+  (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
+  (define-key helm-find-files-map (kbd "M-U") 'helm-unmark-all)
+  (define-key helm-find-files-map (kbd "M-t") 'helm-toggle-all-marks)
+  (define-key helm-find-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
+  (define-key helm-buffer-map (kbd "C-M-j") 'swint-helm-buffer-persp-add-buffers)
+  (define-key helm-buffer-map (kbd "C-M-k") 'swint-helm-buffer-persp-remove-buffers)
+  (define-key helm-buffer-map (kbd "C-o") 'swint-helm-buffer-switch-persp/other-window)
+  (define-key helm-read-file-map (kbd "C-l") 'helm-execute-persistent-action)
+  (define-key helm-read-file-map (kbd "C-h") 'helm-find-files-up-one-level)
+  (define-key helm-grep-map (kbd "C-o") 'helm-grep-run-other-window-action)
+  (define-key helm-generic-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
+  (when is-lin
+    (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
+    (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-externally))
+  (when is-win
+    (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-with-default-tool)
+    (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-with-default-tool))
+  ;; C-x c c helm-colors
+  ;; C-x c b helm-resume 恢复之前的helm buffer，加C-u进行选择。
+  ;; helm-mini下：C-c C-d 从列表中删除，但实际不kill buffer；C-c d kill buffer同时不关闭helm buffer；M-D kill buffer同时关闭helm。
+  ;; helm-find-files-map下：
+  ;; C-l 一次expand candidate，二次打开文件
+  ;; TAB 打开选项
+  ;; C-j 使用外部命令打开文件，加C-u选择命令
+  ;; M-g s grep文件
+  ;; M-e 打开eshell
+  ;; M-C M-D M-R 复制 删除 重命名
+  ;; C-= ediff
+  ;; M-p 历史
+  ;; 再重复一次C-x C-f locate查找文件，可以用sudo updatedb升级数据库
+  ;; C-t 转换列表显示方式
+  ;; C-] toggle basename/fullpath
+  ;; C-backspace 开启关闭自动补全
+  ;; C-{ C-} 放大缩小helm窗口
+  ;; ===============keybindings=================
+;;;; helm-pinyin
+  ;; ================helm-pinyin================
+  ;; 拼音首字母搜索，使用pinyin-initials-string-match函数。
+  (load "iswitchb-pinyin")
+  (defun helm-default-match-function-py (candidate)
+    (string-match (pinyin-search--pinyin-to-regexp helm-pattern) candidate))
+  (advice-add 'helm-default-match-function :override #'helm-default-match-function-py)
+  ;; 修改helm-mm-3-match使helm支持中文拼音首字母匹配。
+  (cl-defun helm-mm-3-match-py (str &optional (pattern helm-pattern))
+    (let ((pat (helm-mm-3-get-patterns pattern)))
+      (cl-loop for (predicate . regexp) in pat
+               always (funcall predicate
+                               (condition-case _err
+                                   (string-match (pinyin-search--pinyin-to-regexp regexp) str)
+                                 (invalid-regexp nil))))))
+  (advice-add 'helm-mm-3-match :override #'helm-mm-3-match-py)
+  ;; ================helm-pinyin================
 ;;;; helm-file-buffer
   ;; ============helm-file-buffer===============
   (defun swint-helm-file-buffers-list--init/curr-persp ()
@@ -128,16 +189,31 @@
      (persistent-help
       :initform
       "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
+  (defclass swint-helm-recentf-file-source (helm-source-sync)
+    ((init :initform (lambda ()
+                       (recentf-mode 1)))
+     (candidates :initform (lambda () (remove-if (lambda (x)
+                                                   (or (file-directory-p x)
+                                                       (member x (mapcar (lambda (xx)
+                                                                           (buffer-file-name xx))
+                                                                         (buffer-list)))))
+                                                 recentf-list)))
+     (pattern-transformer :initform 'helm-recentf-pattern-transformer)
+     (match-part :initform (lambda (candidate)
+                             (if (or helm-ff-transformer-show-only-basename
+                                     helm-recentf--basename-flag)
+                                 (helm-basename candidate) candidate)))
+     (filter-one-by-one :initform (lambda (c)
+                                    (if (and helm-ff-transformer-show-only-basename
+                                             (not (consp c)))
+                                        (cons (helm-basename c) c)
+                                      c)))
+     (keymap :initform helm-generic-files-map)
+     (help-message :initform helm-generic-file-help-message)
+     (action :initform (helm-actions-from-type-file))))
   (defvar swint-helm-file-buffers-source-list/curr-persp nil)
   (defvar swint-helm-file-buffers-source-list/other-persps nil)
   (defvar swint-helm-source-recentf-file nil)
-  (defcustom swint-helm-file-buffers-sources '(swint-helm-file-buffers-source-list/curr-persp
-                                               swint-helm-file-buffers-source-list/other-persps
-                                               swint-helm-source-recentf-file
-                                               helm-source-buffer-not-found)
-    "Default sources list used in `swint-file-buffers'."
-    :group 'helm-misc
-    :type '(repeat (choice symbol)))
   (defun swint-helm-file-buffers-list ()
     "Preconfigured `helm' lightweight version \(buffer -> recentf\)."
     (interactive)
@@ -145,11 +221,20 @@
       (setq swint-helm-file-buffers-source-list/curr-persp
             (helm-make-source "File Buffers in current persp" 'swint-helm-file-buffers-source/curr-persp)))
     (unless swint-helm-file-buffers-source-list/other-persps
-      (progn (setq swint-helm-file-buffers-source-list/other-persps
-                   (helm-make-source "File Buffers in other persps" 'swint-helm-file-buffers-source/other-persps))
-             (helm-add-action-to-source "Switch to persp/buffer" 'helm-switch-persp/buffer swint-helm-file-buffers-source-list/other-persps 0)))
+      (setq swint-helm-file-buffers-source-list/other-persps
+            (helm-make-source "File Buffers in other persps" 'swint-helm-file-buffers-source/other-persps))
+      (helm-add-action-to-source "Switch to persp/buffer" 'helm-switch-persp/buffer swint-helm-file-buffers-source-list/other-persps 0))
+    (unless swint-helm-source-recentf-file
+      (setq swint-helm-source-recentf-file
+            (helm-make-source "Recentf File" 'swint-helm-recentf-file-source)))
     (let ((helm-ff-transformer-show-only-basename nil))
-      (helm-other-buffer swint-helm-file-buffers-sources "*helm file buffers-swint*")))
+      (helm :sources '(swint-helm-file-buffers-source-list/curr-persp
+                       swint-helm-file-buffers-source-list/other-persps
+                       swint-helm-source-recentf-file
+                       helm-source-buffer-not-found)
+            :buffer "*helm file buffers-swint*"
+            :keymap helm-buffer-map
+            :truncate-lines t)))
   ;; ============helm-file-buffer===============
 ;;;; helm-dired-buffer
   ;; ============helm-dired-buffer==============
@@ -231,24 +316,46 @@
      (persistent-help
       :initform
       "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
+  (defclass swint-helm-recentf-directory-source (helm-source-sync)
+    ((init :initform (lambda ()
+                       (recentf-mode 1)))
+     (candidates :initform (lambda () (remove-if (lambda (x)
+                                                   (or (not (file-directory-p x))
+                                                       (member x (mapcar (lambda (xx)
+                                                                           (expand-file-name (buffer-local-value 'default-directory xx)))
+                                                                         (remove-if-not (lambda (x)
+                                                                                          (equal (buffer-mode x) 'dired-mode))
+                                                                                        (buffer-list))))))
+                                                 recentf-list)))
+     (pattern-transformer :initform 'helm-recentf-pattern-transformer)
+     (match-part :initform (lambda (candidate)
+                             (if (or helm-ff-transformer-show-only-basename
+                                     helm-recentf--basename-flag)
+                                 (helm-basename candidate) candidate)))
+     (filter-one-by-one :initform (lambda (c)
+                                    (if (and helm-ff-transformer-show-only-basename
+                                             (not (consp c)))
+                                        (cons (helm-basename c) c)
+                                      c)))
+     (keymap :initform helm-generic-files-map)
+     (help-message :initform helm-generic-file-help-message)
+     (action :initform (helm-actions-from-type-file))))
   (defvar swint-helm-dired-buffers-source-list/curr-persp nil)
   (defvar swint-helm-dired-buffers-source-list/other-persps nil)
   (defvar swint-helm-source-recentf-directory nil)
   (defun swint-helm-dired-buffers-list ()
     "Preconfigured `helm' to list buffers."
     (interactive)
-    ;; (unless swint-helm-dired-buffers-source-list/curr-persp
-    ;;   (setq swint-helm-dired-buffers-source-list/curr-persp
-    ;;         (helm-make-source "Dired Buffers in current persp" 'swint-helm-dired-buffers-source/curr-persp)))
-    ;; 根据当前persp中是否有dired buffer设置helm源，防止因无dired buffer产生错误。
-    (if (member 'dired-mode (mapcar 'buffer-mode (persp-buffers persp-curr)))
-        (setq swint-helm-dired-buffers-source-list/curr-persp
-              (helm-make-source "Dired Buffers in current persp" 'swint-helm-dired-buffers-source/curr-persp))
-      (setq swint-helm-dired-buffers-source-list/curr-persp nil))
+    (unless swint-helm-dired-buffers-source-list/curr-persp
+      (setq swint-helm-dired-buffers-source-list/curr-persp
+            (helm-make-source "Dired Buffers in current persp" 'swint-helm-dired-buffers-source/curr-persp)))
     (unless swint-helm-dired-buffers-source-list/other-persps
-      (progn (setq swint-helm-dired-buffers-source-list/other-persps
-                   (helm-make-source "Dired Buffers in other persps" 'swint-helm-dired-buffers-source/other-persps))
-             (helm-add-action-to-source "Switch to persp/buffer" 'helm-switch-persp/buffer swint-helm-dired-buffers-source-list/other-persps 0)))
+      (setq swint-helm-dired-buffers-source-list/other-persps
+            (helm-make-source "Dired Buffers in other persps" 'swint-helm-dired-buffers-source/other-persps))
+      (helm-add-action-to-source "Switch to persp/buffer" 'helm-switch-persp/buffer swint-helm-dired-buffers-source-list/other-persps 0))
+    (unless swint-helm-source-recentf-directory
+      (setq swint-helm-source-recentf-directory
+            (helm-make-source "Recentf Directory" 'swint-helm-recentf-directory-source)))
     (let ((helm-ff-transformer-show-only-basename nil))
       (helm :sources '(swint-helm-dired-buffers-source-list/curr-persp
                        swint-helm-dired-buffers-source-list/other-persps
@@ -313,29 +420,6 @@
                 helm-visible-mark-overlays nil)))
       (message "Removed %s buffer(s)" removed-bufs)))
   ;; =========helm-related-to-persp=============
-;;;; helm-bookmarks
-  ;; ============helm-bookmarks=================
-  (defcustom swint-helm-bookmarks-list
-    '(helm-source-bookmarks)
-    "Default sources list used in `swint-helm-bookmarks'."
-    :type '(repeat (choice symbol))
-    :group 'helm-files)
-  (defun swint-helm-bookmarks ()
-    "Preconfigured `helm-bookmarks' for opening files."
-    (interactive)
-    (let ((helm-ff-transformer-show-only-basename t))
-      (helm-other-buffer swint-helm-bookmarks-list "*helm bookmarks-swint*")))
-  ;; ============helm-bookmarks=================
-;;;; helm-find-file
-  ;; ============helm-find-file=================
-  (defun swint-helm-find-files ()
-    "Preconfigured `helm' for opening files.
-Run all sources defined in `helm-for-files-preferred-list'."
-    (interactive)
-    (helm :sources 'helm-source-files-in-current-dir
-          :ff-transformer-show-only-basename t
-          :buffer "*helm find files-swint*"))
-  ;; ============helm-find-file=================
 ;;;; helm-locate
   ;; ==============helm-locate==================
   ;; (global-set-key (kbd "C-x l") 'locate)
@@ -369,145 +453,26 @@ Run all sources defined in `helm-for-files-preferred-list'."
                (helm-locate nil)))))
       (call-interactively 'helm-locate)))
   ;; ==============helm-locate==================
-;;;; 在别的helm-buffer中运行helm命令
-  ;; ======在别的helm-buffer中运行helm命令======
+;;;; 在其他helm-buffer中运行helm命令
+  ;; ======在其他helm-buffer中运行helm命令======
   (defun swint-helm-file-buffers-after-quit ()
-    "List swint-helm-file-buffers."
     (interactive)
     (helm-run-after-quit #'(lambda () (swint-helm-file-buffers-list))))
   (defun swint-helm-dired-buffers-after-quit ()
-    "List swint-helm-dired-buffers."
     (interactive)
     (helm-run-after-quit #'(lambda () (swint-helm-dired-buffers-list))))
   (defun swint-helm-bookmarks-after-quit ()
-    "List swint-helm-bookmarks."
     (interactive)
-    (helm-run-after-quit #'(lambda () (swint-helm-bookmarks))))
-  (defun swint-helm-find-files-after-quit ()
-    "List swint-helm-find-files."
+    (helm-run-after-quit #'(lambda () (helm-bookmarks))))
+  (defun swint-helm-projectile-after-quit ()
     (interactive)
-    (helm-run-after-quit #'(lambda () (swint-helm-find-files))))
-  ;; Fix bugs of helm-quit-and-find-file on dired buffer.
-  (defun swint-helm-quit-and-find-file ()
-    "Drop into `helm-find-files' from `helm'.
-If current selection is a buffer or a file, `helm-find-files'
-from its directory."
-    (interactive)
-    (helm-run-after-quit
-     (lambda (f)
-       (if (file-exists-p f)
-           (if (file-directory-p f)
-               (helm-find-files-1 (file-name-as-directory f))
-             (helm-find-files-1 (file-name-directory f)
-                                (concat
-                                 "^"
-                                 (regexp-quote
-                                  (if helm-ff-transformer-show-only-basename
-                                      (helm-basename f) f)))))))
-     (let* ((sel       (helm-get-selection))
-            (grep-line (and (stringp sel)
-                            (helm-grep-split-line sel)))
-            (bmk-name  (and (stringp sel)
-                            (not grep-line)
-                            (replace-regexp-in-string "\\`\\*" "" sel)))
-            (bmk       (and bmk-name (assoc bmk-name bookmark-alist)))
-            (buf       (helm-aif (get-buffer sel) (buffer-name it)))
-            (default-preselection (or (buffer-file-name helm-current-buffer)
-                                      default-directory)))
-       (cond
-        ;; Buffer.
-        (buf (or (buffer-file-name (get-buffer sel))
-                 (car (rassoc (get-buffer buf) dired-buffers))
-                 (and (with-current-buffer buf
-                        (eq major-mode 'org-agenda-mode))
-                      org-directory
-                      (expand-file-name org-directory))
-                 (with-current-buffer buf default-directory)))
-        ;; Bookmark.
-        (bmk (helm-aif (bookmark-get-filename bmk)
-                 (if (and ffap-url-regexp
-                          (string-match ffap-url-regexp it))
-                     it (expand-file-name it))
-               default-directory))
-        ((or (file-remote-p sel)
-             (file-exists-p sel))
-         (expand-file-name sel))
-        ;; Grep.
-        ((and grep-line (file-exists-p (car grep-line)))
-         (expand-file-name (car grep-line)))
-        ;; Occur.
-        (grep-line
-         (with-current-buffer (get-buffer (car grep-line))
-           (or (buffer-file-name) default-directory)))
-        ;; Url.
-        ((and ffap-url-regexp (string-match ffap-url-regexp sel)) sel)
-        ;; Default.
-        (t default-preselection)))))
+    (helm-run-after-quit #'(lambda () (helm-projectile))))
   (define-key helm-map (kbd "C-,") 'swint-helm-file-buffers-after-quit)
   (define-key helm-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
   (define-key helm-map (kbd "C-'") 'swint-helm-bookmarks-after-quit)
-  (define-key helm-map (kbd "C-x C-f") 'swint-helm-find-files-after-quit)
-  (define-key helm-map (kbd "C-/") 'swint-helm-quit-and-find-file)
-  (define-key helm-find-files-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
-  (define-key helm-find-files-map (kbd "C-x C-f") 'swint-helm-find-files-after-quit)
-  ;; ======在别的helm-buffer中运行helm命令======
-;;;; keybindings
-  ;; ===============keybindings=================
-  (define-key helm-map (kbd "C-;") 'helm-toggle-visible-mark)
-  (define-key helm-map (kbd "C-l") 'helm-execute-persistent-action)
-  (define-key helm-map (kbd "C-M-p") 'helm-previous-source)
-  (define-key helm-map (kbd "C-M-n") 'helm-next-source)
-  (define-key helm-map (kbd "M-U") 'helm-unmark-all)
-  (define-key helm-map (kbd "M-t") 'helm-toggle-all-marks)
-  (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)
-  (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
-  (define-key helm-find-files-map (kbd "M-U") 'helm-unmark-all)
-  (define-key helm-find-files-map (kbd "M-t") 'helm-toggle-all-marks)
-  (define-key helm-find-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
-  (define-key helm-buffer-map (kbd "C-M-j") 'swint-helm-buffer-persp-add-buffers)
-  (define-key helm-buffer-map (kbd "C-M-k") 'swint-helm-buffer-persp-remove-buffers)
-  (define-key helm-buffer-map (kbd "C-o") 'swint-helm-buffer-switch-persp/other-window)
-  (define-key helm-read-file-map (kbd "C-l") 'helm-execute-persistent-action)
-  (define-key helm-read-file-map (kbd "C-h") 'helm-find-files-up-one-level)
-  (define-key helm-grep-map (kbd "C-o") 'helm-grep-run-other-window-action)
-  (define-key helm-generic-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
-  (define-key helm-bookmark-map (kbd "C-o") 'helm-bookmark-run-jump-other-window)
-  (when is-lin
-    (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
-    (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-externally))
-  (when is-win
-    (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-with-default-tool)
-    (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-with-default-tool))
-  ;; C-x c c helm-colors
-  ;; C-x c b helm-resume 恢复之前的helm buffer，加C-u进行选择。
-  ;; helm-mini下：C-c C-d 从列表中删除，但实际不kill buffer；C-c d kill buffer同时不关闭helm buffer；M-D kill buffer同时关闭helm。
-  ;; helm-find-files-map下：
-  ;; C-l 一次expand candidate，二次打开文件
-  ;; TAB 打开选项
-  ;; C-j 使用外部命令打开文件，加C-u选择命令
-  ;; M-g s grep文件
-  ;; M-e 打开eshell
-  ;; M-C M-D M-R 复制 删除 重命名
-  ;; C-= ediff
-  ;; M-p 历史
-  ;; 再重复一次C-x C-f locate查找文件，可以用sudo updatedb升级数据库
-  ;; C-t 转换列表显示方式
-  ;; C-] toggle basename/fullpath
-  ;; C-backspace 开启关闭自动补全
-  ;; C-{ C-} 放大缩小helm窗口
-  ;; ===============keybindings=================
-;;;; helm-pinyin
-  ;; ================helm-pinyin================
-  ;; 拼音首字母搜索，使用pinyin-initials-string-match函数。
-  (load "iswitchb-pinyin")
-  (defun helm-default-match-function-py (candidate)
-    (pinyin-initials-string-match helm-pattern candidate))
-  (advice-add 'helm-default-match-function :override #'helm-default-match-function-py)
-  ;; 修改helm-mm-3-match使helm支持中文拼音首字母匹配，会导致helm-find-files匹配过多。
-  (defun helm-mm-3-match-py (orig-fn str &rest args)
-    (apply orig-fn (concat str "|" (str-unicode-to-pinyin-initial str)) args))
-  (advice-add 'helm-mm-3-match :around #'helm-mm-3-match-py)
-  ;; ================helm-pinyin================
+  (define-key helm-map (kbd "M-'") 'swint-helm-projectile-after-quit)
+  (define-key helm-map (kbd "C-/") 'helm-quit-and-find-file)
+  ;; ======在其他helm-buffer中运行helm命令======
 ;;;; total commander
   ;; ==============total commander==============
   ;;使用tc打开当前文件夹。
@@ -585,7 +550,7 @@ from its directory."
       (action . (("Open" . (lambda (candidate)
                              (call-interactively candidate)))))))
   (defun helm-math-symbols ()
-    "helm for searching math menus"
+    "Helm for searching math menus."
     (interactive)
     (helm '(helm-source-lacarte-math)
           (thing-at-point 'symbol) "Symbol: "

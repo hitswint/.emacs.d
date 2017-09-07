@@ -4,7 +4,10 @@
   ;; Enabled at commands.
   :defer t
   :bind (("C-M-5" . w3m)
-         ("C-x C-M-5" . w3m-youdao-sample-sentences))
+         ("C-M-%" . w3m-youdao-sample-sentences))
+  :init
+  (when is-win
+    (setq w3m-command "c:/Program Files (x86)/w3m/w3m.exe"))
   :config
   ;; Use w3m to display youdao sample sentences.
   (defun w3m-youdao-sample-sentences (&optional _word)
@@ -17,8 +20,6 @@
                 ;; 解决w3m无法解析网址的问题。
                 (is-win (w3m-url-encode-string word 'utf-8)))
                "&keyfrom=dict.top"))))
-  (when is-win
-    (setq w3m-command "c:/Program Files (x86)/w3m/w3m.exe"))
   (setq w3m-use-form t
         w3m-tab-width 8
         w3m-use-cookies t

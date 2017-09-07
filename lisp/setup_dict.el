@@ -2,9 +2,9 @@
 ;; ==================stardict====================
 (define-derived-mode sdcv-mode org-mode nil
   "Major mode for sdcv."
-  (fcitx--sdcv-maybe-deactivate)
+  (when is-lin (fcitx--sdcv-maybe-deactivate))
   (local-set-key (kbd "q") '(lambda () (interactive) (swint-kill-this-buffer)
-                              (jump-to-register :sdcv) (fcitx--sdcv-maybe-activate))))
+                              (jump-to-register :sdcv) (when is-lin (fcitx--sdcv-maybe-activate)))))
 (defvar sdcv-dictionary-list '("朗道英汉字典5.0"
                                "朗道汉英字典5.0"
                                "XDICT英汉辞典"
@@ -79,26 +79,25 @@
 (defun swint-online-to-buffer (&optional _word)
   (interactive)
   (let ((word (or _word (swint-get-words-at-point))))
-    (when (internet-active-p)
-      (unless (member (buffer-name) '("*sdcv*" "*online*"))
-        (window-configuration-to-register :sdcv))
-      (delete-other-windows)
-      (switch-to-buffer "*online*")
-      (set-buffer "*online*")
-      (buffer-disable-undo)
-      (erase-buffer)
-      (sdcv-mode)
-      ;; 插入google-translate结果。
-      (insert (concat "*** Google Translate\n"))
-      (if (pyim-string-match-p "\\cc" word)
-          (google-translate-translate "zh-CN" "en" word 'current-buffer)
-        (google-translate-translate "en" "zh-CN" word 'current-buffer))
-      ;; 插入bing-dict结果。
-      (bing-dict-brief word)
-      ;; 插入youdao-dictionary结果。
-      (insert (concat "*** Youdao Dictionary\n"))
-      (insert (youdao-dictionary--format-result word))
-      (online-output-cleaner))))
+    (unless (member (buffer-name) '("*sdcv*" "*online*"))
+      (window-configuration-to-register :sdcv))
+    (delete-other-windows)
+    (switch-to-buffer "*online*")
+    (set-buffer "*online*")
+    (buffer-disable-undo)
+    (erase-buffer)
+    (sdcv-mode)
+    ;; 插入google-translate结果。
+    (insert (concat "*** Google Translate\n"))
+    (if (pyim-string-match-p "\\cc" word)
+        (google-translate-translate "zh-CN" "en" word 'current-buffer)
+      (google-translate-translate "en" "zh-CN" word 'current-buffer))
+    ;; 插入bing-dict结果。
+    (bing-dict-brief word)
+    ;; 插入youdao-dictionary结果。
+    (insert (concat "*** Youdao Dictionary\n"))
+    (insert (youdao-dictionary--format-result word))
+    (online-output-cleaner)))
 (defun online-output-cleaner ()
   (show-all)
   (goto-char (point-min))

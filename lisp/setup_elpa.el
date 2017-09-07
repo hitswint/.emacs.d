@@ -105,7 +105,6 @@
             helm-flycheck
             helm-flyspell
             helm-gtags
-            helm-pass
             helm-projectile
             helm-swoop
             helm-unicode
@@ -145,7 +144,6 @@
             paredit
             paredit-everywhere
             parsebib
-            pass
             peep-dired
             perspective
             persp-projectile
@@ -191,7 +189,9 @@
           (cond
            (is-lin '(fcitx
                      helm-mu
+                     helm-pass
                      mu4e-alert
+                     pass
                      pdf-tools
                      tablist
                      ycmd
@@ -251,5 +251,6 @@ Missing packages are installed automatically."
 ;; ===================smartrep======================
 ;; =====================misc========================
 (require 'subr-x)
+(require 'bookmark)
 ;; =====================misc========================
 (provide 'setup_elpa)

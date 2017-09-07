@@ -132,7 +132,7 @@
   :load-path "site-lisp/unicad/"
   :if is-win
   :config
-  ;; 解决关emacs时保存.session的编码问题
+  ;; 解决关emacs时保存.session的编码问题。
   (setq session-save-file-coding-system 'utf-8)
   ;; Set default encoding to utf-8.
   (setq-default buffer-file-coding-system 'utf-8)
@@ -912,11 +912,15 @@ is named like ODF with the extension turned to pdf."
 ;; =====================pass=======================
 (use-package pass
   ;; Enabled at commands.
+  :if is-lin
+  :defer t
   :bind ("M-g s" . pass)
   :config
   (setq pass-show-keybindings nil))
 (use-package helm-pass
   ;; Enabled at commands.
+  :if is-lin
+  :defer t
   :bind ("M-g M-s" . helm-pass))
 ;; =====================pass=======================
 (provide 'setup_packages)
