@@ -53,7 +53,6 @@
 ;; ==================pinyin-search=================
 ;;; 拼音首字母搜索
 ;; =================拼音首字母搜索=================
-;; 使用pinyin-search替代，但这个可以同时搜索中英文，保留之。
 (defun swint-pinyin-search-forward (&optional bound noerror count)
   (interactive)
   (let ((swint-current-buffer (str-unicode-to-pinyin-initial (buffer-substring-no-properties (point-min) (point-max))))

@@ -44,7 +44,7 @@
   (global-set-key (kbd "C-'") 'helm-bookmarks)
   (global-set-key (kbd "C-,") 'swint-helm-file-buffers-list)
   (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-x C-f") 'swint-helm-find-files)
   (global-set-key (kbd "C-x f") 'helm-find)
   (global-set-key (kbd "C-x F") 'swint-helm-locate)
   (global-set-key (kbd "M-x") 'helm-M-x)
@@ -94,21 +94,22 @@
   ;; ===============keybindings=================
 ;;;; helm-pinyin
   ;; ================helm-pinyin================
-  ;; 拼音首字母搜索，使用pinyin-initials-string-match函数。
   (load "iswitchb-pinyin")
-  (defun helm-default-match-function-py (candidate)
-    (string-match (pinyin-search--pinyin-to-regexp helm-pattern) candidate))
-  (advice-add 'helm-default-match-function :override #'helm-default-match-function-py)
-  ;; 修改helm-mm-3-match使helm支持中文拼音首字母匹配。
-  (cl-defun helm-mm-3-match-py (str &optional (pattern helm-pattern))
-    (let ((pat (helm-mm-3-get-patterns pattern)))
-      (cl-loop for (predicate . regexp) in pat
-               always (funcall predicate
-                               (condition-case _err
-                                   (string-match (pinyin-search--pinyin-to-regexp regexp) str)
-                                 (invalid-regexp nil))))))
-  (advice-add 'helm-mm-3-match :override #'helm-mm-3-match-py)
+  (cl-defun helm-mm-3-match-py (orig-fn str &rest args)
+    (apply orig-fn (concat str "|" (str-unicode-to-pinyin-initial str)) args))
+  (advice-add 'helm-mm-3-match :around #'helm-mm-3-match-py)
   ;; ================helm-pinyin================
+;;;; swint-helm-find-file
+  ;; ===========swint-helm-find-file============
+  (defun swint-helm-find-files ()
+    "Preconfigured `helm' for opening files.
+Run all sources defined in `helm-for-files-preferred-list'."
+    (interactive)
+    (helm :sources '(helm-source-files-in-current-dir
+                     helm-source-buffer-not-found)
+          :ff-transformer-show-only-basename t
+          :buffer "*helm find files-swint*"))
+  ;; ===========swint-helm-find-file============
 ;;;; helm-file-buffer
   ;; ============helm-file-buffer===============
   (defun swint-helm-file-buffers-list--init/curr-persp ()
