@@ -9,6 +9,7 @@
   ;; Stack Exchange上提供：(setq tramp-ssh-controlmaster-options "")。
   :config
   (use-package helm-config)
+  (use-package helm-for-files)
   (helm-mode 1)
   (setq helm-completing-read-handlers-alist '((describe-function . helm-completing-read-symbols)
                                               (describe-variable . helm-completing-read-symbols)
@@ -44,7 +45,7 @@
   (global-set-key (kbd "C-'") 'helm-bookmarks)
   (global-set-key (kbd "C-,") 'swint-helm-file-buffers-list)
   (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
-  (global-set-key (kbd "C-x C-f") 'swint-helm-find-files)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
   (global-set-key (kbd "C-x f") 'helm-find)
   (global-set-key (kbd "C-x F") 'swint-helm-locate)
   (global-set-key (kbd "M-x") 'helm-M-x)
@@ -95,21 +96,15 @@
 ;;;; helm-pinyin
   ;; ================helm-pinyin================
   (load "iswitchb-pinyin")
+  ;; 支持中文拼音首字母匹配，会使helm-find-files匹配过多。
   (cl-defun helm-mm-3-match-py (orig-fn str &rest args)
     (apply orig-fn (concat str "|" (str-unicode-to-pinyin-initial str)) args))
   (advice-add 'helm-mm-3-match :around #'helm-mm-3-match-py)
+  ;; 默认在输入前面加空格解决匹配问题。
+  (defun helm-find-files-1-py (orig-fn fname &rest args)
+    (apply orig-fn (concat fname " ") args))
+  (advice-add 'helm-find-files-1 :around #'helm-find-files-1-py)
   ;; ================helm-pinyin================
-;;;; swint-helm-find-file
-  ;; ===========swint-helm-find-file============
-  (defun swint-helm-find-files ()
-    "Preconfigured `helm' for opening files.
-Run all sources defined in `helm-for-files-preferred-list'."
-    (interactive)
-    (helm :sources '(helm-source-files-in-current-dir
-                     helm-source-buffer-not-found)
-          :ff-transformer-show-only-basename t
-          :buffer "*helm find files-swint*"))
-  ;; ===========swint-helm-find-file============
 ;;;; helm-file-buffer
   ;; ============helm-file-buffer===============
   (defun swint-helm-file-buffers-list--init/curr-persp ()
@@ -191,8 +186,7 @@ Run all sources defined in `helm-for-files-preferred-list'."
       :initform
       "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
   (defclass swint-helm-recentf-file-source (helm-source-sync)
-    ((init :initform (lambda ()
-                       (recentf-mode 1)))
+    ((init :initform (lambda () (recentf-mode 1)))
      (candidates :initform (lambda () (remove-if (lambda (x)
                                                    (or (file-directory-p x)
                                                        (member x (mapcar (lambda (xx)
@@ -318,8 +312,7 @@ Run all sources defined in `helm-for-files-preferred-list'."
       :initform
       "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
   (defclass swint-helm-recentf-directory-source (helm-source-sync)
-    ((init :initform (lambda ()
-                       (recentf-mode 1)))
+    ((init :initform (lambda () (recentf-mode 1)))
      (candidates :initform (lambda () (remove-if (lambda (x)
                                                    (or (not (file-directory-p x))
                                                        (member x (mapcar (lambda (xx)

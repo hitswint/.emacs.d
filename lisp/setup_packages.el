@@ -634,11 +634,13 @@ is named like ODF with the extension turned to pdf."
   ;; Enabled at commands.
   :defer t
   :after easy-kill
-  :bind ("M-g w" . clipmon-autoinsert-toggle)
+  :bind (("M-g w" . clipmon-mode)
+         ("M-g M-w" . clipmon-autoinsert-toggle))
   :config
+  (clipmon-mode 1)
   (advice-add 'clipmon-mode-start :after #'(lambda () (xclipmon-mode 0)))
   (advice-add 'clipmon-mode-stop :after #'(lambda () (xclipmon-mode 1)))
-  ;; 原clipmon--get-selection存在中文乱码问题，而且有时造成复制失败，即yank内容不更新。
+  ;; 原clipmon--get-selection中文乱码，另有时yank内容不更新。修改后clipmon-autoinsert失效。
   (advice-add 'clipmon--get-selection :override #'(lambda () (current-kill 0)))
   (defvar xclipmon-process nil)
   (define-minor-mode xclipmon-mode
@@ -649,8 +651,7 @@ is named like ODF with the extension turned to pdf."
         (ignore-errors (kill-process xclipmon-process))
       (setq xclipmon-process (start-process-shell-command
                               "xclipmon" "*xclipmon*" "xclipmon.sh"))
-      (set-process-query-on-exit-flag xclipmon-process nil)))
-  (clipmon-mode 1))
+      (set-process-query-on-exit-flag xclipmon-process nil))))
 ;; ====================clipmon=====================
 ;;; volatile-highlights
 ;; ==============volatile-highlights===============
