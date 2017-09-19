@@ -6,7 +6,12 @@
   (use-package dired-x)
   (use-package dired-details
     :config
-    (dired-details-install))
+    (dired-details-install)
+    (setq dired-omit-verbose nil)
+    (add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
+    (setq dired-details-hidden-string "")
+    (advice-add 'dired-details-show :after #'(lambda () (dired-hide-details-mode 0)))
+    (advice-add 'dired-details-hide :after #'(lambda () (dired-hide-details-mode 1))))
   (use-package diredful
     :config
     (diredful-mode 1))
@@ -39,8 +44,7 @@
   ;; 将dired-k--highlight-buffer加hook放在前面，使其出现在dired-after-readin-hook中函数列表最后，以便最后生效。
   (add-hook 'dired-after-readin-hook 'dired-k--highlight-buffer)
   ;; 不折行显示。
-  (add-hook 'dired-after-readin-hook '(lambda ()
-                                        (setq truncate-lines t)))
+  (add-hook 'dired-after-readin-hook '(lambda () (setq truncate-lines t)))
   ;; 快捷键。
   (add-hook 'dired-mode-hook
             '(lambda ()
@@ -66,6 +70,7 @@
                    ("n" . dired-k--next-highlighted-file)))
                (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
                (define-key dired-mode-map (kbd "C-/") 'helm-dired-current-file)
+               (define-key dired-mode-map (kbd "C-M-j") 'tc-lister-open-file)
                ;; 在dired对mark的多个文件内容进行查找。
                (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
                (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)))
@@ -136,26 +141,21 @@
   ;; =============文件夹排序===================
 ;;;; 跳转至dired顶部和尾部
   ;; ========跳转至dired顶部和尾部=============
-  (defun dired-back-to-top ()
+  (defun dired-beginning-of-buffer ()
     (interactive)
     (beginning-of-buffer)
-    (cond
-     (is-lin (dired-next-line 4))
-     (is-win (dired-next-line 3))))
-  (define-key dired-mode-map
-    (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
-  (defun dired-jump-to-bottom ()
+    (dired-next-line 1))
+  (define-key dired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-beginning-of-buffer)
+  (defun dired-end-of-buffer ()
     (interactive)
     (end-of-buffer)
     (dired-next-line -1))
-  (define-key dired-mode-map
-    (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
+  (define-key dired-mode-map (vector 'remap 'end-of-buffer) 'dired-end-of-buffer)
   (defun dired-beginning-of-line ()
     (interactive)
     (smart-beginning-of-line)
     (forward-char 1))
-  (define-key dired-mode-map
-    (vector 'remap 'smart-beginning-of-line) 'dired-beginning-of-line)
+  (define-key dired-mode-map (vector 'remap 'smart-beginning-of-line) 'dired-beginning-of-line)
   ;; ========跳转至dired顶部和尾部=============
 ;;;; webdav_sync同步文件
   ;; =========webdav_sync同步文件==============
@@ -209,6 +209,36 @@
              (setcdr pos (remove "unison-sync-backups " (cdr pos)))))))))
   (global-set-key (kbd "C-c M-/") 'swint-unison-sync-backups)
   ;; ================unison====================
+;;;; totalcmd
+  ;; ===============totalcmd===================
+  (defun tc-open-default-directory ()
+    (interactive)
+    (cond
+     (is-win (w32-shell-execute
+              "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T \" " (expand-file-name default-directory))))
+     (is-lin (progn (start-process-shell-command
+                     "tc" "*tc*"
+                     (concat "wine "
+                             "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T z:"
+                             (replace-regexp-in-string " " "\\\\ " (expand-file-name default-directory))))
+                    (let ((default-directory
+                            "/home/swint/.wine/drive_c/Program Files/viatc/"))
+                      (start-process-shell-command
+                       "viatc" "*viatc*"
+                       "wine viatc.exe"))))))
+  (defun tc-lister-open-file ()
+    (interactive)
+    (cond
+     (is-win (w32-shell-execute
+              "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T /S=L \" " (dired-get-filename))))
+     (is-lin (start-process-shell-command
+              "tc" "*tc*"
+              (concat "wine "
+                      "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
+                      (replace-regexp-in-string " " "\\\\ "
+                                                (expand-file-name (dired-get-filename))))))))
+  (global-set-key (kbd "C-s-e") 'tc-open-default-directory)
+  ;; ===============totalcmd===================
   (when is-lin
 ;;;; 默认程序打开文件
     ;; ============默认程序打开文件============
@@ -228,29 +258,19 @@
                   ("jpg" . "feh.sh") ("png" . "feh.sh") ("bmp" . "feh.sh") ("jpeg" . "feh.sh")
                   ("eps" . "gv") ("ps" . "gv")
                   ("html" . "firefox") ("htm" . "firefox")
-                  ("doc" . "word.sh")
-                  ("docx" . "word.sh")
-                  ("xls" . "excel.sh")
-                  ("xlsx" . "excel.sh")
-                  ("ppt" . "ppt.sh")
-                  ("pptx" . "ppt.sh")
+                  ("doc" . "word.sh") ("docx" . "word.sh")
+                  ("xls" . "excel.sh") ("xlsx" . "excel.sh")
+                  ("ppt" . "ppt.sh") ("pptx" . "ppt.sh")
                   ("ods" . "libreoffice")("odt" . "libreoffice")
-                  ("dwg" . "cad-2004.sh")
-                  ("dxf" . "cad-2004.sh")
-                  ("caj" . "caj.sh")
-                  ("nh" . "caj.sh")
-                  ("kdh" . "caj.sh")
+                  ("dwg" . "cad-2004.sh") ("dxf" . "cad-2004.sh")
+                  ("caj" . "caj.sh") ("nh" . "caj.sh") ("kdh" . "caj.sh")
                   ("gp" . "gnuplot")
                   ("rar" . "unrar x -o+")
                   ("zip" . "unzip")
-                  ("gz" . "tar zvxf")
-                  ("tgz" . "tar zvxf")
-                  ("bz2" . "tar jvxf")
-                  ("tar" . "tar xf")
+                  ("gz" . "tar zvxf") ("tgz" . "tar zvxf") ("bz2" . "tar jvxf") ("tar" . "tar xf")
                   ("tex" . "xelatex")
                   ("dot" . "dot -Tpng -o dot.png")
-                  ("c" . "gcc -Wall")
-                  )))
+                  ("c" . "gcc -Wall"))))
       (let ((file-exten (downcase (file-name-extension file))))
         (let ((command (cdr (assoc file-exten file-extension-app-alist))))
           (start-process "Shell" nil shell-file-name shell-command-switch
@@ -407,71 +427,42 @@ Assuming .. and . is a current directory (like in FAR)"
             (dired-get-marked-files))
     (dired-unmark-all-files ?*)))
 ;; ================w32-browser=================
+;;; image-dired
+;; ================image-dired=================
+(use-package image-dired
+  ;; Enabled at commands.
+  :defer t
+  :bind (:map dired-mode-map
+              ("\C-td" . image-dired-display-thumbs)
+              ("\C-tt" . image-dired-tag-files)
+              ("\C-tr" . image-dired-delete-tag)
+              ("\C-ti" . image-dired-dired-display-image)
+              ("\C-tx" . image-dired-dired-display-external)
+              ("\C-ta" . image-dired-display-thumbs-append)
+              ("\C-t." . image-dired-display-thumb)
+              ("\C-tc" . image-dired-dired-comment-files)
+              ("\C-tf" . image-dired-mark-tagged-files))
+  :config
+  ;; cygwin上设置imgconvert.exe为图片转换程序。
+  (when is-win
+    (setq image-dired-cmd-create-temp-image-program "imgconvert")))
+;; ================image-dired=================
 ;;; peep-dired
 ;; ================peep-dired==================
 (use-package peep-dired
   ;; Enabled at commands.
   :defer t
-  :commands peep-dired
   :bind (:map dired-mode-map
-              ("q" . swint-peep-dired))
+              ("q" . peep-dired))
   :config
-  (defun swint-peep-dired ()
-    (interactive)
-    (let ((image-buffer (get-buffer image-dired-display-image-buffer)))
-      (if (buffer-live-p image-buffer)
-          (progn
-            (kill-buffer image-buffer)))
-      (call-interactively 'peep-dired)))
-  (bind-key "q" nil peep-dired-mode-map)
-  ;; image-dired默认使用convert作为图片转换程序。
-  ;; C-t C-t: toggle thumbs display; C-t i: display image; C-t d: display thumbs; C-t x: display external。
-  ;; win上c:/cygwin64/bin同时存在convert.exe和imgconvert.exe，需要将转换程序设置为imgconvert.exe。
-  (when is-win
-    (setq image-dired-cmd-create-temp-image-program "imgconvert"))
-  (defcustom peep-dired-image-extensions
-    '("png" "PNG" "JPG" "jpg" "bmp" "BMP" "jpeg" "JPEG")
-    "Extensions to not try to open."
-    :group 'peep-dired
-    :type 'list)
-  (defun peep-dired-display-file-other-window ()
-    (let ((entry-name (dired-file-name-at-point)))
-      (unless (member (file-name-extension entry-name)
-                      peep-dired-ignored-extensions)
-        (add-to-list 'peep-dired-peeped-buffers
-                     (if (member (file-name-extension entry-name)
-                                 peep-dired-image-extensions)
-                         (window-buffer
-                          (display-buffer
-                           (progn
-                             (image-dired-create-display-image-buffer)
-                             (display-buffer image-dired-display-image-buffer)
-                             (image-dired-display-image entry-name)
-                             image-dired-display-image-buffer)
-                           t))
-                       (window-buffer
-                        (display-buffer
-                         (if (file-directory-p entry-name)
-                             (peep-dired-dir-buffer entry-name)
-                           (or
-                            (find-buffer-visiting entry-name)
-                            (find-file-noselect entry-name)))
-                         t)))))))
-  (setq peep-dired-cleanup-on-disable t)
-  ;; (setq peep-dired-cleanup-eagerly t)
   (setq peep-dired-enable-on-directories nil)
-  (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))
-  (add-hook 'peep-dired-hook
-            '(lambda ()
-               (define-key peep-dired-mode-map (kbd "p") 'peep-dired-prev-file)
-               (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)
-               (define-key peep-dired-mode-map (kbd "C-p") nil)
-               (define-key peep-dired-mode-map (kbd "C-n") nil))))
+  (define-key peep-dired-mode-map (kbd "p") 'peep-dired-prev-file)
+  (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)
+  (define-key peep-dired-mode-map (kbd "C-p") nil)
+  (define-key peep-dired-mode-map (kbd "C-n") nil))
 ;; ================peep-dired==================
-;;; async
-;; ==================async=====================
-;; async: Simple library for asynchronous processing in Emacs.
-;; async-start async-start-process async-get async-ready async-wait
+;;; dired-async
+;; ================dired-async=================
 (use-package dired-async
   ;; Enabled in modes.
   :defer t
@@ -507,8 +498,7 @@ Assuming .. and . is a current directory (like in FAR)"
                              arg dired-keep-marker-copy
                              nil dired-copy-how-to-fn))
     (dired-async-mode 1)))
-;; (autoload 'dired-async-mode "dired-async.el" nil t)
-;; ==================async=====================
+;; ================dired-async=================
 ;;; dired-narrow
 ;; ===============dired-narrow=================
 (use-package dired-narrow
@@ -517,12 +507,13 @@ Assuming .. and . is a current directory (like in FAR)"
   :bind (:map dired-mode-map
               ("/" . dired-narrow))
   :config
-  (defun dired-narrow--string-filter (filter)
+  (defun dired-narrow--string-filter-py (filter)
     (let ((words (split-string filter " ")))
       (--all? (save-excursion (or (search-forward it (line-end-position) t)
                                   (re-search-forward (pinyin-search--pinyin-to-regexp it)
                                                      (line-end-position) t)))
-              words))))
+              words)))
+  (advice-add 'dired-narrow--string-filter :override #'dired-narrow--string-filter-py))
 ;; ===============dired-narrow=================
 ;;; dired-ranger
 ;; ===============dired-ranger=================

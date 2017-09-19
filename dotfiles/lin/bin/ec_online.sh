@@ -11,6 +11,7 @@ else
 fi
 
 run-or-raise.sh emacs
+sleep 0.1
 emacsclient -e "(progn (swint-online-to-buffer (substring-no-properties \"$word\")) (sit-for 60))"
 
 xdotool windowactivate --sync $Wind_id

@@ -112,7 +112,8 @@
   (defun ac-cc-mode-setup ()
     (setq ac-sources
           (append '(ac-source-clang
-                    ac-source-semantic) ac-sources)))
+                    ac-source-semantic)
+                  ac-sources)))
   (setq ac-clang-flags
         (mapcar (lambda (item)
                   (concat "-I" item))
@@ -270,8 +271,11 @@
   (define-key company-active-map (kbd "TAB") nil)
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-search-map (kbd "C-p") 'company-select-previous)
+  (define-key company-search-map (kbd "C-n") 'company-select-next)
   (dotimes (i 10)
-    (define-key company-active-map (read-kbd-macro (format "C-%d" i)) 'company-complete-number))
+    (define-key company-active-map (read-kbd-macro (format "C-%d" i)) 'company-complete-number)
+    (define-key company-search-map (read-kbd-macro (format "C-%d" i)) 'company-complete-number))
   (setq company-backends (delete 'company-semantic company-backends))
   ;; To complete for projects, you need to tell Clang your include paths.
   ;; Create a file named .dir-locals.el at your project root:

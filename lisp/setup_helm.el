@@ -467,36 +467,8 @@
   (define-key helm-map (kbd "M-'") 'swint-helm-projectile-after-quit)
   (define-key helm-map (kbd "C-/") 'helm-quit-and-find-file)
   ;; ======在其他helm-buffer中运行helm命令======
-;;;; total commander
-  ;; ==============total commander==============
-  ;;使用tc打开当前文件夹。
-  (global-set-key (kbd "C-s-e") '(lambda ()
-                                   (interactive)
-                                   (cond
-                                    (is-win (w32-shell-execute
-                                             "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T \" " (expand-file-name default-directory))))
-                                    (is-lin (progn (start-process-shell-command
-                                                    "tc" "*tc*"
-                                                    (concat "wine "
-                                                            "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T z:"
-                                                            (replace-regexp-in-string " " "\\\\ " (expand-file-name default-directory))))
-                                                   (let ((default-directory
-                                                           "/home/swint/.wine/drive_c/Program Files/viatc/"))
-                                                     (start-process-shell-command
-                                                      "viatc" "*viatc*"
-                                                      "wine viatc.exe")))))))
-  ;;使用lister直接浏览文件。
-  (define-key dired-mode-map (kbd "C-M-j") '(lambda ()
-                                              (interactive)
-                                              (cond
-                                               (is-win (w32-shell-execute
-                                                        "open" "c:/totalcmd/TOTALCMD.EXE" (concat "/O /T /S=L \" " (dired-get-filename))))
-                                               (is-lin (start-process-shell-command
-                                                        "tc" "*tc*"
-                                                        (concat "wine "
-                                                                "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
-                                                                (replace-regexp-in-string " " "\\\\ "
-                                                                                          (expand-file-name (dired-get-filename)))))))))
+;;;; helm-open-file-with-lister
+  ;; ========helm-open-file-with-lister=========
   (defun helm-open-file-with-lister (_candidate)
     "Opens a file with lister of total commander."
     (cond
@@ -515,7 +487,7 @@
       (helm-exit-and-execute-action 'helm-open-file-with-lister)))
   (define-key helm-find-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
   (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
-  ;; ==============total commander==============
+  ;; ========helm-open-file-with-lister=========
   )
 ;; ====================helm=====================
 ;;; helm_lacarte
@@ -611,7 +583,8 @@
                                 (is-lin pdf-file)
                                 (is-win (regexp-quote (replace-regexp-in-string
                                                        ":" "\\\\:"
-                                                       (replace-regexp-in-string "/" "\\\\\\\\" pdf-file))))) nil t)
+                                                       (replace-regexp-in-string "/" "\\\\\\\\" pdf-file)))))
+                               nil t)
         (re-search-backward (concat "^@\\(" parsebib--bibtex-identifier
                                     "\\)[[:space:]]*[\(\{][[:space:]]*"
                                     parsebib--key-regexp "[[:space:]]*,"))

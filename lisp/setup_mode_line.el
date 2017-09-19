@@ -91,7 +91,8 @@
   (add-to-list 'sml/hidden-modes " ElDoc")
   (add-to-list 'sml/hidden-modes " skewer")
   (add-to-list 'sml/hidden-modes " skewer-css")
-  (add-to-list 'sml/hidden-modes " skewer-html"))
+  (add-to-list 'sml/hidden-modes " skewer-html")
+  (add-to-list 'sml/hidden-modes " Omit"))
 ;; ================smart-mode-line=================
 ;;; abbrev-for-mode-line
 ;; =============abbrev-for-mode-line===============

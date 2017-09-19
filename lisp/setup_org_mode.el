@@ -148,7 +148,7 @@
              (setq screen-file (concat (make-temp-name
                                         (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
                                                 "_" (format-time-string "%Y%m%d_"))) ".png"))
-             (suspend-frame)
+             ;; (suspend-frame)
              (call-process-shell-command "scrot" nil nil nil nil " -s " (concat "\"" screen-file "\"" )))
             (is-win
              (setq screen-file
@@ -223,7 +223,8 @@
                 (concat "\\(" citation-format "\\)" "\\("
                         ;; 匹配Roller_Physiology_International_1999_2014-02-27T02:02:21Z形式的key。
                         "\\([^^\"@\\&$#%',={} \t\n\f]*_\\)\\{4\\}\\(19\\|20\\)[[:digit:]]\\{2\\}\\(-[[:digit:]]\\{2\\}\\)\\{2\\}T\\([[:digit:]]\\{2\\}:\\)\\{2\\}[[:digit:]]\\{2\\}Z"
-                        "\\)") nil t)
+                        "\\)")
+                nil t)
           (let ((beg (match-beginning 0))
                 (end (match-end 0)))
             (if (and (>= current-point beg) (<= current-point end))
