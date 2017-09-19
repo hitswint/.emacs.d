@@ -9,34 +9,29 @@
 (defconst temp-files-save-dir
   (format "%s%s/" (expand-file-name user-emacs-directory) ".saves"))
 (setq backup-directory-alist `((".*" . ,temp-files-save-dir)))
-(setq auto-save-file-name-transforms `((".*" ,temp-files-save-dir t)))
 (setq tramp-backup-directory-alist backup-directory-alist)
+(setq auto-save-file-name-transforms `((".*" ,temp-files-save-dir t)))
 (setq auto-save-list-file-prefix temp-files-save-dir)
-;; Automatically purge backup files not accessed in a week.
 (let ((day (* 60 60 24))
       (week (* 60 60 24 7))
       (month (* 60 60 24 30))
       (current (float-time (current-time))))
-;;;; 每周删除旧backup文件。
-  (message "Deleting old backup files...")
+;;;; 每周清理backup/autosave文件。
+  (message "Cleaning backup/autosave files...")
   (dolist (file (directory-files temp-files-save-dir t))
-    (when (and (backup-file-name-p file)
-               (> (- current (float-time (cl-sixth (file-attributes file))))
-                  week))
+    (when (> (- current (float-time (cl-sixth (file-attributes file)))) week)
       (message "%s" file)
       (delete-file file t)))
-;;;; 每天清理trash中backup文件。
-  (message "Cleaning trashcan...")
-  (dolist (file (directory-files
-                 (cond
-                  (is-lin "~/.Trash")
-                  (is-win "c:/TRASHCAN"))
-                 t))
-    (when (and (backup-file-name-p file)
-               (> (- current (float-time (cl-sixth (file-attributes file))))
-                  day))
-      (message "%s" file)
-      (delete-file file)))
+;;;; 每天清理trashcan。
+  (when is-lin
+    (message "Cleaning trashcan...")
+    (dolist (file (directory-files trash-directory t))
+      (when (and (or (backup-file-name-p file) (auto-save-file-name-p file))
+                 (> (- current (float-time (cl-sixth (file-attributes file)))) day))
+        (message "%s" file)
+        (if (file-directory-p file)
+            (delete-directory file t)
+          (delete-file file)))))
   (let* ((PC-dir (cond
                   (is-lin (replace-regexp-in-string
                            "\n" ""

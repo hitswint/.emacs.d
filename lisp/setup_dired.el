@@ -16,7 +16,7 @@
     :config
     (diredful-mode 1))
   (setq dired-recursive-copies 'top)
-  (setq dired-recursive-deletes 'top)
+  (setq dired-recursive-deletes 'always)
   (custom-set-faces '(diredp-compressed-file-suffix ((t (:foreground "#7b68ee"))) t)
                     '(diredp-ignored-file-name ((t (:foreground "#aaaaaa"))) t))
 ;;;; Auto-revert-mode

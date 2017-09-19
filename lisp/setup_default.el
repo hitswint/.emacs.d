@@ -34,6 +34,8 @@
 (setq load-prefer-newer t)
 (setq shift-select-mode nil)
 (setq epa-pinentry-mode 'loopback)      ;使用minibuffer输入密码。
+(setq delete-by-moving-to-trash t)
+(setq trash-directory "~/.Trash")
 ;; (setq debug-on-error t)
 (set-face-attribute 'highlight nil :background "black")
 ;; ==================Default====================

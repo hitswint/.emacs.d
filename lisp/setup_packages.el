@@ -101,12 +101,6 @@
   (setq expand-region-reset-fast-key "C-;"))
 ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end。
 ;; =================expand-region==================
-;;; 回收站
-;; ===================回收站=======================
-(use-package trashcan
-  ;; Enabled automatically.
-  :load-path "site-lisp/trashcan/")
-;; ===================回收站=======================
 ;;; undo-tree
 ;; ==================undo-tree=====================
 (use-package undo-tree
