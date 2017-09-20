@@ -155,42 +155,13 @@ region\) apply comment-or-uncomment to the current line"
   "Move point to first non-whitespace character or beginning-of-line."
   (interactive "^") ; Use (interactive "^") in Emacs 23 to make shift-select work
   (let ((oldpos (point)))
-    (back-to-indentation)
+    (if (memq major-mode '(dired-mode wdired-mode))
+        (dired-move-to-filename)
+      (back-to-indentation))
     (and (= oldpos (point))
          (beginning-of-line))))
 (global-set-key (kbd "C-a") 'smart-beginning-of-line)
 ;; =============smart-beginning-of-line============
-;;; 流畅滚动
-;; ===================流畅滚动=====================
-;; (setq redisplay-dont-pause t
-;;       scroll-margin 1
-;;       scroll-step 1
-;;       scroll-conservatively 10000
-;;       scroll-preserve-screen-position 1)
-;; (setq mouse-wheel-follow-mouse 't)
-;; (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
-;; ===================流畅滚动=====================
-;;; 上下移动行
-;; ==================上下移动行====================
-;; ;; 使用 drag-stuff-mode 替代
-;; (defun move-line-down ()
-;;   (interactive)
-;;   (let ((col (current-column)))
-;;     (save-excursion
-;;       (forward-line)
-;;       (transpose-lines 1))
-;;     (forward-line)
-;;     (move-to-column col)))
-;; (defun move-line-up ()
-;;   (interactive)
-;;   (let ((col (current-column)))
-;;     (save-excursion
-;;       (forward-line)
-;;       (transpose-lines -1))
-;;     (move-to-column col)))
-;; (global-set-key (kbd "M-N") 'move-line-down)
-;; (global-set-key (kbd "M-P") 'move-line-up)
-;; ==================上下移动行====================
 ;;; 添加连接线和下划线
 ;; ===============添加连接线和下划线===============
 (defun jcs-dashify ()
@@ -208,20 +179,6 @@ region\) apply comment-or-uncomment to the current line"
 (global-set-key (kbd "M-s -") 'jcs-dashify)
 (global-set-key (kbd "M-s _") 'jcs-dashify-underline)
 ;; ===============添加连接线和下划线===============
-;;; 复制矩形区域
-;; ==================复制矩形区域==================
-(defun copy-rectangle-as-kill ()
-  (interactive)
-  (save-excursion
-    (kill-rectangle (mark) (point))
-    (exchange-point-and-mark)
-    (yank-rectangle)))
-(global-set-key (kbd "C-x r w") 'copy-rectangle-as-kill)
-;; 复制矩形区域三种方法：
-;; 1. 使用C-x rrr复制，使用C-x rir粘贴。
-;; 2. 使用multiple-cursors复制，使用C-x ry粘贴。
-;; 3. 使用C-x SPC直接矩形复制，使用C-y粘贴。
-;; ==================复制矩形区域==================
 ;;; 合并C-j和C-o
 ;; ==================合并C-j和C-o==================
 (defun open-line-or-new-line-dep-pos ()
@@ -349,8 +306,7 @@ if point is at end of line , new-line-and-indent"
         (if (and fb (file-exists-p fb))
             (delete-file fb)))
     (message "Please select region at first!")))
-(global-set-key (kbd "M-s =") '(lambda ()
-                                 (interactive)
+(global-set-key (kbd "M-s =") '(lambda () (interactive)
                                  (if swint-diff-region-tag
                                      (diff-region-compare-with-b)
                                    (diff-region-tag-selected-as-a))))

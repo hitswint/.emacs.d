@@ -143,19 +143,22 @@
   ;; ========跳转至dired顶部和尾部=============
   (defun dired-beginning-of-buffer ()
     (interactive)
-    (beginning-of-buffer)
-    (dired-next-line 1))
-  (define-key dired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-beginning-of-buffer)
+    (let ((move 1)
+          (oldpos (point)))
+      (beginning-of-buffer)
+      (unless dired-hide-details-mode
+        (setq move (+ move 1)))
+      (unless dired-omit-mode
+        (setq move (+ move 2)))
+      (dired-next-line move)
+      (if (= oldpos (point))
+          (beginning-of-buffer))))
   (defun dired-end-of-buffer ()
     (interactive)
     (end-of-buffer)
     (dired-next-line -1))
+  (define-key dired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-beginning-of-buffer)
   (define-key dired-mode-map (vector 'remap 'end-of-buffer) 'dired-end-of-buffer)
-  (defun dired-beginning-of-line ()
-    (interactive)
-    (smart-beginning-of-line)
-    (forward-char 1))
-  (define-key dired-mode-map (vector 'remap 'smart-beginning-of-line) 'dired-beginning-of-line)
   ;; ========跳转至dired顶部和尾部=============
 ;;;; webdav_sync同步文件
   ;; =========webdav_sync同步文件==============
