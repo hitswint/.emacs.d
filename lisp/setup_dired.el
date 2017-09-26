@@ -8,6 +8,7 @@
     :config
     (dired-details-install)
     (setq dired-omit-verbose nil)
+    (setq dired-omit-size-limit nil)
     (add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
     (setq dired-details-hidden-string "")
     (advice-add 'dired-details-show :after #'(lambda () (dired-hide-details-mode 0)))
