@@ -12,9 +12,6 @@
 ;;; PATH
 ;; ==================PATH==================
 (when is-win
-  (setenv "HOME" "c:/Users/swint")
-  ;; (setenv "PATH" "c:/Users/swint/")
-  ;; 必须注销这行，因为会让latex失效。
   ;; Set the default file path.
   (setq default-directory "~/")
   ;; 使emacs可以使用win键。

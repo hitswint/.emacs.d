@@ -18,14 +18,14 @@
       (current (float-time (current-time))))
 ;;;; 每周清理backup/autosave文件。
   (message "Cleaning backup/autosave files...")
-  (dolist (file (directory-files temp-files-save-dir t))
+  (dolist (file (directory-files temp-files-save-dir t directory-files-no-dot-files-regexp))
     (when (> (- current (float-time (cl-sixth (file-attributes file)))) week)
       (message "%s" file)
       (delete-file file t)))
 ;;;; 每天清理trashcan。
   (when is-lin
     (message "Cleaning trashcan...")
-    (dolist (file (directory-files trash-directory t))
+    (dolist (file (directory-files trash-directory t directory-files-no-dot-files-regexp))
       (when (and (or (backup-file-name-p file) (auto-save-file-name-p file))
                  (> (- current (float-time (cl-sixth (file-attributes file)))) day))
         (message "%s" file)

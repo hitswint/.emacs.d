@@ -44,6 +44,10 @@ fi
 
 run-or-raise.sh emacs
 sleep 0.1
-emacsclient -e "(progn (swint-online-to-buffer (substring-no-properties \"$word\")) (sit-for 60))"
+emacsclient -e "(progn (swint-online-to-buffer (substring-no-properties \"$word\")) (start-process-shell-command \"ec_sleep\" \"*ec_sleep*\" \"ec_sleep.sh\"))"
 
-xdotool windowactivate --sync $Wind_id
+while /bin/true; do
+    ps cax | grep sleep > /dev/null
+    [ $? -ne 0 ] && xdotool windowactivate --sync $Wind_id && exit 0
+    sleep 1
+done

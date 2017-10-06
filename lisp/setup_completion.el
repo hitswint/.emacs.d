@@ -387,8 +387,8 @@
   :init
   (setq ycmd-keymap-prefix (kbd "M-g M-y"))
   :config
-  (set-variable 'ycmd-server-command '("python2" "/home/swint/git-repo/ycmd/ycmd"))
-  (set-variable 'ycmd-global-config "/home/swint/git-repo/ycmd/examples/.ycm_extra_conf.py")
+  (set-variable 'ycmd-server-command '("python2" "~/git-repo/ycmd/ycmd"))
+  (set-variable 'ycmd-global-config "~/git-repo/ycmd/examples/.ycm_extra_conf.py")
   (defun swint-toggle-ycmd ()
     (interactive)
     (ycmd-mode 'toggle)

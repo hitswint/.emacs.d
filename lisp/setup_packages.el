@@ -460,7 +460,7 @@
 ;; Lin上使用soffice转换；win上使用unoconv转换。
 ;; Pdf文件使用gs转换成png。
 ;; Win下使用doc-view查看office和pdf文件时，文件名都不可以包含中文字符。
-;; 默认的缓存文件夹分别为/tmp和c:/Users/swint/AppData/Local/Temp，使用doc-view-clear-cache清理。
+;; 默认的缓存文件夹分别为/tmp和~/AppData/Local/Temp，使用doc-view-clear-cache清理。
 (use-package doc-view
   ;; Enabled in modes.
   :defer t
@@ -897,4 +897,21 @@ is named like ODF with the extension turned to pdf."
   :defer t
   :bind ("M-g M-s" . helm-pass))
 ;; =====================pass=======================
+;; =====================sudo=======================
+(use-package sudo-edit
+  ;; Enabled at commands.
+  ;; 需新建~/.ssh/sockets文件夹。
+  :if is-lin
+  :defer t
+  :commands (sudo-edit sudo-dired)
+  :config
+  ;; M(dired-do-chmod)改变权限；O(dired-do-chown)改变owner；G(dired-do-chgrp)改变group。
+  (defun sudo-dired ()
+    (interactive)
+    (require 'tramp)
+    (let ((dir (expand-file-name default-directory)))
+      (if (string-match "^/sudo:" dir)
+          (user-error "Already in sudo")
+        (dired (concat "/sudo::" dir))))))
+;; =====================sudo=======================
 (provide 'setup_packages)

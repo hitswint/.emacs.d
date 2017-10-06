@@ -2,7 +2,7 @@
 
 dmode="$(cat /sys/class/drm/card0-VGA-1/status)"
 export DISPLAY=:0
-export XAUTHORITY=/home/swint/.Xauthority
+export XAUTHORITY=$HOME/.Xauthority
 function list_devices(){
     xrandr | grep connected | cut -d' ' -f 1
 }
@@ -25,10 +25,10 @@ SECONDARY=$(get_device 2)
 echo "Primary display device: $PRIMARY"
 echo "Secondary display device: $SECONDARY"
 
-if [ "${dmode}" = disconnected ]; then
+if [ "$dmode" == "disconnected" ]; then
     xrandr --auto
-elif [ "${dmode}" = connected ];then
-    if [ $MODE == "single" ];then
+elif [ "$dmode" == "connected" ];then
+    if [ "$MODE" == "single" ];then
         xrandr --output $SECONDARY --auto --left-of $PRIMARY
         xrandr --output $PRIMARY --off
         # xrandr  --output $PRIMARY --auto

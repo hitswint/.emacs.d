@@ -13,3 +13,12 @@ URxvt.menu:/etc/X11/rxvt.menu
 URxvt.preeditType:Root
 URxvt.scrollBar:False
 URxvt.font: -*-fixed-medium-r-*--18-*-*-*-*-*-iso10646-1,xft:WenQuanYi Bitmap Song:pixelsize=14:antialias=false
+URxvt.perl-ext-common: default,tabbed
+URxvt.iso14755: False
+URxvt*iso14755_52: False
+URxvt.searchable-scrollback: CM-s
+! URxvt.keysym.CM-s: searchable-scrollback:start
+URxvt.tabbed.tabbar-fg: 5
+URxvt.tabbed.tabbar-bg: 0
+URxvt.tabbed.tab-fg: 6
+URxvt.tabbed.tab-bg: 0

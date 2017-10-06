@@ -167,6 +167,7 @@
             smart-mode-line
             smartrep
             smex
+            sudo-edit
             swiper
             tangotango-theme
             undo-tree

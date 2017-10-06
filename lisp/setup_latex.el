@@ -102,6 +102,7 @@
   (add-hook 'org-mode-hook '(lambda ()
                               (define-key org-mode-map (kbd "C-c z U") 'swint-zotelo-update-database)))
   :config
+  ;; 设置.bib文件的编码格式，否则出现乱码。
   (setq zotelo-translator-charsets '((BibTeX . "Unicode") (Default . "Unicode")))
   ;; 使用zotero-better-bibtex自动更新bib文件，使用zotelo手动更新bib文件。
   (defun swint-zotelo-update-database ()

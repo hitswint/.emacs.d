@@ -20,12 +20,13 @@
   (define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend)
 ;;; 初始化远程库和克隆远程库
   ;; ===========初始化远程库和克隆远程库===========
-  ;; cygwin中使用git remote add/git clone的路径为file:///cygdrive/c/Users/swint/。
+  ;; cygwin中使用git remote add/git clone的路径为file:///cygdrive/c/*。
   (defun swint-magit-clone-nutstore ()
     "从~/Nutstore中clone远程库到本地。"
     (interactive)
     (let* ((remote-repo-prefix (cond (is-lin "~/Nutstore/")
-                                     (is-win "file:///cygdrive/c/Users/swint/Nutstore/")))
+                                     (is-win (concat "file://" (replace-regexp-in-string
+                                                                "c:" "/cygdrive/c" (expand-file-name "~/Nutstore/"))))))
            (remote-repo (concat remote-repo-prefix
                                 (completing-read "Remote repo to clone: "
                                                  (directory-files "~/Nutstore" nil ".+\\.git")))))
@@ -35,7 +36,8 @@
     "使用本地库名字在~/Nutstore中建立远程库，并加为remote repo。"
     (interactive)
     (let* ((remote-repo-prefix (cond (is-lin "~/Nutstore/")
-                                     (is-win "file:///cygdrive/c/Users/swint/Nutstore/")))
+                                     (is-win (concat "file://" (replace-regexp-in-string
+                                                                "c:" "/cygdrive/c" (expand-file-name "~/Nutstore/"))))))
            (remote-repo (concat remote-repo-prefix
                                 (file-name-nondirectory (directory-file-name (magit-toplevel))) ".git")))
       (shell-command (concat "git --bare init " remote-repo))

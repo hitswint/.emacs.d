@@ -36,6 +36,9 @@
 (setq epa-pinentry-mode 'loopback)      ;使用minibuffer输入密码。
 (setq delete-by-moving-to-trash t)
 (setq trash-directory "~/.Trash")
+(setq tramp-default-method "ssh")
+(setq tramp-ssh-controlmaster-options   ;默认设置导致helm启动慢。
+      "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 ;; (setq debug-on-error t)
 (set-face-attribute 'highlight nil :background "black")
 ;; ==================Default====================

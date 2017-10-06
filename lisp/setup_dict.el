@@ -3,7 +3,9 @@
 (define-derived-mode sdcv-mode org-mode nil
   "Major mode for sdcv."
   (when is-lin (fcitx--sdcv-maybe-deactivate))
-  (local-set-key (kbd "q") '(lambda () (interactive) (swint-kill-this-buffer)
+  (local-set-key (kbd "q") '(lambda () (interactive)
+                              (ignore-errors (kill-process "ec_sleep"))
+                              (swint-kill-this-buffer)
                               (jump-to-register :sdcv) (when is-lin (fcitx--sdcv-maybe-activate)))))
 (defvar sdcv-dictionary-list '("朗道英汉字典5.0"
                                "朗道汉英字典5.0"
@@ -49,7 +51,8 @@
       (insert (sdcv-search-with-dictionary word sdcv-dictionary-list t))
       (sdcv-output-cleaner))
      (is-win
-      (w32-shell-execute "open" "sdcv" (concat "--data-dir c:/Users/swint/.stardict " word " stardict"))))))
+      (w32-shell-execute "open" "sdcv"
+                         (concat "--data-dir " (expand-file-name "~/") ".stardict " word " stardict"))))))
 (defun sdcv-output-cleaner ()
   (show-all)
   (goto-char (point-min))

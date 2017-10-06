@@ -1,11 +1,10 @@
 ;;; 从xsel复制粘贴
 ;; =================从xsel复制粘贴=================
 ;; 通过xsel与其他程序进行复制粘贴。
-;; 在emacs中需要选中复制，直接使用easy-kill无法写入xsel。
-(defun xsel-paste-function()
+(defun xsel-paste-primary()
   (interactive)
   (insert (shell-command-to-string "xsel -o -p </dev/null")))
-(global-set-key (kbd "C-x C-y") 'xsel-paste-function)
+(global-set-key (kbd "C-x C-y") 'xsel-paste-primary)
 ;; =================从xsel复制粘贴=================
 ;;; WordsCount
 ;; ===================WordsCount===================

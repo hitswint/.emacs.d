@@ -166,13 +166,15 @@
   (defun swint-nutstore-sync (arg)
     "Synchronization of Nutstore-sync."
     (interactive)
-    (let ((process
-           (start-process-shell-command
-            "webdav_sync" "*webdav_sync*"
-            (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
-                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
-                    " -r -" arg " -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
-                    (expand-file-name "~/Nutstore-sync/")))))
+    (let* ((user (replace-regexp-in-string "@" "%40" (get-auth-user "Nutstore")))
+           (pass (get-auth-pass "Nutstore"))
+           (process
+            (start-process-shell-command
+             "webdav_sync" "*webdav_sync*"
+             (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
+                     " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
+                     " -r -" arg " -u https://" user ":" pass "@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
+                     (expand-file-name "~/Nutstore-sync/")))))
       (lexical-let ((pos (memq 'mode-line-modes mode-line-format))
                     (arg arg))
         (setcdr pos (cons (concat "Nutstore-sync " arg " ") (cdr pos)))
@@ -223,10 +225,10 @@
      (is-lin (progn (start-process-shell-command
                      "tc" "*tc*"
                      (concat "wine "
-                             "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T z:"
+                             "~/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T z:"
                              (replace-regexp-in-string " " "\\\\ " (expand-file-name default-directory))))
                     (let ((default-directory
-                            "/home/swint/.wine/drive_c/Program Files/viatc/"))
+                            "~/.wine/drive_c/Program Files/viatc/"))
                       (start-process-shell-command
                        "viatc" "*viatc*"
                        "wine viatc.exe"))))))
@@ -238,7 +240,7 @@
      (is-lin (start-process-shell-command
               "tc" "*tc*"
               (concat "wine "
-                      "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
+                      "~/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
                       (replace-regexp-in-string " " "\\\\ "
                                                 (expand-file-name (dired-get-filename))))))))
   (global-set-key (kbd "C-s-e") 'tc-open-default-directory)
@@ -321,17 +323,18 @@
     (defun urxvt-default-directory (&optional arg)
       (interactive "P")
       (start-process "Urxvt" nil shell-file-name shell-command-switch
-                     (concat "$(tabbed -c -d > /tmp/tabbed.xid);urxvt -embed $(</tmp/tabbed.xid) -cd "
+                     (concat "$(tabbed -c -d > /tmp/tabbed.xid);urxvt -pe default,-tabbed -embed $(</tmp/tabbed.xid) -cd "
                              "\"" (expand-file-name default-directory) "\""
                              ;; 启动bash终端同时开启virtualenv。
-                             (if arg (let ((pyvenv-virtual-env-for-bash
-                                            (or pyvenv-virtual-env
-                                                (file-name-as-directory
-                                                 (format "%s/%s" (pyvenv-workon-home)
-                                                         (completing-read "Work on: " (pyvenv-virtualenv-list)
-                                                                          nil t nil 'pyvenv-workon-history nil nil))))))
-                                       (concat " -e bash" " --init-file <( printf '%s\\n' 'source ~/.bashrc' 'source "
-                                               pyvenv-virtual-env-for-bash "bin/activate' )"))))))
+                             (when arg (require 'pyvenv)
+                                   (let ((pyvenv-virtual-env-for-bash
+                                          (or pyvenv-virtual-env
+                                              (file-name-as-directory
+                                               (format "%s/%s" (pyvenv-workon-home)
+                                                       (completing-read "Work on: " (pyvenv-virtualenv-list)
+                                                                        nil t nil 'pyvenv-workon-history nil nil))))))
+                                     (concat " -e bash" " --init-file <( printf '%s\\n' 'source ~/.bashrc' 'source "
+                                             pyvenv-virtual-env-for-bash "bin/activate' )"))))))
     (global-set-key (kbd "C-s-<return>") 'urxvt-default-directory)
     ;; ========在当前目录下打开urxvt===========
 ;;;; cad文件版本转换

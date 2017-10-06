@@ -6,7 +6,7 @@ set "nextpattern=\\bnext\\b,^>$,^(>>|»)$,^(>|»),(>|»)$,\\bmore\\b,^下一页$
 set "previouspattern=\\bprev|previous\\b,^<$,^(<<|«)$,^(<|«),(<|«)$,^上一页$"
 set visualbell
 set wildmode=list:longest
-source! /home/swint/.vimperatorrc.local
+source! ~/.vimperatorrc.local
 set hintchars=asdfghjkl
 "set nextpattern+=\s*下一页|下一张|下一篇|下一頁|下页|后页\s*
 "set previouspattern+=\s*上一页|上一张|上一篇|上一頁|上页|前页\s*

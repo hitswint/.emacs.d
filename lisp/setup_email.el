@@ -83,6 +83,7 @@
   :if is-lin
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :defer t
+  :commands (get-auth-user get-auth-pass)
   :bind (("C-M-7" . mu4e)
          ("C-x M" . mu4e-compose-new))
   :config

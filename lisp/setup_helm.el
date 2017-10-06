@@ -2,11 +2,6 @@
 ;; ====================helm=====================
 (use-package helm
   ;; Enabled automatically.
-  :init
-  ;; Emacs24中tramp存在问题，helm-files调用tramp-loaddefs会花费很长时间。
-  ;; 无网络时不存在问题，有网络时偶尔出现。下句解决helm启动变慢问题，源自水木。
-  (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
-  ;; Stack Exchange上提供：(setq tramp-ssh-controlmaster-options "")。
   :config
   (use-package helm-config)
   (use-package helm-for-files)
@@ -416,30 +411,24 @@
   ;; =========helm-related-to-persp=============
 ;;;; helm-locate
   ;; ==============helm-locate==================
-  ;; (global-set-key (kbd "C-x l") 'locate)
-  ;; win上locate似乎搜索中文有问题，改用es。但是es似乎仍然搜索不了中文，而且会导致emacs死掉，放弃。
-  ;; win上面的linux工具包括grep/locate/find都不能够搜索中文。
-  ;; (setq helm-locate-command "es %s %s")
   (cond
    (is-lin
-    ;; 使用 updatedb -l 0 -o ~/.helm-locate.db -U ~/ 建立用户数据库。
     (setq helm-locate-create-db-command "updatedb -l 0 -o ~/.helm-locate.db -U ~/")
     (setq helm-locate-command "locate -b -i %s -r %s -d ~/.helm-locate.db"))
    (is-win
-    ;; 下列的命令建立locate数据库的时候，会导致数据库中记录的文件路径名为/cygdrive/c/，这种路径名emacs无法识别。
-    ;; (setq helm-locate-create-db-command "updatedb --output=/cygdrive/c/Users/swint/.helm-locate.db --localpaths='/cygdrive/c/Users/swint/'")
-    ;; (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.helm-locate.db")
-    ;; 下面的命令建立locate数据库的时候，会导致cygwin警告ms dos path sytle，无妨，时间稍长；locate命令无法识别这种ms dos path sytle。
-    (setq helm-locate-create-db-command "updatedb --output=c:/Users/swint/.helm-locate.db --localpaths='c:/Users/swint/'")
-    (setq helm-locate-command "locate -b -i %s -r %s -d /cygdrive/c/Users/swint/.helm-locate.db")))
+    (setq helm-locate-create-db-command (concat "updatedb --output=" (expand-file-name "~/")
+                                                ".helm-locate.db --localpaths='" (expand-file-name "~/") "'"))
+    (setq helm-locate-command (concat "locate -b -i %s -r %s -d "
+                                      (replace-regexp-in-string "c:" "/cygdrive/c" (expand-file-name "~/"))
+                                      ".helm-locate.db"))))
   (defun swint-helm-locate (&optional arg)
     (interactive "P")
     (if arg
-        ;; 使用helm-locate-db.sh脚本更新~/.helm-locate.db文件。
+        ;; 更新~/.helm-locate.db文件。
         (let* ((locat-db-file (expand-file-name "~/.helm-locate.db"))
                (process (start-process-shell-command
                          "Updating-locate-db-file" "*Updating-locate-db-file*"
-                         "helm-locate-db.sh")))
+                         helm-locate-create-db-command)))
           (set-process-sentinel
            process
            (lambda (process signal)
@@ -477,7 +466,7 @@
      (is-lin (start-process-shell-command
               "tc" "*tc*"
               (concat "wine "
-                      "/home/swint/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
+                      "~/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
                       (replace-regexp-in-string " " "\\\\ "
                                                 (expand-file-name _candidate)))))))
   (defun helm-ff-run-open-file-with-lister ()
@@ -607,8 +596,6 @@
         (-each it helm-bibtex-pdf-open-externally-function)
       (message "No PDF(s) found.")))
   (helm-bibtex-helmify-action bibtex-completion-open-pdf-externally helm-bibtex-open-pdf-externally)
-  ;; 设置.bib文件的编码格式，否则出现乱码。
-  ;; (zotelo-translator-charsets (quote ((BibTeX . "Unicode") (Default . "Unicode"))))
   (helm-delete-action-from-source "Insert citation" helm-source-bibtex)
   (helm-add-action-to-source "Insert citation" 'helm-bibtex-insert-citation helm-source-bibtex 0)
   (helm-add-action-to-source "Open PDF file externally (if present)" 'helm-bibtex-open-pdf-externally helm-source-bibtex 2))

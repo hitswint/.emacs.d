@@ -1,3 +1,3 @@
 #!/bin/bash
 
-wine /home/swint/.wine/drive_c/Program\ Files/AutoCAD\ 2008/acad.exe $1
+wine ~/.wine/drive_c/Program\ Files/AutoCAD\ 2008/acad.exe $1

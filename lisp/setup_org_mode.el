@@ -131,7 +131,7 @@
   ;; ================cdlatex====================
 ;;;; 截图
   ;; ===================截图====================
-  ;; Screenshot-local截图到./pic文件夹中，screenshot截图到home/swint/org/pic文件夹中。
+  ;; Screenshot-local截图到./pic文件夹中，screenshot截图到~/org/pic文件夹中。
   (defun swint-screenshot (&optional arg)
     "Take a screenshot into a unique-named file in the current buffer file
   directory and insert a link to this file."
@@ -311,13 +311,15 @@
            (mapcar 'delete-file (directory-files org-mobile-directory t ".+\\.\\(org\\|dat\\)")))
           ((equal arg "up")
            (with-current-buffer "task.org" (org-mobile-push))))
-    (let ((process
-           (start-process-shell-command
-            "webdav_sync" "*webdav_sync*"
-            (concat "java -Dderby.system.home="  (expand-file-name "~/.webdav_sync/")
-                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
-                    " -r -" arg " -u https://wgq_713%40163.com:arxg55upvg9urwus@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d "
-                    (expand-file-name "~/Nutstore-mobileorg/")))))
+    (let* ((user (replace-regexp-in-string "@" "%40" (get-auth-user "Nutstore")))
+           (pass (get-auth-pass "Nutstore"))
+           (process
+            (start-process-shell-command
+             "webdav_sync" "*webdav_sync*"
+             (concat "java -Dderby.system.home="  (expand-file-name "~/.webdav_sync/")
+                     " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
+                     " -r -" arg " -u https://" user ":" pass "@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d "
+                     (expand-file-name "~/Nutstore-mobileorg/")))))
       (lexical-let ((pos (memq 'mode-line-modes mode-line-format))
                     (sync (cond ((equal arg "down") "pull")
                                 ((equal arg "up") "push"))))
@@ -724,7 +726,6 @@ depending on the last command issued."
 ;; ==================outshine===================
 ;;; interleave
 ;; =================interleave==================
-;; 安装和升级interleave时应确保pdf-tools已经加载，否则无法识别pdf-view中定义的函数。
 (use-package interleave
   ;; Enabled at commands.
   :defer t

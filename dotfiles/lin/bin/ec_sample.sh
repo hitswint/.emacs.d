@@ -41,4 +41,4 @@ else
 fi
 
 run-or-raise.sh emacs
-emacsclient -e "(progn (w3m-youdao-sample-sentences (substring-no-properties \"$word\")) (sit-for 60))"
+emacsclient -e "(w3m-youdao-sample-sentences (substring-no-properties \"$word\"))"

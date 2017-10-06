@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 xwin_id=`xdpyinfo | sed -ne 's/^focus:.*\(0x[^,]\+\).*/\1/p'`
 if xwininfo -id $xwin_id | grep "(has no name)"
@@ -30,7 +30,18 @@ EOF
 }
 
 run-or-raise.sh emacs
-emacsclient -e "(let ((helm-full-frame t)) (save-window-excursion (delete-other-windows) (helm-show-kill-ring)))"
 
-wmctrl -ia $xwin_id
-xte_paste
+# emacsclient -e "(let ((helm-full-frame t)) (save-window-excursion (delete-other-windows) (helm-show-kill-ring)))"
+# if [ $? == 0 ]; then
+#     wmctrl -ia $xwin_id
+#     xte_paste
+# fi
+
+trap exit_hook EXIT
+exit_hook()
+{
+    wmctrl -ia $xwin_id
+    xte_paste
+}
+
+emacsclient -e "(let ((helm-full-frame t)) (save-window-excursion (delete-other-windows) (helm-show-kill-ring)))"
