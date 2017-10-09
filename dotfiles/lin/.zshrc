@@ -69,7 +69,7 @@ MANPATH=/usr/local/texlive/2012/texmf/doc/man:$MANPATH; export MANPATH
 INFOPATH=/usr/local/texlive/2012/texmf/doc/info:$INFOPATH; export INFOPATH
 
 export PATH=/usr/local/MATLAB/R2011b/bin:$PATH
-export PATH=/opt/emacs24/bin:$PATH
+export PATH=/opt/emacs25/bin:$PATH
 
 bindkey " " magic-space
 

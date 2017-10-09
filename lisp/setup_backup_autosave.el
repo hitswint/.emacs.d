@@ -26,20 +26,15 @@
   (when is-lin
     (message "Cleaning trashcan...")
     (dolist (file (directory-files trash-directory t directory-files-no-dot-files-regexp))
-      (when (and (or (backup-file-name-p file) (auto-save-file-name-p file))
+      (when (and (or (backup-file-name-p file) (auto-save-file-name-p (file-name-nondirectory file)))
                  (> (- current (float-time (cl-sixth (file-attributes file)))) day))
         (message "%s" file)
         (if (file-directory-p file)
             (delete-directory file t)
           (delete-file file)))))
-  (let* ((PC-dir (cond
-                  (is-lin (replace-regexp-in-string
-                           "\n" ""
-                           (replace-regexp-in-string
-                            "\\(/\\|\\.\\)" "_"
-                            (shell-command-to-string
-                             "$(cat /etc/machine-id > /tmp/machine.xid); mkpasswd $(</tmp/machine.xid) -s PC"))))
-                  (is-win "PC_win")))
+  (let* ((PC-dir (concat "PC_" (replace-regexp-in-string
+                                "\n" ""
+                                (shell-command-to-string "hostname"))))
          (PC-path (expand-file-name PC-dir "~/org/backups/log/"))
          (PC-tree-file (expand-file-name "fs-tree.txt" PC-path))
          (PC-apt-history-file (expand-file-name "history.log" PC-path)))

@@ -9,7 +9,7 @@ if [[ (x$1 != x) && ( $1 == "w" ) ]]; then
 
 else
     auth="1";
-    nic="enp0s25";
+    nic="eth0";
     server=$1;
 fi
 

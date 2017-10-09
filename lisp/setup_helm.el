@@ -70,23 +70,6 @@
   (when is-win
     (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-with-default-tool)
     (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-with-default-tool))
-  ;; C-x c c helm-colors
-  ;; C-x c b helm-resume 恢复之前的helm buffer，加C-u进行选择。
-  ;; helm-mini下：C-c C-d 从列表中删除，但实际不kill buffer；C-c d kill buffer同时不关闭helm buffer；M-D kill buffer同时关闭helm。
-  ;; helm-find-files-map下：
-  ;; C-l 一次expand candidate，二次打开文件
-  ;; TAB 打开选项
-  ;; C-j 使用外部命令打开文件，加C-u选择命令
-  ;; M-g s grep文件
-  ;; M-e 打开eshell
-  ;; M-C M-D M-R 复制 删除 重命名
-  ;; C-= ediff
-  ;; M-p 历史
-  ;; 再重复一次C-x C-f locate查找文件，可以用sudo updatedb升级数据库
-  ;; C-t 转换列表显示方式
-  ;; C-] toggle basename/fullpath
-  ;; C-backspace 开启关闭自动补全
-  ;; C-{ C-} 放大缩小helm窗口
   ;; ===============keybindings=================
 ;;;; helm-pinyin
   ;; ================helm-pinyin================
@@ -411,30 +394,23 @@
   ;; =========helm-related-to-persp=============
 ;;;; helm-locate
   ;; ==============helm-locate==================
-  (cond
-   (is-lin
-    (setq helm-locate-create-db-command "updatedb -l 0 -o ~/.helm-locate.db -U ~/")
-    (setq helm-locate-command "locate -b -i %s -r %s -d ~/.helm-locate.db"))
-   (is-win
-    (setq helm-locate-create-db-command (concat "updatedb --output=" (expand-file-name "~/")
-                                                ".helm-locate.db --localpaths='" (expand-file-name "~/") "'"))
-    (setq helm-locate-command (concat "locate -b -i %s -r %s -d "
-                                      (replace-regexp-in-string "c:" "/cygdrive/c" (expand-file-name "~/"))
-                                      ".helm-locate.db"))))
+  ;; 默认使用/var/lib/mlocate/mlocate.db数据库，包含系统文件，使用cron每天定时更新或sudo updatedb更新。
   (defun swint-helm-locate (&optional arg)
     (interactive "P")
-    (if arg
-        ;; 更新~/.helm-locate.db文件。
-        (let* ((locat-db-file (expand-file-name "~/.helm-locate.db"))
-               (process (start-process-shell-command
-                         "Updating-locate-db-file" "*Updating-locate-db-file*"
-                         helm-locate-create-db-command)))
-          (set-process-sentinel
-           process
-           (lambda (process signal)
-             (when (memq (process-status process) '(exit signal))
-               (helm-locate nil)))))
-      (call-interactively 'helm-locate)))
+    (let ((helm-locate-create-db-command (cond
+                                          (is-lin "updatedb -l 0 -o ~/.helm-locate.db -U ~/")
+                                          (is-win (concat "updatedb --output=" (expand-file-name "~/")
+                                                          ".helm-locate.db --localpaths='" (expand-file-name "~/") "'"))))
+          (helm-locate-command (cond
+                                (is-lin "locate -b -i %s -r %s -d ~/.helm-locate.db")
+                                (is-win (concat "locate -b -i %s -r %s -d "
+                                                (replace-regexp-in-string "c:" "/cygdrive/c" (expand-file-name "~/"))
+                                                ".helm-locate.db")))))
+      (when arg ;; 更新~/.helm-locate.db文件。
+        (start-process-shell-command
+         "Updating-locate-db-file" "*Updating-locate-db-file*"
+         helm-locate-create-db-command))
+      (helm-locate nil)))
   ;; ==============helm-locate==================
 ;;;; 在其他helm-buffer中运行helm命令
   ;; ======在其他helm-buffer中运行helm命令======

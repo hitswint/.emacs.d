@@ -18,3 +18,20 @@
   (define-key emacs-lisp-mode-map (kbd "C-x C-s") 'save-buffer-with-dos2unix))
 (global-set-key (kbd "C-x M-s") 'save-buffer-with-dos2unix)
 ;; =====================dos2unix===================
+;;; swint-open-output-file
+;; =============swint-open-output-file=============
+(defun swint-open-output-file ()
+  "Swint open gnuplot output file."
+  (interactive)
+  (let* ((output-pdf-file (concat (file-name-sans-extension (buffer-file-name)) ".pdf"))
+         (output-png-file (concat (file-name-sans-extension (buffer-file-name)) ".png"))
+         (output-eps-file (concat (file-name-sans-extension (buffer-file-name)) ".eps"))
+         (output-file (cond ((file-exists-p output-pdf-file) output-pdf-file)
+                            ((file-exists-p output-png-file) output-png-file)
+                            ((file-exists-p output-eps-file) output-eps-file))))
+    (if output-file
+        (cond
+         (is-lin (dired-async-shell-command output-file))
+         (is-win (w32-browser output-file)))
+      (message "Warning: No export file."))))
+;; =============swint-open-output-file=============

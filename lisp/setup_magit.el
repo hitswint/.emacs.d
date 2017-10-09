@@ -56,48 +56,6 @@
     (shell-command "git config diff.wordx.textconv docx2txt-git"))
   (define-key magit-status-mode-map (kbd "C-c d") 'swint-magit-diff-doc)
   ;; =============使用git管理doc文件===============
-;;; Git under Cygwin
-  ;; ==============Git under Cygwin================
-  ;; (when is-win
-  ;;   ;; 使用下列cygwin-mount可以解决cygwin的路径问题，但是会导致其他mode中路径不识别，例如org无法显示图片。
-  ;;   ;; (require 'cygwin-mount)
-  ;;   ;; (cygwin-mount-activate)
-  ;;   ;; 下面这个是针对magit的解决方法，官方已解决。
-  ;;   ;; (defadvice magit-expand-git-file-name
-  ;;   ;;       (before magit-expand-git-file-name-cygwin activate)
-  ;;   ;;     "Handle Cygwin directory names such as /cygdrive/c/*
-  ;;   ;; by changing them to C:/*"
-  ;;   ;;     (when (string-match "^/cygdrive/\\([a-z]\\)/\\(.*\\)" filename)
-  ;;   ;;       (setq filename (concat (match-string 1 filename) ":/"
-  ;;   ;;                              (match-string 2 filename)))))
-  ;;   ;; 解决win上git问题，但推送时，会出现"Not inside a Git repository"的错误。
-  ;;   ;; 1. magit-toplevel会导致错误路径(c:/cygdrive/c/...)，官方已解决。
-  ;;   ;; (defun magit-toplevel (&optional file strict)
-  ;;   ;;   (magit--with-safe-default-directory file
-  ;;   ;;     (-if-let (cdup (magit-rev-parse-safe "--show-cdup"))
-  ;;   ;;         (magit-expand-git-file-name
-  ;;   ;;          (file-name-as-directory (expand-file-name cdup)))
-  ;;   ;;       (unless strict
-  ;;   ;;         (-when-let (gitdir (magit-git-dir))
-  ;;   ;;           (if (magit-bare-repo-p)
-  ;;   ;;               gitdir
-  ;;   ;;             (file-name-directory (directory-file-name gitdir))))))))
-  ;;   ;; 2. ^{commint}会导致magit-insert-head-header错误，官方已解决。
-  ;;   ;; (defun magit-process-git-arguments (args)
-  ;;   ;;   (setq args (-flatten args))
-  ;;   ;;   (when (and (eq system-type 'windows-nt)
-  ;;   ;;              (let ((exec-path
-  ;;   ;;                     (list (file-name-directory magit-git-executable))))
-  ;;   ;;                (executable-find "cygpath.exe")))
-  ;;   ;;     (setq args (--map (let* ((it (replace-regexp-in-string
-  ;;   ;;                                   "{\\([0-9]+\\)}" "\\\\{\\1\\\\}" it))
-  ;;   ;;                              (it (replace-regexp-in-string
-  ;;   ;;                                   "\\^{commit}" "^\\\\{commit\\\\}" it)))
-  ;;   ;;                         it)
-  ;;   ;;                       args)))
-  ;;   ;;   (append magit-git-global-arguments args))
-  ;;   )
-  ;; ==============Git under Cygwin================
   )
 ;; ====================magit=======================
 (provide 'setup_magit)

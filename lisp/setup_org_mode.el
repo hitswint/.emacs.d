@@ -51,7 +51,7 @@
                (turn-on-font-lock)
                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
                (define-key org-mode-map (kbd "C-c C-b") 'org-beamer-select-environment)
-               (define-key org-mode-map (kbd "C-c C-v") 'swint-org-open-export-pdf)
+               (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
                (define-key org-mode-map (kbd "C-c j") 'swint-open-at-point-with-apps)
                (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
                (smartrep-define-key org-mode-map "M-s"
@@ -158,7 +158,8 @@
                    ;;                  "_"
                    ;;                  (format-time-string "%Y%m%d_"))) ".png")
                    (replace-regexp-in-string "/" "\\" (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
-                                                              "_" (format-time-string "%Y%m%d_") (make-temp-name "") ".png") t t))
+                                                              "_" (format-time-string "%Y%m%d_") (make-temp-name "") ".png")
+                                             t t))
              (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil
                            (concat "/clippaste /convert=" screen-file))))
       screen-file))
@@ -375,19 +376,6 @@
               '(lambda ()
                  (delete '("\\.pdf\\'" . default) org-file-apps)
                  (add-to-list 'org-file-apps '("\\.pdf\\'" . "llpp %s")))))
-  (defun swint-org-open-export-pdf ()
-    "Start a viewer without confirmation.
-The viewer is started either on region or master file,
-depending on the last command issued."
-    (interactive)
-    (let ((output-file (cond
-                        (is-lin (concat (file-name-base) ".pdf"))
-                        (is-win (concat (file-name-directory buffer-file-name) (file-name-base) ".pdf")))))
-      (if (file-exists-p output-file)
-          (cond
-           (is-lin (dired-async-shell-command output-file))
-           (is-win (w32-browser output-file)))
-        (message "Warning: No export pdf."))))
   ;; code执行免应答（Eval code without confirm）
   (setq org-confirm-babel-evaluate nil)
   (defun org-mode-article-modes ()

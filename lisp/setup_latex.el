@@ -81,7 +81,7 @@
 ;; =====================auctex=====================
 ;;; auctex-latexmk
 ;; =================auctex-latexmk=================
-;; 安装了texlive2009及更高的版本之后，默认就有latexmk，不用做任何改变。只需要加入.latexmkrc的配置文件和这个auctex-latexmk。
+;; texlive默认包含latexmk，只需加入.latexmkrc配置文件。
 (use-package auctex-latexmk
   ;; Enabled after features.
   :defer t
