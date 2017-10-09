@@ -52,20 +52,24 @@
       (call-interactively 'counsel-shell-history))
      ((eq major-mode 'eshell-mode)
       (call-interactively 'counsel-esh-history))
-     (t (call-interactively 'swint-counsel-bash-history))))
-  (defun swint-counsel-bash-history ()
+     (t (call-interactively 'swint-counsel-sh-history))))
+  (defun swint-counsel-sh-history ()
     "Insert the bash history."
     (interactive)
     (let (hist-cmd collection val)
-      (shell-command "history -r") ; reload history
       (setq collection
             (nreverse
-             (split-string (with-temp-buffer (insert-file-contents (file-truename "~/.bash_history"))
+             (split-string (with-temp-buffer (insert-file-contents
+                                              (if (file-exists-p "~/.zsh_history")
+                                                  (file-truename "~/.zsh_history")
+                                                (file-truename "~/.bash_history")))
+                                             (while (re-search-forward "^: [0-9]+:[0-9];\\(.+\\)\n" nil t)
+                                               (replace-match "\\1\n"))
                                              (buffer-string))
                            "\n" t)))
       (when (and collection (> (length collection) 0)
                  (setq val (if (= 1 (length collection)) (car collection)
-                             (ivy-read (format "Bash history:") collection))))
+                             (ivy-read (format "Bash/Zsh history:") collection))))
         (insert val)))))
 (use-package ivy-hydra
   ;; Enabled after features.

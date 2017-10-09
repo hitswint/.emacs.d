@@ -4,21 +4,25 @@
   ;; Enabled at commands.
   ;; Enabled automatically actually.
   :defer t
-  :bind ("C-M-!" . shell)
+  :bind (("C-M-!" . shell)
+         ("C-x C-M-1" . term))
+  :init
+  (when is-win
+    ;; 设置shell命令默认启用cygwin bash。
+    (setq explicit-shell-file-name "bash.exe")
+    ;; 设置运行cygwin命令使用的shell。
+    (setq shell-file-name explicit-shell-file-name))
   :config
-  (cond
-   (is-win
-    ;; 在windows下默认启用cygwin bash。
-    ;; 若使用cmdproxy.exe，则是windows自带命令行工具。
-    (setq explicit-shell-file-name "bash.exe"))
-   (is-lin
-    (setq explicit-shell-file-name "bash")
-    (setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash"))
-    (add-hook 'shell-mode-hook '(lambda ()
-				  ;; 若virtualenvs开启，启动相应虚拟环境，并使用auto-complete补全命令。
-                                  (if (and (boundp 'pyvenv-virtual-env) pyvenv-virtual-env)
-                                      (process-send-string (get-process "shell")
-                                                           (concat "source " pyvenv-virtual-env "bin/activate\n")))))))
+  (add-hook 'shell-mode-hook '(lambda ()
+                                (if (not (file-exists-p "~/.zsh_history"))
+                                    (setq comint-input-ring-file-name "~/.bash_history")
+                                  (setq comint-input-ring-file-name "~/.zsh_history")
+                                  (setq comint-input-ring-separator "\n: \\([0-9]+\\):\\([0-9]+\\);"))
+                                (comint-read-input-ring t)
+                                ;; 若virtualenvs开启，启动相应虚拟环境，并使用auto-complete补全命令。
+                                (if (and (boundp 'pyvenv-virtual-env) pyvenv-virtual-env)
+                                    (process-send-string (get-process "shell")
+                                                         (concat "source " pyvenv-virtual-env "bin/activate\n")))))
   (define-key shell-mode-map (kbd "C-q") 'comint-send-eof))
 ;; =====================shell======================
 ;;; eshell

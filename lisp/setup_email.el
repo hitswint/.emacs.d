@@ -83,7 +83,6 @@
   :if is-lin
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :defer t
-  :commands (get-auth-user get-auth-pass)
   :bind (("C-M-7" . mu4e)
          ("C-x M" . mu4e-compose-new))
   :config
@@ -173,17 +172,7 @@
                     (mu4e-trash-folder . "/QQ/Deleted Messages")
                     (smtpmail-default-smtp-server . "smtp.qq.com")
                     (smtpmail-smtp-server . "smtp.qq.com")
-                    (smtpmail-smtp-service . 587)))))
-  (defun get-auth-user (host)
-    (require 'netrc)
-    (let* ((netrc (netrc-parse (expand-file-name "~/.authinfo.gpg")))
-           (hostentry (netrc-machine netrc host)))
-      (when hostentry (netrc-get hostentry "login"))))
-  (defun get-auth-pass (host)
-    (require 'netrc)
-    (let* ((netrc (netrc-parse (expand-file-name "~/.authinfo.gpg")))
-           (hostentry (netrc-machine netrc host)))
-      (when hostentry (netrc-get hostentry "password")))))
+                    (smtpmail-smtp-service . 587))))))
 ;; =======================mu4e=========================
 ;;; helm-mu
 ;; ======================helm-mu=======================

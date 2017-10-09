@@ -197,13 +197,9 @@
   (defun swint-unison-sync-backups ()
     "Sync files in ~/org/backups with ~/Nutstore/backups."
     (interactive)
-    (let ((process
-           (start-process-shell-command
-            "unison" "*unison*"
-            (concat (cond
-                     (is-lin "unison")
-                     (is-win "c:/cygwin64/bin/unison-2.40.exe"))
-                    " Nutstore-backups")))
+    (let ((process (start-process-shell-command
+                    "unison" "*unison*"
+                    (concat "unison" " Nutstore-backups")))
           (pos (memq 'mode-line-modes mode-line-format)))
       (setcdr pos (cons "unison-sync-backups " (cdr pos)))
       (set-process-sentinel

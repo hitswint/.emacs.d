@@ -35,3 +35,16 @@
          (is-win (w32-browser output-file)))
       (message "Warning: No export file."))))
 ;; =============swint-open-output-file=============
+;;; get-auth
+;; ====================get-auth====================
+(defun get-auth-user (host)
+  (require 'netrc)
+  (let* ((netrc (netrc-parse (expand-file-name "~/.authinfo.gpg")))
+         (hostentry (netrc-machine netrc host)))
+    (when hostentry (netrc-get hostentry "login"))))
+(defun get-auth-pass (host)
+  (require 'netrc)
+  (let* ((netrc (netrc-parse (expand-file-name "~/.authinfo.gpg")))
+         (hostentry (netrc-machine netrc host)))
+    (when hostentry (netrc-get hostentry "password"))))
+;; ====================get-auth====================
