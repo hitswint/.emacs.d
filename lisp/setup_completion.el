@@ -181,28 +181,8 @@
   (defun ac-org-mode-setup ()
     (add-to-list 'ac-sources 'ac-source-math-unicode)))
 ;; =================ac-math====================
-;;; ac-octave
-;; ================ac-octave===================
-;; ac-octave.el里面并没有定义关键词，似乎是通过和octave的沟通来补全，需要打开octave。
-;; (require 'ac-octave)
-;; ;; octave-mode中使用。
-;; (add-to-list 'ac-modes 'octave-mode)
-;; (defun ac-octave-mode-setup ()
-;;   (setq ac-sources '(ac-source-octave)))
-;; (add-hook 'octave-mode-hook
-;;           '(lambda () (ac-octave-mode-setup)))
-;; ;; inferior-octave中使用。
-;; (add-to-list 'ac-modes 'inferior-octave-mode)
-;; (add-hook 'inferior-octave-mode
-;;           '(lambda () (ac-octave-mode-setup)))
-;; matlab-mode中使用。
-;; (defun ac-matlab-mode-setup ()
-;;   (add-to-list 'ac-sources 'ac-source-octave))
-;; (add-hook 'matlab-mode-hook 'ac-matlab-mode-setup)
-;; ================ac-octave===================
 ;;; auto-complete-octave
 ;; ============auto-complete-octave============
-;; ac-octave有问题，使用auto-complete-octave。
 (use-package auto-complete-octave
   ;; Enabled after features.
   :load-path "site-lisp/auto-complete-octave/"

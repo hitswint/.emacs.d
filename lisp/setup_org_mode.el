@@ -152,11 +152,7 @@
              (call-process-shell-command "scrot" nil nil nil nil " -s " (concat "\"" screen-file "\"" )))
             (is-win
              (setq screen-file
-                   ;; 注释掉原来make-temp-name的方法，因为在win上对于某些prefix无法生成随机名字。
-                   ;; (concat (make-temp-name
-                   ;;          (concat (getenv "HOME") "/org/pic/" (file-name-base)
-                   ;;                  "_"
-                   ;;                  (format-time-string "%Y%m%d_"))) ".png")
+                   ;; 注释掉原来make-temp-name的方法，在win上对于某些prefix无法生成随机名字。
                    (replace-regexp-in-string "/" "\\" (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
                                                               "_" (format-time-string "%Y%m%d_") (make-temp-name "") ".png")
                                              t t))
@@ -164,9 +160,7 @@
                            (concat "/clippaste /convert=" screen-file))))
       screen-file))
   (global-set-key (kbd "C-x M-p") 'swint-screenshot)
-  (global-set-key (kbd "C-x M-P") '(lambda ()
-                                     (interactive)
-                                     (swint-screenshot t)))
+  (global-set-key (kbd "C-x M-P") '(lambda () (interactive) (swint-screenshot t)))
   ;; ===================截图====================
 ;;;; 插入截图
   ;; =================插入截图==================

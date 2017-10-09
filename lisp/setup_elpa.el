@@ -84,8 +84,6 @@
             expand-region
             f
             find-file-in-project
-            flx
-            flx-ido
             flycheck
             flycheck-pos-tip
             git-commit
@@ -113,10 +111,6 @@
             highlight-symbol
             hungry-delete
             hydra
-            ido-at-point
-            ido-completing-read+
-            ido-hacks
-            ido-vertical-mode
             imenu-anywhere
             interleave
             ivy
@@ -167,7 +161,6 @@
             smart-mode-line
             smartrep
             smex
-            sudo-edit
             swiper
             tangotango-theme
             undo-tree
@@ -194,11 +187,13 @@
                      mu4e-alert
                      pass
                      pdf-tools
+                     sudo-edit
                      tablist
                      ycmd
                      company-ycmd
                      flycheck-ycmd))
-           (is-win '(w32-browser
+           (is-win '(everything
+                     w32-browser
                      mew
                      mingus))))
   "A list of packages to ensure are installed at launch.")

@@ -104,7 +104,6 @@
 (require 'setup_flycheck)
 (require 'setup_flyspell)
 (require 'setup_ibuffer)
-(require 'setup_ido)
 (require 'setup_isearch)
 (require 'setup_ivy)
 (require 'setup_latex)

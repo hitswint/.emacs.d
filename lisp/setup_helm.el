@@ -42,7 +42,6 @@
   (global-set-key (kbd "C-.") 'swint-helm-dired-buffers-list)
   (global-set-key (kbd "C-x C-f") 'helm-find-files)
   (global-set-key (kbd "C-x f") 'helm-find)
-  (global-set-key (kbd "C-x F") 'swint-helm-locate)
   (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-x c d") 'helm-apt)
   (global-set-key (kbd "C-x y") 'helm-resume)
@@ -395,22 +394,17 @@
 ;;;; helm-locate
   ;; ==============helm-locate==================
   ;; 默认使用/var/lib/mlocate/mlocate.db数据库，包含系统文件，使用cron每天定时更新或sudo updatedb更新。
-  (defun swint-helm-locate (&optional arg)
-    (interactive "P")
-    (let ((helm-locate-create-db-command (cond
-                                          (is-lin "updatedb -l 0 -o ~/.helm-locate.db -U ~/")
-                                          (is-win (concat "updatedb --output=" (expand-file-name "~/")
-                                                          ".helm-locate.db --localpaths='" (expand-file-name "~/") "'"))))
-          (helm-locate-command (cond
-                                (is-lin "locate -b -i %s -r %s -d ~/.helm-locate.db")
-                                (is-win (concat "locate -b -i %s -r %s -d "
-                                                (replace-regexp-in-string "c:" "/cygdrive/c" (expand-file-name "~/"))
-                                                ".helm-locate.db")))))
-      (when arg ;; 更新~/.helm-locate.db文件。
-        (start-process-shell-command
-         "Updating-locate-db-file" "*Updating-locate-db-file*"
-         helm-locate-create-db-command))
-      (helm-locate nil)))
+  (when is-lin
+    (defun swint-helm-locate (&optional arg)
+      (interactive "P")
+      (let ((helm-locate-create-db-command "updatedb -l 0 -o ~/.helm-locate.db -U ~/")
+            (helm-locate-command "locate -b -i %s -r %s -d ~/.helm-locate.db"))
+        (when arg ;; 更新~/.helm-locate.db文件。
+          (start-process-shell-command
+           "Updating-locate-db-file" "*Updating-locate-db-file*"
+           helm-locate-create-db-command))
+        (helm-locate nil)))
+    (global-set-key (kbd "C-x F") 'swint-helm-locate))
   ;; ==============helm-locate==================
 ;;;; 在其他helm-buffer中运行helm命令
   ;; ======在其他helm-buffer中运行helm命令======

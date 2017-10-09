@@ -43,26 +43,7 @@
   :config
   (use-package recentf-ext)
   (recentf-mode 1)
-  (setq recentf-max-saved-items 100)
-  ;; recentf改用helm前端。
-  (defun recentf-ido-find-file ()
-    "Find a recent file using Ido."
-    (interactive)
-    (let* ((file-assoc-list
-            (mapcar (lambda (x)
-                      (cons (file-name-nondirectory x)
-                            x))
-                    recentf-list))
-           (filename-list
-            (remove-duplicates (mapcar #'car file-assoc-list)
-                               :test #'string=))
-           (filename (ido-completing-read "Recentf: "
-                                          filename-list
-                                          nil
-                                          t)))
-      (when filename
-        (find-file (cdr (assoc filename
-                               file-assoc-list)))))))
+  (setq recentf-max-saved-items 100))
 ;; =====================recentf====================
 ;;; multiple-cursors
 ;; ================multiple-cursors================
@@ -195,18 +176,15 @@
 ;; ===================everything===================
 (use-package everything
   ;; Enabled at commands.
-  :load-path "site-lisp/everything/"
   :if is-win
   :defer t
-  :bind ("C-s-s" . everything-default-directory)
+  :bind ("C-x F" . everything-find-file)
   :config
-  (defun everything-default-directory ()
-    (interactive)
-    (w32-shell-execute
-     "open" "c:/Program Files/Everything/Everything.exe"
-     (concat "-p " (expand-file-name default-directory))))
+  (defun everything-find-file-nolimit (orig-fn)
+    (let ((helm-candidate-number-limit nil))
+      (call-interactively orig-fn)))
+  (advice-add 'everything-find-file :around #'everything-find-file-nolimit)
   (setq everything-ffap-integration nil)
-  (setq everything-matchpath t)
   (setq everything-cmd "c:/Program Files/Everything/es.exe"))
 ;; ===================everything===================
 ;;; popwin
@@ -909,4 +887,21 @@
   (define-key graphviz-dot-mode-map (kbd "C-c C-c") 'compile)
   (define-key graphviz-dot-mode-map (kbd "C-c C-v") 'swint-open-output-file))
 ;; ================graphviz-dot-mode===============
+;;; ido
+;; ======================ido=======================
+(use-package ido
+  ;; Enabled automatically.
+  :config
+  (setq ido-auto-merge-delay-time 0.7
+        ido-default-buffer-method 'raise-frame
+        ido-default-file-method 'raise-frame
+        ido-enable-flex-matching t
+        ido-file-extensions-order nil
+        ido-separator "   "
+        ido-use-virtual-buffers nil)
+  (custom-set-faces '(ido-first-match ((t (:foreground "yellow" :weight bold))))
+                    '(ido-only-match ((((class color)) (:foreground "DeepSkyBlue1" :weight bold))))
+                    '(ido-subdir ((t (:foreground "green")))))
+  (setq ido-ignore-buffers '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Compile\\=Log\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*compilation\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\` " "\\`.english-words\\'")))
+;; ======================ido=======================
 (provide 'setup_packages)
