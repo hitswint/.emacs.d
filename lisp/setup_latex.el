@@ -71,9 +71,6 @@
     :after tex
     :config
     (setq preview-auto-cache-preamble t)
-    (when is-win
-      (setq preview-image-type 'pnm)
-      (setq preview-gs-command "c:/Program Files (x86)/gs/gs9.09/bin/gswin32c.exe"))
     (setq preview-gs-options '("-q" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4"))
     (set-face-attribute 'preview-reference-face nil :background "white"))
   ;; ==================preview=====================

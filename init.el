@@ -103,7 +103,6 @@
 (require 'setup_emms_mingus)
 (require 'setup_flycheck)
 (require 'setup_flyspell)
-(require 'setup_graphical)
 (require 'setup_ibuffer)
 (require 'setup_ido)
 (require 'setup_isearch)

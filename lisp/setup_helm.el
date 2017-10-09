@@ -605,11 +605,9 @@
   :bind (("C-x g" . helm-do-ag)
          ("C-x G" . helm-do-ag-buffers))
   :config
-  (define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)
-  (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)
   ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果。
-  (when is-win
-    (setq helm-ag-base-command "pt -e --nocolor --nogroup")))
+  (define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)
+  (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action))
 ;; =================helm-ag=====================
 ;;; helm-descbinds
 ;; ==============helm-descbinds=================

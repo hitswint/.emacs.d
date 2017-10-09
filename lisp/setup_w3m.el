@@ -5,9 +5,6 @@
   :defer t
   :bind (("C-M-5" . w3m)
          ("C-M-%" . w3m-youdao-sample-sentences))
-  :init
-  (when is-win
-    (setq w3m-command "c:/Program Files (x86)/w3m/w3m.exe"))
   :config
   ;; Use w3m to display youdao sample sentences.
   (defun w3m-youdao-sample-sentences (&optional _word)

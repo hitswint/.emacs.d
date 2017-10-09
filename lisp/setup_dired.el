@@ -430,30 +430,11 @@ Assuming .. and . is a current directory (like in FAR)"
             (dired-get-marked-files))
     (dired-unmark-all-files ?*)))
 ;; ================w32-browser=================
-;;; image-dired
-;; ================image-dired=================
-(use-package image-dired
-  ;; Enabled at commands.
-  :defer t
-  :bind (:map dired-mode-map
-              ("\C-td" . image-dired-display-thumbs)
-              ("\C-tt" . image-dired-tag-files)
-              ("\C-tr" . image-dired-delete-tag)
-              ("\C-ti" . image-dired-dired-display-image)
-              ("\C-tx" . image-dired-dired-display-external)
-              ("\C-ta" . image-dired-display-thumbs-append)
-              ("\C-t." . image-dired-display-thumb)
-              ("\C-tc" . image-dired-dired-comment-files)
-              ("\C-tf" . image-dired-mark-tagged-files))
-  :config
-  ;; cygwin上设置imgconvert.exe为图片转换程序。
-  (when is-win
-    (setq image-dired-cmd-create-temp-image-program "imgconvert")))
-;; ================image-dired=================
 ;;; peep-dired
 ;; ================peep-dired==================
 (use-package peep-dired
   ;; Enabled at commands.
+  ;; image-dired: Use C-t as prefix.
   :defer t
   :bind (:map dired-mode-map
               ("q" . peep-dired))

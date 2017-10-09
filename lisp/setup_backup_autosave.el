@@ -23,15 +23,14 @@
       (message "%s" file)
       (delete-file file t)))
 ;;;; 每天清理trashcan。
-  (when is-lin
-    (message "Cleaning trashcan...")
-    (dolist (file (directory-files trash-directory t directory-files-no-dot-files-regexp))
-      (when (and (or (backup-file-name-p file) (auto-save-file-name-p (file-name-nondirectory file)))
-                 (> (- current (float-time (cl-sixth (file-attributes file)))) day))
-        (message "%s" file)
-        (if (file-directory-p file)
-            (delete-directory file t)
-          (delete-file file)))))
+  (message "Cleaning trashcan...")
+  (dolist (file (directory-files trash-directory t directory-files-no-dot-files-regexp))
+    (when (and (or (backup-file-name-p file) (auto-save-file-name-p (file-name-nondirectory file)))
+               (> (- current (float-time (cl-sixth (file-attributes file)))) day))
+      (message "%s" file)
+      (if (file-directory-p file)
+          (delete-directory file t)
+        (delete-file file))))
   (let* ((PC-dir (concat "PC_" (replace-regexp-in-string
                                 "\n" ""
                                 (shell-command-to-string "hostname"))))

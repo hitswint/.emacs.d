@@ -443,24 +443,11 @@
   (define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
   (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
   (define-key pdf-view-mode-map (kbd "C-c l") 'swint-interleave-open-notes-file-for-pdf))
-;; Failed to fix the bug of pdf-view-mode.
-;; (defun swint-pdf-history-goto-beginning ()
-;;   "Fix the bug of reverting to beginning of pdf after persp-switch."
-;;   (interactive)
-;;   (let ((pdf-buffers (remove-if-not
-;;                       (lambda (x) (eq (buffer-mode x) 'pdf-view-mode))
-;;                       (persp-buffers persp-curr))))
-;;     (loop for pdf-buffer in pdf-buffers
-;;           do (with-current-buffer pdf-buffer
-;;                (pdf-history-goto 0)))))
-;; (add-hook 'persp-activated-hook 'swint-pdf-history-goto-beginning)
 ;; ====================pdf-tools===================
 ;;; doc-view-mode
 ;; ==================doc-view-mode=================
-;; Lin上使用soffice转换；win上使用unoconv转换。
-;; Pdf文件使用gs转换成png。
-;; Win下使用doc-view查看office和pdf文件时，文件名都不可以包含中文字符。
-;; 默认的缓存文件夹分别为/tmp和~/AppData/Local/Temp，使用doc-view-clear-cache清理。
+;; 使用soffice/unoconv转换。
+;; 默认缓存文件保存在/tmp和~/AppData/Local/Temp中，使用doc-view-clear-cache清理。
 (use-package doc-view
   ;; Enabled in modes.
   :defer t
@@ -472,19 +459,7 @@
   (define-key doc-view-mode-map (kbd "C-n") '(lambda () (interactive) (doc-view-next-line-or-next-page 3)))
   (define-key doc-view-mode-map (kbd "C-c l") 'swint-interleave-open-notes-file-for-pdf)
   (when is-win
-    ;; 使用libreoffice自带python.exe运行unoconv脚本。
-    (setq doc-view-odf->pdf-converter-program "c:/Program Files (x86)/LibreOffice 5/program/python.exe")
-    ;; 指定使用unoconv方法转换。
-    (setq doc-view-odf->pdf-converter-function 'doc-view-odf->pdf-converter-unoconv)
-    (defun doc-view-odf->pdf-converter-unoconv (odf callback)
-      "Convert ODF to PDF asynchronously and call CALLBACK when finished.
-The converted PDF is put into the current cache directory, and it
-is named like ODF with the extension turned to pdf."
-      (doc-view-start-process "odf->pdf" doc-view-odf->pdf-converter-program
-                              (list "c:/Program Files (x86)/unoconv/unoconv" "-f" "pdf" "-o"
-                                    ;; 修改下句，原函数会生成无base name文件。
-                                    (concat (doc-view--current-cache-dir) (file-name-base odf) ".pdf") odf)
-                              callback))))
+    (setq doc-view-odf->pdf-converter-program "c:/Program Files (x86)/LibreOffice 5/program/soffice.exe")))
 ;; ==================doc-view-mode=================
 ;;; backup
 ;; ======================backup====================
@@ -897,6 +872,7 @@ is named like ODF with the extension turned to pdf."
   :defer t
   :bind ("M-g M-s" . helm-pass))
 ;; =====================pass=======================
+;;; sudo
 ;; =====================sudo=======================
 (use-package sudo-edit
   ;; Enabled at commands.
@@ -914,4 +890,23 @@ is named like ODF with the extension turned to pdf."
           (user-error "Already in sudo")
         (dired (concat "/sudo::" dir))))))
 ;; =====================sudo=======================
+;;; gnuplot
+;; ====================gnuplot=====================
+(use-package gnuplot-mode
+  ;; Enabled in modes.
+  :defer t
+  :mode ("\\.\\(gp\\|gnuplot\\)$" . gnuplot-mode)
+  :config
+  (define-key gnuplot-mode-map (kbd "C-c C-v") 'swint-open-output-file))
+;; ====================gnuplot=====================
+;;; graphviz-dot-mode
+;; ================graphviz-dot-mode===============
+(use-package graphviz-dot-mode
+  ;; Enabled in modes.
+  :defer t
+  :mode ("\\.dot\\'" . graphviz-dot-mode)
+  :config
+  (define-key graphviz-dot-mode-map (kbd "C-c C-c") 'compile)
+  (define-key graphviz-dot-mode-map (kbd "C-c C-v") 'swint-open-output-file))
+;; ================graphviz-dot-mode===============
 (provide 'setup_packages)

@@ -65,8 +65,6 @@
   (setq ispell-program-name "aspell")
   (setq ispell-personal-dictionary (expand-file-name "~/.ispell"))
   (ispell-change-dictionary "american" t)
-  (when is-win
-    (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/"))
   (unless ispell-alternate-dictionary
     (setq ispell-alternate-dictionary (file-truename "~/.english-words"))))
 ;; =================ispell===================
