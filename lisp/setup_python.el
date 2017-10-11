@@ -81,24 +81,22 @@
     (interactive)
     (unless (and (boundp 'pyvenv-virtual-env) pyvenv-virtual-env)
       (call-interactively 'pyvenv-workon))
-    (unless (get-process "IPYNB")
-      (let ((process (start-process-shell-command
-                      "IPYNB" "*IPYNB*" (concat "jupyter notebook --no-browser --notebook-dir="
-                                                (expand-file-name "~/Documents/Python/Jupyter")))))
-        (set-process-query-on-exit-flag process nil)))
-    (unless (if (boundp 'ein:notebooklist-first-open-hook)
-                (ein:notebooklist-open)
-              (ein:notebooklist-open nil nil t))
-      (ein:force-ipython-version-check)))
-  ;; (setq ein:use-auto-complete t)
+    (let ((ein:jupyter-server-args '("--no-browser")))
+      (ein:jupyter-server-start (concat pyvenv-virtual-env "bin/jupyter")
+                                (expand-file-name "~/Documents/Python/Jupyter"))
+      (set-process-query-on-exit-flag (get-process "EIN: Jupyter notebook server") nil)))
+  ;; 默认补全后端为ac，可选company。
+  ;; (setq ein:completion-backend 'ein:use-company-backend)
   ;; Enable "superpack" (a little bit hacky improvements).
   (setq ein:use-auto-complete-superpack t)
   (setq ein:use-smartrep t)
   (use-package ein-notebook
-    :config
     ;; 在notebook中输入%pylab(%matplotlib) inline显示行内图片。
+    :config
+    ;; 在ein:notebook中关闭company的自动补全。
     (add-hook 'ein:notebook-mode-hook '(lambda ()
                                          (set (make-local-variable 'company-idle-delay) nil)))
+    (setq ein:helm-kernel-history-search-key "\M-r")
     (define-key ein:notebook-mode-map (kbd "M-,") nil)
     (define-key ein:notebook-mode-map (kbd "M-.") nil)
     (define-key ein:notebook-mode-map (kbd "C-c C-,") 'ein:pytools-jump-to-source-command)
@@ -119,7 +117,6 @@
                                     (directory-files "~/Documents/Python/Jupyter" nil ".+\\.ipynb"))
                             nil t nil nil nil nil))
         (ein:connect-to-default-notebook))))
-  ;; (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
   ;; 在ein:connect中关闭company的自动补全。
   (add-hook 'ein:connect-mode-hook '(lambda ()
                                       (set (make-local-variable 'company-idle-delay) nil)))
