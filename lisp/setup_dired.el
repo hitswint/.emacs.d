@@ -439,6 +439,27 @@ Assuming .. and . is a current directory (like in FAR)"
   :bind (:map dired-mode-map
               ("q" . peep-dired))
   :config
+  (defun peep-dired-display-image-other-window (fn)
+    "Use image-dired for peep images."
+    (let ((image-entry-name (dired-file-name-at-point))
+          (peep-dired-image-extensions '("png" "PNG" "JPG" "jpg" "bmp" "BMP" "jpeg" "JPEG")))
+      (if (member (file-name-extension image-entry-name)
+                  peep-dired-image-extensions)
+          (add-to-list 'peep-dired-peeped-buffers
+                       (window-buffer
+                        (display-buffer
+                         (progn
+                           (require 'image-dired)
+                           (image-dired-create-display-image-buffer)
+                           (display-buffer image-dired-display-image-buffer)
+                           (image-dired-display-image image-entry-name)
+                           image-dired-display-image-buffer)
+                         t)))
+        (funcall fn))))
+  (advice-add 'peep-dired-display-file-other-window :around #'peep-dired-display-image-other-window)
+  (advice-add 'peep-dired-disable :after #'(lambda () (if (and (boundp 'image-dired-display-image-buffer)
+                                                               (get-buffer image-dired-display-image-buffer))
+                                                          (kill-buffer image-dired-display-image-buffer))))
   (setq peep-dired-enable-on-directories nil)
   (define-key peep-dired-mode-map (kbd "p") 'peep-dired-prev-file)
   (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)
