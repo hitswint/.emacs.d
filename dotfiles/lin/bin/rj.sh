@@ -6,7 +6,6 @@ if [[ (x$1 != x) && ( $1 == "w" ) ]]; then
     auth="0";
     nic="wlan0";
     server=$2;
-
 else
     auth="1";
     nic="eth0";

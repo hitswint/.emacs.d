@@ -19,7 +19,7 @@
      nil 0 nil "_NET_WM_STATE" 32
      '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0)))
   ;; 启动emacs时窗口最大化。
-  (my-maximized)
+  ;; (my-maximized)
   ;; 启动窗口大小。
   ;; (setq default-frame-alist
   ;;    '((height . 30) (width . 75) (menu-bar-lines . 20) (tool-bar-lines . 0)))
