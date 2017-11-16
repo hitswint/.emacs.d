@@ -1,8 +1,9 @@
 vbell off
 startup_message off
-# Modified prefix to C-\(or M-s)
 # escape ^||
 # register S ^|
 # bindkey "^[s" process S
-escape ^||
-bindkey "^[s" command
+# Modified prefix to C-\(or M-s) as follows.
+# escape ^||
+# bindkey "^[s" command
+escape ^~~

@@ -22,3 +22,5 @@ URxvt.tabbed.tabbar-fg: 5
 URxvt.tabbed.tabbar-bg: 0
 URxvt.tabbed.tab-fg: 6
 URxvt.tabbed.tab-bg: 0
+! Generates the control sequence \036(as C-~ for screen).
+URxvt.keysym.Mod4-a: \036

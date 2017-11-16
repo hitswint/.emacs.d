@@ -325,7 +325,7 @@
 ;; ======================fcitx=====================
 (use-package fcitx
   ;; Enabled automatically.
-  :if is-lin
+  :if (and is-lin (display-graphic-p))
   :config
   (fcitx-prefix-keys-add "M-s" "M-g" "M-O")
   (fcitx-aggressive-setup)
