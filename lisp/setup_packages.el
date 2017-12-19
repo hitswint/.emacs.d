@@ -1,8 +1,6 @@
 ;;; abbrev
 ;; ====================abbrev======================
 (use-package abbrev
-  ;; Enabled at idle.
-  :defer 2
   :config
   ;; Turn on abbrev mode globally.
   (setq-default abbrev-mode t)
@@ -28,8 +26,6 @@
 ;;; server
 ;; =====================server=====================
 (use-package server
-  ;; Enabled at idle.
-  :defer 2
   :config
   (unless (server-running-p)
     (server-start)))
@@ -37,9 +33,6 @@
 ;;; recentf
 ;; =====================recentf====================
 (use-package recentf
-  ;; Enabled at commands.
-  :defer 2
-  :bind ("C-x M-f" . recentf-ido-find-file)
   :config
   (use-package recentf-ext)
   (recentf-mode 1)
@@ -48,10 +41,8 @@
 ;;; multiple-cursors
 ;; ================multiple-cursors================
 (use-package multiple-cursors
-  ;; Enabled at commands.
   ;; mc/xxx函数都不在mc包中，但能激活mc包。
   :defer t
-  :after multiple-cursors-core
   :init
   (bind-key "C-M-," 'mc/mark-previous-like-this)
   (bind-key "C-M-." 'mc/mark-next-like-this)
@@ -74,8 +65,6 @@
 ;;; expand-region
 ;; =================expand-region==================
 (use-package expand-region
-  ;; Enabled at commands.
-  :defer t
   :bind ("C-M-;" . er/expand-region)
   :config
   (setq expand-region-contract-fast-key ":")
@@ -85,8 +74,6 @@
 ;;; undo-tree
 ;; ==================undo-tree=====================
 (use-package undo-tree
-  ;; Enabled at commands.
-  :defer t
   :bind (("C-/" . undo-tree-undo)
          ("C-M-/" . undo-tree-redo))
   :config
@@ -96,9 +83,7 @@
 ;;; breadcrumb
 ;; ==================breadcrumb====================
 (use-package breadcrumb
-  ;; Enabled at commands.
   :load-path "site-lisp/breadcrumb/"
-  :defer t
   :commands bc-set
   :config
   (bind-key "C-M-q" 'bc-previous)
@@ -114,9 +99,7 @@
 ;;; auto-mark
 ;; ==================auto-mark=====================
 (use-package auto-mark
-  ;; Enabled at commands.
   :load-path "site-lisp/auto-mark/"
-  :defer 2
   :config
   (setq auto-mark-command-class-alist
         '((goto-line . jump)
@@ -135,7 +118,6 @@
 ;;; visible-mark
 ;; ================visible-mark====================
 (use-package visible-mark
-  ;; Enabled automatically.
   :config
   (global-visible-mark-mode 1)
   (setq visible-mark-max 2)
@@ -160,7 +142,6 @@
 ;; =====================unicad=====================
 ;; lin中不会出现乱码，不需要，这个包会拖慢启动速度。
 (use-package unicad
-  ;; Enabled automatically.
   :load-path "site-lisp/unicad/"
   :if is-win
   :config
@@ -175,9 +156,7 @@
 ;;; everything
 ;; ===================everything===================
 (use-package everything
-  ;; Enabled at commands.
   :if is-win
-  :defer t
   :bind ("C-x F" . everything-find-file)
   :config
   (defun everything-find-file-nolimit (orig-fn)
@@ -190,16 +169,12 @@
 ;;; popwin
 ;; =====================popwin=====================
 (use-package popwin
-  ;; Enabled at idle.
-  :defer 2
   :config
   (popwin-mode 1))
 ;; =====================popwin=====================
 ;;; anchored-transpose
 ;; ================anchored-transpose==============
 (use-package anchored-transpose
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-s M-t" . anchored-transpose)
   :config
   (autoload 'anchored-transpose "anchored-transpose" nil t))
@@ -208,8 +183,6 @@
 ;;; God-mode
 ;; ====================God-mode====================
 (use-package god-mode
-  ;; Enabled at commands.
-  :defer t
   :bind ("<S-escape>" . god-local-mode)
   :config
   ;; (global-set-key (kbd "<escape>") 'god-mode-all)
@@ -224,9 +197,6 @@
 ;;; elisp-slime-nav
 ;; =================elisp-slime-nav================
 (use-package help
-  ;; Enabled at commands.
-  ;; Enabled automatically actually.
-  :defer t
   :commands help-command
   :config
   (define-key 'help-command (kbd "C-l") 'find-library)
@@ -235,13 +205,9 @@
   (define-key 'help-command (kbd "C-v") 'find-variable)
   (define-key 'help-command (char-to-string help-char) nil))
 (use-package help-mode
-  ;; Enabled with defer.
-  :defer t
   :config
   (define-key help-mode-map (kbd "q") 'kill-buffer-and-window))
 (use-package elisp-slime-nav
-  ;; Enabled in modes.
-  :defer t
   :commands elisp-slime-nav-mode
   :init
   (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
@@ -258,8 +224,6 @@
 ;;; drag stuff
 ;; ===================drag stuff===================
 (use-package drag-stuff
-  ;; Enabled in modes.
-  :defer t
   :bind (("M-P" . drag-stuff-up)
          ("M-N" . drag-stuff-down)
          ("M-B" . drag-stuff-left)
@@ -278,8 +242,6 @@
 ;;; popup-kill-ring
 ;; ================popup-kill-ring=================
 (use-package popup-kill-ring
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-Y" . popup-kill-ring)
   :config
   (setq popup-kill-ring-interactive-insert nil)
@@ -291,8 +253,6 @@
 ;;; popup
 ;; ====================popup=======================
 (use-package popup
-  ;; Enabled at commands.
-  :defer 2
   :commands (popup-tip popup-create popup-make-item)
   :config
   (define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
@@ -302,8 +262,6 @@
 ;;; pos-tip
 ;; ===================pos-tip======================
 (use-package pos-tip
-  ;; Enabled at commands.
-  :defer 2
   :commands (pos-tip-show pos-tip-show-no-propertize))
 ;; ===================pos-tip======================
 ;;; elmacro
@@ -314,8 +272,6 @@
 ;;; hungry-delete
 ;; ===================hungry-delete================
 (use-package hungry-delete
-  ;; Enabled at idle.
-  :defer 2
   :config
   (add-to-list 'hungry-delete-except-modes 'dired-mode)
   (add-to-list 'hungry-delete-except-modes 'ein:notebook-mode)
@@ -324,7 +280,6 @@
 ;;; fcitx
 ;; ======================fcitx=====================
 (use-package fcitx
-  ;; Enabled automatically.
   :if (and is-lin (display-graphic-p))
   :config
   (fcitx-prefix-keys-add "M-s" "M-g" "M-O")
@@ -335,8 +290,6 @@
 ;;; aggressive-indent
 ;; ================aggressive-indent===============
 (use-package aggressive-indent
-  ;; Enabled at idle.
-  :defer 2
   :config
   (add-to-list 'aggressive-indent-excluded-modes 'asm-mode)
   (add-to-list 'aggressive-indent-excluded-modes 'python-mode)
@@ -345,8 +298,6 @@
 ;;; clean-aindent-mode
 ;; ===============clean-aindent-mode===============
 (use-package clean-aindent-mode
-  ;; Enabled in modes.
-  :defer t
   :commands clean-aindent-mode
   :init
   (add-hook 'prog-mode-hook 'clean-aindent-mode)
@@ -366,22 +317,16 @@
 ;;; multifiles
 ;; ===================multifiles===================
 (use-package multifiles
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-g m" . mf/mirror-region-in-multifile))
 ;; ===================multifiles===================
 ;;; ztree
 ;; =====================ztree======================
 (use-package ztree-diff
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-g z" . ztree-diff))
 ;; =====================ztree======================
 ;;; which-key
 ;; ====================which-key===================
 (use-package which-key
-  ;; Enabled at idle.
-  :defer 2
   :config
   (which-key-mode)
   (which-key-setup-side-window-right-bottom)
@@ -401,9 +346,7 @@
 ;;; pdf-tools
 ;; ====================pdf-tools===================
 (use-package pdf-tools
-  ;; Enabled in modes.
   :if is-lin
-  :defer t
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :init
   ;; Pdf-tools会默认设置x-gtk-use-system-tooltips为nil，导致chinese-pyim选词框失效。
@@ -427,8 +370,6 @@
 ;; 使用soffice/unoconv转换。
 ;; 默认缓存文件保存在/tmp和~/AppData/Local/Temp中，使用doc-view-clear-cache清理。
 (use-package doc-view
-  ;; Enabled in modes.
-  :defer t
   :config
   (setq doc-view-continuous t)
   (define-key doc-view-mode-map (kbd "M-v") 'doc-view-scroll-down-or-previous-page)
@@ -442,19 +383,13 @@
 ;;; backup
 ;; ======================backup====================
 (use-package git-timemachine
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-s M-b" . git-timemachine))
 (use-package backup-walker
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-s M-B" . backup-walker-start))
 ;; ======================backup====================
 ;;; visual-regexp
 ;; ===================visual-regexp================
 (use-package visual-regexp
-  ;; Enabled at commands.
-  :defer t
   :bind (("M-s r" . vr/query-replace)
          ("M-s R" . vr/replace)
          ("M-s ;" . vr/mc-mark)))
@@ -462,8 +397,6 @@
 ;;; vlf
 ;; =======================vlf======================
 (use-package vlf
-  ;; Enabled at commands.
-  :defer t
   :bind (:map dired-mode-map
               ("C-c C-v" . dired-vlf))
   :init
@@ -480,8 +413,6 @@
 ;;; easy-kill
 ;; =====================easy-kill==================
 (use-package easy-kill
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-w" . kill-ring-save)
   :init
   (global-set-key [remap kill-ring-save] 'easy-kill)
@@ -495,16 +426,12 @@
 ;;; smex
 ;; ======================smex======================
 (use-package smex
-  ;; Enabled at commands.
-  :defer t
   :bind (("C-x M-x" . smex)
          ("C-c M-x" . smex-major-mode-commands)))
 ;; ======================smex======================
 ;;; bm
 ;; =======================bm=======================
 (use-package bm
-  ;; Enabled at commands.
-  :defer t
   :commands (bm-toggle bm-previous bm-next)
   :init
   (smartrep-define-key global-map "C-x"
@@ -528,8 +455,6 @@
 ;;; helm-bm
 ;; ====================helm-bm=====================
 (use-package helm-bm
-  ;; Enabled after features.
-  :defer t
   :bind ("C-M-'" . helm-bm)
   :config
   (defun helm-bm-action-switch-to-persp/buffer (candidate)
@@ -545,8 +470,6 @@
 ;; ================operate-on-number===============
 ;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字。
 (use-package operate-on-number
-  ;; Enabled at commands.
-  :defer t
   :commands (apply-operation-to-number-at-point operate-on-number-at-point)
   :init
   (smartrep-define-key global-map "C-="
@@ -565,8 +488,6 @@
 ;;; goto-last-change
 ;; =================goto-last-change===============
 (use-package goto-chg
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-?" . swint-goto-last-change-with-prefix)
   :config
   (defun swint-goto-last-change-with-prefix (&optional arg)
@@ -592,8 +513,6 @@
 ;;; Proced
 ;; =====================Proced=====================
 (use-package proced
-  ;; Enabled at commands.
-  :defer t
   :commands proced-process-attributes
   :bind ("C-M-4" . proced)
   :config
@@ -606,8 +525,6 @@
 ;;; bbyac
 ;; =====================bbyac======================
 (use-package bbyac
-  ;; Enabled at commands.
-  :defer t
   :bind (("M-s M-u" . bbyac-expand-substring)
          ("M-s M-U" . bbyac-expand-symbols))
   :config
@@ -627,20 +544,16 @@
 ;;; vimish-fold
 ;; ==================vimish-fold===================
 (use-package vimish-fold
-  ;; Enabled at commands.
-  :defer t
   :bind (("C-x C-`" . vimish-fold)
          ("C-x C-~" . vimish-fold-delete)))
 ;; ==================vimish-fold===================
 ;;; clipmon
 ;; ====================clipmon=====================
 (use-package clipmon
-  ;; Enabled at commands.
-  :defer t
   :after easy-kill
-  :bind (("M-g w" . clipmon-mode)
-         ("M-g M-w" . clipmon-autoinsert-toggle))
   :config
+  (bind-key "M-g w" 'clipmon-mode)
+  (bind-key "M-g M-w" 'clipmon-autoinsert-toggle)
   (clipmon-mode 1)
   (advice-add 'clipmon-mode-start :after #'(lambda () (xclipmon-mode 0)))
   (advice-add 'clipmon-mode-stop :after #'(lambda () (xclipmon-mode 1)))
@@ -660,15 +573,12 @@
 ;;; volatile-highlights
 ;; ==============volatile-highlights===============
 (use-package volatile-highlights
-  ;; Enabled at idle.
-  :defer 2
   :config
   (volatile-highlights-mode t))
 ;; ==============volatile-highlights===============
 ;;; quickrun
 ;; ===================quickrun=====================
 (use-package quickrun
-  :defer t
   :bind (("M-s q" . swint-quickrun)
          ("M-s Q" . quickrun-shell))
   :config
@@ -681,8 +591,6 @@
 ;;; highlight-symbol
 ;; ================highlight-symbol================
 (use-package highlight-symbol
-  ;; Enabled at commands.
-  :defer t
   :commands (highlight-symbol-prev highlight-symbol-next highlight-symbol-at-point highlight-symbol-get-symbol)
   :init
   (smartrep-define-key global-map "C-x"
@@ -695,8 +603,6 @@
 ;;; auto-highlight-symbol
 ;; =============auto-highlight-symbol==============
 (use-package auto-highlight-symbol
-  ;; Enabled at idle.
-  :defer 2
   :init
   (setq ahs-default-range 'ahs-range-whole-buffer)
   :config
@@ -708,6 +614,9 @@
                       :foreground "white"
                       :background "DarkBlue")
   (add-to-list 'ahs-modes 'octave-mode)
+  (add-to-list 'ahs-modes 'gnuplot-mode)
+  (add-to-list 'ahs-modes 'graphviz-dot-mode)
+  (add-to-list 'ahs-modes 'arduino-mode)
   (defun swint-ahs-backward ()
     (interactive)
     (let ((symbol (highlight-symbol-get-symbol)))
@@ -739,8 +648,6 @@
 ;;; dumb-jump
 ;; ==================dumb-jump=====================
 (use-package dumb-jump
-  ;; Enabled at idle.
-  :defer 2
   :config
   (dumb-jump-mode)
   (define-key dumb-jump-mode-map (kbd "C-M-g") nil)
@@ -753,8 +660,6 @@
 ;;; diff-hl
 ;; ===================diff-hl======================
 (use-package diff-hl
-  ;; Enabled at idle.
-  :defer 2
   :config
   ;; 默认快捷键以C-x v为前缀。
   (smartrep-define-key global-map "C-x v"
@@ -787,15 +692,11 @@
 ;;; evil-nerd-commenter
 ;; =============evil-nerd-commenter================
 (use-package evil-nerd-commenter
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-:" . evilnc-comment-or-uncomment-lines))
 ;; =============evil-nerd-commenter================
 ;;; markdown-mode
 ;; =================markdown-mode==================
 (use-package markdown-mode
-  ;; Enabled in modes.
-  :defer t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -804,8 +705,6 @@
 ;;; firefox-controller
 ;; ===============firefox-controller===============
 (use-package firefox-controller
-  ;; Enabled at commands.
-  :defer t
   :bind (("M-s M-f" . firefox-controller-remote-mode)
          ("M-s M-F" . firefox-controller-direct-mode))
   :config
@@ -815,8 +714,6 @@
 ;;; highlight-indentation
 ;; =============highlight-indentation==============
 (use-package highlight-indentation
-  ;; Enabled in modes.
-  :defer t
   :diminish (highlight-indentation-mode highlight-indentation-current-column-mode)
   :init
   (add-hook 'prog-mode-hook 'highlight-indentation-current-column-mode))
@@ -824,8 +721,6 @@
 ;;; rainbow-mode
 ;; =================rainbow-mode===================
 (use-package rainbow-mode
-  ;; Enabled in modes.
-  :defer t
   :diminish rainbow-mode
   :commands rainbow-mode
   :init
@@ -838,25 +733,19 @@
 ;;; pass
 ;; =====================pass=======================
 (use-package pass
-  ;; Enabled at commands.
   :if is-lin
-  :defer t
   :bind ("M-g s" . pass)
   :config
   (setq pass-show-keybindings nil))
 (use-package helm-pass
-  ;; Enabled at commands.
   :if is-lin
-  :defer t
   :bind ("M-g M-s" . helm-pass))
 ;; =====================pass=======================
 ;;; sudo
 ;; =====================sudo=======================
 (use-package sudo-edit
-  ;; Enabled at commands.
   ;; 需新建~/.ssh/sockets文件夹。
   :if is-lin
-  :defer t
   :commands (sudo-edit sudo-dired)
   :config
   ;; M(dired-do-chmod)改变权限；O(dired-do-chown)改变owner；G(dired-do-chgrp)改变group。
@@ -871,8 +760,6 @@
 ;;; gnuplot
 ;; ====================gnuplot=====================
 (use-package gnuplot-mode
-  ;; Enabled in modes.
-  :defer t
   :mode ("\\.\\(gp\\|gnuplot\\)$" . gnuplot-mode)
   :config
   (define-key gnuplot-mode-map (kbd "C-c C-v") 'swint-open-output-file))
@@ -880,8 +767,6 @@
 ;;; graphviz-dot-mode
 ;; ================graphviz-dot-mode===============
 (use-package graphviz-dot-mode
-  ;; Enabled in modes.
-  :defer t
   :mode ("\\.dot\\'" . graphviz-dot-mode)
   :config
   (define-key graphviz-dot-mode-map (kbd "C-c C-c") 'compile)
@@ -890,7 +775,6 @@
 ;;; ido
 ;; ======================ido=======================
 (use-package ido
-  ;; Enabled automatically.
   :config
   (setq ido-auto-merge-delay-time 0.7
         ido-default-buffer-method 'raise-frame

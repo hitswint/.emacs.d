@@ -1,8 +1,6 @@
 ;;; auctex
 ;; =====================auctex=====================
 (use-package tex
-  ;; Enabled in modes.
-  :defer t
   :mode ("\\.[tT][eE][xX]\\'" . latex-mode)
   :commands LaTeX-math-mode
   :config
@@ -48,8 +46,6 @@
 ;;;; reftex
   ;; ===================reftex=====================
   (use-package reftex
-    ;; Enabled after features.
-    :defer t
     :after tex
     :config
     (setq reftex-plug-into-AUCTeX t
@@ -66,8 +62,6 @@
 ;;;; preview
   ;; ==================preview=====================
   (use-package preview
-    ;; Enabled after features.
-    :defer t
     :after tex
     :config
     (setq preview-auto-cache-preamble t)
@@ -80,8 +74,6 @@
 ;; =================auctex-latexmk=================
 ;; texlive默认包含latexmk，只需加入.latexmkrc配置文件。
 (use-package auctex-latexmk
-  ;; Enabled after features.
-  :defer t
   :after tex
   :config
   (auctex-latexmk-setup))
@@ -90,8 +82,6 @@
 ;; ====================zotelo======================
 ;; C-c z c建立bib文件，C-c z u更新bib文件，C-c [引用。
 (use-package zotelo
-  ;; Enabled at commands.
-  :defer t
   :commands (swint-zotelo-update-database zotelo--locate-bibliography-files zotelo-set-collection)
   :init
   (add-hook 'LaTeX-mode-hook '(lambda ()
@@ -130,8 +120,6 @@
 ;;; latex-preview-pane
 ;; ==============latex-preview-pane================
 (use-package latex-preview-pane
-  ;; Enabled at commands.
-  :defer t
   :commands latex-preview-pane-mode
   :config
   ;; latex-preview-pane-enable绑定latex-mode-hook，无效。
@@ -151,8 +139,6 @@
 ;;; magic-latex-buffer
 ;; ==============magic-latex-buffer================
 (use-package magic-latex-buffer
-  ;; Enabled in modes.
-  :defer t
   :commands magic-latex-buffer
   :init
   (add-hook 'TeX-mode-hook 'magic-latex-buffer)

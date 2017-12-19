@@ -233,7 +233,6 @@ Missing packages are installed automatically."
 ;;; smartrep
 ;; ===================smartrep======================
 (use-package smartrep
-  ;; Enabled automatically.
   :config
   (setq smartrep-mode-line-string-activated nil)
   (smartrep-define-key global-map "<escape>"

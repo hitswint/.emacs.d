@@ -1,9 +1,6 @@
 ;;; auto-complete
 ;; ================auto-complete===============
 (use-package auto-complete
-  ;; Enabled at commands.
-  :defer t
-  :after (yasnippet ac-ispell)
   :bind ("M-u" . swint-auto-complete)
   :config
   (defun swint-auto-complete ()
@@ -12,6 +9,7 @@
     (unless auto-complete-mode
       (auto-complete-mode t))
     (auto-complete))
+  :config
   (setq ac-auto-start nil)
   (setq ac-use-menu-map t)
   (setq ac-fuzzy-enable t)
@@ -28,8 +26,6 @@
   ;; pcomplete会自动启动，造成打开eshell时读取ac-sources错误。
   ;; 放在auto-complete中，使其只有当ac开启时才能够执行。
   (use-package pcomplete
-    ;; Enabled after features.
-    :defer t
     :after auto-complete
     :config
     (add-hook 'shell-mode-hook 'pcomplete-shell-setup)
@@ -51,14 +47,13 @@
 ;; ==================ac-ispell=================
 ;; Completion words longer than 4 characters.
 (use-package ac-ispell
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-U" . swint-auto-complete-ispell)
   :config
   (bind-key "M-U" 'hippie-expand ac-completing-map)
   (defun swint-auto-complete-ispell (&optional arg)
     (interactive)
     (company-abort)
+    (require 'auto-complete)
     (unless auto-complete-mode
       (auto-complete-mode t))
     (cond
@@ -76,8 +71,6 @@
 ;;; auto-complete-c-headers
 ;; =========auto-complete-c-headers============
 (use-package auto-complete-c-headers
-  ;; Enabled after features.
-  :defer t
   :after auto-complete
   :config
   (add-hook 'c++-mode-hook 'ac-c-header-init)
@@ -100,8 +93,6 @@
 ;;; auto-complete-clang
 ;; ===========auto-complete-clang==============
 (use-package auto-complete-clang
-  ;; Enabled after features.
-  :defer t
   :after auto-complete
   :config
   (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
@@ -133,8 +124,6 @@
 ;;; ac-auctex
 ;; ================ac-auctex===================
 (use-package auto-complete-auctex
-  ;; Enabled after features.
-  :defer t
   :after auto-complete
   :config
   (add-hook 'LaTeX-mode-hook 'ac-auctex-setup)
@@ -170,8 +159,6 @@
 ;; (setq ac-math-unicode-in-math-p t)      ;在latex的math环境中激活unicode输入
 ;; 在org-mode中使用ac-math激活unicode输入。
 (use-package ac-math
-  ;; Enabled after features.
-  :defer t
   :after auto-complete
   :config
   (add-hook 'org-mode-hook 'ac-org-mode-setup)
@@ -184,9 +171,7 @@
 ;;; auto-complete-octave
 ;; ============auto-complete-octave============
 (use-package auto-complete-octave
-  ;; Enabled after features.
   :load-path "site-lisp/auto-complete-octave/"
-  :defer t
   :after auto-complete
   :config
   (add-hook 'octave-mode-hook 'ac-octave-mode-setup)
@@ -202,8 +187,6 @@
 ;; (setq comint-process-echoes t)
 ;; prevent echoed commands from being printed (t).
 (use-package readline-complete
-  ;; Enabled after features.
-  :defer t
   :after auto-complete
   :config
   (setq comint-process-echoes nil)
@@ -215,8 +198,6 @@
 ;;; auto-complete-config
 ;; ===========auto-complete-config=============
 (use-package auto-complete-config
-  ;; Enabled after features.
-  :defer t
   :after auto-complete
   :config
   ;; ============ac-modes============
@@ -230,6 +211,7 @@
   (add-to-list 'ac-modes 'eshell-mode)
   (add-to-list 'ac-modes 'gnuplot-mode)
   (add-to-list 'ac-modes 'graphviz-dot-mode)
+  (add-to-list 'ac-modes 'arduino-mode)
   ;; 上述auto-complete-mode-hook函数在ac打开时运行。
   ;; 将初始化语句放在最后，使global-auto-complete-mode打开时加载上述设定，即使某buffer已经打开。
   (ac-config-default)
@@ -241,8 +223,6 @@
 ;;; company
 ;; ================company=====================
 (use-package company
-  ;; Enabled at idle.
-  :defer 2
   :config
   (global-company-mode 1)
   (setq company-show-numbers t)
@@ -265,8 +245,6 @@
 ;;;; company-try-hard
   ;; ============company-try-hard==============
   (use-package company-try-hard
-    ;; Enabled at commands.
-    :defer t
     :bind ("M-i" . company-try-hard)
     :config
     (define-key company-active-map (kbd "M-i") 'company-try-hard))
@@ -274,9 +252,7 @@
 ;;;; company-quickhelp-mode
   ;; ==========company-quickhelp-mode==========
   (use-package company-quickhelp
-    ;; Enabled at commands.
     ;; 在弹出popup的情况下，C-h 打开*Help*，C-w 进入文件，C-o弹出pos-tip，C-s 搜索，C-M-s 过滤。
-    :defer t
     :bind (:map company-active-map
                 ("C-o" . company-quickhelp-manual-begin))
     :config
@@ -286,8 +262,6 @@
 ;;;; company-c-headers
   ;; ============company-c-headers=============
   (use-package company-c-headers
-    ;; Enabled after features.
-    :defer t
     :after company
     :config
     (add-to-list 'company-backends 'company-c-headers))
@@ -295,8 +269,6 @@
 ;;;; company-web
   ;; ==============company-web=================
   (use-package company-web
-    ;; Enabled after features.
-    :defer t
     :after company
     :config
     (add-to-list 'company-backends 'company-web-html)
@@ -306,8 +278,6 @@
 ;;;; ac-html-bootstrap
   ;; ===========ac-html-bootstrap==============
   (use-package ac-html-bootstrap
-    ;; Enabled at commands.
-    :defer t
     :commands company-web-bootstrap+)
   ;; ===========ac-html-bootstrap==============
   )
@@ -315,8 +285,6 @@
 ;;; hippie-expand
 ;; ==============hippie-expand=================
 (use-package hippie-exp
-  ;; Enabled at commands.
-  :defer t
   :commands hippie-expand
   :config
   ;; 打开.english-words方式进行补全。
@@ -360,9 +328,7 @@
 ;;; ycmd
 ;; ===================ycmd=====================
 (use-package ycmd
-  ;; Enabled in modes.
   :if is-lin
-  :defer t
   :bind ("M-g y" . swint-toggle-ycmd)
   :init
   (setq ycmd-keymap-prefix (kbd "M-g M-y"))
@@ -390,15 +356,14 @@
 ;;; yasnippet
 ;; =================yasnippet==================
 (use-package yasnippet
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-I" . swint-complete-yasnippet)
   :config
   (yas-global-mode 1)
   (defun swint-complete-yasnippet ()
     (interactive)
     (company-abort)
-    (unless (and (boundp 'auto-complete-mode) auto-complete-mode)
+    (require 'auto-complete)
+    (unless auto-complete-mode
       (auto-complete-mode t))
     (unless (auto-complete '(ac-source-yasnippet))
       (call-interactively 'company-yasnippet))))

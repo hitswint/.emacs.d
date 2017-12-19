@@ -1,8 +1,6 @@
 ;;; flyspell
 ;; ================flyspell==================
 (use-package flyspell
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-g f" . swint-toggle-flyspell-mode)
   :config
   (defun swint-toggle-flyspell-mode ()
@@ -58,9 +56,7 @@
 ;;; ispell
 ;; =================ispell===================
 (use-package ispell
-  ;; Enabled after features.
-  :after (flyspell ac-ispell)
-  :commands ispell-word
+  :after (:any flyspell ac-ispell)
   :config
   (setq ispell-program-name "aspell")
   (setq ispell-personal-dictionary (expand-file-name "~/.ispell"))
@@ -71,8 +67,6 @@
 ;;; helm-flyspell
 ;; =============helm-flyspell================
 (use-package helm-flyspell
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-g M-f" . helm-flyspell-correct))
 ;; =============helm-flyspell================
 (provide 'setup_flyspell)

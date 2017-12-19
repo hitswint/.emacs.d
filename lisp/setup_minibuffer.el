@@ -12,9 +12,7 @@
 ;;; cycle-mini
 ;; ==================cycle-mini=================
 (use-package cycle-mini
-  ;; Enabled at commands.
   :load-path "site-lisp/cycle-mini/"
-  :defer t
   :bind (:map minibuffer-local-completion-map
               ("C-p" . cycle-mini-previous-completion)
               ("C-n" . cycle-mini-next-completion)))

@@ -1,8 +1,6 @@
 ;;; ccmode
 ;; ===================ccmode====================
 (use-package cc-mode
-  ;; Enabled in modes.
-  :defer t
   :mode (("\\.\\(cc\\|hh\\)\\'" . c++-mode)
          ("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode)
          ("\\.\\(CC?\\|HH?\\)\\'" . c++-mode)
@@ -49,8 +47,6 @@
 ;;; gdb
 ;; =====================gdb=====================
 (use-package gdb-mi
-  ;; Enabled at commands.
-  :defer t
   :commands gdb-or-gud-go
   :init
   (add-hook 'c-mode-hook '(lambda ()
@@ -90,8 +86,6 @@
 ;;; function-args
 ;; ==================function-args==============
 (use-package function-args
-  ;; Enabled in modes.
-  :defer t
   :commands fa-config-default
   :init
   (add-hook 'c-mode-hook 'fa-config-default)
@@ -116,8 +110,6 @@
 ;;; hs-minor-mode
 ;; ==================hs-minor-mode==============
 (use-package hideshow
-  ;; Enabled in modes.
-  :defer t
   :commands hs-minor-mode
   :init
   (add-hook 'c-mode-common-hook 'hs-minor-mode)
@@ -129,8 +121,7 @@
 ;;; semantic
 ;; ===================semantic==================
 (use-package semantic
-  ;; Enabled in modes.
-  :defer t
+  :commands semantic-mode
   :init
   (dolist (hook '(c-mode-hook
                   c++-mode-hook))
@@ -149,8 +140,6 @@
 ;;; helm-gtags
 ;; ==================helm-gtags=================
 (use-package helm-gtags
-  ;; Enabled in modes.
-  :defer t
   :bind (("M-s ," . swint-helm-gtags-dwim)
          ("M-s ." . swint-helm-gtags-pop-stack)
          ("M-s /" . swint-helm-gtags-select))
@@ -189,15 +178,11 @@
 ;;; arduino
 ;; ===================arduino===================
 (use-package arduino-mode
-  ;; Enabled in modes.
-  :defer t
   :mode (("\\.pde\\'" . arduino-mode)
          ("\\.ino\\'" . arduino-mode)))
 ;; ===================arduino===================
 ;; ==================disaster===================
 (use-package disaster
-  ;; Enabled at commands.
-  :defer t
   :commands disaster)
 ;; ==================disaster===================
 (provide 'setup_ccmode)

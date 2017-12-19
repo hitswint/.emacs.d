@@ -1,10 +1,7 @@
 ;;; ivy
 ;; ===========ivy/swiper/counsel/hydra=============
 (use-package ivy
-  ;; Enabled after features.
-  :defer t
   :commands ivy-set-actions
-  :after (swiper counsel)
   :config
   (bind-key "M-s y" 'ivy-resume)
   (bind-key "C-h" 'ivy-avy ivy-minibuffer-map)
@@ -12,8 +9,6 @@
   (setq ivy-height 10)
   (setq ivy-count-format "%d/%d "))
 (use-package swiper
-  ;; Enabled at commands.
-  :defer t
   :bind (("M-s s" . swint-swiper)
          ("M-s S" . swiper-all)
          :map isearch-mode-map
@@ -28,8 +23,6 @@
       (deactivate-mark)
       (swiper swint-swiper-current-thing))))
 (use-package counsel
-  ;; Enabled at commands.
-  :defer t
   ;; 按键逻辑：helm(C-x c x)/counsel(M-s c x)。
   :bind (("M-X" . counsel-M-x)
          ("C-x C-r" . swint-counsel-history)
@@ -72,12 +65,8 @@
                              (ivy-read (format "Bash/Zsh history:") collection))))
         (insert val)))))
 (use-package ivy-hydra
-  ;; Enabled after features.
-  :defer t
   :after ivy)
 (use-package hydra
-  ;; Enabled after features.
-  :defer t
   :after ivy-hydra)
 ;; ===========ivy/swiper/counsel/hydra=============
 (provide 'setup_ivy)

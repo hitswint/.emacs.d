@@ -1,8 +1,6 @@
 ;;; paredit
 ;; ==================paredit=======================
 (use-package paredit
-  ;; Enabled in modes.
-  :defer t
   :commands enable-paredit-mode
   :init
   (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
@@ -53,6 +51,7 @@
   (define-key paredit-mode-map (kbd "M-J") nil)
   (define-key paredit-mode-map (kbd "M-K") nil)
   (define-key paredit-mode-map (kbd "M-?") nil)
+  (define-key paredit-mode-map (kbd "M-\"") nil)
   (define-key paredit-mode-map (kbd "M-DEL") 'swint-backward-kill-word)
   (define-key paredit-mode-map (kbd "C-x (") 'paredit-backward-slurp-sexp)
   (define-key paredit-mode-map (kbd "C-x )") 'paredit-forward-slurp-sexp)
@@ -77,8 +76,6 @@
 ;;; paredit-everywhere
 ;; ===============paredit-everything===============
 (use-package paredit-everywhere
-  ;; Enabled in modes.
-  :defer t
   :commands paredit-everywhere-mode
   :init
   (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
@@ -89,6 +86,7 @@
   (define-key paredit-everywhere-mode-map (kbd "M-d") nil)
   (define-key paredit-everywhere-mode-map (kbd "M-J") nil)
   (define-key paredit-everywhere-mode-map (kbd "M-K") nil)
+  (define-key paredit-everywhere-mode-map (kbd "M-\"") nil)
   (define-key paredit-everywhere-mode-map (kbd "M-DEL") 'swint-backward-kill-word)
   (define-key paredit-everywhere-mode-map (kbd "C-x (") 'paredit-backward-slurp-sexp)
   (define-key paredit-everywhere-mode-map (kbd "C-x )") 'paredit-forward-slurp-sexp)

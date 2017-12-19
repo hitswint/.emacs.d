@@ -1,7 +1,6 @@
 ;;; dired
 ;; ==================dired=====================
 (use-package dired
-  ;; Enabled automatically.
   :config
   (use-package dired-x)
   (use-package dired-details
@@ -409,9 +408,7 @@ Assuming .. and . is a current directory (like in FAR)"
 ;;; w32-browser
 ;; ================w32-browser=================
 (use-package w32-browser
-  ;; Enabled at commands.
   :if is-win
-  :defer t
   :commands w32-browser
   :bind (:map dired-mode-map
               ("C-i" . w32explore)
@@ -433,9 +430,7 @@ Assuming .. and . is a current directory (like in FAR)"
 ;;; peep-dired
 ;; ================peep-dired==================
 (use-package peep-dired
-  ;; Enabled at commands.
   ;; image-dired: Use C-t as prefix.
-  :defer t
   :bind (:map dired-mode-map
               ("q" . peep-dired))
   :config
@@ -469,8 +464,6 @@ Assuming .. and . is a current directory (like in FAR)"
 ;;; dired-async
 ;; ================dired-async=================
 (use-package dired-async
-  ;; Enabled in modes.
-  :defer t
   :diminish dired-async-mode
   :commands dired-async-mode
   :init
@@ -507,8 +500,6 @@ Assuming .. and . is a current directory (like in FAR)"
 ;;; dired-narrow
 ;; ===============dired-narrow=================
 (use-package dired-narrow
-  ;; Enabled at commands.
-  :defer t
   :bind (:map dired-mode-map
               ("/" . dired-narrow))
   :config
@@ -523,8 +514,6 @@ Assuming .. and . is a current directory (like in FAR)"
 ;;; dired-ranger
 ;; ===============dired-ranger=================
 (use-package dired-ranger
-  ;; Enabled at commands.
-  :defer t
   :bind (:map dired-mode-map
               ("M-w" . swint-dired-ranger-copy))
   :config
@@ -539,8 +528,6 @@ Assuming .. and . is a current directory (like in FAR)"
 ;;; neotree
 ;; =================neotree====================
 (use-package neotree
-  ;; Enabled at commands.
-  :defer t
   :bind ("C-x j" . neotree-project-or-current-dir)
   :config
   (setq neo-smart-open nil)

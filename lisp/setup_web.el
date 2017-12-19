@@ -1,8 +1,6 @@
 ;;; web-mode
 ;; ==================web-mode==================
 (use-package web-mode
-  ;; Enabled in modes.
-  :defer t
   :mode (("\\.phtml\\'" . web-mode)
          ("\\.tpl\\.php\\'" . web-mode)
          ("\\.[agj]sp\\'" . web-mode)
@@ -23,8 +21,6 @@
 ;;; html-mode
 ;; =================html-mode==================
 (use-package sgml-mode
-  ;; Enabled at commands.
-  :defer t
   :commands swint-run-skewer
   :config
   (define-key html-mode-map (kbd "C-c s") 'swint-run-skewer)
@@ -45,8 +41,6 @@
 ;;; js2-mode
 ;; =================js2-mode===================
 (use-package js2-mode
-  ;; Enabled in modes.
-  :defer t
   :mode ("\\.js\\'" . js2-mode)
   :config
   (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
@@ -58,8 +52,6 @@
 ;;; skewer-mode
 ;; ================skewer-mode=================
 (use-package skewer-mode
-  ;; Enabled in modes.
-  :defer t
   :commands (skewer-mode skewer-css-mode skewer-html-mode)
   :init
   (add-hook 'js2-mode-hook 'skewer-mode)
@@ -70,8 +62,6 @@
 ;;; emmet-mode
 ;; ================emmet-mode==================
 (use-package emmet-mode
-  ;; Enabled in modes.
-  :defer t
   :diminish emmet-mode
   :commands emmet-mode
   :init

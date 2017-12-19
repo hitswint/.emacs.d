@@ -71,8 +71,6 @@
 ;;; wrap-region
 ;; ================wrap-region==================
 (use-package wrap-region
-  ;; Enabled in modes.
-  :defer t
   :commands wrap-region-mode
   :init
   (dolist (hook '(LaTeX-mode-hook
@@ -101,8 +99,6 @@
 ;;; rainbow-delimiters
 ;; ==============rainbow-delimiters=============
 (use-package rainbow-delimiters
-  ;; Enabled in modes.
-  :defer t
   :commands rainbow-delimiters-mode
   :init
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
@@ -125,8 +121,6 @@
 ;;; highlight-parentheses
 ;; ============highlight-parentheses============
 (use-package highlight-parentheses
-  ;; Enabled at idle.
-  :defer 2
   :config
   (set-face-attribute 'hl-paren-face nil :weight 'bold :strike-through t)
   (defun hl-paren-create-overlays ()

@@ -3,7 +3,6 @@
 ;; 使用avy替代ace-jump。
 (use-package ace-jump-mode
   :disabled
-  :defer t
   :bind (("C-h" . swint-ace-jump-char-mode)
          ("C-c C-h" . ace-jump-mode)
          ("C-M-h" . ace-jump-line-mode))
@@ -224,7 +223,6 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
 ;; ====================MATLAB===================
 (use-package matlab-mode
   :disabled
-  :defer t
   :mode ("\\.[mM]\\'" . matlab-mode)
   :config
   (setenv "PATH" (concat (getenv "PATH") "/usr/local/MATLAB/R2011b/bin/"))

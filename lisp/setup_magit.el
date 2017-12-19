@@ -1,8 +1,6 @@
 ;;; magit
 ;; ====================magit=======================
 (use-package magit
-  ;; Enabled at commands.
-  :defer t
   :bind ("C-x M-g" . magit-status)
   :config
   (define-key magit-mode-map (kbd "<C-tab>") nil)

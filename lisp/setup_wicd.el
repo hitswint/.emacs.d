@@ -1,10 +1,8 @@
 ;;; wicd-mode
 ;; ================wicd-mode=================
 (use-package wicd-mode
-  ;; Enabled at commands.
   :load-path "site-lisp/wicd-mode/"
   :if is-lin
-  :defer t
   :bind ("C-M-$" . wicd)
   :config
   (setq wicd-wireless-max-id 100)

@@ -1,7 +1,6 @@
 ;;; chinese-fonts-setup
 ;; ==========chinese-fonts-setup===========
 (use-package chinese-fonts-setup
-  ;; Enabled automatically.
   :load-path "site-lisp/chinese-fonts-setup/"
   :config
   (cond
@@ -26,8 +25,6 @@
 ;;; pyim
 ;; ==================pyim==================
 (use-package pyim
-  ;; Enabled at commands.
-  :defer t
   :commands (pyim-cwords-at-point pyim-string-match-p)
   :bind (("C-x SPC" . pyim-convert-code-at-point)
          ("C-x S-SPC" . pyim-punctuation-translate-at-point))

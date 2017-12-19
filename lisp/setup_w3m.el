@@ -1,8 +1,6 @@
 ;;; w3m
 ;; ===================w3m=====================
 (use-package w3m
-  ;; Enabled at commands.
-  :defer t
   :bind (("C-M-5" . w3m)
          ("C-M-%" . w3m-youdao-sample-sentences))
   :config
@@ -66,8 +64,6 @@
 ;;; helm-firefox
 ;; ===============helm-firefox================
 (use-package helm-firefox
-  ;; Enabled at commands.
-  :defer t
   :commands (helm-firefox-bookmarks helm-get-firefox-user-init-dir)
   :config
   (when is-win

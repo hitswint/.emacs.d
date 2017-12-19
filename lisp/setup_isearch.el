@@ -1,10 +1,7 @@
 ;;; Anzu
 ;; =====================Anzu=======================
 (use-package anzu
-  ;; Enabled at commands.
-  :defer t
   :diminish anzu-mode
-  :after pinyin-search
   :bind (("M-s M-r" . anzu-query-replace)
          ("M-s M-R" . anzu-query-replace-regexp))
   :config
@@ -17,12 +14,11 @@
 ;;; pinyin-search
 ;; ==================pinyin-search=================
 (use-package pinyin-search
-  ;; Enabled at commands.
-  :defer t
   :commands (pinyin-search--pinyin-to-regexp symbol-name-at-point)
   :bind (("C-s" . isearch-forward-pinyin)
          ("C-r" . isearch-backward-pinyin))
   :config
+  (require 'anzu)
   (defun symbol-name-at-point ()
     (let ((symbol (symbol-at-point)))
       (if symbol

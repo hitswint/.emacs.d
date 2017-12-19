@@ -1,8 +1,6 @@
 ;;; flycheck
 ;; ===============flycheck====================
 (use-package flycheck
-  ;; Enabled at commands.
-  :defer t
   :diminish flycheck-mode
   :bind ("M-g c" . flycheck-mode)
   :config
@@ -18,15 +16,11 @@
 ;;; helm-flycheck
 ;; ==============helm-flycheck================
 (use-package helm-flycheck
-  ;; Enabled at commands.
-  :defer t
   :commands helm-flycheck)
 ;; ==============helm-flycheck================
 ;;; flycheck-pos-tip
 ;; =============flycheck-pos-tip==============
 (use-package flycheck-pos-tip
-  ;; Enabled after features.
-  :defer t
   :commands flycheck-pos-tip-mode
   :init
   ;; flycheck-pos-tip-mode会导致pos-tip弹出后快速隐藏。

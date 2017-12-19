@@ -1,7 +1,6 @@
 ;;; helm
 ;; ====================helm=====================
 (use-package helm
-  ;; Enabled automatically.
   :config
   (use-package helm-config)
   (use-package helm-for-files)
@@ -452,8 +451,6 @@
 ;;; helm_lacarte
 ;; ================helm_lacarte=================
 (use-package lacarte
-  ;; Enabled at commands.
-  :defer t
   :bind ("C-x `" . helm-browse-menubar)
   :init
   (add-hook 'LaTeX-mode-hook
@@ -484,8 +481,6 @@
 ;;; helm-bibtex
 ;; ================helm-bibtex==================
 (use-package helm-bibtex
-  ;; Enabled at commands.
-  :defer t
   :commands (swint-helm-bibtex-local bibtex-completion-find-pdf-in-field bibtex-completion-get-entry-for-pdf)
   :bind (("C-x b" . swint-helm-bibtex)
          ("C-x B" . helm-bibtex))
@@ -573,8 +568,6 @@
 ;;; helm-swoop
 ;; ================helm-swoop===================
 (use-package helm-swoop
-  ;; Enabled at commands.
-  :defer t
   :bind (("M-s M-s" . helm-swoop)
          ("M-s M-S" . helm-multi-swoop-all))
   :config
@@ -585,15 +578,11 @@
 ;;; helm-unicode
 ;; ===============helm-unicode==================
 (use-package helm-unicode
-  ;; Enabled at commands.
-  :defer t
   :bind ("C-x c u" . helm-unicode))
 ;; ===============helm-unicode==================
 ;;; helm-ag
 ;; =================helm-ag=====================
 (use-package helm-ag
-  ;; Enabled at commands.
-  :defer t
   ;; helm-do-ag 互动式搜索，但只能搜索一个词。
   ;; helm-ag 先输入词，可以在结果中搜索第二个词。
   :bind (("C-x g" . helm-do-ag)
@@ -606,8 +595,6 @@
 ;;; helm-descbinds
 ;; ==============helm-descbinds=================
 (use-package helm-descbinds
-  ;; Enabled at commands.
-  :defer t
   :commands helm-descbinds
   :config
   (helm-descbinds-mode))
@@ -615,18 +602,12 @@
 ;;; helm-imenu
 ;; ================helm-imenu===================
 (use-package imenu
-  ;; Enabled at commands.
-  :defer t
   :commands imenu-choose-buffer-index)
 (use-package imenu-anywhere
-  ;; Enabled at commands.
-  :defer t
   :bind ("M-s I" . helm-imenu-anywhere)
   :config
   (setq imenu-anywhere-delimiter " | "))
 (use-package helm-imenu
-  ;; Enabled at commands.
-  :defer t
   :bind (("M-s i" . helm-semantic-or-imenu)
          ("M-s M-i" . helm-imenu-outshine))
   :config

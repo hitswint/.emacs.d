@@ -1,8 +1,6 @@
 ;;; ibuffer
 ;; =========================ibuffer==============================
 (use-package ibuffer
-  ;; Enabled at commands.
-  :defer t
   :bind ("C-x C-b" . ibuffer)
   :config
   (setq ibuffer-expert t
@@ -11,7 +9,6 @@
 ;;;; ibuffer分组
   ;; ======================ibuffer分组===========================
   (use-package ibuf-ext
-    ;; Enabled automatically.
     :config
 ;;;;; 按persp分组
     (define-ibuffer-filter persp

@@ -123,8 +123,6 @@
 ;;; bing-dict
 ;; ==================bing-dict===================
 (use-package bing-dict
-  ;; Enabled at commands.
-  :defer t
   :commands (bing-dict-brief bing-dict-brief-cb-at-point)
   :config
   (defun bing-dict-brief-cb-action (&rest args)
@@ -145,8 +143,6 @@
 ;;; google-translate
 ;; ===============google-translate===============
 (use-package google-translate
-  ;; Enabled at commands.
-  :defer t
   :commands (google-translate-translate google-translate-to-tip)
   :init
   (setq google-translate-base-url
@@ -174,8 +170,6 @@
 ;;; youdao-dictionary
 ;; ===============youdao-dictionary==============
 (use-package youdao-dictionary
-  ;; Enabled at commands.
-  :defer t
   :commands (youdao-dictionary--format-result youdao-dictionary-to-tip)
   :config
   (defun youdao-dictionary-to-tip (&optional _word)

@@ -1,8 +1,6 @@
 ;;; winner-mode
 ;; =================winner-mode=================
 (use-package winner
-  ;; Enabled at commands.
-  :defer t
   :bind (("M-/" . winner-undo)
          ("M-s M-/" . winner-redo))
   :config
@@ -11,8 +9,6 @@
 ;;; window-numbering
 ;; ==============window-numbering===============
 (use-package window-numbering
-  ;; Enabled automatically.
-  :defer t
   :bind ("C-<tab>" . select-previously-selected-window)
   :config
   (window-numbering-mode 1)
@@ -100,8 +96,6 @@ If prefix ARG is given, delete the window instead of selecting it."
 ;;; windmove
 ;; ================windmove=====================
 (use-package windmove
-  ;; Enabled at commands.
-  :defer t
   :commands (swint-windmove-left swint-windmove-right swint-windmove-up swint-windmove-down)
   :init
   (smartrep-define-key global-map "M-s"

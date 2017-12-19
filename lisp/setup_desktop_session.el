@@ -1,15 +1,12 @@
 ;;; session
 ;; ===================session====================
 (use-package session
-  ;; Enabled automatically.
   :config
   (add-hook 'after-init-hook 'session-initialize))
 ;; ===================session====================
 ;;; saveplace
 ;; ==================saveplace===================
 (use-package saveplace
-  ;; Enabled at idle.
-  :defer 2
   :config
   (if (fboundp 'save-place-mode)
       ;; Emacs 25 has a proper mode for `save-place'
@@ -20,8 +17,6 @@
 ;;; savehist
 ;; ==================savehist====================
 (use-package savehist
-  ;; Enabled at idle.
-  :defer 2
   :config
   (savehist-mode t)
   (setq enable-recursive-minibuffers t
@@ -37,7 +32,6 @@
 ;;; desktop
 ;; ===================desktop====================
 (use-package desktop
-  ;; Enabled automatically.
   :config
   (add-to-list 'desktop-modes-not-to-save 'Info-mode)
   (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)

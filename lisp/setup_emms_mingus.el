@@ -1,9 +1,7 @@
 ;;; emms
 ;; ================emms==================
 (use-package emms
-  ;; Enabled at commands.
   :if is-lin
-  :defer t
   :bind (("M-s e l" . emms-playlist-mode-go)
          ("M-s e o" . emms-play-file))
   :config
@@ -49,9 +47,7 @@
 ;;; mingus
 ;; ===============mingus=================
 (use-package mingus
-  ;; Enabled at commands.
   :if is-win
-  :defer t
   :bind (("M-s e l" . mingus)
          ("M-s e o" . mingus-browse))
   :config

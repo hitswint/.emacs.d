@@ -1,8 +1,6 @@
 ;;; octave
 ;; ======================octave====================
 (use-package octave
-  ;; Enabled in modes.
-  :defer t
   :mode ("\\.m$" . octave-mode)
   :config
   ;; 使用cygwin安装octave，速度很快，但无法在emacs中启动。

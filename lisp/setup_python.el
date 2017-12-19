@@ -1,24 +1,17 @@
 ;;; python-mode
 ;; =================python-mode================
 (use-package python
-  ;; Enabled in modes.
-  :defer t
   :mode ("\\.py\\'" . python-mode))
 ;; =================python-mode================
 ;;; pyvenv
 ;; ===================pyvenv===================
 (use-package pyvenv
-  ;; Enabled at commands.
-  :defer t
   :bind (("C-x C-M-3" . pyvenv-workon)
          ("C-x C-M-#" . pyvenv-deactivate)))
 ;; ===================pyvenv===================
 ;;; elpy
 ;; ====================elpy====================
 (use-package elpy
-  ;; Enabled after features.
-  :defer t
-  :after pyvenv
   :bind (("C-M-3" . swint-ipython)
          ("C-M-#" . swint-cpython))
   :init
@@ -72,8 +65,6 @@
 ;;; emacs-ipython-notebook
 ;; ====================ein=====================
 (use-package ein
-  ;; Enabled at at commands.
-  :defer t
   :bind ("M-s 3" . swint-ein:notebooklist-open)
   :config
   ;; ein:url-or-port可取8888或http://127.0.0.1(localhost):8888。
@@ -102,8 +93,6 @@
     (define-key ein:notebook-mode-map (kbd "C-c C-,") 'ein:pytools-jump-to-source-command)
     (define-key ein:notebook-mode-map (kbd "C-c C-.") 'ein:pytools-jump-back-command)))
 (use-package ein-connect
-  ;; Enabled at at commands.
-  :defer t
   :bind ("M-s #" . swint-ein:connect-to-notebook)
   :config
   ;; ein:connect-to-notebook无法获取notebooks列表。

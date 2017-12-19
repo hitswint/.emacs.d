@@ -1,9 +1,6 @@
 ;;; shell
 ;; =====================shell======================
 (use-package shell
-  ;; Enabled at commands.
-  ;; Enabled automatically actually.
-  :defer t
   :bind (("C-M-!" . shell)
          ("C-x C-M-1" . term))
   :init
@@ -28,8 +25,6 @@
 ;;; eshell
 ;; =====================eshell=====================
 (use-package eshell
-  ;; Enabled at commands.
-  :defer t
   :bind ("C-M-1" . eshell)
   :config
   (add-hook 'eshell-mode-hook (lambda()
@@ -45,8 +40,6 @@
 ;;; eshell-prompt-extras
 ;; ==============eshell-prompt-extras==============
 (use-package eshell-prompt-extras
-  ;; Enabled after features.
-  :defer t
   :after eshell
   :config
   (with-eval-after-load "esh-opt"

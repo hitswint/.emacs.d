@@ -1,8 +1,6 @@
 ;;; org-mode
 ;; =================org-mode====================
 (use-package org
-  ;; Enabled in modes.
-  :defer t
   :config
 ;;;; Appearance
   ;; =================Appearance================
@@ -118,8 +116,6 @@
 ;;;; cdlatex
   ;; ================cdlatex====================
   (use-package cdlatex
-    ;; Enabled in modes.
-    :defer t
     :commands turn-on-org-cdlatex
     :init
     (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
@@ -535,10 +531,8 @@
 ;; ===============org-annotate==================
 ;; Display annotated files with mark.
 (use-package dired-x-highlight
-  ;; Enabled after features.
   :load-path "site-lisp/org-annotate-file/"
-  :defer t
-  :after dired
+  :commands dired-k--highlight-buffer
   :config
   (defun swint-org-annotation-storage-file ()
     "Modified from var to function."
@@ -551,9 +545,7 @@
     :load-path "site-lisp/org-annotate-file/"))
 ;; 原有org-annotate-file用于全局注释。
 (use-package org-annotate-file
-  ;; Enabled at commands.
   :load-path "site-lisp/org-annotate-file/"
-  :defer t
   :commands org-annotate-file
   :bind ("C-x L" . org-annotate-file-current)
   :config
@@ -571,9 +563,7 @@
   (setq org-annotate-file-storage-file "~/org/annotated/annotated.org"))
 ;; 新建swint-org-annotate-file.el用于局部注释。
 (use-package swint-org-annotate-file
-  ;; Enabled at commands.
   :load-path "site-lisp/org-annotate-file/"
-  :defer t
   :commands swint-org-annotate-file
   :bind ("C-x l" . swint-org-annotate-file-current)
   :config
@@ -610,12 +600,8 @@
 ;;; outline
 ;; ==================outline====================
 (use-package outline-magic
-  ;; Enabled at commands.
-  :defer t
   :commands outline-cycle)
 (use-package outline
-  ;; Enabled in modes.
-  :defer t
   :commands outline-minor-mode
   :init
   (add-hook 'prog-mode-hook 'outline-minor-mode)
@@ -681,23 +667,17 @@
 ;;; outshine
 ;; ==================outshine===================
 (use-package outshine
-  ;; Enabled at commands.
-  :defer t
   :commands (outshine-hook-function outshine-cycle-buffer outshine-calc-outline-regexp)
   :config
   ;; Heading格式随mode不同，通常是M-;加*加空格。
   (setq outshine-use-speed-commands t)
   (setq outshine-imenu-show-headlines-p nil))
 (use-package outorg
-  ;; Enabled after features.
   ;; M-O # current heading.
   ;; C-u M-O # current buffer.
   ;; M-# outorg-copy-edits-and-exit.
-  :defer t
   :after outshine)
 (use-package navi-mode
-  ;; Enabled after features.
-  :defer t
   :after outshine
   :config
   (define-key outline-mode-prefix-map (kbd "i") 'navi-search-and-switch)
@@ -709,8 +689,6 @@
 ;;; interleave
 ;; =================interleave==================
 (use-package interleave
-  ;; Enabled at commands.
-  :defer t
   :commands (swint-dired-interleave swint-interleave-open-notes-file-for-pdf)
   :init
   (add-hook 'org-mode-hook '(lambda ()

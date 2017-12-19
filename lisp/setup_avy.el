@@ -1,12 +1,9 @@
 ;;; avy
 ;; =====================avy=====================
 (use-package avy
-  ;; Enabled at commands.
-  :defer t
   :after ace-pinyin
-  :bind (:map isearch-mode-map
-              ("C-h" . avy-isearch))
   :config
+  (bind-key "C-h" 'avy-isearch isearch-mode-map)
   (setq avy-keys (append (number-sequence ?a ?z) (number-sequence ?0 ?9) '(?, ?. ?/ ?' ?\; ? )))
   (setq avy-dispatch-alist '((?\C-\M-w . avy-action-kill-move)
                              (?\C-w . avy-action-kill-stay)
@@ -104,16 +101,12 @@ LEAF is normally ((BEG . END) . WND)."
 ;;; avy-zap
 ;; ===================avy-zap===================
 (use-package avy-zap
-  ;; Enabled at commands.
-  :defer t
   ;; avy-zap-up-to-char-dwim保留char，而avy-zap-to-char-dwim不保留。
   :commands (avy-zap-to-char-dwim avy-zap-up-to-char-dwim))
 ;; ===================avy-zap===================
 ;;; ace-pinyin
 ;; =================ace-pinyin==================
 (use-package ace-pinyin
-  ;; Enabled at commands.
-  :defer t
   :bind ("C-h" . ace-pinyin-jump-char)
   :config
   (setq ace-pinyin-use-avy t)
@@ -206,23 +199,23 @@ This function obeys `avy-all-windows' setting."
                        (or avy-case-fold-search (string= str (downcase str))))
                       found)
                   (avy-dowindows current-prefix-arg
-                    (dolist (pair (avy--find-visible-regions
-                                   (window-start)
-                                   (window-end (selected-window) t)))
-                      (save-excursion
-                        (goto-char (car pair))
-                        (setq regex (pinyin-search--pinyin-to-regexp str))
-                        (while (re-search-forward regex (cdr pair) t)
-                          (unless (get-char-property (1- (point)) 'invisible)
-                            (let ((ov (make-overlay
-                                       (match-beginning 0)
-                                       (match-end 0))))
-                              (setq found t)
-                              (push ov overlays)
-                              (overlay-put
-                               ov 'window (selected-window))
-                              (overlay-put
-                               ov 'face 'avy-goto-char-timer-face)))))))
+                                 (dolist (pair (avy--find-visible-regions
+                                                (window-start)
+                                                (window-end (selected-window) t)))
+                                   (save-excursion
+                                     (goto-char (car pair))
+                                     (setq regex (pinyin-search--pinyin-to-regexp str))
+                                     (while (re-search-forward regex (cdr pair) t)
+                                       (unless (get-char-property (1- (point)) 'invisible)
+                                         (let ((ov (make-overlay
+                                                    (match-beginning 0)
+                                                    (match-end 0))))
+                                           (setq found t)
+                                           (push ov overlays)
+                                           (overlay-put
+                                            ov 'window (selected-window))
+                                           (overlay-put
+                                            ov 'face 'avy-goto-char-timer-face)))))))
                   ;; No matches at all, so there's surely a typo in the input.
                   (unless found (beep)))))
             (nreverse (mapcar (lambda (ov)
@@ -240,15 +233,13 @@ This function obeys `avy-all-windows' setting."
                                (not avy-all-windows)
                              avy-all-windows)))
       (avy-with swint-avy-goto-char-timer
-        (avy--process
-         (swint-avy--read-candidates)
-         (avy--style-fn avy-style))))))
+                (avy--process
+                 (swint-avy--read-candidates)
+                 (avy--style-fn avy-style))))))
 ;; =================ace-pinyin==================
 ;;; ace-link
 ;; ==================ace-link===================
 (use-package ace-link
-  ;; Enabled at commands.
-  :defer t
   :commands ace-link)
 ;; ==================ace-link===================
 (provide 'setup_avy)

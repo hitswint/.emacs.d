@@ -1,9 +1,7 @@
 ;;; Mew
 ;; ========================Mew=========================
 (use-package mew
-  ;; Enabled at commands.
   :if is-win
-  :defer t
   :bind ("C-M-7" . mew)
   :config
   (autoload 'mew "mew" nil t)
@@ -79,15 +77,21 @@
 ;;; mu4e
 ;; =======================mu4e=========================
 (use-package mu4e
-  ;; Enabled at idle.
   :if is-lin
   :load-path "/usr/share/emacs/site-lisp/mu4e"
-  :defer t
   :bind (("C-M-7" . mu4e)
          ("C-x M" . mu4e-compose-new))
   :config
   (use-package mu4e-alert
     :config
+    (setq mu4e-alert-interesting-mail-query
+          (concat "flag:unread maildir:/Default/INBOX"
+                  " OR "
+                  "flag:unread maildir:/Netease/INBOX"
+                  " OR "
+                  "flag:unread maildir:/Hotmail/Inbox"
+                  " OR "
+                  "flag:unread maildir:/QQ/INBOX"))
     ;; notifications or libnotify.
     (mu4e-alert-set-default-style 'libnotify)
     (mu4e-alert-enable-notifications)
@@ -177,9 +181,7 @@
 ;;; helm-mu
 ;; ======================helm-mu=======================
 (use-package helm-mu
-  ;; Enabled at commands.
   :if is-lin
-  :defer t
   :bind (("M-s m" . helm-mu)
          ("M-s M" . helm-mu-contacts)))
 ;; ======================helm-mu=======================
