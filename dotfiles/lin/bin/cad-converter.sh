@@ -1,3 +1,4 @@
 #!/bin/bash
 
-wine ~/.wine/drive_c/Program\ Files/Acme\ CAD\ Converter/AcmeCADConverter.exe $1
+Filename="${1//\//\\}"
+wine ~/.wine/drive_c/Program\ Files/Acme\ CAD\ Converter/AcmeCADConverter.exe "$Filename"

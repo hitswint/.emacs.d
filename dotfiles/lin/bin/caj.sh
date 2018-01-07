@@ -1,3 +1,4 @@
 #!/bin/bash
 
-wine ~/.wine/drive_c/Program\ Files/CAJViewer/CAJViewer.exe $1
+Filename="${1//\//\\}"
+wine ~/.wine/drive_c/Program\ Files/CAJViewer/CAJViewer.exe "$Filename"

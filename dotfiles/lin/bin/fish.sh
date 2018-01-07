@@ -1,3 +1,4 @@
 #!/bin/bash
 
-wine ~/.wine/drive_c/Program\ Files/Fish/Fish.exe $1
+Filename="${1//\//\\}"
+wine ~/.wine/drive_c/Program\ Files/Fish/Fish.exe Filename="${1//\//\\}"
