@@ -12,4 +12,5 @@ if [ x$1 != x ]; then
     autossh -f -N -R $port:127.0.0.1:$port -p $port_sshR $login_sshR
 fi
 
-/bin/bash -c "source /home/swint/.virtualenvs/shadowsocks/bin/activate; ssserver -s 0.0.0.0 -p \"$port\" -k \"$pass\" -m aes-256-cfb -t 600; exec /bin/bash -i"
+# /bin/bash -c "source /home/swint/.virtualenvs/shadowsocks/bin/activate; ssserver -s 0.0.0.0 -p \"$port\" -k \"$pass\" -m aes-256-cfb -t 600; exec /bin/bash -i"
+zsh -is eval "source /home/swint/.virtualenvs/shadowsocks/bin/activate; ssserver -s 0.0.0.0 -p \"$port\" -k \"$pass\" -m aes-256-cfb -t 600;"

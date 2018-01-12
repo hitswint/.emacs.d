@@ -167,3 +167,10 @@ source ~/.zsh/xsel.sh
 # virtualenv和virtualenvwrapper设置。
 export WORKON_HOME=$HOME/.virtualenvs
 source /usr/local/bin/virtualenvwrapper.sh
+
+# zsh -is eval "commands"
+if [[ $1 == eval ]]
+then
+    "$@"
+    set --
+fi

@@ -322,14 +322,14 @@
                              "\"" (expand-file-name default-directory) "\""
                              ;; 启动bash终端同时开启virtualenv。
                              (when arg (require 'pyvenv)
-                                   (let ((pyvenv-virtual-env-for-bash
+                                   (let ((pyvenv-virtual-env-for-urxvt
                                           (or pyvenv-virtual-env
                                               (file-name-as-directory
                                                (format "%s/%s" (pyvenv-workon-home)
                                                        (completing-read "Work on: " (pyvenv-virtualenv-list)
                                                                         nil t nil 'pyvenv-workon-history nil nil))))))
-                                     (concat " -e bash" " --init-file <( printf '%s\\n' 'source ~/.bashrc' 'source "
-                                             pyvenv-virtual-env-for-bash "bin/activate' )"))))))
+                                     (concat " -e zsh" " -is eval \"source "
+                                             pyvenv-virtual-env-for-urxvt "bin/activate;\""))))))
     (global-set-key (kbd "C-s-<return>") 'urxvt-default-directory)
     ;; ========在当前目录下打开urxvt===========
 ;;;; cad文件版本转换

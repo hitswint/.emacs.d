@@ -14,6 +14,7 @@ if [ x$2 != x ]; then
     autossh -f -N -L $port:127.0.0.1:$port -p $port_sshL $login_sshL
 fi
 
-/bin/bash -c "source ~/.virtualenvs/shadowsocks/bin/activate; sslocal -s \"$login\" -p \"$port\" -l 1080 -k \"$pass\" -m aes-256-cfb; exec /bin/bash -i"
 # sslocal -c ~/bin/shadowsocks.json # -d start
 # ssserver -c ~/bin/shadowsocks.json # -d start
+# /bin/bash -c "source ~/.virtualenvs/shadowsocks/bin/activate; sslocal -s \"$login\" -p \"$port\" -l 1080 -k \"$pass\" -m aes-256-cfb; exec /bin/bash -i"
+zsh -is eval "source ~/.virtualenvs/shadowsocks/bin/activate; sslocal -s \"$login\" -p \"$port\" -l 1080 -k \"$pass\" -m aes-256-cfb;"

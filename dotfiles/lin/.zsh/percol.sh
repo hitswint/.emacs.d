@@ -48,7 +48,7 @@ bindkey '^xF' swint-locate-file
 
 function swint-find-file-current-dir(){
     LBUFFER=$LBUFFER$(ls -Ap | grep -v / | percol --match-method pinyin | tr '\n' ' ' | \
-                             sed 's/[[:space:]]*$//') # delete trailing space
+                          sed 's/[[:space:]]*$//') # delete trailing space
     zle -R -c
 }
 zle -N swint-find-file-current-dir
@@ -127,6 +127,13 @@ function swint-cd() {
 zle -N swint-cd
 bindkey '^x^m' swint-cd
 
+function swint-virtualenvs() {
+    source ~/.virtualenvs/$(ls -F ~/.virtualenvs | grep / | percol --match-method pinyin)bin/activate
+    zle reset-prompt
+}
+zle -N swint-virtualenvs
+bindkey '^xv' swint-virtualenvs
+
 # percol_cd_upper_dirs
 PERCOL_ENABLED=true
 function exists() {
@@ -134,7 +141,7 @@ function exists() {
 }
 exists gtac && _PERCOL_TAC="gtac" || \
         { exists tac && _PERCOL_TAC="tac" || \
-                    { _PERCOL_TAC="tail -r" } }
+                  { _PERCOL_TAC="tail -r" } }
 function _percol_tac() {
     eval $_PERCOL_TAC
 }
@@ -195,7 +202,7 @@ bindkey '^x^j' percol_cd_upper_dirs
 # 显示ag所有结果，然后使用percol过滤。缺点是如果文件名中含有关键词，无法剔除。
 function swint-ag() {
     LBUFFER=$LBUFFER$(ag -C 1000 ./ | percol | tr '\n' ' ' | \
-                             sed 's/[[:space:]]*$//' | cut -f1 -d ":")
+                          sed 's/[[:space:]]*$//' | cut -f1 -d ":")
     zle -R -c
 }
 zle -N swint-ag
@@ -203,7 +210,7 @@ bindkey '^xg' swint-ag
 # 在命令行中输入关键词，然后显示该关键词对应的搜索结果，不包含文件名含有关键词的结果。
 function swint-do-ag() {
     LBUFFER=$(ag $LBUFFER ./ | percol | tr '\n' ' ' | \
-                     sed 's/[[:space:]]*$//' | cut -f1 -d ":")
+                  sed 's/[[:space:]]*$//' | cut -f1 -d ":")
     zle -R -c
 }
 zle -N swint-do-ag
