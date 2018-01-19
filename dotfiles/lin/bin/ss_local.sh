@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# screen加-dm忽略shell环境，可开机启动；加-S xxx命名。
+if [ -z "$STY" ]; then exec screen /bin/zsh $0 $1; fi
+
 # $1开启ssserver，可选$2做内网穿透。
 server=$1
 login=$(gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==server {print $6}' server="$server" | sed 's/^.*@//g')

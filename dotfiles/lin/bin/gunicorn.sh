@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# screen加-dm忽略shell环境，可开机启动；加-S xxx命名。
+if [ -z "$STY" ]; then exec screen /bin/zsh $0 $1; fi
+
 proj_path=$1
 proj_name=$(basename $1)
 # nohup gunicorn --chdir /home/swint/git-repo/vmaig_blog/ --bind unix:/tmp/vmaig_blog.socket vmaig_blog.wsgi:application --reload&

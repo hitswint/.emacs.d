@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# screen加-dm忽略shell环境，可开机启动；加-S xxx命名。
+if [ -z "$STY" ]; then exec screen /bin/zsh $0 $1; fi
+
 port="4433"
 pass="r408hxkjopzZA"
 

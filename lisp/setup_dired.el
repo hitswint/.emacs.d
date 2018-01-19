@@ -41,6 +41,7 @@
   (setq dired-dwim-target t)
   ;; Allow editing file permissions.
   (setq wdired-allow-to-change-permissions t)
+  (add-hook 'wdired-mode-hook 'undo-tree-mode)
   ;; 将dired-k--highlight-buffer加hook放在前面，使其出现在dired-after-readin-hook中函数列表最后，以便最后生效。
   (add-hook 'dired-after-readin-hook 'dired-k--highlight-buffer)
   ;; 不折行显示。
