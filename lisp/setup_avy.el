@@ -5,12 +5,13 @@
   :config
   (bind-key "C-h" 'avy-isearch isearch-mode-map)
   (setq avy-keys (append (number-sequence ?a ?z) (number-sequence ?0 ?9) '(?, ?. ?/ ?' ?\; ? )))
-  (setq avy-dispatch-alist '((?\C-\M-w . avy-action-kill-move)
-                             (?\C-w . avy-action-kill-stay)
-                             (?\C-\; . avy-action-mark)
-                             (?\M-w . avy-action-copy)
+  (setq avy-dispatch-alist '((?K . avy-action-kill-move)
+                             (?\C-k . avy-action-kill-stay)
+                             (?Y . avy-action-teleport)
                              (?\C-y . avy-action-yank)
-                             (?\M-f . avy-action-ispell)))
+                             (?W . avy-action-copy)
+                             (?: . avy-action-mark)
+                             (?I . avy-action-ispell)))
   ;; 默认当前窗口，加C-u时所有窗口。
   (setq avy-all-windows nil)
   (setq avy-all-windows-alt t)
