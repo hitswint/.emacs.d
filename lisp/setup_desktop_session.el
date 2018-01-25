@@ -39,6 +39,7 @@
   (setq desktop-path '("~/.emacs.d/"))
   (setq desktop-dirname "~/.emacs.d/")
   (setq desktop-base-file-name "emacs-desktop")
+  (unless (display-graphic-p) (setq desktop-restore-frames nil))
   (desktop-save-mode t)
   ;; Minor modes not to be saved.
   (add-to-list 'desktop-minor-mode-table '(abbrev-mode nil))

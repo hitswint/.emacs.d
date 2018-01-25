@@ -9,7 +9,7 @@
 (global-hl-line-mode t)
 (fringe-mode)
 ;; 导致emacs25卡顿。
-;; (menu-bar-mode -1)
+(menu-bar-mode -1)
 (delete-selection-mode t)
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))

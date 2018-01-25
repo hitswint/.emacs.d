@@ -70,7 +70,7 @@
                  '(("p" . dired-k--previous-highlighted-file)
                    ("n" . dired-k--next-highlighted-file)))
                (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
-               (define-key dired-mode-map (kbd "C-/") 'helm-dired-current-file)
+               (define-key dired-mode-map (kbd "<C-return>") 'helm-dired-current-file)
                (define-key dired-mode-map (kbd "C-M-j") 'tc-lister-open-file)
                ;; 在dired对mark的多个文件内容进行查找。
                (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)

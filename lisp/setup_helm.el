@@ -423,7 +423,7 @@
   (define-key helm-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
   (define-key helm-map (kbd "C-'") 'swint-helm-bookmarks-after-quit)
   (define-key helm-map (kbd "M-'") 'swint-helm-projectile-after-quit)
-  (define-key helm-map (kbd "C-/") 'helm-quit-and-find-file)
+  (define-key helm-map (kbd "<C-return>") 'helm-quit-and-find-file)
   ;; ======在其他helm-buffer中运行helm命令======
 ;;;; helm-open-file-with-lister
   ;; ========helm-open-file-with-lister=========
