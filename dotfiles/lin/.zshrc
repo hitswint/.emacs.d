@@ -8,7 +8,6 @@ antigen theme robbyrussell
 antigen bundle git
 antigen bundle extract
 antigen bundle pip
-antigen bundle command-not-find
 antigen bundle sudo
 antigen bundle web-search
 antigen bundle z

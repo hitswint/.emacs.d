@@ -212,9 +212,10 @@
   (defun swint-helm-dired-buffers-list--init/curr-persp ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
     (setq swint-helm-dired-buffers-list-cache/curr-persp
-          (remove-if-not (lambda (x) (equal (buffer-mode x) 'dired-mode))
-                         (remove-if-not (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
-                                        (helm-buffer-list))))
+          (or (remove-if-not (lambda (x) (equal (buffer-mode x) 'dired-mode))
+                             (remove-if-not (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
+                                            (helm-buffer-list)))
+              (list (buffer-name (get-buffer-create "*helm no dired buffers in current persp*")))))
     (let ((result (cl-loop for b in swint-helm-dired-buffers-list-cache/curr-persp
                            maximize (length b) into len-buf
                            maximize (length (with-current-buffer b
@@ -423,7 +424,7 @@
   (define-key helm-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
   (define-key helm-map (kbd "C-'") 'swint-helm-bookmarks-after-quit)
   (define-key helm-map (kbd "M-'") 'swint-helm-projectile-after-quit)
-  (define-key helm-map (kbd "<C-return>") 'helm-quit-and-find-file)
+  (define-key helm-map (kbd "M-RET") 'helm-quit-and-find-file)
   ;; ======在其他helm-buffer中运行helm命令======
 ;;;; helm-open-file-with-lister
   ;; ========helm-open-file-with-lister=========
