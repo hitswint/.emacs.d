@@ -23,8 +23,8 @@
                                                   (concat "-u " dict) word))))
              (if to-buffer dictionary-list
                (butlast dictionary-list)) (if to-buffer "\n")))
-(global-set-key (kbd "C-M-2") 'swint-sdcv-to-tip)
-(global-set-key (kbd "C-M-@") 'swint-sdcv-to-buffer)
+(global-set-key (kbd "M-s d") 'swint-sdcv-to-tip)
+(global-set-key (kbd "M-s D") 'swint-sdcv-to-buffer)
 (defun swint-sdcv-to-tip (&optional _word)
   "Search WORD simple translate result."
   (interactive)
@@ -72,8 +72,8 @@
 ;; ==================stardict====================
 ;;; online
 ;; ===================online=====================
-(global-set-key (kbd "C-x C-M-2") 'hydra-online-dict/body)
-(global-set-key (kbd "C-x C-M-@") 'swint-online-to-buffer)
+(global-set-key (kbd "M-s M-d") 'hydra-online-dict/body)
+(global-set-key (kbd "M-s M-D") 'swint-online-to-buffer)
 (defhydra hydra-online-dict (:color blue)
   "Online Dict"
   ("b" bing-dict-brief-cb-at-point "Bing Dict")
