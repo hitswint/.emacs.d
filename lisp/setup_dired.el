@@ -207,10 +207,34 @@
        (lambda (process signal)
          (when (memq (process-status process) '(exit signal))
            (let ((pos (memq 'mode-line-modes mode-line-format)))
-             (message "swint-unison-sync-backups done.")
+             (message "unison-sync-backups done.")
              (setcdr pos (remove "unison-sync-backups " (cdr pos)))))))))
-  (global-set-key (kbd "C-c M-/") 'swint-unison-sync-backups)
+  (global-set-key (kbd "M-s C-/") 'swint-unison-sync-backups)
   ;; ================unison====================
+;;;; bypy
+  ;; =================bypy=====================
+  (defun swint-bypy-sync (&optional arg)
+    "Synchronization of bypy-sync."
+    (interactive)
+    (let* ((localdir (expand-file-name "~/Bypy"))
+           (process
+            (start-process-shell-command
+             "bypy_sync" "*bypy_sync*"
+             (concat "bypy sync" (if arg (concat "up " localdir " /")
+                                   (concat "down " "/ " localdir))
+                     " true")))
+           (pos (memq 'mode-line-modes mode-line-format)))
+      (setcdr pos (cons "bypy-sync " (cdr pos)))
+      (set-process-sentinel
+       process
+       (lambda (process signal)
+         (when (memq (process-status process) '(exit signal))
+           (let ((pos (memq 'mode-line-modes mode-line-format)))
+             (message "bypy-sync done.")
+             (setcdr pos (remove "bypy-sync " (cdr pos)))))))))
+  (global-set-key (kbd "M-s C-,") '(lambda () (interactive) (swint-bypy-sync)))
+  (global-set-key (kbd "M-s C-.") '(lambda () (interactive) (swint-bypy-sync t)))
+  ;; =================bypy=====================
 ;;;; totalcmd
   ;; ===============totalcmd===================
   (defun tc-open-default-directory ()
