@@ -142,6 +142,23 @@
   ;; =============文件夹排序===================
 ;;;; 跳转至dired顶部和尾部
   ;; ========跳转至dired顶部和尾部=============
+  (defadvice dired-next-line (around dired-next-line+ activate)
+    "Replace current buffer if file is a directory."
+    ad-do-it
+    (while (and  (not  (eobp)) (not ad-return-value))
+      (forward-line)
+      (setq ad-return-value(dired-move-to-filename)))
+    (when (eobp)
+      (forward-line -1)
+      (setq ad-return-value(dired-move-to-filename))))
+  (defadvice dired-previous-line (around dired-previous-line+ activate)
+    "Replace current buffer if file is a directory."
+    ad-do-it
+    (while (and  (not  (bobp)) (not ad-return-value))
+      (forward-line -1)
+      (setq ad-return-value(dired-move-to-filename)))
+    (when (bobp)
+      (call-interactively 'dired-next-line)))
   (defun dired-beginning-of-buffer ()
     (interactive)
     (let ((move 1)
