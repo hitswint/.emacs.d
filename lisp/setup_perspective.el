@@ -69,28 +69,29 @@
 ;; =========emacs关闭时保存perspectives=========
 (setq swint-perspectives-saved-file "~/.emacs.d/saved-perspectives.el")
 (defun swint-save-perspectives ()
-  (setq persp-last-session (persp-name persp-curr))
-  (mapcar #'(lambda (x)
-              (swint-persp-switch x)
-              (set (intern (format "window-configuration-of-persp-%s" x)) (window-state-get nil t)))
-          (persp-names))
-  (with-temp-file
-      swint-perspectives-saved-file
-    (when is-win
-      (insert ";;; -*- coding: utf-8; -*-\n"))
-    (insert "(setq swint-persp-names '" (prin1-to-string (persp-names)) ")\n")
-    (insert "(setq persp-projectile-hash '" (prin1-to-string persp-projectile-hash) ")\n")
-    (insert "(setq persp-last-session " (prin1-to-string persp-last-session) ")\n")
+  (when persp-mode
+    (setq persp-last-session (persp-name persp-curr))
     (mapcar #'(lambda (x)
-                (insert (concat (format "(setq buffers-in-perspectives-%s '" x)
-                                (prin1-to-string
-                                 (remove nil (mapcar 'buffer-name (elt (gethash x perspectives-hash) 2))))
-                                ")\n"
-                                (format "(setq window-configuration-of-persp-%s '" x)
-                                (prin1-to-string
-                                 (symbol-value (intern (format "window-configuration-of-persp-%s" x))))
-                                ")\n")))
-            (persp-names))))
+                (swint-persp-switch x)
+                (set (intern (format "window-configuration-of-persp-%s" x)) (window-state-get nil t)))
+            (persp-names))
+    (with-temp-file
+        swint-perspectives-saved-file
+      (when is-win
+        (insert ";;; -*- coding: utf-8; -*-\n"))
+      (insert "(setq swint-persp-names '" (prin1-to-string (persp-names)) ")\n")
+      (insert "(setq persp-projectile-hash '" (prin1-to-string persp-projectile-hash) ")\n")
+      (insert "(setq persp-last-session " (prin1-to-string persp-last-session) ")\n")
+      (mapcar #'(lambda (x)
+                  (insert (concat (format "(setq buffers-in-perspectives-%s '" x)
+                                  (prin1-to-string
+                                   (remove nil (mapcar 'buffer-name (elt (gethash x perspectives-hash) 2))))
+                                  ")\n"
+                                  (format "(setq window-configuration-of-persp-%s '" x)
+                                  (prin1-to-string
+                                   (symbol-value (intern (format "window-configuration-of-persp-%s" x))))
+                                  ")\n")))
+              (persp-names)))))
 (add-hook 'kill-emacs-hook 'swint-save-perspectives)
 ;; =========emacs关闭时保存perspectives=========
 ;;; emacs开启时加载perspectives

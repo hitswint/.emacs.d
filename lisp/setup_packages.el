@@ -788,4 +788,13 @@
                     '(ido-subdir ((t (:foreground "green")))))
   (setq ido-ignore-buffers '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Compile\\=Log\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*compilation\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\` " "\\`.english-words\\'")))
 ;; ======================ido=======================
+;;; term-keys
+;; ===================term-keys====================
+;; (add-to-list 'package-archives
+;;              '("cselpa" . "https://elpa.thecybershadow.net/packages/"))
+(use-package term-keys
+  :if (and is-lin (not (display-graphic-p)))
+  :config
+  (term-keys-mode t))
+;; ===================term-keys====================
 (provide 'setup_packages)
