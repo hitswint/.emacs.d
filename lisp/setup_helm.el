@@ -369,7 +369,7 @@
   (defun swint-helm-switch-persp/other-window (buffer)
     "Helm-switch to persp/other-window simultaneously."
     (if (memq buffer (persp-buffers persp-curr))
-        (helm-switch-to-buffers buffer t)
+        (switch-to-buffer-other-window buffer)
       (let ((curr-buf (current-buffer)))
         (swint-persp-switch "i")
         (switch-to-buffer curr-buf)

@@ -28,4 +28,6 @@ export XAPIAN_CJK_NGRAM=1
 dunst &
 
 dwm-multi-mon.sh single
+
+xkeysnail.sh &
 exec dwm
