@@ -335,7 +335,7 @@
   (setq which-key-use-C-h-for-paging t
         which-key-prevent-C-h-from-cycling nil)
   ;; 默认的C-h启用describe-prefix-bindings不带prefix。
-  (defun which-key-show-standard-help-with-helm-descbinds ()
+  (defun which-key-show-standard-help-with-helm-descbinds (&optional _)
     (interactive)
     (let ((which-key-inhibit t))
       (which-key--hide-popup-ignore-command)

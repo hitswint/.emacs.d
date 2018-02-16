@@ -25,6 +25,7 @@
   (setq helm-ff-newfile-prompt-p nil)
   (setq helm-split-window-default-side 'same)
   (setq helm-kill-ring-threshold 1)
+  (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))
                     '(helm-ff-directory ((t (:foreground "yellow" :weight bold))))

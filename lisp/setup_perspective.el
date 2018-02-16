@@ -96,25 +96,26 @@
 ;; =========emacs关闭时保存perspectives=========
 ;;; emacs开启时加载perspectives
 ;; =========emacs开启时加载perspectives=========
-(load swint-perspectives-saved-file t)
 (defmacro senny-persp (name &rest body)
   `(let ((initialize (not (gethash ,name perspectives-hash)))
          (current-perspective persp-curr))
      (persp-switch ,name)
      (when initialize ,@body)
      (setq persp-last current-perspective)))
-(defun swint-perspective-init ()
+(defun swint-load-perspectives ()
   ;; 升级到emacs24.5之后，(persp-mode)启动初始化错误，这里重新初始化。
+  (load swint-perspectives-saved-file t)
   (persp-mode t)
   (remove-hook 'ido-make-buffer-list-hook 'persp-set-ido-buffers)
   (mapcar #'(lambda (x)
               (senny-persp x)
               (persp-reactivate-buffers
                (remove nil (mapcar 'get-buffer (symbol-value (intern (format "buffers-in-perspectives-%s" x))))))
-              (window-state-put (symbol-value (intern (format "window-configuration-of-persp-%s" x))) nil t))
+              (ignore-errors (window-state-put (symbol-value (intern (format "window-configuration-of-persp-%s" x)))
+                                               nil t)))
           swint-persp-names)
   (persp-switch persp-last-session))
-(add-hook 'desktop-after-read-hook 'swint-perspective-init)
+(add-hook 'desktop-after-read-hook 'swint-load-perspectives)
 ;; 在不同的persp中关闭同一个buffer时，会产生无效的(persp-point-marker persp)。
 (add-hook 'persp-before-switch-hook '(lambda ()
                                        (unless (marker-position (persp-point-marker persp))

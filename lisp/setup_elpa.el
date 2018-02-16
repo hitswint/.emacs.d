@@ -189,6 +189,7 @@
                      pdf-tools
                      sudo-edit
                      tablist
+                     term-keys
                      ycmd
                      company-ycmd
                      flycheck-ycmd))

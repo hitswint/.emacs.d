@@ -27,6 +27,8 @@
 ;; ================全屏和最大化===============
 ;;; tangotango-theme
 ;; ==============tangotango-theme=============
-(load-theme 'tangotango t)
+(use-package tangotango-theme
+  :config
+  (load-theme 'tangotango t))
 ;; ==============tangotango-theme=============
 (provide 'setup_appearance)

@@ -1,9 +1,18 @@
 vbell off
 startup_message off
+defflow off
+altscreen on
+term screen-256color
+
+hardstatus off
+hardstatus alwayslastline
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %m-%d %{W} %c %{g}]'
+
+# escape ^\\\
 # escape ^||
 # register S ^|
 # bindkey "^[s" process S
 # Modified prefix to C-\(or M-s) as follows.
 # escape ^||
 # bindkey "^[s" command
-escape ^~~
+escape ^Zz
