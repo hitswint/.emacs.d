@@ -23,7 +23,7 @@
   (setq emms-mode-line-format ""
         emms-lyrics-display-format ""
         emms-lyrics-display-on-modeline nil
-        emms-playing-time-display-format "") ;关闭emms在mode-line上的显示
+        emms-playing-time-display-format "")
 ;;;; emms-mpd
   ;; ==============emms-mpd================
   (use-package emms-player-mpd)

@@ -29,14 +29,12 @@
   :bind (("C-x SPC" . pyim-convert-code-at-point)
          ("C-x S-SPC" . pyim-punctuation-translate-at-point))
   :init
-  (bind-key "C-S-SPC" 'toggle-input-method)
-  ;; Lin下使用Gtk+ tooltip，修改~/.emacs.d/gtkrc配置字体。
-  (when is-lin (setq x-gtk-use-system-tooltips t))
-  :config
   (setq default-input-method "pyim")
+  (bind-key "C-S-SPC" 'toggle-input-method)
+  :config
   ;; 使用pyim-fuzzy-pinyin-alist设置模糊音。
-  ;; 设置选词框显示方式popup/pos-tip/nil。
-  (setq pyim-page-tooltip 'pos-tip)
+  ;; 设置选词框显示方式child-frame/popup/minibuffer。
+  ;; (setq pyim-page-tooltip 'popup)
   ;; 开启拼音搜索功能。
   ;; (pyim-isearch-mode 1)
   ;; 设置词条获取方式。

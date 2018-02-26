@@ -262,7 +262,10 @@
 ;;; pos-tip
 ;; ===================pos-tip======================
 (use-package pos-tip
-  :commands (pos-tip-show pos-tip-show-no-propertize))
+  :commands (pos-tip-show pos-tip-show-no-propertize)
+  :config
+  ;; 使用Gtk+ tooltip需配置x-gtk-use-system-tooltips，修改~/.emacs.d/gtkrc配置字体。
+  (when is-lin (setq x-gtk-use-system-tooltips t)))
 ;; ===================pos-tip======================
 ;;; elmacro
 ;; ===================elmacro======================
@@ -349,7 +352,7 @@
   :if is-lin
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :init
-  ;; Pdf-tools会默认设置x-gtk-use-system-tooltips为nil，导致chinese-pyim选词框失效。
+  ;; Pdf-tools默认设置x-gtk-use-system-tooltips为nil。
   (setq pdf-annot-tweak-tooltips nil)
   :config
   (pdf-tools-install)
@@ -797,4 +800,8 @@
   :config
   (term-keys-mode t))
 ;; ===================term-keys====================
+;; ===================yaml-mode====================
+(use-package yaml-mode
+  :mode ("\\.yml\\'" . yaml-mode))
+;; ===================yaml-mode====================
 (provide 'setup_packages)

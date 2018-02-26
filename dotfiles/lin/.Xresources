@@ -174,7 +174,7 @@ URxvt.keysym.C-period: string:L"
 URxvt.keysym.S-C-period: string:L#
 URxvt.keysym.C-M-period: string:L&
 URxvt.keysym.S-C-M-period: string:L'
-URxvt.keysym.C-slash: string:Lb
+! URxvt.keysym.C-slash: string:Lb
 URxvt.keysym.S-C-slash: string:Lc
 URxvt.keysym.C-M-slash: string:Lf
 URxvt.keysym.S-C-M-slash: string:Lg

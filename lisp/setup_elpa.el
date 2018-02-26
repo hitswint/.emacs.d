@@ -190,6 +190,7 @@
                      sudo-edit
                      tablist
                      term-keys
+                     yaml-mode
                      ycmd
                      company-ycmd
                      flycheck-ycmd))
