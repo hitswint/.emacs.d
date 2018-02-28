@@ -12,11 +12,9 @@
   ;; Auctex在打开tex文件时加载，LaTeX-insert-left-brace会覆盖全局的括号定义。
   ;; 打开auctex自带的默认输入右括号的选项。
   (setq LaTeX-electric-left-right-brace t)
-  ;; 为LaTeX模式hook自动换行，数学公式，reftex和显示行号的功能。
   (mapc (lambda (mode)
           (add-hook 'TeX-mode-hook mode))
         (list 'LaTeX-math-mode
-              'turn-on-reftex
               'turn-on-orgtbl
               'TeX-fold-mode ; C-c C-o C-b打开fold，C-c C-o b关闭fold。
               'LaTeX-install-toolbar))
@@ -29,7 +27,6 @@
               (TeX-global-PDF-mode t)   ; PDF mode enable, not plain.
               (setq TeX-save-query nil)
               (imenu-add-menubar-index)
-              (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-parse-all)
               (define-key LaTeX-mode-map (kbd "C-c f") 'TeX-font)
               (define-key LaTeX-mode-map (kbd "C-c v") 'preview-at-point)
               (define-key LaTeX-mode-map (kbd "C-c V") 'preview-clearout-buffer)
@@ -37,7 +34,10 @@
                                                          (ignore-errors (kill-process (TeX-active-process)))))
               (define-key LaTeX-mode-map (kbd "C-c j") 'swint-open-at-point-with-apps)
               (define-key LaTeX-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
-              (define-key LaTeX-mode-map (kbd "\"") nil)))
+              (define-key LaTeX-mode-map (kbd "\"") nil)
+              (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-mode)
+              (define-key LaTeX-mode-map (kbd "C-c z") 'zotelo-minor-mode)
+              (define-key LaTeX-mode-map (kbd "C-c b") 'helm-bibtex-with-local-bibliography)))
   (setq TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o")))
   ;; 使用imagemagick中convert转换为图片。win中默认使用imgconvert，可以将cygwin中convert改名为imgconvert。
   (add-to-list 'TeX-command-list '("LaTeX-standalone" "%`xelatex -shell-escape%(mode)%' %t" TeX-run-TeX nil t))
@@ -46,8 +46,10 @@
 ;;;; reftex
   ;; ===================reftex=====================
   (use-package reftex
-    :after tex
+    :commands reftex-mode
+    ;; C-c [ reftex-citation，C-c C-x [ org-reftex-citation。
     :config
+    (define-key reftex-mode-map (kbd "C-c r") 'reftex-parse-all)
     (setq reftex-plug-into-AUCTeX t
           reftex-toc-split-windows-horizontally t
           reftex-toc-split-windows-fraction 0.2)
@@ -80,18 +82,14 @@
 ;; =================auctex-latexmk=================
 ;;; zotelo
 ;; ====================zotelo======================
-;; C-c z c建立bib文件，C-c z u更新bib文件，C-c [引用。
+;; C-c z c建立bib文件，C-c z u更新bib文件。
 (use-package zotelo
-  :commands (swint-zotelo-update-database zotelo--locate-bibliography-files zotelo-set-collection)
-  :init
-  (add-hook 'LaTeX-mode-hook '(lambda ()
-                                (define-key LaTeX-mode-map (kbd "C-c z U") 'swint-zotelo-update-database)))
-  (add-hook 'org-mode-hook '(lambda ()
-                              (define-key org-mode-map (kbd "C-c z U") 'swint-zotelo-update-database)))
+  :commands (zotelo-minor-mode swint-zotelo-update-database zotelo--locate-bibliography-files zotelo-set-collection)
   :config
+  (define-key zotelo-minor-mode-map "\C-czU" 'swint-zotelo-update-database)
   ;; 设置.bib文件的编码格式，否则出现乱码。
   (setq zotelo-translator-charsets '((BibTeX . "Unicode") (Default . "Unicode")))
-  ;; 使用zotero-better-bibtex自动更新bib文件，使用zotelo手动更新bib文件。
+  ;; 手动更新~/.bib/zotelo/下文件。
   (defun swint-zotelo-update-database ()
     (interactive)
     (zotero-update-collection-hash)

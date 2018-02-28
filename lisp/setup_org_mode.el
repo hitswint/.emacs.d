@@ -67,6 +67,9 @@
                                                        (if (or (org-at-heading-p) (org-at-item-p))
                                                            (call-interactively 'org-beginning-of-line)
                                                          (call-interactively 'smart-beginning-of-line))))
+               (define-key org-mode-map (kbd "C-c r") 'reftex-mode)
+               (define-key org-mode-map (kbd "C-c z") 'zotelo-minor-mode)
+               (define-key org-mode-map (kbd "C-c b") 'helm-bibtex-with-local-bibliography)
                (define-key org-mode-map (kbd "C-j") nil)
                (define-key org-mode-map (kbd "RET") nil)
                (define-key org-mode-map [(control \,)] nil)
@@ -111,7 +114,6 @@
            (plantuml . t)
            (latex . t))))
   (setq org-confirm-babel-evaluate nil)
-  ;; win中似乎不好使，应该是没装java。
   ;; ===========使用ditaa输出ascii图片==========
 ;;;; cdlatex
   ;; ================cdlatex====================
@@ -176,8 +178,7 @@
                  (org-redisplay-inline-images))
         (insert (abbreviate-file-name screen-file-name)))))
   (global-set-key (kbd "C-x p") 'swint-insert-screenshot)
-  (global-set-key (kbd "C-x P") '(lambda ()
-                                   (interactive)
+  (global-set-key (kbd "C-x P") '(lambda () (interactive)
                                    (swint-insert-screenshot t)))
   ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后调用insert-screenshot。
   ;; org中打开和关闭图片显示(org-display-inline-images)和(org-remove-inline-images)。
@@ -368,15 +369,6 @@
                  (add-to-list 'org-file-apps '("\\.pdf\\'" . "llpp %s")))))
   ;; code执行免应答（Eval code without confirm）
   (setq org-confirm-babel-evaluate nil)
-  (defun org-mode-article-modes ()
-    (reftex-mode t)
-    (and (buffer-file-name)
-         (file-exists-p (buffer-file-name))
-         (reftex-parse-all)))
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (if (member "REFTEX" org-todo-keywords-1)
-                  (org-mode-article-modes))))
   (unless (boundp 'org-latex-classes)
     (setq org-latex-classes nil))
   ;; 定义org markup(*_+/=~)等的转换。

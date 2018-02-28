@@ -483,16 +483,9 @@
 ;;; helm-bibtex
 ;; ================helm-bibtex==================
 (use-package helm-bibtex
-  :commands (swint-helm-bibtex-local bibtex-completion-find-pdf-in-field bibtex-completion-get-entry-for-pdf)
+  :commands (helm-bibtex-with-local-bibliography bibtex-completion-find-pdf-in-field bibtex-completion-get-entry-for-pdf)
   :bind (("C-x b" . swint-helm-bibtex)
          ("C-x B" . helm-bibtex))
-  :init
-  (add-hook 'LaTeX-mode-hook
-            '(lambda ()
-               (define-key LaTeX-mode-map (kbd "C-c b") 'swint-helm-bibtex-local)))
-  (add-hook 'org-mode-hook
-            '(lambda ()
-               (define-key org-mode-map (kbd "C-c b") 'swint-helm-bibtex-local)))
   :config
   (define-key helm-map (kbd "C-c j") '(lambda () (interactive)
                                         (with-helm-alive-p
@@ -503,29 +496,16 @@
   (define-key helm-map (kbd "C-c l") '(lambda () (interactive)
                                         (with-helm-alive-p
                                           (helm-exit-and-execute-action 'helm-bibtex-edit-notes))))
-  (defun swint-helm-bibtex-local ()
-    (interactive)
-    (let* ((bibfile (or (car (zotelo--locate-bibliography-files))
-                        (file-name-base)))
-           (actual-bibfile (if (string-match (concat "\\." "bib" "$") bibfile)
-                               (expand-file-name bibfile)
-                             (concat (expand-file-name bibfile) "." "bib"))))
-      (unless (file-exists-p actual-bibfile)
-        (zotelo-set-collection))
-      (unless zotelo-minor-mode
-        (zotelo-minor-mode t))
-      (let ((bibtex-completion-bibliography actual-bibfile))
-        (helm-bibtex))))
   (defun swint-helm-bibtex ()
     (interactive)
     (let ((bibtex-completion-bibliography
            (read-file-name "File: " (expand-file-name "~/.bib/"))))
-      (helm-bibtex)))
+      (call-interactively 'helm-bibtex)))
   (setq bibtex-completion-cite-default-command "citep"
         bibtex-completion-cite-prompt-for-optional-arguments nil
         bibtex-completion-additional-search-fields '(keywords)
         bibtex-completion-pdf-field "file"
-        bibtex-completion-bibliography "~/.bib/ALL.bib"
+        bibtex-completion-bibliography "~/.bib/ALL.bib" ;zotero-better-bibtex自动更新。
         bibtex-completion-notes-path (concat (helm-get-firefox-user-init-dir)
                                              "zotero/storage/TKM9D893/notes.org"))
   ;; 通过pdf文件找到对应entry，供swint-interleave-open-notes-file-for-pdf使用。
