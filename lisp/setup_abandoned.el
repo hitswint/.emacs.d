@@ -32,9 +32,9 @@ The returned value is a list of `aj-position' record."
                        (goto-char start-point)
                        (let ((case-fold-search ace-jump-mode-case-fold)
                              re-query-string-all) ;定义包括中英文字符串
-                         (if (string-empty-p (pinyin-search--pinyin-to-regexp re-query-string))
+                         (if (string-empty-p (pinyinlib-build-regexp-string re-query-string))
                              (setq re-query-string-all (concat "[" re-query-string "]")) ;无法跳转.*+?等正则表达式使用的符号
-                           (setq re-query-string-all (concat "[" (substring (pinyin-search--pinyin-to-regexp re-query-string) 1 -1) re-query-string "]")))
+                           (setq re-query-string-all (concat "[" (substring (pinyinlib-build-regexp-string re-query-string) 1 -1) re-query-string "]")))
                          (loop while (re-search-forward re-query-string-all nil t) ;使用pinyin-search实现中文ace-jump
                                until (or
                                       (> (point) end-point)

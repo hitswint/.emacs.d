@@ -200,23 +200,23 @@ This function obeys `avy-all-windows' setting."
                        (or avy-case-fold-search (string= str (downcase str))))
                       found)
                   (avy-dowindows current-prefix-arg
-                                 (dolist (pair (avy--find-visible-regions
-                                                (window-start)
-                                                (window-end (selected-window) t)))
-                                   (save-excursion
-                                     (goto-char (car pair))
-                                     (setq regex (pinyin-search--pinyin-to-regexp str))
-                                     (while (re-search-forward regex (cdr pair) t)
-                                       (unless (get-char-property (1- (point)) 'invisible)
-                                         (let ((ov (make-overlay
-                                                    (match-beginning 0)
-                                                    (match-end 0))))
-                                           (setq found t)
-                                           (push ov overlays)
-                                           (overlay-put
-                                            ov 'window (selected-window))
-                                           (overlay-put
-                                            ov 'face 'avy-goto-char-timer-face)))))))
+                    (dolist (pair (avy--find-visible-regions
+                                   (window-start)
+                                   (window-end (selected-window) t)))
+                      (save-excursion
+                        (goto-char (car pair))
+                        (setq regex (pinyinlib-build-regexp-string str))
+                        (while (re-search-forward regex (cdr pair) t)
+                          (unless (get-char-property (1- (point)) 'invisible)
+                            (let ((ov (make-overlay
+                                       (match-beginning 0)
+                                       (match-end 0))))
+                              (setq found t)
+                              (push ov overlays)
+                              (overlay-put
+                               ov 'window (selected-window))
+                              (overlay-put
+                               ov 'face 'avy-goto-char-timer-face)))))))
                   ;; No matches at all, so there's surely a typo in the input.
                   (unless found (beep)))))
             (nreverse (mapcar (lambda (ov)
@@ -234,9 +234,9 @@ This function obeys `avy-all-windows' setting."
                                (not avy-all-windows)
                              avy-all-windows)))
       (avy-with swint-avy-goto-char-timer
-                (avy--process
-                 (swint-avy--read-candidates)
-                 (avy--style-fn avy-style))))))
+        (avy--process
+         (swint-avy--read-candidates)
+         (avy--style-fn avy-style))))))
 ;; =================ace-pinyin==================
 ;;; ace-link
 ;; ==================ace-link===================

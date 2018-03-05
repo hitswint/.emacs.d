@@ -141,6 +141,7 @@
             peep-dired
             perspective
             persp-projectile
+            pinyinlib
             pinyin-search
             pkg-info
             popup

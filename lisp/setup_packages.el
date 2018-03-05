@@ -24,20 +24,20 @@
 ;; 退出时会要求保存abbrev_defs文件。
 ;; ====================abbrev======================
 ;;; server
-;; =====================server=====================
+;; ====================server======================
 (use-package server
   :config
   (unless (server-running-p)
     (server-start)))
-;; =====================server=====================
+;; ====================server======================
 ;;; recentf
-;; =====================recentf====================
+;; ====================recentf=====================
 (use-package recentf
   :config
   (use-package recentf-ext)
   (recentf-mode 1)
   (setq recentf-max-saved-items 100))
-;; =====================recentf====================
+;; ====================recentf=====================
 ;;; multiple-cursors
 ;; ================multiple-cursors================
 (use-package multiple-cursors

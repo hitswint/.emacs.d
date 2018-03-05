@@ -1,5 +1,5 @@
 ;;; ivy
-;; ===========ivy/swiper/counsel/hydra=============
+;; =====================ivy========================
 (use-package ivy
   :commands ivy-set-actions
   :config
@@ -7,7 +7,32 @@
   (bind-key "C-h" 'ivy-avy ivy-minibuffer-map)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-height 10)
-  (setq ivy-count-format "%d/%d "))
+  (setq ivy-count-format "%d/%d ")
+  ;; https://github.com/pengpengxp/swiper/wiki/ivy-support-chinese-pinyin
+  (defun swint-pinyinlib-build-regexp-string (str)
+    (cond ((equal str ".*") ".*")
+          (t (pinyinlib-build-regexp-string str t))))
+  (defun swint-pinyin-regexp-helper (str)
+    (cond ((equal str " ") ".*")
+          ((equal str "") nil)
+          (t str)))
+  (defun pinyin-to-utf8 (str)
+    (cond ((equal 0 (length str)) nil)
+          (t (mapconcat 'swint-pinyinlib-build-regexp-string
+                        (remove nil (mapcar 'swint-pinyin-regexp-helper
+                                            (split-string str ""))) ""))))
+  (defun re-builder-pinyin (str)
+    (or (pinyin-to-utf8 str)
+        (ivy--regex-plus str)
+        (ivy--regex-ignore-order str)))
+  (setq ivy-re-builders-alist '((t . re-builder-pinyin)))
+  (use-package ivy-hydra
+    :after ivy)
+  (use-package hydra
+    :after ivy-hydra))
+;; =====================ivy========================
+;;; swiper
+;; ===================swiper=======================
 (use-package swiper
   :bind (("M-s s" . swint-swiper)
          ("M-s S" . swiper-all)
@@ -22,6 +47,9 @@
              (symbol-name-at-point))))
       (deactivate-mark)
       (swiper swint-swiper-current-thing))))
+;; ===================swiper=======================
+;;; counsel
+;; ===================counsel======================
 (use-package counsel
   ;; 按键逻辑：helm(C-x c x)/counsel(M-s c x)。
   :bind (("M-X" . counsel-M-x)
@@ -64,9 +92,5 @@
                  (setq val (if (= 1 (length collection)) (car collection)
                              (ivy-read (format "Bash/Zsh history:") collection))))
         (insert val)))))
-(use-package ivy-hydra
-  :after ivy)
-(use-package hydra
-  :after ivy-hydra)
-;; ===========ivy/swiper/counsel/hydra=============
+;; ===================counsel======================
 (provide 'setup_ivy)

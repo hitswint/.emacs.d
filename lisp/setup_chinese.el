@@ -55,4 +55,9 @@
     :config
     (pyim-basedict-enable)))
 ;; ==================pyim==================
+;;; pinyinlib
+;; ===============pinyinlib================
+(use-package pinyinlib
+  :commands pinyinlib-build-regexp-string)
+;; ===============pinyinlib================
 (provide 'setup_chinese)

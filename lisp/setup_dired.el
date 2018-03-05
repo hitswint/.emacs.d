@@ -548,7 +548,7 @@ Assuming .. and . is a current directory (like in FAR)"
   (defun dired-narrow--string-filter-py (filter)
     (let ((words (split-string filter " ")))
       (--all? (save-excursion (or (search-forward it (line-end-position) t)
-                                  (re-search-forward (pinyin-search--pinyin-to-regexp it)
+                                  (re-search-forward (pinyinlib-build-regexp-string it)
                                                      (line-end-position) t)))
               words)))
   (advice-add 'dired-narrow--string-filter :override #'dired-narrow--string-filter-py))

@@ -35,16 +35,10 @@
       (isearch-yank-string swint-isearch-current-thing)))
   (define-key isearch-mode-map (kbd "C-t") 'isearch-thing)
   (define-key isearch-mode-map (kbd "C-q") #'isearch-toggle-pinyin)
-  ;; 同时搜索中英文，与ace-jump一样，对于.*+?等正则表达式使用的符号无效。
-  (defun swint-pinyin-search--pinyin-to-regexp (fn string)
+  (defun swint-pinyin-search--pinyin-to-regexp (pinyin)
     "Wrap for Pinyin searching."
-    (let ((string-converted (funcall fn string)))
-      ;; 当搜索中文、符号或包含iuv时，不转换string。
-      (or (unless (or (string-match "[iuv]" string)
-                      (string-empty-p string-converted))
-            (concat string "\\|" string-converted))
-          string)))
-  (advice-add 'pinyin-search--pinyin-to-regexp :around #'swint-pinyin-search--pinyin-to-regexp)
+    (pinyinlib-build-regexp-string pinyin nil nil nil))
+  (advice-add 'pinyin-search--pinyin-to-regexp :override #'swint-pinyin-search--pinyin-to-regexp)
   (add-hook 'isearch-mode-end-hook (lambda () (setq pinyin-search-activated nil))))
 ;; ==================pinyin-search=================
 ;;; 拼音首字母搜索
