@@ -54,7 +54,6 @@
   ;; 按键逻辑：helm(C-x c x)/counsel(M-s c x)。
   :bind (("M-X" . counsel-M-x)
          ("C-x C-r" . swint-counsel-history)
-         ("M-s `" . counsel-tmm)
          ("M-s c u" . counsel-unicode-char)
          ("M-s c l" . counsel-locate)
          ("M-s c i" . counsel-imenu)

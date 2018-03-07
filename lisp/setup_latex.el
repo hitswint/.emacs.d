@@ -37,6 +37,7 @@
               (define-key LaTeX-mode-map (kbd "\"") nil)
               (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-mode)
               (define-key LaTeX-mode-map (kbd "C-c z") 'zotelo-minor-mode)
+              (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)
               (define-key LaTeX-mode-map (kbd "C-c b") 'helm-bibtex-with-local-bibliography)))
   (setq TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o")))
   ;; 使用imagemagick中convert转换为图片。win中默认使用imgconvert，可以将cygwin中convert改名为imgconvert。

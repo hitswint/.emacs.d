@@ -87,9 +87,10 @@
   (defun swint-helm-file-buffers-list--init/curr-persp ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
     (setq swint-helm-file-buffers-list-cache/curr-persp
-          (remove-if (lambda (x) (equal (buffer-mode x) 'dired-mode))
-                     (remove-if-not (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
-                                    (helm-buffer-list))))
+          (or (remove-if (lambda (x) (equal (buffer-mode x) 'dired-mode))
+                         (remove-if-not (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
+                                        (helm-buffer-list)))
+              '("*helm file buffers-swint*")))
     (let ((result (cl-loop for b in swint-helm-file-buffers-list-cache/curr-persp
                            maximize (length b) into len-buf
                            maximize (length (with-current-buffer b
@@ -103,9 +104,10 @@
   (defun swint-helm-file-buffers-list--init/other-persps ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
     (setq swint-helm-file-buffers-list-cache/other-persps
-          (remove-if (lambda (x) (equal (buffer-mode x) 'dired-mode))
-                     (remove-if (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
-                                (helm-buffer-list))))
+          (or (remove-if (lambda (x) (equal (buffer-mode x) 'dired-mode))
+                         (remove-if (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
+                                    (helm-buffer-list)))
+              '("*helm file buffers-swint*")))
     (let ((result (cl-loop for b in swint-helm-file-buffers-list-cache/other-persps
                            maximize (length b) into len-buf
                            maximize (length (with-current-buffer b
@@ -216,7 +218,7 @@
           (or (remove-if-not (lambda (x) (equal (buffer-mode x) 'dired-mode))
                              (remove-if-not (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
                                             (helm-buffer-list)))
-              (list (buffer-name (get-buffer-create "*helm no dired buffers in current persp*")))))
+              '("*helm dired buffers-swint*")))
     (let ((result (cl-loop for b in swint-helm-dired-buffers-list-cache/curr-persp
                            maximize (length b) into len-buf
                            maximize (length (with-current-buffer b
@@ -230,9 +232,10 @@
   (defun swint-helm-dired-buffers-list--init/other-persps ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
     (setq swint-helm-dired-buffers-list-cache/other-persps
-          (remove-if-not (lambda (x) (equal (buffer-mode x) 'dired-mode))
-                         (remove-if (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
-                                    (helm-buffer-list))))
+          (or (remove-if-not (lambda (x) (equal (buffer-mode x) 'dired-mode))
+                             (remove-if (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
+                                        (helm-buffer-list)))
+              '("*helm dired buffers-swint*")))
     (let ((result (cl-loop for b in swint-helm-dired-buffers-list-cache/other-persps
                            maximize (length b) into len-buf
                            maximize (length (with-current-buffer b
@@ -453,17 +456,11 @@
 ;;; helm_lacarte
 ;; ================helm_lacarte=================
 (use-package lacarte
-  :bind ("C-x `" . helm-browse-menubar)
-  :init
-  (add-hook 'LaTeX-mode-hook
-            '(lambda ()
-               (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)))
-  (add-hook 'org-mode-hook
-            '(lambda ()
-               (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)))
-  (setq LaTeX-math-menu-unicode t)
+  :commands helm-math-symbols
+  :bind (("<escape> M-x" . lacarte-execute-command)
+         ("C-x `" . lacarte-execute-menu-command))
   :config
-  ;; 使用helm自带的程序而不使用下列自定义的命令。
+  ;; 使用helm-insert-latex-math代替。
   (defvar helm-source-lacarte-math
     '((name . "Math Symbols")
       (init . (lambda()

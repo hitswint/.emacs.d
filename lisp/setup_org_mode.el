@@ -69,6 +69,7 @@
                                                          (call-interactively 'smart-beginning-of-line))))
                (define-key org-mode-map (kbd "C-c r") 'reftex-mode)
                (define-key org-mode-map (kbd "C-c z") 'zotelo-minor-mode)
+               (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)
                (define-key org-mode-map (kbd "C-c b") 'helm-bibtex-with-local-bibliography)
                (define-key org-mode-map (kbd "C-c l") 'swint-noter/interleave)
                (define-key org-mode-map (kbd "C-j") nil)
