@@ -23,7 +23,7 @@
           ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
           ("c" "Computer" entry (file+headline "~/org/notes-computer.org" "Computer") "* %? %U %^g")
           ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others") "* %? %U %^g")
-          ("j" "Journal" entry (file+datetree "~/org/journal.org.gpg") "* %? %U")))
+          ("j" "Journal" entry (file+olp+datetree "~/org/journal.org.gpg") "* %? %U")))
   ;; =================Capture===================
 ;;;; Keybindings
   ;; ===============Keybindings=================
@@ -70,6 +70,7 @@
                (define-key org-mode-map (kbd "C-c r") 'reftex-mode)
                (define-key org-mode-map (kbd "C-c z") 'zotelo-minor-mode)
                (define-key org-mode-map (kbd "C-c b") 'helm-bibtex-with-local-bibliography)
+               (define-key org-mode-map (kbd "C-c l") 'swint-noter/interleave)
                (define-key org-mode-map (kbd "C-j") nil)
                (define-key org-mode-map (kbd "RET") nil)
                (define-key org-mode-map [(control \,)] nil)
@@ -85,7 +86,7 @@
         (lambda ()
           (substring (nth 4 (org-heading-components)) 0 0)))
   ;; 显示两周的agenda。
-  (setq org-agenda-span 14)
+  (setq org-agenda-span 'month)
   ;; 设定todo的子项完成后主项自动完成。
   (add-hook 'org-after-todo-statistics-hook '(lambda (n-done n-not-done)
                                                (let (org-log-done org-log-states)
@@ -95,24 +96,21 @@
         '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")))
   ;; |后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔。
   ;; ===================GTD=====================
-;;;; 使用ditaa输出ascii图片
+;;;; org-babel
   ;; ===========使用ditaa输出ascii图片==========
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
-  (org-babel-do-load-languages
-   (quote org-babel-load-languages)
-   (quote ((emacs-lisp . t)
-           (dot . t)
-           (ditaa . t)
-           (R . t)
-           (python . t)
-           (ruby . t)
-           (gnuplot . t)
-           (clojure . t)
-           (sh . t)
-           (ledger . t)
-           (org . t)
-           (plantuml . t)
-           (latex . t))))
+  (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)
+                                                           (dot . t)
+                                                           (ditaa . t)
+                                                           (python . t)
+                                                           (ruby . t)
+                                                           (gnuplot . t)
+                                                           (clojure . t)
+                                                           (sh . t)
+                                                           (ledger . t)
+                                                           (org . t)
+                                                           (plantuml . t)
+                                                           (latex . t)))
   (setq org-confirm-babel-evaluate nil)
   ;; ===========使用ditaa输出ascii图片==========
 ;;;; cdlatex
@@ -524,17 +522,10 @@
 ;; Display annotated files with mark.
 (use-package dired-x-highlight
   :load-path "site-lisp/org-annotate-file/"
-  :commands dired-k--highlight-buffer
-  :config
-  (defun swint-org-annotation-storage-file ()
-    "Modified from var to function."
-    (concat "~/org/annotated/annotated-("
-            (replace-regexp-in-string
-             "/" "_" (substring-no-properties (abbreviate-file-name default-directory) 1))
-            ").org"))
-  ;; Sync annotated status as operating.
-  (use-package dired-sync-highlight
-    :load-path "site-lisp/org-annotate-file/"))
+  :commands dired-k--highlight-buffer)
+;; Sync annotated status as operating.
+(use-package dired-sync-highlight
+  :load-path "site-lisp/org-annotate-file/")
 ;; 原有org-annotate-file用于全局注释。
 (use-package org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
@@ -556,20 +547,8 @@
 ;; 新建swint-org-annotate-file.el用于局部注释。
 (use-package swint-org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
-  :commands swint-org-annotate-file
-  :bind ("C-x l" . swint-org-annotate-file-current)
-  :config
-  (defun swint-org-annotate-file-current ()
-    (interactive)
-    (cond
-     ((equal major-mode 'dired-mode)
-      (swint-org-annotate-file (abbreviate-file-name (dired-get-filename))))
-     ((equal major-mode 'pdf-view-mode)
-      (dired-jump-other-window)
-      (swint-org-annotate-file (abbreviate-file-name (dired-get-filename))))
-     (t
-      (switch-to-buffer-other-window (current-buffer))
-      (swint-org-annotate-file (abbreviate-file-name (buffer-file-name)))))))
+  :commands swint-org-annotation-storage-file
+  :bind ("C-x l" . swint-org-annotate-file-current))
 ;; ===============org-annotate==================
 ;;; org-speed-commands
 ;; =============org-speed-commands==============
@@ -681,34 +660,7 @@
 ;;; interleave
 ;; =================interleave==================
 (use-package interleave
-  :commands (swint-dired-interleave swint-interleave-open-notes-file-for-pdf)
-  :init
-  (add-hook 'org-mode-hook '(lambda ()
-                              (define-key org-mode-map (kbd "C-c l") 'swint-interleave)
-                              (define-key org-mode-map (kbd "C-c L") 'interleave-mode)))
-  ;; 在加载interleave包之前必须先加载pdf-tools。
-  (defun swint-interleave ()
-    (interactive)
-    (when is-lin
-      (use-package pdf-tools))
-    (let ((note-page (ignore-errors
-                       (string-to-number (org-entry-get nil "interleave_page_note" t)))))
-      (unless (org-at-top-heading-p)
-        (re-search-backward "^\* " nil t))
-      (let* ((annotated-file (swint-get-annotated-file))
-             (key (org-entry-get nil "Custom_ID"))
-             (pdf-file (save-excursion (car (bibtex-completion-find-pdf-in-field key)))))
-        (unless (org-entry-get nil "interleave_pdf")
-          (cond
-           ((and annotated-file (file-exists-p annotated-file))
-            (org-set-property "INTERLEAVE_PDF" annotated-file))
-           (pdf-file
-            (org-set-property "INTERLEAVE_PDF" (file-relative-name pdf-file))))))
-      (call-interactively 'interleave-mode)
-      (if note-page
-          (progn
-            (interleave--go-to-page-note note-page)
-            (interleave-sync-pdf-page-current)))))
+  :commands (interleave-mode swint-dired-interleave interleave-open-notes-file-for-pdf)
   :config
   (defun swint-dired-interleave ()
     (interactive)
@@ -718,36 +670,41 @@
           (find-file note-file)
         (find-file pdf-file)
         (interleave-open-notes-file-for-pdf))))
-  (defun swint-interleave-open-notes-file-for-pdf ()
-    (interactive)
-    (if (file-in-directory-p (buffer-file-name) (helm-get-firefox-user-init-dir))
-        (when (or (derived-mode-p 'doc-view-mode)
-                  (derived-mode-p 'pdf-view-mode))
-          (let* ((current-pdf buffer-file-name)
-                 (entry-for-pdf (bibtex-completion-get-entry-for-pdf current-pdf))
-                 (key-for-pdf (list (bibtex-completion-get-value "=key=" entry-for-pdf))))
-            (if entry-for-pdf
-                (progn (bibtex-completion-edit-notes key-for-pdf)
-                       (org-back-to-heading)
-                       (swint-interleave)
-                       (interleave-add-note))
-              (message "Current pdf file is not in bibliography."))))
-      (interleave-open-notes-file-for-pdf)))
-  (smartrep-define-key interleave-mode-map "C-c"
-    '(("c" . interleave-sync-pdf-page-current)
-      ("p" . interleave-sync-pdf-page-previous)
-      ("n" . interleave-sync-pdf-page-next)
-      ("l" . interleave-mode)))
-  (smartrep-define-key interleave-pdf-mode-map "C-c"
-    '(("c" . interleave-sync-pdf-page-current)
-      ("p" . interleave-sync-pdf-page-previous)
-      ("n" . interleave-sync-pdf-page-next)
-      ("l" . interleave-add-note)))
   (define-key interleave-mode-map (kbd "M-.") nil)
-  (define-key interleave-mode-map (kbd "M-p") nil)
-  (define-key interleave-mode-map (kbd "M-n") nil)
+  (define-key interleave-mode-map (kbd "M-o") 'interleave-sync-pdf-page-current)
   (define-key interleave-pdf-mode-map (kbd "M-.") nil)
-  (define-key interleave-pdf-mode-map (kbd "M-p") nil)
-  (define-key interleave-pdf-mode-map (kbd "M-n") nil))
+  (define-key interleave-pdf-mode-map (kbd "M-o") 'interleave-sync-pdf-page-current))
 ;; =================interleave==================
+;;; org-noter
+;; =================org-noter===================
+(use-package org-noter
+  :commands (org-noter swint-noter/interleave swint-open-notes-file-for-pdf)
+  :config
+  (defun swint-noter/interleave ()
+    (interactive)
+    (let* ((key (org-entry-get nil "Custom_ID"))
+           (pdf-file (save-excursion (car (bibtex-completion-find-pdf-in-field key)))))
+      (when (and (not (org-entry-get nil org-noter-property-doc-file t)) key pdf-file)
+        (org-entry-put nil org-noter-property-doc-file (file-relative-name pdf-file)))
+      (if (org-entry-get nil org-noter-property-doc-file t)
+          (call-interactively 'org-noter)
+        (call-interactively 'interleave-mode))))
+  (defun swint-open-notes-file-for-pdf ()
+    (interactive)
+    (if (file-in-directory-p (buffer-file-name) "~/Zotero")
+        (let* ((entry-for-pdf (bibtex-completion-get-entry-for-pdf (buffer-file-name)))
+               (key-for-pdf (list (bibtex-completion-get-value "=key=" entry-for-pdf))))
+          (when entry-for-pdf
+            (bibtex-completion-edit-notes key-for-pdf)
+            (swint-noter/interleave)))
+      (interleave-open-notes-file-for-pdf)))
+  (define-key org-noter-doc-mode-map (kbd "M-.") nil)
+  (define-key org-noter-doc-mode-map (kbd "C-M-.") nil)
+  (define-key org-noter-doc-mode-map (kbd "M-o") 'org-noter-sync-current-page-or-chapter)
+  (define-key org-noter-doc-mode-map (kbd "C-M-o") 'org-noter-sync-current-note)
+  (define-key org-noter-notes-mode-map (kbd "M-.") nil)
+  (define-key org-noter-notes-mode-map (kbd "C-M-.") nil)
+  (define-key org-noter-notes-mode-map (kbd "M-o") 'org-noter-sync-current-page-or-chapter)
+  (define-key org-noter-notes-mode-map (kbd "C-M-o") 'org-noter-sync-current-note))
+;; =================org-noter===================
 (provide 'setup_org_mode)

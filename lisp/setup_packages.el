@@ -334,15 +334,12 @@
   (which-key-mode)
   (which-key-setup-side-window-right-bottom)
   (setq which-key-sort-order 'which-key-description-order)
-  ;; 使用C-h或?切换页面。
-  (setq which-key-use-C-h-for-paging t
-        which-key-prevent-C-h-from-cycling nil)
-  ;; 默认的C-h启用describe-prefix-bindings不带prefix。
+  ;; 默认C-h启用describe-prefix-bindings。
   (defun which-key-show-standard-help-with-helm-descbinds (&optional _)
     (interactive)
     (let ((which-key-inhibit t))
       (which-key--hide-popup-ignore-command)
-      (helm-descbinds which-key--current-prefix)))
+      (helm-descbinds (kbd (which-key--current-key-string)))))
   (advice-add 'which-key-show-standard-help :override
               #'which-key-show-standard-help-with-helm-descbinds))
 ;; ====================which-key===================
@@ -366,7 +363,7 @@
   (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
   (define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
   (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
-  (define-key pdf-view-mode-map (kbd "C-c l") 'swint-interleave-open-notes-file-for-pdf))
+  (define-key pdf-view-mode-map (kbd "C-c l") 'swint-open-notes-file-for-pdf))
 ;; ====================pdf-tools===================
 ;;; doc-view-mode
 ;; ==================doc-view-mode=================
@@ -379,7 +376,7 @@
   (define-key doc-view-mode-map (kbd "C-v") 'doc-view-scroll-up-or-next-page)
   (define-key doc-view-mode-map (kbd "C-p") '(lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
   (define-key doc-view-mode-map (kbd "C-n") '(lambda () (interactive) (doc-view-next-line-or-next-page 3)))
-  (define-key doc-view-mode-map (kbd "C-c l") 'swint-interleave-open-notes-file-for-pdf)
+  (define-key doc-view-mode-map (kbd "C-c l") 'swint-open-notes-file-for-pdf)
   (when is-win
     (setq doc-view-odf->pdf-converter-program "c:/Program Files (x86)/LibreOffice 5/program/soffice.exe")))
 ;; ==================doc-view-mode=================
@@ -491,9 +488,9 @@
 ;;; goto-last-change
 ;; =================goto-last-change===============
 (use-package goto-chg
-  :bind ("M-?" . swint-goto-last-change-with-prefix)
+  :bind ("M-?" . swint-goto-last-change)
   :config
-  (defun swint-goto-last-change-with-prefix (&optional arg)
+  (defun swint-goto-last-change ()
     (interactive)
     (condition-case nil
         (progn (call-interactively 'goto-last-change)

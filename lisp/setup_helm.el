@@ -506,9 +506,7 @@
         bibtex-completion-additional-search-fields '(keywords)
         bibtex-completion-pdf-field "file"
         bibtex-completion-bibliography "~/.bib/ALL.bib" ;zotero-better-bibtex自动更新。
-        bibtex-completion-notes-path (concat (helm-get-firefox-user-init-dir)
-                                             "zotero/storage/TKM9D893/notes.org"))
-  ;; 通过pdf文件找到对应entry，供swint-interleave-open-notes-file-for-pdf使用。
+        bibtex-completion-notes-path "~/Zotero/storage/TKM9D893/notes.org")
   (defun bibtex-completion-get-entry-for-pdf (pdf-file)
     "Find entry for pdf-file in .bib file."
     (with-temp-buffer
@@ -526,7 +524,6 @@
                                     parsebib--key-regexp "[[:space:]]*,"))
         (let ((entry-type (match-string 1)))
           (reverse (bibtex-completion-prepare-entry (parsebib-read-entry entry-type) nil nil))))))
-  ;; Added helm-bibtex-open-pdf-externally.
   (defcustom helm-bibtex-pdf-open-externally-function '(lambda (fpath)
                                                          (cond
                                                           (is-lin (dired-async-shell-command fpath))

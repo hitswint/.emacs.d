@@ -80,7 +80,7 @@
   (bind-key "M-s M-'" 'projectile-persp-switch-project)
   (defun projectile-persp-switch-project-update-hash (project-to-switch)
     (projectile-add-known-project project-to-switch)
-    (unless (and (boundp 'persp-projectile-hash) persp-projectile-hash)
+    (unless (bound-and-true-p persp-projectile-hash)
       (setq persp-projectile-hash (make-hash-table :test 'equal)))
     ;; 将project-to-switch加入persp-projectile-hash中。
     (puthash project-to-switch

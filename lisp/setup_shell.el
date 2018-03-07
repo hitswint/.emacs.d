@@ -17,7 +17,7 @@
                                   (setq comint-input-ring-separator "\n: \\([0-9]+\\):\\([0-9]+\\);"))
                                 (comint-read-input-ring t)
                                 ;; 若virtualenvs开启，启动相应虚拟环境，并使用auto-complete补全命令。
-                                (if (and (boundp 'pyvenv-virtual-env) pyvenv-virtual-env)
+                                (if (bound-and-true-p pyvenv-virtual-env)
                                     (process-send-string (get-process "shell")
                                                          (concat "source " pyvenv-virtual-env "bin/activate\n")))))
   (define-key shell-mode-map (kbd "C-q") 'comint-send-eof))

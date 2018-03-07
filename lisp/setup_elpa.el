@@ -186,6 +186,8 @@
                      helm-mu
                      helm-pass
                      mu4e-alert
+                     org
+                     org-noter
                      pass
                      pdf-tools
                      sudo-edit

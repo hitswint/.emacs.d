@@ -67,7 +67,7 @@
   (defun swint-ein:jupyter-server-start (fn &rest args)
     (interactive
      (lambda (spec)
-       (unless (and (boundp 'pyvenv-virtual-env) pyvenv-virtual-env)
+       (unless (bound-and-true-p pyvenv-virtual-env)
          (call-interactively 'pyvenv-workon))
        (unless (buffer-live-p (get-buffer ein:jupyter-server-buffer-name))
          (advice-eval-interactive-spec spec))))
