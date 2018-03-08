@@ -20,7 +20,7 @@
   (global-set-key (kbd "M-O a") 'org-agenda)
   (setq org-capture-templates
         '(("i" "Idea" entry (file+headline "~/org/task.org" "Idea List") "* TODO %? %^g")
-          ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
+          ("r" "Research" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
           ("c" "Computer" entry (file+headline "~/org/notes-computer.org" "Computer") "* %? %U %^g")
           ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others") "* %? %U %^g")
           ("j" "Journal" entry (file+olp+datetree "~/org/journal.org.gpg") "* %? %U")))
@@ -47,14 +47,28 @@
                (setq org-latex-pdf-process '("xelatex -interaction nonstopmode -output-directory %o %f"))
                (setq org-latex-remove-logfiles nil)
                (turn-on-font-lock)
+               (setq org-use-speed-commands t)
+               ;; ? org-speed-command-help
+               ;; n/p/f/b/u navigation commands
+               ;; U/D/R/L org-shiftmeta up/down/right/left
+               ;; c org-cycle
+               ;; C org-shifttab
+               ;; @ org-mark-subtree
+               ;; i C-RET
+               ;; w org-refile
+               ;; I/O org-clock-in/out
+               ;; t org-todo
+               ;; ;/0/1/2/3 org-priority/A/B/C
+               ;; v org-agenda
+               ;; : org-set-tags-command
                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
                (define-key org-mode-map (kbd "C-c C-b") 'org-beamer-select-environment)
                (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
                (define-key org-mode-map (kbd "C-c j") 'swint-open-at-point-with-apps)
                (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
                (smartrep-define-key org-mode-map "M-s"
-                 '(("p" . outline-previous-visible-heading)
-                   ("n" . outline-next-visible-heading)
+                 '(("p" . org-previous-visible-heading)
+                   ("n" . org-next-visible-heading)
                    ("u" . outline-up-heading)
                    ("b" . org-backward-heading-same-level)
                    ("f" . org-forward-heading-same-level)))
@@ -526,7 +540,8 @@
   :commands dired-k--highlight-buffer)
 ;; Sync annotated status as operating.
 (use-package dired-sync-highlight
-  :load-path "site-lisp/org-annotate-file/")
+  :load-path "site-lisp/org-annotate-file/"
+  :after dired-x-highlight)
 ;; 原有org-annotate-file用于全局注释。
 (use-package org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
@@ -551,24 +566,6 @@
   :commands swint-org-annotation-storage-file
   :bind ("C-x l" . swint-org-annotate-file-current))
 ;; ===============org-annotate==================
-;;; org-speed-commands
-;; =============org-speed-commands==============
-;; Activate single letter commands at beginning of a headline.
-(setq org-use-speed-commands t)
-;; ? org-speed-command-help
-;; n/p/f/b/u navigation commands
-;; U/D/R/L org-shiftmeta up/down/right/left
-;; c org-cycle
-;; C org-shifttab
-;; @ org-mark-subtree
-;; i C-RET
-;; w org-refile
-;; I/O org-clock-in/out
-;; t org-todo
-;; ;/0/1/2/3 org-priority/A/B/C
-;; v org-agenda
-;; : org-set-tags-command
-;; =============org-speed-commands==============
 ;;; outline
 ;; ==================outline====================
 (use-package outline-magic
@@ -708,4 +705,47 @@
   (define-key org-noter-notes-mode-map (kbd "M-o") 'org-noter-sync-current-page-or-chapter)
   (define-key org-noter-notes-mode-map (kbd "C-M-o") 'org-noter-sync-current-note))
 ;; =================org-noter===================
+;;; org-protocol-capture-html
+;; =========org-protocol-capture-html===========
+(use-package org-protocol-capture-html
+  :load-path "site-lisp/org-protocol-capture-html/"
+  :config
+  (add-to-list 'org-capture-templates
+               '("w" "Web" entry (file+olp "~/Nutstore-sync/orgzly/orgzly.org" "Web")
+                 "* %c %U\n%?\n%:initial"))
+  ;; Removed useless HTML elements.
+  (defun org-protocol-capture-html--with-pandoc (data)
+    (unless org-protocol-capture-html-pandoc-no-wrap-option
+      (org-protocol-capture-html--define-pandoc-wrap-const))
+    (let* ((template (or (plist-get data :template)
+                         org-protocol-default-template-key))
+           (url (org-protocol-sanitize-uri (plist-get data :url)))
+           (type (if (string-match "^\\([a-z]+\\):" url)
+                     (match-string 1 url)))
+           (title (or (org-protocol-capture-html--nbsp-to-space (string-trim (plist-get data :title))) ""))
+           (content (or (org-protocol-capture-html--nbsp-to-space (string-trim (plist-get data :body))) ""))
+           (orglink (org-make-link-string
+                     url (if (string-match "[^[:space:]]" title) title url)))
+           (org-capture-link-is-already-stored t)) ; avoid call to org-store-link
+      (setq org-stored-links
+            (cons (list url title) org-stored-links))
+      (kill-new orglink)
+      (with-temp-buffer
+        (insert content)
+        (if (not (zerop (call-process-region
+                         (point-min) (point-max)
+                         ;; Change "html" to "html-native_divs".
+                         "pandoc" t t nil "-f" "html-native_divs" "-t" "org" org-protocol-capture-html-pandoc-no-wrap-option)))
+            (message "Pandoc failed: %s" (buffer-string))
+          (progn
+            ;; Pandoc succeeded
+            (org-store-link-props :type type
+                                  :annotation orglink
+                                  :link url
+                                  :description title
+                                  :orglink orglink
+                                  :initial (buffer-string)))))
+      (org-protocol-capture-html--do-capture)
+      nil)))
+;; =========org-protocol-capture-html===========
 (provide 'setup_org_mode)

@@ -511,9 +511,8 @@ Assuming .. and . is a current directory (like in FAR)"
   :init
   (add-hook 'dired-mode-hook '(lambda () (dired-async-mode 1)))
   :config
-  (defun dired-do-copy (&optional arg)
+  (defun dired-do-copy-before (&optional arg)
     "Redefine dired-do-copy to fix conflict between dired-async-mode and dired-sync-highlight."
-    (interactive "P")
     (let* ((fn-list (dired-get-marked-files nil arg))
            (fn-list-nodirectory (mapcar 'file-name-nondirectory fn-list))
            (annotated-file-list (if (dired-k--parse-status t)
@@ -526,18 +525,14 @@ Assuming .. and . is a current directory (like in FAR)"
                                   (directory-files "~/org/annotated/" t
                                                    (concat "annotated-("
                                                            (replace-regexp-in-string
-                                                            "/" "_" (substring-no-properties (abbreviate-file-name from) 1)) "_")))
+                                                            "/" "_"
+                                                            (substring-no-properties
+                                                             (abbreviate-file-name from) 1)))))
                                 fn-list))))
-      (if (or fn-list-annotated annotation-storage-files)
-          (progn (message "%s" fn-list-annotated)
-                 (message "%s" annotation-storage-files)
-                 (dired-async-mode 0))))
-    (let ((dired-recursive-copies dired-recursive-copies))
-      (dired-do-create-files 'copy (function dired-copy-file)
-                             "Copy"
-                             arg dired-keep-marker-copy
-                             nil dired-copy-how-to-fn))
-    (dired-async-mode 1)))
+      (when (or fn-list-annotated annotation-storage-files)
+        (dired-async-mode 0))))
+  (advice-add 'dired-do-copy :before #'dired-do-copy-before)
+  (advice-add 'dired-do-copy :after #'(lambda (&optional arg) (dired-async-mode 1))))
 ;; ================dired-async=================
 ;;; dired-narrow
 ;; ===============dired-narrow=================
