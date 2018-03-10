@@ -30,11 +30,9 @@
               (define-key LaTeX-mode-map (kbd "C-c f") 'TeX-font)
               (define-key LaTeX-mode-map (kbd "C-c v") 'preview-at-point)
               (define-key LaTeX-mode-map (kbd "C-c V") 'preview-clearout-buffer)
-              (define-key LaTeX-mode-map (kbd "C-q") ' (lambda () (interactive) (swint-kill-this-buffer)
-                                                         (ignore-errors (kill-process (TeX-active-process)))))
-              (define-key LaTeX-mode-map (kbd "C-c j") 'swint-open-at-point-with-apps)
-              (define-key LaTeX-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
-              (define-key LaTeX-mode-map (kbd "\"") nil)
+              (define-key LaTeX-mode-map (kbd "C-q") ' (lambda () (interactive)
+                                                         (ignore-errors (kill-process (TeX-active-process)))
+                                                         (swint-kill-this-buffer)))
               (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-mode)
               (define-key LaTeX-mode-map (kbd "C-c z") 'zotelo-minor-mode)
               (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)
@@ -53,14 +51,7 @@
     (define-key reftex-mode-map (kbd "C-c r") 'reftex-parse-all)
     (setq reftex-plug-into-AUCTeX t
           reftex-toc-split-windows-horizontally t
-          reftex-toc-split-windows-fraction 0.2)
-    (setq reftex-format-cite-function
-          '(lambda (key fmt)
-             (let ((cite (replace-regexp-in-string "%l" key fmt)))
-               (if (or (= ?~ (string-to-char fmt))
-                       (member (preceding-char) '(?\ ?\t ?\n ?~)))
-                   cite
-                 (concat "~" cite))))))
+          reftex-toc-split-windows-fraction 0.2))
   ;; ===================reftex=====================
 ;;;; preview
   ;; ==================preview=====================

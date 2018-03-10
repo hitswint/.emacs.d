@@ -480,9 +480,9 @@
 ;;; helm-bibtex
 ;; ================helm-bibtex==================
 (use-package helm-bibtex
-  :commands (helm-bibtex-with-local-bibliography bibtex-completion-find-pdf-in-field bibtex-completion-get-entry-for-pdf)
-  :bind (("C-x b" . swint-helm-bibtex)
-         ("C-x B" . helm-bibtex))
+  :commands (helm-bibtex-with-local-bibliography bibtex-completion-find-pdf bibtex-completion-get-entry-for-pdf)
+  :bind (("C-x b" . helm-bibtex)
+         ("C-x B" . swint-helm-bibtex))
   :config
   (define-key helm-map (kbd "C-c j") '(lambda () (interactive)
                                         (with-helm-alive-p
@@ -493,17 +493,16 @@
   (define-key helm-map (kbd "C-c l") '(lambda () (interactive)
                                         (with-helm-alive-p
                                           (helm-exit-and-execute-action 'helm-bibtex-edit-notes))))
+  (setq bibtex-completion-cite-prompt-for-optional-arguments nil
+        bibtex-completion-additional-search-fields '(keywords)
+        bibtex-completion-pdf-field "file"
+        bibtex-completion-bibliography '("~/.bib/ALL.bib") ;zotero-better-bibtex自动更新。
+        bibtex-completion-notes-path "~/Zotero/storage/TKM9D893/notes.org")
   (defun swint-helm-bibtex ()
     (interactive)
     (let ((bibtex-completion-bibliography
            (read-file-name "File: " (expand-file-name "~/.bib/"))))
       (call-interactively 'helm-bibtex)))
-  (setq bibtex-completion-cite-default-command "citep"
-        bibtex-completion-cite-prompt-for-optional-arguments nil
-        bibtex-completion-additional-search-fields '(keywords)
-        bibtex-completion-pdf-field "file"
-        bibtex-completion-bibliography "~/.bib/ALL.bib" ;zotero-better-bibtex自动更新。
-        bibtex-completion-notes-path "~/Zotero/storage/TKM9D893/notes.org")
   (defun bibtex-completion-get-entry-for-pdf (pdf-file)
     "Find entry for pdf-file in .bib file."
     (with-temp-buffer
@@ -536,10 +535,7 @@
                (if (listp candidates) candidates (list candidates))))
         (-each it helm-bibtex-pdf-open-externally-function)
       (message "No PDF(s) found.")))
-  (helm-bibtex-helmify-action bibtex-completion-open-pdf-externally helm-bibtex-open-pdf-externally)
-  (helm-delete-action-from-source "Insert citation" helm-source-bibtex)
-  (helm-add-action-to-source "Insert citation" 'helm-bibtex-insert-citation helm-source-bibtex 0)
-  (helm-add-action-to-source "Open PDF file externally (if present)" 'helm-bibtex-open-pdf-externally helm-source-bibtex 2))
+  (helm-bibtex-helmify-action bibtex-completion-open-pdf-externally helm-bibtex-open-pdf-externally))
 ;; ================helm-bibtex==================
 ;;; helm-swoop
 ;; ================helm-swoop===================

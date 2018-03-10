@@ -4,6 +4,5 @@
 # group: misc
 # name: \bibliography
 # --
-\bibliographystyle{${1:$$(yas/choose-value '("unsrtnat" "plainnat" "abbrvnat" "plain" "unsrt" "alpha" "abbrv" "ieeetr" "acm" "siam" "apalike"))}}
-\bibliography{${2:$$(unless yas/modified-p (file-name-base (buffer-name)))}}
-#+BIBLIOGRAPHY: $2 $1 option:-d$0
+bibliographystyle:${1:$$(yas/choose-value '("unsrtnat" "plainnat" "abbrvnat" "plain" "unsrt" "alpha" "abbrv" "ieeetr" "acm" "siam" "apalike"))}
+bibliography:${2:$$(unless yas/modified-p (concat (file-name-base (buffer-name)) ".bib"))}

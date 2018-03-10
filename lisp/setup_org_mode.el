@@ -33,6 +33,8 @@
                ;; 插入source code时高亮，C-c ' 打开相应major-mode编辑窗口。
                (setq org-src-fontify-natively t)
                ;; (setq org-startup-indented t)
+               ;; code执行免应答（Eval code without confirm）
+               (setq org-confirm-babel-evaluate nil)
                (setq truncate-lines nil)
                (setq org-hide-leading-stars t)
                (setq org-startup-folded 'content)
@@ -44,7 +46,6 @@
                (setq org-format-latex-options '(:foreground default :background default :scale 1.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
                (setq org-latex-default-figure-position "htbp")
                (setq org-latex-image-default-width "1\\linewidth")
-               (setq org-latex-pdf-process '("xelatex -interaction nonstopmode -output-directory %o %f"))
                (setq org-latex-remove-logfiles nil)
                (turn-on-font-lock)
                (setq org-use-speed-commands t)
@@ -62,10 +63,10 @@
                ;; v org-agenda
                ;; : org-set-tags-command
                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
-               (define-key org-mode-map (kbd "C-c C-b") 'org-beamer-select-environment)
+               (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
                (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
-               (define-key org-mode-map (kbd "C-c j") 'swint-open-at-point-with-apps)
-               (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-open-at-point t)))
+               (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point-with-apps)
+               (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-org-open-at-point t)))
                (smartrep-define-key org-mode-map "M-s"
                  '(("p" . org-previous-visible-heading)
                    ("n" . org-next-visible-heading)
@@ -84,7 +85,7 @@
                (define-key org-mode-map (kbd "C-c r") 'reftex-mode)
                (define-key org-mode-map (kbd "C-c z") 'zotelo-minor-mode)
                (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)
-               (define-key org-mode-map (kbd "C-c b") 'helm-bibtex-with-local-bibliography)
+               (define-key org-mode-map (kbd "C-c b") 'org-ref-insert-link)
                (define-key org-mode-map (kbd "C-c l") 'swint-noter/interleave)
                (define-key org-mode-map (kbd "C-j") nil)
                (define-key org-mode-map (kbd "RET") nil)
@@ -197,8 +198,8 @@
   ;; org中打开和关闭图片显示(org-display-inline-images)和(org-remove-inline-images)。
   ;; 可以使用(org-toggle-inline-images)快捷键为C-c C-x C-v。
   ;; =================插入截图==================
-;;;; swint-open-at-point
-  ;; =============swint-open-at-point===========
+;;;; swint-org-open-at-point
+  ;; ===========swint-org-open-at-point=========
   (defun org-at-top-heading-p ()
     "Go back to top heading and return that point. If already on top heading, return nil."
     (let ((headline (org-element-at-point)))
@@ -212,44 +213,22 @@
                     (replace-regexp-in-string
                      "_" "/" (substring-no-properties (file-name-nondirectory (buffer-file-name)) 11 -5)))
                 (car (last (split-string (substring-no-properties (org-get-heading) nil -2) "\\[file:") 1)))))
-  (defun swint-key-at-point ()
-    "Find citation key at point."
-    (interactive)
-    (let ((current-point (point))
-          (citation-format (cond
-                            ((eq major-mode 'org-mode)
-                             "ebib:")
-                            ((eq major-mode 'latex-mode)
-                             "\\\\citep{")))
-          key)
-      (save-excursion
-        (beginning-of-line)
-        (while (re-search-forward
-                (concat "\\(" citation-format "\\)" "\\("
-                        ;; 匹配Roller_Physiology_International_1999_2014-02-27T02:02:21Z形式的key。
-                        "\\([^^\"@\\&$#%',={} \t\n\f]*_\\)\\{4\\}\\(19\\|20\\)[[:digit:]]\\{2\\}\\(-[[:digit:]]\\{2\\}\\)\\{2\\}T\\([[:digit:]]\\{2\\}:\\)\\{2\\}[[:digit:]]\\{2\\}Z"
-                        "\\)")
-                nil t)
-          (let ((beg (match-beginning 0))
-                (end (match-end 0)))
-            (if (and (>= current-point beg) (<= current-point end))
-                (setq key (match-string 2))))))
-      key))
-  (defun swint-open-at-point (&optional in-emacs)
+  (defun swint-org-open-at-point (&optional in-emacs)
     "Open annotated file if annotation storage file exists."
     (interactive)
-    (let ((annotated-file (swint-get-annotated-file))
-          (key (swint-key-at-point)))
+    (let* ((annotated-file (swint-get-annotated-file))
+           (key (ignore-errors (car (save-excursion (org-ref-get-bibtex-key-and-file)))))
+           (pdf-file (car (bibtex-completion-find-pdf key))))
       (cond
        ((and annotated-file (file-exists-p annotated-file))
-        (org-open-file annotated-file in-emacs))
-       (key (let ((pdf-file (save-excursion (car (bibtex-completion-find-pdf-in-field key)))))
-              (if pdf-file
-                  (org-open-file pdf-file in-emacs)
-                (message "No available pdf file for this citation."))))
+        (org-open-file annotated-file in-emacs)
+        (message "%s" "annotated"))
+       ((and pdf-file (file-exists-p pdf-file))
+        (org-open-file pdf-file in-emacs)
+        (message "%s" pdf-file))
        (t
         (org-open-at-point in-emacs)))))
-  (defun swint-open-at-point-with-apps ()
+  (defun swint-org-open-at-point-with-apps ()
     (interactive)
     (let ((org-file-apps
            (cond (is-lin '(("\\.pdf\\'" . "llpp %s")
@@ -289,8 +268,8 @@
                            ("\\.htm\\'" . "firefox %s")
                            ))
                  (is-win '((w32-browser))))))
-      (swint-open-at-point)))
-  ;; =============swint-open-at-point===========
+      (swint-org-open-at-point)))
+  ;; ===========swint-org-open-at-point=========
 ;;;; mobileorg
   ;; =================mobileorg=================
   ;; Set to the location of your Org files on your local system.
@@ -362,41 +341,26 @@
   (define-key org-mode-map (kbd "C-c v") 'org-preview-latex-fragment)
   (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境。
   ;; =============org-latex-preview=============
-;;;; org输出latex
-  ;; ==============org输出latex=================
-  ;; (require 'org-install)
-  ;; (require 'org-latex)
-  ;; 使用上面的两个命令会导致输出成beamer的选项出不来。
-  ;; 使用xelatex一步生成PDF。
-  (setq org-latex-pdf-process
-        '("xelatex -interaction nonstopmode %f"
-          "xelatex -interaction nonstopmode %f"))
-  (setq org-latex-to-pdf-process
-        '("xelatex -interaction nonstopmode %f"
-          "xelatex -interaction nonstopmode %f"))
-  (when is-lin
-    ;; 生成pdf自动用llpp打开。
-    (add-hook 'org-mode-hook
-              '(lambda ()
-                 (delete '("\\.pdf\\'" . default) org-file-apps)
-                 (add-to-list 'org-file-apps '("\\.pdf\\'" . "llpp %s")))))
-  ;; code执行免应答（Eval code without confirm）
-  (setq org-confirm-babel-evaluate nil)
-  (unless (boundp 'org-latex-classes)
-    (setq org-latex-classes nil))
-  ;; 定义org markup(*_+/=~)等的转换。
-  (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
-                                      (code . verb)
-                                      (italic . "\\emph{%s}")
-                                      (strike-through . "\\sout{%s}")
-                                      (underline . "\\underline{%s}")
-                                      (verbatim . protectedtexttt)))
-  ;; ==============org输出latex=================
-;;;; article设置
-  ;; ==============article设置==================
-  (add-to-list 'org-latex-classes
-               '("org-article"
-                 "\\documentclass[11pt]{ctexart}
+;;;; ox-latex
+  ;; ================ox-latex===================
+  (use-package ox-latex
+    :config
+    (setq org-latex-pdf-process
+          '("xelatex -interaction nonstopmode %f"
+            "xelatex -interaction nonstopmode %f"))
+    ;; 定义org markup(*_+/=~)等的转换。
+    (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
+                                        (code . verb)
+                                        (italic . "\\emph{%s}")
+                                        (strike-through . "\\sout{%s}")
+                                        (underline . "\\underline{%s}")
+                                        (verbatim . protectedtexttt)))
+    ;; 使用Listings宏包格式化源代码(只是把代码框用listing环境框起来，还需要额外的设置。
+    (setq org-export-latex-listings t)
+    (setq org-beamer-outline-frame-title "目录")
+    (add-to-list 'org-latex-classes
+                 '("cn-article"
+                   "\\documentclass[11pt]{ctexart}
 \\usepackage[top=1in,bottom=1in,left=0.8in,right=0.8in]{geometry}
 \\usepackage{graphicx,amsmath,amssymb,subfigure,url,xspace,booktabs,tikz,float}
 \\usepackage[autoplay,loop]{animate}
@@ -441,17 +405,12 @@
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                ("\\paragraph{%s}" . "\\paragraph*{%s}")
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-;; 使用Listings宏包格式化源代码(只是把代码框用listing环境框起来，还需要额外的设置。
-(setq org-export-latex-listings t)
-;; ================article设置==================
-;;;; beamer设置
-;; =================beamer设置==================
 ;; Beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)。
 ;; 设定mainfont会导致公式环境中变量变成正体。
 ;; 设定setsansfont使用Times New Roman无法使用英文斜体和粗体。
 ;; 使用某些字体可以实现粗斜体，例如DejaVu Sans/DejaVu Sans Mono/DejaVu Serif等。
 (add-to-list 'org-latex-classes
-             '("org-beamer"
+             '("cn-beamer"
                "\\documentclass[11pt]{beamer}
 % [xcolor=dvipsnames]
 \\usepackage{graphicx,subfigure,url,booktabs,tikz,float,fontspec}
@@ -521,15 +480,17 @@
                ;;  "\\end{frame}"
                ;;  "\\begin{frame}[fragile]\\frametitle{%s}"
                ;;  "\\end{frame}")
-               ))
-(setq org-beamer-outline-frame-title "目录")
+               )))
+;; =================ox-latex====================
+;;;; ox-beamer
+;; =================ox-beamer===================
 (use-package ox-beamer
   :config
   (add-to-list 'org-beamer-environments-extra
                '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
   (add-to-list 'org-beamer-environments-extra
                '("uncoverenv" "U" "\\begin{uncoverenv}%a" "\\end{uncoverenv}")))
-;; =================beamer设置==================
+;; =================ox-beamer===================
 )
 ;; =================org-mode====================
 ;;; org-annotate
@@ -681,7 +642,7 @@
   (defun swint-noter/interleave ()
     (interactive)
     (let* ((key (org-entry-get nil "Custom_ID"))
-           (pdf-file (save-excursion (car (bibtex-completion-find-pdf-in-field key)))))
+           (pdf-file (car (bibtex-completion-find-pdf key))))
       (when (and (not (org-entry-get nil org-noter-property-doc-file t)) key pdf-file)
         (org-entry-put nil org-noter-property-doc-file (file-relative-name pdf-file)))
       (if (org-entry-get nil org-noter-property-doc-file t)
@@ -748,4 +709,28 @@
       (org-protocol-capture-html--do-capture)
       nil)))
 ;; =========org-protocol-capture-html===========
+;;; org-ref
+;; ==================org-ref====================
+(use-package org-ref
+  :commands (org-ref-insert-link org-ref-get-bibtex-key-and-file)
+  :init
+  (setq org-ref-bibtex-hydra-key-binding "\C-cj")
+  (setq org-ref-insert-cite-key "\C-cb")
+  :config
+  (setq org-ref-default-bibliography '("~/.bib/ALL.bib")
+        org-ref-bibliography-notes "~/Zotero/storage/TKM9D893/notes.org"
+        org-latex-prefer-user-labels t
+        org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+        org-ref-notes-function '(lambda (thekey)
+                                  (bibtex-completion-edit-notes
+                                   (list (car (org-ref-get-bibtex-key-and-file thekey))))))
+  (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
+        'org-ref-format-citation)
+  ;; 在已有org-mode中更新链接高亮。
+  (dolist (buf (remove-if-not (lambda (x)
+                                (equal (buffer-mode x) 'org-mode))
+                              (helm-buffer-list)))
+    (with-current-buffer buf
+      (org-restart-font-lock))))
+;; ==================org-ref====================
 (provide 'setup_org_mode)
