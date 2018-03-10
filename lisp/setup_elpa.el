@@ -188,6 +188,7 @@
                      mu4e-alert
                      org
                      org-noter
+                     org-ref
                      pass
                      pdf-tools
                      sudo-edit

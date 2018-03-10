@@ -22,6 +22,7 @@
                          file)))))
   (add-hook 'c-mode-hook
             (lambda ()
+              (define-key c-mode-base-map (kbd "C-c g") 'gdb-or-gud-go)
               (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
               (define-key c-mode-base-map (kbd "C-c C-S-c") (lambda () (interactive)
                                                               (setq-local compilation-read-command nil)
@@ -48,9 +49,6 @@
 ;; =====================gdb=====================
 (use-package gdb-mi
   :commands gdb-or-gud-go
-  :init
-  (add-hook 'c-mode-hook '(lambda ()
-                            (define-key c-mode-map (kbd "C-c g") 'gdb-or-gud-go)))
   :config
   (define-key gud-mode-map (kbd "C-c G") 'gud-quit)
   ;; 直接使用gdb-or-gud-go弹出gud-comint-buffer未定义，先gdb，然后gdb-or-gud-go。
@@ -114,9 +112,7 @@
   :init
   (add-hook 'c-mode-common-hook 'hs-minor-mode)
   :config
-  (add-hook 'c-mode-hook
-            (lambda ()
-              (define-key hs-minor-mode-map (kbd "C-c C-`") 'hs-toggle-hiding))))
+  (define-key hs-minor-mode-map (kbd "C-c C-`") 'hs-toggle-hiding))
 ;; ==================hs-minor-mode==============
 ;;; semantic
 ;; ===================semantic==================
@@ -140,40 +136,29 @@
 ;;; helm-gtags
 ;; ==================helm-gtags=================
 (use-package helm-gtags
-  :bind (("M-s ," . swint-helm-gtags-dwim)
-         ("M-s ." . swint-helm-gtags-pop-stack)
-         ("M-s /" . swint-helm-gtags-select))
+  :commands helm-gtags-mode
+  :init
+  (add-hook 'c-mode-hook 'helm-gtags-mode)
+  (add-hook 'c++-mode-hook 'helm-gtags-mode)
+  (add-hook 'asm-mode-hook 'helm-gtags-mode)
   :config
-  (defun swint-helm-gtags-dwim ()
-    (interactive)
-    (unless helm-gtags-mode
-      (helm-gtags-mode t))
-    (add-hook (derived-mode-hook-name major-mode) 'helm-gtags-mode)
-    (call-interactively 'helm-gtags-dwim))
-  (defun swint-helm-gtags-pop-stack ()
-    (interactive)
-    (unless helm-gtags-mode
-      (helm-gtags-mode t))
-    (add-hook (derived-mode-hook-name major-mode) 'helm-gtags-mode)
-    (call-interactively 'helm-gtags-pop-stack))
-  (defun swint-helm-gtags-select ()
-    (interactive)
-    (unless helm-gtags-mode
-      (helm-gtags-mode t))
-    (add-hook (derived-mode-hook-name major-mode) 'helm-gtags-mode)
-    (call-interactively 'helm-gtags-select))
+  (defun helm-gtags--find-tag-simple-fix (fn &rest args)
+    (let ((helm-execute-action-at-once-if-one nil))
+      (apply fn args)))
+  (advice-add 'helm-gtags--find-tag-simple :around #'helm-gtags--find-tag-simple-fix)
   (setq helm-gtags-ignore-case t
         helm-gtags-auto-update t
         helm-gtags-use-input-at-cursor t
         helm-gtags-pulse-at-cursor t
-        helm-gtags-prefix-key "\M-s")
-  (smartrep-define-key helm-gtags-mode-map "M-s"
-    '(("," . helm-gtags-dwim)
-      ("." . helm-gtags-pop-stack)
-      ("/" . helm-gtags-select)
-      ("C-," . helm-gtags-previous-history)
-      ("C-." . helm-gtags-next-history)
-      ("C-/" . helm-gtags-show-stack))))
+        helm-gtags-prefix-key "\M-s"
+        helm-gtags-suggested-key-mapping nil)
+  (smartrep-define-key helm-gtags-mode-map "C-c"
+    '(("C-," . helm-gtags-dwim)
+      ("C-." . helm-gtags-pop-stack)
+      ("C-/" . helm-gtags-select)
+      ("," . helm-gtags-previous-history)
+      ("." . helm-gtags-next-history)
+      ("/" . helm-gtags-show-stack))))
 ;; ==================helm-gtags=================
 ;;; arduino
 ;; ===================arduino===================

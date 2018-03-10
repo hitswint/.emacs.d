@@ -111,7 +111,7 @@ LEAF is normally ((BEG . END) . WND)."
   :bind ("C-h" . ace-pinyin-jump-char)
   :config
   (setq ace-pinyin-use-avy t)
-  (ace-pinyin-global-mode +1)
+  (ace-pinyin-global-mode 1)
   (bind-key "C-h" 'avy-goto-char)
   (defun ace-pinyin-jump-char (query-char &optional arg)
     "AceJump with pinyin by QUERY-CHAR."

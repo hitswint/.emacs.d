@@ -33,7 +33,6 @@
   (add-to-list 'emms-info-functions 'emms-info-mpd)
   (add-to-list 'emms-player-list 'emms-player-mpd)
   ;; ==============emms-mpd================
-  ;; Emms-mpd快捷键设置。
   (global-set-key (kbd "M-s e c") 'emms-player-mpd-connect)
   (global-set-key (kbd "s-/") 'emms-pause)
   (global-set-key (kbd "s-?") 'emms-stop)
@@ -72,6 +71,5 @@
                                                                                 (mingus-clear t)
                                                                                 (mingus-insert-and-play)
                                                                                 (swint-kill-this-buffer))))))
-;; 在win上使用emms提示找不到service:6600，似乎找不到mpd后台。这个问题似乎是因为emms-player-mpd-ensure-process需要接受一个整数作为port number，但是接受到了一个字符串"6600"，按下述网址https://lists.gnu.org/archive/html/emms-help/2013-08/msg00002.html修改emms-player-mpd.el能够解决这个问题。但播放音乐时出现musicpd error {add}  not found的错误，似乎是mpd数据库问题。
 ;; ===============mingus=================
 (provide 'setup_emms_mingus)

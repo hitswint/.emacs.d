@@ -27,7 +27,7 @@
     (cond ((paredit-in-string-p)
            (if (eq (cdr (paredit-string-start+end-points))
                    (point))
-               (forward-char)             ; We're on the closing quote.
+               (forward-char)
              (insert ?\\ ?\' )))
           ((paredit-in-comment-p)
            (insert ?\' ))

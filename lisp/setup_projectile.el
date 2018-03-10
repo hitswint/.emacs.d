@@ -1,10 +1,11 @@
 ;;; Projectile
 ;; ==================Projectile=================
 (use-package projectile
+  :bind-keymap ("M-\"" . projectile-command-map)
   :init
   (setq projectile-keymap-prefix (kbd "M-\""))
   :config
-  (projectile-global-mode)
+  (projectile-mode t)
   (setq projectile-enable-caching t)
   (setq projectile-mode-line nil)
   (setq projectile-completion-system 'helm))

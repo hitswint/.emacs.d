@@ -13,14 +13,9 @@
   (setq ac-auto-start nil)
   (setq ac-use-menu-map t)
   (setq ac-fuzzy-enable t)
+  ;; (ac-set-trigger-key "TAB")
   (define-key ac-completing-map "\C-p" 'ac-previous)
   (define-key ac-completing-map "\C-n" 'ac-next)
-  ;; (ac-set-trigger-key "TAB")              ;导致无法indent
-  ;; 取消TAB绑定以适应yasnippet。TAB的默认作用有两个：
-  ;; 1. 延伸menu出现之前的默认选项。取消延伸默认选项，使用RET替代。
-  ;; (define-key ac-completing-map (kbd "TAB") nil)
-  ;; 2. 切换menu的选项。取消TAB切换menu选项。
-  ;; (define-key ac-menu-map (kbd "TAB") nil)
 ;;;; eshell
   ;; ==================eshell==================
   ;; pcomplete会自动启动，造成打开eshell时读取ac-sources错误。
@@ -43,13 +38,35 @@
   ;; ==================eshell==================
   )
 ;; ================auto-complete===============
+;;; auto-complete-config
+;; ===========auto-complete-config=============
+(use-package auto-complete-config
+  :after auto-complete
+  :config
+  ;; ============ac-modes============
+  (add-to-list 'ac-modes 'latex-mode)
+  (add-to-list 'ac-modes 'org-mode)
+  (add-to-list 'ac-modes 'octave-mode)
+  (add-to-list 'ac-modes 'shell-mode)
+  (add-to-list 'ac-modes 'eshell-mode)
+  (add-to-list 'ac-modes 'gnuplot-mode)
+  (add-to-list 'ac-modes 'graphviz-dot-mode)
+  (add-to-list 'ac-modes 'arduino-mode)
+  (ac-config-default)
+  (setq-default ac-sources '(ac-source-abbrev
+                             ac-source-dictionary
+                             ac-source-words-in-same-mode-buffers
+                             ac-source-files-in-current-dir)))
+;; ===========auto-complete-config=============
 ;;; ac-ispell
 ;; ==================ac-ispell=================
-;; Completion words longer than 4 characters.
 (use-package ac-ispell
   :bind ("M-U" . swint-auto-complete-ispell)
   :config
   (bind-key "M-U" 'hippie-expand ac-completing-map)
+  ;; 使用ac-source-dictionary补全单词。
+  ;; (add-to-list 'ac-dictionary-files "~/.english-words")
+  (ac-ispell-setup)
   (defun swint-auto-complete-ispell (&optional arg)
     (interactive)
     (company-abort)
@@ -63,10 +80,7 @@
      ((equal last-command 'swint-auto-complete-ispell)
       (hippie-expand arg))
      (t (auto-complete '(ac-source-ispell-fuzzy
-                         ac-source-ispell)))))
-  (ac-ispell-setup))
-;; 也可以加下句，使用ac-source-dictionary补全单词。
-;; (add-to-list 'ac-dictionary-files "~/.english-words")
+                         ac-source-ispell))))))
 ;; ==================ac-ispell=================
 ;;; auto-complete-c-headers
 ;; =========auto-complete-c-headers============
@@ -130,34 +144,9 @@
   (add-hook 'auto-complete-mode-hook '(lambda ()
                                         (if (eq major-mode 'latex-mode)
                                             (ac-auctex-setup)))))
-;; lin上的ac-auctex会自动启闭latex-math-mode，造成`输入公式的方法失效，两种解决方法：
-;; 1. 去掉(init . LaTeX-math-mode)项，这样会导致有时ac失效。
-;; 2. 定义如下函数代替原函数中的初始化，由(init . LaTeX-math-mode)变成(init . swint-latex-math-mode)。
-;; 结果，frac输入有问题，放弃使用。
-;; win中不存在这个问题，没有修改，在tex中使用ac-auctex。
-;; lin上emacs升级新版本之后解决上述问题，而ac-math在tex中自动补全选项有长有短，最后在tex中使用ac-auctex。
 ;; ================ac-auctex===================
 ;;; ac-math
 ;; =================ac-math====================
-;; ac-math中输入一个字母ac就开启的问题是因为所有\之后的字母都被识别做ac-source中的math、unicode和commands，忽略了中间的空格。
-;; 即$/alpha$中/alpla识别为公式，$\alpha beta$中的beta也被识别为公式，而且因为前面的字符数足够，只要输入b就启动ac。
-;; 在于ac-source-math-unicode/ac-source-math-latex/ac-source-latex-commands中的prefix正则表达式匹配问题。
-;; 修改ac-math.el原文件，使用[a-z0-9A-Z]代替原来的.任意字符，去掉空格的影响。
-;; 这样公式环境中，不以\开头的字符，识别为普通字符。
-;; 注释掉下列，在tex中不使用ac-math。
-;; (add-to-list 'ac-modes 'latex-mode)   ; make auto-complete aware of `latex-mode`
-;; (defun ac-latex-mode-setup ()         ; add ac-sources to default ac-sources
-;;   (setq ac-sources
-;;         (append '(
-;;                   ;; ac-source-math-unicode ;在latex中禁用unicode输入，因为array被当作了非math环境，会默认输入unicode。
-;;                   ;; 似乎是因为如果array写到下一行的话，无法识别公式环境。
-;;                   ac-source-math-latex
-;;                   ac-source-latex-commands
-;;                   )
-;;                 ac-sources)))
-;; (add-hook 'LaTeX-mode-hook 'ac-latex-mode-setup)
-;; (setq ac-math-unicode-in-math-p t)      ;在latex的math环境中激活unicode输入
-;; 在org-mode中使用ac-math激活unicode输入。
 (use-package ac-math
   :after auto-complete
   :config
@@ -183,9 +172,6 @@
 ;; ============auto-complete-octave============
 ;;; shell
 ;; ===================shell====================
-;; 下面这句会导致octave运行时emacs hang。
-;; (setq comint-process-echoes t)
-;; prevent echoed commands from being printed (t).
 (use-package readline-complete
   :after auto-complete
   :config
@@ -195,31 +181,6 @@
                                         (if (eq major-mode 'shell-mode)
                                             (ac-rlc-setup-sources)))))
 ;; ===================shell====================
-;;; auto-complete-config
-;; ===========auto-complete-config=============
-(use-package auto-complete-config
-  :after auto-complete
-  :config
-  ;; ============ac-modes============
-  ;; hook的函数只在文件打开时运行，如果文件已经打开，那么hook的函数无效。
-  ;; 在auto-complete激活名单中加入mode。
-  ;; 与hook机制不同，即使该buffer已经打开，仍然起作用。
-  (add-to-list 'ac-modes 'latex-mode)
-  (add-to-list 'ac-modes 'org-mode)
-  (add-to-list 'ac-modes 'octave-mode)
-  (add-to-list 'ac-modes 'shell-mode)
-  (add-to-list 'ac-modes 'eshell-mode)
-  (add-to-list 'ac-modes 'gnuplot-mode)
-  (add-to-list 'ac-modes 'graphviz-dot-mode)
-  (add-to-list 'ac-modes 'arduino-mode)
-  ;; 上述auto-complete-mode-hook函数在ac打开时运行。
-  ;; 将初始化语句放在最后，使global-auto-complete-mode打开时加载上述设定，即使某buffer已经打开。
-  (ac-config-default)
-  (setq-default ac-sources '(ac-source-abbrev
-                             ac-source-dictionary
-                             ac-source-words-in-same-mode-buffers
-                             ac-source-files-in-current-dir)))
-;; ===========auto-complete-config=============
 ;;; company
 ;; ================company=====================
 (use-package company
@@ -252,7 +213,6 @@
 ;;;; company-quickhelp-mode
   ;; ==========company-quickhelp-mode==========
   (use-package company-quickhelp
-    ;; 在弹出popup的情况下，C-h 打开*Help*，C-w 进入文件，C-o弹出pos-tip，C-s 搜索，C-M-s 过滤。
     :bind (:map company-active-map
                 ("C-o" . company-quickhelp-manual-begin))
     :config
@@ -287,7 +247,6 @@
 (use-package hippie-exp
   :commands hippie-expand
   :config
-  ;; 打开.english-words方式进行补全。
   (setq hippie-expand-try-functions-list
         '(try-expand-by-dict
           ;; try-expand-dabbrev-all-buffers

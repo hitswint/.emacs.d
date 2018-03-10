@@ -3,8 +3,7 @@
 (use-package octave
   :mode ("\\.m$" . octave-mode)
   :config
-  ;; 使用cygwin安装octave，速度很快，但无法在emacs中启动。
-  ;; 使用mingw的octave。
+  ;; cygwin下octave无法在emacs中启动，使用mingw下octave。
   (when is-win
     (add-to-list 'exec-path "c:/Octave/Octave3.6.4_gcc4.6.2/bin/"))
   (add-hook 'octave-mode-hook

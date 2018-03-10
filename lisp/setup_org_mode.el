@@ -30,10 +30,9 @@
   ;; %^{Description}
   (add-hook 'org-mode-hook
             '(lambda ()
-               ;; 插入source code时高亮，C-c ' 打开相应major-mode编辑窗口。
+               ;; 插入source code时高亮，C-c '打开相应major-mode编辑窗口。
                (setq org-src-fontify-natively t)
                ;; (setq org-startup-indented t)
-               ;; code执行免应答（Eval code without confirm）
                (setq org-confirm-babel-evaluate nil)
                (setq truncate-lines nil)
                (setq org-hide-leading-stars t)
@@ -331,7 +330,7 @@
   ;; =================org输出doc================
   ;; 先生成odt文件(需要zip支持)，然后使用libreoffice转化成doc文件。
   ;; 在win上转doc格式路径名中不能有中文。
-  (setq org-odt-preferred-output-format "doc") ;v8
+  (setq org-odt-preferred-output-format "doc")
   (define-key org-mode-map (kbd "C-c C-S-e") 'org-odt-export-to-odt)
   ;; =================org输出doc================
 ;;;; org-latex-preview

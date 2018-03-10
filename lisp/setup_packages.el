@@ -175,10 +175,8 @@
 ;;; anchored-transpose
 ;; ================anchored-transpose==============
 (use-package anchored-transpose
-  :bind ("M-s M-t" . anchored-transpose)
-  :config
-  (autoload 'anchored-transpose "anchored-transpose" nil t))
-;; 首先选择整个区域，然后选择锚点，调换锚点两侧的内容；其次，分别选择两部分内容进行调换。
+  ;; 首先选择整个区域，然后选择锚点，调换锚点两侧的内容；其次，分别选择两部分内容进行调换。
+  :bind ("M-s M-t" . anchored-transpose))
 ;; ================anchored-transpose==============
 ;;; God-mode
 ;; ====================God-mode====================

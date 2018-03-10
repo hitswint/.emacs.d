@@ -9,8 +9,6 @@
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq-default TeX-master nil)
-  ;; Auctex在打开tex文件时加载，LaTeX-insert-left-brace会覆盖全局的括号定义。
-  ;; 打开auctex自带的默认输入右括号的选项。
   (setq LaTeX-electric-left-right-brace t)
   (mapc (lambda (mode)
           (add-hook 'TeX-mode-hook mode))
@@ -18,7 +16,6 @@
               'turn-on-orgtbl
               'TeX-fold-mode ; C-c C-o C-b打开fold，C-c C-o b关闭fold。
               'LaTeX-install-toolbar))
-  ;; 在LaTeX-mode中，默认开启PDF-mode，即默认使用xelatex直接生成pdf文件，而不用每次用'C-c C-t C-p'进行切换。设置'Tex-show-compilation'为t，在另一个窗口显示编译信息，对于错误的排除很方便。另外，编译时默认直接保存文件，绑定补全符号到TAB键。
   (add-hook 'LaTeX-mode-hook
             (lambda ()
               (setq TeX-auto-untabify t ; Remove all tabs before saving.
@@ -74,9 +71,9 @@
 ;; =================auctex-latexmk=================
 ;;; zotelo
 ;; ====================zotelo======================
-;; C-c z c建立bib文件，C-c z u更新bib文件。
 (use-package zotelo
-  :commands (zotelo-minor-mode swint-zotelo-update-database zotelo--locate-bibliography-files zotelo-set-collection)
+  ;; C-c z c建立bib文件，C-c z u更新bib文件。
+  :commands zotelo-minor-mode
   :config
   (define-key zotelo-minor-mode-map "\C-czU" 'swint-zotelo-update-database)
   ;; 设置.bib文件的编码格式，否则出现乱码。

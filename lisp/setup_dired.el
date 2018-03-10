@@ -26,8 +26,6 @@
   ;; Also auto refresh dired, but be quiet about it.
   (setq global-auto-revert-non-file-buffers t)
   (setq auto-revert-verbose nil)
-  ;; dired-k-highlight会使auto-revert-mode出错，在dired-mode中禁用auto-revert-mode。
-  ;; 已修复上述问题，在dired-mode中重新开启auto-revert-mode。
   ;; (setq global-auto-revert-ignore-modes '(dired-mode))
   ;; 使用dired-mode自带的auto-revert。
   (setq dired-auto-revert-buffer t)
@@ -42,11 +40,10 @@
   ;; Allow editing file permissions.
   (setq wdired-allow-to-change-permissions t)
   (add-hook 'wdired-mode-hook 'undo-tree-mode)
-  ;; 将dired-k--highlight-buffer加hook放在前面，使其出现在dired-after-readin-hook中函数列表最后，以便最后生效。
+  ;; 将dired-k--highlight-buffer加hook放在前面，使其出现在hook列表最后，以便最后生效。
   (add-hook 'dired-after-readin-hook 'dired-k--highlight-buffer)
   ;; 不折行显示。
   (add-hook 'dired-after-readin-hook '(lambda () (setq truncate-lines t)))
-  ;; 快捷键。
   (add-hook 'dired-mode-hook
             '(lambda ()
                (define-key dired-mode-map (kbd "M-=") nil)
