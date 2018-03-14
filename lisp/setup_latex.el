@@ -31,7 +31,6 @@
                                                          (ignore-errors (kill-process (TeX-active-process)))
                                                          (swint-kill-this-buffer)))
               (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-mode)
-              (define-key LaTeX-mode-map (kbd "C-c z") 'zotelo-minor-mode)
               (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)
               (define-key LaTeX-mode-map (kbd "C-c b") 'helm-bibtex-with-local-bibliography)))
   (setq TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o")))
@@ -69,41 +68,6 @@
   :config
   (auctex-latexmk-setup))
 ;; =================auctex-latexmk=================
-;;; zotelo
-;; ====================zotelo======================
-(use-package zotelo
-  ;; C-c z c建立bib文件，C-c z u更新bib文件。
-  :commands zotelo-minor-mode
-  :config
-  (define-key zotelo-minor-mode-map "\C-czU" 'swint-zotelo-update-database)
-  ;; 设置.bib文件的编码格式，否则出现乱码。
-  (setq zotelo-translator-charsets '((BibTeX . "Unicode") (Default . "Unicode")))
-  ;; 手动更新~/.bib/zotelo/下文件。
-  (defun swint-zotelo-update-database ()
-    (interactive)
-    (zotero-update-collection-hash)
-    (maphash #'(lambda (key value)
-                 (zotelo-update-database nil (concat "~/.bib/zotelo/" value) key))
-             zotero-collection-hash))
-  (defvar zotero-collection-hash nil)
-  (defun zotero-update-collection-hash ()
-    (let ((buf (get-buffer-create "*moz-command-output*"))
-          colls name id)
-      ;; Set up the collection list.
-      (moz-command (format zotelo--render-collection-js
-                           (process-get (zotelo--moz-process) 'moz-prompt)))
-      (moz-command "zotelo_render_collection()" buf)
-      (setq zotero-collection-hash (make-hash-table :test 'equal))
-      (with-current-buffer buf
-        (goto-char (point-min))
-        (zotelo--message (format "Collections:\n %s"
-                                 (buffer-substring-no-properties (point-min) (min 500 (point-max)))))
-        (while (re-search-forward "^\\([0-9]+\\) /\\(.*\\)$" nil t)
-          (setq id (match-string-no-properties 1)
-                name (replace-regexp-in-string "/" "_" (match-string-no-properties 2) t t))
-          (puthash id name zotero-collection-hash)))
-      (puthash "0" "ALL" zotero-collection-hash))))
-;; ====================zotelo======================
 ;;; latex-preview-pane
 ;; ==============latex-preview-pane================
 (use-package latex-preview-pane

@@ -68,7 +68,6 @@
   (add-to-list 'desktop-minor-mode-table '(flycheck-mode nil))
   (add-to-list 'desktop-minor-mode-table '(flycheck-pos-tip-mode nil))
   (add-to-list 'desktop-minor-mode-table '(flyspell-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(zotelo-minor-mode nil))
   (add-to-list 'desktop-minor-mode-table '(auto-fill-mode nil))
   (add-to-list 'desktop-minor-mode-table '(auto-fill-function nil))
   (add-to-list 'desktop-minor-mode-table '(override-global-mode nil))

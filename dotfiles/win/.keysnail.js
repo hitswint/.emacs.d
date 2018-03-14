@@ -19,7 +19,6 @@ key.suspendKey           = "<f2>";
 key.universalArgumentKey = "C-u";
 key.negativeArgument1Key = "C--";
 key.negativeArgument2Key = "C-M--";
-key.negativeArgument3Key = "M--";
 
 // ================================= Hooks ================================= //
 
@@ -66,7 +65,7 @@ key.setGlobalKey('M-x', function (ev, arg) {
     ext.select(arg, ev);
 }, 'List exts and execute selected one', true);
 
-key.setGlobalKey('M-:', function (ev) {
+key.setGlobalKey('M-X', function (ev) {
     command.interpreter();
 }, 'Command interpreter', true);
 
@@ -114,7 +113,7 @@ key.setGlobalKey('C-q', function (ev) {
     BrowserCloseTabOrWindow();
 }, 'Close tab / window', false);
 
-key.setGlobalKey(["C-x", "K"], function (ev) {
+key.setGlobalKey(["C-x", "k"], function (ev) {
     closeWindow(true);
 }, 'Close the window', false);
 
@@ -126,13 +125,25 @@ key.setGlobalKey(["C-x", "n"], function (ev) {
     OpenBrowserWindow();
 }, 'Open new window', false);
 
-key.setGlobalKey(["C-x", "C-l"], function (ev) {
+key.setGlobalKey("M-n", function (ev) {
     getBrowser().mTabContainer.advanceSelectedTab(1, true);
 }, 'Select next tab', false);
 
-key.setGlobalKey(["C-x", "C-h"], function (ev) {
+key.setGlobalKey("M-p", function (ev) {
     getBrowser().mTabContainer.advanceSelectedTab(-1, true);
 }, 'Select previous tab', false);
+
+key.setGlobalKey(["C-x", "r"], function (ev) {
+    BrowserReload();
+}, 'Reload the page', true);
+
+key.setGlobalKey(["C-x", "b"], function (ev) {
+    BrowserBack();
+}, 'Back', false);
+
+key.setGlobalKey(["C-x", "f"], function (ev) {
+    BrowserForward();
+}, 'Forward', false);
 
 key.setGlobalKey(["C-x", "C-c"], function (ev) {
     goQuitApplication();
@@ -154,11 +165,11 @@ key.setGlobalKey(["C-x", "C-s"], function (ev) {
     saveDocument(window.content.document);
 }, 'Save current page to the file', true);
 
-key.setGlobalKey(["C-c", "C-x", "C-v"], function (ev) {
+key.setGlobalKey(["C-x", "c"], function (ev) {
     toJavaScriptConsole();
 }, 'Display JavaScript console', true);
 
-key.setGlobalKey(["C-c", "C-x", "C-c"], function (ev) {
+key.setGlobalKey(["C-x", "C"], function (ev) {
     command.clearConsole();
 }, 'Clear Javascript console', true);
 
@@ -315,11 +326,11 @@ key.setEditKey(["C-x", "r", "y"], function (ev) {
     command.yankRectangle(ev.originalTarget, command.kill.buffer);
 }, 'Yank the last killed rectangle with upper left corner at point', true);
 
-key.setEditKey('M-n', function (ev) {
+key.setEditKey(["C-x", "C-n"], function (ev) {
     command.walkInputElement(command.elementsRetrieverTextarea, true, true);
 }, 'Focus to the next text area', false);
 
-key.setEditKey('M-p', function (ev) {
+key.setEditKey(["C-x", "C-p"], function (ev) {
     command.walkInputElement(command.elementsRetrieverTextarea, false, true);
 }, 'Focus to the previous text area', false);
 
@@ -355,15 +366,15 @@ key.setViewKey([["M->"], ["G"]], function (ev) {
     goDoCommand("cmd_scrollBottom");
 }, 'Scroll to the bottom of the page', true);
 
-key.setViewKey('l', function (ev) {
+key.setViewKey('n', function (ev) {
     getBrowser().mTabContainer.advanceSelectedTab(1, true);
 }, 'Select next tab', false);
 
-key.setViewKey('h', function (ev) {
+key.setViewKey('p', function (ev) {
     getBrowser().mTabContainer.advanceSelectedTab(-1, true);
 }, 'Select previous tab', false);
 
-key.setViewKey(':', function (ev, arg) {
+key.setViewKey(["C-x", "M-x"], function (ev, arg) {
     shell.input(null, arg);
 }, 'List and execute commands', true);
 
@@ -383,15 +394,15 @@ key.setViewKey(["C-x", "h"], function (ev) {
     goDoCommand("cmd_selectAll");
 }, 'Select all', true);
 
-key.setViewKey('M-m', function (ev) {
+key.setViewKey(["C-x", "C-m"], function (ev) {
     command.focusElement(command.elementsRetrieverTextarea, 0);
 }, 'Focus to the first textarea', true);
 
-key.setViewKey('M-p', function (ev) {
+key.setViewKey(["C-x", "C-n"], function (ev) {
     command.walkInputElement(command.elementsRetrieverButton, true, true);
 }, 'Focus to the next button', false);
 
-key.setViewKey('M-n', function (ev) {
+key.setViewKey(["C-x", "C-p"], function (ev) {
     command.walkInputElement(command.elementsRetrieverButton, false, true);
 }, 'Focus to the previous button', false);
 
@@ -478,7 +489,7 @@ key.setCaretKey('C-;', function (ev) {
     command.setMark(ev);
 }, 'Set the mark', true);
 
-key.setCaretKey(':', function (ev, arg) {
+key.setCaretKey(["C-x", "M-x"], function (ev, arg) {
     shell.input(null, arg);
 }, 'List and execute commands', true);
 
@@ -498,15 +509,15 @@ key.setCaretKey(["C-x", "h"], function (ev) {
     goDoCommand("cmd_selectAll");
 }, 'Select all', true);
 
-key.setCaretKey('M-m', function (ev) {
+key.setCaretKey(["C-x", "C-m"], function (ev) {
     command.focusElement(command.elementsRetrieverTextarea, 0);
 }, 'Focus to the first textarea', true);
 
-key.setCaretKey('M-p', function (ev) {
+key.setCaretKey(["C-x", "C-n"], function (ev) {
     command.walkInputElement(command.elementsRetrieverButton, true, true);
 }, 'Focus to the next button', false);
 
-key.setCaretKey('M-n', function (ev) {
+key.setCaretKey(["C-x", "C-p"], function (ev) {
     command.walkInputElement(command.elementsRetrieverButton, false, true);
 }, 'Focus to the previous button', false);
 
@@ -544,7 +555,7 @@ key.setViewKey('>', function(ev, arg) {
 // caret模式，下面这句会导致自动进入caret模式
 // util.setBoolPref("accessibility.browsewithcaret", true);
 //this add some visual effect indicating the caret mode
-key.setViewKey(["C-c", "C-c"], function (ev) {
+key.setViewKey(["C-x", "C-x"], function (ev) {
     children = document.getElementById("nav-bar").children;
     for (i = 0; i < children.length; i++) {
         children[i].style.backgroundColor = "pink";
@@ -552,7 +563,7 @@ key.setViewKey(["C-c", "C-c"], function (ev) {
     util.setBoolPref("accessibility.browsewithcaret", true);
 }, 'Start Caret-Browse Mode');
 
-key.setCaretKey(["C-c", "C-c"], function (ev) {
+key.setCaretKey(["C-x", "C-x"], function (ev) {
     children = document.getElementById("nav-bar").children;
     for (i = 0; i < children.length; i++) {
         children[i].style.backgroundColor = "transparent";
@@ -570,7 +581,7 @@ ext.add("paste-and-go", function() {
     }
 }, "Paste the URL or keyword from clipboard and Go");
 
-key.setViewKey(["C-c", "p"], function(ev, arg) {
+key.setViewKey(["C-x", "p"], function(ev, arg) {
     ext.exec("paste-and-go");
 }, "Paste and Go", true);
 
@@ -585,25 +596,25 @@ ext.add("paste-to-tab-and-go", function() {
     }
 }, "Paste the URL or keyword from clipboard to a new tab and Go");
 
-key.setViewKey(["C-c", "P"], function(ev, arg) {
+key.setViewKey(["C-x", "P"], function(ev, arg) {
     ext.exec("paste-to-tab-and-go");
 }, "Paste to tab and Go", true);
 
 // open and tabopen
-key.setGlobalKey(["C-c", "o"], function (ev, arg) {
+key.setGlobalKey(["C-x", "C-o"], function (ev, arg) {
     shell.input("open http://");
 }, 'Open URL (with search engine)');
 
-key.setGlobalKey(["C-c", "t"], function (ev, arg) {
+key.setGlobalKey(["C-x", "C-t"], function (ev, arg) {
     shell.input("tabopen http://");
 }, 'Open URL (with search engine) in new tab');
 
-key.setGlobalKey(["C-c", "O"], function (ev, arg) {
+key.setGlobalKey(["C-x", "C-M-o"], function (ev, arg) {
     var url = window._content.document.location;
     shell.input("open " + url);
 }, 'Edit current url and open it');
 
-key.setGlobalKey(["C-c", "T"], function (ev, arg) {
+key.setGlobalKey(["C-x", "C-M-t"], function (ev, arg) {
     var url = window._content.document.location;
     shell.input("tabopen " + url);
 }, 'Edit current url and open it in new tab');
@@ -617,7 +628,7 @@ key.setGlobalKey(["C-x", "C-\'"], function (ev, arg) {
     ext.exec("bmany-list-toolbar-bookmarks", arg, ev);
 }, 'bmany - List all bookmarklets');
 
-key.setGlobalKey(["C-c", "C-\'"], function (ev, arg) {
+key.setGlobalKey(["C-x", "C-M-\'"], function (ev, arg) {
     ext.exec("bmany-list-bookmarks-with-keyword", arg, ev);
 }, 'bmany - List bookmarks with keyword');
 
@@ -631,11 +642,11 @@ key.setGlobalKey('C-h', function (ev, arg) {
     ext.exec('hok-start-foreground-mode', arg, ev);
 }, 'Start Hit a Hint foreground mode', true);
 
-key.setGlobalKey(["C-c", "C-h"], function (ev, arg) {
+key.setGlobalKey(["C-x", "C-h"], function (ev, arg) {
     ext.exec('hok-start-background-mode', arg, ev);
 }, 'Start Hit a Hint background mode', true);
 
-key.setGlobalKey(["C-c", "h"], function (ev, arg) {
+key.setGlobalKey(["C-x", "x"], function (ev, arg) {
     children = document.getElementById("nav-bar").children;
     for (i = 0; i < children.length; i++) {
         children[i].style.backgroundColor = "pink";

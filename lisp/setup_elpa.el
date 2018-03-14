@@ -69,7 +69,6 @@
             disaster
             drag-stuff
             dumb-jump
-            firefox-controller
             function-args
             easy-kill
             ein
@@ -146,7 +145,6 @@
             pkg-info
             popup
             popup-kill-ring
-            popwin
             pos-tip
             projectile
             pyvenv
@@ -179,7 +177,6 @@
             wrap-region
             yasnippet
             youdao-dictionary
-            zotelo
             ztree)
           (cond
            (is-lin '(fcitx

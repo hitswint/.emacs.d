@@ -166,12 +166,6 @@
   (setq everything-ffap-integration nil)
   (setq everything-cmd "c:/Program Files/Everything/es.exe"))
 ;; ===================everything===================
-;;; popwin
-;; =====================popwin=====================
-(use-package popwin
-  :config
-  (popwin-mode 1))
-;; =====================popwin=====================
 ;;; anchored-transpose
 ;; ================anchored-transpose==============
 (use-package anchored-transpose
@@ -700,15 +694,6 @@
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
 ;; =================markdown-mode==================
-;;; firefox-controller
-;; ===============firefox-controller===============
-(use-package firefox-controller
-  :bind (("M-s M-f" . firefox-controller-remote-mode)
-         ("M-s M-F" . firefox-controller-direct-mode))
-  :config
-  (define-key firefox-controller-remote-mode-map (kbd "C-M-g") #'firefox-controller-focus-content)
-  (define-key firefox-controller-remote-mode-map (kbd "C-g") #'firefox-controller-remote-mode-quit))
-;; ===============firefox-controller===============
 ;;; highlight-indentation
 ;; =============highlight-indentation==============
 (use-package highlight-indentation
