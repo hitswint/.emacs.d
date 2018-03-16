@@ -19,19 +19,9 @@
   (setq dired-recursive-deletes 'always)
   (custom-set-faces '(diredp-compressed-file-suffix ((t (:foreground "#7b68ee"))) t)
                     '(diredp-ignored-file-name ((t (:foreground "#aaaaaa"))) t))
-;;;; Auto-revert-mode
-  ;; =============Auto-revert-mode=============
-  ;; Auto refresh buffers.
-  (global-auto-revert-mode 1)
-  ;; Also auto refresh dired, but be quiet about it.
-  (setq global-auto-revert-non-file-buffers t)
-  (setq auto-revert-verbose nil)
-  ;; (setq global-auto-revert-ignore-modes '(dired-mode))
-  ;; 使用dired-mode自带的auto-revert。
-  (setq dired-auto-revert-buffer t)
-  ;; =============Auto-revert-mode=============
 ;;;; setup-and-keybindings
   ;; ==========setup-and-keybindings===========
+  (setq dired-auto-revert-buffer t)
   (put 'dired-find-alternate-file 'disabled nil)
   ;; 显示文件大小。
   (setq dired-listing-switches "-alh")

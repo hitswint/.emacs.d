@@ -130,6 +130,7 @@
 ;;;; cdlatex
   ;; ================cdlatex====================
   (use-package cdlatex
+    :diminish org-cdlatex-mode
     :commands turn-on-org-cdlatex
     :init
     (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
@@ -530,6 +531,7 @@
 (use-package outline-magic
   :commands outline-cycle)
 (use-package outline
+  :diminish outline-minor-mode
   :commands outline-minor-mode
   :init
   (add-hook 'prog-mode-hook 'outline-minor-mode)

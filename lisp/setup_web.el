@@ -52,6 +52,7 @@
 ;;; skewer-mode
 ;; ================skewer-mode=================
 (use-package skewer-mode
+  :diminish (skewer-mode skewer-css-mode skewer-html-mode)
   :commands (skewer-mode skewer-css-mode skewer-html-mode)
   :init
   (add-hook 'js2-mode-hook 'skewer-mode)

@@ -108,6 +108,7 @@ LEAF is normally ((BEG . END) . WND)."
 ;;; ace-pinyin
 ;; =================ace-pinyin==================
 (use-package ace-pinyin
+  :diminish ace-pinyin-mode
   :bind ("C-h" . ace-pinyin-jump-char)
   :config
   (setq ace-pinyin-use-avy t)

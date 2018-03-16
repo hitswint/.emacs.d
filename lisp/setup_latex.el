@@ -41,6 +41,7 @@
 ;;;; reftex
   ;; ===================reftex=====================
   (use-package reftex
+    :diminish reftex-mode
     :commands reftex-mode
     ;; C-c [ reftex-citation，C-c C-x [ org-reftex-citation。
     :config
@@ -90,6 +91,7 @@
 ;;; magic-latex-buffer
 ;; ==============magic-latex-buffer================
 (use-package magic-latex-buffer
+  :diminish magic-latex-buffer
   :commands magic-latex-buffer
   :init
   (add-hook 'TeX-mode-hook 'magic-latex-buffer)

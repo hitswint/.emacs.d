@@ -1,6 +1,7 @@
 ;;; magit
 ;; ====================magit=======================
 (use-package magit
+  :diminish magit-autorevert-mode
   :bind ("C-x M-g" . magit-status)
   :config
   (define-key magit-mode-map (kbd "<C-tab>") nil)

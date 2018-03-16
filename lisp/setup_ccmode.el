@@ -84,6 +84,7 @@
 ;;; function-args
 ;; ==================function-args==============
 (use-package function-args
+  :diminish function-args-mode
   :commands fa-config-default
   :init
   (add-hook 'c-mode-hook 'fa-config-default)
@@ -108,6 +109,7 @@
 ;;; hs-minor-mode
 ;; ==================hs-minor-mode==============
 (use-package hideshow
+  :diminish hs-minor-mode
   :commands hs-minor-mode
   :init
   (add-hook 'c-mode-common-hook 'hs-minor-mode)
@@ -136,6 +138,7 @@
 ;;; helm-gtags
 ;; ==================helm-gtags=================
 (use-package helm-gtags
+  :diminish helm-gtags-mode
   :commands helm-gtags-mode
   :init
   (add-hook 'c-mode-hook 'helm-gtags-mode)

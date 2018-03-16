@@ -1,6 +1,7 @@
 ;;; abbrev
 ;; ====================abbrev======================
 (use-package abbrev
+  :diminish abbrev-mode
   :config
   ;; Turn on abbrev mode globally.
   (setq-default abbrev-mode t)
@@ -74,6 +75,7 @@
 ;;; undo-tree
 ;; ==================undo-tree=====================
 (use-package undo-tree
+  :diminish undo-tree-mode
   :bind (("C-/" . undo-tree-undo)
          ("C-M-/" . undo-tree-redo))
   :config
@@ -175,6 +177,7 @@
 ;;; God-mode
 ;; ====================God-mode====================
 (use-package god-mode
+  :diminish god-local-mode
   :bind ("<S-escape>" . god-local-mode)
   :config
   ;; (global-set-key (kbd "<escape>") 'god-mode-all)
@@ -200,11 +203,13 @@
   :config
   (define-key help-mode-map (kbd "q") 'kill-buffer-and-window))
 (use-package elisp-slime-nav
+  :diminish elisp-slime-nav-mode
   :commands elisp-slime-nav-mode
   :init
   (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
     (add-hook hook 'elisp-slime-nav-mode))
   :config
+  (setq eval-expression-debug-on-error nil)
   (define-key elisp-slime-nav-mode-map (kbd "C-c C-,") 'elisp-slime-nav-find-elisp-thing-at-point)
   (define-key elisp-slime-nav-mode-map (kbd "C-c C-.") 'pop-tag-mark)
   (define-key elisp-slime-nav-mode-map (kbd "C-c C-/") 'elisp-slime-nav-describe-elisp-thing-at-point)
@@ -216,6 +221,7 @@
 ;;; drag stuff
 ;; ===================drag stuff===================
 (use-package drag-stuff
+  :diminish drag-stuff-mode
   :bind (("M-P" . drag-stuff-up)
          ("M-N" . drag-stuff-down)
          ("M-B" . drag-stuff-left)
@@ -267,6 +273,7 @@
 ;;; hungry-delete
 ;; ===================hungry-delete================
 (use-package hungry-delete
+  :diminish hungry-delete-mode
   :config
   (add-to-list 'hungry-delete-except-modes 'dired-mode)
   (add-to-list 'hungry-delete-except-modes 'ein:notebook-mode)
@@ -285,6 +292,7 @@
 ;;; aggressive-indent
 ;; ================aggressive-indent===============
 (use-package aggressive-indent
+  :diminish aggressive-indent-mode
   :config
   (add-to-list 'aggressive-indent-excluded-modes 'asm-mode)
   (add-to-list 'aggressive-indent-excluded-modes 'python-mode)
@@ -322,6 +330,7 @@
 ;;; which-key
 ;; ====================which-key===================
 (use-package which-key
+  :diminish which-key-mode
   :config
   (which-key-mode)
   (which-key-setup-side-window-right-bottom)
@@ -517,6 +526,7 @@
 ;;; bbyac
 ;; =====================bbyac======================
 (use-package bbyac
+  :diminish bbyac-mode
   :bind (("M-s M-u" . bbyac-expand-substring)
          ("M-s M-U" . bbyac-expand-symbols))
   :config
@@ -565,6 +575,7 @@
 ;;; volatile-highlights
 ;; ==============volatile-highlights===============
 (use-package volatile-highlights
+  :diminish volatile-highlights-mode
   :config
   (volatile-highlights-mode t))
 ;; ==============volatile-highlights===============
@@ -595,6 +606,7 @@
 ;;; auto-highlight-symbol
 ;; =============auto-highlight-symbol==============
 (use-package auto-highlight-symbol
+  :diminish auto-highlight-symbol-mode
   :init
   (setq ahs-default-range 'ahs-range-whole-buffer)
   :config
@@ -784,4 +796,15 @@
 (use-package yaml-mode
   :mode ("\\.yml\\'" . yaml-mode))
 ;; ===================yaml-mode====================
+;;; Auto-revert-mode
+;; =================Auto-revert-mode===============
+(use-package autorevert
+  :diminish auto-revert-mode
+  :config
+  (global-auto-revert-mode 1)
+  ;; Also auto refresh dired, but be quiet about it.
+  (setq global-auto-revert-non-file-buffers t)
+  ;; (setq global-auto-revert-ignore-modes '(dired-mode))
+  (setq auto-revert-verbose nil))
+;; =================Auto-revert-mode===============
 (provide 'setup_packages)

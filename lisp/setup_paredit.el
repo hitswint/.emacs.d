@@ -1,6 +1,7 @@
 ;;; paredit
 ;; ==================paredit=======================
 (use-package paredit
+  :diminish paredit-mode
   :commands enable-paredit-mode
   :init
   (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
@@ -76,6 +77,7 @@
 ;;; paredit-everywhere
 ;; ===============paredit-everything===============
 (use-package paredit-everywhere
+  :diminish paredit-everywhere-mode
   :commands paredit-everywhere-mode
   :init
   (add-hook 'prog-mode-hook 'paredit-everywhere-mode)

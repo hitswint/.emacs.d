@@ -1,6 +1,7 @@
 ;;; helm
 ;; ====================helm=====================
 (use-package helm
+  :diminish helm-mode
   :config
   (use-package helm-config)
   (use-package helm-for-files)

@@ -1,6 +1,7 @@
 ;;; auto-complete
 ;; ================auto-complete===============
 (use-package auto-complete
+  :diminish auto-complete-mode
   :bind ("M-u" . swint-auto-complete)
   :config
   (defun swint-auto-complete ()
@@ -184,6 +185,7 @@
 ;;; company
 ;; ================company=====================
 (use-package company
+  :diminish company-mode
   :config
   (global-company-mode 1)
   (setq company-show-numbers t)
@@ -307,7 +309,7 @@
     (setq ycmd-min-num-chars-for-completion 1))
   (use-package ycmd-eldoc
     :config
-    (add-hook 'ycmd-mode-hook 'ycmd-eldoc-setup))
+    (add-hook 'ycmd-mode-hook 'ycmd-eldoc-mode))
   (use-package flycheck-ycmd
     :config
     (flycheck-ycmd-setup)))
@@ -315,6 +317,7 @@
 ;;; yasnippet
 ;; =================yasnippet==================
 (use-package yasnippet
+  :diminish yas-minor-mode
   :bind ("M-I" . swint-complete-yasnippet)
   :config
   (yas-global-mode 1)

@@ -24,6 +24,7 @@
 ;;; elpy
 ;; ====================elpy====================
 (use-package elpy
+  :diminish elpy-mode
   :after pyvenv
   :init
   (setq elpy-remove-modeline-lighter nil)

@@ -106,6 +106,8 @@
   (add-to-list 'desktop-minor-mode-table '(skewer-html-mode nil))
   (add-to-list 'desktop-minor-mode-table '(elpy-mode nil))
   (add-to-list 'desktop-minor-mode-table '(flymake-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(xclipmon-mode nil)))
+  (add-to-list 'desktop-minor-mode-table '(xclipmon-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(dired-async-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(dired-omit-mode nil)))
 ;; ===================desktop====================
 (provide 'setup_desktop_session)

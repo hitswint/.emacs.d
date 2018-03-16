@@ -56,6 +56,7 @@
 ;;; ispell
 ;; =================ispell===================
 (use-package ispell
+  :diminish ispell-minor-mode
   :after (:any flyspell ac-ispell)
   :config
   (setq ispell-program-name "aspell")

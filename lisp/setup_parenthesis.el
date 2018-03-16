@@ -71,6 +71,7 @@
 ;;; wrap-region
 ;; ================wrap-region==================
 (use-package wrap-region
+  :diminish wrap-region-mode
   :commands wrap-region-mode
   :init
   (dolist (hook '(LaTeX-mode-hook

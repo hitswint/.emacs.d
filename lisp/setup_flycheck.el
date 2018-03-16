@@ -1,7 +1,6 @@
 ;;; flycheck
 ;; ===============flycheck====================
 (use-package flycheck
-  :diminish flycheck-mode
   :bind ("M-g c" . flycheck-mode)
   :config
   ;; Change the prefix.
