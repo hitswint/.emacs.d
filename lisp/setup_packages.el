@@ -267,8 +267,10 @@
 ;; ===================pos-tip======================
 ;;; elmacro
 ;; ===================elmacro======================
-;; 需要先打开elmacro-mode，然后F3/F4录制宏。
-;; 然后使用elmacro-show-last-macro来将操作转换为elisp。
+(use-package elmacro
+  ;; F3开始录制宏，再次F3插入计数，F4停止录制。
+  ;; elmacro-show-last-macro将宏转换为elisp。
+  :commands elmacro-mode)
 ;; ===================elmacro======================
 ;;; hungry-delete
 ;; ===================hungry-delete================

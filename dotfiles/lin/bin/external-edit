@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 while getopts "se:" arg         #选项后面的冒号表示该选项需要参数
 do
@@ -18,19 +18,9 @@ do
     esac
 done
 
-winid=`xdpyinfo | sed -ne 's/^focus:.*\(0x[^,]\+\).*/\1/p'`
-
-if xwininfo -id $winid | grep "(has no name)"
-then
-    winid=`printf "0x%x\n" $(( $winid - 1 ))` #Decrement by one.
-fi
-
-wintitle=`xwininfo -id $winid | sed -ne 's/xwininfo: .*"\([^"]\+\)"/\1/p'`
-Emacs_style='^.*(Mozilla Firefox|Microsoft Word)$'
-
 xte_selectall()
 {
-    case $wintitle in
+    case $xwin_title in
         *Mozilla\ Firefox* | *Microsoft\ Word* )
             xte <<EOF
 sleep 1
@@ -51,33 +41,41 @@ EOF
     esac
 }
 
-# copy text using application keyboard short-cuts
+xwin_id=`xdpyinfo | sed -ne 's/^focus:.*\(0x[^,]\+\).*/\1/p'`
+if xwininfo -id $xwin_id | grep "(has no name)"
+then
+    xwin_id=`printf "0x%x\n" $(( $xwin_id - 1 ))` #Decrement by one.
+fi
+xwin_title=`xwininfo -id $xwin_id | sed -ne 's/xwininfo: .*"\([^"]\+\)"/\1/p'`
+
+Emacs_style='^.*(Mozilla Firefox|Microsoft Word)$'
+
 if [ $sel ]; then
     xte_selectall
 fi
 
-Wind_wine=`xdotool getwindowfocus -f`
-
-if [ $(xdotool search --onlyvisible --class "wine" | grep -i $Wind_wine) ]; then
-    xdotool key --clearmodifiers ctrl+c
-    xclip -selection clipboard -o | sed 's/[\"]/\\&/g' > "/tmp/eaclipboard"
-else
-    xclip -selection primary -o | sed 's/[\"]/\\&/g' > "/tmp/eaclipboard"
-fi
+xdotool key --clearmodifiers ctrl+c
+word=$(xclip -selection clipboard -o | sed 's/[\"]/\\&/g')
 
 run-or-raise.sh emacs
 
 ELISP=$( cat $HOME/bin/emacs_anywhere.el )
 
-$editor -a '' -c -e "(progn $ELISP)"
+$editor -a '' -c -e "(progn $ELISP (insert \"$word\"))"
 
-wmctrl -ia $winid
+. /tmp/eaenv
+
+if [ "$EA_ABORT" = true ]; then
+    exit 0;
+fi
+
+wmctrl -ia $xwin_id
 
 if [ $sel ]; then
     xte_selectall
 fi
 
-if [[ $wintitle =~ $Emacs_style  ]];then
+if [[ $xwin_title =~ $Emacs_style  ]];then
     xdotool key --clearmodifiers ctrl+y
 else
     xdotool key --clearmodifiers ctrl+v

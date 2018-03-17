@@ -179,7 +179,8 @@
             youdao-dictionary
             ztree)
           (cond
-           (is-lin '(fcitx
+           (is-lin '(auto-yasnippet
+                     fcitx
                      helm-mu
                      helm-pass
                      mu4e-alert

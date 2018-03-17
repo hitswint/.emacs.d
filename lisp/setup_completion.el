@@ -330,4 +330,10 @@
     (unless (auto-complete '(ac-source-yasnippet))
       (call-interactively 'company-yasnippet))))
 ;; =================yasnippet==================
+;;; auto-yasnippet
+;; ===============auto-yasnippet===============
+(use-package auto-yasnippet
+  :bind (("M-g i" . aya-create)
+         ("M-g M-i" . aya-expand)))
+;; ===============auto-yasnippet===============
 (provide 'setup_completion)
