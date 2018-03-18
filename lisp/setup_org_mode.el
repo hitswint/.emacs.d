@@ -1,6 +1,7 @@
 ;;; org-mode
 ;; =================org-mode====================
 (use-package org
+  :mode ("\\.[oO][rR][gG]\\'" . org-mode)
   :config
 ;;;; Appearance
   ;; =================Appearance================
@@ -83,8 +84,6 @@
                                                          (call-interactively 'smart-beginning-of-line))))
                (define-key org-mode-map (kbd "C-c r") 'reftex-mode)
                (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)
-               (define-key org-mode-map (kbd "C-c b") 'org-ref-insert-link)
-               (define-key org-mode-map (kbd "C-c l") 'swint-noter/interleave)
                (define-key org-mode-map (kbd "C-j") nil)
                (define-key org-mode-map (kbd "RET") nil)
                (define-key org-mode-map [(control \,)] nil)
@@ -220,11 +219,9 @@
            (pdf-file (car (bibtex-completion-find-pdf key))))
       (cond
        ((and annotated-file (file-exists-p annotated-file))
-        (org-open-file annotated-file in-emacs)
-        (message "%s" "annotated"))
+        (org-open-file annotated-file in-emacs))
        ((and pdf-file (file-exists-p pdf-file))
-        (org-open-file pdf-file in-emacs)
-        (message "%s" pdf-file))
+        (org-open-file pdf-file in-emacs))
        (t
         (org-open-at-point in-emacs)))))
   (defun swint-org-open-at-point-with-apps ()
@@ -494,10 +491,23 @@
 ;; =================org-mode====================
 ;;; org-annotate
 ;; ===============org-annotate==================
-;; Display annotated files with mark.
 (use-package dired-x-highlight
   :load-path "site-lisp/org-annotate-file/"
-  :commands dired-k--highlight-buffer)
+  :commands (dired-k--highlight-buffer
+             dired-k--previous-highlighted-file
+             dired-k--next-highlighted-file)
+  :init
+  (smartrep-define-key dired-mode-map "C-c"
+    '(("p" . dired-k--previous-highlighted-file)
+      ("n" . dired-k--next-highlighted-file)))
+  :config
+  (add-hook 'dired-after-readin-hook 'dired-k--highlight-buffer t)
+  ;; 在已有dired-mode中开启dired-x-highlight。
+  (dolist (buf (remove-if-not (lambda (x)
+                                (equal (buffer-mode x) 'dired-mode))
+                              (helm-buffer-list)))
+    (with-current-buffer buf
+      (dired-k--highlight-buffer))))
 ;; Sync annotated status as operating.
 (use-package dired-sync-highlight
   :load-path "site-lisp/org-annotate-file/"
@@ -506,7 +516,9 @@
 (use-package org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands org-annotate-file
-  :bind ("C-x L" . org-annotate-file-current)
+  :bind (("C-x L" . org-annotate-file-current)
+         :map dired-mode-map
+         ("L" . org-annotate-file-current))
   :config
   (defun org-annotate-file-current ()
     (interactive)
@@ -524,7 +536,9 @@
 (use-package swint-org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands swint-org-annotation-storage-file
-  :bind ("C-x l" . swint-org-annotate-file-current))
+  :bind (("C-x l" . swint-org-annotate-file-current)
+         :map dired-mode-map
+         ("l" . swint-org-annotate-file-current)))
 ;; ===============org-annotate==================
 ;;; outline
 ;; ==================outline====================
@@ -597,7 +611,9 @@
 ;;; outshine
 ;; ==================outshine===================
 (use-package outshine
-  :commands (outshine-hook-function outshine-cycle-buffer outshine-calc-outline-regexp)
+  :commands (outshine-hook-function
+             outshine-cycle-buffer
+             outshine-calc-outline-regexp)
   :config
   ;; Heading格式随mode不同，通常是M-;加*加空格。
   (setq outshine-use-speed-commands t)
@@ -619,7 +635,11 @@
 ;;; interleave
 ;; =================interleave==================
 (use-package interleave
-  :commands (interleave-mode swint-dired-interleave interleave-open-notes-file-for-pdf)
+  :commands (interleave-mode
+             swint-dired-interleave
+             interleave-open-notes-file-for-pdf)
+  :bind (:map dired-mode-map
+              ("C-c l" . swint-dired-interleave))
   :config
   (defun swint-dired-interleave ()
     (interactive)
@@ -637,7 +657,13 @@
 ;;; org-noter
 ;; =================org-noter===================
 (use-package org-noter
-  :commands (org-noter swint-noter/interleave swint-open-notes-file-for-pdf)
+  :if (and is-lin (display-graphic-p))
+  :commands (org-noter
+             swint-noter/interleave
+             swint-open-notes-file-for-pdf)
+  :init
+  (add-hook 'org-mode-hook (lambda ()
+                             (bind-key "C-c l" 'swint-noter/interleave org-mode-map)))
   :config
   (defun swint-noter/interleave ()
     (interactive)
@@ -670,6 +696,8 @@
 ;; =========org-protocol-capture-html===========
 (use-package org-protocol-capture-html
   :load-path "site-lisp/org-protocol-capture-html/"
+  :if (and is-lin (display-graphic-p))
+  :defer 2
   :config
   (add-to-list 'org-capture-templates
                '("w" "Web" entry (file+olp "~/Nutstore-sync/orgzly/orgzly.org" "Web")
@@ -713,6 +741,9 @@
 ;; ==================org-ref====================
 (use-package org-ref
   :commands (org-ref-insert-link org-ref-get-bibtex-key-and-file)
+  :init
+  (add-hook 'org-mode-hook (lambda ()
+                             (bind-key "C-c b" 'org-ref-insert-link org-mode-map)))
   :init
   (setq org-ref-bibtex-hydra-key-binding "\C-cj")
   (setq org-ref-insert-cite-key "\C-cb")

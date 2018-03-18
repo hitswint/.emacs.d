@@ -27,6 +27,7 @@
   (setq helm-split-window-default-side 'same)
   (setq helm-kill-ring-threshold 1)
   (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
+  (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'")))
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))
                     '(helm-ff-directory ((t (:foreground "yellow" :weight bold))))
@@ -481,9 +482,14 @@
 ;;; helm-bibtex
 ;; ================helm-bibtex==================
 (use-package helm-bibtex
-  :commands (helm-bibtex-with-local-bibliography bibtex-completion-find-pdf bibtex-completion-get-entry-for-pdf)
+  :commands (helm-bibtex-with-local-bibliography
+             bibtex-completion-find-pdf
+             bibtex-completion-get-entry-for-pdf)
   :bind (("C-x b" . helm-bibtex)
          ("C-x B" . swint-helm-bibtex))
+  :init
+  (add-hook 'LaTeX-mode-hook '(lambda ()
+                                (bind-key "C-c b" 'helm-bibtex-with-local-bibliography LaTeX-mode-map)))
   :config
   (define-key helm-map (kbd "C-c j") '(lambda () (interactive)
                                         (with-helm-alive-p

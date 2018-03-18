@@ -22,7 +22,6 @@
                          file)))))
   (add-hook 'c-mode-hook
             (lambda ()
-              (define-key c-mode-base-map (kbd "C-c g") 'gdb-or-gud-go)
               (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
               (define-key c-mode-base-map (kbd "C-c C-S-c") (lambda () (interactive)
                                                               (setq-local compilation-read-command nil)
@@ -49,6 +48,9 @@
 ;; =====================gdb=====================
 (use-package gdb-mi
   :commands gdb-or-gud-go
+  :init
+  (add-hook 'c-mode-hook (lambda ()
+                           (bind-key "C-c g" 'gdb-or-gud-go c-mode-map)))
   :config
   (define-key gud-mode-map (kbd "C-c G") 'gud-quit)
   ;; 直接使用gdb-or-gud-go弹出gud-comint-buffer未定义，先gdb，然后gdb-or-gud-go。

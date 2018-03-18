@@ -2,7 +2,6 @@
 ;; =====================auctex=====================
 (use-package tex
   :mode ("\\.[tT][eE][xX]\\'" . latex-mode)
-  :commands LaTeX-math-mode
   :config
 ;;;; setup-and-keybindings
   ;; ============setup-and-keybindings=============
@@ -25,14 +24,10 @@
               (setq TeX-save-query nil)
               (imenu-add-menubar-index)
               (define-key LaTeX-mode-map (kbd "C-c f") 'TeX-font)
-              (define-key LaTeX-mode-map (kbd "C-c v") 'preview-at-point)
-              (define-key LaTeX-mode-map (kbd "C-c V") 'preview-clearout-buffer)
               (define-key LaTeX-mode-map (kbd "C-q") ' (lambda () (interactive)
                                                          (ignore-errors (kill-process (TeX-active-process)))
                                                          (swint-kill-this-buffer)))
-              (define-key LaTeX-mode-map (kbd "C-c r") 'reftex-mode)
-              (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)
-              (define-key LaTeX-mode-map (kbd "C-c b") 'helm-bibtex-with-local-bibliography)))
+              (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)))
   (setq TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o")))
   ;; 使用imagemagick中convert转换为图片。win中默认使用imgconvert，可以将cygwin中convert改名为imgconvert。
   (add-to-list 'TeX-command-list '("LaTeX-standalone" "%`xelatex -shell-escape%(mode)%' %t" TeX-run-TeX nil t))
@@ -43,8 +38,11 @@
   (use-package reftex
     :diminish reftex-mode
     :commands reftex-mode
-    ;; C-c [ reftex-citation，C-c C-x [ org-reftex-citation。
+    :init
+    (add-hook 'LaTeX-mode-hook (lambda ()
+                                 (bind-key "C-c r" 'reftex-mode LaTeX-mode-map)))
     :config
+    ;; C-c [ reftex-citation，C-c C-x [ org-reftex-citation。
     (define-key reftex-mode-map (kbd "C-c r") 'reftex-parse-all)
     (setq reftex-plug-into-AUCTeX t
           reftex-toc-split-windows-horizontally t
@@ -53,7 +51,12 @@
 ;;;; preview
   ;; ==================preview=====================
   (use-package preview
-    :after tex
+    :commands (preview-at-point
+               preview-clearout-buffer)
+    :init
+    (add-hook 'LaTeX-mode-hook (lambda ()
+                                 (bind-key "C-c v" 'preview-at-point LaTeX-mode-map)
+                                 (bind-key "C-c V" 'preview-clearout-buffer LaTeX-mode-map)))
     :config
     (setq preview-auto-cache-preamble t)
     (setq preview-gs-options '("-q" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4"))

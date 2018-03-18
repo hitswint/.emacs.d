@@ -34,6 +34,7 @@
 ;;; recentf
 ;; ====================recentf=====================
 (use-package recentf
+  :commands recentf-mode
   :config
   (use-package recentf-ext)
   (recentf-mode 1)
@@ -142,7 +143,6 @@
 ;; ================visible-mark====================
 ;;; unicad
 ;; =====================unicad=====================
-;; lin中不会出现乱码，不需要，这个包会拖慢启动速度。
 (use-package unicad
   :load-path "site-lisp/unicad/"
   :if is-win
@@ -199,9 +199,6 @@
   (define-key 'help-command (kbd "C-k") 'find-function-on-key)
   (define-key 'help-command (kbd "C-v") 'find-variable)
   (define-key 'help-command (char-to-string help-char) nil))
-(use-package help-mode
-  :config
-  (define-key help-mode-map (kbd "q") 'kill-buffer-and-window))
 (use-package elisp-slime-nav
   :diminish elisp-slime-nav-mode
   :commands elisp-slime-nav-mode
@@ -248,19 +245,10 @@
   (setq popup-kill-ring-popup-margin-right 0)
   (setq popup-kill-ring-timeout 0.5))
 ;; ================popup-kill-ring=================
-;;; popup
-;; ====================popup=======================
-(use-package popup
-  :commands (popup-tip popup-create popup-make-item)
-  :config
-  (define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
-  (define-key popup-menu-keymap (kbd "M-n") 'popup-next)
-  (define-key popup-menu-keymap (kbd "TAB") 'popup-next))
-;; ====================popup=======================
 ;;; pos-tip
 ;; ===================pos-tip======================
 (use-package pos-tip
-  :commands (pos-tip-show pos-tip-show-no-propertize)
+  :commands pos-tip-show
   :config
   ;; 使用Gtk+ tooltip需配置x-gtk-use-system-tooltips，修改~/.emacs.d/gtkrc配置字体。
   (when is-lin (setq x-gtk-use-system-tooltips t)))
@@ -297,15 +285,11 @@
   :diminish aggressive-indent-mode
   :config
   (add-to-list 'aggressive-indent-excluded-modes 'asm-mode)
-  (add-to-list 'aggressive-indent-excluded-modes 'python-mode)
   (global-aggressive-indent-mode 1))
 ;; ================aggressive-indent===============
 ;;; clean-aindent-mode
 ;; ===============clean-aindent-mode===============
 (use-package clean-aindent-mode
-  :commands clean-aindent-mode
-  :init
-  (add-hook 'prog-mode-hook 'clean-aindent-mode)
   :config
   (clean-aindent-mode t)
   (setq clean-aindent-is-simple-indent t)
@@ -333,6 +317,7 @@
 ;; ====================which-key===================
 (use-package which-key
   :diminish which-key-mode
+  :defer 2
   :config
   (which-key-mode)
   (which-key-setup-side-window-right-bottom)
@@ -373,6 +358,7 @@
 ;; 使用soffice/unoconv转换。
 ;; 默认缓存文件保存在/tmp和~/AppData/Local/Temp中，使用doc-view-clear-cache清理。
 (use-package doc-view
+  :defer t
   :config
   (setq doc-view-continuous t)
   (define-key doc-view-mode-map (kbd "M-v") 'doc-view-scroll-down-or-previous-page)
@@ -435,7 +421,9 @@
 ;;; bm
 ;; =======================bm=======================
 (use-package bm
-  :commands (bm-toggle bm-previous bm-next)
+  :commands (bm-toggle
+             bm-previous
+             bm-next)
   :init
   (smartrep-define-key global-map "C-x"
     '(("C-'" . bm-toggle)
@@ -473,7 +461,8 @@
 ;; ================operate-on-number===============
 ;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字。
 (use-package operate-on-number
-  :commands (apply-operation-to-number-at-point operate-on-number-at-point)
+  :commands (apply-operation-to-number-at-point
+             operate-on-number-at-point)
   :init
   (smartrep-define-key global-map "C-="
     '(("+" . apply-operation-to-number-at-point)
@@ -596,7 +585,10 @@
 ;;; highlight-symbol
 ;; ================highlight-symbol================
 (use-package highlight-symbol
-  :commands (highlight-symbol-prev highlight-symbol-next highlight-symbol-at-point highlight-symbol-get-symbol)
+  :commands (highlight-symbol-prev
+             highlight-symbol-next
+             highlight-symbol-at-point
+             highlight-symbol-get-symbol)
   :init
   (smartrep-define-key global-map "C-x"
     '(("," . highlight-symbol-prev)
@@ -609,6 +601,7 @@
 ;; =============auto-highlight-symbol==============
 (use-package auto-highlight-symbol
   :diminish auto-highlight-symbol-mode
+  :defer 2
   :init
   (setq ahs-default-range 'ahs-range-whole-buffer)
   :config
@@ -654,14 +647,9 @@
 ;;; dumb-jump
 ;; ==================dumb-jump=====================
 (use-package dumb-jump
-  :config
-  (dumb-jump-mode)
-  (define-key dumb-jump-mode-map (kbd "C-M-g") nil)
-  (define-key dumb-jump-mode-map (kbd "C-M-p") nil)
-  (define-key dumb-jump-mode-map (kbd "C-M-q") nil)
-  (define-key dumb-jump-mode-map (kbd "C-x C-,") 'dumb-jump-go)
-  (define-key dumb-jump-mode-map (kbd "C-x C-.") 'dumb-jump-back)
-  (define-key dumb-jump-mode-map (kbd "C-x C-/") 'dumb-jump-quick-look))
+  :bind (("C-x C-," . dumb-jump-go)
+         ("C-x C-." . dumb-jump-back)
+         ("C-x C-/" . dumb-jump-quick-look)))
 ;; ==================dumb-jump=====================
 ;;; diff-hl
 ;; ===================diff-hl======================
@@ -703,7 +691,8 @@
 ;;; markdown-mode
 ;; =================markdown-mode==================
 (use-package markdown-mode
-  :commands (markdown-mode gfm-mode)
+  :commands (markdown-mode
+             gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
@@ -711,7 +700,8 @@
 ;;; highlight-indentation
 ;; =============highlight-indentation==============
 (use-package highlight-indentation
-  :diminish (highlight-indentation-mode highlight-indentation-current-column-mode)
+  :diminish (highlight-indentation-mode
+             highlight-indentation-current-column-mode)
   :init
   (add-hook 'prog-mode-hook 'highlight-indentation-current-column-mode))
 ;; =============highlight-indentation==============
@@ -743,7 +733,8 @@
 (use-package sudo-edit
   ;; 需新建~/.ssh/sockets文件夹。
   :if is-lin
-  :commands (sudo-edit sudo-dired)
+  :commands (sudo-edit
+             sudo-dired)
   :config
   ;; M(dired-do-chmod)改变权限；O(dired-do-chown)改变owner；G(dired-do-chgrp)改变group。
   (defun sudo-dired ()
@@ -772,6 +763,7 @@
 ;;; ido
 ;; ======================ido=======================
 (use-package ido
+  :defer t
   :config
   (setq ido-auto-merge-delay-time 0.7
         ido-default-buffer-method 'raise-frame
@@ -802,6 +794,7 @@
 ;; =================Auto-revert-mode===============
 (use-package autorevert
   :diminish auto-revert-mode
+  :defer 2
   :config
   (global-auto-revert-mode 1)
   ;; Also auto refresh dired, but be quiet about it.
@@ -809,4 +802,9 @@
   ;; (setq global-auto-revert-ignore-modes '(dired-mode))
   (setq auto-revert-verbose nil))
 ;; =================Auto-revert-mode===============
+;; =================academic-phrases===============
+(use-package academic-phrases
+  :bind (("M-s a" . academic-phrases)
+         ("M-s A" . academic-phrases-by-section)))
+;; =================academic-phrases===============
 (provide 'setup_packages)

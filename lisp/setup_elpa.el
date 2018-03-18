@@ -22,7 +22,8 @@
     (setq package-check-signature nil)))
 ;; 借自prelude。
 (defvar prelude-packages
-  (append '(ace-jump-mode
+  (append '(academic-phrases
+            ace-jump-mode
             ace-link
             ace-pinyin
             ac-html-bootstrap
@@ -40,6 +41,7 @@
             auto-complete-c-headers
             auto-complete-clang
             auto-highlight-symbol
+            auto-yasnippet
             avy
             avy-zap
             backup-walker
@@ -76,7 +78,6 @@
             elmacro
             elpy
             emmet-mode
-            emms
             epl
             eshell-prompt-extras
             evil-nerd-commenter
@@ -131,6 +132,7 @@
             neotree
             nyan-mode
             operate-on-number
+            org-ref
             outline-magic
             outorg
             outshine
@@ -175,24 +177,22 @@
             window-numbering
             with-editor
             wrap-region
+            yaml-mode
             yasnippet
             youdao-dictionary
             ztree)
           (cond
-           (is-lin '(auto-yasnippet
+           (is-lin '(emms
                      fcitx
                      helm-mu
                      helm-pass
                      mu4e-alert
                      org
                      org-noter
-                     org-ref
                      pass
                      pdf-tools
                      sudo-edit
-                     tablist
                      term-keys
-                     yaml-mode
                      ycmd
                      company-ycmd
                      flycheck-ycmd))

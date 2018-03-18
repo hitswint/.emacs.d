@@ -1,7 +1,7 @@
 ;;; ivy
 ;; =====================ivy========================
 (use-package ivy
-  :commands ivy-set-actions
+  :after (:any swiper counsel)
   :config
   (bind-key "M-s y" 'ivy-resume)
   (bind-key "C-h" 'ivy-avy ivy-minibuffer-map)
@@ -34,10 +34,12 @@
 ;;; swiper
 ;; ===================swiper=======================
 (use-package swiper
+  :commands swiper-from-isearch
   :bind (("M-s s" . swint-swiper)
-         ("M-s S" . swiper-all)
-         :map isearch-mode-map
-         ("M-s s" . swiper-from-isearch))
+         ("M-s S" . swiper-all))
+  :init
+  (add-hook 'isearch-mode-hook (lambda ()
+                                 (bind-key "M-s s" 'swiper-from-isearch isearch-mode-map)))
   :config
   (defun swint-swiper ()
     (interactive)

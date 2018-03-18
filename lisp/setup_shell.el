@@ -27,15 +27,15 @@
 (use-package eshell
   :bind ("C-M-1" . eshell)
   :config
-  (add-hook 'eshell-mode-hook (lambda()
-                                (outline-minor-mode 1)
-                                (setq outline-regexp "^[^#$\n]* [#>]+ "
-                                      scroll-margin 0
-                                      eshell-scroll-to-bottom-on-output t
-                                      eshell-scroll-show-maximum-output t)
-                                (add-to-list 'eshell-output-filter-functions
-                                             'eshell-postoutput-scroll-to-bottom)
-                                (define-key eshell-mode-map (kbd "M-s") nil))))
+  (add-hook 'eshell-mode-hook '(lambda()
+                                 (outline-minor-mode 1)
+                                 (setq outline-regexp "^[^#$\n]* [#>]+ "
+                                       scroll-margin 0
+                                       eshell-scroll-to-bottom-on-output t
+                                       eshell-scroll-show-maximum-output t)
+                                 (add-to-list 'eshell-output-filter-functions
+                                              'eshell-postoutput-scroll-to-bottom)
+                                 (define-key eshell-mode-map (kbd "M-s") nil))))
 ;; =====================eshell=====================
 ;;; eshell-prompt-extras
 ;; ==============eshell-prompt-extras==============

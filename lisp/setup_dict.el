@@ -123,7 +123,8 @@
 ;;; bing-dict
 ;; ==================bing-dict===================
 (use-package bing-dict
-  :commands (bing-dict-brief bing-dict-brief-cb-at-point)
+  :commands (bing-dict-brief
+             bing-dict-brief-cb-at-point)
   :config
   (defun bing-dict-brief-cb-action (&rest args)
     "Output translation to pos-tip or *online* buffer."
@@ -143,7 +144,8 @@
 ;;; google-translate
 ;; ===============google-translate===============
 (use-package google-translate
-  :commands (google-translate-translate google-translate-to-tip)
+  :commands (google-translate-translate
+             google-translate-to-tip)
   :init
   (setq google-translate-base-url
         "http://translate.google.cn/translate_a/single")
@@ -170,7 +172,8 @@
 ;;; youdao-dictionary
 ;; ===============youdao-dictionary==============
 (use-package youdao-dictionary
-  :commands (youdao-dictionary--format-result youdao-dictionary-to-tip)
+  :commands (youdao-dictionary--format-result
+             youdao-dictionary-to-tip)
   :config
   (defun youdao-dictionary-to-tip (&optional _word)
     "Search word at point and display result with pos-tip."

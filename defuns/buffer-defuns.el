@@ -165,8 +165,8 @@ FORCE-OTHER-WINDOW is ignored."
                 curr-buf-name))))
 (defun swint-iswitchb-ignore-buffername-p (bufname)
   "Return t if the buffer BUFNAME should be ignored."
-  (let ((data       (match-data))
-        (re-list    swint-iswitchb-buffer-ignore)
+  (let ((data (match-data))
+        (re-list swint-iswitchb-buffer-ignore)
         ignorep
         nextstr)
     (while re-list

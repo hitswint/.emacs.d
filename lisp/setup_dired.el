@@ -30,8 +30,6 @@
   ;; Allow editing file permissions.
   (setq wdired-allow-to-change-permissions t)
   (add-hook 'wdired-mode-hook 'undo-tree-mode)
-  ;; 将dired-k--highlight-buffer加hook放在前面，使其出现在hook列表最后，以便最后生效。
-  (add-hook 'dired-after-readin-hook 'dired-k--highlight-buffer)
   ;; 不折行显示。
   (add-hook 'dired-after-readin-hook '(lambda () (setq truncate-lines t)))
   (add-hook 'dired-mode-hook
@@ -50,12 +48,6 @@
                                                        (interactive)
                                                        (dired-kill-and-next-subdir)
                                                        (revert-buffer)))
-               (define-key dired-mode-map (kbd "l") 'swint-org-annotate-file-current)
-               (define-key dired-mode-map (kbd "L") 'org-annotate-file-current)
-               (define-key dired-mode-map (kbd "C-c l") 'swint-dired-interleave)
-               (smartrep-define-key dired-mode-map "C-c"
-                 '(("p" . dired-k--previous-highlighted-file)
-                   ("n" . dired-k--next-highlighted-file)))
                (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
                (define-key dired-mode-map (kbd "M-RET") 'helm-dired-current-file)
                (define-key dired-mode-map (kbd "C-M-j") 'tc-lister-open-file)

@@ -13,15 +13,15 @@
   (setq web-mode-engines-alist
         '(("django"    . "\\.html\\'")
           ("django"  . "\\.djhtml\\.")))
-  ;; skewer与web-mode兼容性不好。
-  (define-key web-mode-map (kbd "C-c s") 'swint-run-skewer)
-  (define-key web-mode-map (kbd "C-c b") 'company-web-bootstrap+)
   (define-key web-mode-map (kbd "C-c C-v") 'browse-url-of-buffer))
 ;; ==================web-mode==================
 ;;; html-mode
 ;; =================html-mode==================
 (use-package sgml-mode
   :commands swint-run-skewer
+  :init
+  (add-hook 'web-mode-hook (lambda ()
+                             (bind-key "C-c s" 'swint-run-skewer web-mode-map)))
   :config
   (define-key html-mode-map (kbd "C-c s") 'swint-run-skewer)
   ;; 在html-mode下，使用skewer实现html/js/css代码的实时eval。
@@ -52,8 +52,12 @@
 ;;; skewer-mode
 ;; ================skewer-mode=================
 (use-package skewer-mode
-  :diminish (skewer-mode skewer-css-mode skewer-html-mode)
-  :commands (skewer-mode skewer-css-mode skewer-html-mode)
+  :diminish (skewer-mode
+             skewer-css-mode
+             skewer-html-mode)
+  :commands (skewer-mode
+             skewer-css-mode
+             skewer-html-mode)
   :init
   (add-hook 'js2-mode-hook 'skewer-mode)
   (add-hook 'css-mode-hook 'skewer-css-mode)

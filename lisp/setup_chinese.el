@@ -25,7 +25,8 @@
 ;;; pyim
 ;; ==================pyim==================
 (use-package pyim
-  :commands (pyim-cwords-at-point pyim-string-match-p)
+  :commands (pyim-cwords-at-point
+             pyim-string-match-p)
   :bind (("C-x SPC" . pyim-convert-code-at-point)
          ("C-x S-SPC" . pyim-punctuation-translate-at-point))
   :init

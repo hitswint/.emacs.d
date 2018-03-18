@@ -6,7 +6,7 @@
   :config
   (defun swint-auto-complete ()
     (interactive)
-    (company-abort)
+    (ignore-errors (company-abort))
     (unless auto-complete-mode
       (auto-complete-mode t))
     (auto-complete))
@@ -70,7 +70,7 @@
   (ac-ispell-setup)
   (defun swint-auto-complete-ispell (&optional arg)
     (interactive)
-    (company-abort)
+    (ignore-errors (company-abort))
     (require 'auto-complete)
     (unless auto-complete-mode
       (auto-complete-mode t))
@@ -186,6 +186,7 @@
 ;; ================company=====================
 (use-package company
   :diminish company-mode
+  :after (:any company-try-hard yasnippet)
   :config
   (global-company-mode 1)
   (setq company-show-numbers t)
@@ -205,45 +206,48 @@
   ;; ((nil . ((company-clang-arguments . ("-I/home/<user>/project_root/include1/"
   ;;                                      "-I/home/<user>/project_root/include2/")))))
   ;; If you use Helm, you can easily insert absolute path by C-c i at the current path in helm-find-files.
-;;;; company-try-hard
-  ;; ============company-try-hard==============
-  (use-package company-try-hard
-    :bind ("M-i" . company-try-hard)
-    :config
-    (define-key company-active-map (kbd "M-i") 'company-try-hard))
-  ;; ============company-try-hard==============
-;;;; company-quickhelp-mode
-  ;; ==========company-quickhelp-mode==========
-  (use-package company-quickhelp
-    :bind (:map company-active-map
-                ("C-o" . company-quickhelp-manual-begin))
-    :config
-    (setq company-quickhelp-delay nil)
-    (company-quickhelp-mode 1))
-  ;; ==========company-quickhelp-mode==========
-;;;; company-c-headers
-  ;; ============company-c-headers=============
-  (use-package company-c-headers
-    :after company
-    :config
-    (add-to-list 'company-backends 'company-c-headers))
-  ;; ============company-c-headers=============
-;;;; company-web
-  ;; ==============company-web=================
-  (use-package company-web
-    :after company
-    :config
-    (add-to-list 'company-backends 'company-web-html)
-    (add-to-list 'company-backends 'company-web-jade)
-    (add-to-list 'company-backends 'company-web-slim))
-  ;; ==============company-web=================
-;;;; ac-html-bootstrap
-  ;; ===========ac-html-bootstrap==============
-  (use-package ac-html-bootstrap
-    :commands company-web-bootstrap+)
-  ;; ===========ac-html-bootstrap==============
   )
 ;; ================company=====================
+;;;; company-try-hard
+;; ==============company-try-hard==============
+(use-package company-try-hard
+  :bind ("M-i" . company-try-hard)
+  :config
+  (define-key company-active-map (kbd "M-i") 'company-try-hard))
+;; ==============company-try-hard==============
+;;;; company-quickhelp-mode
+;; ===========company-quickhelp-mode===========
+(use-package company-quickhelp
+  :after company
+  :config
+  (bind-key "C-o" 'company-quickhelp-manual-begin company-active-map)
+  (setq company-quickhelp-delay nil)
+  (company-quickhelp-mode 1))
+;; ===========company-quickhelp-mode===========
+;;;; company-c-headers
+;; =============company-c-headers==============
+(use-package company-c-headers
+  :after company
+  :config
+  (add-to-list 'company-backends 'company-c-headers))
+;; =============company-c-headers==============
+;;;; company-web
+;; ===============company-web==================
+(use-package company-web
+  :after company
+  :config
+  (add-to-list 'company-backends 'company-web-html)
+  (add-to-list 'company-backends 'company-web-jade)
+  (add-to-list 'company-backends 'company-web-slim))
+;; ===============company-web==================
+;;;; ac-html-bootstrap
+;; ============ac-html-bootstrap===============
+(use-package ac-html-bootstrap
+  :commands company-web-bootstrap+
+  :init
+  (add-hook 'web-mode-hook (lambda ()
+                             (bind-key "C-c i" 'company-web-bootstrap+ web-mode-map))))
+;; ============ac-html-bootstrap===============
 ;;; hippie-expand
 ;; ==============hippie-expand=================
 (use-package hippie-exp
@@ -294,7 +298,7 @@
   :init
   (setq ycmd-keymap-prefix (kbd "M-g M-y"))
   :config
-  (set-variable 'ycmd-server-command '("python2" "~/git-repo/ycmd/ycmd"))
+  (set-variable 'ycmd-server-command `("python2" ,(file-truename "~/git-repo/ycmd/ycmd")))
   (set-variable 'ycmd-global-config "~/git-repo/ycmd/examples/.ycm_extra_conf.py")
   (defun swint-toggle-ycmd ()
     (interactive)

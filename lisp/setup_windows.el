@@ -96,7 +96,14 @@ If prefix ARG is given, delete the window instead of selecting it."
 ;;; windmove
 ;; ================windmove=====================
 (use-package windmove
-  :commands (swint-windmove-left swint-windmove-right swint-windmove-up swint-windmove-down)
+  :commands (swint-windmove-left
+             swint-windmove-right
+             swint-windmove-up
+             swint-windmove-down
+             move-border-left
+             move-border-right
+             move-border-up
+             move-border-down)
   :init
   (smartrep-define-key global-map "M-s"
     '(("H" . swint-windmove-left)
@@ -131,75 +138,41 @@ If prefix ARG is given, delete the window instead of selecting it."
    The function wraps a function with `ignore-errors' macro."
     (interactive)
     (setq previously-selected-window (selected-window))
-    (funcall (ignore-error-wrapper 'windmove-down))))
-;; ================windmove=====================
-;;; intuitive window resizing
-;; ===========intuitive window resizing============
-(defun xor (b1 b2)
-  (or (and b1 b2)
-      (and (not b1) (not b2))))
-(defun move-border-left-or-right (arg dir)
-  "General function covering move-border-left and move-border-right. If DIR is
+    (funcall (ignore-error-wrapper 'windmove-down)))
+  (defun xor (b1 b2)
+    (or (and b1 b2)
+        (and (not b1) (not b2))))
+  (defun move-border-left-or-right (arg dir)
+    "General function covering move-border-left and move-border-right. If DIR is
      t, then move left, otherwise move right."
-  (interactive)
-  (if (null arg) (setq arg 10))
-  (let ((left-edge (nth 0 (window-edges))))
-    (if (xor (= left-edge 0) dir)
-        (shrink-window arg t)
-      (enlarge-window arg t))))
-(defun move-border-up-or-down (arg dir)
-  "General function covering move-border-up and move-border-down. If DIR is
+    (interactive)
+    (if (null arg) (setq arg 10))
+    (let ((left-edge (nth 0 (window-edges))))
+      (if (xor (= left-edge 0) dir)
+          (shrink-window arg t)
+        (enlarge-window arg t))))
+  (defun move-border-up-or-down (arg dir)
+    "General function covering move-border-up and move-border-down. If DIR is
      t, then move up, otherwise move down."
-  (interactive)
-  (if (null arg) (setq arg 10))
-  (let ((top-edge (nth 1 (window-edges))))
-    (if (xor (= top-edge 0) dir)
-        (shrink-window arg nil)
-      (enlarge-window arg nil))))
-(defun move-border-left (arg)
-  (interactive "P")
-  (move-border-left-or-right arg t))
-(defun move-border-right (arg)
-  (interactive "P")
-  (move-border-left-or-right arg nil))
-(defun move-border-up (arg)
-  (interactive "P")
-  (move-border-up-or-down arg t))
-(defun move-border-down (arg)
-  (interactive "P")
-  (move-border-up-or-down arg nil))
-;; ===========intuitive window resizing============
-;;; 三窗口设置
-;; ================三窗口设置===================
-(defun split-window-3-horizontally (&optional arg)
-  "Split window into 3 while largest one is in horizon."
-  ;; (interactive "P")
-  (delete-other-windows)
-  (split-window-horizontally)
-  (if arg (other-window 1))
-  (split-window-vertically))
-(defun split-window-3-vertically (&optional arg)
-  "Split window into 3 while largest one is in vertical."
-  ;; (interactive "P")
-  (delete-other-windows)
-  (split-window-vertically)
-  (if arg (other-window 1))
-  (split-window-horizontally))
-(defun change-split-type (split-fn &optional arg)
-  "Change 3 window style from horizontal to vertical and vice-versa."
-  (let ((bufList (mapcar 'window-buffer (window-list))))
-    (select-window (get-largest-window))
-    (funcall split-fn arg)
-    (mapcar* 'set-window-buffer (window-list) bufList)))
-(defun change-split-type-3-v (&optional arg)
-  "change 3 window style from horizon to vertical"
-  (interactive "P")
-  (change-split-type 'split-window-3-horizontally arg))
-(defun change-split-type-3-h (&optional arg)
-  "change 3 window style from vertical to horizon"
-  (interactive "P")
-  (change-split-type 'split-window-3-vertically arg))
-;; ================三窗口设置===================
+    (interactive)
+    (if (null arg) (setq arg 10))
+    (let ((top-edge (nth 1 (window-edges))))
+      (if (xor (= top-edge 0) dir)
+          (shrink-window arg nil)
+        (enlarge-window arg nil))))
+  (defun move-border-left (arg)
+    (interactive "P")
+    (move-border-left-or-right arg t))
+  (defun move-border-right (arg)
+    (interactive "P")
+    (move-border-left-or-right arg nil))
+  (defun move-border-up (arg)
+    (interactive "P")
+    (move-border-up-or-down arg t))
+  (defun move-border-down (arg)
+    (interactive "P")
+    (move-border-up-or-down arg nil)))
+;; ================windmove=====================
 ;;; 切换窗口分割模式
 ;; ===============切换窗口分割模式=================
 (global-set-key (kbd "C-\\") 'toggle-window-split)

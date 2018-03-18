@@ -14,7 +14,7 @@
 ;;; pinyin-search
 ;; ==================pinyin-search=================
 (use-package pinyin-search
-  :commands (pinyin-search--pinyin-to-regexp symbol-name-at-point)
+  :commands symbol-name-at-point
   :bind (("C-s" . isearch-forward-pinyin)
          ("C-r" . isearch-backward-pinyin))
   :config

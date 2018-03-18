@@ -58,13 +58,15 @@
                                                          (w3m-browse-url "cn.bing.com")))
                (define-key w3m-mode-map (kbd "C-o g") '(lambda () (interactive)
                                                          (w3m-new-tab)
-                                                         (w3m-browse-url "www.google.com")))
-               (define-key w3m-mode-map (kbd "'") 'helm-firefox-bookmarks))))
+                                                         (w3m-browse-url "www.google.com"))))))
 ;; ===================w3m=====================
 ;;; helm-firefox
 ;; ===============helm-firefox================
 (use-package helm-firefox
-  :commands (helm-firefox-bookmarks helm-get-firefox-user-init-dir)
+  :commands helm-firefox-bookmarks
+  :init
+  (add-hook 'w3m-mode-hook (lambda ()
+                             (bind-key "'" 'helm-firefox-bookmarks w3m-mode-map)))
   :config
   (when is-win
     (setq helm-firefox-default-directory "~/AppData/Roaming/Mozilla/Firefox/")))
