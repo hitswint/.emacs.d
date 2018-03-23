@@ -66,7 +66,10 @@
   (require 'setup_shell)
   (require 'setup_packages)
   (condition-case-unless-debug ex
-      (require 'autoloads doom-autoload-file t)
+      (if (file-exists-p doom-autoload-file)
+          (require 'autoloads doom-autoload-file t)
+        (dolist (file (directory-files (expand-file-name "autoload" lisp-dir) t "\\w+"))
+          (when (file-regular-p file) (load file))))
     ('error
      (lwarn 'autoloads :warning
             "%s in autoloads.el -> %s"
