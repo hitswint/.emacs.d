@@ -1,4 +1,4 @@
-;;; org-annotate-file.el --- Annotate a file with org syntax
+;; * org-annotate-file.el --- Annotate a file with org syntax
 
 ;; Copyright (C) 2008 Philip Jackson
 
@@ -148,7 +148,7 @@ clobbering sucessive entries."
   (newline)
   (newline)
   (newline)
-  (previous-line))
+  (forward-line -1))
 
 (defun org-annotate-file-show-annotations (&optional buffer)
   "Show the annotations in the current file, without adding new ones."
@@ -165,7 +165,7 @@ clobbering sucessive entries."
     (widen)                           ;交换上下两句，解决无法显示已建注释
     (goto-char (point-min))
     (when org-annotate-file-always-open
-      (show-all))
+      (outline-show-all))
     (unless (search-forward-regexp
              (concat "^* " (regexp-quote link)) nil t)
       (org-annotate-file-add-upper-level link))

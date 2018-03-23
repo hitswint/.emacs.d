@@ -1,6 +1,6 @@
 ;;; w3m
 ;; ===================w3m=====================
-(use-package w3m
+(def-package! w3m
   :bind (("C-M-5" . w3m)
          ("C-M-%" . w3m-youdao-sample-sentences))
   :config
@@ -10,11 +10,7 @@
     (let ((word (or _word (swint-get-words-at-point))))
       (browse-url
        (concat "http://dict.youdao.com/search?le=eng&q=lj%3A"
-               (cond
-                (is-lin word)
-                ;; 解决w3m无法解析网址的问题。
-                (is-win (w3m-url-encode-string word 'utf-8)))
-               "&keyfrom=dict.top"))))
+               word "&keyfrom=dict.top"))))
   (setq w3m-use-form t
         w3m-tab-width 8
         w3m-use-cookies t
@@ -62,13 +58,10 @@
 ;; ===================w3m=====================
 ;;; helm-firefox
 ;; ===============helm-firefox================
-(use-package helm-firefox
+(def-package! helm-firefox
   :commands helm-firefox-bookmarks
   :init
   (add-hook 'w3m-mode-hook (lambda ()
-                             (bind-key "'" 'helm-firefox-bookmarks w3m-mode-map)))
-  :config
-  (when is-win
-    (setq helm-firefox-default-directory "~/AppData/Roaming/Mozilla/Firefox/")))
+                             (bind-key "'" 'helm-firefox-bookmarks w3m-mode-map))))
 ;; ===============helm-firefox================
 (provide 'setup_w3m)

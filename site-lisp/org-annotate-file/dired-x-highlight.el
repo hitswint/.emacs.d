@@ -1,4 +1,4 @@
-;; dired-x-highlight.el --- Display annotated files with mark.
+;;; org-annotate-file/dired-x-highlight.el --- Display annotated files with mark
 (defface dired-k-annotated-locally
   '((t (:foreground "red" :weight bold)))
   "Face of modified file in git repository"
@@ -23,9 +23,9 @@
   :group 'dired)
 
 (defun swint-interleaved-files ()
-  (remove-if-not (lambda (x) (member (file-name-base x)
-                                     (mapcar 'file-name-base (directory-files "~/org/interleave_notes" nil "\\.[oO][rR][gG]\\'"))))
-                 (directory-files default-directory nil "\\.[pP][dD][fF]\\'")))
+  (cl-remove-if-not (lambda (x) (member (file-name-base x)
+                                        (mapcar 'file-name-base (directory-files "~/org/interleave_notes" nil "\\.[oO][rR][gG]\\'"))))
+                    (directory-files default-directory nil "\\.[pP][dD][fF]\\'")))
 
 (defun dired-k--highlight-buffer ()
   (save-excursion
@@ -96,9 +96,9 @@
       (let ((pdf-files-interleaved (swint-interleaved-files))
             (status 'interleaved))
         (when pdf-files-interleaved
-          (mapcar #'(lambda (x)
-                      (puthash x status files-status))
-                  pdf-files-interleaved))))
+          (mapc #'(lambda (x)
+                    (puthash x status files-status))
+                pdf-files-interleaved))))
     (when (eq (hash-table-count files-status) 0)
       (setq files-status nil))
     files-status))

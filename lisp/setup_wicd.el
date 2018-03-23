@@ -1,8 +1,7 @@
 ;;; wicd-mode
 ;; ================wicd-mode=================
-(use-package wicd-mode
+(def-package! wicd-mode
   :load-path "site-lisp/wicd-mode/"
-  :if is-lin
   :bind ("C-M-$" . wicd)
   :config
   (setq wicd-wireless-max-id 100)
@@ -45,7 +44,7 @@
                                (wicd-dbus-name :daemon)
                                "ConnectResultsSent"
                                (lambda (s)
-                                 (message "Connexion " s)
+                                 (message "Connexion %s" s)
                                  (when (string= s "success")
                                    (wicd-wireless-emphase-network))))))
   (defun quit-wicd-mode ()

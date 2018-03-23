@@ -1,6 +1,6 @@
 ;;; auto-complete
 ;; ================auto-complete===============
-(use-package auto-complete
+(def-package! auto-complete
   :diminish auto-complete-mode
   :bind ("M-u" . swint-auto-complete)
   :config
@@ -21,7 +21,7 @@
   ;; ==================eshell==================
   ;; pcomplete会自动启动，造成打开eshell时读取ac-sources错误。
   ;; 放在auto-complete中，使其只有当ac开启时才能够执行。
-  (use-package pcomplete
+  (def-package! pcomplete
     :after auto-complete
     :config
     (add-hook 'shell-mode-hook 'pcomplete-shell-setup)
@@ -41,7 +41,7 @@
 ;; ================auto-complete===============
 ;;; auto-complete-config
 ;; ===========auto-complete-config=============
-(use-package auto-complete-config
+(def-package! auto-complete-config
   :after auto-complete
   :config
   ;; ============ac-modes============
@@ -61,7 +61,7 @@
 ;; ===========auto-complete-config=============
 ;;; ac-ispell
 ;; ==================ac-ispell=================
-(use-package ac-ispell
+(def-package! ac-ispell
   :bind ("M-U" . swint-auto-complete-ispell)
   :config
   (bind-key "M-U" 'hippie-expand ac-completing-map)
@@ -85,7 +85,7 @@
 ;; ==================ac-ispell=================
 ;;; auto-complete-c-headers
 ;; =========auto-complete-c-headers============
-(use-package auto-complete-c-headers
+(def-package! auto-complete-c-headers
   :after auto-complete
   :config
   (add-hook 'c++-mode-hook 'ac-c-header-init)
@@ -107,7 +107,7 @@
 ;; =========auto-complete-c-headers============
 ;;; auto-complete-clang
 ;; ===========auto-complete-clang==============
-(use-package auto-complete-clang
+(def-package! auto-complete-clang
   :after auto-complete
   :config
   (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
@@ -138,7 +138,7 @@
 ;; ===========auto-complete-clang==============
 ;;; ac-auctex
 ;; ================ac-auctex===================
-(use-package auto-complete-auctex
+(def-package! auto-complete-auctex
   :after auto-complete
   :config
   (add-hook 'LaTeX-mode-hook 'ac-auctex-setup)
@@ -148,7 +148,7 @@
 ;; ================ac-auctex===================
 ;;; ac-math
 ;; =================ac-math====================
-(use-package ac-math
+(def-package! ac-math
   :after auto-complete
   :config
   (add-hook 'org-mode-hook 'ac-org-mode-setup)
@@ -158,22 +158,9 @@
   (defun ac-org-mode-setup ()
     (add-to-list 'ac-sources 'ac-source-math-unicode)))
 ;; =================ac-math====================
-;;; auto-complete-octave
-;; ============auto-complete-octave============
-(use-package auto-complete-octave
-  :load-path "site-lisp/auto-complete-octave/"
-  :after auto-complete
-  :config
-  (add-hook 'octave-mode-hook 'ac-octave-mode-setup)
-  (add-hook 'auto-complete-mode-hook '(lambda ()
-                                        (if (eq major-mode 'octave-mode)
-                                            (ac-octave-mode-setup))))
-  (defun ac-octave-mode-setup ()
-    (add-to-list 'ac-sources 'ac-source-octave)))
-;; ============auto-complete-octave============
 ;;; shell
 ;; ===================shell====================
-(use-package readline-complete
+(def-package! readline-complete
   :after auto-complete
   :config
   (setq comint-process-echoes nil)
@@ -184,7 +171,7 @@
 ;; ===================shell====================
 ;;; company
 ;; ================company=====================
-(use-package company
+(def-package! company
   :diminish company-mode
   :after (:any company-try-hard yasnippet)
   :config
@@ -208,41 +195,41 @@
   ;; If you use Helm, you can easily insert absolute path by C-c i at the current path in helm-find-files.
   )
 ;; ================company=====================
-;;;; company-try-hard
+;;; company-try-hard
 ;; ==============company-try-hard==============
-(use-package company-try-hard
+(def-package! company-try-hard
   :bind ("M-i" . company-try-hard)
   :config
   (define-key company-active-map (kbd "M-i") 'company-try-hard))
 ;; ==============company-try-hard==============
-;;;; company-quickhelp-mode
+;;; company-quickhelp-mode
 ;; ===========company-quickhelp-mode===========
-(use-package company-quickhelp
+(def-package! company-quickhelp
   :after company
   :config
   (bind-key "C-o" 'company-quickhelp-manual-begin company-active-map)
   (setq company-quickhelp-delay nil)
   (company-quickhelp-mode 1))
 ;; ===========company-quickhelp-mode===========
-;;;; company-c-headers
+;;; company-c-headers
 ;; =============company-c-headers==============
-(use-package company-c-headers
+(def-package! company-c-headers
   :after company
   :config
   (add-to-list 'company-backends 'company-c-headers))
 ;; =============company-c-headers==============
-;;;; company-web
+;;; company-web
 ;; ===============company-web==================
-(use-package company-web
+(def-package! company-web
   :after company
   :config
   (add-to-list 'company-backends 'company-web-html)
   (add-to-list 'company-backends 'company-web-jade)
   (add-to-list 'company-backends 'company-web-slim))
 ;; ===============company-web==================
-;;;; ac-html-bootstrap
+;;; ac-html-bootstrap
 ;; ============ac-html-bootstrap===============
-(use-package ac-html-bootstrap
+(def-package! ac-html-bootstrap
   :commands company-web-bootstrap+
   :init
   (add-hook 'web-mode-hook (lambda ()
@@ -250,7 +237,7 @@
 ;; ============ac-html-bootstrap===============
 ;;; hippie-expand
 ;; ==============hippie-expand=================
-(use-package hippie-exp
+(def-package! hippie-exp
   :commands hippie-expand
   :config
   (setq hippie-expand-try-functions-list
@@ -292,8 +279,7 @@
 ;; ==============hippie-expand=================
 ;;; ycmd
 ;; ===================ycmd=====================
-(use-package ycmd
-  :if is-lin
+(def-package! ycmd
   :bind ("M-g y" . swint-toggle-ycmd)
   :init
   (setq ycmd-keymap-prefix (kbd "M-g M-y"))
@@ -305,22 +291,22 @@
     (ycmd-mode 'toggle)
     (set (make-local-variable 'company-backends)
          (if (member 'company-ycmd company-backends)
-             (delq 'company-ycmd (remove-duplicates (mapcar #'identity company-backends)))
-           (cons 'company-ycmd (remove-duplicates (mapcar #'identity company-backends))))))
-  (use-package company-ycmd
+             (delq 'company-ycmd (cl-remove-duplicates (mapcar #'identity company-backends)))
+           (cons 'company-ycmd (cl-remove-duplicates (mapcar #'identity company-backends))))))
+  (def-package! company-ycmd
     :commands company-ycmd
     :init
     (setq ycmd-min-num-chars-for-completion 1))
-  (use-package ycmd-eldoc
+  (def-package! ycmd-eldoc
     :config
     (add-hook 'ycmd-mode-hook 'ycmd-eldoc-mode))
-  (use-package flycheck-ycmd
+  (def-package! flycheck-ycmd
     :config
     (flycheck-ycmd-setup)))
 ;; ===================ycmd=====================
 ;;; yasnippet
 ;; =================yasnippet==================
-(use-package yasnippet
+(def-package! yasnippet
   :diminish yas-minor-mode
   :bind ("M-I" . swint-complete-yasnippet)
   :config
@@ -336,7 +322,7 @@
 ;; =================yasnippet==================
 ;;; auto-yasnippet
 ;; ===============auto-yasnippet===============
-(use-package auto-yasnippet
+(def-package! auto-yasnippet
   :bind (("M-g i" . aya-create)
          ("M-g M-i" . aya-expand)))
 ;; ===============auto-yasnippet===============

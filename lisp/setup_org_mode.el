@@ -1,6 +1,6 @@
 ;;; org-mode
 ;; =================org-mode====================
-(use-package org
+(def-package! org
   :mode ("\\.[oO][rR][gG]\\'" . org-mode)
   :config
 ;;;; Appearance
@@ -128,7 +128,7 @@
   ;; ===========使用ditaa输出ascii图片==========
 ;;;; cdlatex
   ;; ================cdlatex====================
-  (use-package cdlatex
+  (def-package! cdlatex
     :diminish org-cdlatex-mode
     :commands turn-on-org-cdlatex
     :init
@@ -154,21 +154,11 @@
                                        (dired-create-directory "./pic"))
                                      "./pic/")))
           screen-file)
-      (cond (is-lin
-             (setq screen-file (concat (make-temp-name
-                                        (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
-                                                "_" (format-time-string "%Y%m%d_"))) ".png"))
-             ;; (suspend-frame)
-             (call-process-shell-command "scrot" nil nil nil nil " -s " (concat "\"" screen-file "\"" )))
-            (is-win
-             (setq screen-file
-                   ;; 注释掉原来make-temp-name的方法，在win上对于某些prefix无法生成随机名字。
-                   (replace-regexp-in-string "/" "\\" (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
-                                                              "_" (format-time-string "%Y%m%d_") (make-temp-name "") ".png")
-                                             t t))
-             (call-process "c:\\Program Files (x86)\\IrfanView\\i_view32.exe" nil nil nil
-                           (concat "/clippaste /convert=" screen-file))))
-      screen-file))
+      (setq screen-file (concat (make-temp-name
+                                 (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
+                                         "_" (format-time-string "%Y%m%d_"))) ".png"))
+      ;; (suspend-frame)
+      (call-process-shell-command (concat "scrot" " -s " "\"" screen-file "\"" ))))
   (global-set-key (kbd "C-x M-p") 'swint-screenshot)
   (global-set-key (kbd "C-x M-P") '(lambda () (interactive) (swint-screenshot t)))
   ;; ===================截图====================
@@ -226,8 +216,7 @@
         (org-open-at-point in-emacs)))))
   (defun swint-org-open-at-point-with-apps ()
     (interactive)
-    (let ((org-file-apps
-           (cond (is-lin '(("\\.pdf\\'" . "llpp %s")
+    (let ((org-file-apps '(("\\.pdf\\'" . "llpp %s")
                            ("\\.djvu\\'" . "llpp %s")
                            ("\\.png\\'" . "feh.sh %s")
                            ("\\.jpg\\'" . "feh.sh %s")
@@ -262,8 +251,7 @@
                            ("\\.dxf\\'" . "librecad %s")
                            ("\\.html\\'" . "firefox %s")
                            ("\\.htm\\'" . "firefox %s")
-                           ))
-                 (is-win '((w32-browser))))))
+                           )))
       (swint-org-open-at-point)))
   ;; ===========swint-org-open-at-point=========
 ;;;; mobileorg
@@ -288,7 +276,7 @@
     (interactive)
     (cond ((equal arg "down")
            ;; Webdav会造成文件conflict，在pull之前先删除本地mobileorg文件。
-           (mapcar 'delete-file (directory-files org-mobile-directory t ".+\\.\\(org\\|dat\\)")))
+           (mapc #'delete-file (directory-files org-mobile-directory t ".+\\.\\(org\\|dat\\)")))
           ((equal arg "up")
            (with-current-buffer "task.org" (org-mobile-push))))
     (let* ((user (replace-regexp-in-string "@" "%40" (get-auth-user "Nutstore")))
@@ -339,7 +327,7 @@
   ;; =============org-latex-preview=============
 ;;;; ox-latex
   ;; ================ox-latex===================
-  (use-package ox-latex
+  (def-package! ox-latex
     :config
     (setq org-latex-pdf-process
           '("xelatex -interaction nonstopmode %f"
@@ -480,7 +468,7 @@
 ;; =================ox-latex====================
 ;;;; ox-beamer
 ;; =================ox-beamer===================
-(use-package ox-beamer
+(def-package! ox-beamer
   :config
   (add-to-list 'org-beamer-environments-extra
                '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
@@ -491,9 +479,9 @@
 ;; =================org-mode====================
 ;;; org-annotate
 ;; ===============org-annotate==================
-(use-package dired-x-highlight
+(def-package! dired-x-highlight
   :load-path "site-lisp/org-annotate-file/"
-  :commands (dired-k--highlight-buffer
+  :commands (dired-k--parse-status
              dired-k--previous-highlighted-file
              dired-k--next-highlighted-file)
   :init
@@ -503,17 +491,17 @@
   :config
   (add-hook 'dired-after-readin-hook 'dired-k--highlight-buffer t)
   ;; 在已有dired-mode中开启dired-x-highlight。
-  (dolist (buf (remove-if-not (lambda (x)
-                                (equal (buffer-mode x) 'dired-mode))
-                              (helm-buffer-list)))
+  (dolist (buf (cl-remove-if-not (lambda (x)
+                                   (equal (buffer-mode x) 'dired-mode))
+                                 (helm-buffer-list)))
     (with-current-buffer buf
       (dired-k--highlight-buffer))))
 ;; Sync annotated status as operating.
-(use-package dired-sync-highlight
+(def-package! dired-sync-highlight
   :load-path "site-lisp/org-annotate-file/"
   :after dired-x-highlight)
 ;; 原有org-annotate-file用于全局注释。
-(use-package org-annotate-file
+(def-package! org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands org-annotate-file
   :bind (("C-x L" . org-annotate-file-current)
@@ -533,7 +521,7 @@
       (org-annotate-file (abbreviate-file-name (buffer-file-name))))))
   (setq org-annotate-file-storage-file "~/org/annotated/annotated.org"))
 ;; 新建swint-org-annotate-file.el用于局部注释。
-(use-package swint-org-annotate-file
+(def-package! swint-org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands swint-org-annotation-storage-file
   :bind (("C-x l" . swint-org-annotate-file-current)
@@ -542,9 +530,9 @@
 ;; ===============org-annotate==================
 ;;; outline
 ;; ==================outline====================
-(use-package outline-magic
+(def-package! outline-magic
   :commands outline-cycle)
-(use-package outline
+(def-package! outline
   :diminish outline-minor-mode
   :commands outline-minor-mode
   :init
@@ -596,7 +584,8 @@
       ;; "\\\\maketitle\\_>"
       "\\\\appendix\\_>\\|\\\\\\(begin\\|end\\){document}"
       "\\\\documentclass\\_>")
-    "List of regexps which define what a section can be.Ordered from deepest to highest level.")
+    "List of regexps which define what a section can be.Ordered from deepest to highest level."
+    :group 'outlines)
   (defun latex/section-regexp ()
     "Return a regexp matching anything in `latex/section-hierarchy'."
     (format "^\\(%s\\)" (mapconcat 'identity latex/section-hierarchy "\\|")))
@@ -610,7 +599,7 @@
 ;; ==================outline====================
 ;;; outshine
 ;; ==================outshine===================
-(use-package outshine
+(def-package! outshine
   :commands (outshine-hook-function
              outshine-cycle-buffer
              outshine-calc-outline-regexp)
@@ -618,12 +607,12 @@
   ;; Heading格式随mode不同，通常是M-;加*加空格。
   (setq outshine-use-speed-commands t)
   (setq outshine-imenu-show-headlines-p nil))
-(use-package outorg
+(def-package! outorg
   ;; M-O # current heading.
   ;; C-u M-O # current buffer.
   ;; M-# outorg-copy-edits-and-exit.
   :after outshine)
-(use-package navi-mode
+(def-package! navi-mode
   :after outshine
   :config
   (define-key outline-mode-prefix-map (kbd "i") 'navi-search-and-switch)
@@ -634,7 +623,7 @@
 ;; ==================outshine===================
 ;;; interleave
 ;; =================interleave==================
-(use-package interleave
+(def-package! interleave
   :commands (interleave-mode
              swint-dired-interleave
              interleave-open-notes-file-for-pdf)
@@ -656,8 +645,7 @@
 ;; =================interleave==================
 ;;; org-noter
 ;; =================org-noter===================
-(use-package org-noter
-  :if (and is-lin (display-graphic-p))
+(def-package! org-noter
   :commands (org-noter
              swint-noter/interleave
              swint-open-notes-file-for-pdf)
@@ -694,9 +682,8 @@
 ;; =================org-noter===================
 ;;; org-protocol-capture-html
 ;; =========org-protocol-capture-html===========
-(use-package org-protocol-capture-html
+(def-package! org-protocol-capture-html
   :load-path "site-lisp/org-protocol-capture-html/"
-  :if (and is-lin (display-graphic-p))
   :defer 2
   :config
   (add-to-list 'org-capture-templates
@@ -739,7 +726,7 @@
 ;; =========org-protocol-capture-html===========
 ;;; org-ref
 ;; ==================org-ref====================
-(use-package org-ref
+(def-package! org-ref
   :commands (org-ref-insert-link org-ref-get-bibtex-key-and-file)
   :init
   (add-hook 'org-mode-hook (lambda ()
@@ -758,9 +745,9 @@
   (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
         'org-ref-format-citation)
   ;; 在已有org-mode中更新链接高亮。
-  (dolist (buf (remove-if-not (lambda (x)
-                                (equal (buffer-mode x) 'org-mode))
-                              (helm-buffer-list)))
+  (dolist (buf (cl-remove-if-not (lambda (x)
+                                   (equal (buffer-mode x) 'org-mode))
+                                 (helm-buffer-list)))
     (with-current-buffer buf
       (org-restart-font-lock))))
 ;; ==================org-ref====================

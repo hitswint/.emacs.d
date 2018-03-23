@@ -1,19 +1,14 @@
 ;;; chinese-fonts-setup
 ;; ==========chinese-fonts-setup===========
-(use-package chinese-fonts-setup
+(def-package! chinese-fonts-setup
   :load-path "site-lisp/chinese-fonts-setup/"
   :config
-  (cond
-   (is-lin (setq cfs--current-profile-name "profile-lin"))
-   (is-win (setq cfs--current-profile-name "profile-win"))
-   (is-mac (setq cfs--current-profile-name "profile-mac")))
+  (setq cfs--current-profile-name "profile-lin")
   ;; Emacs启动时自动设定fontsize。
   (defun swint-cfs-set-font-with-saved-size ()
     (let* ((profile-name cfs--current-profile-name))
       (when (display-graphic-p)
-        (cond
-         (is-lin (cfs--set-font 11.5 1.2))
-         (is-win (cfs--set-font 11.5 1.14))))))
+        (cfs--set-font 11.5 1.2))))
   (if (and (fboundp 'daemonp) (daemonp))
       (add-hook 'after-make-frame-functions
                 (lambda (frame)
@@ -24,7 +19,7 @@
 ;; ==========chinese-fonts-setup===========
 ;;; pyim
 ;; ==================pyim==================
-(use-package pyim
+(def-package! pyim
   :commands (pyim-cwords-at-point
              pyim-string-match-p)
   :bind (("C-x SPC" . pyim-convert-code-at-point)
@@ -52,13 +47,13 @@
   (setq-default pyim-punctuation-half-width-functions
                 '(pyim-probe-punctuation-line-beginning
                   pyim-probe-punctuation-after-punctuation))
-  (use-package pyim-basedict
+  (def-package! pyim-basedict
     :config
     (pyim-basedict-enable)))
 ;; ==================pyim==================
 ;;; pinyinlib
 ;; ===============pinyinlib================
-(use-package pinyinlib
+(def-package! pinyinlib
   :commands pinyinlib-build-regexp-string)
 ;; ===============pinyinlib================
 (provide 'setup_chinese)

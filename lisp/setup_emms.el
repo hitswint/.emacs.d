@@ -1,14 +1,13 @@
 ;;; emms
 ;; ================emms==================
-(use-package emms
-  :if is-lin
+(def-package! emms
   :bind (("M-s e l" . emms-playlist-mode-go)
          ("M-s e o" . emms-play-file))
   :config
   (advice-add 'emms-playlist-mode-go :before #'emms-player-mpd-connect)
   (advice-add 'emms-play-file :before #'(lambda (file) (emms-player-mpd-update-all)))
-  (use-package emms-setup)
-  (emms-devel)
+  (def-package! emms-setup)
+  (emms-all)
   (setq emms-player-mpg321-command-name "mpg321"
         emms-player-mplayer-command-name "mplayer"
         emms-player-list '(emms-player-mplayer
@@ -18,7 +17,7 @@
   (setq emms-source-file-default-directory "~/Music/")
   (setq emms-playlist-buffer-name "Enjoy Music")
   (add-hook 'emms-player-started-hook 'emms-show)
-  (setq emms-show-format "播放: %s")
+  (setq emms-show-format "%s")
   (setq emms-mode-line-mode-line-function nil)
   (setq emms-mode-line-format ""
         emms-lyrics-display-format ""
@@ -26,7 +25,7 @@
         emms-playing-time-display-format "")
 ;;;; emms-mpd
   ;; ==============emms-mpd================
-  (use-package emms-player-mpd)
+  (def-package! emms-player-mpd)
   (setq emms-player-mpd-server-name "localhost")
   (setq emms-player-mpd-server-port "6600")
   (setq emms-player-mpd-music-directory "~/Music")
@@ -43,33 +42,4 @@
   (global-set-key (kbd "C-s-,") 'emms-volume-lower)
   (global-set-key (kbd "C-s-.") 'emms-volume-raise))
 ;; ================emms==================
-;;; mingus
-;; ===============mingus=================
-(use-package mingus
-  :if is-win
-  :bind (("M-s e l" . mingus)
-         ("M-s e o" . mingus-browse))
-  :config
-  (autoload 'mingus "mingus-stays-home" nil t)
-  (setq mingus-mode-always-modeline nil
-        mingus-mode-line-show-consume-and-single-status nil
-        mingus-mode-line-show-elapsed-percentage nil
-        mingus-mode-line-show-elapsed-time nil
-        mingus-mode-line-show-random-and-repeat-status nil
-        mingus-mode-line-show-status nil
-        mingus-mode-line-show-volume nil)
-  (global-set-key (kbd "s-/") 'mingus-toggle)
-  (global-set-key (kbd "s-?") 'mingus-stop)
-  (global-set-key (kbd "s-,") 'mingus-seek-backward)
-  (global-set-key (kbd "s-.") 'mingus-seek)
-  (global-set-key (kbd "s-<") 'mingus-prev)
-  (global-set-key (kbd "s->") 'mingus-next)
-  (global-set-key (kbd "C-s-,") 'mingus-vol-down)
-  (global-set-key (kbd "C-s-.") 'mingus-vol-up)
-  (add-hook 'mingus-browse-hook '(lambda ()
-                                   (define-key mingus-browse-map (kbd "C-j") '(lambda () (interactive)
-                                                                                (mingus-clear t)
-                                                                                (mingus-insert-and-play)
-                                                                                (swint-kill-this-buffer))))))
-;; ===============mingus=================
-(provide 'setup_emms_mingus)
+(provide 'setup_emms)

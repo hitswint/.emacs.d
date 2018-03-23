@@ -1,11 +1,11 @@
 ;;; python-mode
 ;; =================python-mode================
-(use-package python
+(def-package! python
   :mode ("\\.py\\'" . python-mode))
 ;; =================python-mode================
 ;;; pyvenv
 ;; ===================pyvenv===================
-(use-package pyvenv
+(def-package! pyvenv
   :bind (("C-x C-M-3" . pyvenv-workon)
          ("C-x C-M-#" . pyvenv-deactivate)
          ("C-M-3" . elpy-shell-switch-to-shell))
@@ -23,7 +23,7 @@
 ;; ===================pyvenv===================
 ;;; elpy
 ;; ====================elpy====================
-(use-package elpy
+(def-package! elpy
   :diminish elpy-mode
   :after pyvenv
   :init
@@ -53,15 +53,15 @@
   ;;   (lambda () (when (eq major-mode 'python-mode) (elpy-mode 1))))
   ;; (global-elpy-mode 1)
   ;; 在opened python buffer中开启elpy-mode。
-  (dolist (buf (remove-if-not (lambda (x)
-                                (equal (buffer-mode x) 'python-mode))
-                              (helm-buffer-list)))
+  (dolist (buf (cl-remove-if-not (lambda (x)
+                                   (equal (buffer-mode x) 'python-mode))
+                                 (helm-buffer-list)))
     (with-current-buffer buf
       (elpy-mode 1))))
 ;; ====================elpy====================
 ;;; emacs-ipython-notebook
 ;; ====================ein=====================
-(use-package ein
+(def-package! ein
   :bind ("C-M-#" . ein:jupyter-server-start)
   :config
   ;; ein:url-or-port可取8888或http://127.0.0.1(localhost):8888。
@@ -83,7 +83,7 @@
   ;; Enable "superpack" (a little bit hacky improvements).
   (setq ein:use-auto-complete-superpack t)
   (setq ein:use-smartrep t)
-  (use-package ein-notebook
+  (def-package! ein-notebook
     :config
     ;; 在notebook中输入%pylab(%matplotlib) inline显示行内图片。
     ;; 在ein:notebook中关闭company的自动补全。
@@ -94,7 +94,7 @@
     (define-key ein:notebook-mode-map (kbd "M-.") nil)
     (define-key ein:notebook-mode-map (kbd "C-c C-,") 'ein:pytools-jump-to-source-command)
     (define-key ein:notebook-mode-map (kbd "C-c C-.") 'ein:pytools-jump-back-command))
-  (use-package ein-connect
+  (def-package! ein-connect
     :commands ein:connect-to-notebook-command
     :config
     ;; 在ein:connect中关闭company的自动补全。

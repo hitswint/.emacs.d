@@ -1,6 +1,6 @@
 ;;; flycheck
 ;; ===============flycheck====================
-(use-package flycheck
+(def-package! flycheck
   :bind ("M-g c" . flycheck-mode)
   :config
   ;; Change the prefix.
@@ -14,12 +14,12 @@
 ;; ===============flycheck====================
 ;;; helm-flycheck
 ;; ==============helm-flycheck================
-(use-package helm-flycheck
+(def-package! helm-flycheck
   :commands helm-flycheck)
 ;; ==============helm-flycheck================
 ;;; flycheck-pos-tip
 ;; =============flycheck-pos-tip==============
-(use-package flycheck-pos-tip
+(def-package! flycheck-pos-tip
   :commands flycheck-pos-tip-mode
   :init
   ;; flycheck-pos-tip-mode会导致pos-tip弹出后快速隐藏。

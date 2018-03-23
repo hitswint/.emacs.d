@@ -1,6 +1,6 @@
 ;;; avy
 ;; =====================avy=====================
-(use-package avy
+(def-package! avy
   :after ace-pinyin
   :config
   (bind-key "C-h" 'avy-isearch isearch-mode-map)
@@ -101,14 +101,14 @@ LEAF is normally ((BEG . END) . WND)."
 ;; =====================avy=====================
 ;;; avy-zap
 ;; ===================avy-zap===================
-(use-package avy-zap
+(def-package! avy-zap
   ;; avy-zap-up-to-char-dwim保留char，而avy-zap-to-char-dwim不保留。
   :commands (avy-zap-to-char-dwim
              avy-zap-up-to-char-dwim))
 ;; ===================avy-zap===================
 ;;; ace-pinyin
 ;; =================ace-pinyin==================
-(use-package ace-pinyin
+(def-package! ace-pinyin
   :diminish ace-pinyin-mode
   :bind ("C-h" . ace-pinyin-jump-char)
   :config
@@ -242,7 +242,7 @@ This function obeys `avy-all-windows' setting."
 ;; =================ace-pinyin==================
 ;;; ace-link
 ;; ==================ace-link===================
-(use-package ace-link
+(def-package! ace-link
   :commands ace-link)
 ;; ==================ace-link===================
 (provide 'setup_avy)

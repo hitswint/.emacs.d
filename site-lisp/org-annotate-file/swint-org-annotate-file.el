@@ -1,4 +1,4 @@
-;;; org-annotate-file.el --- Annotate a file with org syntax
+;; * swint-org-annotate-file.el --- Annotate a file with org syntax
 
 ;; Copyright (C) 2008 Philip Jackson
 
@@ -97,7 +97,7 @@ after the 60th with '...'"
   (newline)
   (newline)
   (newline)
-  (previous-line))
+  (forward-line -1))
 
 (defun swint-new-entry ()
   "Safely positions cursor for a new entry."
@@ -115,7 +115,7 @@ after the 60th with '...'"
       (widen)                             ;交换上下两句，解决无法显示已建注释
       (goto-char (point-min))
       (when swint-org-annotate-file-always-open
-        (show-all))
+        (outline-show-all))
       (unless (search-forward-regexp
                (concat "^* " (regexp-quote link)) nil t)
         (swint-org-annotate-file-add-upper-level link))

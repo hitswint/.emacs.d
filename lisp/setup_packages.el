@@ -1,6 +1,6 @@
 ;;; abbrev
 ;; ====================abbrev======================
-(use-package abbrev
+(def-package! abbrev
   :diminish abbrev-mode
   :config
   ;; Turn on abbrev mode globally.
@@ -26,23 +26,25 @@
 ;; ====================abbrev======================
 ;;; server
 ;; ====================server======================
-(use-package server
+(def-package! server
   :config
   (unless (server-running-p)
     (server-start)))
 ;; ====================server======================
 ;;; recentf
 ;; ====================recentf=====================
-(use-package recentf
+(def-package! recentf
   :commands recentf-mode
   :config
-  (use-package recentf-ext)
+  (def-package! recentf-ext)
   (recentf-mode 1)
-  (setq recentf-max-saved-items 100))
+  (setq recentf-max-saved-items 100)
+  (setq recentf-exclude
+        (list "^/tmp/" "^/ssh:" "\\.?ido\\.last$" "\\.revive$" "/TAGS$" "^/var/folders/.+$")))
 ;; ====================recentf=====================
 ;;; multiple-cursors
 ;; ================multiple-cursors================
-(use-package multiple-cursors
+(def-package! multiple-cursors
   ;; mc/xxx函数都不在mc包中，但能激活mc包。
   :defer t
   :init
@@ -66,7 +68,7 @@
 ;; ================multiple-cursors================
 ;;; expand-region
 ;; =================expand-region==================
-(use-package expand-region
+(def-package! expand-region
   :bind ("C-M-;" . er/expand-region)
   :config
   (setq expand-region-contract-fast-key ":")
@@ -75,7 +77,7 @@
 ;; =================expand-region==================
 ;;; undo-tree
 ;; ==================undo-tree=====================
-(use-package undo-tree
+(def-package! undo-tree
   :diminish undo-tree-mode
   :bind (("C-/" . undo-tree-undo)
          ("C-M-/" . undo-tree-redo))
@@ -85,7 +87,7 @@
 ;; ==================undo-tree=====================
 ;;; breadcrumb
 ;; ==================breadcrumb====================
-(use-package breadcrumb
+(def-package! breadcrumb
   :load-path "site-lisp/breadcrumb/"
   :commands bc-set
   :config
@@ -101,7 +103,7 @@
 ;; ==================breadcrumb====================
 ;;; auto-mark
 ;; ==================auto-mark=====================
-(use-package auto-mark
+(def-package! auto-mark
   :load-path "site-lisp/auto-mark/"
   :config
   (setq auto-mark-command-class-alist
@@ -120,7 +122,7 @@
 ;; ==================auto-mark=====================
 ;;; visible-mark
 ;; ================visible-mark====================
-(use-package visible-mark
+(def-package! visible-mark
   :config
   (global-visible-mark-mode 1)
   (setq visible-mark-max 2)
@@ -141,42 +143,15 @@
   (setq visible-mark-forward-faces '(swint-visible-mark-forward-face-1 swint-visible-mark-forward-face-2))
   (set-face-attribute 'visible-mark-active nil :background "maroon" :foreground "white"))
 ;; ================visible-mark====================
-;;; unicad
-;; =====================unicad=====================
-(use-package unicad
-  :load-path "site-lisp/unicad/"
-  :if is-win
-  :config
-  ;; 解决关emacs时保存.session的编码问题。
-  (setq session-save-file-coding-system 'utf-8)
-  ;; Set default encoding to utf-8.
-  (setq-default buffer-file-coding-system 'utf-8)
-  ;; Set writing buffer default to utf-8, or emacs always show encoding problem when saving files.
-  (setq save-buffer-coding-system 'utf-8)
-  (setq coding-system-for-write 'utf-8))
-;; =====================unicad=====================
-;;; everything
-;; ===================everything===================
-(use-package everything
-  :if is-win
-  :bind ("C-x F" . everything-find-file)
-  :config
-  (defun everything-find-file-nolimit (orig-fn)
-    (let ((helm-candidate-number-limit nil))
-      (call-interactively orig-fn)))
-  (advice-add 'everything-find-file :around #'everything-find-file-nolimit)
-  (setq everything-ffap-integration nil)
-  (setq everything-cmd "c:/Program Files/Everything/es.exe"))
-;; ===================everything===================
 ;;; anchored-transpose
 ;; ================anchored-transpose==============
-(use-package anchored-transpose
+(def-package! anchored-transpose
   ;; 首先选择整个区域，然后选择锚点，调换锚点两侧的内容；其次，分别选择两部分内容进行调换。
   :bind ("M-s M-t" . anchored-transpose))
 ;; ================anchored-transpose==============
 ;;; God-mode
 ;; ====================God-mode====================
-(use-package god-mode
+(def-package! god-mode
   :diminish god-local-mode
   :bind ("<S-escape>" . god-local-mode)
   :config
@@ -191,7 +166,7 @@
 ;; ====================God-mode====================
 ;;; elisp-slime-nav
 ;; =================elisp-slime-nav================
-(use-package help
+(def-package! help
   :commands help-command
   :config
   (define-key 'help-command (kbd "C-l") 'find-library)
@@ -199,7 +174,7 @@
   (define-key 'help-command (kbd "C-k") 'find-function-on-key)
   (define-key 'help-command (kbd "C-v") 'find-variable)
   (define-key 'help-command (char-to-string help-char) nil))
-(use-package elisp-slime-nav
+(def-package! elisp-slime-nav
   :diminish elisp-slime-nav-mode
   :commands elisp-slime-nav-mode
   :init
@@ -217,7 +192,7 @@
 ;; =================elisp-slime-nav================
 ;;; drag stuff
 ;; ===================drag stuff===================
-(use-package drag-stuff
+(def-package! drag-stuff
   :diminish drag-stuff-mode
   :bind (("M-P" . drag-stuff-up)
          ("M-N" . drag-stuff-down)
@@ -236,7 +211,7 @@
 ;; ===================drag stuff===================
 ;;; popup-kill-ring
 ;; ================popup-kill-ring=================
-(use-package popup-kill-ring
+(def-package! popup-kill-ring
   :bind ("M-Y" . popup-kill-ring)
   :config
   (setq popup-kill-ring-interactive-insert nil)
@@ -247,22 +222,22 @@
 ;; ================popup-kill-ring=================
 ;;; pos-tip
 ;; ===================pos-tip======================
-(use-package pos-tip
+(def-package! pos-tip
   :commands pos-tip-show
   :config
   ;; 使用Gtk+ tooltip需配置x-gtk-use-system-tooltips，修改~/.emacs.d/gtkrc配置字体。
-  (when is-lin (setq x-gtk-use-system-tooltips t)))
+  (setq x-gtk-use-system-tooltips t))
 ;; ===================pos-tip======================
 ;;; elmacro
 ;; ===================elmacro======================
-(use-package elmacro
+(def-package! elmacro
   ;; F3开始录制宏，再次F3插入计数，F4停止录制。
   ;; elmacro-show-last-macro将宏转换为elisp。
   :commands elmacro-mode)
 ;; ===================elmacro======================
 ;;; hungry-delete
 ;; ===================hungry-delete================
-(use-package hungry-delete
+(def-package! hungry-delete
   :diminish hungry-delete-mode
   :config
   (add-to-list 'hungry-delete-except-modes 'dired-mode)
@@ -271,17 +246,18 @@
 ;; ===================hungry-delete================
 ;;; fcitx
 ;; ======================fcitx=====================
-(use-package fcitx
-  :if (and is-lin (display-graphic-p))
+(def-package! fcitx
+  :defer 2
   :config
-  (fcitx-prefix-keys-add "M-s" "M-g" "M-O")
-  (fcitx-aggressive-setup)
-  (fcitx-isearch-turn-on)
-  (fcitx--defun-maybe "sdcv"))
+  (when (display-graphic-p)
+    (fcitx-prefix-keys-add "M-s" "M-g" "M-O")
+    (fcitx-aggressive-setup)
+    (fcitx-isearch-turn-on)
+    (fcitx--defun-maybe "sdcv")))
 ;; ======================fcitx=====================
 ;;; aggressive-indent
 ;; ================aggressive-indent===============
-(use-package aggressive-indent
+(def-package! aggressive-indent
   :diminish aggressive-indent-mode
   :config
   (add-to-list 'aggressive-indent-excluded-modes 'asm-mode)
@@ -289,7 +265,7 @@
 ;; ================aggressive-indent===============
 ;;; clean-aindent-mode
 ;; ===============clean-aindent-mode===============
-(use-package clean-aindent-mode
+(def-package! clean-aindent-mode
   :config
   (clean-aindent-mode t)
   (setq clean-aindent-is-simple-indent t)
@@ -305,17 +281,17 @@
 ;; ===============clean-aindent-mode===============
 ;;; multifiles
 ;; ===================multifiles===================
-(use-package multifiles
+(def-package! multifiles
   :bind ("M-g m" . mf/mirror-region-in-multifile))
 ;; ===================multifiles===================
 ;;; ztree
 ;; =====================ztree======================
-(use-package ztree-diff
+(def-package! ztree-diff
   :bind ("M-g z" . ztree-diff))
 ;; =====================ztree======================
 ;;; which-key
 ;; ====================which-key===================
-(use-package which-key
+(def-package! which-key
   :diminish which-key-mode
   :defer 2
   :config
@@ -333,8 +309,7 @@
 ;; ====================which-key===================
 ;;; pdf-tools
 ;; ====================pdf-tools===================
-(use-package pdf-tools
-  :if is-lin
+(def-package! pdf-tools
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :init
   ;; Pdf-tools默认设置x-gtk-use-system-tooltips为nil。
@@ -357,7 +332,7 @@
 ;; ==================doc-view-mode=================
 ;; 使用soffice/unoconv转换。
 ;; 默认缓存文件保存在/tmp和~/AppData/Local/Temp中，使用doc-view-clear-cache清理。
-(use-package doc-view
+(def-package! doc-view
   :defer t
   :config
   (setq doc-view-continuous t)
@@ -365,34 +340,32 @@
   (define-key doc-view-mode-map (kbd "C-v") 'doc-view-scroll-up-or-next-page)
   (define-key doc-view-mode-map (kbd "C-p") '(lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
   (define-key doc-view-mode-map (kbd "C-n") '(lambda () (interactive) (doc-view-next-line-or-next-page 3)))
-  (define-key doc-view-mode-map (kbd "C-c l") 'swint-open-notes-file-for-pdf)
-  (when is-win
-    (setq doc-view-odf->pdf-converter-program "c:/Program Files (x86)/LibreOffice 5/program/soffice.exe")))
+  (define-key doc-view-mode-map (kbd "C-c l") 'swint-open-notes-file-for-pdf))
 ;; ==================doc-view-mode=================
 ;;; backup
 ;; ======================backup====================
-(use-package git-timemachine
+(def-package! git-timemachine
   :bind ("M-s M-b" . git-timemachine))
-(use-package backup-walker
+(def-package! backup-walker
   :bind ("M-s M-B" . backup-walker-start))
 ;; ======================backup====================
 ;;; visual-regexp
 ;; ===================visual-regexp================
-(use-package visual-regexp
+(def-package! visual-regexp
   :bind (("M-s r" . vr/query-replace)
          ("M-s R" . vr/replace)
          ("M-s ;" . vr/mc-mark)))
 ;; ===================visual-regexp================
 ;;; vlf
 ;; =======================vlf======================
-(use-package vlf
+(def-package! vlf
   :bind (:map dired-mode-map
               ("C-c C-v" . dired-vlf))
   :init
   ;; Enable vlf when opening files bigger than 100MB.
   (setq large-file-warning-threshold 100000000)
   :config
-  (use-package vlf-setup)
+  (def-package! vlf-setup)
   (smartrep-define-key vlf-mode-map ""
     '(("n" . vlf-next-batch)
       ("p" . vlf-prev-batch)))
@@ -401,7 +374,7 @@
 ;; =======================vlf======================
 ;;; easy-kill
 ;; =====================easy-kill==================
-(use-package easy-kill
+(def-package! easy-kill
   :bind ("M-w" . kill-ring-save)
   :init
   (global-set-key [remap kill-ring-save] 'easy-kill)
@@ -414,13 +387,13 @@
 ;; =====================easy-kill==================
 ;;; smex
 ;; ======================smex======================
-(use-package smex
+(def-package! smex
   :bind (("C-x M-x" . smex)
          ("C-c M-x" . smex-major-mode-commands)))
 ;; ======================smex======================
 ;;; bm
 ;; =======================bm=======================
-(use-package bm
+(def-package! bm
   :commands (bm-toggle
              bm-previous
              bm-next)
@@ -445,7 +418,7 @@
 ;; =======================bm=======================
 ;;; helm-bm
 ;; ====================helm-bm=====================
-(use-package helm-bm
+(def-package! helm-bm
   :bind ("C-M-'" . helm-bm)
   :config
   (defun helm-bm-action-switch-to-persp/buffer (candidate)
@@ -460,7 +433,7 @@
 ;;; operate-on-number
 ;; ================operate-on-number===============
 ;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字。
-(use-package operate-on-number
+(def-package! operate-on-number
   :commands (apply-operation-to-number-at-point
              operate-on-number-at-point)
   :init
@@ -479,7 +452,7 @@
 ;; ================operate-on-number===============
 ;;; goto-last-change
 ;; =================goto-last-change===============
-(use-package goto-chg
+(def-package! goto-chg
   :bind ("M-?" . swint-goto-last-change)
   :config
   (defun swint-goto-last-change ()
@@ -504,7 +477,7 @@
 ;; =================goto-last-change===============
 ;;; Proced
 ;; =====================Proced=====================
-(use-package proced
+(def-package! proced
   :commands proced-process-attributes
   :bind ("C-M-4" . proced)
   :config
@@ -516,7 +489,7 @@
 ;; =====================Proced=====================
 ;;; bbyac
 ;; =====================bbyac======================
-(use-package bbyac
+(def-package! bbyac
   :diminish bbyac-mode
   :bind (("M-s M-u" . bbyac-expand-substring)
          ("M-s M-U" . bbyac-expand-symbols))
@@ -536,13 +509,13 @@
 ;; =====================bbyac======================
 ;;; vimish-fold
 ;; ==================vimish-fold===================
-(use-package vimish-fold
+(def-package! vimish-fold
   :bind (("C-x C-`" . vimish-fold)
          ("C-x C-~" . vimish-fold-delete)))
 ;; ==================vimish-fold===================
 ;;; clipmon
 ;; ====================clipmon=====================
-(use-package clipmon
+(def-package! clipmon
   :after easy-kill
   :config
   (bind-key "M-g w" 'clipmon-mode)
@@ -565,14 +538,14 @@
 ;; ====================clipmon=====================
 ;;; volatile-highlights
 ;; ==============volatile-highlights===============
-(use-package volatile-highlights
+(def-package! volatile-highlights
   :diminish volatile-highlights-mode
   :config
   (volatile-highlights-mode t))
 ;; ==============volatile-highlights===============
 ;;; quickrun
 ;; ===================quickrun=====================
-(use-package quickrun
+(def-package! quickrun
   :bind (("M-s q" . swint-quickrun)
          ("M-s Q" . quickrun-shell))
   :config
@@ -584,7 +557,7 @@
 ;; ===================quickrun=====================
 ;;; highlight-symbol
 ;; ================highlight-symbol================
-(use-package highlight-symbol
+(def-package! highlight-symbol
   :commands (highlight-symbol-prev
              highlight-symbol-next
              highlight-symbol-at-point
@@ -599,7 +572,7 @@
 ;; ================highlight-symbol================
 ;;; auto-highlight-symbol
 ;; =============auto-highlight-symbol==============
-(use-package auto-highlight-symbol
+(def-package! auto-highlight-symbol
   :diminish auto-highlight-symbol-mode
   :defer 2
   :init
@@ -646,14 +619,15 @@
 ;; =============auto-highlight-symbol==============
 ;;; dumb-jump
 ;; ==================dumb-jump=====================
-(use-package dumb-jump
+(def-package! dumb-jump
   :bind (("C-x C-," . dumb-jump-go)
          ("C-x C-." . dumb-jump-back)
          ("C-x C-/" . dumb-jump-quick-look)))
 ;; ==================dumb-jump=====================
 ;;; diff-hl
 ;; ===================diff-hl======================
-(use-package diff-hl
+(def-package! diff-hl
+  :defer 2
   :config
   ;; 默认快捷键以C-x v为前缀。
   (smartrep-define-key global-map "C-x v"
@@ -666,9 +640,9 @@
   (add-hook 'text-mode-hook 'diff-hl-flydiff-mode)
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
   ;; 在已有dired-mode中开启diff-hl-dired-mode。
-  (dolist (buf (remove-if-not (lambda (x)
-                                (equal (buffer-mode x) 'dired-mode))
-                              (helm-buffer-list)))
+  (dolist (buf (cl-remove-if-not (lambda (x)
+                                   (equal (buffer-mode x) 'dired-mode))
+                                 (helm-buffer-list)))
     (with-current-buffer buf
       (diff-hl-dired-mode)
       (diff-hl-dired-update)))
@@ -685,12 +659,12 @@
 ;; ===================diff-hl======================
 ;;; evil-nerd-commenter
 ;; =============evil-nerd-commenter================
-(use-package evil-nerd-commenter
+(def-package! evil-nerd-commenter
   :bind ("M-:" . evilnc-comment-or-uncomment-lines))
 ;; =============evil-nerd-commenter================
 ;;; markdown-mode
 ;; =================markdown-mode==================
-(use-package markdown-mode
+(def-package! markdown-mode
   :commands (markdown-mode
              gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
@@ -699,7 +673,7 @@
 ;; =================markdown-mode==================
 ;;; highlight-indentation
 ;; =============highlight-indentation==============
-(use-package highlight-indentation
+(def-package! highlight-indentation
   :diminish (highlight-indentation-mode
              highlight-indentation-current-column-mode)
   :init
@@ -707,7 +681,7 @@
 ;; =============highlight-indentation==============
 ;;; rainbow-mode
 ;; =================rainbow-mode===================
-(use-package rainbow-mode
+(def-package! rainbow-mode
   :diminish rainbow-mode
   :commands rainbow-mode
   :init
@@ -719,20 +693,17 @@
 ;; =================rainbow-mode===================
 ;;; pass
 ;; =====================pass=======================
-(use-package pass
-  :if is-lin
+(def-package! pass
   :bind ("M-g s" . pass)
   :config
   (setq pass-show-keybindings nil))
-(use-package helm-pass
-  :if is-lin
+(def-package! helm-pass
   :bind ("M-g M-s" . helm-pass))
 ;; =====================pass=======================
 ;;; sudo
 ;; =====================sudo=======================
-(use-package sudo-edit
+(def-package! sudo-edit
   ;; 需新建~/.ssh/sockets文件夹。
-  :if is-lin
   :commands (sudo-edit
              sudo-dired)
   :config
@@ -747,14 +718,14 @@
 ;; =====================sudo=======================
 ;;; gnuplot
 ;; ====================gnuplot=====================
-(use-package gnuplot-mode
+(def-package! gnuplot-mode
   :mode ("\\.\\(gp\\|gnuplot\\)$" . gnuplot-mode)
   :config
   (define-key gnuplot-mode-map (kbd "C-c C-v") 'swint-open-output-file))
 ;; ====================gnuplot=====================
 ;;; graphviz-dot-mode
 ;; ================graphviz-dot-mode===============
-(use-package graphviz-dot-mode
+(def-package! graphviz-dot-mode
   :mode ("\\.dot\\'" . graphviz-dot-mode)
   :config
   (define-key graphviz-dot-mode-map (kbd "C-c C-c") 'compile)
@@ -762,7 +733,7 @@
 ;; ================graphviz-dot-mode===============
 ;;; ido
 ;; ======================ido=======================
-(use-package ido
+(def-package! ido
   :defer t
   :config
   (setq ido-auto-merge-delay-time 0.7
@@ -770,7 +741,6 @@
         ido-default-file-method 'raise-frame
         ido-enable-flex-matching t
         ido-file-extensions-order nil
-        ido-separator "   "
         ido-use-virtual-buffers nil)
   (custom-set-faces '(ido-first-match ((t (:foreground "yellow" :weight bold))))
                     '(ido-only-match ((((class color)) (:foreground "DeepSkyBlue1" :weight bold))))
@@ -781,18 +751,18 @@
 ;; ===================term-keys====================
 ;; (add-to-list 'package-archives
 ;;              '("cselpa" . "https://elpa.thecybershadow.net/packages/"))
-(use-package term-keys
-  :if (and is-lin (not (display-graphic-p)))
+(def-package! term-keys
   :config
-  (term-keys-mode t))
+  (unless (display-graphic-p)
+    (term-keys-mode t)))
 ;; ===================term-keys====================
 ;; ===================yaml-mode====================
-(use-package yaml-mode
+(def-package! yaml-mode
   :mode ("\\.yml\\'" . yaml-mode))
 ;; ===================yaml-mode====================
 ;;; Auto-revert-mode
 ;; =================Auto-revert-mode===============
-(use-package autorevert
+(def-package! autorevert
   :diminish auto-revert-mode
   :defer 2
   :config
@@ -802,8 +772,9 @@
   ;; (setq global-auto-revert-ignore-modes '(dired-mode))
   (setq auto-revert-verbose nil))
 ;; =================Auto-revert-mode===============
+;;; academic-phrases
 ;; =================academic-phrases===============
-(use-package academic-phrases
+(def-package! academic-phrases
   :bind (("M-s a" . academic-phrases)
          ("M-s A" . academic-phrases-by-section)))
 ;; =================academic-phrases===============

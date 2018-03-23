@@ -1,88 +1,11 @@
-;;; Mew
-;; ========================Mew=========================
-(use-package mew
-  :if is-win
-  :bind ("C-M-7" . mew)
-  :config
-  (autoload 'mew "mew" nil t)
-  (autoload 'mew-send "mew" nil t)
-  (autoload 'mew-user-agent-compose "mew" nil t)
-  (when (boundp 'read-mail-command)
-    (setq read-mail-command 'mew))
-  (when (fboundp 'define-mail-user-agent)
-    (define-mail-user-agent
-      'mew-user-agent
-      'mew-user-agent-compose
-      'mew-draft-send-message
-      'mew-draft-kill
-      'mew-send-hook))
-  (when (boundp 'mail-user-agent)
-    (setq mail-user-agent 'mew-user-agent))
-  (when (boundp 'utf-translate-cjk)
-    (setq utf-translate-cjk t))
-  (when (fboundp 'utf-translate-cjk-mode)
-    (utf-translate-cjk-mode 1))
-  (setq user-full-name "Guiqiang Wang")
-  (setq user-mail-address "wgq_hit@126.com")
-  ;; +/$/%/-对应local/pop/imap/nntp。
-  (setq mew-refile-guess-alist '(("To:"
-                                  ("wgq_713@163.com" . "+inbox_netease")
-                                  ("wguiqiang@hotmail.com" . "+inbox_hotmail")
-                                  ("278064399@qq.com" . "+inbox_qq"))
-                                 ("Cc:"
-                                  ("wgq_713@163.com" . "+inbox_netease")
-                                  ("wguiqiang@hotmail.com" . "+inbox_hotmail")
-                                  ("278064399@qq.com" . "+inbox_qq"))
-                                 (nil . "+inbox")))
-  ;; Gmail的引用格式。
-  (setq mew-cite-fields '("Date:"  "From:"))
-  (setq mew-cite-format "On %s %s wrote:\n\n")
-  ;; 使用主密码，win会提示主密码错误。
-  ;; (setq mew-use-master-passwd t)
-  (setq mew-use-cached-passwd t)
-  (setq mew-passwd-timer-unit 60)
-  (setq mew-passwd-lifetime 24)
-  (setq mew-prog-ssl-arg "CAfile=/usr/ssl/certs/ca-bundle.crt\n")
-  ;; 编码设置。
-  (setq mew-charset-m17n "utf-8")
-  (setq mew-internal-utf-8p t)
-  ;; Html设置。
-  (use-package mew-w3m
-    :load-path "site-lisp/mew-w3m/"
-    :config
-    (setq mew-use-w3m-minor-mode t)
-    (add-hook 'mew-message-hook 'mew-w3m-minor-mode-setter)
-    (define-key mew-summary-mode-map (kbd "M-s") nil)
-    (define-key mew-summary-mode-map (kbd "T") 'mew-w3m-view-inline-image)
-    ;; Press "T":Toggle the visibility of the images included its message only.
-    ;; Press "C-uT":Display the all images included its Text/Html part.
-    (setq mew-w3m-auto-insert-image t)
-    (setq w3m-default-display-inline-images t)
-    (setq mew-prog-html '(mew-mime-text/html-w3m nil nil))
-    (setq mew-mime-multipart-alternative-list '("Text/Html" "Text/Plan" ".*")))
-  ;; Biff设置(邮件提醒)。
-  (setq mew-use-biff t)
-  (setq mew-use-biff-bell t)
-  (setq mew-biff-interval 5)
-  (setq mew-pop-biff-interval 3)
-  ;; 其他。
-  ;; (setq mew-debug t)
-  (setq mew-pop-delete nil)
-  (setq mew-pop-size 0)
-  (setq mew-use-unread-mark t)
-  (setq toolbar-mail-reader 'Mew)
-  (set-default 'mew-decode-quoted 't)
-  (setq sml/active-background-color "#222222"))
-;; ========================Mew=========================
 ;;; mu4e
 ;; =======================mu4e=========================
-(use-package mu4e
-  :if is-lin
+(def-package! mu4e
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :bind (("C-M-7" . mu4e)
          ("C-x M" . mu4e-compose-new))
   :config
-  (use-package mu4e-alert
+  (def-package! mu4e-alert
     :config
     (setq mu4e-alert-interesting-mail-query
           (concat "flag:unread maildir:/Default/INBOX"
@@ -96,7 +19,7 @@
     (mu4e-alert-set-default-style 'libnotify)
     (mu4e-alert-enable-notifications)
     (mu4e-alert-enable-mode-line-display))
-  (use-package org-mu4e
+  (def-package! org-mu4e
     :config
     (setq org-mu4e-convert-to-html t)
     (define-key mu4e-view-mode-map (kbd "C-c o") 'mu4e-org-mode)
@@ -180,8 +103,7 @@
 ;; =======================mu4e=========================
 ;;; helm-mu
 ;; ======================helm-mu=======================
-(use-package helm-mu
-  :if is-lin
+(def-package! helm-mu
   :bind (("M-s m" . helm-mu)
          ("M-s M" . helm-mu-contacts)))
 ;; ======================helm-mu=======================

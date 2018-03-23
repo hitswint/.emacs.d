@@ -1,14 +1,8 @@
 ;;; shell
 ;; =====================shell======================
-(use-package shell
+(def-package! shell
   :bind (("C-M-!" . shell)
          ("C-x C-M-1" . term))
-  :init
-  (when is-win
-    ;; 设置shell命令默认启用cygwin bash。
-    (setq explicit-shell-file-name "bash.exe")
-    ;; 设置运行cygwin命令使用的shell。
-    (setq shell-file-name explicit-shell-file-name))
   :config
   (add-hook 'shell-mode-hook '(lambda ()
                                 (if (not (file-exists-p "~/.zsh_history"))
@@ -16,6 +10,7 @@
                                   (setq comint-input-ring-file-name "~/.zsh_history")
                                   (setq comint-input-ring-separator "\n: \\([0-9]+\\):\\([0-9]+\\);"))
                                 (comint-read-input-ring t)
+                                (add-hook 'shell-mode-hook 'kill-shell-buffer-after-exit t)
                                 ;; 若virtualenvs开启，启动相应虚拟环境，并使用auto-complete补全命令。
                                 (if (bound-and-true-p pyvenv-virtual-env)
                                     (process-send-string (get-process "shell")
@@ -24,7 +19,7 @@
 ;; =====================shell======================
 ;;; eshell
 ;; =====================eshell=====================
-(use-package eshell
+(def-package! eshell
   :bind ("C-M-1" . eshell)
   :config
   (add-hook 'eshell-mode-hook '(lambda()
@@ -39,7 +34,7 @@
 ;; =====================eshell=====================
 ;;; eshell-prompt-extras
 ;; ==============eshell-prompt-extras==============
-(use-package eshell-prompt-extras
+(def-package! eshell-prompt-extras
   :after eshell
   :config
   (with-eval-after-load "esh-opt"

@@ -1,6 +1,6 @@
 ;;; ivy
 ;; =====================ivy========================
-(use-package ivy
+(def-package! ivy
   :after (:any swiper counsel)
   :config
   (bind-key "M-s y" 'ivy-resume)
@@ -26,14 +26,14 @@
         (ivy--regex-plus str)
         (ivy--regex-ignore-order str)))
   (setq ivy-re-builders-alist '((t . re-builder-pinyin)))
-  (use-package ivy-hydra
+  (def-package! ivy-hydra
     :after ivy)
-  (use-package hydra
+  (def-package! hydra
     :after ivy-hydra))
 ;; =====================ivy========================
 ;;; swiper
 ;; ===================swiper=======================
-(use-package swiper
+(def-package! swiper
   :commands swiper-from-isearch
   :bind (("M-s s" . swint-swiper)
          ("M-s S" . swiper-all))
@@ -52,7 +52,7 @@
 ;; ===================swiper=======================
 ;;; counsel
 ;; ===================counsel======================
-(use-package counsel
+(def-package! counsel
   ;; 按键逻辑：helm(C-x c x)/counsel(M-s c x)。
   :bind (("M-X" . counsel-M-x)
          ("C-x C-r" . swint-counsel-history)

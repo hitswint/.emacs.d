@@ -1,6 +1,6 @@
 ;;; paredit
 ;; ==================paredit=======================
-(use-package paredit
+(def-package! paredit
   :diminish paredit-mode
   :commands enable-paredit-mode
   :init
@@ -76,7 +76,7 @@
 ;; ==================paredit=======================
 ;;; paredit-everywhere
 ;; ===============paredit-everything===============
-(use-package paredit-everywhere
+(def-package! paredit-everywhere
   :diminish paredit-everywhere-mode
   :commands paredit-everywhere-mode
   :init

@@ -1,11 +1,9 @@
 ;;; octave
 ;; ======================octave====================
-(use-package octave
+(def-package! octave
   :mode ("\\.m$" . octave-mode)
   :config
-  ;; cygwin下octave无法在emacs中启动，使用mingw下octave。
-  (when is-win
-    (add-to-list 'exec-path "c:/Octave/Octave3.6.4_gcc4.6.2/bin/"))
+  ;; ac-octave/auto-complete-octave编译配置都有问题。
   (add-hook 'octave-mode-hook
             '(lambda ()
                (if (eq window-system 'x)

@@ -30,3 +30,5 @@
 /places
 /bookmarks
 /request/
+*.elc
+/lisp/autoloads.el

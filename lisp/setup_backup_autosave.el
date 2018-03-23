@@ -41,10 +41,9 @@
       (dired-create-directory PC-path)
       (message "Created %s" PC-path))
 ;;;; 每月备份apt history文件。
-    (when (and is-lin
-               (or (not (file-exists-p PC-apt-history-file))
-                   (> (- current (float-time (cl-sixth (file-attributes PC-apt-history-file))))
-                      month)))
+    (when (or (not (file-exists-p PC-apt-history-file))
+              (> (- current (float-time (cl-sixth (file-attributes PC-apt-history-file))))
+                 month))
       (message "Updating apt history: %s" PC-apt-history-file)
       (cl-loop for it in (directory-files "/var/log/apt/" t "history\\.log")
                do (copy-file it PC-path t)))
@@ -56,10 +55,7 @@
       (get-buffer-create "*Updating-file-system-tree*")
       (start-process-shell-command
        "Updating-file-system-tree" "*Updating-file-system-tree*"
-       (concat "tree " (expand-file-name "~")
-               (cond
-                (is-lin " -o ")
-                (is-win " /f /a > "))
+       (concat "tree " (expand-file-name "~") " -o "
                PC-tree-file)))))
 ;;;; 每次保存备份文件。
 (defun force-backup-of-buffer ()

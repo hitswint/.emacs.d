@@ -1,6 +1,6 @@
 ;;; web-mode
 ;; ==================web-mode==================
-(use-package web-mode
+(def-package! web-mode
   :mode (("\\.phtml\\'" . web-mode)
          ("\\.tpl\\.php\\'" . web-mode)
          ("\\.[agj]sp\\'" . web-mode)
@@ -17,7 +17,7 @@
 ;; ==================web-mode==================
 ;;; html-mode
 ;; =================html-mode==================
-(use-package sgml-mode
+(def-package! sgml-mode
   :commands swint-run-skewer
   :init
   (add-hook 'web-mode-hook (lambda ()
@@ -40,7 +40,7 @@
 ;; =================html-mode==================
 ;;; js2-mode
 ;; =================js2-mode===================
-(use-package js2-mode
+(def-package! js2-mode
   :mode ("\\.js\\'" . js2-mode)
   :config
   (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
@@ -51,7 +51,7 @@
 ;; =================js2-mode===================
 ;;; skewer-mode
 ;; ================skewer-mode=================
-(use-package skewer-mode
+(def-package! skewer-mode
   :diminish (skewer-mode
              skewer-css-mode
              skewer-html-mode)
@@ -66,7 +66,7 @@
 ;; ================skewer-mode=================
 ;;; emmet-mode
 ;; ================emmet-mode==================
-(use-package emmet-mode
+(def-package! emmet-mode
   :diminish emmet-mode
   :commands emmet-mode
   :init

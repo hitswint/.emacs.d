@@ -1,4 +1,4 @@
-;; dired-sync-highlight.el --- Sync highlighted files status.
+;;; dired-sync-highlight.el --- Sync highlighted files status
 (require 'dired-aux)
 (require 'wdired)
 
@@ -27,23 +27,24 @@
            (tar-to-str (annotated-path to))
            (annotation-storage-files (directory-files "~/org/annotated/" t tar-from-str)))
       (when (member (file-name-nondirectory from) annotated-file-list)
-        (let ((annotation-refile-from (concat "~/org/annotated/" dir-from-str ").org"))
-              (annotation-refile-to (concat "~/org/annotated/" dir-to-str ").org"))
-              (link-from (concat "file:" (file-name-nondirectory from)))
-              (link-to (concat "file:" (file-name-nondirectory to))))
+        (let* ((annotation-refile-from (concat "~/org/annotated/" dir-from-str ").org"))
+               (annotation-refile-to (concat "~/org/annotated/" dir-to-str ").org"))
+               (link-from (concat "file:" (file-name-nondirectory from)))
+               (link-to (concat "file:" (file-name-nondirectory to)))
+               (string-from (org-make-link-string link-from link-from))
+               (string-to (org-make-link-string link-to link-to)))
           (with-current-buffer (find-file annotation-refile-from)
             (widen)
             (goto-char (point-min))
-            (search-forward (org-make-link-string link-from link-from) nil t)
+            (search-forward string-from nil t)
             (if (org-at-heading-p)
                 (my/refile annotation-refile-to (org-get-heading)))
             (kill-buffer))
           (with-current-buffer (find-file annotation-refile-to)
             (widen)
             (goto-char (point-min))
-            (replace-string
-             (org-make-link-string link-from link-from)
-             (org-make-link-string link-to link-to))
+            (while (search-forward string-from nil t)
+              (replace-match string-to))
             (save-buffer)
             (kill-buffer))))
       (when annotation-storage-files
@@ -70,14 +71,15 @@
                       (annotation-storage-files (directory-files "~/org/annotated/" t
                                                                  (annotated-path file-renamed-old))))
                  (when (member (file-name-nondirectory file-renamed-old) annotated-file-list)
-                   (let ((link-old (concat "file:" (file-name-nondirectory file-renamed-old)))
-                         (link-new (concat "file:" (file-name-nondirectory file-renamed-new))))
+                   (let* ((link-old (concat "file:" (file-name-nondirectory file-renamed-old)))
+                          (link-new (concat "file:" (file-name-nondirectory file-renamed-new)))
+                          (string-old (org-make-link-string link-old link-old))
+                          (string-new (org-make-link-string link-new link-new)))
                      (with-current-buffer (find-file (swint-org-annotation-storage-file))
                        (widen)
                        (goto-char (point-min))
-                       (replace-string
-                        (org-make-link-string link-old link-old)
-                        (org-make-link-string link-new link-new))
+                       (while (search-forward string-old nil t)
+                         (replace-match string-new t t))
                        (save-buffer)
                        (kill-buffer))))
                  (when annotation-storage-files
@@ -86,8 +88,7 @@
                                          (replace-regexp-in-string
                                           (annotated-path file-renamed-old)
                                           (annotated-path file-renamed-new)
-                                          annotation-storage-file)
-                                         ))))))))
+                                          annotation-storage-file)))))))))
 
 (advice-add 'wdired-do-renames :before #'wdired-do-renames-sync-highlight)
 
@@ -123,7 +124,7 @@
                  (unless (dired-k--parse-status t)
                    (delete-file (swint-org-annotation-storage-file))))
                (when annotation-storage-files
-                 (mapcar 'delete-file annotation-storage-files))))))
+                 (mapc 'delete-file annotation-storage-files))))))
 
 (advice-add 'dired-internal-do-deletions :before #'dired-internal-do-deletions-sync-highlight)
 

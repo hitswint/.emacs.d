@@ -1,6 +1,6 @@
 ;;; smart-mode-line
 ;; ================smart-mode-line=================
-(use-package smart-mode-line
+(def-package! smart-mode-line
   :config
   (setq sml/no-confirm-load-theme t)
   ;; 设定theme为dark/light/respectful/automatic。
@@ -46,7 +46,7 @@
 ;; ================smart-mode-line=================
 ;;; nyan-mode
 ;; ===================nyan-mode====================
-(use-package nyan-mode
+(def-package! nyan-mode
   :config
   (nyan-mode t)
   (setq nyan-bar-length 20))

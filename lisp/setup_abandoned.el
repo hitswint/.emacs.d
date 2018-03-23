@@ -1,13 +1,13 @@
 ;;; ace-jump
 ;; ===================ace-jump==================
 ;; 使用avy替代ace-jump。
-(use-package ace-jump-mode
+(def-package! ace-jump-mode
   :disabled
   :bind (("C-h" . swint-ace-jump-char-mode)
          ("C-c C-h" . ace-jump-mode)
          ("C-M-h" . ace-jump-line-mode))
   :config
-  (use-package pinyin-search)
+  (def-package! pinyin-search)
   (custom-set-faces '(ace-jump-face-background ((t (:foreground "#666666"))))
                     '(ace-jump-face-foreground ((t (:foreground "yellow" :weight bold)))))
   ;; (setq ace-jump-mode-gray-background nil)
@@ -214,14 +214,14 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
   (defun ace-jump-list-visual-area/exclude-pdf-view ()
     "Exclude pdf view area to improve performance."
     (loop for f in (frame-list)
-          append (loop for w in (remove-if (lambda (x) (eq (buffer-mode (window-buffer x)) 'pdf-view-mode)) (window-list f))
+          append (loop for w in (cl-remove-if (lambda (x) (eq (buffer-mode (window-buffer x)) 'pdf-view-mode)) (window-list f))
                        collect (make-aj-visual-area :buffer (window-buffer w)
                                                     :window w
                                                     :frame f)))))
 ;; ===================ace-jump==================
 ;;; MATLAB
 ;; ====================MATLAB===================
-(use-package matlab-mode
+(def-package! matlab-mode
   :disabled
   :mode ("\\.[mM]\\'" . matlab-mode)
   :config
@@ -254,7 +254,7 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
 ;; ====================MATLAB===================
 ;;; tabbar
 ;; ====================tabbar===================
-(use-package tabbar
+(def-package! tabbar
   :disabled
   :config
   (add-to-list 'load-path "~/.emacs.d/tabbar")
@@ -344,7 +344,7 @@ You can constrol whether use the case sensitive via `ace-jump-mode-case-fold'."
 ;;; color-theme
 ;; ==================color-theme================
 ;; 用于emacs23以下。
-(use-package color-theme
+(def-package! color-theme
   :disabled
   :config
   ;; (add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0/")

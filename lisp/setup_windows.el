@@ -1,6 +1,6 @@
 ;;; winner-mode
 ;; =================winner-mode=================
-(use-package winner
+(def-package! winner
   :bind (("M-/" . winner-undo)
          ("M-s M-/" . winner-redo))
   :config
@@ -8,7 +8,7 @@
 ;; =================winner-mode=================
 ;;; window-numbering
 ;; ==============window-numbering===============
-(use-package window-numbering
+(def-package! window-numbering
   :bind ("C-<tab>" . select-previously-selected-window)
   :config
   (window-numbering-mode 1)
@@ -89,13 +89,11 @@ If prefix ARG is given, delete the window instead of selecting it."
                (set-window-buffer (next-window) this-win)
                (other-window 1)))
       (setq previously-selected-window current-selected-window)))
-  (cond
-   (is-lin (global-set-key (kbd "<C-S-iso-lefttab>") 'transpose-with-previously-selected-window))
-   (is-win (global-set-key (kbd "C-S-<tab>") 'transpose-with-previously-selected-window))))
+  (global-set-key (kbd "<C-S-iso-lefttab>") 'transpose-with-previously-selected-window))
 ;; ==============window-numbering===============
 ;;; windmove
 ;; ================windmove=====================
-(use-package windmove
+(def-package! windmove
   :commands (swint-windmove-left
              swint-windmove-right
              swint-windmove-up
@@ -173,58 +171,4 @@ If prefix ARG is given, delete the window instead of selecting it."
     (interactive "P")
     (move-border-up-or-down arg nil)))
 ;; ================windmove=====================
-;;; 切换窗口分割模式
-;; ===============切换窗口分割模式=================
-(global-set-key (kbd "C-\\") 'toggle-window-split)
-(defun toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
-;; ===============切换窗口分割模式=================
-;;; 循环窗口
-;; ===================循环窗口=====================
-(global-set-key (kbd "C-x O") 'rotate-windows)
-(defun rotate-windows ()
-  "Rotate your windows."
-  (interactive)
-  (cond ((not (> (count-windows)1))
-         (message "You can't rotate a single window!"))
-        (t
-         (setq i 1)
-         (setq numWindows (count-windows))
-         (while  (< i numWindows)
-           (let* (
-                  (w1 (elt (window-list) i))
-                  (w2 (elt (window-list) (+ (% i numWindows) 1)))
-                  (b1 (window-buffer w1))
-                  (b2 (window-buffer w2))
-                  (s1 (window-start w1))
-                  (s2 (window-start w2))
-                  )
-             (set-window-buffer w1 b2)
-             (set-window-buffer w2 b1)
-             (set-window-start w1 s2)
-             (set-window-start w2 s1)
-             (setq i (1+ i)))))))
-;; ===================循环窗口=====================
 (provide 'setup_windows)

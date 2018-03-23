@@ -1,3 +1,3 @@
 [submodule "site-lisp/org-protocol-capture-html"]
 	path = site-lisp/org-protocol-capture-html
-	url = https://github.com/alphapapa/org-protocol-capture-html
+	url = https://github.com/hitswint/org-protocol-capture-html

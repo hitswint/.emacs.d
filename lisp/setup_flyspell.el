@@ -1,6 +1,6 @@
 ;;; flyspell
 ;; ================flyspell==================
-(use-package flyspell
+(def-package! flyspell
   :bind ("M-g f" . swint-toggle-flyspell-mode)
   :config
   (defun swint-toggle-flyspell-mode ()
@@ -55,7 +55,7 @@
 ;; ================flyspell==================
 ;;; ispell
 ;; =================ispell===================
-(use-package ispell
+(def-package! ispell
   :diminish ispell-minor-mode
   :after (:any flyspell ac-ispell)
   :config
@@ -67,7 +67,7 @@
 ;; =================ispell===================
 ;;; helm-flyspell
 ;; =============helm-flyspell================
-(use-package helm-flyspell
+(def-package! helm-flyspell
   :bind ("M-g M-f" . helm-flyspell-correct))
 ;; =============helm-flyspell================
 (provide 'setup_flyspell)

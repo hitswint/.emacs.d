@@ -1,6 +1,6 @@
 ;;; auctex
 ;; =====================auctex=====================
-(use-package tex
+(def-package! tex
   :mode ("\\.[tT][eE][xX]\\'" . latex-mode)
   :config
 ;;;; setup-and-keybindings
@@ -31,11 +31,11 @@
   (setq TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o")))
   ;; 使用imagemagick中convert转换为图片。win中默认使用imgconvert，可以将cygwin中convert改名为imgconvert。
   (add-to-list 'TeX-command-list '("LaTeX-standalone" "%`xelatex -shell-escape%(mode)%' %t" TeX-run-TeX nil t))
-  (when is-lin (setq TeX-view-program-selection '((output-pdf "Llpp") (output-dvi "Llpp"))))
+  (setq TeX-view-program-selection '((output-pdf "Llpp") (output-dvi "Llpp")))
   ;; ============setup-and-keybindings=============
 ;;;; reftex
   ;; ===================reftex=====================
-  (use-package reftex
+  (def-package! reftex
     :diminish reftex-mode
     :commands reftex-mode
     :init
@@ -50,7 +50,7 @@
   ;; ===================reftex=====================
 ;;;; preview
   ;; ==================preview=====================
-  (use-package preview
+  (def-package! preview
     :commands (preview-at-point
                preview-clearout-buffer)
     :init
@@ -67,14 +67,14 @@
 ;;; auctex-latexmk
 ;; =================auctex-latexmk=================
 ;; texlive默认包含latexmk，只需加入.latexmkrc配置文件。
-(use-package auctex-latexmk
+(def-package! auctex-latexmk
   :after tex
   :config
   (auctex-latexmk-setup))
 ;; =================auctex-latexmk=================
 ;;; latex-preview-pane
 ;; ==============latex-preview-pane================
-(use-package latex-preview-pane
+(def-package! latex-preview-pane
   :commands latex-preview-pane-mode
   :config
   ;; latex-preview-pane-enable绑定latex-mode-hook，无效。
@@ -93,7 +93,7 @@
 ;; ==============latex-preview-pane================
 ;;; magic-latex-buffer
 ;; ==============magic-latex-buffer================
-(use-package magic-latex-buffer
+(def-package! magic-latex-buffer
   :diminish magic-latex-buffer
   :commands magic-latex-buffer
   :init

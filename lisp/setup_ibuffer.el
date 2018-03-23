@@ -1,6 +1,6 @@
 ;;; ibuffer
 ;; =========================ibuffer==============================
-(use-package ibuffer
+(def-package! ibuffer
   :bind ("C-x C-b" . ibuffer)
   :config
   (setq ibuffer-expert t
@@ -8,9 +8,13 @@
   (define-key ibuffer-mode-map (kbd "i") 'ibuffer-jump-to-filter-group)
 ;;;; ibuffer分组
   ;; ======================ibuffer分组===========================
-  (use-package ibuf-ext
+  (def-package! ibuf-ext
     :config
-;;;;; 按persp分组
+    (add-hook 'ibuffer-mode-hook '(lambda () (if (not persp-mode)
+                                                 (ibuffer-switch-to-saved-filter-groups "Filename")
+                                               (ibuffer-create-saved-filter-groups-with-persp)
+                                               (ibuffer-switch-to-saved-filter-groups "Persp"))))
+;;;; 按persp分组
     (define-ibuffer-filter persp
         "Toggle current view to buffers with file or directory name matching QUALIFIER."
       (:description "persp" :reader (read-from-minibuffer "Filter by persp (regexp): "))
@@ -18,27 +22,24 @@
     (defun ibuffer-create-saved-filter-groups-with-persp ()
       (interactive)
       (let* ((ibuffer-saved-filter-groups-without-persp
-              (remove-if #'(lambda (x)
-                             (equal (car x) "Persp"))
-                         ibuffer-saved-filter-groups))
+              (cl-remove-if #'(lambda (x)
+                                (equal (car x) "Persp"))
+                            ibuffer-saved-filter-groups))
              (it (mapcar #'(lambda (x)
                              (list x (cons 'persp x))) (delete "i" (persp-names))))
              (itt (push "Persp" it)))
         (setq ibuffer-saved-filter-groups
               (push itt ibuffer-saved-filter-groups-without-persp))))
-    (add-hook 'ibuffer-mode-hook '(lambda ()
-                                    (ibuffer-create-saved-filter-groups-with-persp)
-                                    (ibuffer-switch-to-saved-filter-groups "Persp")))
     (define-key ibuffer-mode-map (kbd ":") '(lambda () (interactive)
                                               (ibuffer-create-saved-filter-groups-with-persp)
                                               (ibuffer-switch-to-saved-filter-groups "Persp")))
-;;;;; 按filename分组
+;;;; 按filename分组
     (define-ibuffer-filter filename
         "Toggle current view to buffers with file or directory name matching QUALIFIER."
       (:description "filename" :reader (read-from-minibuffer "Filter by file/directory name (regexp): "))
       (ibuffer-awhen (or (buffer-local-value 'buffer-file-name buf)
                          (buffer-local-value 'dired-directory buf))
-        (string-match qualifier it)))
+                     (string-match qualifier it)))
     (add-to-list 'ibuffer-saved-filter-groups
                  '("Filename"
                    ("Coding" (or

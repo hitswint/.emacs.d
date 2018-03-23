@@ -1,5 +1,5 @@
-;;; Default
-;; ==================Default====================
+;;; Setup
+;; ===================Setup=====================
 (fset 'yes-or-no-p 'y-or-n-p)
 (global-font-lock-mode t)               ;语法高亮。
 (auto-image-file-mode t)                ;打开图片显示功能。
@@ -19,7 +19,6 @@
   (horizontal-scroll-bar-mode -1))
 (mouse-avoidance-mode 'animate)         ;光标靠近鼠标指针时，让鼠标指针自动让开。
 (setq fill-column 80)                   ;默认显示 80列就换行。
-(setq inhibit-startup-screen t)         ;禁用启动信息。
 (setq visible-bell t)                   ;关闭烦人的出错时的提示声。
 (setq mouse-yank-at-point t)            ;支持中键粘贴。
 (setq kill-ring-max 200)                ;用一个很大的 kill ring。
@@ -29,6 +28,7 @@
 (setq disabled-command-function nil)
 (setq uniquify-buffer-name-style 'forward)
 (setq-default indent-tabs-mode nil)
+(setq auto-window-vscroll nil)          ;解决C-n卡顿。
 (setq save-interprogram-paste-before-kill t)
 (setq require-final-newline t)
 (setq load-prefer-newer t)
@@ -41,7 +41,14 @@
       "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 ;; (setq debug-on-error t)
 (set-face-attribute 'highlight nil :background "black")
-;; ==================Default====================
+(unless noninteractive
+  (advice-add #'display-startup-echo-area-message :override #'ignore)
+  (setq inhibit-startup-screen t
+        inhibit-startup-echo-area-message user-login-name
+        inhibit-default-init t
+        initial-major-mode 'fundamental-mode
+        initial-scratch-message nil))
+;; ===================Setup=====================
 ;;; Keybindings
 ;; ================Keybindings==================
 (global-set-key (kbd "C-x C-M-j") 'speedbar-get-focus)
@@ -62,9 +69,54 @@
 (global-set-key (kbd "C-SPC") nil)
 (global-set-key (kbd "<C-M-backspace>") 'backward-kill-sexp)
 (define-key lisp-interaction-mode-map (kbd "C-j") nil)
+(global-set-key (kbd "<C-prior>") 'previous-user-buffer)
+(global-set-key (kbd "<C-next>") 'next-user-buffer)
+(global-set-key (kbd "C-x M-d") 'delete-current-buffer-file)
+(global-set-key (kbd "C-x M-r") 'rename-current-buffer-file)
+(global-set-key (kbd "C-q") 'swint-kill-this-buffer)
+(global-set-key (kbd "M-c") 'toggle-letter-case)
+(global-set-key (kbd "M-Q") 'compact-uncompact-block)
+(global-set-key (kbd "C-w") 'cut-line-or-region)
+(global-set-key [(meta n)] 'window-move-up)
+(global-set-key [(meta p)] 'window-move-down)
+(global-set-key (kbd "C-x C-i") 'cleanup-buffer)
+(global-set-key (kbd "M-g g") 'linum-mode)
+(global-set-key [remap goto-line] 'goto-line-with-feedback)
+(global-set-key (kbd "M-s M-;") 'comment-or-uncomment-region-or-line)
+(global-set-key (kbd "C-a") 'smart-beginning-of-line)
+(global-set-key (kbd "M-s -") 'jcs-dashify)
+(global-set-key (kbd "M-s _") 'jcs-dashify-underline)
+(global-set-key (kbd "C-j") 'open-line-or-new-line-dep-pos)
+(global-set-key (kbd "M-m") 'pop-to-mark-command)
+(global-set-key (kbd "M-M") 'unpop-to-mark-command)
+(global-set-key (kbd "M-s =") '(lambda () (interactive)
+                                 (if swint-diff-region-tag
+                                     (diff-region-compare-with-b)
+                                   (diff-region-tag-selected-as-a))))
+(global-set-key (kbd "C-x RET RET") '(lambda () (interactive)
+                                       (revert-buffer-with-coding-system 'utf-8)))
+(global-set-key (kbd "C-x M-s") 'save-buffer-with-dos2unix)
+(global-set-key (kbd "C-x e") 'replace-last-sexp)
+(global-set-key (kbd "C-x C-y") 'xsel-paste-primary)
+(global-set-key (kbd "M-g =") 'swint-count-words-region)
+(global-set-key (kbd "M-g o") 'swint-pandoc-output)
+(global-set-key (kbd "M-g t") 'swint-pdftk-output)
+(global-set-key (kbd "M-s M-e") 'show-some-last-messages)
+(global-set-key (kbd "M-s d") 'swint-sdcv-to-tip)
+(global-set-key (kbd "M-s D") 'swint-sdcv-to-buffer)
+(global-set-key (kbd "M-s M-D") 'swint-online-to-buffer)
+(global-set-key (kbd "C-s-<return>") 'urxvt-default-directory)
+(global-set-key (kbd "C-s-e") 'tc-open-default-directory)
+(global-set-key (kbd "C-x M-,") '(lambda () (interactive) (swint-nutstore-sync "down")))
+(global-set-key (kbd "C-x M-.") '(lambda () (interactive) (swint-nutstore-sync "up")))
+(global-set-key (kbd "C-x M-/") '(lambda () (interactive) (swint-nutstore-sync "bi")))
+(global-set-key (kbd "M-s C-/") 'swint-unison-sync-backups)
+(global-set-key (kbd "M-s C-,") '(lambda () (interactive) (swint-bypy-sync)))
+(global-set-key (kbd "M-s C-.") '(lambda () (interactive) (swint-bypy-sync t)))
+(global-set-key (kbd "C-S-s") 'swint-pinyin-search-forward)
+(global-set-key (kbd "C-S-r") 'swint-pinyin-search-backward)
+(global-set-key (kbd "C-x C-<tab>") 'switch-to-minibuffer)
+(global-set-key (kbd "C-\\") 'toggle-window-split)
+(global-set-key (kbd "C-x O") 'rotate-windows)
 ;; ================Keybindings==================
-;;; Local Variables
-;; ==============Local Variables================
-;; add-file-local-variable/-prop-line分别在尾首加local variables。
-;; ==============Local Variables================
 (provide 'setup_default)

@@ -24,8 +24,7 @@
 
 (defun iswitchb-pinyin-init ()
   (unless iswitchb-pinyin-initialized
-    (save-excursion
-      (set-buffer (generate-new-buffer " pinyin-initials")) ; buffer名字前加空格，避免在emacs中编辑该文件
+    (with-current-buffer (generate-new-buffer " pinyin-initials") ; buffer名字前加空格，避免在emacs中编辑该文件
       (insert-file-contents pinyin-initials-file)
       (setq pinyin-initials-buffer (current-buffer))
       (setq iswitchb-pinyin-initialized t))))
@@ -136,3 +135,5 @@
 
 
 (iswitchb-pinyin-init)
+
+(provide 'iswitchb-pinyin)

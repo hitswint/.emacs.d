@@ -1,6 +1,6 @@
 ;;; ccmode
 ;; ===================ccmode====================
-(use-package cc-mode
+(def-package! cc-mode
   :mode (("\\.\\(cc\\|hh\\)\\'" . c++-mode)
          ("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode)
          ("\\.\\(CC?\\|HH?\\)\\'" . c++-mode)
@@ -46,7 +46,7 @@
 ;; ===================ccmode====================
 ;;; gdb
 ;; =====================gdb=====================
-(use-package gdb-mi
+(def-package! gdb-mi
   :commands gdb-or-gud-go
   :init
   (add-hook 'c-mode-hook (lambda ()
@@ -85,7 +85,7 @@
 ;; =====================gdb=====================
 ;;; function-args
 ;; ==================function-args==============
-(use-package function-args
+(def-package! function-args
   :diminish function-args-mode
   :commands fa-config-default
   :init
@@ -110,7 +110,7 @@
 ;; ==================function-args==============
 ;;; hs-minor-mode
 ;; ==================hs-minor-mode==============
-(use-package hideshow
+(def-package! hideshow
   :diminish hs-minor-mode
   :commands hs-minor-mode
   :init
@@ -120,7 +120,7 @@
 ;; ==================hs-minor-mode==============
 ;;; semantic
 ;; ===================semantic==================
-(use-package semantic
+(def-package! semantic
   :commands semantic-mode
   :init
   (dolist (hook '(c-mode-hook
@@ -139,7 +139,7 @@
 ;; ===================semantic==================
 ;;; helm-gtags
 ;; ==================helm-gtags=================
-(use-package helm-gtags
+(def-package! helm-gtags
   :diminish helm-gtags-mode
   :commands helm-gtags-mode
   :init
@@ -167,12 +167,13 @@
 ;; ==================helm-gtags=================
 ;;; arduino
 ;; ===================arduino===================
-(use-package arduino-mode
+(def-package! arduino-mode
   :mode (("\\.pde\\'" . arduino-mode)
          ("\\.ino\\'" . arduino-mode)))
 ;; ===================arduino===================
+;;; disaster
 ;; ==================disaster===================
-(use-package disaster
+(def-package! disaster
   :commands disaster)
 ;; ==================disaster===================
 (provide 'setup_ccmode)

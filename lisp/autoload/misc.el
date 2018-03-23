@@ -1,10 +1,10 @@
 ;;; 从xsel复制粘贴
 ;; =================从xsel复制粘贴=================
 ;; 通过xsel与其他程序进行复制粘贴。
+;;;###autoload
 (defun xsel-paste-primary()
   (interactive)
   (insert (shell-command-to-string "xsel -o -p </dev/null")))
-(global-set-key (kbd "C-x C-y") 'xsel-paste-primary)
 ;; =================从xsel复制粘贴=================
 ;;; WordsCount
 ;; ===================WordsCount===================
@@ -14,6 +14,7 @@
   "[。，！？；：「」『』（）、【】《》〈〉※—]")
 (defvar wc-regexp-english-word
   "[a-zA-Z0-9-]+")
+;;;###autoload
 (defun swint-count-words-region ()
   "「較精確地」統計中/日/英文字數。
 - 文章中的註解不算在字數內。
@@ -64,10 +65,10 @@
              chinese-char chinese-char-and-punc english-word
              (+ chinese-char english-word)
              (+ chinese-char-and-punc english-word)))))
-(global-set-key (kbd "M-g =") 'swint-count-words-region)
 ;; ===================WordsCount===================
 ;;; get-words-at-point
 ;; ===============get-words-at-point===============
+;;;###autoload
 (defun swint-get-words-at-point ()
   "Get words at point, use pyim-get-words-list-at-point to deal with chinese."
   (interactive)
@@ -79,10 +80,11 @@
       (if (<= (length words-at-point) 1)
           (read-string (format "Get Words (default %s): " (car (car words-at-point)))
                        nil nil (car (car words-at-point)))
-        (ivy-read "Get Words:" (remove-duplicates (mapcar 'car words-at-point)))))))
+        (ivy-read "Get Words:" (cl-remove-duplicates (mapcar 'car words-at-point)))))))
 ;; ===============get-words-at-point===============
 ;;; swint-pandoc-output
 ;; ==============swint-pandoc-output===============
+;;;###autoload
 (defun swint-pandoc-output ()
   (interactive)
   (let ((output-format (read-string "Output format: ")))
@@ -91,33 +93,33 @@
             (if (eq major-mode 'dired-mode)
                 (dired-get-marked-files)
               (list (buffer-file-name))))))
-(global-set-key (kbd "M-g o") 'swint-pandoc-output)
 ;; ==============swint-pandoc-output===============
 ;;; swint-pdftk-output
 ;; ==============swint-pdftk-output================
+;;;###autoload
 (defun swint-pdftk-output ()
   (interactive)
   (let ((args (read-string "Pdftk args(1-2west 4 5-end): ")))
     (mapcar #'(lambda (pdf-file)
                 (shell-command (concat "pdftk " (file-name-nondirectory pdf-file) " cat "
                                        args " output " (concat (file-name-base pdf-file) "-new.pdf"))))
-            (remove-if-not #'(lambda (x) (string-equal (downcase (file-name-extension x)) "pdf"))
-                           (if (eq major-mode 'dired-mode)
-                               (dired-get-marked-files)
-                             (list (buffer-file-name)))))))
-(global-set-key (kbd "M-g t") 'swint-pdftk-output)
+            (cl-remove-if-not #'(lambda (x) (string-equal (downcase (file-name-extension x)) "pdf"))
+                              (if (eq major-mode 'dired-mode)
+                                  (dired-get-marked-files)
+                                (list (buffer-file-name)))))))
 ;; ==============swint-pdftk-output================
 ;;; show-some-last-messages
 ;; ============show-some-last-messages=============
 (defcustom default-messages-to-show 4
-  "Default number of messages for `show-some-last-messages'.")
+  "Default number of messages for `show-some-last-messages'."
+  :group 'autoload-misc)
+;;;###autoload
 (defun show-some-last-messages (count)
   "Show COUNT last lines of the `*Messages*' buffer."
   (interactive "P")
   (setq count (if count (prefix-numeric-value count)
                 default-messages-to-show))
-  (save-excursion
-    (set-buffer "*Messages*")
+  (with-current-buffer "*Messages*"
     (let ((prev-point-max (point-max-marker))
           (inhibit-read-only t))
       (message "%s"
@@ -132,5 +134,4 @@
                     (point))
                   (point-max))))
       (delete-region (point-max) prev-point-max))))
-(global-set-key (kbd "M-s M-e") 'show-some-last-messages)
 ;; ============show-some-last-messages=============

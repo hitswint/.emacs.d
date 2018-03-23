@@ -1,6 +1,6 @@
 ;;; magit
 ;; ====================magit=======================
-(use-package magit
+(def-package! magit
   :diminish magit-autorevert-mode
   :bind ("C-x M-g" . magit-status)
   :config
@@ -23,9 +23,7 @@
   (defun swint-magit-clone-nutstore ()
     "从~/Nutstore中clone远程库到本地。"
     (interactive)
-    (let* ((remote-repo-prefix (cond (is-lin "~/Nutstore/")
-                                     (is-win (concat "file://" (replace-regexp-in-string
-                                                                "c:" "/cygdrive/c" (expand-file-name "~/Nutstore/"))))))
+    (let* ((remote-repo-prefix "~/Nutstore/")
            (remote-repo (concat remote-repo-prefix
                                 (completing-read "Remote repo to clone: "
                                                  (directory-files "~/Nutstore" nil ".+\\.git")))))
@@ -34,9 +32,7 @@
   (defun swint-magit-remote-nutstore ()
     "使用本地库名字在~/Nutstore中建立远程库，并加为remote repo。"
     (interactive)
-    (let* ((remote-repo-prefix (cond (is-lin "~/Nutstore/")
-                                     (is-win (concat "file://" (replace-regexp-in-string
-                                                                "c:" "/cygdrive/c" (expand-file-name "~/Nutstore/"))))))
+    (let* ((remote-repo-prefix "~/Nutstore/")
            (remote-repo (concat remote-repo-prefix
                                 (file-name-nondirectory (directory-file-name (magit-toplevel))) ".git")))
       (shell-command (concat "git --bare init " remote-repo))

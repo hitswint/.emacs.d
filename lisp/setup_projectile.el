@@ -1,6 +1,6 @@
 ;;; Projectile
 ;; ==================Projectile=================
-(use-package projectile
+(def-package! projectile
   :bind-keymap ("M-\"" . projectile-command-map)
   :init
   (setq projectile-keymap-prefix (kbd "M-\""))
@@ -12,7 +12,7 @@
 ;; ==================Projectile=================
 ;;; helm-projectile
 ;; ==============helm-projectile================
-(use-package helm-projectile
+(def-package! helm-projectile
   :bind ("M-'" . helm-projectile)
   :config
   (helm-projectile-on)
@@ -37,11 +37,11 @@
       :candidates (lambda ()
                     (if (projectile-project-p)
                         (cons (abbreviate-file-name (projectile-project-root))
-                              (remove-if-not
+                              (cl-remove-if-not
                                (lambda (x)
                                  (member x (hash-table-keys persp-projectile-hash)))
                                (projectile-relevant-known-projects)))
-                      (remove-if-not
+                      (cl-remove-if-not
                        (lambda (x)
                          (member x (hash-table-keys persp-projectile-hash)))
                        projectile-known-projects)))
@@ -53,7 +53,7 @@
   (defvar helm-source-projectile-projects-without-persp
     (helm-build-sync-source "Projectile projects without persp"
       :candidates (lambda ()
-                    (remove-if
+                    (cl-remove-if
                      (lambda (x)
                        (member x (hash-table-keys persp-projectile-hash)))
                      projectile-known-projects))
@@ -75,7 +75,7 @@
 ;; ==============helm-projectile================
 ;;; persp-projectile
 ;; ================persp-projectile=============
-(use-package persp-projectile
+(def-package! persp-projectile
   :after helm-projectile
   :config
   (bind-key "M-s M-'" 'projectile-persp-switch-project)
@@ -88,10 +88,10 @@
              (file-name-nondirectory (directory-file-name project-to-switch))
              persp-projectile-hash)
     ;; 删除不在projectile-known-projects中的project。
-    (mapcar #'(lambda (x) (remhash x persp-projectile-hash))
-            (remove-if (lambda (x)
-                         (member x projectile-known-projects))
-                       (hash-table-keys persp-projectile-hash))))
+    (mapc #'(lambda (x) (remhash x persp-projectile-hash))
+          (cl-remove-if (lambda (x)
+                          (member x projectile-known-projects))
+                        (hash-table-keys persp-projectile-hash))))
   (advice-add 'projectile-persp-switch-project :after
               #'projectile-persp-switch-project-update-hash))
 ;; ================persp-projectile=============
