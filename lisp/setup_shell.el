@@ -23,9 +23,7 @@
   :bind ("C-M-1" . eshell)
   :config
   (add-hook 'eshell-mode-hook '(lambda()
-                                 (outline-minor-mode 1)
-                                 (setq outline-regexp "^[^#$\n]* [#>]+ "
-                                       scroll-margin 0
+                                 (setq scroll-margin 0
                                        eshell-scroll-to-bottom-on-output t
                                        eshell-scroll-show-maximum-output t)
                                  (add-to-list 'eshell-output-filter-functions

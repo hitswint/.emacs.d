@@ -48,6 +48,12 @@
                (setq org-latex-image-default-width "1\\linewidth")
                (setq org-latex-remove-logfiles nil)
                (turn-on-font-lock)
+               (iimage-mode)
+               ;; 如果有#+ATTR_ORG: :width 100则设置为图片宽度为100，否则显示原尺寸。
+               (setq org-image-actual-width nil)
+               ;; org-redisplay-inline-images(C-c C-x C-M-v) 更新图片。
+               ;; org-toggle-inline-images(C-c C-x C-v) 开关图片。
+               (org-display-inline-images)
                (setq org-use-speed-commands t)
                ;; ? org-speed-command-help
                ;; n/p/f/b/u navigation commands
@@ -67,6 +73,8 @@
                (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
                (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point-with-apps)
                (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-org-open-at-point t)))
+               (define-key org-mode-map (kbd "C-c M-,") '(lambda () (interactive) (swint-org-mobile-sync "down")))
+               (define-key org-mode-map (kbd "C-c M-.") '(lambda () (interactive) (swint-org-mobile-sync "up")))
                (smartrep-define-key org-mode-map "M-s"
                  '(("p" . org-previous-visible-heading)
                    ("n" . org-next-visible-heading)
@@ -94,6 +102,7 @@
   ;; ===============Keybindings=================
 ;;;; GTD
   ;; ===================GTD=====================
+  (setq org-agenda-files (list "~/org/task.org"))
   ;; Do not show title of task in mode-line when using org-clock.
   (setq org-clock-heading-function
         (lambda ()
@@ -139,178 +148,6 @@
   ;; Pressing the backquote ` followed by a character inserts math macros, also outside LaTeX fragments. If you wait more than 1.5 seconds after the backquote, a help window will pop up.
   ;; Pressing the single-quote ' followed by another character modifies the symbol before point with an accent or a font. If you wait more than 1.5 seconds after the single-quote, a help window will pop up. Character modification will work only inside LaTeX fragments; outside the quote is normal.
   ;; ================cdlatex====================
-;;;; 截图
-  ;; ===================截图====================
-  ;; Screenshot-local截图到./pic文件夹中，screenshot截图到~/org/pic文件夹中。
-  (defun swint-screenshot (&optional arg)
-    "Take a screenshot into a unique-named file in the current buffer file
-  directory and insert a link to this file."
-    (interactive "P")
-    ;; 将截图名字定义为buffer名字加日期。
-    (let ((screen-file-path (if arg
-                                (concat (getenv "HOME") "/org/pic/")
-                              (progn (unless (file-exists-p "./pic")
-                                       ;; 建立pic文件夹。
-                                       (dired-create-directory "./pic"))
-                                     "./pic/")))
-          screen-file)
-      (setq screen-file (concat (make-temp-name
-                                 (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
-                                         "_" (format-time-string "%Y%m%d_"))) ".png"))
-      ;; (suspend-frame)
-      (call-process-shell-command (concat "scrot" " -s " "\"" screen-file "\"" ))))
-  (global-set-key (kbd "C-x M-p") 'swint-screenshot)
-  (global-set-key (kbd "C-x M-P") '(lambda () (interactive) (swint-screenshot t)))
-  ;; ===================截图====================
-;;;; 插入截图
-  ;; =================插入截图==================
-  ;; 如果有#+ATTR_ORG: :width 100则设置为图片宽度为100，否则显示原尺寸。
-  ;; 设置尺寸之后使用org-redisplay-inline-images(C-c C-x C-M-v)更新图片。
-  (setq org-image-actual-width nil)
-  (add-hook 'org-mode-hook 'iimage-mode)
-  (add-hook 'org-mode-hook 'org-display-inline-images)
-  (global-set-key (kbd "M-g v") 'iimage-mode)
-  (defun swint-insert-screenshot (&optional arg)
-    "Take a screenshot into a unique-named file in the current buffer file
-  directory and insert a link to this file."
-    (interactive "P")
-    (let ((screen-file-name (swint-screenshot arg)))
-      (if (eq major-mode 'org-mode)
-          (progn (insert (concat "[[" (abbreviate-file-name screen-file-name) "]]"))
-                 (org-redisplay-inline-images))
-        (insert (abbreviate-file-name screen-file-name)))))
-  (global-set-key (kbd "C-x p") 'swint-insert-screenshot)
-  (global-set-key (kbd "C-x P") '(lambda () (interactive)
-                                   (swint-insert-screenshot t)))
-  ;; win上跟lin上不同，需要先使用截图工具进行截图并复制，然后调用insert-screenshot。
-  ;; org中打开和关闭图片显示(org-display-inline-images)和(org-remove-inline-images)。
-  ;; 可以使用(org-toggle-inline-images)快捷键为C-c C-x C-v。
-  ;; =================插入截图==================
-;;;; swint-org-open-at-point
-  ;; ===========swint-org-open-at-point=========
-  (defun org-at-top-heading-p ()
-    "Go back to top heading and return that point. If already on top heading, return nil."
-    (let ((headline (org-element-at-point)))
-      (and (org-at-heading-p)
-           (equal (org-element-type headline) 'headline)
-           (equal (org-element-property :level headline) 1))))
-  (defun swint-get-annotated-file ()
-    (if (ignore-errors (org-at-top-heading-p))
-        (concat "~"
-                (if (string-prefix-p "annotated-(" (file-name-nondirectory (buffer-file-name)))
-                    (replace-regexp-in-string
-                     "_" "/" (substring-no-properties (file-name-nondirectory (buffer-file-name)) 11 -5)))
-                (car (last (split-string (substring-no-properties (org-get-heading) nil -2) "\\[file:") 1)))))
-  (defun swint-org-open-at-point (&optional in-emacs)
-    "Open annotated file if annotation storage file exists."
-    (interactive)
-    (let* ((annotated-file (swint-get-annotated-file))
-           (key (ignore-errors (car (save-excursion (org-ref-get-bibtex-key-and-file)))))
-           (pdf-file (car (bibtex-completion-find-pdf key))))
-      (cond
-       ((and annotated-file (file-exists-p annotated-file))
-        (org-open-file annotated-file in-emacs))
-       ((and pdf-file (file-exists-p pdf-file))
-        (org-open-file pdf-file in-emacs))
-       (t
-        (org-open-at-point in-emacs)))))
-  (defun swint-org-open-at-point-with-apps ()
-    (interactive)
-    (let ((org-file-apps '(("\\.pdf\\'" . "llpp %s")
-                           ("\\.djvu\\'" . "llpp %s")
-                           ("\\.png\\'" . "feh.sh %s")
-                           ("\\.jpg\\'" . "feh.sh %s")
-                           ("\\.bmp\\'" . "feh.sh %s")
-                           ("\\.jpeg\\'" . "feh.sh %s")
-                           ("\\.eps\\'" . "gv %s")
-                           ("\\.ps\\'" . "gv %s")
-                           ("\\.rmvb\\'" . "mplayer %s")
-                           ("\\.rm\\'" . "mplayer %s")
-                           ("\\.mp4\\'" . "mplayer %s")
-                           ("\\.avi\\'" . "mplayer %s")
-                           ("\\.flv\\'" . "mplayer %s")
-                           ("\\.f4v\\'" . "mplayer %s")
-                           ("\\.mpg\\'" . "mplayer %s")
-                           ("\\.mkv\\'" . "mplayer %s")
-                           ("\\.3gp\\'" . "mplayer %s")
-                           ("\\.wmv\\'" . "mplayer %s")
-                           ("\\.mov\\'" . "mplayer %s")
-                           ("\\.dat\\'" . "mplayer %s")
-                           ("\\.asf\\'" . "mplayer %s")
-                           ("\\.mpeg\\'" . "mplayer %s")
-                           ("\\.wma\\'" . "mplayer %s")
-                           ("\\.gif\\'" . "mplayer %s")
-                           ("\\.doc\\'" . "libreoffice %s")
-                           ("\\.ppt\\'" . "libreoffice %s")
-                           ("\\.xls\\'" . "libreoffice %s")
-                           ("\\.ods\\'" . "libreoffice %s")
-                           ("\\.odt\\'" . "libreoffice %s")
-                           ("\\.docx\\'" . "libreoffice %s")
-                           ("\\.pptx\\'" . "libreoffice %s")
-                           ("\\.xlsx\\'" . "libreoffice %s")
-                           ("\\.dxf\\'" . "librecad %s")
-                           ("\\.html\\'" . "firefox %s")
-                           ("\\.htm\\'" . "firefox %s")
-                           )))
-      (swint-org-open-at-point)))
-  ;; ===========swint-org-open-at-point=========
-;;;; mobileorg
-  ;; =================mobileorg=================
-  ;; Set to the location of your Org files on your local system.
-  (setq org-directory "~/org")
-  ;; Set to the name of the file where new notes will be stored.
-  (setq org-mobile-inbox-for-pull "~/org/task-from-mobile.org")
-  ;; Set to <your Dropbox root directory>/MobileOrg.
-  (setq org-mobile-directory "~/Nutstore-mobileorg")
-  ;; 加密。
-  (setq org-mobile-encryption-tempfile "~/org/orgtmpcrypt")
-  (unless (file-exists-p org-mobile-encryption-tempfile)
-    (shell-command (concat "touch " (expand-file-name org-mobile-encryption-tempfile))))
-  (unless (file-exists-p org-mobile-inbox-for-pull)
-    (shell-command (concat "touch " (expand-file-name org-mobile-inbox-for-pull))))
-  ;; 设置需要同步的文件。
-  (setq org-agenda-files (list "~/org/task.org"))
-  (setq org-mobile-files org-agenda-files)
-  (defun swint-org-mobile-sync (arg)
-    "Synchronization of org mobile."
-    (interactive)
-    (cond ((equal arg "down")
-           ;; Webdav会造成文件conflict，在pull之前先删除本地mobileorg文件。
-           (mapc #'delete-file (directory-files org-mobile-directory t ".+\\.\\(org\\|dat\\)")))
-          ((equal arg "up")
-           (with-current-buffer "task.org" (org-mobile-push))))
-    (let* ((user (replace-regexp-in-string "@" "%40" (get-auth-user "Nutstore")))
-           (pass (get-auth-pass "Nutstore"))
-           (process
-            (start-process-shell-command
-             "webdav_sync" "*webdav_sync*"
-             (concat "java -Dderby.system.home="  (expand-file-name "~/.webdav_sync/")
-                     " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
-                     " -r -" arg " -u https://" user ":" pass "@dav.jianguoyun.com/dav/Nutstore-mobileorg/ -d "
-                     (expand-file-name "~/Nutstore-mobileorg/")))))
-      (lexical-let ((pos (memq 'mode-line-modes mode-line-format))
-                    (sync (cond ((equal arg "down") "pull")
-                                ((equal arg "up") "push"))))
-        (setcdr pos (cons (concat "Org-mobile " sync " ") (cdr pos)))
-        (set-process-sentinel
-         process
-         (lambda (process signal)
-           (when (memq (process-status process) '(exit signal))
-             (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                                 (buffer-substring-no-properties (- (point-max) 6) (point-max))))
-                   (pos (memq 'mode-line-modes mode-line-format)))
-               (if (string-equal webdav_sync-process-output "Done.\n")
-                   (with-current-buffer "task.org"
-                     (when (equal sync "pull")
-                       (insert-file-contents "~/Nutstore-mobileorg/task.org" nil nil nil t)
-                       (org-mobile-pull)
-                       (org-mobile-push))
-                     (message "Org-mobile %s done." sync))
-                 (message "Org-mobile %s failed." sync))
-               (setcdr pos (remove (concat "Org-mobile " sync " ") (cdr pos))))))))))
-  (define-key org-mode-map (kbd "C-c M-,") '(lambda () (interactive) (swint-org-mobile-sync "down")))
-  (define-key org-mode-map (kbd "C-c M-.") '(lambda () (interactive) (swint-org-mobile-sync "up")))
-  ;; =================mobileorg=================
 ;;;; org输出doc
   ;; =================org输出doc================
   ;; 先生成odt文件(需要zip支持)，然后使用libreoffice转化成doc文件。
@@ -328,6 +165,7 @@
 ;;;; ox-latex
   ;; ================ox-latex===================
   (def-package! ox-latex
+    :defer t
     :config
     (setq org-latex-pdf-process
           '("xelatex -interaction nonstopmode %f"
@@ -469,6 +307,7 @@
 ;;;; ox-beamer
 ;; =================ox-beamer===================
 (def-package! ox-beamer
+  :defer t
   :config
   (add-to-list 'org-beamer-environments-extra
                '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
@@ -493,7 +332,7 @@
   ;; 在已有dired-mode中开启dired-x-highlight。
   (dolist (buf (cl-remove-if-not (lambda (x)
                                    (equal (buffer-mode x) 'dired-mode))
-                                 (helm-buffer-list)))
+                                 (buffer-list)))
     (with-current-buffer buf
       (dired-k--highlight-buffer))))
 ;; Sync annotated status as operating.
@@ -534,29 +373,42 @@
   :commands outline-cycle)
 (def-package! outline
   :diminish outline-minor-mode
-  :commands outline-minor-mode
+  :commands (outline-minor-mode
+             outline-previous-visible-heading
+             outline-next-visible-heading
+             outline-up-heading
+             outline-backward-same-level
+             outline-forward-same-level)
   :init
+  (dolist (hook '(prog-mode-hook TeX-mode-hook message-mode-hook))
+    (add-hook hook (lambda ()
+                     (local-set-key (kbd "M-s p") 'outline-previous-visible-heading)
+                     (local-set-key (kbd "M-s n") 'outline-next-visible-heading)
+                     (local-set-key (kbd "M-s u") 'outline-up-heading)
+                     (local-set-key (kbd "M-s b") 'outline-backward-same-level)
+                     (local-set-key (kbd "M-s f") 'outline-forward-same-level))))
+  (defvar outline-minor-mode-prefix "\M-O")
+  (add-hook 'outline-minor-mode-hook
+            (lambda () ;; 在latex-mode和org-mode中不开启outshine。
+              (unless (derived-mode-p 'latex-mode 'org-mode)
+                (outshine-hook-function))))
+  :config
   (add-hook 'prog-mode-hook 'outline-minor-mode)
   (add-hook 'TeX-mode-hook 'outline-minor-mode)
   (add-hook 'message-mode-hook 'outline-minor-mode)
-  (add-hook 'lisp-interaction-mode-hook
-            (lambda () (outline-minor-mode -1)))
-  (defvar outline-minor-mode-prefix "\M-O")
-  :config
-  (add-hook 'outline-minor-mode-hook
-            (lambda ()
-              ;; 在latex-mode和lisp-interaction-mode中不开启outshine。
-              (unless (memq major-mode '(latex-mode eshell-mode))
-                (outshine-hook-function))
-              (smartrep-define-key outline-minor-mode-map "M-s"
-                '(("p" . outline-previous-visible-heading)
-                  ("n" . outline-next-visible-heading)
-                  ("u" . outline-up-heading)
-                  ("b" . outline-backward-same-level)
-                  ("f" . outline-forward-same-level)))
-              (define-key outline-minor-mode-map (kbd "<M-S-return>") 'outline-insert-heading)
-              (define-key outline-minor-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
-              (define-key outline-minor-mode-map (kbd "C-M-i") nil)))
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (derived-mode-p 'prog-mode 'tex-mode 'message-mode)
+        (outline-minor-mode))))
+  (smartrep-define-key outline-minor-mode-map "M-s"
+    '(("p" . outline-previous-visible-heading)
+      ("n" . outline-next-visible-heading)
+      ("u" . outline-up-heading)
+      ("b" . outline-backward-same-level)
+      ("f" . outline-forward-same-level)))
+  (define-key outline-minor-mode-map (kbd "<M-S-return>") 'outline-insert-heading)
+  (define-key outline-minor-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
+  (define-key outline-minor-mode-map (kbd "C-M-i") nil)
   (add-hook 'outline-insert-heading-hook (lambda ()
                                            (if (string-equal "" head)
                                                (progn (call-interactively 'comment-dwim)
@@ -613,10 +465,13 @@
   ;; M-# outorg-copy-edits-and-exit.
   :after outshine)
 (def-package! navi-mode
-  :after outshine
+  :commands (navi-search-and-switch
+             navi-switch-to-twin-buffer)
+  :init
+  (add-hook 'outline-mode-hook (lambda ()
+                                 (bind-key "i" 'navi-search-and-switch outline-mode-prefix-map)
+                                 (bind-key "o" 'navi-switch-to-twin-buffer outline-mode-prefix-map)))
   :config
-  (define-key outline-mode-prefix-map (kbd "i") 'navi-search-and-switch)
-  (define-key outline-mode-prefix-map (kbd "o") 'navi-switch-to-twin-buffer)
   (global-set-key (kbd "M-s n") nil)
   (global-set-key (kbd "M-s s") 'swint-swiper)
   (global-set-key (kbd "M-s M-s") 'helm-swoop))
@@ -684,7 +539,7 @@
 ;; =========org-protocol-capture-html===========
 (def-package! org-protocol-capture-html
   :load-path "site-lisp/org-protocol-capture-html/"
-  :defer 2
+  :after org-protocol
   :config
   (add-to-list 'org-capture-templates
                '("w" "Web" entry (file+olp "~/Nutstore-sync/orgzly/orgzly.org" "Web")
@@ -747,7 +602,7 @@
   ;; 在已有org-mode中更新链接高亮。
   (dolist (buf (cl-remove-if-not (lambda (x)
                                    (equal (buffer-mode x) 'org-mode))
-                                 (helm-buffer-list)))
+                                 (buffer-list)))
     (with-current-buffer buf
       (org-restart-font-lock))))
 ;; ==================org-ref====================

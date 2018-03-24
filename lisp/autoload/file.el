@@ -41,3 +41,38 @@
          (hostentry (netrc-machine netrc host)))
     (when hostentry (netrc-get hostentry "password"))))
 ;; ====================get-auth====================
+;;; 截图
+;; ===================截图====================
+;; Screenshot-local截图到./pic文件夹中，screenshot截图到~/org/pic文件夹中。
+;;;###autoload
+(defun swint-screenshot (&optional arg)
+  "Take a screenshot into a unique-named file in the current buffer file
+  directory and insert a link to this file."
+  (interactive "P")
+  ;; 将截图名字定义为buffer名字加日期。
+  (let ((screen-file-path (if arg
+                              (concat (getenv "HOME") "/org/pic/")
+                            (progn (unless (file-exists-p "./pic")
+                                     ;; 建立pic文件夹。
+                                     (dired-create-directory "./pic"))
+                                   "./pic/")))
+        screen-file)
+    (setq screen-file (concat (make-temp-name
+                               (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
+                                       "_" (format-time-string "%Y%m%d_"))) ".png"))
+    ;; (suspend-frame)
+    (call-process-shell-command (concat "scrot" " -s " "\"" screen-file "\"" ))))
+;; ===================截图====================
+;;; 插入截图
+;; =================插入截图==================
+;;;###autoload
+(defun swint-insert-screenshot (&optional arg)
+  "Take a screenshot into a unique-named file in the current buffer file
+  directory and insert a link to this file."
+  (interactive "P")
+  (let ((screen-file-name (swint-screenshot arg)))
+    (if (eq major-mode 'org-mode)
+        (progn (insert (concat "[[" (abbreviate-file-name screen-file-name) "]]"))
+               (org-redisplay-inline-images))
+      (insert (abbreviate-file-name screen-file-name)))))
+;; =================插入截图==================

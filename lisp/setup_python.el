@@ -55,7 +55,7 @@
   ;; 在opened python buffer中开启elpy-mode。
   (dolist (buf (cl-remove-if-not (lambda (x)
                                    (equal (buffer-mode x) 'python-mode))
-                                 (helm-buffer-list)))
+                                 (buffer-list)))
     (with-current-buffer buf
       (elpy-mode 1))))
 ;; ====================elpy====================

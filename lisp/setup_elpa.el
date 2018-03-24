@@ -19,13 +19,12 @@
 ;; 激活所有packages，也可以使用package-activate单独激活。
 (package-initialize)
 ;; 借自prelude。
-(defvar prelude-packages '(academic-phrases
-                           ace-jump-mode
-                           ace-link
-                           ace-pinyin
-                           ac-html-bootstrap
+(defvar prelude-packages '(ac-html-bootstrap
                            ac-ispell
                            ac-math
+                           academic-phrases
+                           ace-link
+                           ace-pinyin
                            aggressive-indent
                            anchored-transpose
                            anzu
@@ -43,13 +42,12 @@
                            avy-zap
                            backup-walker
                            bbyac
+                           benchmark-init
                            bind-key
                            bing-dict
                            bm
                            buttercup
                            cdlatex
-                           pyim
-                           pyim-basedict
                            clean-aindent-mode
                            clipmon
                            company
@@ -57,6 +55,7 @@
                            company-quickhelp
                            company-try-hard
                            company-web
+                           company-ycmd
                            counsel
                            dash
                            diff-hl
@@ -68,21 +67,24 @@
                            disaster
                            drag-stuff
                            dumb-jump
-                           function-args
                            easy-kill
                            ein
                            elisp-slime-nav
                            elmacro
                            elpy
                            emmet-mode
+                           emms
                            epl
                            eshell-prompt-extras
                            evil-nerd-commenter
                            expand-region
                            f
+                           fcitx
                            find-file-in-project
                            flycheck
                            flycheck-pos-tip
+                           flycheck-ycmd
+                           function-args
                            git-commit
                            git-timemachine
                            gnuplot-mode
@@ -100,6 +102,8 @@
                            helm-flycheck
                            helm-flyspell
                            helm-gtags
+                           helm-mu
+                           helm-pass
                            helm-projectile
                            helm-swoop
                            helm-unicode
@@ -121,7 +125,7 @@
                            magit-popup
                            markdown-mode
                            math-symbol-lists
-                           matlab-mode
+                           mu4e-alert
                            multifiles
                            multiple-cursors
                            names
@@ -129,6 +133,8 @@
                            neotree
                            nyan-mode
                            operate-on-number
+                           org
+                           org-noter
                            org-ref
                            outline-magic
                            outorg
@@ -136,16 +142,20 @@
                            paredit
                            paredit-everywhere
                            parsebib
+                           pass
+                           pdf-tools
                            peep-dired
-                           perspective
                            persp-projectile
-                           pinyinlib
+                           perspective
                            pinyin-search
+                           pinyinlib
                            pkg-info
                            popup
                            popup-kill-ring
                            pos-tip
                            projectile
+                           pyim
+                           pyim-basedict
                            pyvenv
                            quickrun
                            rainbow-delimiters
@@ -159,8 +169,10 @@
                            smart-mode-line
                            smartrep
                            smex
+                           sudo-edit
                            swiper
                            tangotango-theme
+                           term-keys
                            undo-tree
                            use-package
                            vimish-fold
@@ -176,22 +188,9 @@
                            wrap-region
                            yaml-mode
                            yasnippet
-                           youdao-dictionary
-                           ztree
-                           emms
-                           fcitx
-                           helm-mu
-                           helm-pass
-                           mu4e-alert
-                           org
-                           org-noter
-                           pass
-                           pdf-tools
-                           sudo-edit
-                           term-keys
                            ycmd
-                           company-ycmd
-                           flycheck-ycmd)
+                           youdao-dictionary
+                           ztree)
   "A list of packages to ensure are installed at launch.")
 (defun prelude-packages-installed-p ()
   "Check if all packages in `prelude-packages' are installed."
@@ -232,6 +231,13 @@ Missing packages are installed automatically."
                    (and (plist-member plist :unless) (eval (plist-get plist :unless)))))
     `(use-package ,name ,@plist)))
 ;; =================use-package=====================
+;;; benchmark-init
+;; ================benchmark-init===================
+(def-package! benchmark-init
+  :disabled
+  :config
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+;; ================benchmark-init===================
 ;;; smartrep
 ;; ===================smartrep======================
 (def-package! smartrep

@@ -33,7 +33,6 @@
   (require 'setup_elpa)
   (require 'setup_desktop_session)
   (require 'setup_perspective)
-  (require 'setup_abandoned)
   (require 'setup_avy)
   (require 'setup_appearance)
   (require 'setup_ccmode)

@@ -118,5 +118,10 @@
 (global-set-key (kbd "C-x C-<tab>") 'switch-to-minibuffer)
 (global-set-key (kbd "C-\\") 'toggle-window-split)
 (global-set-key (kbd "C-x O") 'rotate-windows)
+(global-set-key (kbd "C-x M-p") 'swint-screenshot)
+(global-set-key (kbd "C-x M-P") '(lambda () (interactive) (swint-screenshot t)))
+(global-set-key (kbd "C-x p") 'swint-insert-screenshot)
+(global-set-key (kbd "C-x P") '(lambda () (interactive) (swint-insert-screenshot t)))
+(global-set-key (kbd "M-g v") 'iimage-mode)
 ;; ================Keybindings==================
 (provide 'setup_default)

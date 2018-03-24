@@ -49,8 +49,8 @@
 (def-package! gdb-mi
   :commands gdb-or-gud-go
   :init
-  (add-hook 'c-mode-hook (lambda ()
-                           (bind-key "C-c g" 'gdb-or-gud-go c-mode-map)))
+  (add-hook 'c-mode-common-hook (lambda ()
+                                  (bind-key "C-c g" 'gdb-or-gud-go c-mode-map)))
   :config
   (define-key gud-mode-map (kbd "C-c G") 'gud-quit)
   ;; 直接使用gdb-or-gud-go弹出gud-comint-buffer未定义，先gdb，然后gdb-or-gud-go。
@@ -89,7 +89,7 @@
   :diminish function-args-mode
   :commands fa-config-default
   :init
-  (add-hook 'c-mode-hook 'fa-config-default)
+  (add-hook 'c-mode-common-hook 'fa-config-default)
   :config
   (define-key function-args-mode-map (kbd "C-c u") 'moo-complete)
   (define-key function-args-mode-map (kbd "C-c j") 'moo-jump-directory)
@@ -141,12 +141,23 @@
 ;; ==================helm-gtags=================
 (def-package! helm-gtags
   :diminish helm-gtags-mode
-  :commands helm-gtags-mode
+  :commands (helm-gtags-mode
+             helm-gtags-dwim
+             helm-gtags-pop-stack
+             helm-gtags-select)
   :init
-  (add-hook 'c-mode-hook 'helm-gtags-mode)
-  (add-hook 'c++-mode-hook 'helm-gtags-mode)
-  (add-hook 'asm-mode-hook 'helm-gtags-mode)
+  (dolist (hook '(c-mode-common-hook asm-mode-hook))
+    (add-hook hook (lambda ()
+                     (local-set-key (kbd "C-c C-,") 'helm-gtags-dwim)
+                     (local-set-key (kbd "C-c C-.") 'helm-gtags-pop-stack)
+                     (local-set-key (kbd "C-c C-/") 'helm-gtags-select))))
   :config
+  (add-hook 'c-mode-common-hook 'helm-gtags-mode)
+  (add-hook 'asm-mode-hook 'helm-gtags-mode)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (derived-mode-p 'c-mode 'C++-mode 'asm-mode)
+        (helm-gtags-mode))))
   (defun helm-gtags--find-tag-simple-fix (fn &rest args)
     (let ((helm-execute-action-at-once-if-one nil))
       (apply fn args)))

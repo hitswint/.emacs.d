@@ -642,7 +642,7 @@
   ;; 在已有dired-mode中开启diff-hl-dired-mode。
   (dolist (buf (cl-remove-if-not (lambda (x)
                                    (equal (buffer-mode x) 'dired-mode))
-                                 (helm-buffer-list)))
+                                 (buffer-list)))
     (with-current-buffer buf
       (diff-hl-dired-mode)
       (diff-hl-dired-update)))
