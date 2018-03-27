@@ -87,26 +87,27 @@
 ;;;###autoload
 (defun swint-pandoc-output ()
   (interactive)
-  (let ((output-format (read-string "Output format: ")))
-    (mapcar #'(lambda (x) (shell-command (concat "pandoc -o " (file-name-base x)
-                                                 "." output-format " " (file-name-nondirectory x))))
-            (if (eq major-mode 'dired-mode)
-                (dired-get-marked-files)
-              (list (buffer-file-name))))))
+  (let ((output-format (read-string "Output format: "))
+        (file-list (if (eq major-mode 'dired-mode)
+                       (dired-get-marked-files)
+                     (list (buffer-file-name)))))
+    (cl-loop for x in file-list
+             do (shell-command (concat "pandoc -o " (file-name-base x)
+                                       "." output-format " " (file-name-nondirectory x))))))
 ;; ==============swint-pandoc-output===============
 ;;; swint-pdftk-output
 ;; ==============swint-pdftk-output================
 ;;;###autoload
 (defun swint-pdftk-output ()
   (interactive)
-  (let ((args (read-string "Pdftk args(1-2west 4 5-end): ")))
-    (mapcar #'(lambda (pdf-file)
-                (shell-command (concat "pdftk " (file-name-nondirectory pdf-file) " cat "
-                                       args " output " (concat (file-name-base pdf-file) "-new.pdf"))))
-            (cl-remove-if-not #'(lambda (x) (string-equal (downcase (file-name-extension x)) "pdf"))
-                              (if (eq major-mode 'dired-mode)
-                                  (dired-get-marked-files)
-                                (list (buffer-file-name)))))))
+  (let ((args (read-string "Pdftk args(1-2west 4 5-end): "))
+        (file-list (cl-remove-if-not #'(lambda (x) (string-equal (downcase (file-name-extension x)) "pdf"))
+                                     (if (eq major-mode 'dired-mode)
+                                         (dired-get-marked-files)
+                                       (list (buffer-file-name))))))
+    (cl-loop for x in file-list
+             do (shell-command (concat "pdftk " (file-name-nondirectory pdf-file) " cat "
+                                       args " output " (concat (file-name-base pdf-file) "-new.pdf"))))))
 ;; ==============swint-pdftk-output================
 ;;; show-some-last-messages
 ;; ============show-some-last-messages=============

@@ -9,7 +9,8 @@
 ;;; window-numbering
 ;; ==============window-numbering===============
 (def-package! window-numbering
-  :bind ("C-<tab>" . select-previously-selected-window)
+  :bind (("C-<tab>" . select-previously-selected-window)
+         ("<C-S-iso-lefttab>" . transpose-with-previously-selected-window))
   :config
   (window-numbering-mode 1)
   (set-face-attribute 'window-numbering-face nil :background "dark red" :foreground "white")
@@ -64,7 +65,8 @@ If prefix ARG is given, delete the window instead of selecting it."
     "Select previously selected window."
     (interactive)
     (let ((current-selected-window (selected-window))
-          (prev-buf (car (or (swint-filter-buffer-list (mapcar #'(lambda (x) (car x)) (window-prev-buffers)))
+          (prev-buf (car (or (swint-filter-buffer-list (cl-loop for x in (window-prev-buffers)
+                                                                collect (car x)))
                              (swint-filter-buffer-list (buffer-list (selected-frame)) t)))))
       (if (one-window-p)
           (switch-to-buffer prev-buf)
@@ -88,8 +90,7 @@ If prefix ARG is given, delete the window instead of selecting it."
         (progn (set-window-buffer (selected-window) (window-buffer (next-window)))
                (set-window-buffer (next-window) this-win)
                (other-window 1)))
-      (setq previously-selected-window current-selected-window)))
-  (global-set-key (kbd "<C-S-iso-lefttab>") 'transpose-with-previously-selected-window))
+      (setq previously-selected-window current-selected-window))))
 ;; ==============window-numbering===============
 ;;; windmove
 ;; ================windmove=====================

@@ -92,41 +92,40 @@
                        collect target))
         (unless compile-targets
           (error "No targets to compile"))
-        (let ((def-package!-expand-minimally t))
-          (push (expand-file-name "init.el" (file-truename user-emacs-directory)) compile-targets)
-          (condition-case ex
-              (progn
-                (dolist (target compile-targets)
-                  (when (or recompile-p
-                            (let ((elc-file (byte-compile-dest-file target)))
-                              (and (file-exists-p elc-file)
-                                   (file-newer-than-file-p target elc-file))))
-                    (let ((result (if (doom-packages--read-if-cookies target)
-                                      (byte-compile-file target)
-                                    'no-byte-compile))
-                          (short-name (file-relative-name target (file-truename user-emacs-directory))))
-                      (cl-incf
-                       (cond ((eq result 'no-byte-compile)
-                              (message "⚠ Ignored %s" short-name)
-                              total-noop)
-                             ((null result)
-                              (message "✕ Failed to compile %s" short-name)
-                              total-fail)
-                             (t
-                              (message "✓ Compiled %s" short-name)
-                              (load target t t)
-                              total-ok))))))
-                (message "%s %s file(s) %s"
-                         (if recompile-p "Recompiled" "Compiled")
-                         (format "%d/%d" total-ok (- (length compile-targets) total-noop))
-                         (format "(%s ignored)" total-noop)))
-            (error
-             (message "\n%s\n\n%s\n\n%s"
-                      "There were breaking errors."
-                      (error-message-string ex)
-                      "Reverting changes...")
-             (doom//clean-byte-compiled-files)
-             (message "Finished (nothing was byte-compiled)"))))))))
+        (push (expand-file-name "init.el" (file-truename user-emacs-directory)) compile-targets)
+        (condition-case ex
+            (progn
+              (dolist (target compile-targets)
+                (when (or recompile-p
+                          (let ((elc-file (byte-compile-dest-file target)))
+                            (and (file-exists-p elc-file)
+                                 (file-newer-than-file-p target elc-file))))
+                  (let ((result (if (doom-packages--read-if-cookies target)
+                                    (byte-compile-file target)
+                                  'no-byte-compile))
+                        (short-name (file-relative-name target (file-truename user-emacs-directory))))
+                    (cl-incf
+                     (cond ((eq result 'no-byte-compile)
+                            (message "⚠ Ignored %s" short-name)
+                            total-noop)
+                           ((null result)
+                            (message "✕ Failed to compile %s" short-name)
+                            total-fail)
+                           (t
+                            (message "✓ Compiled %s" short-name)
+                            (load target t t)
+                            total-ok))))))
+              (message "%s %s file(s) %s"
+                       (if recompile-p "Recompiled" "Compiled")
+                       (format "%d/%d" total-ok (- (length compile-targets) total-noop))
+                       (format "(%s ignored)" total-noop)))
+          (error
+           (message "\n%s\n\n%s\n\n%s"
+                    "There were breaking errors."
+                    (error-message-string ex)
+                    "Reverting changes...")
+           (doom//clean-byte-compiled-files)
+           (message "Finished (nothing was byte-compiled)")))))))
 ;;;###autoload
 (defun doom//clean-byte-compiled-files ()
   "Delete all the compiled elc files in your Emacs configuration."

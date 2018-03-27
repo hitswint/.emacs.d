@@ -8,8 +8,8 @@
   ;; Stop asking whether to save newly added abbrev when quitting emacs.
   (setq save-abbrevs t)
   (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
-  (if (file-exists-p abbrev-file-name)
-      (quietly-read-abbrev-file))
+  (when (file-exists-p abbrev-file-name)
+    (quietly-read-abbrev-file))
   ;; Sample use of emacs abbreviation feature.
   (define-abbrev-table 'global-abbrev-table
     '(("abqq" "278064399@qq.com")
@@ -201,13 +201,13 @@
   :config
   (drag-stuff-global-mode t)
   ;; 重新定义drag-stuff-define-keys函数，取消"M+方向键"的快捷键。
-  (defun drag-stuff-define-keys-cancel-keys ()
+  (defun drag-stuff-define-keys/override ()
     "Defines keys for `drag-stuff-mode'."
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'up) nil)
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'down) nil)
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'left) nil)
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'right) nil))
-  (advice-add 'drag-stuff-define-keys :override #'drag-stuff-define-keys-cancel-keys))
+  (advice-add 'drag-stuff-define-keys :override #'drag-stuff-define-keys/override))
 ;; ===================drag stuff===================
 ;;; popup-kill-ring
 ;; ================popup-kill-ring=================
@@ -299,13 +299,13 @@
   (which-key-setup-side-window-right-bottom)
   (setq which-key-sort-order 'which-key-description-order)
   ;; 默认C-h启用describe-prefix-bindings。
-  (defun which-key-show-standard-help-with-helm-descbinds (&optional _)
+  (defun which-key-show-standard-help/override (&optional _)
     (interactive)
     (let ((which-key-inhibit t))
       (which-key--hide-popup-ignore-command)
       (helm-descbinds (kbd (which-key--current-key-string)))))
   (advice-add 'which-key-show-standard-help :override
-              #'which-key-show-standard-help-with-helm-descbinds))
+              #'which-key-show-standard-help/override))
 ;; ====================which-key===================
 ;;; pdf-tools
 ;; ====================pdf-tools===================
@@ -421,14 +421,14 @@
 (def-package! helm-bm
   :bind ("C-M-'" . helm-bm)
   :config
-  (defun helm-bm-action-switch-to-persp/buffer (candidate)
+  (defun helm-bm-action-switch-to-buffer/override (candidate)
     "Switch to buffer of CANDIDATE."
     (helm-bm-with-candidate candidates
-                            (helm-switch-persp/buffer bufname)
-                            (goto-char (point-min))
-                            (forward-line (1- lineno))))
+      (helm-switch-persp/buffer bufname)
+      (goto-char (point-min))
+      (forward-line (1- lineno))))
   (advice-add 'helm-bm-action-switch-to-buffer :override
-              #'helm-bm-action-switch-to-persp/buffer))
+              #'helm-bm-action-switch-to-buffer/override))
 ;; ====================helm-bm=====================
 ;;; operate-on-number
 ;; ================operate-on-number===============

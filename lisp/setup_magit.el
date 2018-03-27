@@ -1,8 +1,12 @@
 ;;; magit
 ;; ====================magit=======================
 (def-package! magit
-  :diminish magit-autorevert-mode
-  :bind ("C-x M-g" . magit-status)
+  :diminish magit-auto-revert-mode
+  :bind (("C-x M-g" . magit-status)
+         ("M-g M-," . swint-magit-clone-nutstore)
+         ("M-g M-." . swint-magit-remote-nutstore))
+  :init
+  (setq magit-auto-revert-mode nil)
   :config
   (define-key magit-mode-map (kbd "<C-tab>") nil)
   (defun magit-exit-commit-mode ()
@@ -38,8 +42,6 @@
       (shell-command (concat "git --bare init " remote-repo))
       (magit-remote-add (read-string "Remote name: " "origin")
                         (read-string "Remote url: " remote-repo))))
-  (global-set-key (kbd "M-g M-,") 'swint-magit-clone-nutstore)
-  (global-set-key (kbd "M-g M-.") 'swint-magit-remote-nutstore)
   ;; ===========初始化远程库和克隆远程库===========
 ;;; 使用git管理doc文件
   ;; =============使用git管理doc文件===============

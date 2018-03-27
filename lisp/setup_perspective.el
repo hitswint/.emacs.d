@@ -1,9 +1,31 @@
 ;;; perspective
 ;; =================perspective=================
 (def-package! perspective
+  :commands (persp-push-current-buffer
+             persp-push-current-buffer-to-last
+             persp-push-all-buffer-to-init
+             swint-persp-switch
+             swint-load-perspectives)
+  :init
+  (bind-key "C-8" '(lambda () (interactive) (swint-persp-switch "8")))
+  (bind-key "C-9" '(lambda () (interactive) (swint-persp-switch "9")))
+  (bind-key "C-0" '(lambda () (interactive) (swint-persp-switch "0")))
+  (bind-key "C-7" 'persp-push-all-buffer-to-init)
+  (bind-key "C-*" '(lambda () (interactive) (persp-push-current-buffer "8")))
+  (bind-key "C-(" '(lambda () (interactive) (persp-push-current-buffer "9")))
+  (bind-key "C-)" '(lambda () (interactive) (persp-push-current-buffer "0")))
+  (bind-key "C-&" '(lambda () (interactive) (persp-push-current-buffer "i")))
+  (bind-key "C-`" '(lambda () (interactive) (swint-persp-switch (persp-name persp-last))))
+  (bind-key "C-~" 'persp-push-current-buffer-to-last)
+  (defmacro with-persp-mode-on (&rest body)
+    "Switch to the perspective given by NAME while evaluating BODY."
+    `(progn (unless persp-mode
+              (swint-load-perspectives))
+            ,@body))
   :config
   (setq persp-initial-frame-name "i"
-        persp-modestring-dividers '("" "" ""))
+        persp-modestring-dividers '("" "" "")
+        swint-perspectives-saved-file "~/.emacs.d/saved-perspectives.el")
   (set-face-attribute 'persp-selected-face nil :foreground "green" :weight 'bold)
   (defun persp-format-name (name)
     "Format the perspective name given by NAME for display in `persp-modestring'."
@@ -28,45 +50,75 @@
     (goto-char (persp-point-marker persp))
     (persp-update-modestring)
     (run-hooks 'persp-activated-hook))
-  (global-set-key (kbd "C-8") '(lambda () (interactive) (swint-persp-switch "8")))
-  (global-set-key (kbd "C-9") '(lambda () (interactive) (swint-persp-switch "9")))
-  (global-set-key (kbd "C-0") '(lambda () (interactive) (swint-persp-switch "0")))
-  (global-set-key (kbd "C-7") 'persp-push-all-buffer-to-init)
-  (global-set-key (kbd "C-*") '(lambda () (interactive) (persp-push-current-buffer "8")))
-  (global-set-key (kbd "C-(") '(lambda () (interactive) (persp-push-current-buffer "9")))
-  (global-set-key (kbd "C-)") '(lambda () (interactive) (persp-push-current-buffer "0")))
-  (global-set-key (kbd "C-&") '(lambda () (interactive) (persp-push-current-buffer "i")))
-  (global-set-key (kbd "C-`") '(lambda () (interactive) (swint-persp-switch (persp-name persp-last))))
-  (global-set-key (kbd "C-~") 'persp-push-current-buffer-to-last)
+;;;; defuns
+  ;; ===================defuns==================
+  (defun persp-push-current-buffer (name)
+    (interactive)
+    (with-persp-mode-on
+     (let ((persp (gethash name perspectives-hash)))
+       (push (current-buffer) (persp-buffers persp))
+       (persp-remove-buffer (current-buffer))
+       (persp-switch name))))
+  (defun persp-push-current-buffer-to-last ()
+    (interactive)
+    (with-persp-mode-on
+     (persp-push-current-buffer (persp-name persp-last))))
+  (defun persp-push-all-buffer-to-init ()
+    (interactive)
+    (with-persp-mode-on
+     (let ((init-persp (gethash persp-initial-frame-name perspectives-hash)))
+       (cl-loop for element in (buffer-list)
+                do (unless (member element (persp-buffers init-persp))
+                     (push element (persp-buffers init-persp))))
+       (swint-persp-switch persp-initial-frame-name))))
+  (defun swint-persp-switch (name)
+    (with-persp-mode-on
+     (if (and (featurep 'helm) helm-alive-p)
+         (helm-run-after-exit #'(lambda (swint-persp-name) (persp-switch swint-persp-name)) name)
+       (persp-switch name))))
+  ;; ===================defuns==================
 ;;;; 开启时加载perspectives
   ;; ========emacs开启时加载perspectives========
-  (setq swint-perspectives-saved-file "~/.emacs.d/saved-perspectives.el")
-  (defmacro senny-persp (name &rest body)
-    `(let ((initialize (not (gethash ,name perspectives-hash)))
-           (current-perspective persp-curr))
-       (persp-switch ,name)
-       (when initialize ,@body)
-       (setq persp-last current-perspective)))
   (defun swint-load-perspectives ()
     ;; 升级到emacs24.5之后，(persp-mode)启动初始化错误，这里重新初始化。
     (load swint-perspectives-saved-file t)
-    (persp-mode t)
+    (persp-mode 1)
     (remove-hook 'ido-make-buffer-list-hook 'persp-set-ido-buffers)
-    (mapc #'(lambda (x)
-              (senny-persp x)
-              (persp-reactivate-buffers
-               (remove nil (mapcar #'get-buffer (symbol-value (intern (format "buffers-in-perspectives-%s" x))))))
-              (ignore-errors (window-state-put (symbol-value (intern (format "window-configuration-of-persp-%s" x)))
-                                               nil t)))
-          swint-persp-names)
-    (persp-switch persp-last-session))
-  (add-hook 'desktop-after-read-hook 'swint-load-perspectives)
+    (cl-loop for x in swint-persp-names do
+             (with-perspective x
+               (persp-reactivate-buffers
+                (remove nil (mapcar #'get-buffer
+                                    (symbol-value (intern (format "buffers-in-perspectives-%s" x))))))
+               (ignore-errors (window-state-put
+                               (symbol-value (intern (format "window-configuration-of-persp-%s" x)))
+                               nil t)))))
+  ;; (add-hook 'desktop-after-read-hook 'swint-load-perspectives)
+  ;; ========emacs开启时加载perspectives========
+;;;; 关闭时保存perspectives
+  ;; ========emacs关闭时保存perspectives========
+  (defun swint-save-perspectives ()
+    (when persp-mode
+      (cl-loop for x in (persp-names) do
+               (swint-persp-switch x)
+               (set (intern (format "window-configuration-of-persp-%s" x)) (window-state-get nil t)))
+      (with-temp-file swint-perspectives-saved-file
+        (insert "(setq swint-persp-names '" (prin1-to-string (persp-names)) ")\n")
+        (insert "(setq persp-projectile-hash '" (prin1-to-string persp-projectile-hash) ")\n")
+        (cl-loop for x in (persp-names) do
+                 (insert (concat (format "(setq buffers-in-perspectives-%s '" x)
+                                 (prin1-to-string
+                                  (remove nil (mapcar #'buffer-name (elt (gethash x perspectives-hash) 2))))
+                                 ")\n"
+                                 (format "(setq window-configuration-of-persp-%s '" x)
+                                 (prin1-to-string
+                                  (symbol-value (intern (format "window-configuration-of-persp-%s" x))))
+                                 ")\n"))))))
   (add-hook 'kill-emacs-hook 'swint-save-perspectives)
   ;; 在不同的persp中关闭同一个buffer时，会产生无效的(persp-point-marker persp)。
   (add-hook 'persp-before-switch-hook '(lambda ()
                                          (unless (marker-position (persp-point-marker persp))
                                            (setf (persp-point-marker persp) (point)))))
-  ;; ========emacs开启时加载perspectives========
+  ;; ========emacs关闭时保存perspectives========
   )
 ;; =================perspective=================
 (provide 'setup_perspective)

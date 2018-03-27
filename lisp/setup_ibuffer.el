@@ -10,7 +10,7 @@
   ;; ======================ibuffer分组===========================
   (def-package! ibuf-ext
     :config
-    (add-hook 'ibuffer-mode-hook '(lambda () (if (not persp-mode)
+    (add-hook 'ibuffer-mode-hook '(lambda () (if (not (bound-and-true-p persp-mode))
                                                  (ibuffer-switch-to-saved-filter-groups "Filename")
                                                (ibuffer-create-saved-filter-groups-with-persp)
                                                (ibuffer-switch-to-saved-filter-groups "Persp"))))
@@ -25,8 +25,8 @@
               (cl-remove-if #'(lambda (x)
                                 (equal (car x) "Persp"))
                             ibuffer-saved-filter-groups))
-             (it (mapcar #'(lambda (x)
-                             (list x (cons 'persp x))) (delete "i" (persp-names))))
+             (it (cl-loop for x in (delete "i" (persp-names))
+                          collect (list x (cons 'persp x))))
              (itt (push "Persp" it)))
         (setq ibuffer-saved-filter-groups
               (push itt ibuffer-saved-filter-groups-without-persp))))
@@ -39,7 +39,7 @@
       (:description "filename" :reader (read-from-minibuffer "Filter by file/directory name (regexp): "))
       (ibuffer-awhen (or (buffer-local-value 'buffer-file-name buf)
                          (buffer-local-value 'dired-directory buf))
-                     (string-match qualifier it)))
+        (string-match qualifier it)))
     (add-to-list 'ibuffer-saved-filter-groups
                  '("Filename"
                    ("Coding" (or

@@ -10,7 +10,7 @@
         (org-refile-keep t))
     (org-refile nil nil (list headline file nil pos) "Copy")))
 
-(defun dired-copy-file-sync-highlight (from to ok-flag)
+(defun dired-copy-file/after (from to ok-flag)
   "Sync dired annotated status when copy files."
   (cl-flet ((annotated-path (x)
                             (concat "annotated-("
@@ -53,9 +53,9 @@
                             (replace-regexp-in-string
                              tar-from-str tar-to-str annotation-storage-file)))))))
 
-(advice-add 'dired-copy-file :after #'dired-copy-file-sync-highlight)
+(advice-add 'dired-copy-file :after #'dired-copy-file/after)
 
-(defun wdired-do-renames-sync-highlight (files-renamed)
+(defun wdired-do-renames/before (files-renamed)
   "Sync dired annotated status in wdired-mode."
   (cl-flet ((annotated-path (x)
                             (concat "annotated-("
@@ -90,7 +90,7 @@
                                           (annotated-path file-renamed-new)
                                           annotation-storage-file)))))))))
 
-(advice-add 'wdired-do-renames :before #'wdired-do-renames-sync-highlight)
+(advice-add 'wdired-do-renames :before #'wdired-do-renames/before)
 
 (defun org-delete-entity-at-point ()
   "Org delete entity at point."
@@ -100,7 +100,7 @@
          (end (org-element-property :end el)))
     (delete-region beg end)))
 
-(defun dired-internal-do-deletions-sync-highlight (l arg &optional trash)
+(defun dired-internal-do-deletions/before (l arg &optional trash)
   "Sync dired annotated status when delete files."
   (let ((files-deleted (mapcar (function car) l))
         (annotated-file-list (if (dired-k--parse-status t)
@@ -126,7 +126,7 @@
                (when annotation-storage-files
                  (mapc 'delete-file annotation-storage-files))))))
 
-(advice-add 'dired-internal-do-deletions :before #'dired-internal-do-deletions-sync-highlight)
+(advice-add 'dired-internal-do-deletions :before #'dired-internal-do-deletions/before)
 
 (provide 'dired-sync-highlight)
 ;;; dired-sync-highlight.el ends here

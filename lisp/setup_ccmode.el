@@ -158,10 +158,10 @@
     (with-current-buffer buf
       (when (derived-mode-p 'c-mode 'C++-mode 'asm-mode)
         (helm-gtags-mode))))
-  (defun helm-gtags--find-tag-simple-fix (fn &rest args)
+  (defun helm-gtags--find-tag-simple/around (fn &rest args)
     (let ((helm-execute-action-at-once-if-one nil))
       (apply fn args)))
-  (advice-add 'helm-gtags--find-tag-simple :around #'helm-gtags--find-tag-simple-fix)
+  (advice-add 'helm-gtags--find-tag-simple :around #'helm-gtags--find-tag-simple/around)
   (setq helm-gtags-ignore-case t
         helm-gtags-auto-update t
         helm-gtags-use-input-at-cursor t

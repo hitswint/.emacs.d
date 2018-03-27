@@ -15,11 +15,11 @@
   ;; ipython默认设置有bug，需要加--simple-prompt选项。
   (setq python-shell-interpreter "ipython"
         python-shell-interpreter-args "-i --simple-prompt --pylab")
-  (defun swint-elpy-shell-switch-to-shell (fn)
+  (defun elpy-shell-switch-to-shell/around (fn)
     (unless pyvenv-virtual-env
       (call-interactively 'pyvenv-workon))
     (funcall fn))
-  (advice-add 'elpy-shell-switch-to-shell :around #'swint-elpy-shell-switch-to-shell))
+  (advice-add 'elpy-shell-switch-to-shell :around #'elpy-shell-switch-to-shell/around))
 ;; ===================pyvenv===================
 ;;; elpy
 ;; ====================elpy====================
@@ -65,7 +65,7 @@
   :bind ("C-M-#" . ein:jupyter-server-start)
   :config
   ;; ein:url-or-port可取8888或http://127.0.0.1(localhost):8888。
-  (defun swint-ein:jupyter-server-start (fn &rest args)
+  (defun ein:jupyter-server-start/around (fn &rest args)
     (interactive
      (lambda (spec)
        (unless (bound-and-true-p pyvenv-virtual-env)
@@ -77,7 +77,7 @@
       (let ((ein:jupyter-server-args '("--no-browser")))
         (apply fn args)
         (set-process-query-on-exit-flag (get-process "EIN: Jupyter notebook server") nil))))
-  (advice-add 'ein:jupyter-server-start :around #'swint-ein:jupyter-server-start)
+  (advice-add 'ein:jupyter-server-start :around #'ein:jupyter-server-start/around)
   ;; 默认补全后端为ac，可选company。
   ;; (setq ein:completion-backend 'ein:use-company-backend)
   ;; Enable "superpack" (a little bit hacky improvements).

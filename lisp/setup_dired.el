@@ -95,22 +95,14 @@
               (make-local-variable 'dired-sort-map)
               (setq dired-sort-map (make-sparse-keymap))
               (define-key dired-mode-map "s" dired-sort-map)
-              (define-key dired-sort-map "s"
-                '(lambda () ;"sort by Size"
-                   (interactive)
-                   (dired-sort-other (concat dired-listing-switches "S"))))
-              (define-key dired-sort-map "x"
-                '(lambda () ;"sort by eXtension"
-                   (interactive)
-                   (dired-sort-other (concat dired-listing-switches "X"))))
-              (define-key dired-sort-map "t"
-                '(lambda () ;"sort by Time"
-                   (interactive)
-                   (dired-sort-other (concat dired-listing-switches "t"))))
-              (define-key dired-sort-map "n"
-                '(lambda () ;"sort by Name"
-                   (interactive)
-                   (dired-sort-other (concat dired-listing-switches ""))))))
+              (define-key dired-sort-map "s" '(lambda () (interactive) ;"sort by Size"
+                                                (dired-sort-other (concat dired-listing-switches "S"))))
+              (define-key dired-sort-map "x" '(lambda () (interactive) ;"sort by eXtension"
+                                                (dired-sort-other (concat dired-listing-switches "X"))))
+              (define-key dired-sort-map "t" '(lambda () (interactive) ;"sort by Time"
+                                                (dired-sort-other (concat dired-listing-switches "t"))))
+              (define-key dired-sort-map "n" '(lambda () (interactive) ;"sort by Name"
+                                                (dired-sort-other (concat dired-listing-switches ""))))))
   ;; ==========setup-and-keybindings===========
 ;;;; 默认文件夹排在最前面
   ;; =========默认文件夹排在最前面=============
@@ -155,7 +147,7 @@
   :bind (:map dired-mode-map
               ("q" . peep-dired))
   :config
-  (defun peep-dired-display-image-other-window (fn)
+  (defun peep-dired-display-file-other-window/around (fn)
     "Use image-dired for peep images."
     (let ((image-entry-name (dired-file-name-at-point))
           (peep-dired-image-extensions '("png" "PNG" "JPG" "jpg" "bmp" "BMP" "jpeg" "JPEG")))
@@ -172,7 +164,7 @@
                            image-dired-display-image-buffer)
                          t)))
         (funcall fn))))
-  (advice-add 'peep-dired-display-file-other-window :around #'peep-dired-display-image-other-window)
+  (advice-add 'peep-dired-display-file-other-window :around #'peep-dired-display-file-other-window/around)
   (advice-add 'peep-dired-disable :after #'(lambda () (if (and (boundp 'image-dired-display-image-buffer)
                                                                (get-buffer image-dired-display-image-buffer))
                                                           (kill-buffer image-dired-display-image-buffer))))
@@ -190,7 +182,7 @@
   :init
   (add-hook 'dired-mode-hook '(lambda () (dired-async-mode 1)))
   :config
-  (defun dired-do-copy-before (&optional arg)
+  (defun dired-do-copy/before (&optional arg)
     "Redefine dired-do-copy to fix conflict between dired-async-mode and dired-sync-highlight."
     (let* ((fn-list (dired-get-marked-files nil arg))
            (fn-list-nodirectory (mapcar 'file-name-nondirectory fn-list))
@@ -200,17 +192,16 @@
                                                   (member x annotated-file-list))
                                                 fn-list-nodirectory))
            (annotation-storage-files
-            (remove nil (mapcar (lambda (from)
-                                  (directory-files "~/org/annotated/" t
-                                                   (concat "annotated-("
-                                                           (replace-regexp-in-string
-                                                            "/" "_"
-                                                            (substring-no-properties
-                                                             (abbreviate-file-name from) 1)))))
-                                fn-list))))
+            (remove nil (cl-loop for from in fn-list
+                                 collect (directory-files "~/org/annotated/" t
+                                                          (concat "annotated-("
+                                                                  (replace-regexp-in-string
+                                                                   "/" "_"
+                                                                   (substring-no-properties
+                                                                    (abbreviate-file-name from) 1))))))))
       (when (or fn-list-annotated annotation-storage-files)
         (dired-async-mode 0))))
-  (advice-add 'dired-do-copy :before #'dired-do-copy-before)
+  (advice-add 'dired-do-copy :before #'dired-do-copy/before)
   (advice-add 'dired-do-copy :after #'(lambda (&optional arg) (dired-async-mode 1))))
 ;; ================dired-async=================
 ;;; dired-narrow
@@ -219,13 +210,13 @@
   :bind (:map dired-mode-map
               ("/" . dired-narrow))
   :config
-  (defun dired-narrow--string-filter-py (filter)
+  (defun dired-narrow--string-filter/override (filter)
     (let ((words (split-string filter " ")))
       (--all? (save-excursion (or (search-forward it (line-end-position) t)
                                   (re-search-forward (pinyinlib-build-regexp-string it)
                                                      (line-end-position) t)))
               words)))
-  (advice-add 'dired-narrow--string-filter :override #'dired-narrow--string-filter-py))
+  (advice-add 'dired-narrow--string-filter :override #'dired-narrow--string-filter/override))
 ;; ===============dired-narrow=================
 ;;; dired-ranger
 ;; ===============dired-ranger=================

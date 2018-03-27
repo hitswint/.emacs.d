@@ -36,13 +36,13 @@
   (define-key isearch-mode-map (kbd "C-t") 'isearch-thing)
   (define-key isearch-mode-map (kbd "C-q") 'isearch-toggle-pinyin)
   ;; 转换后的regexp可能超过长度限制，导致re-search-forward产生"Regular expression too big"错误。
-  (defun swint-pinyin-search--pinyin-to-regexp (pinyin)
+  (defun pinyin-search--pinyin-to-regexp/override (pinyin)
     "Wrap for Pinyin searching."
     (let ((string-converted (pinyinlib-build-regexp-string pinyin nil nil nil)))
       (condition-case nil
           (progn (save-excursion (re-search-forward string-converted nil t)) string-converted)
         (error pinyin))))
-  (advice-add 'pinyin-search--pinyin-to-regexp :override #'swint-pinyin-search--pinyin-to-regexp)
+  (advice-add 'pinyin-search--pinyin-to-regexp :override #'pinyin-search--pinyin-to-regexp/override)
   (add-hook 'isearch-mode-end-hook (lambda () (setq pinyin-search-activated nil))))
 ;; ==================pinyin-search=================
 (provide 'setup_isearch)

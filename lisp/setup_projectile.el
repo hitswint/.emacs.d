@@ -22,10 +22,9 @@
       (with-helm-display-marked-candidates
         helm-marked-buffer-name
         projects
-        (mapc (lambda (p)
-                (persp-kill (file-basename p))
-                (remhash p persp-projectile-hash))
-              projects))))
+        (cl-loop for p in projects do
+                 (persp-kill (file-basename p))
+                 (remhash p persp-projectile-hash)))))
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-j") '(lambda (project)
                                                                           (let ((projectile-completion-system 'helm))
                                                                             (projectile-switch-project-by-name project))))
@@ -71,28 +70,42 @@
   (helm-add-action-to-source "Projectile persp switch project"
                              'projectile-persp-switch-project helm-source-projectile-projects-without-persp 0)
   ;; 设置切换project的默认操作。
-  (setq projectile-switch-project-action 'helm-projectile))
+  (setq projectile-switch-project-action 'helm-projectile)
+  (defun helm-projectile/override (&optional arg)
+    (interactive "P")
+    (let ((curr-buf (current-buffer)))
+      (with-persp-mode-on
+       (helm-switch-persp/buffer curr-buf)
+       (if (projectile-project-p)
+           (projectile-maybe-invalidate-cache arg))
+       (let ((helm-ff-transformer-show-only-basename nil))
+         (helm :sources helm-projectile-sources-list
+               :buffer "*helm projectile*"
+               :truncate-lines helm-projectile-truncate-lines
+               :prompt (projectile-prepend-project-name (if (projectile-project-p)
+                                                            "pattern: "
+                                                          "Switch to project: ")))))))
+  (advice-add 'helm-projectile :override #'helm-projectile/override))
 ;; ==============helm-projectile================
 ;;; persp-projectile
 ;; ================persp-projectile=============
 (def-package! persp-projectile
-  :after helm-projectile
-  :config
+  :commands projectile-persp-switch-project
+  :init
   (bind-key "M-s M-'" 'projectile-persp-switch-project)
-  (defun projectile-persp-switch-project-update-hash (project-to-switch)
+  (defvar persp-projectile-hash (make-hash-table :test 'equal))
+  :config
+  (defun projectile-persp-switch-project/after (project-to-switch)
     (projectile-add-known-project project-to-switch)
-    (unless (bound-and-true-p persp-projectile-hash)
-      (setq persp-projectile-hash (make-hash-table :test 'equal)))
     ;; 将project-to-switch加入persp-projectile-hash中。
     (puthash project-to-switch
              (file-name-nondirectory (directory-file-name project-to-switch))
              persp-projectile-hash)
     ;; 删除不在projectile-known-projects中的project。
-    (mapc #'(lambda (x) (remhash x persp-projectile-hash))
-          (cl-remove-if (lambda (x)
-                          (member x projectile-known-projects))
-                        (hash-table-keys persp-projectile-hash))))
+    (cl-loop for p in (hash-table-keys persp-projectile-hash)
+             do (unless (member p projectile-known-projects)
+                  (remhash p persp-projectile-hash))))
   (advice-add 'projectile-persp-switch-project :after
-              #'projectile-persp-switch-project-update-hash))
+              #'projectile-persp-switch-project/after))
 ;; ================persp-projectile=============
 (provide 'setup_projectile)

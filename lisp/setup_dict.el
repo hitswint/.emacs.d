@@ -9,7 +9,7 @@
       ("g" . google-translate-to-tip)
       ("y" . youdao-dictionary-to-tip)))
   :config
-  (defun bing-dict-brief-cb-action (&rest args)
+  (defun bing-dict-brief-cb/after (&rest args)
     "Output translation to pos-tip or *online* buffer."
     (if (get-buffer "*online*")
         (with-current-buffer "*online*"
@@ -17,7 +17,7 @@
           (insert (concat "*** Bing Dict\n"))
           (insert (concat (current-message) "\n")))
       (pos-tip-show (current-message) nil nil nil 0)))
-  (advice-add 'bing-dict-brief-cb :after #'bing-dict-brief-cb-action)
+  (advice-add 'bing-dict-brief-cb :after #'bing-dict-brief-cb/after)
   (defun bing-dict-brief-cb-at-point (&optional _word)
     "Search word at point."
     (interactive)
@@ -39,11 +39,11 @@
   (setq google-translate-translation-directions-alist
         '(("en" . "zh-CN") ("zh-CN" . "en")))
   :config
-  (defun google-translate-current-buffer-output-translation-with-detail (gtos)
+  (defun google-translate-current-buffer-output-translation/override (gtos)
     "Output translation to current buffer."
     (google-translate-buffer-insert-translation gtos))
   (advice-add 'google-translate-current-buffer-output-translation :override
-              #'google-translate-current-buffer-output-translation-with-detail)
+              #'google-translate-current-buffer-output-translation/override)
   (defun google-translate-to-tip (&optional _word)
     "Search WORD simple translate result."
     (interactive)

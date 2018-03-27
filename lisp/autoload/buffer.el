@@ -120,7 +120,8 @@ FILENAME defaults to `buffer-file-name'."
   "Switch to prev buffer before killing current."
   (interactive)
   (let ((curr-buf (current-buffer))
-        (prev-buf (car (or (swint-filter-buffer-list (mapcar #'(lambda (x) (car x)) (window-prev-buffers)))
+        (prev-buf (car (or (swint-filter-buffer-list (cl-loop for x in (window-prev-buffers)
+                                                              collect (car x)))
                            (swint-filter-buffer-list (buffer-list (selected-frame)) t)))))
     (bc-set)
     (switch-to-buffer prev-buf)
@@ -128,17 +129,19 @@ FILENAME defaults to `buffer-file-name'."
 ;;;###autoload
 (defun swint-filter-buffer-list (buffers &optional include-current)
   "Remove buffers that are ignored or belong to other persps from buffers."
-  (let ((curr-buf-name (buffer-name (current-buffer))))
-    (append (delete curr-buf-name
-                    (delq nil
-                          (mapcar
-                           (lambda (x)
-                             (unless (swint-iswitchb-ignore-buffername-p x) x))
-                           ;; 只使用(persp-buffers persp-curr)产生的buffer list顺序不对，无法切换回之前的buffer。
-                           (cl-remove-if-not (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
-                                             (mapcar 'buffer-name buffers)))))
-            (if include-current
-                curr-buf-name))))
+  (let* ((curr_name (buffer-name (current-buffer)))
+         (buffers_name (mapcar 'buffer-name buffers))
+         (buffers-persp-curr
+          (or (and (bound-and-true-p persp-mode)
+                   ;; 只使用(persp-buffers persp-curr)产生的buffer list顺序不对，无法切换回之前的buffer。
+                   (cl-remove-if-not
+                    (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))
+                    buffers_name))
+              buffers_name)))
+    (append (delete curr_name
+                    (delq nil (cl-loop for x in buffers-persp-curr
+                                       collect (unless (swint-iswitchb-ignore-buffername-p x) x))))
+            (if include-current curr_name))))
 (defun swint-iswitchb-ignore-buffername-p (bufname)
   "Return t if the buffer BUFNAME should be ignored."
   (let ((data (match-data))

@@ -55,50 +55,57 @@
   (define-key helm-map (kbd "C-M-n") 'helm-next-source)
   (define-key helm-map (kbd "M-U") 'helm-unmark-all)
   (define-key helm-map (kbd "M-T") 'helm-toggle-all-marks)
+  (define-key helm-map (kbd "C-,") 'swint-helm-file-buffers-after-quit)
+  (define-key helm-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
+  (define-key helm-map (kbd "C-'") 'swint-helm-bookmarks-after-quit)
+  (define-key helm-map (kbd "M-'") 'swint-helm-projectile-after-quit)
+  (define-key helm-map (kbd "M-RET") 'helm-quit-and-find-file)
   (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)
   (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
   (define-key helm-find-files-map (kbd "M-U") 'helm-unmark-all)
   (define-key helm-find-files-map (kbd "M-T") 'helm-toggle-all-marks)
   (define-key helm-find-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
+  (define-key helm-find-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
+  (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
+  (define-key helm-generic-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
+  (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
+  (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
   (define-key helm-buffer-map (kbd "C-M-j") 'swint-helm-buffer-persp-add-buffers)
   (define-key helm-buffer-map (kbd "C-M-k") 'swint-helm-buffer-persp-remove-buffers)
   (define-key helm-buffer-map (kbd "C-o") 'swint-helm-buffer-switch-persp/other-window)
   (define-key helm-read-file-map (kbd "C-l") 'helm-execute-persistent-action)
   (define-key helm-read-file-map (kbd "C-h") 'helm-find-files-up-one-level)
   (define-key helm-grep-map (kbd "C-o") 'helm-grep-run-other-window-action)
-  (define-key helm-generic-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
-  (define-key helm-map (kbd "C-,") 'swint-helm-file-buffers-after-quit)
-  (define-key helm-map (kbd "C-.") 'swint-helm-dired-buffers-after-quit)
-  (define-key helm-map (kbd "C-'") 'swint-helm-bookmarks-after-quit)
-  (define-key helm-map (kbd "M-'") 'swint-helm-projectile-after-quit)
-  (define-key helm-map (kbd "M-RET") 'helm-quit-and-find-file)
-  (define-key helm-find-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
-  (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
-  (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
-  (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
   (define-key helm-command-map (kbd "u") 'helm-unicode)
   ;; ===============keybindings=================
 ;;;; helm-pinyin
   ;; ================helm-pinyin================
   (require 'iswitchb-pinyin)
   ;; 支持中文拼音首字母匹配，会使helm-find-files匹配过多。
-  (cl-defun helm-mm-3-match-py (orig-fn str &rest args)
+  (cl-defun helm-mm-3-match/around (orig-fn str &rest args)
     (apply orig-fn (concat str "|" (str-unicode-to-pinyin-initial str)) args))
-  (advice-add 'helm-mm-3-match :around #'helm-mm-3-match-py)
+  (advice-add 'helm-mm-3-match :around #'helm-mm-3-match/around)
   ;; 默认在输入前面加空格解决匹配问题。
-  (defun helm-find-files-1-py (orig-fn fname &rest args)
+  (defun helm-find-files-1/around (orig-fn fname &rest args)
     (apply orig-fn (concat fname " ") args))
-  (advice-add 'helm-find-files-1 :around #'helm-find-files-1-py)
+  (advice-add 'helm-find-files-1 :around #'helm-find-files-1/around)
   ;; ================helm-pinyin================
 ;;;; helm-file-buffer
   ;; ============helm-file-buffer===============
+  (defmacro swint-buffer-dired/persp-boolean (is-dired is-persp-curr)
+    (let ((cl-remove-op (if (null is-dired) 'cl-remove-if 'cl-remove-if-not))
+          (dired-op (if (null is-dired) 'or 'and))
+          (persp-curr-op (if (eq is-dired is-persp-curr) 'or 'not))
+          (type (if (null is-dired) "file" "dired")))
+      `(or (,cl-remove-op (lambda (x) (,dired-op (equal (buffer-mode x) 'dired-mode)
+                                                 (,persp-curr-op (and (bound-and-true-p persp-mode)
+                                                                      (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr))))))))
+                          (helm-buffer-list))
+           (list (buffer-name (get-buffer-create (format "*helm %s buffers-swint*" ,type)))))))
   (defun swint-helm-file-buffers-list--init/curr-persp ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
     (setq swint-helm-file-buffers-list-cache/curr-persp
-          (or (cl-remove-if (lambda (x) (or (equal (buffer-mode x) 'dired-mode)
-                                            (not (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))))
-                            (helm-buffer-list))
-              '("*helm file buffers-swint*")))
+          (swint-buffer-dired/persp-boolean nil 1))
     (let ((result (cl-loop for b in swint-helm-file-buffers-list-cache/curr-persp
                            maximize (length b) into len-buf
                            maximize (length (with-current-buffer b
@@ -112,10 +119,7 @@
   (defun swint-helm-file-buffers-list--init/other-persps ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
     (setq swint-helm-file-buffers-list-cache/other-persps
-          (or (cl-remove-if (lambda (x) (or (equal (buffer-mode x) 'dired-mode)
-                                            (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr))))))
-                            (helm-buffer-list))
-              '("*helm file buffers-swint*")))
+          (swint-buffer-dired/persp-boolean nil nil))
     (let ((result (cl-loop for b in swint-helm-file-buffers-list-cache/other-persps
                            maximize (length b) into len-buf
                            maximize (length (with-current-buffer b
@@ -176,9 +180,7 @@
     ((init :initform (lambda () (recentf-mode 1)))
      (candidates :initform (lambda () (cl-remove-if (lambda (x)
                                                       (or (file-directory-p x)
-                                                          (member x (mapcar (lambda (xx)
-                                                                              (buffer-file-name xx))
-                                                                            (buffer-list)))))
+                                                          (member x (mapcar 'buffer-file-name (buffer-list)))))
                                                     recentf-list)))
      (pattern-transformer :initform 'helm-recentf-pattern-transformer)
      (match-part :initform (lambda (candidate)
@@ -223,10 +225,7 @@
   (defun swint-helm-dired-buffers-list--init/curr-persp ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
     (setq swint-helm-dired-buffers-list-cache/curr-persp
-          (or (cl-remove-if-not (lambda (x) (and (equal (buffer-mode x) 'dired-mode)
-                                                 (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr))))))
-                                (helm-buffer-list))
-              '("*helm dired buffers-swint*")))
+          (swint-buffer-dired/persp-boolean 1 1))
     (let ((result (cl-loop for b in swint-helm-dired-buffers-list-cache/curr-persp
                            maximize (length b) into len-buf
                            maximize (length (with-current-buffer b
@@ -240,10 +239,7 @@
   (defun swint-helm-dired-buffers-list--init/other-persps ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
     (setq swint-helm-dired-buffers-list-cache/other-persps
-          (or (cl-remove-if-not (lambda (x) (and (equal (buffer-mode x) 'dired-mode)
-                                                 (not (member x (remq nil (mapcar 'buffer-name (persp-buffers persp-curr)))))))
-                                (helm-buffer-list))
-              '("*helm dired buffers-swint*")))
+          (swint-buffer-dired/persp-boolean 1 nil))
     (let ((result (cl-loop for b in swint-helm-dired-buffers-list-cache/other-persps
                            maximize (length b) into len-buf
                            maximize (length (with-current-buffer b
@@ -304,11 +300,10 @@
     ((init :initform (lambda () (recentf-mode 1)))
      (candidates :initform (lambda () (cl-remove-if (lambda (x)
                                                       (or (not (file-directory-p x))
-                                                          (member x (mapcar (lambda (xx)
-                                                                              (expand-file-name (buffer-local-value 'default-directory xx)))
-                                                                            (cl-remove-if-not (lambda (x)
-                                                                                                (equal (buffer-mode x) 'dired-mode))
-                                                                                              (buffer-list))))))
+                                                          (member x (cl-loop for xx in (cl-remove-if-not (lambda (x)
+                                                                                                           (equal (buffer-mode x) 'dired-mode))
+                                                                                                         (buffer-list))
+                                                                             collect (expand-file-name (buffer-local-value 'default-directory xx))))))
                                                     recentf-list)))
      (pattern-transformer :initform 'helm-recentf-pattern-transformer)
      (match-part :initform (lambda (candidate)
@@ -352,17 +347,18 @@
   ;; =========helm-related-to-persp=============
   (defun helm-switch-persp/buffer (BUFFER-OR-NAME)
     "Helm-switch to persp/buffer simultaneously."
-    (let ((swint-all-persps (nreverse (cons  "i" (nreverse (delete "i" (persp-names))))))
-          (buffer (get-buffer BUFFER-OR-NAME)))
-      (cl-loop for persp in swint-all-persps
-               when (or (memq buffer (persp-buffers (gethash persp perspectives-hash)))
-                        (string-equal persp "i"))
-               do (if (memq buffer (persp-buffers persp-curr))
-                      (switch-to-buffer buffer)
-                    (swint-persp-switch persp)
-                    (if (window-live-p (get-buffer-window buffer))
-                        (select-window (get-buffer-window buffer))
-                      (switch-to-buffer buffer))))))
+    (let ((buffer (get-buffer BUFFER-OR-NAME)))
+      (if (bound-and-true-p persp-mode)
+          (cl-loop for persp in (nreverse (cons  "i" (nreverse (delete "i" (persp-names)))))
+                   when (or (memq buffer (persp-buffers (gethash persp perspectives-hash)))
+                            (string-equal persp "i"))
+                   do (if (memq buffer (persp-buffers persp-curr))
+                          (switch-to-buffer buffer)
+                        (swint-persp-switch persp)
+                        (if (window-live-p (get-buffer-window buffer))
+                            (select-window (get-buffer-window buffer))
+                          (switch-to-buffer buffer))))
+        (switch-to-buffer buffer))))
   (defun swint-helm-buffer-switch-persp/other-window ()
     "Run switch-persp/other-window action from `helm-source-buffers-list'."
     (interactive)
@@ -380,7 +376,8 @@
       (helm-exit-and-execute-action 'swint-helm-persp-remove-buffers)))
   (defun swint-helm-switch-persp/other-window (buffer)
     "Helm-switch to persp/other-window simultaneously."
-    (if (memq buffer (persp-buffers persp-curr))
+    (if (or (not (bound-and-true-p persp-mode))
+            (memq buffer (persp-buffers persp-curr)))
         (switch-to-buffer-other-window buffer)
       (let ((curr-buf (current-buffer)))
         (swint-persp-switch "i")

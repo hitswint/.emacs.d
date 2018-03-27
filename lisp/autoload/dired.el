@@ -145,8 +145,7 @@
 ;;;###autoload
 (defun dired-async-shell-command-on-files ()
   (interactive)
-  (mapc #'(lambda (file) (dired-async-shell-command file))
-        (dired-get-marked-files))
+  (mapc #'dired-async-shell-command (dired-get-marked-files))
   (dired-unmark-all-files ?*))
 ;;;###autoload
 (defun dired-async-shell-command (file)
