@@ -52,17 +52,21 @@
 ;;; skewer-mode
 ;; ================skewer-mode=================
 (def-package! skewer-mode
-  :diminish (skewer-mode
-             skewer-css-mode
-             skewer-html-mode)
-  :commands (skewer-mode
-             skewer-css-mode
-             skewer-html-mode)
+  :diminish skewer-mode
+  :commands skewer-mode
   :init
-  (add-hook 'js2-mode-hook 'skewer-mode)
-  (add-hook 'css-mode-hook 'skewer-css-mode)
+  (add-hook 'js2-mode-hook 'skewer-mode))
+(def-package! skewer-html
+  :diminish skewer-html-mode
+  :commands skewer-html-mode
+  :init
   (add-hook 'html-mode-hook 'skewer-html-mode)
   (add-hook 'web-mode-hook 'skewer-html-mode))
+(def-package! skewer-css
+  :diminish skewer-css-mode
+  :commands skewer-css-mode
+  :init
+  (add-hook 'css-mode-hook 'skewer-css-mode))
 ;; ================skewer-mode=================
 ;;; emmet-mode
 ;; ================emmet-mode==================

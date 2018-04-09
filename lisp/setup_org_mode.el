@@ -539,7 +539,8 @@
 ;; =========org-protocol-capture-html===========
 (def-package! org-protocol-capture-html
   :load-path "site-lisp/org-protocol-capture-html/"
-  :after org-protocol
+  :after org
+  :defer 2
   :config
   (add-to-list 'org-capture-templates
                '("w" "Web" entry (file+olp "~/Nutstore-sync/orgzly/orgzly.org" "Web")
