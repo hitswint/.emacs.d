@@ -123,5 +123,8 @@
 (global-set-key (kbd "C-x p") 'swint-insert-screenshot)
 (global-set-key (kbd "C-x P") '(lambda () (interactive) (swint-insert-screenshot t)))
 (global-set-key (kbd "M-g v") 'iimage-mode)
+(global-set-key (kbd "M-s ,") '(lambda () (interactive) (swint-dired-rsync/unison "pull")))
+(global-set-key (kbd "M-s .") '(lambda () (interactive) (swint-dired-rsync/unison "push")))
+(global-set-key (kbd "M-s /") '(lambda () (interactive) (swint-dired-rsync/unison "sync")))
 ;; ================Keybindings==================
 (provide 'setup_default)

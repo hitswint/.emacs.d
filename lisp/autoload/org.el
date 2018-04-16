@@ -7,26 +7,23 @@
          (equal (org-element-type headline) 'headline)
          (equal (org-element-property :level headline) 1))))
 (defun swint-get-annotated-file ()
-  (if (ignore-errors (org-at-top-heading-p))
-      (concat "~"
-              (if (string-prefix-p "annotated-(" (file-name-nondirectory (buffer-file-name)))
-                  (replace-regexp-in-string
-                   "_" "/" (substring-no-properties (file-name-nondirectory (buffer-file-name)) 11 -5)))
-              (car (last (split-string (substring-no-properties (org-get-heading) nil -2) "\\[file:") 1)))))
+  (when (and (ignore-errors (org-at-top-heading-p))
+             (string-prefix-p "annotated-(" (file-name-nondirectory (buffer-file-name))))
+    (concat "~"
+            (replace-regexp-in-string
+             "_" "/" (substring-no-properties (file-name-nondirectory (buffer-file-name)) 11 -5))
+            (car (last (split-string (substring-no-properties (org-get-heading) nil -2) "\\[file:") 1)))))
 ;;;###autoload
 (defun swint-org-open-at-point (&optional in-emacs)
   "Open annotated file if annotation storage file exists."
   (interactive)
   (let* ((annotated-file (swint-get-annotated-file))
-         (key (ignore-errors (car (save-excursion (org-ref-get-bibtex-key-and-file)))))
-         (pdf-file (car (bibtex-completion-find-pdf key))))
-    (cond
-     ((and annotated-file (file-exists-p annotated-file))
-      (org-open-file annotated-file in-emacs))
-     ((and pdf-file (file-exists-p pdf-file))
-      (org-open-file pdf-file in-emacs))
-     (t
-      (org-open-at-point in-emacs)))))
+         (cite-results (ignore-errors (save-excursion (org-ref-get-bibtex-key-and-file))))
+         (cite-file (and (cdr cite-results) (car (bibtex-completion-find-pdf (car cite-results)))))
+         (file-at-point (or annotated-file cite-file)))
+    (if (and file-at-point (file-exists-p file-at-point))
+        (org-open-file file-at-point in-emacs)
+      (org-open-at-point in-emacs))))
 ;;;###autoload
 (defun swint-org-open-at-point-with-apps ()
   (interactive)
