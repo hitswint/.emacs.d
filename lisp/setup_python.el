@@ -30,20 +30,12 @@
   (setq elpy-remove-modeline-lighter nil)
   :config
   (elpy-enable)
-  ;; 同时安装jedi/rope时默认采用rope，手动设置以便采用jedi后端。
-  (setq elpy-rpc-backend "jedi")
   (setq elpy-rpc-timeout nil)
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (define-key elpy-mode-map (kbd "M-.") nil)
-  (define-key elpy-mode-map (kbd "C-c C-c") '(lambda (arg) (interactive "P")
-                                               (if arg (elpy-use-cpython)
-                                                 (elpy-use-ipython)
-                                                 (setq python-shell-interpreter-args "--simple-prompt --pylab"))
-                                               (call-interactively 'elpy-shell-send-region-or-buffer)))
   (define-key elpy-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key elpy-mode-map (kbd "C-c C-.") 'pop-tag-mark)
   (define-key elpy-mode-map (kbd "C-c C-/") 'elpy-doc)
-  (define-key elpy-mode-map (kbd "C-c c") 'ein:connect-to-notebook-command)
   (define-key inferior-python-mode-map (kbd "C-q") 'comint-send-eof)
   (define-key inferior-python-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key inferior-python-mode-map (kbd "C-c C-.") 'pop-tag-mark)
@@ -80,7 +72,6 @@
   (advice-add 'ein:jupyter-server-start :around #'ein:jupyter-server-start/around)
   ;; 默认补全后端为ac，可选company。
   ;; (setq ein:completion-backend 'ein:use-company-backend)
-  ;; Enable "superpack" (a little bit hacky improvements).
   (setq ein:use-auto-complete-superpack t)
   (setq ein:use-smartrep t)
   (def-package! ein-notebook
@@ -95,7 +86,8 @@
     (define-key ein:notebook-mode-map (kbd "C-c C-,") 'ein:pytools-jump-to-source-command)
     (define-key ein:notebook-mode-map (kbd "C-c C-.") 'ein:pytools-jump-back-command))
   (def-package! ein-connect
-    :commands ein:connect-to-notebook-command
+    :bind (:map python-mode-map
+                ("C-c c" . ein:connect-to-notebook-command))
     :config
     ;; 在ein:connect中关闭company的自动补全。
     (add-hook 'ein:connect-mode-hook '(lambda ()

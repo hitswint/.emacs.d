@@ -558,9 +558,7 @@
 ;;; helm-descbinds
 ;; ==============helm-descbinds=================
 (def-package! helm-descbinds
-  :commands helm-descbinds
-  :config
-  (helm-descbinds-mode))
+  :commands helm-descbinds)
 ;; ==============helm-descbinds=================
 ;;; helm-imenu
 ;; ================helm-imenu===================

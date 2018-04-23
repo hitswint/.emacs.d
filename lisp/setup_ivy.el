@@ -54,6 +54,7 @@
 ;; ===================counsel======================
 (def-package! counsel
   ;; 按键逻辑：helm(C-x c x)/counsel(M-s c x)。
+  :commands counsel-read-file-for-rsync
   :bind (("M-X" . counsel-M-x)
          ("C-x C-r" . swint-counsel-history)
          ("M-s c u" . counsel-unicode-char)
@@ -92,6 +93,28 @@
       (when (and collection (> (length collection) 0)
                  (setq val (if (= 1 (length collection)) (car collection)
                              (ivy-read (format "Bash/Zsh history:") collection))))
-        (insert val)))))
+        (insert val))))
+  (defun counsel-read-file-for-rsync (files &optional initial-input)
+    "Forward to `find-file'.
+When INITIAL-INPUT is non-nil, use it in the minibuffer during completion."
+    (interactive)
+    (ivy-read "Find file: " 'read-file-name-internal
+              :matcher #'counsel--find-file-matcher
+              :initial-input initial-input
+              :action #'(lambda (x) (with-ivy-window
+                                      (if (and counsel-find-file-speedup-remote
+                                               (file-remote-p ivy--directory))
+                                          (let ((find-file-hook nil))
+                                            (setf (symbol-value files)
+                                                  (append (symbol-value files)
+                                                          (last (split-string (expand-file-name x ivy--directory) ":")))))
+                                        (setf (symbol-value files)
+                                              (append (symbol-value files)
+                                                      (last (split-string (expand-file-name x ivy--directory) ":")))))))
+              :preselect (counsel--preselect-file)
+              :require-match 'confirm-after-completion
+              :history 'file-name-history
+              :keymap counsel-find-file-map
+              :caller 'counsel-find-file)))
 ;; ===================counsel======================
 (provide 'setup_ivy)

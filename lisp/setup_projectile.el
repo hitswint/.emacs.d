@@ -16,6 +16,8 @@
   :bind ("M-'" . helm-projectile)
   :config
   (helm-projectile-on)
+  ;; 设置切换project的默认操作。
+  (setq projectile-switch-project-action 'helm-projectile)
   (defun helm-projectile-kill-persp (_ignore)
     "Kill selected persps for projects."
     (let* ((projects (helm-marked-candidates :with-wildcard t)))
@@ -61,23 +63,23 @@
       :mode-line helm-read-file-name-mode-line-string
       :action 'helm-source-projectile-projects-actions)
     "Helm source for known projectile projects.")
-  (setq helm-projectile-sources-list '(helm-source-projectile-projects-with-persp
-                                       helm-source-projectile-projects-without-persp
-                                       helm-source-projectile-files-list
-                                       helm-source-projectile-buffers-list))
   (helm-add-action-to-source "Projectile persp switch project"
                              'projectile-persp-switch-project helm-source-projectile-projects-with-persp 0)
   (helm-add-action-to-source "Projectile persp switch project"
                              'projectile-persp-switch-project helm-source-projectile-projects-without-persp 0)
-  ;; 设置切换project的默认操作。
-  (setq projectile-switch-project-action 'helm-projectile)
   (defun helm-projectile/override (&optional arg)
     (interactive "P")
     (let ((curr-buf (current-buffer)))
       (with-persp-mode-on
        (helm-switch-persp/buffer curr-buf)
-       (if (projectile-project-p)
-           (projectile-maybe-invalidate-cache arg))
+       (if (not (projectile-project-p))
+           (setq helm-projectile-sources-list '(helm-source-projectile-projects-with-persp
+                                                helm-source-projectile-projects-without-persp))
+         (projectile-maybe-invalidate-cache arg)
+         (setq helm-projectile-sources-list '(helm-source-projectile-projects-with-persp
+                                              helm-source-projectile-projects-without-persp
+                                              helm-source-projectile-files-list
+                                              helm-source-projectile-buffers-list)))
        (let ((helm-ff-transformer-show-only-basename nil))
          (helm :sources helm-projectile-sources-list
                :buffer "*helm projectile*"

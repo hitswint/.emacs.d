@@ -269,9 +269,10 @@ Assuming .. and . is a current directory (like in FAR)"
               (message (concat "Cannot determine size of " filename)))))
       (view-file file))))
 ;; ==========dired-view-file-or-dir==========
-;; ============swint-dired-rsync=============
+;;; swint-dired-rsync/unison
+;; =========swint-dired-rsync/unison=========
 ;;;###autoload
-(defun swint-dired-rsync/unison (arg)
+(defun swint-dired-rsync/unison (action)
   (interactive)
   (let ((remote (completing-read "Remote repo: "
                                  (split-string
@@ -279,26 +280,36 @@ Assuming .. and . is a current directory (like in FAR)"
                                    "cat ~/.ssh/config | grep \"^host \" | awk '{print $2}'"))))
         (path (abbreviate-file-name default-directory))
         rsync/unison-command)
-    (if (equal arg "sync")
+    (if (equal action "sync")
         (setq rsync/unison-command (concat "unison -batch -confirmbigdel=false " path
                                            " ssh://" remote "//" (file-truename path)))
-      (let ((files (cond ((equal arg "push")
-                          (dired-get-marked-files nil current-prefix-arg))
-                         ((equal arg "pull")
-                          (let ((remote-files (helm-comp-read "Remote files: "
-                                                              (split-string
-                                                               (shell-command-to-string
-                                                                ;; 连接remote列出path下文件绝对路径，并不显示错误信息。
-                                                                (format "ssh %s '(cd %s && ls -A | sed \"s:^:`pwd`/:\") 2>/dev/null'"
-                                                                        remote path)))
-                                                              :marked-candidates t
-                                                              :buffer (format "*helm rsync/unison %s*" remote))))
+      (let ((files (cond ((equal action "push")
+                          (dired-get-marked-files))
+                         ((equal action "pull")
+                          (let (remote-files)
+                            (if current-prefix-arg
+                                (counsel-read-file-for-rsync 'remote-files (format "/ssh:%s:~/" remote))
+                              (setq remote-files
+                                    (helm-comp-read "Remote files: "
+                                                    (split-string (shell-command-to-string
+                                                                   ;; 连接remote列出path下文件绝对路径，并不显示错误信息。
+                                                                   (format "ssh %s '(cd %s && ls -A | sed \"s:^:`pwd`/:\") 2>/dev/null'"
+                                                                           remote path)))
+                                                    :marked-candidates t
+                                                    :buffer (format "*helm rsync/unison %s*" remote))))
                             (cl-loop for f in remote-files
-                                     collect (concat remote ":" f))))))
-            (dest (cond ((equal arg "pull")
+                                     collect (concat remote ":" (if (directory-name-p f)
+                                                                    (directory-file-name f)
+                                                                  f)))))))
+            (dest (cond ((equal action "pull")
                          path)
-                        ((equal arg "push")
-                         (concat remote ":" path)))))
+                        ((equal action "push")
+                         (let (remote-files)
+                           (if current-prefix-arg
+                               (directory-file-name
+                                (car (split-string (counsel-read-file-for-rsync
+                                                    'remote-files (format "/ssh:%s:~/" remote)) "/ssh:" t)))
+                             (concat remote ":" path)))))))
         (setq rsync/unison-command "rsync -arvz --progress ")
         (dolist (file files)
           (setq rsync/unison-command
@@ -306,7 +317,7 @@ Assuming .. and . is a current directory (like in FAR)"
         (setq rsync/unison-command (concat rsync/unison-command dest))))
     (let ((process (start-process-shell-command "rsync/unison" "*rsync/unison*" rsync/unison-command)))
       (lexical-let ((pos (memq 'mode-line-modes mode-line-format))
-                    (mode-string arg))
+                    (mode-string action))
         (setcdr pos (cons (concat "Rsync/Unison " mode-string " ") (cdr pos)))
         (set-process-sentinel
          process
@@ -314,4 +325,4 @@ Assuming .. and . is a current directory (like in FAR)"
            (when (memq (process-status process) '(exit signal))
              (message "Rsync/Unison %s done." mode-string)
              (setcdr pos (remove (concat "Rsync/Unison " mode-string " ") (cdr pos))))))))))
-;; ============swint-dired-rsync=============
+;; =========swint-dired-rsync/unison=========
