@@ -136,3 +136,15 @@
                   (point-max))))
       (delete-region (point-max) prev-point-max))))
 ;; ============show-some-last-messages=============
+;;; swint-helm-firefox-bookmarks
+;; ========swint-helm-firefox-bookmarks============
+;;;###autoload
+(defun swint-helm-firefox-bookmarks ()
+  (let ((helm-full-frame t))
+    (set-frame-position
+     (selected-frame)
+     (/ (- (x-display-pixel-width) (frame-pixel-width)) 2)
+     (/ (- (x-display-pixel-height) (frame-pixel-height)) 2))
+    (helm-firefox-bookmarks)
+    (delete-frame)))
+;; ========swint-helm-firefox-bookmarks============
