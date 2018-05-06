@@ -21,7 +21,7 @@ done
 xte_selectall()
 {
     case $xwin_title in
-        *Mozilla\ Firefox* | *Microsoft\ Word* )
+        *emacs@* | *Microsoft\ Word* )
             xte <<EOF
 sleep 1
 keydown Control_L
@@ -48,7 +48,7 @@ then
 fi
 xwin_title=`xwininfo -id $xwin_id | sed -ne 's/xwininfo: .*"\([^"]\+\)"/\1/p'`
 
-Emacs_style='^.*(Mozilla Firefox|Microsoft Word)$'
+Emacs_style='^.*(emacs@|Microsoft Word).*$'
 
 if [ $sel ]; then
     xte_selectall

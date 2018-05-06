@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+function widget-x-kill-region () {
+    zle kill-region
+    print -rn $CUTBUFFER | xsel -i -b
+}
+
+widget-x-kill-region "$@"

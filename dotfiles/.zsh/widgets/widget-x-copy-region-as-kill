@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+function widget-x-copy-region-as-kill () {
+    zle copy-region-as-kill
+    print -rn $CUTBUFFER | xsel -i -b
+    zle deactivate-region
+}
+
+widget-x-copy-region-as-kill "$@"

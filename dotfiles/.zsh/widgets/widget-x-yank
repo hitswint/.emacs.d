@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+function widget-x-yank () {
+    CUTBUFFER=$(xsel -o -b </dev/null)
+    zle yank
+}
+
+widget-x-yank "$@"

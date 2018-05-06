@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+# Inserts the last typed word again.
+function widget-insert-last-typed-word () {
+  zle insert-last-word -- 0 -1
+}
+widget-insert-last-typed-word "$@"

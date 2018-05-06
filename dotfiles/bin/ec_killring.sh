@@ -7,7 +7,7 @@ then
 fi
 xwin_title=`xwininfo -id $xwin_id | sed -ne 's/xwininfo: .*"\([^"]\+\)"/\1/p'`
 
-Emacs_style='^.*(Mozilla Firefox|Microsoft Word)$'
+Emacs_style='^.*(emacs@|Microsoft Word).*$'
 
 run-or-raise.sh emacs
 

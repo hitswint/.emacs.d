@@ -41,7 +41,7 @@ define_modmap({Key.CAPSLOCK: Key.LEFT_CTRL})
 
 # * Emacs-like keybindings in non-Emacs applications
 define_keymap(
-    lambda wm_class: wm_class not in ("emacs_Emacs", "urxvt_URxvt", "Navigator_Firefox-esr", "WINWORD.EXE_Wine", "scratchpad_URxvt"),
+    lambda wm_class: wm_class and wm_class[-1] not in ("Emacs", "URxvt") and wm_class[0] not in ("WINWORD.EXE"),
     {
         # Cursor
         K("C-b"): with_mark(K("left")),

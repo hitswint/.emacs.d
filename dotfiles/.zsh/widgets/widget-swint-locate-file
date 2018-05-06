@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+function widget-swint-locate-file()
+{
+    local selected=$(locate ~/ | percol)
+    if [ $? -eq 0 ]; then
+        local new_left="${LBUFFER} ${selected} "
+        BUFFER=${new_left}${RBUFFER}
+        CURSOR=${#new_left}
+    fi
+    zle reset-prompt
+}
+
+widget-swint-locate-file "$@"

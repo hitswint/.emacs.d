@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+# List all commands available in the current shell.
+function iosource-list-commands() {
+    # $functions is an associative array of function names to definitions.
+    # k: expand only keys, i.e. function names
+    # j: join with the null byte (\0).
+    # #_*: filter function names that begin with an underscore
+    local shell_functions=${(kj:\n:)functions#_}
+    local external_commands=${(kj:\n:)commands}
+    print -- $shell_functions\n$external_commands
+}
+
+iosource-list-commands "$@"

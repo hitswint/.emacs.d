@@ -49,12 +49,15 @@
                (define-key w3m-mode-map [(\Q)] '(lambda () (interactive) (w3m-quit 1)))
                (define-key w3m-mode-map (kbd "o") 'w3m-open-site-current-session)
                (define-key w3m-mode-map (kbd "O") 'w3m-open-site-new-session)
-               (define-key w3m-mode-map (kbd "C-o b") '(lambda () (interactive)
-                                                         (w3m-new-tab)
-                                                         (w3m-browse-url "cn.bing.com")))
-               (define-key w3m-mode-map (kbd "C-o g") '(lambda () (interactive)
-                                                         (w3m-new-tab)
-                                                         (w3m-browse-url "www.google.com"))))))
+               (define-key w3m-mode-map (kbd "` b") '(lambda () (interactive)
+                                                       (w3m-new-tab)
+                                                       (w3m-browse-url "www.baidu.com")))
+               (define-key w3m-mode-map (kbd "` g") '(lambda () (interactive)
+                                                       (w3m-new-tab)
+                                                       (w3m-browse-url "www.google.com")))
+               (define-key w3m-mode-map (kbd "` o") '(lambda () (interactive)
+                                                       (w3m-new-tab)
+                                                       (w3m-browse-url "cn.bing.com"))))))
 ;; ===================w3m=====================
 ;;; helm-firefox
 ;; ===============helm-firefox================

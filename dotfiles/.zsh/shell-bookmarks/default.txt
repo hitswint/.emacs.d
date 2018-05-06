@@ -1,0 +1,12 @@
+# Default shell bookmarks
+
+~/book
+~/papers
+~/myfile
+~/linux
+~/tex
+~/bin
+~/Downloads
+~/OpenFOAM
+~/org
+~/git-repo

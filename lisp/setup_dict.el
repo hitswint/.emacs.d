@@ -4,7 +4,7 @@
   :commands (bing-dict-brief
              bing-dict-brief-cb-at-point)
   :init
-  (smartrep-define-key global-map "M-s M-d"
+  (smartrep-define-key global-map "M-s d"
     '(("b" . bing-dict-brief-cb-at-point)
       ("g" . google-translate-to-tip)
       ("y" . youdao-dictionary-to-tip)))

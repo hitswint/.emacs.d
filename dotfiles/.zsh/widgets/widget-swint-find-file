@@ -1,0 +1,19 @@
+#!/bin/zsh
+
+function widget-swint-find-file()
+{
+    local fullpath=$*
+    local filename=${fullpath##*/} # remove "/" from the beginning
+    filename=${filename##*./} # remove  ".../" from the beginning
+    # only the filename without path is needed
+    # filename should be reasonable
+    local cli=`find $PWD -not -iwholename '*/target/*' -not -iwholename '*.svn*' -not -iwholename '*.git*' -not -iwholename '*.sass-cache*' -not -iwholename '*.hg*' -type f -iwholename '*'${filename}'*' -print 2>/dev/null | percol`
+    if [ $? -eq 0 ]; then
+        local new_left="${LBUFFER} ${cli} "
+        BUFFER=${new_left}${RBUFFER}
+        CURSOR=${#new_left}
+    fi
+    zle reset-prompt
+}
+
+widget-swint-find-file "$@"

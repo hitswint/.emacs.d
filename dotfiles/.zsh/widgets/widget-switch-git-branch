@@ -1,0 +1,19 @@
+#!/bin/zsh
+
+function widget-switch-git-branch() {
+    # commiterdate:relativeを commiterdate:localに変更すると普通の時刻表示
+    local selected_line="$(git for-each-ref --format='%(refname:short) | %(committerdate:relative) | %(committername) | %(subject)' --sort=-committerdate refs/heads refs/remotes \
+            | column -t -s '|' \
+            | percol \
+            | head -n 1 \
+            | awk '{print $1}')"
+    if [ -n "$selected_line" ]; then
+        BUFFER="git checkout ${selected_line}"
+        CURSOR=$#BUFFER
+        # ↓そのまま実行の場合
+        zle accept-line
+    fi
+    zle clear-screen
+}
+
+widget-switch-git-branch "$@"

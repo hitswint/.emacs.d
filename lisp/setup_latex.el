@@ -39,8 +39,9 @@
     :diminish reftex-mode
     :commands reftex-mode
     :init
-    (add-hook 'LaTeX-mode-hook (lambda ()
-                                 (bind-key "C-c r" 'reftex-mode LaTeX-mode-map)))
+    (dolist (hook '(LaTeX-mode-hook org-mode-hook))
+      (add-hook hook (lambda ()
+                       (local-set-key (kbd "C-c r") 'reftex-mode))))
     :config
     ;; C-c [ reftex-citation，C-c C-x [ org-reftex-citation。
     (define-key reftex-mode-map (kbd "C-c r") 'reftex-parse-all)

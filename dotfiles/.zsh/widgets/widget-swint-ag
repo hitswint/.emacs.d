@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+function widget-swint-ag() {
+    LBUFFER=$LBUFFER$(ag -C 1000 ./ | percol | tr '\n' ' ' | \
+                          sed 's/[[:space:]]*$//' | cut -f1 -d ":")
+    zle -R -c
+}
+
+widget-swint-ag "$@"

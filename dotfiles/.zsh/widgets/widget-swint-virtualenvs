@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+function widget-swint-virtualenvs() {
+    source ~/.virtualenvs/$(ls -F ~/.virtualenvs | grep / | percol --match-method pinyin)bin/activate
+    zle reset-prompt
+}
+
+widget-swint-virtualenvs "$@"

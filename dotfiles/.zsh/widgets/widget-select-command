@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+function widget-select-command() {
+  setopt pipe_fail
+  iosource-list-commands |
+      percol |
+      join-input-by-space |
+      insert-stdin-into-zsh-buffer
+  widget-redisplay-propagate-error
+}
+widget-select-command "$@"

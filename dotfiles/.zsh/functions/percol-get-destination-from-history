@@ -1,0 +1,16 @@
+#!/bin/zsh
+
+function percol_get_destination_from_history() {
+    # sort ${CD_HISTORY_FILE} | uniq -c | sort -r | \
+        #     sed -e 's/^[ ]*[0-9]*[ ]*//' | \
+        #     sed -e s"/^${HOME//\//\\/}/~/" | \
+        #     percol --match-method pinyin| xargs echo
+    local tac
+    exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
+    tac ${CD_HISTORY_FILE} | awk ' !x[$0]++' | \
+        sed -e 's/^[ ]*[0-9]*[ ]*//' | \
+        sed -e s"/^${HOME//\//\\/}/~/" | \
+        percol --match-method pinyin| xargs echo
+}
+
+percol_get_destination_from_history "$@"

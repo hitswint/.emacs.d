@@ -1,0 +1,55 @@
+#!/bin/zsh
+
+# percol_cd_upper_dirs
+PERCOL_TMP_DIR=/tmp/percol.zsh.tmp
+if ! [ -d ${PERCOL_TMP_DIR} ]; then
+    mkdir ${PERCOL_TMP_DIR}
+fi
+local PERCOL_IN=${PERCOL_TMP_DIR}/percol-channel-in-$$
+local PERCOL_OUT=${PERCOL_TMP_DIR}/percol-channel-out-$$
+function _percol_create_fifo() {
+    [ -p $PERCOL_IN ] || { command rm -f $PERCOL_IN; mkfifo -m 600 $PERCOL_IN }
+    [ -p $PERCOL_OUT ] || { command rm -f $PERCOL_OUT; mkfifo -m 600 $PERCOL_OUT }
+}
+function _percol_clean_fifos() {
+    command rm -f $PERCOL_IN
+    command rm -f $PERCOL_OUT
+}
+trap _percol_clean_fifos EXIT SIGINT SIGTERM
+function _percol_popup() {
+    INPUT=$1
+    PERCOL_OPTION=$2
+    if [[ -n $TMUX ]]; then
+        eval "_percol_popup_tmux ${PERCOL_OPTION}; ${INPUT} > ${PERCOL_IN} &; cat ${PERCOL_OUT}"
+    else
+        eval "${INPUT} | percol ${(Q)PERCOL_OPTION}"
+    fi
+}
+function _percol_clean_prompt() {
+    if [[ -n $TMUX ]]; then
+        zle reset-prompt
+    else
+        zle -R -c
+    fi
+}
+function _percol_list_upper_directories() {
+    local dir_cursor
+    dir_cursor=$(dirname ${PWD})
+    local dir_prefix="../../"
+    while [[ ${dir_cursor} != "/" ]]; do
+        echo ${dir_prefix}$(basename ${dir_cursor})
+        dir_cursor=$(dirname ${dir_cursor})
+        dir_prefix="../"${dir_prefix}
+    done
+    echo "/"
+}
+function widget-percol-cd-upper-dirs() {
+    destination=$(_percol_popup "_percol_list_upper_directories")
+    if [[ $destination != "" ]]; then
+        cd $destination
+    fi
+    _percol_clean_prompt
+    zle reset-prompt
+}
+
+widget-percol-cd-upper-dirs "$@"

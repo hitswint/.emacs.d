@@ -1,0 +1,13 @@
+#!/bin/zsh
+
+function widget-percol-insert-history() {
+    local destination=$(percol-get-destination-from-history)
+    if [ $? -eq 0 ]; then
+        local new_left="${LBUFFER} ${destination} "
+        BUFFER=${new_left}${RBUFFER}
+        CURSOR=${#new_left}
+    fi
+    zle reset-prompt
+}
+
+widget-percol-insert-history "$@"

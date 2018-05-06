@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+function widget-swint-find-file-current-dir(){
+    LBUFFER=$LBUFFER$(ls -Ap | grep -v / | percol --match-method pinyin | tr '\n' ' ' | \
+                          sed 's/[[:space:]]*$//') # delete trailing space
+    zle -R -c
+}
+
+widget-swint-find-file-current-dir "$@"

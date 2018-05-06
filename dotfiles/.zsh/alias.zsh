@@ -1,10 +1,12 @@
-# Some aliases.
+#!/bin/zsh
+
 # 将zsh的alias导入eshell。
-alias | sed -E "s/^(.*)='?(.*)/alias \1 \2/" | sed -E "s/'$//" >~/.emacs.d/eshell/alias
-# Compatible with bash.
-# alias | sed -E "s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;" >~/.emacs.d/eshell/alias
-# 不将以空格开始的命令记入历史。
-setopt hist_ignore_space
+if [ -f $HOME/.emacs.d/eshell/alias ];then
+    alias | sed -E "s/^(.*)='?(.*)/alias \1 \2/" | sed -E "s/'$//" > $HOME/.emacs.d/eshell/alias
+    # Compatible with bash.
+    # alias | sed -E "s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;" > $HOME/.emacs.d/eshell/alias
+fi
+
 alias cd=' cd'
 alias ..=' cd ..; ls'
 alias ...=' cd ..; cd ..; ls'
@@ -26,3 +28,6 @@ alias -s {doc,docx}=wps
 alias -s {xls,xlsx}=et
 alias -s {ppt,pptx}=wpp
 alias -s pdf=llpp
+alias ec='emacsclient -n'
+alias ecc='emacsclient -c -n'
+alias ect='emacsclient -t'

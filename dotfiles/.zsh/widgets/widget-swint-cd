@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+function widget-swint-cd() {
+    cd ./$(ls -F ./ | grep / | percol --match-method pinyin)
+    zle reset-prompt
+}
+
+widget-swint-cd "$@"

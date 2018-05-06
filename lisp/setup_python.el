@@ -86,8 +86,10 @@
     (define-key ein:notebook-mode-map (kbd "C-c C-,") 'ein:pytools-jump-to-source-command)
     (define-key ein:notebook-mode-map (kbd "C-c C-.") 'ein:pytools-jump-back-command))
   (def-package! ein-connect
-    :bind (:map python-mode-map
-                ("C-c c" . ein:connect-to-notebook-command))
+    :commands ein:connect-to-notebook-command
+    :init
+    (add-hook 'python-mode-hook (lambda ()
+                                  (bind-key "C-c c" 'ein:connect-to-notebook-command python-mode-map)))
     :config
     ;; 在ein:connect中关闭company的自动补全。
     (add-hook 'ein:connect-mode-hook '(lambda ()

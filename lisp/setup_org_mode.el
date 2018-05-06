@@ -90,7 +90,6 @@
                                                        (if (or (org-at-heading-p) (org-at-item-p))
                                                            (call-interactively 'org-beginning-of-line)
                                                          (call-interactively 'smart-beginning-of-line))))
-               (define-key org-mode-map (kbd "C-c r") 'reftex-mode)
                (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)
                (define-key org-mode-map (kbd "C-j") nil)
                (define-key org-mode-map (kbd "RET") nil)
@@ -120,20 +119,18 @@
   ;; ===================GTD=====================
 ;;;; org-babel
   ;; ===========使用ditaa输出ascii图片==========
+  (setq org-confirm-babel-evaluate nil)
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
   (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)
-                                                           (dot . t)
-                                                           (ditaa . t)
                                                            (python . t)
-                                                           (ruby . t)
+                                                           (shell . t)
+                                                           (latex . t)
                                                            (gnuplot . t)
-                                                           (clojure . t)
-                                                           (sh . t)
-                                                           (ledger . t)
-                                                           (org . t)
-                                                           (plantuml . t)
-                                                           (latex . t)))
-  (setq org-confirm-babel-evaluate nil)
+                                                           (ditaa . t)
+                                                           (dot . t)
+                                                           (octave . t)
+                                                           (js . t)
+                                                           (css . t)))
   ;; ===========使用ditaa输出ascii图片==========
 ;;;; cdlatex
   ;; ================cdlatex====================
@@ -159,7 +156,7 @@
   ;; =============org-latex-preview=============
   ;; org-preview-latex-fragment表示preview当前位置。
   ;; 加C-u表示当前节，两个C-u表示当前head。
-  (define-key org-mode-map (kbd "C-c v") 'org-preview-latex-fragment)
+  (define-key org-mode-map (kbd "C-c v") 'org-toggle-latex-fragment)
   (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境。
   ;; =============org-latex-preview=============
 ;;;; ox-latex

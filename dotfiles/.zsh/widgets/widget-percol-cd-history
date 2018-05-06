@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+function widget-percol-cd-history() {
+    local destination=$(percol-get-destination-from-history)
+    [ -n $destination ] && cd ${destination/#\~/${HOME}}
+    zle reset-prompt
+}
+
+widget-percol-cd-history "$@"
