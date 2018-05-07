@@ -164,7 +164,6 @@
                            recentf-ext
                            rich-minority
                            s
-                           session
                            skewer-mode
                            smart-mode-line
                            smartrep

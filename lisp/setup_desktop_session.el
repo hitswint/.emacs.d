@@ -1,9 +1,3 @@
-;;; session
-;; ===================session====================
-(def-package! session
-  :config
-  (add-hook 'after-init-hook 'session-initialize))
-;; ===================session====================
 ;;; saveplace
 ;; ==================saveplace===================
 (def-package! saveplace

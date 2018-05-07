@@ -62,9 +62,45 @@
 ;;; helm-firefox
 ;; ===============helm-firefox================
 (def-package! helm-firefox
-  :commands helm-firefox-bookmarks
+  :commands (helm-firefox-bookmarks
+             helm-firefox-history)
   :init
   (add-hook 'w3m-mode-hook (lambda ()
-                             (bind-key "'" 'helm-firefox-bookmarks w3m-mode-map))))
+                             (bind-key "'" 'helm-firefox-bookmarks w3m-mode-map)
+                             (bind-key "\"" 'helm-firefox-history w3m-mode-map)))
+  :config
+  (defvar helm-firefox-history-alist nil)
+  (defvar helm-source-firefox-history
+    (helm-build-sync-source "Firefox History"
+      :init (lambda ()
+              (setq helm-firefox-history-alist
+                    (split-string (shell-command-to-string
+                                   (format "sqlite3 -separator '||' %s \"select title,url from moz_places where last_visit_date is not null order by last_visit_date desc\" | head -1000"
+                                           (expand-file-name "places.sqlite" (helm-get-firefox-user-init-dir)))) "\n")))
+      :candidates (lambda ()
+                    (cl-loop for f in helm-firefox-history-alist
+                             collect (replace-regexp-in-string "\\(||\\)http.*\\'" "\n" f nil nil 1)))
+      :multiline t
+      :filtered-candidate-transformer
+      '(helm-adaptive-sort
+        helm-firefox-highlight-bookmarks)
+      :action (helm-make-actions
+               "Browse Url"
+               (lambda (candidate)
+                 (helm-browse-url candidate))
+               "Copy Url"
+               (lambda (url)
+                 (kill-new url)
+                 (message "`%s' copied to kill-ring" url)))))
+  (defun helm-firefox-history ()
+    (interactive)
+    (helm :sources `(helm-source-firefox-history
+                     ,(helm-build-dummy-source "DuckDuckgo"
+                        :action (lambda (candidate)
+                                  (helm-browse-url
+                                   (format helm-surfraw-duckduckgo-url
+                                           (url-hexify-string candidate))))))
+          :truncate-lines t
+          :buffer "*Helm Firefox History*")))
 ;; ===============helm-firefox================
 (provide 'setup_w3m)
