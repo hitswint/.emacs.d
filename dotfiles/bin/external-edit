@@ -48,20 +48,25 @@ then
 fi
 xwin_title=`xwininfo -id $xwin_id | sed -ne 's/xwininfo: .*"\([^"]\+\)"/\1/p'`
 
-Emacs_style='^.*(emacs@|Microsoft Word).*$'
-
 if [ $sel ]; then
     xte_selectall
 fi
 
-xdotool key --clearmodifiers ctrl+c
-word=$(xclip -selection clipboard -o | sed 's/[\"]/\\&/g')
+Wind_id=`xdotool getactivewindow`;
+sleep 0.5
 
-run-or-raise.sh emacs
+if [ $(xdotool search --onlyvisible --class "llpp" | grep -i $Wind_id) ]; then
+    word=$(xclip -selection primary -o | sed 's/[\"]/\\&/g')
+else
+    xdotool key --clearmodifiers ctrl+c
+    word=$(xclip -selection clipboard -o | sed 's/[\"]/\\&/g')
+fi
+
+# run-or-raise.sh emacs
 
 ELISP=$( cat $HOME/bin/emacs_anywhere.el )
 
-$editor -a '' -c -e "(progn $ELISP (insert \"$word\"))"
+$editor -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(progn $ELISP (insert \"$word\"))"
 
 . /tmp/eaenv
 
@@ -71,9 +76,7 @@ fi
 
 wmctrl -ia $xwin_id
 
-if [ $sel ]; then
-    xte_selectall
-fi
+Emacs_style='^.*(emacs@|Microsoft Word).*$'
 
 if [[ $xwin_title =~ $Emacs_style  ]];then
     xdotool key --clearmodifiers ctrl+y

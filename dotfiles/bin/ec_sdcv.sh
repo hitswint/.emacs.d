@@ -16,10 +16,8 @@ else
     word=$(xclip -selection clipboard -o | sed 's/[\"]/\\&/g')
 fi
 
-run-or-raise.sh emacs
+# run-or-raise.sh emacs
 
-ELISP=$( cat $HOME/bin/emacs_anywhere.el )
-
-emacsclient -a '' -c -e "(progn $ELISP (swint-sdcv-to-buffer (substring-no-properties \"$word\")))"
+emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(progn (add-hook 'delete-frame-functions '(lambda (frame) (write-region (current-kill 0) nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (kill-this-buffer))) (swint-sdcv-to-buffer (substring-no-properties \"$word\")) (local-set-key (kbd \"q\") 'delete-frame))"
 
 wmctrl -ia $xwin_id

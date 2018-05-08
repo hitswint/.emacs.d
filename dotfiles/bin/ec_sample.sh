@@ -17,10 +17,8 @@ else
     word=$(xclip -selection clipboard -o | sed 's/[\"]/\\&/g')
 fi
 
-run-or-raise.sh emacs
+# run-or-raise.sh emacs
 
-ELISP=$( cat $HOME/bin/emacs_anywhere.el )
-
-emacsclient -a '' -c -e "(progn $ELISP (w3m-youdao-sample-sentences (substring-no-properties \"$word\")))"
+emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(progn (add-hook 'delete-frame-functions '(lambda (frame) (write-region (current-kill 0) nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (w3m-quit 1))) (w3m-youdao-sample-sentences (substring-no-properties \"$word\")) (local-set-key (kbd \"q\") 'delete-frame))"
 
 xdotool windowactivate --sync $Wind_id && exit 0
