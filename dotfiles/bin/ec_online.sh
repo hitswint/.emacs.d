@@ -18,6 +18,6 @@ fi
 
 # run-or-raise.sh emacs
 
-emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(progn (add-hook 'delete-frame-functions '(lambda (frame) (write-region (current-kill 0) nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (kill-this-buffer))) (swint-online-to-buffer (substring-no-properties \"$word\")) (local-set-key (kbd \"q\") 'delete-frame))"
+emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(progn (defun swint-copy-to-clipboard (frame) (remove-hook 'delete-frame-functions 'swint-copy-to-clipboard) (write-region (current-kill 0) nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (kill-this-buffer)) (add-hook 'delete-frame-functions 'swint-copy-to-clipboard) (swint-online-to-buffer (substring-no-properties \"$word\")) (local-set-key (kbd \"q\") 'delete-frame))"
 
 wmctrl -ia $xwin_id

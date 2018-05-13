@@ -49,7 +49,7 @@
   (require 'setup_latex)
   (require 'setup_magit)
   (require 'setup_mode_line)
-  (require 'setup_octave)
+  (require 'setup_octave_matlab)
   (require 'setup_org_mode)
   (require 'setup_perspective)
   (require 'setup_projectile)

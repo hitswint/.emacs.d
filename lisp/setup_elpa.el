@@ -125,6 +125,7 @@
                            magit-popup
                            markdown-mode
                            math-symbol-lists
+                           matlab-mode
                            mu4e-alert
                            multifiles
                            multiple-cursors

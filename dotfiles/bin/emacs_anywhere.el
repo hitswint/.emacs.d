@@ -10,6 +10,7 @@
   (shell-command "xclip -selection clipboard /tmp/eaclipboard &> /dev/null"))
 
 (defun ea-on-delete (frame)
+  (remove-hook 'delete-frame-functions 'ea-on-delete)
   (when ea-on
     (cond
      ((string-equal system-type "darwin") (ea-osx-on-delete))

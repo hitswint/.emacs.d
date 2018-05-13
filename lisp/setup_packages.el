@@ -248,12 +248,19 @@
 ;; ======================fcitx=====================
 (def-package! fcitx
   :defer 2
+  :init
+  (defvar swint-fcitx-setup-done nil)
   :config
-  (when (display-graphic-p)
-    (fcitx-prefix-keys-add "M-s" "M-g" "M-O")
-    (fcitx-aggressive-setup)
-    (fcitx-isearch-turn-on)
-    (fcitx--defun-maybe "sdcv")))
+  (defun swint-fcitx-setup (frame)
+    (when (and (display-graphic-p frame) (not swint-fcitx-setup-done))
+      (fcitx-prefix-keys-add "M-s" "M-g" "M-O")
+      (fcitx-aggressive-setup)
+      (fcitx-isearch-turn-on)
+      (fcitx--defun-maybe "sdcv")
+      (setq swint-fcitx-setup-done t)))
+  (if (and (fboundp 'daemonp) (daemonp))
+      (add-hook 'after-make-frame-functions 'swint-fcitx-setup)
+    (swint-fcitx-setup (selected-frame))))
 ;; ======================fcitx=====================
 ;;; aggressive-indent
 ;; ================aggressive-indent===============
@@ -753,8 +760,7 @@
 ;;              '("cselpa" . "https://elpa.thecybershadow.net/packages/"))
 (def-package! term-keys
   :config
-  (unless (display-graphic-p)
-    (term-keys-mode t)))
+  (term-keys-mode t))
 ;; ===================term-keys====================
 ;; ===================yaml-mode====================
 (def-package! yaml-mode

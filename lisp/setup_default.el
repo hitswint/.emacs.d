@@ -57,7 +57,7 @@
 (global-set-key (kbd "M-s M-,") 'split-window-vertically)
 (global-set-key (kbd "M-s M-.") 'split-window-horizontally)
 (global-set-key (kbd "C-M-2") 'run-octave)
-(global-set-key (kbd "C-M-@") 'calculator)
+(global-set-key (kbd "C-M-@") 'matlab-shell)
 (global-set-key (kbd "C-M-6") 'calendar)
 (global-set-key (kbd "C-x C-l") 'reposition-window)
 (global-set-key (kbd "C-;") 'set-mark-command)

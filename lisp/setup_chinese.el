@@ -5,17 +5,15 @@
   :config
   (setq cfs--current-profile-name "profile-lin")
   ;; Emacs启动时自动设定fontsize。
-  (defun swint-cfs-set-font-with-saved-size ()
-    (let* ((profile-name cfs--current-profile-name))
-      (when (display-graphic-p)
+  (defun swint-cfs-set-font-with-saved-size (frame)
+    (with-selected-frame frame
+      (when (display-graphic-p frame)
         (cfs--set-font 11.5 1.2))))
   (if (and (fboundp 'daemonp) (daemonp))
       (add-hook 'after-make-frame-functions
-                (lambda (frame)
-                  (with-selected-frame frame
-                    (swint-cfs-set-font-with-saved-size))))
+                'swint-cfs-set-font-with-saved-size)
     (add-hook 'window-setup-hook
-              'swint-cfs-set-font-with-saved-size)))
+              (lambda () (swint-cfs-set-font-with-saved-size (selected-frame))))))
 ;; ==========chinese-fonts-setup===========
 ;;; pyim
 ;; ==================pyim==================

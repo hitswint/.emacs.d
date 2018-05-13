@@ -22,6 +22,7 @@
     `(progn (unless persp-mode
               (swint-load-perspectives))
             ,@body))
+  (defvar swint-persp-loadp nil)
   :config
   (setq persp-initial-frame-name "i"
         persp-modestring-dividers '("" "" "")
@@ -91,13 +92,14 @@
                                     (symbol-value (intern (format "buffers-in-perspectives-%s" x))))))
                (ignore-errors (window-state-put
                                (symbol-value (intern (format "window-configuration-of-persp-%s" x)))
-                               nil t)))))
+                               nil t))))
+    (modify-frame-parameters nil '((swint-persp-loadp . t))))
   ;; (add-hook 'desktop-after-read-hook 'swint-load-perspectives)
   ;; ========emacs开启时加载perspectives========
 ;;;; 关闭时保存perspectives
   ;; ========emacs关闭时保存perspectives========
   (defun swint-save-perspectives ()
-    (when persp-mode
+    (when (and persp-mode (frame-parameter nil 'swint-persp-loadp))
       (cl-loop for x in (persp-names) do
                (swint-persp-switch x)
                (set (intern (format "window-configuration-of-persp-%s" x)) (window-state-get nil t)))
@@ -113,7 +115,9 @@
                                  (prin1-to-string
                                   (symbol-value (intern (format "window-configuration-of-persp-%s" x))))
                                  ")\n"))))))
-  (add-hook 'kill-emacs-hook 'swint-save-perspectives)
+  (if (and (fboundp 'daemonp) (daemonp))
+      (add-hook 'delete-frame-functions (lambda (frame) (swint-save-perspectives)))
+    (add-hook 'kill-emacs-hook 'swint-save-perspectives))
   ;; 在不同的persp中关闭同一个buffer时，会产生无效的(persp-point-marker persp)。
   (add-hook 'persp-before-switch-hook '(lambda ()
                                          (unless (marker-position (persp-point-marker persp))

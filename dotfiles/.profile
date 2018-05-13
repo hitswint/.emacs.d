@@ -43,8 +43,5 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
-PATH+=":/usr/local/texlive/2012/bin/i386-linux"
-MANPATH+=":/usr/local/texlive/2012/texmf/doc/man"
-INFOPATH+=":/usr/local/texlive/2012/texmf/doc/info"
 PATH+=":/usr/local/MATLAB/R2011b/bin"
 PATH+=":/opt/emacs25/bin"

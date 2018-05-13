@@ -19,6 +19,6 @@ fi
 
 # run-or-raise.sh emacs
 
-emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(progn (add-hook 'delete-frame-functions '(lambda (frame) (write-region (current-kill 0) nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (w3m-quit 1))) (w3m-youdao-sample-sentences (substring-no-properties \"$word\")) (local-set-key (kbd \"q\") 'delete-frame))"
+emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(progn (w3m-youdao-sample-sentences (substring-no-properties \"$word\")) (setq-local kill-buffer-hook (lambda () (write-region (current-kill 0) nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (delete-frame))))"
 
 xdotool windowactivate --sync $Wind_id && exit 0
