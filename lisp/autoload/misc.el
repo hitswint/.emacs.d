@@ -106,8 +106,8 @@
                                          (dired-get-marked-files)
                                        (list (buffer-file-name))))))
     (cl-loop for x in file-list
-             do (shell-command (concat "pdftk " (file-name-nondirectory pdf-file) " cat "
-                                       args " output " (concat (file-name-base pdf-file) "-new.pdf"))))))
+             do (shell-command (concat "pdftk " (file-name-nondirectory x) " cat "
+                                       args " output " (concat (file-name-base x) "-new.pdf"))))))
 ;; ==============swint-pdftk-output================
 ;;; show-some-last-messages
 ;; ============show-some-last-messages=============

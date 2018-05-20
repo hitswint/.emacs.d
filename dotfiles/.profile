@@ -22,6 +22,18 @@ if [[ -z $HOSTNAME ]]; then
     export HOSTNAME=$HOST
 fi
 
+# fcitx
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
+
+# matlab
+export MATLAB_JAVA=/usr/lib/jvm/java-8-openjdk-amd64/jre
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+# mu
+export XAPIAN_CJK_NGRAM=1
+
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists

@@ -279,42 +279,57 @@ Assuming .. and . is a current directory (like in FAR)"
                                   (shell-command-to-string
                                    "cat ~/.ssh/config | grep \"^host \" | awk '{print $2}'"))))
         (path (abbreviate-file-name default-directory))
+        (is-sync (equal action "sync"))
+        (is-push (equal action "push"))
+        (is-pull (equal action "pull"))
+        (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)")
         rsync/unison-command)
-    (if (equal action "sync")
-        (setq rsync/unison-command (concat "unison -batch -confirmbigdel=false " path
-                                           " ssh://" remote "//" (file-truename path)))
-      (let ((files (cond ((equal action "push")
-                          (dired-get-marked-files))
-                         ((equal action "pull")
+    (if is-sync
+        (let ((unison-path (replace-regexp-in-string string-to-escape
+                                                     "\\\\\\1" (file-truename path))))
+          (setq rsync/unison-command (concat "unison -batch -confirmbigdel=false " unison-path
+                                             " ssh://" remote "//" unison-path)))
+      (let* ((files (cond (is-push
+                           (dired-get-marked-files))
+                          (is-pull
+                           (let (remote-files)
+                             (if current-prefix-arg
+                                 (counsel-read-file-for-rsync 'remote-files (format "/ssh:%s:~/" remote))
+                               (setq remote-files
+                                     (helm-comp-read "Remote files: "
+                                                     (split-string (shell-command-to-string
+                                                                    ;; 连接remote列出path下文件绝对路径，并不显示错误信息。
+                                                                    (format "ssh %s '(cd %s && ls -A | sed \"s:^:`pwd`/:\") 2>/dev/null'"
+                                                                            remote path)) "\n")
+                                                     :marked-candidates t
+                                                     :buffer (format "*helm rsync/unison %s*" remote))))
+                             (cl-loop for f in remote-files
+                                      collect (concat remote ":" (if (directory-name-p f)
+                                                                     (directory-file-name f)
+                                                                   f)))))))
+             ;; 对于rsync，escape本地路径用\，远程路径用\\\。
+             (files-escaped (cl-loop for f in files
+                                     collect (replace-regexp-in-string string-to-escape
+                                                                       (cond (is-push "\\\\\\1")
+                                                                             (is-pull "\\\\\\\\\\\\\\1"))
+                                                                       f)))
+             (dest (cond (is-pull path)
+                         (is-push
                           (let (remote-files)
                             (if current-prefix-arg
-                                (counsel-read-file-for-rsync 'remote-files (format "/ssh:%s:~/" remote))
-                              (setq remote-files
-                                    (helm-comp-read "Remote files: "
-                                                    (split-string (shell-command-to-string
-                                                                   ;; 连接remote列出path下文件绝对路径，并不显示错误信息。
-                                                                   (format "ssh %s '(cd %s && ls -A | sed \"s:^:`pwd`/:\") 2>/dev/null'"
-                                                                           remote path)))
-                                                    :marked-candidates t
-                                                    :buffer (format "*helm rsync/unison %s*" remote))))
-                            (cl-loop for f in remote-files
-                                     collect (concat remote ":" (if (directory-name-p f)
-                                                                    (directory-file-name f)
-                                                                  f)))))))
-            (dest (cond ((equal action "pull")
-                         path)
-                        ((equal action "push")
-                         (let (remote-files)
-                           (if current-prefix-arg
-                               (directory-file-name
-                                (car (split-string (counsel-read-file-for-rsync
-                                                    'remote-files (format "/ssh:%s:~/" remote)) "/ssh:" t)))
-                             (concat remote ":" path)))))))
+                                (directory-file-name
+                                 (car (split-string (counsel-read-file-for-rsync
+                                                     'remote-files (format "/ssh:%s:~/" remote)) "/ssh:" t)))
+                              (concat remote ":" path))))))
+             (dest-escaped (replace-regexp-in-string string-to-escape
+                                                     (cond (is-push "\\\\\\\\\\\\\\1")
+                                                           (is-pull "\\\\\\1"))
+                                                     dest)))
         (setq rsync/unison-command "rsync -arvz --progress ")
-        (dolist (file files)
+        (dolist (file files-escaped)
           (setq rsync/unison-command
                 (concat rsync/unison-command file " ")))
-        (setq rsync/unison-command (concat rsync/unison-command dest))))
+        (setq rsync/unison-command (concat rsync/unison-command dest-escaped))))
     (let ((process (start-process-shell-command "rsync/unison" "*rsync/unison*" rsync/unison-command)))
       (lexical-let ((pos (memq 'mode-line-modes mode-line-format))
                     (mode-string action))

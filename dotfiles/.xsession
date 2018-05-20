@@ -4,14 +4,7 @@
 #
 #Executed by startx(run your window manager from here)
 #
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS="@im=fcitx"
-
 fcitx
-
-export MATLAB_JAVA=/usr/lib/jvm/java-7-openjdk-amd64/jre
-export _JAVA_AWT_WM_NONREPARENTING=1
 
 conky | while true; read line; do xsetroot -name "$line"; done &
 
@@ -24,10 +17,12 @@ xmodmap ~/.xmodmap
 # [ ! -s ~/.mpd/mpd.pid ] && mpd  # Fail to startup sometime
 [ ! -s ~/.mpd/mpd.pid ] ; mpd
 
-export XAPIAN_CJK_NGRAM=1
 dunst &
 
 dwm-multi-mon.sh single
 
 xkeysnail.sh &
+
+pgrep redshift || redshift -l 41.8:123.4 &
+
 exec dwm
