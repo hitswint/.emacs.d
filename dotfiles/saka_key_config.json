@@ -283,54 +283,10 @@
             }
           ]
         ],
-        "moveTabLeft": [
-          [
-            {
-              "code": "KeyP",
-              "key": "p",
-              "shiftKey": false,
-              "ctrlKey": false,
-              "altKey": true,
-              "metaKey": false
-            }
-          ]
-        ],
-        "moveTabRight": [
-          [
-            {
-              "code": "KeyN",
-              "key": "n",
-              "shiftKey": false,
-              "ctrlKey": false,
-              "altKey": true,
-              "metaKey": false
-            }
-          ]
-        ],
-        "moveTabFirst": [
-          [
-            {
-              "code": "KeyP",
-              "key": "P",
-              "shiftKey": true,
-              "ctrlKey": false,
-              "altKey": true,
-              "metaKey": false
-            }
-          ]
-        ],
-        "moveTabLast": [
-          [
-            {
-              "code": "KeyN",
-              "key": "N",
-              "shiftKey": true,
-              "ctrlKey": false,
-              "altKey": true,
-              "metaKey": false
-            }
-          ]
-        ],
+        "moveTabLeft": [],
+        "moveTabRight": [],
+        "moveTabFirst": [],
+        "moveTabLast": [],
         "closeTab": [
           [
             {

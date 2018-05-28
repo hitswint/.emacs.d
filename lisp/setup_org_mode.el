@@ -287,6 +287,7 @@
 \\renewcommand{\\today}{\\number\\year 年 \\number\\month 月 \\number\\day 日}
 \\usepackage[]{caption}
 \\captionsetup{font={small,it}}
+\\setbeamertemplate{caption}[numbered]
 \\usepackage{comment}
 \\subtitle{}
 \\subject{}

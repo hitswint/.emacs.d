@@ -45,9 +45,9 @@
 ;;; multiple-cursors
 ;; ================multiple-cursors================
 (def-package! multiple-cursors
-  ;; mc/xxx函数都不在mc包中，但能激活mc包。
-  :defer t
-  :init
+  ;; mc/xxx函数都不在mc包中。
+  :defer 2
+  :config
   (bind-key "C-M-," 'mc/mark-previous-like-this)
   (bind-key "C-M-." 'mc/mark-next-like-this)
   (bind-key "<C-M-mouse-1>" 'mc/add-cursor-on-click)
@@ -63,7 +63,6 @@
       ("M-\"" . mc/insert-letters)
       ("M-?" . mc/sort-regions)
       ("M-m" . mc/mark-pop)))
-  :config
   (define-key mc/keymap (kbd "C-`") 'mc-hide-unmatched-lines-mode))
 ;; ================multiple-cursors================
 ;;; expand-region

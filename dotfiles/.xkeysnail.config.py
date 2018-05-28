@@ -23,15 +23,18 @@ define_modmap({Key.CAPSLOCK: Key.LEFT_CTRL})
 # )
 
 # * Keybindings for Firefox/Chrome
-# define_keymap(re.compile("Firefox|Google-chrome"), {
-#     # Ctrl+Alt+j/k to switch next/previous tab
-#     K("C-M-j"): K("C-TAB"),
-#     K("C-M-k"): K("C-Shift-TAB"),
-#     # Type C-j to focus to the content
-#     K("C-j"): K("C-f6"),
-#     # very naive "Edit in editor" feature (just an example)
-#     K("C-o"): [K("C-a"), K("C-c"), launch(["gedit"]), sleep(0.5), K("C-v")]
-# }, "Firefox and Chrome")
+define_keymap(
+    lambda wm_class: wm_class and wm_class[-1] in ("Firefox", "Google-chrome"),
+    {
+        # Ctrl+Alt+j/k to switch next/previous tab
+        K("M-n"): K("C-TAB"),
+        K("M-p"): K("C-Shift-TAB"),
+        # Type C-j to focus to the content
+        K("C-i"): K("C-f6")
+        # very naive "Edit in editor" feature (just an example)
+        # K("C-o"): [K("C-a"), K("C-c"), launch(["gedit"]), sleep(0.5), K("C-v")]
+    },
+    "Firefox and Chrome")
 
 # * Keybindings for Zeal https://github.com/zealdocs/zeal/
 # define_keymap(re.compile("Zeal"), {
@@ -41,7 +44,7 @@ define_modmap({Key.CAPSLOCK: Key.LEFT_CTRL})
 
 # * Emacs-like keybindings in non-Emacs applications
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] not in ("Emacs", "URxvt") and wm_class[0] not in ("WINWORD.EXE"),
+    lambda wm_class: wm_class and wm_class[-1] not in ("Emacs", "URxvt", "Vncviewer") and wm_class[0] not in ("WINWORD.EXE"),
     {
         # Cursor
         K("C-b"): with_mark(K("left")),
@@ -81,6 +84,7 @@ define_keymap(
         K("C-Shift-ro"): K("C-z"),
         # Mark
         K("C-semicolon"): set_mark(True),
+        K("C-M-semicolon"): with_or_set_mark(K("C-right")),
         # Search
         K("C-s"): K("F3"),
         K("C-r"): K("Shift-F3"),
