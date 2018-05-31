@@ -1,19 +1,16 @@
 [Unit]
-Description=Emacs: the extensible, self-documenting text editor
+Description=Emacs text editor
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 
 [Service]
-Type=forking
-ExecStart=/usr/bin/emacs --daemon
-ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
+Type=simple
+ExecStart=/opt/emacs26/bin/emacs --fg-daemon
+ExecStop=/opt/emacs26/bin/emacsclient --eval "(kill-emacs)"
+Environment=SSH_AUTH_SOCK=%t/keyring/ssh
+Environment="LC_CTYPE=zh_CN.UTF-8" "XMODIFIERS=@im=fcitx"
+Environment="PATH=%h/.local/bin:%h/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/local/MATLAB/R2011b/bin:/opt/emacs26/bin"
+
 Restart=on-failure
-# Restart=always
-
-Environment="LC_CTYPE=zh_CN.UTF-8" "XMODIFIERS=@im=fcitx" "PATH=${HOME}/.local/bin:${HOME}/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/local/MATLAB/R2011b/bin:/opt/emacs25/bin"
-
-# Remove the limit in startup timeout, since emacs
-# cloning and building all packages can take time
-TimeoutStartSec=0
-
 
 [Install]
 WantedBy=default.target

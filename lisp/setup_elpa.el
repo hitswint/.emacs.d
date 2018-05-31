@@ -4,7 +4,9 @@
 (setq package-archives '(("melpa" . "http://elpa.emacs-china.org/melpa/")
                          ("gnu" . "http://elpa.emacs-china.org/gnu/")
                          ("org" . "http://elpa.emacs-china.org/org/")
-                         ("marmalade" . "http://elpa.emacs-china.org/marmalade/")))
+                         ("marmalade" . "http://elpa.emacs-china.org/marmalade/")
+                         ;; ELPA for term-keys.
+                         ("cselpa" . "https://elpa.thecybershadow.net/packages/")))
 ;; 使用官方源。
 ;; (setq package-archives '(("melpa" . "http://melpa.org/packages/")
 ;;                          ("gnu" . "http://elpa.gnu.org/packages/")
@@ -26,7 +28,6 @@
                            ace-link
                            ace-pinyin
                            aggressive-indent
-                           anchored-transpose
                            anzu
                            arduino-mode
                            async
@@ -61,9 +62,9 @@
                            diff-hl
                            diminish
                            dired-details
+                           dired-filetype-face
                            dired-narrow
                            dired-ranger
-                           diredful
                            disaster
                            drag-stuff
                            dumb-jump
@@ -147,7 +148,7 @@
                            pdf-tools
                            peep-dired
                            persp-projectile
-                           perspective
+                           ;; perspective
                            pinyin-search
                            pinyinlib
                            pkg-info

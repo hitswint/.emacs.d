@@ -12,9 +12,7 @@
     (setq dired-details-hidden-string "")
     (advice-add 'dired-details-show :after #'(lambda () (dired-hide-details-mode 0)))
     (advice-add 'dired-details-hide :after #'(lambda () (dired-hide-details-mode 1))))
-  (def-package! diredful
-    :config
-    (diredful-mode 1))
+  (def-package! dired-filetype-face)
   (setq dired-recursive-copies 'top)
   (setq dired-recursive-deletes 'always)
   (custom-set-faces '(diredp-compressed-file-suffix ((t (:foreground "#7b68ee"))) t)

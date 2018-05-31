@@ -97,17 +97,20 @@
   (bind-key "M-s M-'" 'projectile-persp-switch-project)
   (defvar persp-projectile-hash (make-hash-table :test 'equal))
   :config
-  (defun projectile-persp-switch-project/after (project-to-switch)
-    (projectile-add-known-project project-to-switch)
-    ;; 将project-to-switch加入persp-projectile-hash中。
-    (puthash project-to-switch
-             (file-name-nondirectory (directory-file-name project-to-switch))
-             persp-projectile-hash)
-    ;; 删除不在projectile-known-projects中的project。
-    (cl-loop for p in (hash-table-keys persp-projectile-hash)
-             do (unless (member p projectile-known-projects)
-                  (remhash p persp-projectile-hash))))
-  (advice-add 'projectile-persp-switch-project :after
-              #'projectile-persp-switch-project/after))
+  (defun projectile-persp-switch-project/around (orig-fn project-to-switch)
+    (let ((perspectives-hash (frame-parameter nil 'perspectives-hash))
+          (persp-curr (frame-parameter nil 'persp-curr)))
+      (funcall orig-fn project-to-switch)
+      (projectile-add-known-project project-to-switch)
+      ;; 将project-to-switch加入persp-projectile-hash中。
+      (puthash project-to-switch
+               (file-name-nondirectory (directory-file-name project-to-switch))
+               persp-projectile-hash)
+      ;; 删除不在projectile-known-projects中的project。
+      (cl-loop for p in (hash-table-keys persp-projectile-hash)
+               do (unless (member p projectile-known-projects)
+                    (remhash p persp-projectile-hash)))))
+  (advice-add 'projectile-persp-switch-project :around
+              #'projectile-persp-switch-project/around))
 ;; ================persp-projectile=============
 (provide 'setup_projectile)

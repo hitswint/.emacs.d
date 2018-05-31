@@ -3,12 +3,15 @@
 (def-package! magit
   :diminish magit-auto-revert-mode
   :bind (("C-x M-g" . magit-status)
+         ("C-x C-M-g" . magit-dispatch-popup)
          ("M-g M-," . swint-magit-clone-nutstore)
          ("M-g M-." . swint-magit-remote-nutstore))
   :init
   (setq magit-auto-revert-mode nil)
   :config
   (define-key magit-mode-map (kbd "<C-tab>") nil)
+  (define-key magit-file-mode-map "\C-xg" nil)
+  (define-key magit-file-mode-map "\C-x\M-g" nil)
   (defun magit-exit-commit-mode ()
     (interactive)
     (swint-kill-this-buffer)

@@ -28,7 +28,7 @@
 ;; ====================server======================
 (def-package! server
   :config
-  (unless (server-running-p)
+  (unless (and (fboundp 'daemonp) (daemonp))
     (server-start)))
 ;; ====================server======================
 ;;; recentf
@@ -142,12 +142,6 @@
   (setq visible-mark-forward-faces '(swint-visible-mark-forward-face-1 swint-visible-mark-forward-face-2))
   (set-face-attribute 'visible-mark-active nil :background "maroon" :foreground "white"))
 ;; ================visible-mark====================
-;;; anchored-transpose
-;; ================anchored-transpose==============
-(def-package! anchored-transpose
-  ;; 首先选择整个区域，然后选择锚点，调换锚点两侧的内容；其次，分别选择两部分内容进行调换。
-  :bind ("M-s M-t" . anchored-transpose))
-;; ================anchored-transpose==============
 ;;; God-mode
 ;; ====================God-mode====================
 (def-package! god-mode
@@ -755,8 +749,6 @@
 ;; ======================ido=======================
 ;;; term-keys
 ;; ===================term-keys====================
-;; (add-to-list 'package-archives
-;;              '("cselpa" . "https://elpa.thecybershadow.net/packages/"))
 (def-package! term-keys
   :config
   (term-keys-mode t))

@@ -56,4 +56,4 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 PATH+=":/usr/local/MATLAB/R2011b/bin"
-PATH+=":/opt/emacs25/bin"
+PATH+=":/opt/emacs26/bin"
