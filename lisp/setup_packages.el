@@ -28,7 +28,8 @@
 ;; ====================server======================
 (def-package! server
   :config
-  (unless (and (fboundp 'daemonp) (daemonp))
+  (unless (or (and (fboundp 'daemonp) (daemonp))
+              (server-running-p))
     (server-start)))
 ;; ====================server======================
 ;;; recentf

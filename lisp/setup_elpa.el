@@ -78,6 +78,7 @@
                            epl
                            eshell-prompt-extras
                            evil-nerd-commenter
+                           exec-path-from-shell
                            expand-region
                            f
                            fcitx
@@ -239,6 +240,15 @@ Missing packages are installed automatically."
   :config
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 ;; ================benchmark-init===================
+;;; exec-path-from-shell
+;; =============exec-path-from-shell================
+(def-package! exec-path-from-shell
+  :config
+  (setq exec-path-from-shell-check-startup-files nil)
+  (setq exec-path-from-shell-variables '("PATH" "MANPATH" "XAPIAN_CJK_NGRAM"))
+  (setq exec-path-from-shell-arguments '("-l"))
+  (exec-path-from-shell-initialize))
+;; =============exec-path-from-shell================
 ;;; smartrep
 ;; ===================smartrep======================
 (def-package! smartrep

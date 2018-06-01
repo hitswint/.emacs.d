@@ -43,17 +43,5 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 
 # User configuration
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:$PATH"
+export PATH="/opt/emacs26/bin:/usr/local/MATLAB/R2011b/bin:$HOME/bin:$HOME/.local/bin:$PATH"
 export MANPATH="/usr/local/man:$MANPATH"
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
-
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-
-PATH+=":/usr/local/MATLAB/R2011b/bin"
-PATH+=":/opt/emacs26/bin"
