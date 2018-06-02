@@ -199,7 +199,7 @@
   (defvar swint-helm-file-buffers-source-list/other-persps nil)
   (defvar swint-helm-source-recentf-file nil)
   (defun swint-helm-file-buffers-list ()
-    "Preconfigured `helm' lightweight version \(buffer -> recentf\)."
+    "Preconfigured `helm' lightweight file buffers list."
     (interactive)
     (unless swint-helm-file-buffers-source-list/curr-persp
       (setq swint-helm-file-buffers-source-list/curr-persp
@@ -322,7 +322,7 @@
   (defvar swint-helm-dired-buffers-source-list/other-persps nil)
   (defvar swint-helm-source-recentf-directory nil)
   (defun swint-helm-dired-buffers-list ()
-    "Preconfigured `helm' to list buffers."
+    "Preconfigured `helm' lightweight dired buffers list."
     (interactive)
     (unless swint-helm-dired-buffers-source-list/curr-persp
       (setq swint-helm-dired-buffers-source-list/curr-persp

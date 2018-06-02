@@ -4,14 +4,13 @@
   :load-path "site-lisp/perspective/"
   :commands (persp-push-current-buffer
              persp-push-current-buffer-to-last
-             persp-push-all-buffer-to-init
              swint-persp-switch
              swint-load-perspectives)
   :init
   (bind-key "C-8" '(lambda () (interactive) (swint-persp-switch "8")))
   (bind-key "C-9" '(lambda () (interactive) (swint-persp-switch "9")))
   (bind-key "C-0" '(lambda () (interactive) (swint-persp-switch "0")))
-  (bind-key "C-7" 'persp-push-all-buffer-to-init)
+  (bind-key "C-7" '(lambda () (interactive) (swint-persp-switch "i")))
   (bind-key "C-*" '(lambda () (interactive) (persp-push-current-buffer "8")))
   (bind-key "C-(" '(lambda () (interactive) (persp-push-current-buffer "9")))
   (bind-key "C-)" '(lambda () (interactive) (persp-push-current-buffer "0")))
@@ -20,7 +19,7 @@
   (bind-key "C-~" 'persp-push-current-buffer-to-last)
   (defmacro with-persp-mode-on (&rest body)
     "Switch to the perspective given by NAME while evaluating BODY."
-    `(progn (unless persp-mode
+    `(progn (unless (and persp-mode (frame-parameter nil 'swint-persp-loadp))
               (swint-load-perspectives))
             ,@body))
   (defvar swint-persp-loadp nil)
@@ -65,14 +64,6 @@
     (interactive)
     (with-persp-mode-on
      (persp-push-current-buffer (persp-name (frame-parameter nil 'persp-last)))))
-  (defun persp-push-all-buffer-to-init ()
-    (interactive)
-    (with-persp-mode-on
-     (let ((init-persp (gethash persp-initial-frame-name (frame-parameter nil 'perspectives-hash))))
-       (cl-loop for element in (buffer-list)
-                do (unless (member element (persp-buffers init-persp))
-                     (push element (persp-buffers init-persp))))
-       (swint-persp-switch persp-initial-frame-name))))
   (defun swint-persp-switch (name)
     (with-persp-mode-on
      (if (and (featurep 'helm) helm-alive-p)
@@ -102,8 +93,8 @@
   (defun swint-save-perspectives ()
     (when (and persp-mode (frame-parameter nil 'swint-persp-loadp))
       (cl-loop for x in (persp-names) do
-               (swint-persp-switch x)
-               (set (intern (format "window-configuration-of-persp-%s" x)) (window-state-get nil t)))
+               (with-perspective x
+                 (set (intern (format "window-configuration-of-persp-%s" x)) (window-state-get nil t))))
       (with-temp-file swint-perspectives-saved-file
         (insert "(setq swint-persp-names '" (prin1-to-string (persp-names)) ")\n")
         (insert "(setq persp-projectile-hash '" (prin1-to-string persp-projectile-hash) ")\n")
@@ -115,7 +106,8 @@
                                  (format "(setq window-configuration-of-persp-%s '" x)
                                  (prin1-to-string
                                   (symbol-value (intern (format "window-configuration-of-persp-%s" x))))
-                                 ")\n"))))))
+                                 ")\n"))))
+      (persp-mode -1)))
   (if (and (fboundp 'daemonp) (daemonp))
       (add-hook 'delete-frame-functions (lambda (frame) (swint-save-perspectives)))
     (add-hook 'kill-emacs-hook 'swint-save-perspectives))

@@ -9,4 +9,4 @@ then
     while [ ! -e "/tmp/emacs$USERID/server" ] ; do sleep 1 ; done
 fi
 
-emacsclient -a '' -c -e "(swint-load-perspectives)"
+emacsclient -a '' -c # -e "(swint-load-perspectives)"

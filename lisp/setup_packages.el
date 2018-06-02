@@ -241,20 +241,20 @@
 ;;; fcitx
 ;; ======================fcitx=====================
 (def-package! fcitx
-  :defer 2
+  :commands swint-fcitx-setup
   :init
-  (defvar swint-fcitx-setup-done nil)
+  (if (and (fboundp 'daemonp) (daemonp))
+      (add-hook 'after-make-frame-functions 'swint-fcitx-setup)
+    (swint-fcitx-setup (selected-frame)))
   :config
+  (defvar swint-fcitx-setup-done nil)
   (defun swint-fcitx-setup (frame)
     (when (and (display-graphic-p frame) (not swint-fcitx-setup-done))
       (fcitx-prefix-keys-add "M-s" "M-g" "M-O")
       (fcitx-aggressive-setup)
       (fcitx-isearch-turn-on)
       (fcitx--defun-maybe "sdcv")
-      (setq swint-fcitx-setup-done t)))
-  (if (and (fboundp 'daemonp) (daemonp))
-      (add-hook 'after-make-frame-functions 'swint-fcitx-setup)
-    (swint-fcitx-setup (selected-frame))))
+      (setq swint-fcitx-setup-done t))))
 ;; ======================fcitx=====================
 ;;; aggressive-indent
 ;; ================aggressive-indent===============
