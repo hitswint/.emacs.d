@@ -218,18 +218,18 @@
 \\newcommand{\\liuhao}{\\zihao{6}}
 [NO-DEFAULT-PACKAGES]
 [NO-PACKAGES]"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-               ("\\paragraph{%s}" . "\\paragraph*{%s}")
-               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-;; Beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)。
-;; 设定mainfont会导致公式环境中变量变成正体。
-;; 设定setsansfont使用Times New Roman无法使用英文斜体和粗体。
-;; 使用某些字体可以实现粗斜体，例如DejaVu Sans/DejaVu Sans Mono/DejaVu Serif等。
-(add-to-list 'org-latex-classes
-             '("cn-beamer"
-               "\\documentclass[11pt]{beamer}
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+    ;; Beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)。
+    ;; 设定mainfont会导致公式环境中变量变成正体。
+    ;; 设定setsansfont使用Times New Roman无法使用英文斜体和粗体。
+    ;; 使用某些字体可以实现粗斜体，例如DejaVu Sans/DejaVu Sans Mono/DejaVu Serif等。
+    (add-to-list 'org-latex-classes
+                 '("cn-beamer"
+                   "\\documentclass[11pt]{beamer}
 % [xcolor=dvipsnames]
 \\usepackage{graphicx,subfigure,url,booktabs,tikz,float,fontspec}
 \\usepackage{amsmath,amssymb}
@@ -294,24 +294,24 @@
 \\institute{沈阳建筑大学}
 [NO-DEFAULT-PACKAGES]
 [NO-PACKAGES]"
-               ("\\section{%s}" . "\\section*{%s}")
-               ;; ("\\begin{frame}[fragile]\\frametitle{%s}"
-               ;;  "\\end{frame}"
-               ;;  "\\begin{frame}[fragile]\\frametitle{%s}"
-               ;;  "\\end{frame}")
-               )))
-;; =================ox-latex====================
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ;; ("\\begin{frame}[fragile]\\frametitle{%s}"
+                   ;;  "\\end{frame}"
+                   ;;  "\\begin{frame}[fragile]\\frametitle{%s}"
+                   ;;  "\\end{frame}")
+                   )))
+  ;; =================ox-latex====================
 ;;;; ox-beamer
-;; =================ox-beamer===================
-(def-package! ox-beamer
-  :defer t
-  :config
-  (add-to-list 'org-beamer-environments-extra
-               '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
-  (add-to-list 'org-beamer-environments-extra
-               '("uncoverenv" "U" "\\begin{uncoverenv}%a" "\\end{uncoverenv}")))
-;; =================ox-beamer===================
-)
+  ;; =================ox-beamer===================
+  (def-package! ox-beamer
+    :defer t
+    :config
+    (add-to-list 'org-beamer-environments-extra
+                 '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
+    (add-to-list 'org-beamer-environments-extra
+                 '("uncoverenv" "U" "\\begin{uncoverenv}%a" "\\end{uncoverenv}")))
+  ;; =================ox-beamer===================
+  )
 ;; =================org-mode====================
 ;;; org-annotate
 ;; ===============org-annotate==================
@@ -434,7 +434,8 @@
       "\\\\appendix\\_>\\|\\\\\\(begin\\|end\\){document}"
       "\\\\documentclass\\_>")
     "List of regexps which define what a section can be.Ordered from deepest to highest level."
-    :group 'outlines)
+    :group 'outlines
+    :type '(repeat (choice regexp function)))
   (defun latex/section-regexp ()
     "Return a regexp matching anything in `latex/section-hierarchy'."
     (format "^\\(%s\\)" (mapconcat 'identity latex/section-hierarchy "\\|")))

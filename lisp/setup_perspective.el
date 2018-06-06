@@ -1,7 +1,6 @@
 ;;; perspective
 ;; =================perspective=================
 (def-package! perspective
-  :load-path "site-lisp/perspective/"
   :commands (persp-push-current-buffer
              persp-push-current-buffer-to-last
              swint-persp-switch

@@ -126,5 +126,9 @@
 (global-set-key (kbd "M-s ,") '(lambda (&optional arg) (interactive "P") (swint-dired-rsync/unison "pull")))
 (global-set-key (kbd "M-s .") '(lambda (&optional arg) (interactive "P") (swint-dired-rsync/unison "push")))
 (global-set-key (kbd "M-s /") '(lambda (&optional arg) (interactive "P") (swint-dired-rsync/unison "sync")))
+(global-set-key (kbd "C-M-q") 'swint-undo-kill-buffer)
+(define-key emacs-lisp-mode-map "\e\C-q" nil)
+(define-key lisp-interaction-mode-map "\e\C-q" nil)
+(define-key prog-mode-map "\e\C-q" nil)
 ;; ================Keybindings==================
 (provide 'setup_default)

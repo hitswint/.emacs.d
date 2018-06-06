@@ -111,9 +111,8 @@
 ;; ==============swint-pdftk-output================
 ;;; show-some-last-messages
 ;; ============show-some-last-messages=============
-(defcustom default-messages-to-show 4
-  "Default number of messages for `show-some-last-messages'."
-  :group 'autoload-misc)
+(defvar default-messages-to-show 4
+  "Default number of messages for `show-some-last-messages'.")
 ;;;###autoload
 (defun show-some-last-messages (count)
   "Show COUNT last lines of the `*Messages*' buffer."

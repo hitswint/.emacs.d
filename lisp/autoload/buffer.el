@@ -123,7 +123,6 @@ FILENAME defaults to `buffer-file-name'."
         (prev-buf (car (or (swint-filter-buffer-list (cl-loop for x in (window-prev-buffers)
                                                               collect (car x)))
                            (swint-filter-buffer-list (buffer-list (selected-frame)) t)))))
-    (bc-set)
     (switch-to-buffer prev-buf)
     (kill-buffer curr-buf)))
 ;;;###autoload
@@ -135,7 +134,7 @@ FILENAME defaults to `buffer-file-name'."
           (or (and (bound-and-true-p persp-mode)
                    ;; 只使用(persp-buffers persp-curr)产生的buffer list顺序不对，无法切换回之前的buffer。
                    (cl-remove-if-not
-                    (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-curr)))))
+                    (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers (persp-curr))))))
                     buffers_name))
               buffers_name)))
     (append (delete curr_name
@@ -177,3 +176,23 @@ FILENAME defaults to `buffer-file-name'."
     (error "Minibuffer is not active")))
 (define-key minibuffer-local-map (kbd "C-<tab>") 'nil)
 ;; =================minibuffer==================
+;;; undo-kill-buffer
+;; ==============undo-kill-buffer===============
+(add-hook 'kill-buffer-hook #'swint-add-to-killed-list)
+(defvar swint-killed-file-list nil
+  "List of recently killed files.")
+;;;###autoload
+(defun swint-add-to-killed-list ()
+  "Add to the `swint-killed-file-list' when killing the buffer."
+  (let ((file-or-dired (or buffer-file-name
+                           (and (equal major-mode 'dired-mode)
+                                default-directory))))
+    (when file-or-dired
+      (push file-or-dired swint-killed-file-list))))
+;;;###autoload
+(defun swint-undo-kill-buffer ()
+  "Reopen the most recently killed file, if one exists."
+  (interactive)
+  (when swint-killed-file-list
+    (find-file (pop swint-killed-file-list))))
+;; ==============undo-kill-buffer===============

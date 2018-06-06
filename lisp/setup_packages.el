@@ -85,22 +85,6 @@
   (global-undo-tree-mode)
   (define-key undo-tree-map (kbd "M-_") nil))
 ;; ==================undo-tree=====================
-;;; breadcrumb
-;; ==================breadcrumb====================
-(def-package! breadcrumb
-  :load-path "site-lisp/breadcrumb/"
-  :commands bc-set
-  :config
-  (bind-key "C-M-q" 'bc-previous)
-  (define-key emacs-lisp-mode-map "\e\C-q" nil)
-  (define-key lisp-interaction-mode-map "\e\C-q" nil)
-  (define-key prog-mode-map "\e\C-q" nil))
-;; 删除breadcrumb.el源文件中(message "breadcrumb bookmark is set for the current position.")，使bc-set不出现提示。
-;; (global-set-key (kbd "C-x C-/") 'bc-list) ;; C-x M-j for the bookmark menu list
-;; (global-set-key (kbd "C-x C-/") 'bc-local-previous) ;; M-up-arrow for local previous
-;; (global-set-key (kbd "C-x C-/") 'bc-local-next)     ;; M-down-arrow for local next
-;; (global-set-key (kbd "C-x C-/") 'bc-goto-current) ;; C-c j for jump to current bookmark
-;; ==================breadcrumb====================
 ;;; auto-mark
 ;; ==================auto-mark=====================
 (def-package! auto-mark
@@ -245,10 +229,10 @@
   :init
   (if (and (fboundp 'daemonp) (daemonp))
       (add-hook 'after-make-frame-functions 'swint-fcitx-setup)
-    (swint-fcitx-setup (selected-frame)))
+    (add-hook 'after-init-hook 'swint-fcitx-setup))
   :config
   (defvar swint-fcitx-setup-done nil)
-  (defun swint-fcitx-setup (frame)
+  (defun swint-fcitx-setup (&optional frame)
     (when (and (display-graphic-p frame) (not swint-fcitx-setup-done))
       (fcitx-prefix-keys-add "M-s" "M-g" "M-O")
       (fcitx-aggressive-setup)
