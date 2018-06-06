@@ -149,7 +149,7 @@
                            pdf-tools
                            peep-dired
                            persp-projectile
-                           ;; perspective
+                           perspective
                            pinyin-search
                            pinyinlib
                            pkg-info

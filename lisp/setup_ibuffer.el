@@ -18,7 +18,7 @@
     (define-ibuffer-filter persp
         "Toggle current view to buffers with file or directory name matching QUALIFIER."
       (:description "persp" :reader (read-from-minibuffer "Filter by persp (regexp): "))
-      (memq buf (persp-buffers (gethash qualifier (frame-parameter nil 'perspectives-hash)))))
+      (memq buf (persp-buffers (gethash qualifier (perspectives-hash)))))
     (defun ibuffer-create-saved-filter-groups-with-persp ()
       (interactive)
       (let* ((ibuffer-saved-filter-groups-without-persp

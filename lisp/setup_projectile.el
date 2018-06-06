@@ -98,8 +98,8 @@
   (defvar persp-projectile-hash (make-hash-table :test 'equal))
   :config
   (defun projectile-persp-switch-project/around (orig-fn project-to-switch)
-    (let ((perspectives-hash (frame-parameter nil 'perspectives-hash))
-          (persp-curr (frame-parameter nil 'persp-curr)))
+    (let ((perspectives-hash (perspectives-hash))
+          (persp-curr (persp-curr)))
       (funcall orig-fn project-to-switch)
       (projectile-add-known-project project-to-switch)
       ;; 将project-to-switch加入persp-projectile-hash中。

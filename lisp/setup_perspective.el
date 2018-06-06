@@ -15,7 +15,7 @@
   (bind-key "C-(" '(lambda () (interactive) (persp-push-current-buffer "9")))
   (bind-key "C-)" '(lambda () (interactive) (persp-push-current-buffer "0")))
   (bind-key "C-&" '(lambda () (interactive) (persp-push-current-buffer "i")))
-  (bind-key "C-`" '(lambda () (interactive) (swint-persp-switch (persp-name (frame-parameter nil 'persp-last)))))
+  (bind-key "C-`" 'persp-switch-last)
   (bind-key "C-~" 'persp-push-current-buffer-to-last)
   (defmacro with-persp-mode-on (&rest body)
     "Switch to the perspective given by NAME while evaluating BODY."
@@ -31,19 +31,19 @@
   (defun persp-format-name (name)
     "Format the perspective name given by NAME for display in `persp-modestring'."
     (let ((string-name (format "%s" name)))
-      (if (equal name (persp-name (frame-parameter nil 'persp-curr)))
+      (if (equal name (persp-name (persp-curr)))
           (propertize string-name 'face 'persp-selected-face))))
   (defun persp-activate (persp)
     "Activate the perspective given by the persp struct PERSP."
     (check-persp persp)
     (persp-save)
-    (set-frame-parameter nil 'persp-curr persp)
+    (set-frame-parameter nil 'persp--curr persp)
     (persp-set-local-variables (persp-local-variables persp))
     ;; 切换persp会打乱buffer list顺序，因persp-reactivate-buffers后(persp-buffers persp)顺序不对。
     (persp-reactivate-buffers
      (mapcar 'get-buffer (cl-remove-if-not
                           (lambda (x)
-                            (member x (remq nil (mapcar 'buffer-name (persp-buffers (frame-parameter nil 'persp-curr))))))
+                            (member x (remq nil (mapcar 'buffer-name (persp-buffers (persp-curr))))))
                           (if (bound-and-true-p helm-mode)
                               (helm-buffer-list) (buffer-list)))))
     (setq buffer-name-history (persp-buffer-history persp))
@@ -56,14 +56,14 @@
   (defun persp-push-current-buffer (name)
     (interactive)
     (with-persp-mode-on
-     (let ((persp (gethash name (frame-parameter nil 'perspectives-hash))))
+     (let ((persp (gethash name (perspectives-hash))))
        (push (current-buffer) (persp-buffers persp))
        (persp-remove-buffer (current-buffer))
        (persp-switch name))))
   (defun persp-push-current-buffer-to-last ()
     (interactive)
     (with-persp-mode-on
-     (persp-push-current-buffer (persp-name (frame-parameter nil 'persp-last)))))
+     (persp-push-current-buffer (persp-name (persp-last)))))
   (defun swint-persp-switch (name)
     (with-persp-mode-on
      (if (and (featurep 'helm) helm-alive-p)
@@ -101,7 +101,7 @@
         (cl-loop for x in (persp-names) do
                  (insert (concat (format "(setq buffers-in-perspectives-%s '" x)
                                  (prin1-to-string
-                                  (remove nil (mapcar #'buffer-name (persp-buffers (gethash x (frame-parameter nil 'perspectives-hash))))))
+                                  (remove nil (mapcar #'buffer-name (persp-buffers (gethash x (perspectives-hash))))))
                                  ")\n"
                                  (format "(setq window-configuration-of-persp-%s '" x)
                                  (prin1-to-string

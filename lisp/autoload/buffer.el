@@ -135,7 +135,7 @@ FILENAME defaults to `buffer-file-name'."
           (or (and (bound-and-true-p persp-mode)
                    ;; 只使用(persp-buffers persp-curr)产生的buffer list顺序不对，无法切换回之前的buffer。
                    (cl-remove-if-not
-                    (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers (frame-parameter nil 'persp-curr))))))
+                    (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-curr)))))
                     buffers_name))
               buffers_name)))
     (append (delete curr_name
