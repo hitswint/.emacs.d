@@ -37,6 +37,7 @@
   (setq helm-ff-newfile-prompt-p nil)
   (setq helm-split-window-default-side 'same)
   (setq helm-kill-ring-threshold 1)
+  (setq helm-external-programs-associations file-extension-app-alist)
   (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
   (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'")))
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))

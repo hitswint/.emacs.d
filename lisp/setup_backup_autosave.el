@@ -32,7 +32,7 @@
           (delete-directory file t)
         (delete-file file))))
   (let* ((PC-dir (concat "PC_" (replace-regexp-in-string
-                                "\n" ""
+                                "\n" "/"
                                 (shell-command-to-string "hostname"))))
          (PC-path (expand-file-name PC-dir "~/org/backups/log/"))
          (PC-tree-file (expand-file-name "fs-tree.txt" PC-path))
