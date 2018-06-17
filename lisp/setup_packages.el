@@ -760,4 +760,20 @@
   :bind (("M-s a" . academic-phrases)
          ("M-s A" . academic-phrases-by-section)))
 ;; =================academic-phrases===============
+;;; reftex
+;; =====================reftex=====================
+(def-package! reftex
+  :diminish reftex-mode
+  :commands reftex-mode
+  :init
+  (dolist (hook '(LaTeX-mode-hook org-mode-hook))
+    (add-hook hook (lambda ()
+                     (local-set-key (kbd "C-c r") 'reftex-mode))))
+  :config
+  ;; C-c [ reftex-citation，C-c C-x [ org-reftex-citation。
+  (define-key reftex-mode-map (kbd "C-c r") 'reftex-parse-all)
+  (setq reftex-plug-into-AUCTeX t
+        reftex-toc-split-windows-horizontally t
+        reftex-toc-split-windows-fraction 0.2))
+;; =====================reftex=====================
 (provide 'setup_packages)

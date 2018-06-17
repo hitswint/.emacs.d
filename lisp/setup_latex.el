@@ -33,22 +33,6 @@
   (add-to-list 'TeX-command-list '("LaTeX-standalone" "%`xelatex -shell-escape%(mode)%' %t" TeX-run-TeX nil t))
   (setq TeX-view-program-selection '((output-pdf "Llpp") (output-dvi "Llpp")))
   ;; ============setup-and-keybindings=============
-;;;; reftex
-  ;; ===================reftex=====================
-  (def-package! reftex
-    :diminish reftex-mode
-    :commands reftex-mode
-    :init
-    (dolist (hook '(LaTeX-mode-hook org-mode-hook))
-      (add-hook hook (lambda ()
-                       (local-set-key (kbd "C-c r") 'reftex-mode))))
-    :config
-    ;; C-c [ reftex-citation，C-c C-x [ org-reftex-citation。
-    (define-key reftex-mode-map (kbd "C-c r") 'reftex-parse-all)
-    (setq reftex-plug-into-AUCTeX t
-          reftex-toc-split-windows-horizontally t
-          reftex-toc-split-windows-fraction 0.2))
-  ;; ===================reftex=====================
 ;;;; preview
   ;; ==================preview=====================
   (def-package! preview

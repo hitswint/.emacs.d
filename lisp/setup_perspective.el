@@ -47,7 +47,8 @@
                               (helm-buffer-list) (buffer-list)))))
     (setq buffer-name-history (persp-buffer-history persp))
     (set-window-configuration (persp-window-configuration persp))
-    (goto-char (persp-point-marker persp))
+    (when (marker-position (persp-point-marker persp))
+      (goto-char (persp-point-marker persp)))
     (persp-update-modestring)
     (run-hooks 'persp-activated-hook))
 ;;;; defuns
