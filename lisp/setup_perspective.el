@@ -74,17 +74,17 @@
   ;; ========emacs开启时加载perspectives========
   (defun swint-load-perspectives ()
     ;; 升级到emacs24.5之后，(persp-mode)启动初始化错误，这里重新初始化。
-    (load swint-perspectives-saved-file t)
     (persp-mode 1)
     (remove-hook 'ido-make-buffer-list-hook 'persp-set-ido-buffers)
-    (cl-loop for x in swint-persp-names do
-             (with-perspective x
-               (persp-reactivate-buffers
-                (remove nil (mapcar #'get-buffer
-                                    (symbol-value (intern (format "buffers-in-perspectives-%s" x))))))
-               (ignore-errors (window-state-put
-                               (symbol-value (intern (format "window-configuration-of-persp-%s" x)))
-                               nil t))))
+    (when (load swint-perspectives-saved-file t)
+      (cl-loop for x in swint-persp-names do
+               (with-perspective x
+                 (persp-reactivate-buffers
+                  (remove nil (mapcar #'get-buffer
+                                      (symbol-value (intern (format "buffers-in-perspectives-%s" x))))))
+                 (ignore-errors (window-state-put
+                                 (symbol-value (intern (format "window-configuration-of-persp-%s" x)))
+                                 nil t)))))
     (modify-frame-parameters nil '((swint-persp-loadp . t))))
   ;; (add-hook 'desktop-after-read-hook 'swint-load-perspectives)
   ;; ========emacs开启时加载perspectives========
