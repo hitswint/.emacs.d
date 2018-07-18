@@ -31,7 +31,7 @@
                                                                           (let ((projectile-completion-system 'helm))
                                                                             (projectile-switch-project-by-name project))))
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-x j") '(lambda (project) (neotree-dir project)))
-  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-s") 'helm-projectile-ag)
+  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-s") '(lambda (project) (helm-projectile-ag "--hidden")))
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-M-k") 'helm-projectile-kill-persp)
   (defvar helm-source-projectile-projects-with-persp
     (helm-build-sync-source "Projectile projects with persp"

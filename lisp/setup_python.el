@@ -10,6 +10,7 @@
          ("C-x C-M-#" . pyvenv-deactivate)
          ("C-M-3" . elpy-shell-switch-to-shell))
   :config
+  (pyvenv-mode 1)
   ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换。
   (defalias 'workon 'pyvenv-workon)
   ;; ipython默认设置有bug，需要加--simple-prompt选项。
@@ -25,11 +26,12 @@
 ;; ====================elpy====================
 (def-package! elpy
   :diminish elpy-mode
-  :after pyvenv
+  :commands toggle-elpy-mode-all-buffers
   :init
+  (add-hook 'python-mode-hook (lambda ()
+                                (bind-key "C-c t" 'toggle-elpy-mode-all-buffers python-mode-map)))
   (setq elpy-remove-modeline-lighter nil)
   :config
-  (elpy-enable)
   (setq elpy-rpc-timeout nil)
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (define-key elpy-mode-map (kbd "M-.") nil)
@@ -44,12 +46,19 @@
   ;; (define-global-minor-mode global-elpy-mode elpy-mode
   ;;   (lambda () (when (eq major-mode 'python-mode) (elpy-mode 1))))
   ;; (global-elpy-mode 1)
-  ;; 在opened python buffer中开启elpy-mode。
-  (dolist (buf (cl-remove-if-not (lambda (x)
-                                   (equal (buffer-mode x) 'python-mode))
-                                 (buffer-list)))
-    (with-current-buffer buf
-      (elpy-mode 1))))
+  ;; 在opened python buffer中开关elpy-mode。
+  (defun toggle-elpy-mode-all-buffers ()
+    (interactive)
+    (if elpy-modules-initialized-p
+        (elpy-disable)
+      (unless pyvenv-virtual-env
+        (call-interactively 'pyvenv-workon))
+      (elpy-enable))
+    (dolist (buf (cl-remove-if-not (lambda (x)
+                                     (equal (buffer-mode x) 'python-mode))
+                                   (buffer-list)))
+      (with-current-buffer buf
+        (elpy-mode 'toggle)))))
 ;; ====================elpy====================
 ;;; emacs-ipython-notebook
 ;; ====================ein=====================

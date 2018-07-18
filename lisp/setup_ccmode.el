@@ -50,7 +50,7 @@
   :commands gdb-or-gud-go
   :init
   (add-hook 'c-mode-common-hook (lambda ()
-                                  (bind-key "C-c g" 'gdb-or-gud-go c-mode-map)))
+                                  (local-set-key (kbd "C-c g") 'gdb-or-gud-go)))
   :config
   (define-key gud-mode-map (kbd "C-c G") 'gud-quit)
   ;; 直接使用gdb-or-gud-go弹出gud-comint-buffer未定义，先gdb，然后gdb-or-gud-go。

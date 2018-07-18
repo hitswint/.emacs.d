@@ -1,6 +1,9 @@
 ;;; perspective
 ;; =================perspective=================
 (def-package! perspective
+  ;; 编译流程：
+  ;; 1. doom//clean-byte-compiled-files并重启emacs，更新编译包。
+  ;; 2. doom//byte-compile编译配置文件。
   :commands (persp-push-current-buffer
              persp-push-current-buffer-to-last
              swint-persp-switch
@@ -51,6 +54,17 @@
       (goto-char (persp-point-marker persp)))
     (persp-update-modestring)
     (run-hooks 'persp-activated-hook))
+  (defun persp-add-buffer (buffer)
+    "Associate BUFFER with the current perspective.
+
+See also `persp-switch' and `persp-remove-buffer'."
+    (interactive
+     (list
+      (let ((read-buffer-function nil))
+        (read-buffer "Add buffer to perspective: "))))
+    (let ((buffer (get-buffer buffer)))
+      (unless (or (not (persp-curr)) (memq buffer (persp-buffers (persp-curr))))
+        (push buffer (persp-buffers (persp-curr))))))
 ;;;; defuns
   ;; ===================defuns==================
   (defun persp-push-current-buffer (name)

@@ -27,8 +27,8 @@
   (bind-key "C-S-SPC" 'toggle-input-method)
   :config
   ;; 使用pyim-fuzzy-pinyin-alist设置模糊音。
-  ;; 设置选词框显示方式child-frame/popup/minibuffer。
-  ;; (setq pyim-page-tooltip 'popup)
+  ;; 设置选词框显示方式posframe/popup/minibuffer。
+  (setq pyim-page-tooltip 'popup)
   ;; 开启拼音搜索功能。
   ;; (pyim-isearch-mode 1)
   ;; 设置词条获取方式。

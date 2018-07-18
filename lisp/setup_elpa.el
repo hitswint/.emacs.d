@@ -109,6 +109,7 @@
                            helm-projectile
                            helm-swoop
                            helm-unicode
+                           helm-xref
                            highlight-indentation
                            highlight-parentheses
                            highlight-symbol
@@ -122,6 +123,11 @@
                            lacarte
                            latex-preview-pane
                            let-alist
+                           company-lsp
+                           cquery
+                           lsp-mode
+                           lsp-ui
+                           lsp-python
                            magic-latex-buffer
                            magit
                            magit-popup

@@ -446,7 +446,7 @@
         (progn (call-interactively 'goto-last-change)
                (setq last-command 'goto-last-change))
       (error
-       (call-interactively 'session-jump-to-last-change)))
+       (message "Buffer has not been changed")))
     ;; (invoke-prefix-command)
     ;; (initialize-event-loop)
     ;; The form (condition-case ERR FORM (quit QUIT-HANDLER))
@@ -605,9 +605,9 @@
 ;;; dumb-jump
 ;; ==================dumb-jump=====================
 (def-package! dumb-jump
-  :bind (("C-x C-," . dumb-jump-go)
-         ("C-x C-." . dumb-jump-back)
-         ("C-x C-/" . dumb-jump-quick-look)))
+  :bind (("M-s ," . dumb-jump-go)
+         ("M-s ." . dumb-jump-back)
+         ("M-s /" . dumb-jump-quick-look)))
 ;; ==================dumb-jump=====================
 ;;; diff-hl
 ;; ===================diff-hl======================

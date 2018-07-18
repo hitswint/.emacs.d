@@ -481,8 +481,8 @@
   :commands (helm-bibtex-with-local-bibliography
              bibtex-completion-find-pdf
              bibtex-completion-get-entry-for-pdf)
-  :bind (("C-x b" . helm-bibtex)
-         ("C-x B" . swint-helm-bibtex))
+  :bind (("C-x b" . swint-helm-bibtex)
+         ("C-x B" . helm-bibtex))
   :init
   (add-hook 'LaTeX-mode-hook '(lambda ()
                                 (bind-key "C-c b" 'helm-bibtex-with-local-bibliography LaTeX-mode-map)))
@@ -501,11 +501,17 @@
         bibtex-completion-pdf-field "file"
         bibtex-completion-bibliography '("~/.bib/ALL.bib") ;zotero-better-bibtex自动更新。
         bibtex-completion-notes-path "~/Zotero/storage/TKM9D893/notes.org")
-  (defun swint-helm-bibtex ()
-    (interactive)
-    (let ((bibtex-completion-bibliography
-           (read-file-name "File: " (expand-file-name "~/.bib/"))))
-      (call-interactively 'helm-bibtex)))
+  (defvar bibtex-completion-bibliography/curr nil)
+  (defun swint-helm-bibtex (&optional arg)
+    (interactive "P")
+    (when (or arg (not bibtex-completion-bibliography/curr))
+      (setq bibtex-completion-bibliography/curr
+            (helm-comp-read "Bibtex completion bibliography: "
+                            (directory-files (expand-file-name "~/.bib/") t "\\.bib$")
+                            :marked-candidates t
+                            :buffer "*helm bibtex-swint*")))
+    (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr))
+      (helm-bibtex nil bibtex-completion-bibliography/curr)))
   (defun bibtex-completion-get-entry-for-pdf (pdf-file)
     "Find entry for pdf-file in .bib file."
     (with-temp-buffer
