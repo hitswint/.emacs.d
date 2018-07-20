@@ -776,4 +776,15 @@
         reftex-toc-split-windows-horizontally t
         reftex-toc-split-windows-fraction 0.2))
 ;; =====================reftex=====================
+;; ======================eaf=======================
+(def-package! eaf
+  :commands eaf-open
+  :load-path "site-lisp/emacs-application-framework/"
+  :config
+  (advice-add 'eaf-open :before #'(lambda (url &optional app-name)
+                                    (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "eaf")
+                                      (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "eaf")))))
+  (add-hook 'eaf-mode-hook (lambda ()
+                             (set (make-local-variable 'ring-bell-function) 'ignore))))
+;; ======================eaf=======================
 (provide 'setup_packages)

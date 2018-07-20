@@ -32,3 +32,4 @@
 /request/
 *.elc
 /lisp/autoloads.el
+/eaf/

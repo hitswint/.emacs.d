@@ -1,3 +1,6 @@
 [submodule "site-lisp/org-protocol-capture-html"]
 	path = site-lisp/org-protocol-capture-html
 	url = https://github.com/hitswint/org-protocol-capture-html
+[submodule "site-lisp/emacs-application-framework"]
+	path = site-lisp/emacs-application-framework
+	url = https://github.com/manateelazycat/emacs-application-framework/

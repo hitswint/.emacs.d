@@ -7,32 +7,27 @@
 ;; ===================pyvenv===================
 (def-package! pyvenv
   :bind (("C-x C-M-3" . pyvenv-workon)
-         ("C-x C-M-#" . pyvenv-deactivate)
-         ("C-M-3" . elpy-shell-switch-to-shell))
+         ("C-x C-M-#" . pyvenv-deactivate))
   :config
   (pyvenv-mode 1)
   ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换。
-  (defalias 'workon 'pyvenv-workon)
-  ;; ipython默认设置有bug，需要加--simple-prompt选项。
-  (setq python-shell-interpreter "ipython"
-        python-shell-interpreter-args "-i --simple-prompt --pylab")
-  (defun elpy-shell-switch-to-shell/around (fn)
-    (unless pyvenv-virtual-env
-      (call-interactively 'pyvenv-workon))
-    (funcall fn))
-  (advice-add 'elpy-shell-switch-to-shell :around #'elpy-shell-switch-to-shell/around))
+  (defalias 'workon 'pyvenv-workon))
 ;; ===================pyvenv===================
 ;;; elpy
 ;; ====================elpy====================
 (def-package! elpy
   :diminish elpy-mode
-  :commands toggle-elpy-mode-all-buffers
+  :commands (elpy-shell-switch-to-shell toggle-elpy-mode-all-buffers)
   :init
+  (bind-key "C-M-3" 'elpy-shell-switch-to-shell)
   (add-hook 'python-mode-hook (lambda ()
                                 (bind-key "C-c t" 'toggle-elpy-mode-all-buffers python-mode-map)))
   (setq elpy-remove-modeline-lighter nil)
   :config
   (setq elpy-rpc-timeout nil)
+  ;; ipython默认设置有bug，需要加--simple-prompt选项。
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "-i --simple-prompt --pylab")
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (define-key elpy-mode-map (kbd "M-.") nil)
   (define-key elpy-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
@@ -42,6 +37,9 @@
   (define-key inferior-python-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key inferior-python-mode-map (kbd "C-c C-.") 'pop-tag-mark)
   (define-key inferior-python-mode-map (kbd "C-c C-/") 'elpy-doc)
+  (advice-add 'elpy-shell-switch-to-shell :before #'(lambda ()
+                                                      (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
+                                                        (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))))
   ;; 使用global-elpy-mode方式开启elpy-mode。
   ;; (define-global-minor-mode global-elpy-mode elpy-mode
   ;;   (lambda () (when (eq major-mode 'python-mode) (elpy-mode 1))))
@@ -51,8 +49,8 @@
     (interactive)
     (if elpy-modules-initialized-p
         (elpy-disable)
-      (unless pyvenv-virtual-env
-        (call-interactively 'pyvenv-workon))
+      (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
+        (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
       (elpy-enable))
     (dolist (buf (cl-remove-if-not (lambda (x)
                                      (equal (buffer-mode x) 'python-mode))
@@ -69,8 +67,8 @@
   (defun ein:jupyter-server-start/around (fn &rest args)
     (interactive
      (lambda (spec)
-       (unless (bound-and-true-p pyvenv-virtual-env)
-         (call-interactively 'pyvenv-workon))
+       (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
+         (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
        (unless (buffer-live-p (get-buffer ein:jupyter-server-buffer-name))
          (advice-eval-interactive-spec spec))))
     (if (buffer-live-p (get-buffer ein:jupyter-server-buffer-name))
