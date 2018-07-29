@@ -33,3 +33,4 @@
 *.elc
 /lisp/autoloads.el
 /eaf/
+/network-security.data

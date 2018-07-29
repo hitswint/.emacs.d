@@ -125,10 +125,6 @@ See also `persp-switch' and `persp-remove-buffer'."
   (if (and (fboundp 'daemonp) (daemonp))
       (add-hook 'delete-frame-functions (lambda (frame) (swint-save-perspectives)))
     (add-hook 'kill-emacs-hook 'swint-save-perspectives))
-  ;; 在不同的persp中关闭同一个buffer时，会产生无效的(persp-point-marker persp)。
-  (add-hook 'persp-before-switch-hook '(lambda ()
-                                         (unless (marker-position (persp-point-marker persp))
-                                           (setf (persp-point-marker persp) (point)))))
   ;; ========emacs关闭时保存perspectives========
   )
 ;; =================perspective=================

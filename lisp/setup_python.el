@@ -6,6 +6,7 @@
 ;;; pyvenv
 ;; ===================pyvenv===================
 (def-package! pyvenv
+  :commands (pyvenv-workon-home pyvenv-activate)
   :bind (("C-x C-M-3" . pyvenv-workon)
          ("C-x C-M-#" . pyvenv-deactivate))
   :config

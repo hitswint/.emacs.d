@@ -235,6 +235,12 @@
   (add-hook 'web-mode-hook (lambda ()
                              (bind-key "C-c i" 'company-web-bootstrap+ web-mode-map))))
 ;; ============ac-html-bootstrap===============
+;;; company-english-helper
+;; ==========company-english-helper============
+(use-package company-english-helper
+  :load-path "site-lisp/english-helper/"
+  :commands toggle-company-english-helper)
+;; ==========company-english-helper============
 ;;; hippie-expand
 ;; ==============hippie-expand=================
 (def-package! hippie-exp

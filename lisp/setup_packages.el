@@ -781,6 +781,7 @@
   :commands eaf-open
   :load-path "site-lisp/emacs-application-framework/"
   :config
+  (setq eaf-grip-token "2b9cd942f6960d763364607f258f45196b55c660")
   (advice-add 'eaf-open :before #'(lambda (url &optional app-name)
                                     (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "eaf")
                                       (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "eaf")))))
