@@ -764,7 +764,7 @@
 ;; =====================reftex=====================
 (def-package! reftex
   :diminish reftex-mode
-  :commands reftex-mode
+  :commands (reftex-mode reftex-label)
   :init
   (dolist (hook '(LaTeX-mode-hook org-mode-hook))
     (add-hook hook (lambda ()
@@ -776,6 +776,7 @@
         reftex-toc-split-windows-horizontally t
         reftex-toc-split-windows-fraction 0.2))
 ;; =====================reftex=====================
+;;; eaf
 ;; ======================eaf=======================
 (def-package! eaf
   :commands eaf-open
@@ -788,4 +789,22 @@
   (add-hook 'eaf-mode-hook (lambda ()
                              (set (make-local-variable 'ring-bell-function) 'ignore))))
 ;; ======================eaf=======================
+;;; annot
+;; =====================annot======================
+(def-package! annot
+  :load-path "site-lisp/annot/src/"
+  :bind (("M-g a" . annot-edit/add)
+         ("M-g A" . annot-remove)
+         ("M-g M-a" . annot-add-image))
+  :config
+  ;; 与volatile-highlights-mode有冲突。
+  (vhl/unload-extension 'kill)
+  (vhl/unload-extension 'delete)
+  (dolist (buf (cl-remove-if-not (lambda (x)
+                                   (buffer-file-name x))
+                                 (buffer-list)))
+    (with-current-buffer buf (annot-load-annotations)))
+  (define-key ctl-x-map "\C-r" 'swint-counsel-history)
+  (define-key ctl-x-map "\C-i" 'cleanup-buffer))
+;; =====================annot======================
 (provide 'setup_packages)

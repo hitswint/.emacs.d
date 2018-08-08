@@ -53,6 +53,8 @@
           ("dot" . "dot -Tpng -o dot.png")
           ("c" . "gcc -Wall")))
   ;; dired-do-shell-command打开方式。
+  (setq async-shell-command-buffer 'new-buffer)
+  (setq async-shell-command-display-buffer nil)
   (setq dired-guess-shell-alist-user
         (list
          (list "\\.pdf$" "adobe.sh * >/dev/null 2>&1 &")

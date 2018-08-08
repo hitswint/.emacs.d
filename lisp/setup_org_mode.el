@@ -483,6 +483,7 @@
   :bind (:map dired-mode-map
               ("C-c l" . swint-dired-interleave))
   :config
+  (setq interleave-disable-narrowing t)
   (defun swint-dired-interleave ()
     (interactive)
     (let* ((pdf-file (dired-get-file-for-visit))
