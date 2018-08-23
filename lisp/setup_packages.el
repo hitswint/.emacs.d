@@ -797,6 +797,7 @@
          ("M-g A" . annot-remove)
          ("M-g M-a" . annot-add-image))
   :config
+  (setq annot-directory "~/org/.annot")
   ;; 与volatile-highlights-mode有冲突。
   (vhl/unload-extension 'kill)
   (vhl/unload-extension 'delete)
@@ -804,6 +805,7 @@
                                    (buffer-file-name x))
                                  (buffer-list)))
     (with-current-buffer buf (annot-load-annotations)))
+  (define-key ctl-x-map "\C-a" nil)
   (define-key ctl-x-map "\C-r" 'swint-counsel-history)
   (define-key ctl-x-map "\C-i" 'cleanup-buffer))
 ;; =====================annot======================

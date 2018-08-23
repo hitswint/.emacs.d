@@ -47,7 +47,7 @@
           ("caj" . "caj.sh") ("nh" . "caj.sh") ("kdh" . "caj.sh")
           ("gp" . "gnuplot")
           ("rar" . "unrar x -o+")
-          ("zip" . "unzip")
+          ("zip" . "unar")
           ("gz" . "tar zvxf") ("tgz" . "tar zvxf") ("bz2" . "tar jvxf") ("tar" . "tar xf")
           ("tex" . "xelatex")
           ("dot" . "dot -Tpng -o dot.png")
