@@ -1,0 +1,22 @@
+{
+    "createdBy": "Redirector v3.2.1",
+    "createdAt": "2018-09-13T04:23:37.515Z",
+    "redirects": [
+        {
+            "description": "vpn-sciencedirect",
+            "exampleUrl": "https://www.sciencedirect.com/science/article/pii/S0378778817338513",
+            "exampleResult": "https://vpn.hit.edu.cn/,DanaInfo=www.sciencedirect.com,SSL+science/article/pii/S0378778817338513",
+            "error": null,
+            "includePattern": "https://www.sciencedirect.com/science/article/*",
+            "excludePattern": "",
+            "patternDesc": "",
+            "redirectUrl": "https://vpn.hit.edu.cn/,DanaInfo=www.sciencedirect.com,SSL+science/article/$1",
+            "patternType": "W",
+            "processMatches": "noProcessing",
+            "disabled": false,
+            "appliesTo": [
+                "main_frame"
+            ]
+        }
+    ]
+}

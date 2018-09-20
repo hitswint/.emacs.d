@@ -108,6 +108,19 @@
   (define-key function-args-mode-map (kbd "C-M-j") nil)
   (define-key function-args-mode-map (kbd "C-M-k") nil))
 ;; ==================function-args==============
+;;; semantic
+;; ===================semantic==================
+(def-package! semantic
+  :commands semantic-mode
+  :config
+  (setq semantic-idle-scheduler-idle-time 5)
+  (semanticdb-enable-gnu-global-databases 'c-mode)
+  (semanticdb-enable-gnu-global-databases 'c++-mode)
+  ;; (add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+  ;; 默认semantic快捷键以C-c ,为前缀。
+  (define-key semantic-mode-map (kbd "C-c ,") nil))
+;; ===================semantic==================
 ;;; hs-minor-mode
 ;; ==================hs-minor-mode==============
 (def-package! hideshow
@@ -118,25 +131,6 @@
   :config
   (define-key hs-minor-mode-map (kbd "C-c C-`") 'hs-toggle-hiding))
 ;; ==================hs-minor-mode==============
-;;; semantic
-;; ===================semantic==================
-(def-package! semantic
-  :commands semantic-mode
-  :init
-  (dolist (hook '(c-mode-hook
-                  c++-mode-hook))
-    (add-hook hook 'semantic-mode))
-  :config
-  (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
-  ;; 在空闲时分析buffer。
-  (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
-  ;; 在minibuffer显示函数。
-  (add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
-  ;; 在header-line显示函数。
-  (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
-  ;; 默认semantic快捷键以C-c ,为前缀。
-  (define-key semantic-mode-map (kbd "C-c ,") nil))
-;; ===================semantic==================
 ;;; helm-gtags
 ;; ==================helm-gtags=================
 (def-package! helm-gtags

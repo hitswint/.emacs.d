@@ -30,9 +30,6 @@
                                               (swint-org-annotate-file)
                                               (dired-do-copy)
                                               (dired-create-directory)))
-  (setq helm-projectile-sources-list '(helm-source-projectile-projects
-                                       helm-source-projectile-files-list
-                                       helm-source-projectile-buffers-list))
   (setq helm-buffer-details-flag nil)
   (setq helm-ff-newfile-prompt-p nil)
   (setq helm-split-window-default-side 'same)
