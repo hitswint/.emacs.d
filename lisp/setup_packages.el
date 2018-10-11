@@ -560,8 +560,6 @@
 (def-package! auto-highlight-symbol
   :diminish auto-highlight-symbol-mode
   :defer 2
-  :init
-  (setq ahs-default-range 'ahs-range-whole-buffer)
   :config
   (global-auto-highlight-symbol-mode t)
   (set-face-attribute 'ahs-face nil
@@ -809,4 +807,11 @@
   (define-key ctl-x-map "\C-r" 'swint-counsel-history)
   (define-key ctl-x-map "\C-i" 'cleanup-buffer))
 ;; =====================annot======================
+;;; insert-translated-name
+;; ============insert-translated-name==============
+(use-package insert-translated-name
+  :load-path "site-lisp/insert-translated-name/"
+  :bind (("M-s M-o" . insert-translated-name-insert-original-translation)
+         ("M-s M-O" . insert-translated-name-insert)))
+;; ============insert-translated-name==============
 (provide 'setup_packages)

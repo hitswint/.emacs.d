@@ -20,7 +20,7 @@
                          (or (getenv "CPPFLAGS") "")
                          (or (getenv "CFLAGS") "-Wall -g")
                          file)))))
-  (add-hook 'c-mode-hook
+  (add-hook 'c-mode-common-hook
             (lambda ()
               (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
               (define-key c-mode-base-map (kbd "C-c C-S-c") (lambda () (interactive)
@@ -28,7 +28,6 @@
                                                               (call-interactively 'compile)))
               (define-key c-mode-base-map (kbd "C-c d") 'disaster)
               (define-key c-mode-base-map (kbd "C-M-q") nil)
-              (define-key c-mode-base-map (kbd "C-M-h") nil)
               (define-key c-mode-base-map (kbd "(") nil)
               (define-key c-mode-base-map (kbd "{") nil)))
   ;; Available C style:

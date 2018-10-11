@@ -21,7 +21,7 @@
   (global-set-key (kbd "M-O a") 'org-agenda)
   (setq org-capture-templates
         '(("i" "Idea" entry (file+headline "~/org/task.org" "Idea List") "* TODO %? %^g")
-          ("r" "Research" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
+          ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
           ("c" "Computer" entry (file+headline "~/org/notes-computer.org" "Computer") "* %? %U %^g")
           ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others") "* %? %U %^g")
           ("j" "Journal" entry (file+olp+datetree "~/org/journal.org.gpg") "* %? %U")))
@@ -557,7 +557,7 @@
   :defer 2
   :config
   (add-to-list 'org-capture-templates
-               '("w" "Web" entry (file+olp "~/Nutstore-sync/orgzly/orgzly.org" "Web")
+               '("h" "Html" entry (file+olp "~/Nutstore-sync/orgzly/orgzly.org" "Html")
                  "* %c %U\n%?\n%:initial"))
   ;; Removed useless HTML elements.
   (defun org-protocol-capture-html--with-pandoc (data)

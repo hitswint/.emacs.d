@@ -1,12 +1,12 @@
 ;;; Projectile
 ;; ==================Projectile=================
 (def-package! projectile
+  :diminish projectile-mode
   :bind-keymap ("M-\"" . projectile-command-map)
   :config
   (projectile-mode t)
   (define-key projectile-mode-map (kbd "M-\"") 'projectile-command-map)
   (setq projectile-enable-caching t)
-  (setq projectile-mode-line nil)
   (setq projectile-completion-system 'helm))
 ;; ==================Projectile=================
 ;;; helm-projectile

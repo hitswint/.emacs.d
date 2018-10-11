@@ -26,6 +26,7 @@
   (setq elpy-remove-modeline-lighter nil)
   :config
   (setq elpy-rpc-timeout nil)
+  (setq elpy-shell-use-project-root nil)
   ;; ipython默认设置有bug，需要加--simple-prompt选项。
   (setq python-shell-interpreter "ipython"
         python-shell-interpreter-args "-i --simple-prompt --pylab")
@@ -49,7 +50,8 @@
   (defun toggle-elpy-mode-all-buffers ()
     (interactive)
     (if elpy-modules-initialized-p
-        (elpy-disable)
+        (progn (elpy-disable)
+               (pyvenv-mode 1))
       (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
         (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
       (elpy-enable))
@@ -62,7 +64,8 @@
 ;;; emacs-ipython-notebook
 ;; ====================ein=====================
 (def-package! ein
-  :bind ("C-M-#" . ein:jupyter-server-start)
+  :bind (("M-g j" . ein:jupyter-server-start)
+         ("M-g J" . ein:jupyter-server-stop))
   :config
   ;; ein:url-or-port可取8888或http://127.0.0.1(localhost):8888。
   (defun ein:jupyter-server-start/around (fn &rest args)
@@ -76,7 +79,8 @@
         (ein:notebooklist-open)
       (let ((ein:jupyter-server-args '("--no-browser")))
         (apply fn args)
-        (set-process-query-on-exit-flag (get-process "EIN: Jupyter notebook server") nil))))
+        (set-process-query-on-exit-flag (get-process "EIN: Jupyter notebook server") nil)
+        (setq *ein:last-jupyter-directory* nil))))
   (advice-add 'ein:jupyter-server-start :around #'ein:jupyter-server-start/around)
   ;; 默认补全后端为ac，可选company。
   ;; (setq ein:completion-backend 'ein:use-company-backend)
