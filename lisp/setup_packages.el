@@ -476,21 +476,11 @@
 ;; =====================bbyac======================
 (def-package! bbyac
   :diminish bbyac-mode
-  :bind (("M-s M-u" . bbyac-expand-substring)
-         ("M-s M-U" . bbyac-expand-symbols))
+  :bind (("M-g M-u" . bbyac-expand-substring)
+         ("M-g M-U" . bbyac-expand-symbols))
   :config
-  (bbyac-global-mode 1)
-  (setq browse-kill-ring-display-style 'one-line)
-  (define-key bbyac-mode-map (kbd "M-s M-u") 'bbyac-expand-substring)
-  (define-key bbyac-mode-map (kbd "M-s M-U") 'bbyac-expand-symbols)
-  (define-key bbyac-mode-map (kbd "M-g <return>") nil)
-  (define-key bbyac-mode-map (kbd "M-g RET") nil)
-  (define-key bbyac-mode-map (kbd "M-s <return>") nil)
-  (define-key bbyac-mode-map (kbd "M-s <RET>") nil)
-  (define-key bbyac-mode-map (kbd "M-g x") nil)
-  (define-key bbyac-mode-map (kbd "M-s l") nil)
-  (define-key bbyac-mode-map (kbd "M-s s") nil)
-  (define-key bbyac-mode-map (kbd "M-s p") nil))
+  ;; (bbyac-global-mode 1)
+  (setq browse-kill-ring-display-style 'one-line))
 ;; =====================bbyac======================
 ;;; vimish-fold
 ;; ==================vimish-fold===================
@@ -811,7 +801,7 @@
 ;; ============insert-translated-name==============
 (use-package insert-translated-name
   :load-path "site-lisp/insert-translated-name/"
-  :bind (("M-s M-o" . insert-translated-name-insert-original-translation)
-         ("M-s M-O" . insert-translated-name-insert)))
+  :bind (("M-g d" . insert-translated-name-insert)
+         ("M-g D" . insert-translated-name-insert-original-translation)))
 ;; ============insert-translated-name==============
 (provide 'setup_packages)

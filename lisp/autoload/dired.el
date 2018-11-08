@@ -302,7 +302,7 @@ Assuming .. and . is a current directory (like in FAR)"
                                                  (car (split-string (counsel-read-file-for-rsync
                                                                      'remote-files (format "/ssh:%s:~/" remote)) "/ssh:" t)))
                                               (concat remote ":" path))))))))
-          (setq rsync/unison-command "rsync -arvz --progress ")
+          (setq rsync/unison-command "rsync -arv -zz --progress ")
           (dolist (file files)
             (setq rsync/unison-command
                   (concat rsync/unison-command file " ")))

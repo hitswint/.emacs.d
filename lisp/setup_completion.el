@@ -239,7 +239,12 @@
 ;; ==========company-english-helper============
 (use-package company-english-helper
   :load-path "site-lisp/english-helper/"
-  :commands toggle-company-english-helper)
+  :bind ("M-s M-u" . swint-company-english-helper-search)
+  :config
+  (defun swint-company-english-helper-search ()
+    (interactive)
+    (company-abort)
+    (call-interactively 'company-english-helper-search)))
 ;; ==========company-english-helper============
 ;;; hippie-expand
 ;; ==============hippie-expand=================
