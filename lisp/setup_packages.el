@@ -799,7 +799,7 @@
 ;; =====================annot======================
 ;;; insert-translated-name
 ;; ============insert-translated-name==============
-(use-package insert-translated-name
+(def-package! insert-translated-name
   :load-path "site-lisp/insert-translated-name/"
   :bind (("M-g d" . insert-translated-name-insert)
          ("M-g D" . insert-translated-name-insert-original-translation)))

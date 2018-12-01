@@ -54,3 +54,9 @@ then
     "$@"
     set --
 fi
+
+if [ ! -f $HOME/git-repo/pinyin-completion/shell/pinyin-comp.zsh ];then
+    git clone https://github.com/petronny/pinyin-completion.git $HOME/git-repo/pinyin-completion
+else
+    source-if-exists "${HOME}/git-repo/pinyin-completion/shell/pinyin-comp.zsh"
+fi

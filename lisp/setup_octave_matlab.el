@@ -31,7 +31,7 @@
 ;; ======================octave====================
 ;;; matlab
 ;; ======================matlab====================
-(use-package matlab
+(def-package! matlab
   :commands (matlab-mode
              matlab-shell)
   :config

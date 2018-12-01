@@ -117,6 +117,30 @@
            (message "bypy-sync done.")
            (setcdr pos (remove "bypy-sync " (cdr pos)))))))))
 ;; =================bypy=====================
+;;; OneDrive
+;; ===============OneDrive===================
+;;;###autoload
+(defun swint-onedrive-sync (&optional arg)
+  "Synchronization of OneDrive-sync."
+  (interactive)
+  (let* ((localdir (expand-file-name "~/OneDrive/rclone"))
+         (remotedir "OneDrive:/rclone")
+         (process
+          (start-process-shell-command
+           "OneDrive_sync" "*OneDrive_sync*"
+           (cond ((equal arg "down") (concat "rclone sync " remotedir " " localdir))
+                 ((equal arg "up") (concat "rclone sync " localdir " " remotedir))
+                 ((equal arg "bi") "onedrive"))))
+         (pos (memq 'mode-line-modes mode-line-format)))
+    (setcdr pos (cons "OneDrive-sync " (cdr pos)))
+    (set-process-sentinel
+     process
+     (lambda (process signal)
+       (when (memq (process-status process) '(exit signal))
+         (let ((pos (memq 'mode-line-modes mode-line-format)))
+           (message "OneDrive-sync done.")
+           (setcdr pos (remove "OneDrive-sync " (cdr pos)))))))))
+;; ===============OneDrive===================
 ;;; totalcmd
 ;; ===============totalcmd===================
 ;;;###autoload

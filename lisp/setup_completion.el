@@ -237,7 +237,7 @@
 ;; ============ac-html-bootstrap===============
 ;;; company-english-helper
 ;; ==========company-english-helper============
-(use-package company-english-helper
+(def-package! company-english-helper
   :load-path "site-lisp/english-helper/"
   :bind ("M-s M-u" . swint-company-english-helper-search)
   :config
