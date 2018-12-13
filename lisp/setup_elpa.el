@@ -127,7 +127,6 @@
                            cquery
                            lsp-mode
                            lsp-ui
-                           lsp-python
                            magic-latex-buffer
                            magit
                            magit-popup

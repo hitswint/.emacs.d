@@ -68,19 +68,39 @@
          ("M-g J" . ein:jupyter-server-stop))
   :config
   ;; ein:url-or-port可取8888或http://127.0.0.1(localhost):8888。
+  ;; ein:jupyter-server-conn-info搜索并确定url和token，但中文提示导致搜索失败。
+  (defun ein:jupyter-server-conn-info/override (&optional buffer)
+    "Return the url-or-port and password for BUFFER or the global session."
+    (unless buffer
+      (setq buffer (get-buffer ein:jupyter-server-buffer-name)))
+    (let ((result '(nil nil)))
+      (if buffer
+          (with-current-buffer buffer
+            (save-excursion
+              (goto-char (point-max))
+              (re-search-backward (format "Process %s" *ein:jupyter-server-process-name*)
+                                  nil "") ;; important if we start-stop-start
+              (when (or (re-search-forward "\\([[:alnum:]]+\\) is\\( now\\)? running" nil t)
+                        (re-search-forward "\\(本程序运行在\\)" nil t))
+                (let ((hub-p (search "jupyterhub" (downcase (match-string 1)))))
+                  (when (re-search-forward "\\(https?://[^:]*:[0-9]+\\)\\(?:/\\?token=\\([[:alnum:]]+\\)\\)?" nil t)
+                    (let ((raw-url (match-string 1))
+                          (token (or (match-string 2) (and (not hub-p) ""))))
+                      (setq result (list (ein:url raw-url) token)))))))))
+      result))
+  (advice-add 'ein:jupyter-server-conn-info :override #'ein:jupyter-server-conn-info/override)
   (defun ein:jupyter-server-start/around (fn &rest args)
     (interactive
      (lambda (spec)
        (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
          (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
-       (unless (buffer-live-p (get-buffer ein:jupyter-server-buffer-name))
+       (unless (ein:jupyter-server-process)
          (advice-eval-interactive-spec spec))))
-    (if (buffer-live-p (get-buffer ein:jupyter-server-buffer-name))
-        (ein:notebooklist-open)
-      (let ((ein:jupyter-server-args '("--no-browser")))
-        (apply fn args)
-        (set-process-query-on-exit-flag (get-process "EIN: Jupyter notebook server") nil)
-        (setq *ein:last-jupyter-directory* nil))))
+    (if (ein:jupyter-server-process)
+        (call-interactively 'ein:notebooklist-login)
+      (apply fn args)
+      (set-process-query-on-exit-flag (get-process "EIN: Jupyter notebook server") nil)
+      (setq *ein:last-jupyter-directory* nil)))
   (advice-add 'ein:jupyter-server-start :around #'ein:jupyter-server-start/around)
   ;; 默认补全后端为ac，可选company。
   ;; (setq ein:completion-backend 'ein:use-company-backend)
