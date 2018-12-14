@@ -365,27 +365,28 @@
     "Run switch-persp/other-window action from `helm-source-buffers-list'."
     (interactive)
     (with-helm-alive-p
-      (helm-exit-and-execute-action 'swint-helm-switch-persp/other-window)))
+      (helm-run-after-exit 'swint-helm-switch-persp/other-window)))
   (defun swint-helm-buffer-persp-add-buffers ()
     "Run persp-add-buffer action from `helm-source-buffers-list'."
     (interactive)
     (with-helm-alive-p
-      (helm-exit-and-execute-action 'swint-helm-persp-add-buffers)))
+      (helm-run-after-exit 'swint-helm-persp-add-buffers)))
   (defun swint-helm-buffer-persp-remove-buffers ()
     "Run persp-remove-buffer action from `helm-source-buffers-list'."
     (interactive)
     (with-helm-alive-p
-      (helm-exit-and-execute-action 'swint-helm-persp-remove-buffers)))
-  (defun swint-helm-switch-persp/other-window (buffer)
+      (helm-run-after-exit 'swint-helm-persp-remove-buffers)))
+  (defun swint-helm-switch-persp/other-window ()
     "Helm-switch to persp/other-window simultaneously."
-    (if (or (not (bound-and-true-p persp-mode))
-            (memq buffer (persp-buffers (persp-curr))))
-        (switch-to-buffer-other-window buffer)
-      (let ((curr-buf (current-buffer)))
-        (swint-persp-switch "i")
-        (switch-to-buffer curr-buf)
-        (switch-to-buffer-other-window buffer))))
-  (defun swint-helm-persp-add-buffers (_ignore)
+    (let ((buffer (helm-get-selection)))
+      (if (or (not (bound-and-true-p persp-mode))
+              (memq buffer (persp-buffers (persp-curr))))
+          (switch-to-buffer-other-window buffer)
+        (let ((curr-buf (current-buffer)))
+          (swint-persp-switch "i")
+          (switch-to-buffer curr-buf)
+          (switch-to-buffer-other-window buffer)))))
+  (defun swint-helm-persp-add-buffers ()
     (let* ((bufs (helm-marked-candidates))
            (added-bufs (cl-count-if 'persp-add-buffer bufs)))
       (when (buffer-live-p helm-buffer)
@@ -393,7 +394,7 @@
           (setq helm-marked-candidates nil
                 helm-visible-mark-overlays nil)))
       (message "Addded %s buffer(s)" added-bufs)))
-  (defun swint-helm-persp-remove-buffers (_ignore)
+  (defun swint-helm-persp-remove-buffers ()
     (let* ((bufs (helm-marked-candidates))
            (removed-bufs (cl-count-if 'persp-remove-buffer bufs)))
       (when (buffer-live-p helm-buffer)
@@ -419,19 +420,20 @@
   ;; ======在其他helm-buffer中运行helm命令======
 ;;;; helm-open-file-with-lister
   ;; ========helm-open-file-with-lister=========
-  (defun helm-open-file-with-lister (_candidate)
+  (defun helm-open-file-with-lister ()
     "Opens a file with lister of total commander."
-    (start-process-shell-command
-     "tc" "*tc*"
-     (concat "wine "
-             "~/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
-             (replace-regexp-in-string " " "\\\\ "
-                                       (expand-file-name _candidate)))))
+    (let ((file (helm-get-selection)))
+      (start-process-shell-command
+       "tc" "*tc*"
+       (concat "wine "
+               "~/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
+               (replace-regexp-in-string " " "\\\\ "
+                                         (expand-file-name file))))))
   (defun helm-ff-run-open-file-with-lister ()
     "Run Rename file action from `helm-source-find-files'."
     (interactive)
     (with-helm-alive-p
-      (helm-exit-and-execute-action 'helm-open-file-with-lister)))
+      (helm-run-after-exit 'helm-open-file-with-lister)))
   ;; ========helm-open-file-with-lister=========
 ;;;; helm-locate
   ;; ==============helm-locate==================
@@ -486,13 +488,13 @@
   :config
   (define-key helm-map (kbd "C-c j") '(lambda () (interactive)
                                         (with-helm-alive-p
-                                          (helm-exit-and-execute-action 'helm-bibtex-open-pdf-externally))))
+                                          (helm-run-after-exit 'helm-bibtex-open-pdf-externally (helm-marked-candidates)))))
   (define-key helm-map (kbd "C-c o") '(lambda () (interactive)
                                         (with-helm-alive-p
-                                          (helm-exit-and-execute-action 'helm-bibtex-open-pdf))))
+                                          (helm-run-after-exit 'helm-bibtex-open-pdf (helm-marked-candidates)))))
   (define-key helm-map (kbd "C-c l") '(lambda () (interactive)
                                         (with-helm-alive-p
-                                          (helm-exit-and-execute-action 'helm-bibtex-edit-notes))))
+                                          (helm-run-after-exit 'helm-bibtex-edit-notes))))
   (setq bibtex-completion-cite-prompt-for-optional-arguments nil
         bibtex-completion-additional-search-fields '(keywords)
         bibtex-completion-pdf-field "file"
