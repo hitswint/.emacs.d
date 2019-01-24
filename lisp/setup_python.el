@@ -1,7 +1,11 @@
 ;;; python-mode
 ;; =================python-mode================
 (def-package! python
-  :mode ("\\.py\\'" . python-mode))
+  :mode ("\\.py\\'" . python-mode)
+  :config
+  ;; ipython默认设置有bug，需要加--simple-prompt选项。
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "-i --simple-prompt --pylab"))
 ;; =================python-mode================
 ;;; pyvenv
 ;; ===================pyvenv===================
@@ -27,9 +31,6 @@
   :config
   (setq elpy-rpc-timeout nil)
   (setq elpy-shell-use-project-root nil)
-  ;; ipython默认设置有bug，需要加--simple-prompt选项。
-  (setq python-shell-interpreter "ipython"
-        python-shell-interpreter-args "-i --simple-prompt --pylab")
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (define-key elpy-mode-map (kbd "M-.") nil)
   (define-key elpy-mode-map (kbd "C-c C-,") 'elpy-goto-definition)

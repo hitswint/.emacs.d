@@ -494,7 +494,7 @@
                                           (helm-run-after-exit 'helm-bibtex-open-pdf (helm-marked-candidates)))))
   (define-key helm-map (kbd "C-c l") '(lambda () (interactive)
                                         (with-helm-alive-p
-                                          (helm-run-after-exit 'helm-bibtex-edit-notes))))
+                                          (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
   (setq bibtex-completion-cite-prompt-for-optional-arguments nil
         bibtex-completion-additional-search-fields '(keywords)
         bibtex-completion-pdf-field "file"
