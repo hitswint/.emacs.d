@@ -35,6 +35,7 @@
 (setq shift-select-mode nil)
 (setq epa-pinentry-mode 'loopback)      ;使用minibuffer输入密码。
 (setq delete-by-moving-to-trash t)
+(setq display-line-numbers-type t)
 (setq trash-directory "~/.Trash")
 (setq tramp-default-method "ssh")
 (setq tramp-ssh-controlmaster-options   ;默认设置导致helm启动慢。
@@ -73,7 +74,7 @@
 (global-set-key (kbd "<C-next>") 'next-user-buffer)
 (global-set-key (kbd "C-x M-d") 'delete-current-buffer-file)
 (global-set-key (kbd "C-x M-r") 'rename-current-buffer-file)
-(global-set-key (kbd "C-q") 'swint-kill-this-buffer)
+(global-set-key (kbd "C-q") 'swint-kill-buffer)
 (global-set-key (kbd "M-c") 'toggle-letter-case)
 (global-set-key (kbd "M-Q") 'compact-uncompact-block)
 (global-set-key (kbd "C-w") 'cut-line-or-region)

@@ -46,7 +46,7 @@
     (persp-reactivate-buffers
      (mapcar 'get-buffer (cl-remove-if-not
                           (lambda (x)
-                            (member x (remq nil (mapcar 'buffer-name (persp-buffers (persp-curr))))))
+                            (member x (remq nil (mapcar #'buffer-name (persp-buffers (persp-curr))))))
                           (if (bound-and-true-p helm-mode)
                               (helm-buffer-list) (buffer-list)))))
     (setq buffer-name-history (persp-buffer-history persp))

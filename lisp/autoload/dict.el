@@ -5,7 +5,7 @@
   "Major mode for sdcv."
   (fcitx--sdcv-maybe-deactivate)
   (local-set-key (kbd "q") '(lambda () (interactive)
-                              (swint-kill-this-buffer)
+                              (swint-kill-buffer)
                               (jump-to-register :sdcv)
                               (fcitx--sdcv-maybe-activate))))
 (defvar sdcv-dictionary-list '("朗道英汉字典5.0"

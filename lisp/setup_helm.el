@@ -502,6 +502,7 @@
         bibtex-completion-notes-path "~/Zotero/storage/TKM9D893/notes.org")
   (defvar bibtex-completion-bibliography/curr nil)
   (defun swint-helm-bibtex (&optional arg)
+    "With a prefix ARG，choose bib file and execute bibtex-completion-clear-cache."
     (interactive "P")
     (when (or arg (not bibtex-completion-bibliography/curr))
       (setq bibtex-completion-bibliography/curr
@@ -510,7 +511,9 @@
                             :marked-candidates t
                             :buffer "*helm bibtex-swint*")))
     (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr))
-      (helm-bibtex nil bibtex-completion-bibliography/curr)))
+      (if (and (buffer-live-p (get-buffer "*helm bibtex*")) (not arg))
+          (helm-resume "*helm bibtex*")
+        (helm-bibtex arg bibtex-completion-bibliography/curr))))
   (defun bibtex-completion-get-entry-for-pdf (pdf-file)
     "Find entry for pdf-file in .bib file."
     (with-temp-buffer
@@ -631,4 +634,21 @@
             :preselect str
             :buffer "*helm imenu outshine*"))))
 ;; ================helm-imenu===================
+;;; ace-jump-helm-line
+;; ============ace-jump-helm-line===============
+(def-package! ace-jump-helm-line
+  :commands ace-jump-helm-line
+  :config
+  (setq ace-jump-helm-line-keys (append (number-sequence ?a ?z)
+                                        (number-sequence ?0 ?9)
+                                        '(?, ?. ?/ ?' ?\; ? ))))
+;; ============ace-jump-helm-line===============
+;;; key-chord
+;; ================key-chord====================
+(def-package! key-chord
+  :after helm
+  :config
+  (key-chord-mode 1)
+  (key-chord-define helm-map "hh" 'ace-jump-helm-line))
+;; ================key-chord====================
 (provide 'setup_helm)

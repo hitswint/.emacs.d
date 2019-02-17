@@ -68,7 +68,7 @@
                       (nth 0 current-sexp)
                       (nth 1 current-sexp)
                       (car ex) (error-message-string ex))))
-          (kill-buffer buf))))))
+          (swint-kill-buffer buf))))))
 ;;;###autoload
 (defun doom//byte-compile (&optional recompile-p)
   "Byte compiles your emacs configuration."

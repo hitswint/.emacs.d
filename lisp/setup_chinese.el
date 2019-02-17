@@ -19,8 +19,9 @@
 ;; ==================pyim==================
 (def-package! pyim
   :commands (pyim-cwords-at-point
-             pyim-string-match-p)
-  :bind (("C-x SPC" . pyim-convert-code-at-point)
+             pyim-string-match-p
+             pyim-hanzi2pinyin-capitalize)
+  :bind (("C-x SPC" . pyim-convert-string-at-point)
          ("C-x S-SPC" . pyim-punctuation-translate-at-point))
   :init
   (setq default-input-method "pyim")
@@ -45,6 +46,15 @@
   (setq-default pyim-punctuation-half-width-functions
                 '(pyim-probe-punctuation-line-beginning
                   pyim-probe-punctuation-after-punctuation))
+  ;; 转化拼音首字母大写。
+  (defun pyim-hanzi2pinyin-capitalize (string &optional shou-zi-mu separator
+                                              return-list ignore-duo-yin-zi adjust-duo-yin-zi)
+    (let ((orig-fun (symbol-function 'pyim-cchar2pinyin-get)))
+      (letf (((symbol-function 'pyim-cchar2pinyin-get)
+              (lambda (arg)
+                (mapcar #'capitalize (funcall orig-fun arg)))))
+        (pyim-hanzi2pinyin string shou-zi-mu separator
+                           return-list ignore-duo-yin-zi adjust-duo-yin-zi))))
   (def-package! pyim-basedict
     :config
     (pyim-basedict-enable)))

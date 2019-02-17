@@ -388,7 +388,7 @@
   (add-hook 'outline-minor-mode-hook
             (lambda () ;; 在latex-mode和org-mode中不开启outshine。
               (unless (derived-mode-p 'latex-mode 'org-mode)
-                (outshine-hook-function))))
+                (outshine-mode))))
   :config
   (add-hook 'prog-mode-hook 'outline-minor-mode)
   (add-hook 'TeX-mode-hook 'outline-minor-mode)
@@ -450,7 +450,8 @@
 ;;; outshine
 ;; ==================outshine===================
 (def-package! outshine
-  :commands (outshine-hook-function
+  :diminish outshine-mode
+  :commands (outshine-mode
              outshine-cycle-buffer
              outshine-calc-outline-regexp)
   :config
@@ -599,6 +600,7 @@
 (def-package! org-ref
   :commands (org-ref-insert-link org-ref-get-bibtex-key-and-file)
   :init
+  ;; C-c b 文献引用(citation)，C-u 元素引用(reference)，C-u C-u 跳转或新建label。
   (add-hook 'org-mode-hook (lambda ()
                              (bind-key "C-c b" 'org-ref-insert-link org-mode-map)))
   :init

@@ -88,6 +88,9 @@
   (add-hook 'dired-mode-hook
             (lambda ()
               (define-key dired-mode-map (kbd "M-=") nil)
+              (define-key dired-mode-map (kbd "e") (lambda ()
+                                                     (interactive)
+                                                     (find-file-literally (dired-get-file-for-visit))))
               (define-key dired-mode-map (kbd "r") (lambda ()
                                                      (interactive)
                                                      (let ((current-directory default-directory))
@@ -189,7 +192,7 @@
   (advice-add 'peep-dired-display-file-other-window :around #'peep-dired-display-file-other-window/around)
   (advice-add 'peep-dired-disable :after #'(lambda () (if (and (boundp 'image-dired-display-image-buffer)
                                                                (get-buffer image-dired-display-image-buffer))
-                                                          (kill-buffer image-dired-display-image-buffer))))
+                                                          (swint-kill-buffer image-dired-display-image-buffer))))
   (setq peep-dired-enable-on-directories nil)
   (define-key peep-dired-mode-map (kbd "p") 'peep-dired-prev-file)
   (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)

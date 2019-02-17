@@ -49,6 +49,8 @@
   ;; mc/xxx函数都不在mc包中。
   :defer 2
   :config
+  (add-to-list 'mc/unsupported-minor-modes 'auto-mark-mode)
+  (add-to-list 'mc/unsupported-minor-modes 'highlight-indentation-current-column-mode)
   (bind-key "C-M-," 'mc/mark-previous-like-this)
   (bind-key "C-M-." 'mc/mark-next-like-this)
   (bind-key "<C-M-mouse-1>" 'mc/add-cursor-on-click)
@@ -102,6 +104,10 @@
   ;;               (if (and (eq command 'self-insert-command)
   ;;                        (eq last-command-char ? ))
   ;;                   'ignore))))
+  (defun auto-mark-mode-maybe/after ()
+    (when (> (buffer-size) (* 1024 1024))
+      (auto-mark-mode -1)))
+  (advice-add 'auto-mark-mode-maybe :after #'auto-mark-mode-maybe/after)
   (global-auto-mark-mode 1))
 ;; ==================auto-mark=====================
 ;;; visible-mark
@@ -283,6 +289,8 @@
   (which-key-mode)
   (which-key-setup-side-window-right-bottom)
   (setq which-key-sort-order 'which-key-description-order)
+  (bind-key "M-s x" 'which-key-show-major-mode)
+  (bind-key "M-s X" 'which-key-show-minor-mode-keymap)
   ;; 默认C-h启用describe-prefix-bindings。
   (defun which-key-show-standard-help/override (&optional _)
     (interactive)
@@ -345,7 +353,7 @@
 ;; =======================vlf======================
 (def-package! vlf
   :bind (:map dired-mode-map
-              ("C-c C-v" . dired-vlf))
+              ("V" . dired-vlf))
   :init
   ;; Enable vlf when opening files bigger than 100MB.
   (setq large-file-warning-threshold 100000000)
@@ -373,8 +381,8 @@
 ;;; smex
 ;; ======================smex======================
 (def-package! smex
-  :bind (("C-x M-x" . smex)
-         ("C-c M-x" . smex-major-mode-commands)))
+  :bind (("M-s M-x" . smex)
+         ("M-s M-X" . smex-major-mode-commands)))
 ;; ======================smex======================
 ;;; bm
 ;; =======================bm=======================
@@ -390,7 +398,7 @@
   (setq bm-restore-repository-on-load t)
   :config
   (setq-default bm-buffer-persistence t)
-  (add-hook 'find-file-hooks 'bm-buffer-restore)
+  (add-hook 'find-file-hook 'bm-buffer-restore)
   (add-hook 'kill-buffer-hook 'bm-buffer-save)
   (add-hook 'kill-emacs-hook '(lambda ()
                                 (bm-buffer-save-all)
@@ -758,7 +766,8 @@
     (add-hook hook (lambda ()
                      (local-set-key (kbd "C-c r") 'reftex-mode))))
   :config
-  ;; C-c [ reftex-citation，C-c C-x [ org-reftex-citation。
+  ;; 对元素的引用(reference)：C-c ( 添加label，C-c ) 引用label。
+  ;; 对文献的引用(citation)：C-c [ reftex-citation，C-c C-x [ org-reftex-citation。
   (define-key reftex-mode-map (kbd "C-c r") 'reftex-parse-all)
   (setq reftex-plug-into-AUCTeX t
         reftex-toc-split-windows-horizontally t
@@ -804,4 +813,56 @@
   :bind (("M-g d" . insert-translated-name-insert)
          ("M-g D" . insert-translated-name-insert-original-translation)))
 ;; ============insert-translated-name==============
+;;; ebib
+;; =====================ebib=======================
+(def-package! ebib
+  :bind ("C-x M-b" . ebib)
+  :config
+  (define-key ebib-index-mode-map (kbd "C-x b") nil)
+  (define-key ebib-entry-mode-map (kbd "C-x b") nil)
+  (define-key ebib-strings-mode-map (kbd "C-x b") nil)
+  (setq ebib-file-associations '(("pdf" . "llpp")
+                                 ("ps" . "gv")))
+  (setq ebib-truncate-file-names nil)
+  (setq ebib-preload-bib-files '("~/.bib/ALL.bib")))
+;; =====================ebib=======================
+;;; bibtex
+;; ====================bibtex======================
+(def-package! bibtex
+  :after (:any ebib helm-bibtex org-ref)
+  :config
+  (defun bibtex-autokey-name-convert (str)
+    (if (pyim-string-match-p "\\cc" str)
+        (let ((str-list (pyim-hanzi2pinyin str nil nil t)))
+          (if (= (length str-list) 1)
+              (car str-list)
+            (completing-read "Choose: " str-list)))
+      (funcall 'downcase str)))
+  (defun bibtex-autokey-titleword-convert (str)
+    (if (pyim-string-match-p "\\cc" str)
+        (let ((str-list (pyim-hanzi2pinyin-capitalize str nil nil t)))
+          (if (= (length str-list) 1)
+              (car str-list)
+            (completing-read "Choose: " str-list)))
+      (funcall 'upcase-initials str)))
+  (defun bibtex-autokey-get-title/around (orig-fun &rest args)
+    (let ((case-fold-search t)
+          (titlestring
+           (bibtex-autokey-get-field "title"
+                                     bibtex-autokey-titleword-change-strings)))
+      (if (string-match-p "\\cc" titlestring)
+          (setq bibtex-autokey-titleword-ignore nil)
+        (setq bibtex-autokey-titleword-ignore
+              '("A" "An" "On" "The" "Eine?" "Der" "Die" "Das"
+                "[^[:upper:]].*" ".*[^[:upper:][:lower:]0-9].*")))
+      (apply orig-fun args)))
+  (advice-add 'bibtex-autokey-get-title :around #'bibtex-autokey-get-title/around)
+  (setq bibtex-autokey-titleword-length nil)
+  (setq bibtex-autokey-titleword-separator "")
+  (setq bibtex-autokey-name-case-convert-function 'bibtex-autokey-name-convert)
+  (setq bibtex-autokey-titleword-case-convert-function 'bibtex-autokey-titleword-convert)
+  (setq bibtex-autokey-name-year-separator "_")
+  (setq bibtex-autokey-year-title-separator "_")
+  (setq bibtex-autokey-year-length 4))
+;; ====================bibtex======================
 (provide 'setup_packages)

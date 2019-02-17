@@ -2,7 +2,7 @@
 ;; ==============退出shell时关闭buffer=============
 (defun kill-shell-buffer(process event)
   "The one actually kill shell buffer when exit. "
-  (kill-buffer (process-buffer process)))
+  (swint-kill-buffer (process-buffer process)))
 ;;;###autoload
 (defun kill-shell-buffer-after-exit()
   "kill shell buffer when exit."
@@ -57,12 +57,11 @@ Emacs buffers are those whose name starts with *."
   (let ((filename (buffer-file-name))
         (buffer (current-buffer))
         (name (buffer-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (ido-kill-buffer)
-      (when (yes-or-no-p "Are you sure you want to remove this file? ")
-        (delete-file filename)
-        (kill-buffer buffer)
-        (message "File '%s' successfully removed" filename)))))
+    (when (and filename (file-exists-p filename)
+               (yes-or-no-p "Are you sure you want to remove this file? "))
+      (delete-file filename)
+      (swint-kill-buffer buffer)
+      (message "File '%s' successfully removed" filename))))
 ;; ==============关闭buffer并删除文件==============
 ;;; 重命名当前buffer
 ;; ================重命名当前buffer================
@@ -116,10 +115,12 @@ FILENAME defaults to `buffer-file-name'."
   :group 'autoload-buffer
   :type '(repeat (choice regexp function)))
 ;;;###autoload
-(defun swint-kill-this-buffer ()
+(defun swint-kill-buffer (&optional BUFFER-OR-NAME)
   "Switch to prev buffer before killing current."
   (interactive)
-  (let ((curr-buf (current-buffer))
+  (let ((curr-buf (if BUFFER-OR-NAME
+                      (get-buffer BUFFER-OR-NAME)
+                    (current-buffer)))
         (prev-buf (car (or (swint-filter-buffer-list (cl-loop for x in (window-prev-buffers)
                                                               collect (car x)))
                            (swint-filter-buffer-list (buffer-list (selected-frame)) t)))))

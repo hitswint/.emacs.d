@@ -14,7 +14,7 @@
   (define-key magit-file-mode-map "\C-x\M-g" nil)
   (defun magit-exit-commit-mode ()
     (interactive)
-    (swint-kill-this-buffer)
+    (swint-kill-buffer)
     (delete-window))
   (define-key git-commit-mode-map (kbd "C-c C-k") 'magit-exit-commit-mode)
   ;; C-c C-a to amend without any prompt.

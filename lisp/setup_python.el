@@ -1,11 +1,7 @@
 ;;; python-mode
 ;; =================python-mode================
 (def-package! python
-  :mode ("\\.py\\'" . python-mode)
-  :config
-  ;; ipython默认设置有bug，需要加--simple-prompt选项。
-  (setq python-shell-interpreter "ipython"
-        python-shell-interpreter-args "-i --simple-prompt --pylab"))
+  :mode ("\\.py\\'" . python-mode))
 ;; =================python-mode================
 ;;; pyvenv
 ;; ===================pyvenv===================
@@ -16,7 +12,10 @@
   :config
   (pyvenv-mode 1)
   ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换。
-  (defalias 'workon 'pyvenv-workon))
+  (defalias 'workon 'pyvenv-workon)
+  ;; ipython默认设置有bug，需要加--simple-prompt选项。
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "-i --simple-prompt --pylab"))
 ;; ===================pyvenv===================
 ;;; elpy
 ;; ====================elpy====================

@@ -25,6 +25,7 @@
                            ac-ispell
                            ac-math
                            academic-phrases
+                           ace-jump-helm-line
                            ace-link
                            ace-pinyin
                            aggressive-indent
@@ -69,6 +70,7 @@
                            drag-stuff
                            dumb-jump
                            easy-kill
+                           ebib
                            ein
                            elisp-slime-nav
                            elmacro
@@ -120,6 +122,7 @@
                            ivy
                            ivy-hydra
                            js2-mode
+                           key-chord
                            lacarte
                            latex-preview-pane
                            let-alist
@@ -129,7 +132,6 @@
                            lsp-ui
                            magic-latex-buffer
                            magit
-                           magit-popup
                            markdown-mode
                            math-symbol-lists
                            matlab-mode
