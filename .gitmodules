@@ -1,15 +1,24 @@
 [submodule "site-lisp/org-protocol-capture-html"]
 	path = site-lisp/org-protocol-capture-html
 	url = https://github.com/hitswint/org-protocol-capture-html
+        ignore = dirty
 [submodule "site-lisp/emacs-application-framework"]
 	path = site-lisp/emacs-application-framework
 	url = https://github.com/manateelazycat/emacs-application-framework/
+        ignore = dirty
 [submodule "site-lisp/annot"]
 	path = site-lisp/annot
 	url = https://github.com/ghoshi/annot
+        ignore = dirty
 [submodule "site-lisp/company-english-helper"]
 	path = site-lisp/company-english-helper
 	url = https://github.com/manateelazycat/company-english-helper
+        ignore = dirty
 [submodule "site-lisp/insert-translated-name"]
 	path = site-lisp/insert-translated-name
 	url = https://github.com/manateelazycat/insert-translated-name
+        ignore = dirty
+[submodule "site-lisp/awesome-tab"]
+	path = site-lisp/awesome-tab
+	url = https://github.com/manateelazycat/awesome-tab
+        ignore = dirty

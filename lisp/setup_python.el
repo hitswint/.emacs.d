@@ -12,10 +12,7 @@
   :config
   (pyvenv-mode 1)
   ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换。
-  (defalias 'workon 'pyvenv-workon)
-  ;; ipython默认设置有bug，需要加--simple-prompt选项。
-  (setq python-shell-interpreter "ipython"
-        python-shell-interpreter-args "-i --simple-prompt --pylab"))
+  (defalias 'workon 'pyvenv-workon))
 ;; ===================pyvenv===================
 ;;; elpy
 ;; ====================elpy====================
@@ -30,6 +27,9 @@
   :config
   (setq elpy-rpc-timeout nil)
   (setq elpy-shell-use-project-root nil)
+  ;; ipython默认设置有bug，需要加--simple-prompt选项。
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "-i --simple-prompt --pylab")
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (define-key elpy-mode-map (kbd "M-.") nil)
   (define-key elpy-mode-map (kbd "C-c C-,") 'elpy-goto-definition)

@@ -95,6 +95,22 @@
              do (shell-command (concat "pandoc -o " (file-name-base x)
                                        "." output-format " " (file-name-nondirectory x))))))
 ;; ==============swint-pandoc-output===============
+;;; swint-libreoffice-output
+;; ===========swint-libreoffice-output=============
+;;;###autoload
+(defun swint-libreoffice-output ()
+  (interactive)
+  (let ((output-format (read-string "Output format: "))
+        (file-list (if (eq major-mode 'dired-mode)
+                       (dired-get-marked-files)
+                     (list (buffer-file-name)))))
+    (cl-loop for x in file-list
+             do (shell-command (concat "libreoffice --headless --convert-to "
+                                       output-format
+                                       (when (equal output-format "csv")
+                                         " --infilter=CSV:44,34,76,1")
+                                       " " (file-name-nondirectory x))))))
+;; ===========swint-libreoffice-output=============
 ;;; swint-pdftk-output
 ;; ==============swint-pdftk-output================
 ;;;###autoload

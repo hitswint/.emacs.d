@@ -818,6 +818,8 @@
 (def-package! ebib
   :bind ("C-x M-b" . ebib)
   :config
+  (define-key ebib-index-mode-map (kbd ",") 'ebib-prev-database)
+  (define-key ebib-index-mode-map (kbd ".") 'ebib-next-database)
   (define-key ebib-index-mode-map (kbd "C-x b") nil)
   (define-key ebib-entry-mode-map (kbd "C-x b") nil)
   (define-key ebib-strings-mode-map (kbd "C-x b") nil)
@@ -856,13 +858,43 @@
               '("A" "An" "On" "The" "Eine?" "Der" "Die" "Das"
                 "[^[:upper:]].*" ".*[^[:upper:][:lower:]0-9].*")))
       (apply orig-fun args)))
+  (defun bibtex-autokey-add_pages (key)
+    (concat key "_" (bibtex-autokey-get-field "pages")))
   (advice-add 'bibtex-autokey-get-title :around #'bibtex-autokey-get-title/around)
   (setq bibtex-autokey-titleword-length nil)
+  (setq bibtex-autokey-titlewords-stretch 0)
   (setq bibtex-autokey-titleword-separator "")
   (setq bibtex-autokey-name-case-convert-function 'bibtex-autokey-name-convert)
   (setq bibtex-autokey-titleword-case-convert-function 'bibtex-autokey-titleword-convert)
+  (setq bibtex-autokey-before-presentation-function 'bibtex-autokey-add_pages)
   (setq bibtex-autokey-name-year-separator "_")
   (setq bibtex-autokey-year-title-separator "_")
   (setq bibtex-autokey-year-length 4))
 ;; ====================bibtex======================
+;;; awesome-tab
+;; =================awesome-tab====================
+(use-package awesome-tab
+  :load-path "site-lisp/awesome-tab/"
+  :commands awesome-tab-mode
+  :init
+  (setq awesome-tab-prefix-key [(meta \s)])
+  :config
+  ;; (awesome-tab-mode t)
+  (define-key awesome-tab-prefix-map (kbd "M-p") 'awesome-tab-backward)
+  (define-key awesome-tab-prefix-map (kbd "M-n") 'awesome-tab-forward)
+  (define-key awesome-tab-prefix-map (kbd "M-P") 'awesome-tab-select-beg-tab)
+  (define-key awesome-tab-prefix-map (kbd "M-N") 'awesome-tab-select-end-tab)
+  (setq awesome-tab-cycle-scope 'tabs)
+  (setq awesome-tab-common-group-name "i")
+  (setq awesome-tab-buffer-groups-function 'swint-awesome-tab-buffer-groups)
+  (defun swint-awesome-tab-buffer-groups ()
+    (list
+     (cond
+      ((bound-and-true-p persp-mode)
+       (cl-loop for key in (nreverse (cons  "i" (nreverse (delete "i" (persp-names)))))
+                until (member (current-buffer)
+                              (persp-buffers (gethash key (perspectives-hash))))
+                finally return key))
+      (t "i")))))
+;; =================awesome-tab====================
 (provide 'setup_packages)

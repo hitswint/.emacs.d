@@ -101,6 +101,7 @@
 (global-set-key (kbd "C-x C-y") 'xsel-paste-primary)
 (global-set-key (kbd "M-g =") 'swint-count-words-region)
 (global-set-key (kbd "M-g o") 'swint-pandoc-output)
+(global-set-key (kbd "M-g M-o") 'swint-libreoffice-output)
 (global-set-key (kbd "M-g t") 'swint-pdftk-output)
 (global-set-key (kbd "M-s M-e") 'show-some-last-messages)
 (global-set-key (kbd "M-s M-d") 'swint-sdcv-to-tip)
