@@ -75,7 +75,8 @@
       :init (lambda ()
               (setq helm-firefox-history-alist
                     (split-string (shell-command-to-string
-                                   (format "sqlite3 -separator '||' %s \"select title,url from moz_places where last_visit_date is not null order by last_visit_date desc\" | head -1000"
+                                   ;; 直接读取places.sqlite会导致Error: database is locked，将其拷贝到/tmp下读取。
+                                   (format "cp %s /tmp/; sqlite3 -separator '||' /tmp/places.sqlite \"select title,url from moz_places where last_visit_date is not null order by last_visit_date desc\" | head -1000"
                                            (expand-file-name "places.sqlite" (helm-get-firefox-user-init-dir)))) "\n")))
       :candidates (lambda ()
                     (cl-loop for f in helm-firefox-history-alist

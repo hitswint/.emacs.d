@@ -1,0 +1,22 @@
+#!/bin/zsh
+
+function widget-percol-rsync-push()
+{
+    local remote=$(cat ~/.ssh/config | grep "^host " | awk '{print $2}' | percol)
+    local dir=$(print -- $PWD | replace-home-with-tilde)
+    local local_files=$(ls -A | percol --match-method pinyin | tr '\n' '/' | sed 's/[[:space:]]*$//') # 生成a/b/c字符串
+
+    if [[ $local_files != "" ]]; then
+        IFS='/' read -rA ADDR <<< "$local_files" # 直接用\n分割有误，先替换成/。
+        unset IFS;
+        ADDR=($ADDR)            # Remove null elements from an array
+        rsync -arv -zz --progress "${ADDR[@]}" $remote:$dir/ # 展开方式
+        # for i in "${ADDR[@]}"; do # 循环方式
+        #     rsync -arv -zz --progress "$i" $remote:$dir
+        # done
+    fi
+
+    zle reset-prompt
+}
+
+widget-percol-rsync-push "$@"

@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+function widget-percol-rsync-pull()
+{
+    local remote=$(cat ~/.ssh/config | grep "^host " | awk '{print $2}' | percol)
+    local dir=$(print -- $PWD | replace-home-with-tilde)
+    local remote_files=$(ssh $remote '(cd '"$dir"' && ls -A | sed "s:^:$PWD/:") 2>/dev/null' | percol --match-method pinyin)
+
+    if [[ $remote_files != "" ]]; then
+        # ADDR=(${(s:-:)var})         # 按-分割成列表。
+        ADDR=("${(f)remote_files}") # 按\n分割成列表。
+        ADDR=($ADDR)            # Remove null elements from an array
+
+        remote_args=()
+        for i in "${ADDR[@]}"; do # 循环方式
+            remote_args+=($remote:"'$i'")
+        done
+        rsync -arv -zz --progress "${remote_args[@]}" "./"
+    fi
+
+    zle reset-prompt
+}
+
+widget-percol-rsync-pull "$@"

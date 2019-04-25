@@ -41,7 +41,7 @@
   (recentf-mode 1)
   (setq recentf-max-saved-items 100)
   (setq recentf-exclude
-        (list "^/tmp/" "^/ssh:" "\\.?ido\\.last$" "\\.revive$" "/TAGS$" "^/var/folders/.+$")))
+        (list "^/tmp/" "^/ssh:" "\\.?ido\\.last$" "\\.revive$" "/TAGS$" "^/var/folders/.+$" "^/mnt.+")))
 ;; ====================recentf=====================
 ;;; multiple-cursors
 ;; ================multiple-cursors================

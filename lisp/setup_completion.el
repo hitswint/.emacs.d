@@ -238,7 +238,7 @@
 ;;; company-english-helper
 ;; ==========company-english-helper============
 (def-package! company-english-helper
-  :load-path "site-lisp/english-helper/"
+  :load-path "site-lisp/company-english-helper/"
   :bind ("M-s M-u" . swint-company-english-helper-search)
   :config
   (defun swint-company-english-helper-search ()

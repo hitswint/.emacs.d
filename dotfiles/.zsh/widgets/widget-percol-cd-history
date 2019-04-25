@@ -2,7 +2,9 @@
 
 function widget-percol-cd-history() {
     local destination=$(percol-get-destination-from-history)
-    [ -n $destination ] && cd ${destination/#\~/${HOME}}
+    if [[ $destination != "" ]]; then
+        cd ${destination/#\~/${HOME}}
+    fi
     zle reset-prompt
 }
 
