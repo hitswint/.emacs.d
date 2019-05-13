@@ -10,9 +10,9 @@ function widget-percol-rsync-push()
         IFS='/' read -rA ADDR <<< "$local_files" # 直接用\n分割有误，先替换成/。
         unset IFS;
         ADDR=($ADDR)            # Remove null elements from an array
-        rsync -arv -zz --progress "${ADDR[@]}" $remote:$dir/ # 展开方式
+        rsync -arv --progress "${ADDR[@]}" $remote:$dir/ # 展开方式
         # for i in "${ADDR[@]}"; do # 循环方式
-        #     rsync -arv -zz --progress "$i" $remote:$dir
+        #     rsync -arv --progress "$i" $remote:$dir
         # done
     fi
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-server="raspberrypi"
+server="rpi"
 Last_IP=$(gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==server {print $6}' server="$server" | sed 's/^.*@//g')
-Curr_IP=`ssh AliyunECS "cat ~/.ip.pub"`
+Curr_IP=`ssh ali "cat ~/.ip.pub"`
 
 echo "Last IP: $Last_IP"
 echo "Curr IP: $Curr_IP"

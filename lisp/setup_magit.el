@@ -3,7 +3,7 @@
 (def-package! magit
   :diminish magit-auto-revert-mode
   :bind (("C-x M-g" . magit-status)
-         ("C-x C-M-g" . magit-dispatch-popup)
+         ("C-x C-M-g" . magit-dispatch)
          ("M-g M-," . swint-magit-clone-nutstore)
          ("M-g M-." . swint-magit-remote-nutstore))
   :init

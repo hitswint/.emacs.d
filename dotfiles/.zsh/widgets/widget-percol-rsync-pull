@@ -15,7 +15,7 @@ function widget-percol-rsync-pull()
         for i in "${ADDR[@]}"; do # 循环方式
             remote_args+=($remote:"'$i'")
         done
-        rsync -arv -zz --progress "${remote_args[@]}" "./"
+        rsync -arv --progress "${remote_args[@]}" "./"
     fi
 
     zle reset-prompt

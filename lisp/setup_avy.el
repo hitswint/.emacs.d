@@ -242,7 +242,7 @@ This function obeys `avy-all-windows' setting."
                                (not avy-all-windows)
                              avy-all-windows)))
       (avy-with swint-avy-goto-char-timer
-        (avy--process
+        (avy-process
          (swint-avy--read-candidates)
          (avy--style-fn avy-style))))))
 ;; =================ace-pinyin==================
