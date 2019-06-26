@@ -19,6 +19,7 @@
   (bind-key "C-)" '(lambda () (interactive) (persp-push-current-buffer "0")))
   (bind-key "C-&" '(lambda () (interactive) (persp-push-current-buffer "i")))
   (bind-key "C-`" 'persp-switch-last)
+  (bind-key "<C-escape>" 'persp-switch-last)
   (bind-key "C-~" 'persp-push-current-buffer-to-last)
   (defmacro with-persp-mode-on (&rest body)
     "Switch to the perspective given by NAME while evaluating BODY."

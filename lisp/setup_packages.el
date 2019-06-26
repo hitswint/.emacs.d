@@ -570,26 +570,8 @@
   (add-to-list 'ahs-modes 'gnuplot-mode)
   (add-to-list 'ahs-modes 'graphviz-dot-mode)
   (add-to-list 'ahs-modes 'arduino-mode)
-  (defun swint-ahs-backward ()
-    (interactive)
-    (let ((symbol (highlight-symbol-get-symbol)))
-      (unless ahs-highlighted
-        (ahs-highlight-now))
-      (call-interactively 'ahs-backward)
-      (highlight-symbol-count symbol t)))
-  (defun swint-ahs-forward ()
-    (interactive)
-    (let ((symbol (highlight-symbol-get-symbol)))
-      (unless ahs-highlighted
-        (ahs-highlight-now))
-      (call-interactively 'ahs-forward)
-      (highlight-symbol-count symbol t)))
-  (add-to-list 'ahs-unhighlight-allowed-commands 'swint-ahs-forward)
-  (add-to-list 'ahs-unhighlight-allowed-commands 'swint-ahs-backward)
-  (smartrep-define-key auto-highlight-symbol-mode-map "C-x"
-    '(("," . swint-ahs-backward)
-      ("." . swint-ahs-forward)
-      ("/" . ahs-edit-mode)))
+  ;; C-u for whole buffer.
+  (define-key auto-highlight-symbol-mode-map (kbd "C-x /") 'ahs-edit-mode)
   (define-key auto-highlight-symbol-mode-map (kbd "M-<left>") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "M-<right>") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "M-S-<left>") nil)

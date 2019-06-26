@@ -145,6 +145,7 @@
                            operate-on-number
                            org
                            org-noter
+                           org-pdfview
                            org-ref
                            outline-magic
                            outorg

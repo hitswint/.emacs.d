@@ -603,10 +603,9 @@
   ;; C-c b 文献引用(citation)，C-u 元素引用(reference)，C-u C-u 跳转或新建label。
   (add-hook 'org-mode-hook (lambda ()
                              (bind-key "C-c b" 'org-ref-insert-link org-mode-map)))
-  :init
-  (setq org-ref-bibtex-hydra-key-binding "\C-cj")
-  (setq org-ref-insert-cite-key "\C-cb")
   :config
+  (setq org-ref-insert-cite-key "\C-cb")
+  (setq org-ref-bibtex-hydra-key-binding "\C-cj")
   (setq org-ref-default-bibliography '("~/.bib/ALL.bib")
         org-ref-bibliography-notes "~/Zotero/storage/TKM9D893/notes.org"
         org-latex-prefer-user-labels t
@@ -623,4 +622,24 @@
     (with-current-buffer buf
       (org-restart-font-lock))))
 ;; ==================org-ref====================
+;;; org-ref
+;; ================org-pdfview==================
+(def-package! org-pdfview
+  :commands (org-pdfview-open org-pdfview-complete-link org-pdfview-store-link)
+  :init
+  (add-hook 'org-mode-hook (lambda ()
+                             (if (fboundp 'org-link-set-parameters)
+                                 (org-link-set-parameters "pdfview"
+                                                          :follow #'org-pdfview-open
+                                                          :complete #'org-pdfview-complete-link
+                                                          :store #'org-pdfview-store-link)
+                               (org-add-link-type "pdfview" 'org-pdfview-open)
+                               (add-hook 'org-store-link-functions 'org-pdfview-store-link))))
+  :config
+  (defun org-pdfview-store-link/around (fn)
+    "Use image-dired for peep images."
+    (let ((buffer-file-name (and (buffer-file-name) (abbreviate-file-name (buffer-file-name)))))
+      (funcall fn)))
+  (advice-add 'org-pdfview-store-link :around #'org-pdfview-store-link/around))
+;; ================org-pdfview==================
 (provide 'setup_org_mode)

@@ -11,8 +11,6 @@ conky | while true; read line; do xsetroot -name "$line"; done &
 wicd-client -t &
 # dbus-launch nm-applet &
 
-xmodmap ~/.xmodmap
-
 # MPD daemon start (if no other user instance exists)
 # [ ! -s ~/.mpd/mpd.pid ] && mpd  # Fail to startup sometime
 [ ! -s ~/.mpd/mpd.pid ] ; mpd
@@ -24,5 +22,10 @@ dwm-multi-mon.sh single
 xkeysnail.sh &
 
 pgrep redshift || redshift -l 41.8:123.4 &
+
+# sleep 10 && xmodmap ~/.xmodmap &
+# Swap Escape and grave
+# xmodmap -e " keycode 49 = Escape NoSymbol Escape "
+# xmodmap -e " keycode 9 = grave asciitilde grave asciitilde "
 
 exec dwm
