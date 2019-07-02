@@ -21,6 +21,8 @@ dwm-multi-mon.sh single
 
 xkeysnail.sh &
 
+keynav &
+
 pgrep redshift || redshift -l 41.8:123.4 &
 
 # sleep 10 && xmodmap ~/.xmodmap &

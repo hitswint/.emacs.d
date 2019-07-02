@@ -8,7 +8,7 @@
   (set-face-attribute 'org-level-5 nil :weight 'normal :foreground "cyan" :height 1.0)
   (set-face-attribute 'org-level-6 nil :weight 'normal :foreground "violet" :height 1.0)
   (set-face-attribute 'org-level-7 nil :weight 'normal :foreground "orange" :height 1.0)
-  (set-face-attribute 'org-level-8 nil :weight 'normal :foreground "gray" :height 1.0)
+  (set-face-attribute 'org-level-8 nil :weight 'normal :foreground "khaki" :height 1.0)
   (setq org-hide-emphasis-markers t)
   (font-lock-add-keywords 'org-mode
                           '(("^ +\\([-*]\\) "

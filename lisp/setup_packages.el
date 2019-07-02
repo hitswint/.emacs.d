@@ -879,4 +879,18 @@
                 finally return key))
       (t "i")))))
 ;; =================awesome-tab====================
+;;; idf-mode
+;; ==================idf-mode======================
+(use-package idf-mode
+  :load-path "site-lisp/idf-mode/"
+  :mode ("\\.[iI][dD][fF]\\'" . idf-mode)
+  :config
+  (smartrep-define-key idf-mode-map "C-c"
+    '(("p" . idf-prev-object)
+      ("n" . idf-next-object)
+      ("f" . idf-next-type)
+      ("b" . idf-prev-type)))
+  (define-key idf-mode-map (kbd "C-c C-,") 'idf-find-object-at-point)
+  (define-key idf-mode-map (kbd "C-c C-.") 'pop-tag-mark))
+;; ==================idf-mode======================
 (provide 'setup_packages)
