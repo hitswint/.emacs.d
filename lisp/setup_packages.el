@@ -802,13 +802,33 @@
   :config
   (define-key ebib-index-mode-map (kbd ",") 'ebib-prev-database)
   (define-key ebib-index-mode-map (kbd ".") 'ebib-next-database)
+  (define-key ebib-index-mode-map (kbd "C-j") 'ebib-view-file)
+  (define-key ebib-index-mode-map (kbd "<RET>") 'ebib-view-file-in-emacs)
   (define-key ebib-index-mode-map (kbd "C-x b") nil)
   (define-key ebib-entry-mode-map (kbd "C-x b") nil)
   (define-key ebib-strings-mode-map (kbd "C-x b") nil)
-  (setq ebib-file-associations '(("pdf" . "llpp")
-                                 ("ps" . "gv")))
+  (setq ebib-index-window-size 30)
+  (setq ebib-file-associations '(("pdf" . "llpp") ("ps" . "gv")))
   (setq ebib-truncate-file-names nil)
-  (setq ebib-preload-bib-files '("~/.bib/ALL.bib")))
+  (setq ebib-preload-bib-files (directory-files "~/.bib" nil "\\.bib$"))
+  (setq ebib-bib-search-dirs '("~/.bib"))
+  (setq ebib-notes-use-single-file (expand-file-name "~/Zotero/storage/TKM9D893/notes.org"))
+  (defun ebib-create-org-identifier/override (key _)
+    (format ":Custom_ID: %s" key))
+  (advice-add 'ebib-create-org-identifier :override #'ebib-create-org-identifier/override)
+  (defun ebib-view-file-in-emacs (arg)
+    (interactive "P")
+    (ebib--execute-when
+      (entries
+       (let ((file (ebib-get-field-value ebib-file-field (ebib--get-key-at-point) ebib--cur-db 'noerror 'unbraced 'xref))
+             (num (if (numberp arg) arg nil)))
+         (let ((file-full-path (ebib--expand-file-name (ebib--select-file file num (ebib--get-key-at-point)))))
+           (when (file-exists-p file-full-path)
+             (message "Opening `%s'" file-full-path)
+             (ebib-lower)
+             (find-file file-full-path)))))
+      (default
+        (beep)))))
 ;; =====================ebib=======================
 ;;; bibtex
 ;; ====================bibtex======================

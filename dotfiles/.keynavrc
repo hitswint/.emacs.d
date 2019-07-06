@@ -47,6 +47,7 @@ slash warp,end
 
 w windowzoom
 c cursorzoom 200 200
+m cursorzoom 5 5
 
 p warp,drag 1
 ctrl+p warp,drag 1 ctrl

@@ -622,7 +622,7 @@
     (with-current-buffer buf
       (org-restart-font-lock))))
 ;; ==================org-ref====================
-;;; org-ref
+;;; org-pdfview
 ;; ================org-pdfview==================
 (def-package! org-pdfview
   :commands (org-pdfview-open org-pdfview-complete-link org-pdfview-store-link)
