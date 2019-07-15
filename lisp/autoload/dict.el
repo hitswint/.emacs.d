@@ -130,14 +130,16 @@ FORCE-OTHER-WINDOW is ignored."
     (erase-buffer)
     (sdcv-mode)
     ;; 插入google-translate结果。
-    (insert (concat "*** Google Translate\n"))
-    (if (pyim-string-match-p "\\cc" word)
-        (google-translate-translate "zh-CN" "en" word 'current-buffer)
-      (google-translate-translate "en" "zh-CN" word 'current-buffer))
+    (ignore-errors
+      (insert (concat "*** Google Translate\n"))
+      (if (pyim-string-match-p "\\cc" word)
+          (google-translate-translate "zh-CN" "en" word 'current-buffer)
+        (google-translate-translate "en" "zh-CN" word 'current-buffer)))
     ;; 插入bing-dict结果。
-    (bing-dict-brief word)
+    (ignore-errors (bing-dict-brief word))
     ;; 插入youdao-dictionary结果。
-    (insert (concat "*** Youdao Dictionary\n"))
-    (insert (youdao-dictionary--format-result word))
+    (ignore-errors
+      (insert (concat "*** Youdao Dictionary\n"))
+      (insert (youdao-dictionary--format-result word)))
     (online-output-cleaner)))
 ;; =================online===================

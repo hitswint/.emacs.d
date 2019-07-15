@@ -77,11 +77,11 @@
 ;; ================unison====================
 ;;;###autoload
 (defun swint-unison-sync-backups ()
-  "Sync files in ~/org/backups with ~/Nutstore/backups."
+  "Sync files in ~/org/backups."
   (interactive)
   (let ((process (start-process-shell-command
                   "unison" "*unison*"
-                  (concat "unison" " Nutstore-backups")))
+                  (concat "unison" " org-backups")))
         (pos (memq 'mode-line-modes mode-line-format)))
     (setcdr pos (cons "unison-sync-backups " (cdr pos)))
     (set-process-sentinel

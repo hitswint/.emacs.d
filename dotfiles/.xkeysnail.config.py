@@ -94,6 +94,8 @@ define_keymap(
         K("C-g"): [K("esc"), set_mark(False)],
         # Escape
         K("C-q"): escape_next_key,
+        # Menu
+        K("Super-Shift-o"): K("Compose"),
         # C-x YYY
         K("C-x"): {
             # C-x h (select all)

@@ -265,6 +265,7 @@
   (setq neo-smart-open nil)
   (setq neo-show-hidden-files nil)
   (setq neo-confirm-change-root 'off-p)
+  (setq neo-window-fixed-size nil)
   (define-key neotree-mode-map "\C-j" 'neotree-shell-command)
   (define-key neotree-mode-map (kbd "b") 'neotree-select-previous-sibling-node)
   (define-key neotree-mode-map (kbd "f") 'neotree-select-next-sibling-node)
