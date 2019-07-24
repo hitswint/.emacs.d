@@ -802,15 +802,27 @@
   :config
   (define-key ebib-index-mode-map (kbd ",") 'ebib-prev-database)
   (define-key ebib-index-mode-map (kbd ".") 'ebib-next-database)
+  (define-key ebib-index-mode-map (kbd "C-q") 'ebib-quit)
   (define-key ebib-index-mode-map (kbd "C-j") 'ebib-view-file)
   (define-key ebib-index-mode-map (kbd "<RET>") 'ebib-view-file-in-emacs)
+  (define-key ebib-index-mode-map (kbd "D") 'ebib-delete-entry-from-zotero)
+  (define-key ebib-index-mode-map (kbd "J") 'ebib-join-bib)
   (define-key ebib-index-mode-map (kbd "C-x b") nil)
   (define-key ebib-entry-mode-map (kbd "C-x b") nil)
   (define-key ebib-strings-mode-map (kbd "C-x b") nil)
-  (setq ebib-index-window-size 30)
+  (define-key ebib-entry-mode-map (kbd "C-p") nil)
+  (define-key ebib-entry-mode-map (kbd "C-n") nil)
+  (add-hook 'ebib-entry-mode-hook '(lambda ()
+                                     (setq truncate-lines nil)
+                                     (setq word-wrap t)))
+  (setq ebib-index-columns '(("Author/Editor" 15 t)
+                             ("Year" 5 t)
+                             ("Title" 50 t)))
+  (setq ebib-index-default-sort '("Year" . descend))
+  (setq ebib-hide-cursor nil)
   (setq ebib-file-associations '(("pdf" . "llpp") ("ps" . "gv")))
   (setq ebib-truncate-file-names nil)
-  (setq ebib-preload-bib-files (directory-files "~/.bib" nil "\\.bib$"))
+  (setq ebib-preload-bib-files '("ALL.bib" "Current.bib"))
   (setq ebib-bib-search-dirs '("~/.bib"))
   (setq ebib-notes-use-single-file (expand-file-name "~/Zotero/storage/TKM9D893/notes.org"))
   (defun ebib-create-org-identifier/override (key _)
@@ -828,7 +840,42 @@
              (ebib-lower)
              (find-file file-full-path)))))
       (default
-        (beep)))))
+        (beep))))
+  (defun ebib-join-bib ()
+    "Delete item from zotero."
+    (interactive)
+    (when (y-or-n-p "Join All.bib?")
+      (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
+        (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
+      (let* ((ebib-join-command (concat "python " (expand-file-name "~/Documents/Python/ebib_bibtexparser.py")))
+             (process (start-process-shell-command "ebib-join" "*ebib-join*" ebib-join-command)))
+        (message "Ebib joining.")
+        (set-process-sentinel
+         process
+         (lambda (process signal)
+           (when (memq (process-status process) '(exit signal))
+             (message "Ebib joined.")))))))
+  (defun ebib-delete-entry-from-zotero ()
+    "Delete item from zotero."
+    (interactive)
+    (let ((item-title (if (region-active-p)
+                          (buffer-substring (region-beginning) (region-end))
+                        (ebib--get-field-value-for-display
+                         "Title" (ebib--get-key-at-point) ebib--cur-db))))
+      (when (y-or-n-p (format "Delete [%s] from zotero?"
+                              (truncate-string-to-width item-title 100 nil nil t)))
+        (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
+          (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
+        (let* ((ebib-delete-command (concat "python " (expand-file-name "~/Documents/Python/ebib_pyzotero.py")
+                                            " -t " "\"" item-title "\""))
+               (process (start-process-shell-command "ebib-delete" "*ebib-delete*" ebib-delete-command)))
+          (lexical-let ((mode-string (truncate-string-to-width item-title 100 nil nil t)))
+            (message "Ebib deleting %s." mode-string)
+            (set-process-sentinel
+             process
+             (lambda (process signal)
+               (when (memq (process-status process) '(exit signal))
+                 (message "Ebib deleted %s done." mode-string))))))))))
 ;; =====================ebib=======================
 ;;; bibtex
 ;; ====================bibtex======================
