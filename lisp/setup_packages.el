@@ -818,13 +818,15 @@
   (setq ebib-index-columns '(("Author/Editor" 15 t)
                              ("Year" 5 t)
                              ("Title" 50 t)))
-  (setq ebib-index-default-sort '("Year" . descend))
   (setq ebib-hide-cursor nil)
   (setq ebib-file-associations '(("pdf" . "llpp") ("ps" . "gv")))
   (setq ebib-truncate-file-names nil)
   (setq ebib-preload-bib-files '("ALL.bib" "Current.bib"))
   (setq ebib-bib-search-dirs '("~/.bib"))
   (setq ebib-notes-use-single-file (expand-file-name "~/Zotero/storage/TKM9D893/notes.org"))
+  (setq ebib-use-timestamp t)
+  (setq ebib-timestamp-format "%Y-%m-%dT%TZ") ;same as zotero export
+  (setq ebib-index-default-sort '("timestamp" . descend))
   (defun ebib-create-org-identifier/override (key _)
     (format ":Custom_ID: %s" key))
   (advice-add 'ebib-create-org-identifier :override #'ebib-create-org-identifier/override)
@@ -842,7 +844,7 @@
       (default
         (beep))))
   (defun ebib-join-bib ()
-    "Delete item from zotero."
+    "Join to ALL.bib."
     (interactive)
     (when (y-or-n-p "Join All.bib?")
       (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
@@ -854,7 +856,7 @@
          process
          (lambda (process signal)
            (when (memq (process-status process) '(exit signal))
-             (message "Ebib joined.")))))))
+             (message "Ebib join done.")))))))
   (defun ebib-delete-entry-from-zotero ()
     "Delete item from zotero."
     (interactive)
@@ -874,8 +876,12 @@
             (set-process-sentinel
              process
              (lambda (process signal)
-               (when (memq (process-status process) '(exit signal))
-                 (message "Ebib deleted %s done." mode-string))))))))))
+               (cond ((equal (process-status process) 'exit)
+                      (if (zerop (process-exit-status process))
+                          (message "Ebib delete %s done." mode-string)
+                        (message "Ebib delete %s failed." mode-string)))
+                     ((memq (process-status process) '(stop signal))
+                      (message "Ebib delete %s failed." mode-string)))))))))))
 ;; =====================ebib=======================
 ;;; bibtex
 ;; ====================bibtex======================
