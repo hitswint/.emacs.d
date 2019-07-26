@@ -34,6 +34,7 @@
   (require 'setup_desktop)
   (require 'setup_avy)
   (require 'setup_appearance)
+  (require 'setup_bibtex)
   (require 'setup_ccmode)
   (require 'setup_chinese)
   (require 'setup_dired)
