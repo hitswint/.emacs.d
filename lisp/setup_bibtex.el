@@ -65,7 +65,7 @@
   (setq bibtex-completion-cite-prompt-for-optional-arguments nil
         bibtex-completion-additional-search-fields '(keywords)
         bibtex-completion-pdf-field "file"
-        bibtex-completion-bibliography '("~/.bib/ALL.bib") ;zotero-better-bibtex自动更新。
+        bibtex-completion-bibliography '("~/.bib/ALL.bib")
         bibtex-completion-notes-path "~/Zotero/storage/TKM9D893/notes.org")
   (defvar bibtex-completion-bibliography/curr nil)
   (defun swint-helm-bibtex (&optional arg)
@@ -119,7 +119,7 @@
   (define-key ebib-index-mode-map (kbd "C-j") 'ebib-view-file)
   (define-key ebib-index-mode-map (kbd "<RET>") 'ebib-view-file-in-emacs)
   (define-key ebib-index-mode-map (kbd "D") 'ebib-delete-entry-from-zotero)
-  (define-key ebib-index-mode-map (kbd "J") 'ebib-join-bib)
+  (define-key ebib-index-mode-map (kbd "j") 'ebib-join-bib)
   (define-key ebib-index-mode-map (kbd "C-x b") nil)
   (define-key ebib-entry-mode-map (kbd "C-x b") nil)
   (define-key ebib-strings-mode-map (kbd "C-x b") nil)
@@ -134,10 +134,11 @@
   (setq ebib-hide-cursor nil)
   (setq ebib-file-associations '(("pdf" . "llpp") ("ps" . "gv")))
   (setq ebib-truncate-file-names nil)
-  (setq ebib-preload-bib-files '("ALL.bib" "Current.bib"))
+  (setq ebib-preload-bib-files (delete "ALL.bib" (directory-files "~/.bib" nil "\\.bib$")))
   (setq ebib-bib-search-dirs '("~/.bib"))
   (setq ebib-notes-use-single-file (expand-file-name "~/Zotero/storage/TKM9D893/notes.org"))
   (setq ebib-notes-template "* %T\n  :PROPERTIES:\n  %K\n  :END:\n>|<\n")
+  (setq ebib-reading-list-file "~/.bib/reading-list.org")
   (setq ebib-use-timestamp t)
   (setq ebib-timestamp-format "%Y-%m-%dT%TZ") ;same as zotero export
   (setq ebib-index-default-sort '("timestamp" . descend))

@@ -797,7 +797,7 @@
 ;; ============insert-translated-name==============
 ;;; awesome-tab
 ;; =================awesome-tab====================
-(use-package awesome-tab
+(def-package! awesome-tab
   :load-path "site-lisp/awesome-tab/"
   :commands awesome-tab-mode
   :init
@@ -823,7 +823,7 @@
 ;; =================awesome-tab====================
 ;;; idf-mode
 ;; ==================idf-mode======================
-(use-package idf-mode
+(def-package! idf-mode
   :load-path "site-lisp/idf-mode/"
   :mode ("\\.[iI][dD][fF]\\'" . idf-mode)
   :config

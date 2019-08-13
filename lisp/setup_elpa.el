@@ -122,6 +122,7 @@
                            ivy
                            ivy-hydra
                            js2-mode
+                           jupyter
                            key-chord
                            lacarte
                            latex-preview-pane

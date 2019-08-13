@@ -130,7 +130,8 @@
                                                            (dot . t)
                                                            (octave . t)
                                                            (js . t)
-                                                           (css . t)))
+                                                           (css . t)
+                                                           (jupyter . t)))
   ;; ===========使用ditaa输出ascii图片==========
 ;;;; cdlatex
   ;; ================cdlatex====================
@@ -457,7 +458,8 @@
   :config
   ;; Heading格式随mode不同，通常是M-;加*加空格。
   (setq outshine-use-speed-commands t)
-  (setq outshine-imenu-show-headlines-p nil))
+  (setq outshine-imenu-show-headlines-p nil)
+  (define-key outshine-mode-map (kbd "M-TAB") nil))
 (def-package! outorg
   ;; M-O # current heading.
   ;; C-u M-O # current buffer.

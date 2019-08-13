@@ -20,7 +20,7 @@ URxvt.searchable-scrollback: CM-s
 
 ! perl-ext-common.
 ! https://github.com/muennich/urxvt-perls
-! 下载keyboard-select置于/usr/lib/urxvt/perl/，其他自带。
+! 下载keyboard-select置于~/.urxvt/ext/(/usr/lib/urxvt/perl/失效)，其他自带。
 URxvt.perl-ext-common: default,tabbed,keyboard-select,selection-to-clipboard
 ! C-M-c/C-M-v 复制粘贴到clipboard。
 URxvt.tabbed.tabbar-fg: 5

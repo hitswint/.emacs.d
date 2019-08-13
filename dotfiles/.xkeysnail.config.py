@@ -23,9 +23,9 @@ define_multipurpose_modmap(
     # To use this example, you can't remap capslock with define_modmap.
 )
 
-# * Keybindings for Firefox/Chrome
+# * Keybindings for Firefox/Chromium
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("Firefox", "Google-chrome"),
+    lambda wm_class: wm_class and wm_class[-1] in ("Firefox", "Chromium"),
     {
         # Ctrl+Alt+j/k to switch next/previous tab
         K("M-n"): K("C-TAB"),
@@ -35,7 +35,7 @@ define_keymap(
         # very naive "Edit in editor" feature (just an example)
         # K("C-o"): [K("C-a"), K("C-c"), launch(["gedit"]), sleep(0.5), K("C-v")]
     },
-    "Firefox and Chrome")
+    "Firefox and Chromium")
 
 # * Keybindings for Zeal https://github.com/zealdocs/zeal/
 # define_keymap(re.compile("Zeal"), {

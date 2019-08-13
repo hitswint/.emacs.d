@@ -1,7 +1,9 @@
 ;;; python-mode
 ;; =================python-mode================
 (def-package! python
-  :mode ("\\.py\\'" . python-mode))
+  :mode ("\\.py\\'" . python-mode)
+  :config
+  (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t))
 ;; =================python-mode================
 ;;; pyvenv
 ;; ===================pyvenv===================
@@ -30,7 +32,6 @@
   ;; ipython默认设置有bug，需要加--simple-prompt选项。
   (setq python-shell-interpreter "ipython"
         python-shell-interpreter-args "-i --simple-prompt --pylab")
-  (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (define-key elpy-mode-map (kbd "M-.") nil)
   (define-key elpy-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key elpy-mode-map (kbd "C-c C-.") 'pop-tag-mark)
@@ -50,16 +51,16 @@
   (defun toggle-elpy-mode-all-buffers ()
     (interactive)
     (if elpy-modules-initialized-p
-        (progn (elpy-disable)
+        (progn (dolist (buf (cl-remove-if-not (lambda (x)
+                                                (equal (buffer-mode x) 'python-mode))
+                                              (buffer-list)))
+                 (with-current-buffer buf
+                   (elpy-mode 'toggle)))
+               (elpy-disable)
                (pyvenv-mode 1))
       (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
         (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
-      (elpy-enable))
-    (dolist (buf (cl-remove-if-not (lambda (x)
-                                     (equal (buffer-mode x) 'python-mode))
-                                   (buffer-list)))
-      (with-current-buffer buf
-        (elpy-mode 'toggle)))))
+      (elpy-enable))))
 ;; ====================elpy====================
 ;;; emacs-ipython-notebook
 ;; ====================ein=====================
@@ -69,11 +70,12 @@
   :config
   ;; ein:url-or-port可取8888或http://127.0.0.1(localhost):8888。
   ;; ein:jupyter-server-conn-info搜索并确定url和token，但中文提示导致搜索失败。
-  (defun ein:jupyter-server-conn-info/override (&optional buffer)
+  (defun ein:jupyter-server-conn-info/override (&optional buffer-name)
     "Return the url-or-port and password for BUFFER or the global session."
-    (unless buffer
-      (setq buffer (get-buffer ein:jupyter-server-buffer-name)))
-    (let ((result '(nil nil)))
+    (unless buffer-name
+      (setq buffer-name ein:jupyter-server-buffer-name))
+    (let ((buffer (get-buffer buffer-name))
+          (result '(nil nil)))
       (if buffer
           (with-current-buffer buffer
             (save-excursion
@@ -102,8 +104,8 @@
       (set-process-query-on-exit-flag (get-process "EIN: Jupyter notebook server") nil)
       (setq *ein:last-jupyter-directory* nil)))
   (advice-add 'ein:jupyter-server-start :around #'ein:jupyter-server-start/around)
-  ;; 默认补全后端为ac，可选company。
-  ;; (setq ein:completion-backend 'ein:use-company-backend)
+  ;; 补全后端可选ac/company。
+  (setq ein:completion-backend 'ein:use-ac-backend)
   (setq ein:use-auto-complete-superpack t)
   (setq ein:use-smartrep t)
   (def-package! ein-notebook
@@ -118,41 +120,36 @@
     (define-key ein:notebook-mode-map (kbd "C-c C-,") 'ein:pytools-jump-to-source-command)
     (define-key ein:notebook-mode-map (kbd "C-c C-.") 'ein:pytools-jump-back-command))
   (def-package! ein-connect
-    :commands ein:connect-to-notebook-command
-    :init
-    (add-hook 'python-mode-hook (lambda ()
-                                  (bind-key "C-c c" 'ein:connect-to-notebook-command python-mode-map)))
+    :bind (:map python-mode-map
+                ("C-c c" . ein:connect-to-notebook-command))
     :config
     ;; 在ein:connect中关闭company的自动补全。
     (add-hook 'ein:connect-mode-hook '(lambda ()
                                         (set (make-local-variable 'company-idle-delay) nil)))
-    ;; 取消ein:connect-mode-map默认快捷键，以免与elpy冲突。
-    (define-key ein:connect-mode-map "\C-c\C-c" nil)
-    (define-key ein:connect-mode-map "\C-c\C-l" nil)
-    (define-key ein:connect-mode-map "\C-c\C-r" nil)
-    (define-key ein:connect-mode-map "\C-c\C-f" nil)
-    (define-key ein:connect-mode-map "\C-c\C-z" nil)
-    (define-key ein:connect-mode-map "\C-c\C-a" nil)
-    (define-key ein:connect-mode-map "\C-c\C-o" nil)
-    (define-key ein:connect-mode-map "\C-c\C-x" nil)
+    ;; 与elpy快捷键冲突。
     (define-key ein:connect-mode-map (kbd "C-:") nil)
     (define-key ein:connect-mode-map "\M-," nil)
     (define-key ein:connect-mode-map "\M-." nil)
-    (define-key ein:connect-mode-map (kbd "C-c C-,") nil)
-    (define-key ein:connect-mode-map (kbd "C-c C-.") nil)
-    (define-key ein:connect-mode-map (kbd "C-c C-/") nil)
-    ;; Elpy快捷键为C-c C-x，ein快捷键为C-c x。
-    (define-key ein:connect-mode-map "\C-cc" 'ein:connect-run-or-eval-buffer)
-    (define-key ein:connect-mode-map "\C-cl" 'ein:connect-reload-buffer)
-    (define-key ein:connect-mode-map "\C-cr" 'ein:connect-eval-region)
-    (define-key ein:connect-mode-map "\C-ce" 'ein:shared-output-eval-string)
-    (define-key ein:connect-mode-map "\C-co" 'ein:console-open)
-    (define-key ein:connect-mode-map "\C-cs" 'ein:notebook-scratchsheet-open)
-    (define-key ein:connect-mode-map "\C-ca" 'ein:connect-toggle-autoexec)
-    (define-key ein:connect-mode-map "\C-cz" 'ein:connect-pop-to-notebook)
-    (define-key ein:connect-mode-map "\C-cx" 'ein:tb-show)
-    (define-key ein:connect-mode-map (kbd "C-c ,") 'ein:pytools-jump-to-source-command)
-    (define-key ein:connect-mode-map (kbd "C-c .") 'ein:pytools-jump-back-command)
-    (define-key ein:connect-mode-map (kbd "C-c /") 'ein:pytools-request-tooltip-or-help)))
+    (define-key ein:connect-mode-map "\C-c\C-e" 'ein:shared-output-eval-string)
+    (define-key ein:connect-mode-map (kbd "C-c C-,") 'ein:pytools-jump-to-source-command)
+    (define-key ein:connect-mode-map (kbd "C-c C-.") 'ein:pytools-jump-back-command)))
 ;; ====================ein=====================
+;;; jupyter
+;; ==================jupyter===================
+(def-package! jupyter
+  :bind (("M-g C-j" . swint-jupyter-run-repl)
+         ("M-g C-M-j" . jupyter-connect-repl))
+  :config
+  (bind-key "C-c c" 'jupyter-repl-associate-buffer python-mode-map)
+  (defun swint-jupyter-run-repl ()
+    "Synchronization of bypy-sync."
+    (interactive)
+    (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
+      (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
+    (call-interactively 'jupyter-run-repl))
+  (define-key jupyter-repl-interaction-mode-map (kbd "M-i") nil)
+  (define-key jupyter-repl-interaction-mode-map (kbd "C-x C-e") nil)
+  (define-key jupyter-repl-interaction-mode-map (kbd "C-c C-/") #'jupyter-inspect-at-point)
+  (define-key jupyter-repl-interaction-mode-map (kbd "C-c C-e") #'jupyter-eval-string-command))
+;; ==================jupyter===================
 (provide 'setup_python)
