@@ -34,7 +34,6 @@
                ;; 插入source code时高亮，C-c '打开相应major-mode编辑窗口。
                (setq org-src-fontify-natively t)
                ;; (setq org-startup-indented t)
-               (setq org-confirm-babel-evaluate nil)
                (setq truncate-lines nil)
                (setq org-hide-leading-stars t)
                (setq org-startup-folded 'content)
@@ -130,8 +129,7 @@
                                                            (dot . t)
                                                            (octave . t)
                                                            (js . t)
-                                                           (css . t)
-                                                           (jupyter . t)))
+                                                           (css . t)))
   ;; ===========使用ditaa输出ascii图片==========
 ;;;; cdlatex
   ;; ================cdlatex====================

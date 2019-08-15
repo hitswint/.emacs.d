@@ -102,19 +102,22 @@ FORCE-OTHER-WINDOW is ignored."
 (defun online-output-cleaner ()
   (outline-show-all)
   (goto-char (point-min))
-  (while (re-search-forward ".*Translate\\ from.*to.*:\n" nil t)
-    (replace-match ""))
-  (while (re-search-forward "\\\<1\\\. " nil t)
-    (org-shiftmetaright)
-    (org-shiftmetaright)
-    (org-shiftmetaright))
-  (while (re-search-forward "^*\\ .*" nil t)
-    (org-shiftmetaright)
-    (org-shiftmetaright)
-    (org-shiftmetaright))
-  (goto-char (point-min))
-  (while (re-search-forward "^\n" nil t)
-    (replace-match ""))
+  (save-excursion
+    (while (re-search-forward ".*Translate\\ from.*to.*:\n" nil t)
+      (replace-match "")))
+  (save-excursion
+    (while (re-search-forward "\\\<1\\\. " nil t)
+      (org-shiftmetaright)
+      (org-shiftmetaright)
+      (org-shiftmetaright)))
+  (save-excursion
+    (while (re-search-forward "^*\\ .*" nil t)
+      (org-metaright)
+      (org-metaright)
+      (org-metaright)))
+  (save-excursion
+    (while (re-search-forward "^\n" nil t)
+      (replace-match "")))
   (indent-region (point-min) (point-max))
   (goto-char (point-min)))
 ;;;###autoload
@@ -129,17 +132,17 @@ FORCE-OTHER-WINDOW is ignored."
     (buffer-disable-undo)
     (erase-buffer)
     (sdcv-mode)
-    ;; 插入google-translate结果。
-    (ignore-errors
-      (insert (concat "*** Google Translate\n"))
-      (if (pyim-string-match-p "\\cc" word)
-          (google-translate-translate "zh-CN" "en" word 'current-buffer)
-        (google-translate-translate "en" "zh-CN" word 'current-buffer)))
-    ;; 插入bing-dict结果。
-    (ignore-errors (bing-dict-brief word))
-    ;; 插入youdao-dictionary结果。
-    (ignore-errors
-      (insert (concat "*** Youdao Dictionary\n"))
-      (insert (youdao-dictionary--format-result word)))
-    (online-output-cleaner)))
+    (let ((bing-result (ignore-errors (bing-dict-brief word t)))
+          (youdao-result (ignore-errors (youdao-dictionary--format-result word))))
+      (insert "*** Google Translate\n")
+      (unless (ignore-errors
+                (if (pyim-string-match-p "\\cc" word)
+                    (google-translate-translate "zh-CN" "en" word 'current-buffer)
+                  (google-translate-translate "en" "zh-CN" word 'current-buffer)))
+        (insert "Nothing"))
+      (insert "\n\n*** Bing Dict\n")
+      (insert (or bing-result "Nothing"))
+      (insert "\n\n*** Youdao Dictionary\n")
+      (insert (or youdao-result "Nothing"))
+      (online-output-cleaner))))
 ;; =================online===================

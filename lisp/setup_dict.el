@@ -9,15 +9,6 @@
       ("g" . google-translate-to-tip)
       ("y" . youdao-dictionary-to-tip)))
   :config
-  (defun bing-dict-brief-cb/after (&rest args)
-    "Output translation to pos-tip or *online* buffer."
-    (if (get-buffer "*online*")
-        (with-current-buffer "*online*"
-          (goto-char (point-min))
-          (insert (concat "*** Bing Dict\n"))
-          (insert (concat (current-message) "\n")))
-      (pos-tip-show (current-message) nil nil nil 0)))
-  (advice-add 'bing-dict-brief-cb :after #'bing-dict-brief-cb/after)
   (defun bing-dict-brief-cb-at-point (&optional _word)
     "Search word at point."
     (interactive)
@@ -39,9 +30,11 @@
   (setq google-translate-translation-directions-alist
         '(("en" . "zh-CN") ("zh-CN" . "en")))
   :config
+  (setq google-translate-backend-method 'wget)
   (defun google-translate-current-buffer-output-translation/override (gtos)
     "Output translation to current buffer."
-    (google-translate-buffer-insert-translation gtos))
+    (google-translate-buffer-insert-translation gtos)
+    (message "Translated text was added to current buffer."))
   (advice-add 'google-translate-current-buffer-output-translation :override
               #'google-translate-current-buffer-output-translation/override)
   (defun google-translate-to-tip (&optional _word)

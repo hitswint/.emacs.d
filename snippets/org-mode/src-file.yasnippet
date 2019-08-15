@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# key: file-src
+# name: src-file
+# --
+:file ${1:$$(unless yas/modified-p (unless (file-exists-p ".ob-pic") (make-directory ".ob-pic")) (concat "./.ob-pic/" (make-temp-name (concat (file-name-base (or (buffer-file-name) (buffer-name))) "_" (format-time-string "%Y%m%d_"))) ".png"))} :exports results
