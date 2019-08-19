@@ -3,11 +3,13 @@
 ;;;###autoload
 (define-derived-mode sdcv-mode org-mode nil
   "Major mode for sdcv."
-  (fcitx--sdcv-maybe-deactivate)
+  (when swint-fcitx-setup-done
+    (fcitx--sdcv-maybe-deactivate))
   (local-set-key (kbd "q") '(lambda () (interactive)
                               (swint-kill-buffer)
                               (jump-to-register :sdcv)
-                              (fcitx--sdcv-maybe-activate))))
+                              (when swint-fcitx-setup-done
+                                (fcitx--sdcv-maybe-activate)))))
 (defvar sdcv-dictionary-list '("朗道英汉字典5.0"
                                "朗道汉英字典5.0"
                                "XDICT英汉辞典"

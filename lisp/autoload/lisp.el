@@ -15,6 +15,22 @@
   (or (assoc "eth0" (network-interface-list))
       (assoc "wlan0" (network-interface-list))))
 ;; ==========Determination internet status=========
+;;; shadowsocks-proxy-mode
+;; =============shadowsocks-proxy-mode=============
+(setq socks-server '("Default server" "127.0.0.1" 1080 5))
+;;;###autoload
+(define-minor-mode shadowsocks-proxy-mode
+  :global t
+  :init-value nil
+  :lighter " SS"
+  (if shadowsocks-proxy-mode
+      (setq url-gateway-method 'socks)
+    (setq url-gateway-method 'native)))
+;;;###autoload
+(define-global-minor-mode global-shadowsocks-proxy-mode
+  shadowsocks-proxy-mode shadowsocks-proxy-mode
+  :group 'shadowsocks-proxy)
+;; =============shadowsocks-proxy-mode=============
 ;;; ignore-error-wrapper
 ;; ==============ignore-error-wrapper==============
 ;;;###autoload
