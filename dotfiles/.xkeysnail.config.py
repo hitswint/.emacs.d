@@ -45,7 +45,7 @@ define_keymap(
 
 # * Emacs-like keybindings in non-Emacs applications
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] not in ("Emacs", "URxvt", "Vncviewer") and wm_class[0] not in ("WINWORD.EXE"),
+    lambda wm_class: wm_class and wm_class[-1] not in ("Emacs", "URxvt", "Vncviewer") and wm_class[0] not in ("winword.exe"),
     {
         # Cursor
         K("C-b"): with_mark(K("left")),

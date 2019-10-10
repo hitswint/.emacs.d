@@ -1,0 +1,17 @@
++ /book/
++ /book/**
++ /linux/
++ /linux/**
++ /Music/
++ /Music/**
++ /myfile/
++ /myfile/**
++ /OpenFOAM/
++ /OpenFOAM/**
++ /papers/
++ /papers/**
++ /Pictures/
++ /Pictures/**
++ /tex/
++ /tex/**
+- *

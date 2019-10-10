@@ -32,7 +32,7 @@
   (add-hook 'dired-after-readin-hook '(lambda () (setq truncate-lines t)))
   ;; 默认打开方式。
   (setq file-extension-app-alist
-        '(("pdf" . "llpp") ("djvu" . "llpp")
+        '(("pdf" . "llpp_qpdfview.sh") ("djvu" . "llpp")
           ("rmvb" . "mplayer") ("rm" . "mplayer") ("mp4" . "mplayer") ("avi" . "mplayer") ("flv" . "mplayer") ("f4v" . "mplayer") ("mpg" . "mplayer") ("mkv" . "mplayer") ("3gp" . "mplayer") ("wmv" . "mplayer") ("mov" . "mplayer") ("dat" . "mplayer") ("asf" . "mplayer") ("mpeg" . "mplayer") ("wma" . "mplayer") ("gif" . "mplayer")
           ("mp3" . "mpg321") ("ape" . "mplayer")
           ("xoj" . "xournal")
@@ -84,7 +84,8 @@
          (list "\\.mpg$" "mplayer * >/dev/null 2>&1 &")
          (list "\\.ods$" "libreoffice * >/dev/null 2>&1 &")
          (list "\\.tex$" "xelatex * >/dev/null 2>&1 &")
-         (list "\\.c$" "gcc -Wall")))
+         (list "\\.c$" "gcc -Wall * >/dev/null 2>&1 &")
+         (list "\\.ipynb$" "jupyter nbconvert --to python * >/dev/null 2>&1 &")))
   (add-hook 'dired-mode-hook
             (lambda ()
               (define-key dired-mode-map (kbd "M-=") nil)

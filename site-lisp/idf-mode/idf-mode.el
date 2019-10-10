@@ -50,11 +50,11 @@
   "Syntax table for idf-mode.")
 
 (defconst idf-font-lock-keywords
-  `((,(concat "^[ \t]*" "\\([a-zA-Z0-9:]*\\)" ",\n")
+  `((,(concat "^[ \t]*" "\\([a-zA-Z0-9:]*\\)" ",[ \t]*\n")
      (1 font-lock-type-face))
-    (,(concat "^[ \t]*" "\\([a-zA-Z0-9:]*\\)" ",.*;\n")
+    (,(concat "^[ \t]*" "\\([a-zA-Z0-9:]*\\)" ",.*;[ \t]*\n")
      (1 font-lock-type-face))
-    (,(concat "^[ \t]*" "\\(.*\\)" "[,;][ \t]*!- Name[ \t]*\n")
+    (,(concat "^[ \ta-zA-Z0-9:]*" ",[ \t]*\n" "[ \t]*" "\\(.*\\)" "[,;].*\n")
      (1 font-lock-variable-name-face))
     (,(concat "^[ \t]*" "\\(.*\\)" "[,;][ \t]*!- .+Name[ \t]*\n")
      (1 font-lock-builtin-face))
@@ -63,13 +63,13 @@
   "Keywords for highlighting.")
 
 (defcustom idf-imenu-generic-expression
-  '((nil "^[ \t]*\\([a-zA-Z0-9:]*,\n[ \t]*.*\\)[,;][ \t]*!- Name[ \t]*\n" 1))
+  '((nil "^[ \t]*\\([a-zA-Z0-9:]*,\n[ \t]*.*\\)[,;].*\n" 1))
   "The imenu regex to parse an outline of the idf file.")
 
 (defun idf-imenu-create-index-function ()
   (let ((default-index (imenu-default-create-index-function)))
     (cl-loop for i in default-index
-             collect (cons (replace-regexp-in-string ",\n[ \t]*" " | " (car i)) (cdr i)))))
+             collect (cons (replace-regexp-in-string ",[ \t]*\n[ \t]*" " | " (car i)) (cdr i)))))
 
 (defun idf-set-imenu-generic-expression ()
   (make-local-variable 'imenu-generic-expression)
@@ -81,33 +81,35 @@
 
 (defun idf-prev-object ()
   (interactive)
-  (re-search-backward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\(\n\\|.*;\n\\)") nil t))
+  (re-search-backward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)") nil t))
 
 (defun idf-next-object ()
   (interactive)
   (goto-char (+ (line-end-position) 1))
-  (if (re-search-forward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\(\n\\|.*;\n\\)") nil t)
+  (if (re-search-forward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)") nil t)
       (forward-line -1)))
 
 (defun idf-next-type ()
   (interactive)
   (goto-char (+ (line-end-position) 1))
-  (re-search-backward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\(\n\\|.*;\n\\)") nil t)
+  (re-search-backward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)") nil t)
   (let* ((current-type (match-string 1))
          (next-type current-type))
     (while (equal next-type current-type)
-      (idf-next-object)
-      (setq next-type (match-string 1)))))
+      (if (idf-next-object)
+          (setq next-type (match-string 1))
+        (setq next-type nil)))))
 
 (defun idf-prev-type ()
   (interactive)
   (goto-char (+ (line-end-position) 1))
-  (re-search-backward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\(\n\\|.*;\n\\)") nil t)
+  (re-search-backward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)") nil t)
   (let* ((current-type (match-string 1))
          (prev-type current-type))
     (while (equal prev-type current-type)
-      (idf-prev-object)
-      (setq prev-type (match-string 1)))))
+      (if (idf-prev-object)
+          (setq prev-type (match-string 1))
+        (setq prev-type nil)))))
 
 (defun idf-find-object-at-point ()
   "Find the object at point."
@@ -115,7 +117,7 @@
   (let ((current-point (point))
         (current-object (save-excursion
                           (goto-char (line-beginning-position))
-                          (re-search-forward "^[ \t]*\\(.*\\)[,;][ \t]*!- .+Name[ \t]*\n"
+                          (re-search-forward "^[ \t]*\\(.*\\)[,;].*\n"
                                              (line-beginning-position 2) t)
                           (match-string 1))))
     (if (fboundp 'xref-push-marker-stack)
@@ -125,7 +127,7 @@
     (cond
      (current-object
       (goto-char (point-max))
-      (unless (re-search-backward (concat "^[ \t]*" current-object "[,;][ \t]*!- Name[ \t]*\n") nil t)
+      (unless (re-search-backward (concat "^[ \ta-zA-Z0-9:]*,[ \t]*\n[ \t]*" current-object "[,;].*\n") nil t)
         (goto-char current-point)))
      (t
       (pop-tag-mark)

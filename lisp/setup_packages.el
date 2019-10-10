@@ -599,8 +599,8 @@
       ("." . diff-hl-next-hunk)
       ("/" . diff-hl-revert-hunk)))
   (global-diff-hl-mode)
-  (add-hook 'prog-mode-hook 'diff-hl-flydiff-mode)
-  (add-hook 'text-mode-hook 'diff-hl-flydiff-mode)
+  ;; 无需保存即显示diff，造成大文件卡顿。
+  ;; (diff-hl-flydiff-mode)
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
   ;; 在已有dired-mode中开启diff-hl-dired-mode。
   (dolist (buf (cl-remove-if-not (lambda (x)
@@ -735,8 +735,8 @@
 ;;; academic-phrases
 ;; =================academic-phrases===============
 (def-package! academic-phrases
-  :bind (("M-s a" . academic-phrases)
-         ("M-s A" . academic-phrases-by-section)))
+  :bind (("M-s a" . academic-phrases-by-section)
+         ("M-s A" . academic-phrases)))
 ;; =================academic-phrases===============
 ;;; reftex
 ;; =====================reftex=====================

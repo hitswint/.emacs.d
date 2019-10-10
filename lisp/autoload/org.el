@@ -29,7 +29,7 @@
 ;;;###autoload
 (defun swint-org-open-at-point-with-apps ()
   (interactive)
-  (let ((org-file-apps '(("\\.pdf\\'" . "llpp %s")
+  (let ((org-file-apps '(("\\.pdf\\'" . "llpp_qpdfview.sh %s")
                          ("\\.djvu\\'" . "llpp %s")
                          ("\\.png\\'" . "feh.sh %s")
                          ("\\.jpg\\'" . "feh.sh %s")

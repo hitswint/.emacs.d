@@ -132,7 +132,7 @@
                              ("Year" 5 t)
                              ("Title" 50 t)))
   (setq ebib-hide-cursor nil)
-  (setq ebib-file-associations '(("pdf" . "llpp") ("ps" . "gv")))
+  (setq ebib-file-associations '(("pdf" . "llpp_qpdfview.sh") ("ps" . "gv")))
   (setq ebib-truncate-file-names nil)
   (setq ebib-preload-bib-files (delete "ALL.bib" (directory-files "~/.bib" nil "\\.bib$")))
   (setq ebib-bib-search-dirs '("~/.bib"))
