@@ -50,9 +50,9 @@
   "Syntax table for idf-mode.")
 
 (defconst idf-font-lock-keywords
-  `((,(concat "^[ \t]*" "\\([a-zA-Z0-9:]*\\)" ",[ \t]*\n")
+  `((,(concat "^[ \t]*" "\\([ a-zA-Z0-9:]*\\)" ",[ \t]*\n")
      (1 font-lock-type-face))
-    (,(concat "^[ \t]*" "\\([a-zA-Z0-9:]*\\)" ",.*;[ \t]*\n")
+    (,(concat "^[ \t]*" "\\([ a-zA-Z0-9:]*\\)" ",.*;[ \t]*\n")
      (1 font-lock-type-face))
     (,(concat "^[ \ta-zA-Z0-9:]*" ",[ \t]*\n" "[ \t]*" "\\(.*\\)" "[,;].*\n")
      (1 font-lock-variable-name-face))

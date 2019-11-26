@@ -20,7 +20,7 @@
   (global-set-key (kbd "M-O c") 'org-capture)
   (global-set-key (kbd "M-O a") 'org-agenda)
   (setq org-capture-templates
-        '(("i" "Idea" entry (file+headline "~/org/task.org" "Idea List") "* TODO %? %^g")
+        '(("i" "Idea" entry (file+headline "~/Nutstore-sync/orgzly/task.org" "Idea List") "* TODO %? %^g")
           ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
           ("c" "Computer" entry (file+headline "~/org/notes-computer.org" "Computer") "* %? %U %^g")
           ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others") "* %? %U %^g")
@@ -100,7 +100,7 @@
   ;; ===============Keybindings=================
 ;;;; GTD
   ;; ===================GTD=====================
-  (setq org-agenda-files (list "~/org/task.org"))
+  (setq org-agenda-files (list "~/Nutstore-sync/orgzly/task.org"))
   ;; Do not show title of task in mode-line when using org-clock.
   (setq org-clock-heading-function
         (lambda ()
@@ -174,7 +174,7 @@
                                         (verbatim . protectedtexttt)))
     ;; 使用Listings宏包格式化源代码(只是把代码框用listing环境框起来，还需要额外的设置。
     (setq org-export-latex-listings t)
-    (setq org-beamer-outline-frame-title "目录")
+    (setq org-beamer-outline-frame-title "Outline")
     (add-to-list 'org-latex-classes
                  '("cn-article"
                    "\\documentclass[11pt]{ctexart}
@@ -290,7 +290,7 @@
 \\usepackage{comment}
 \\subtitle{}
 \\subject{}
-\\institute{沈阳建筑大学}
+\\institute{}
 [NO-DEFAULT-PACKAGES]
 [NO-PACKAGES]"
                    ("\\section{%s}" . "\\section*{%s}")

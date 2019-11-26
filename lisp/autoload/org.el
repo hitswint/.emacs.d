@@ -82,7 +82,7 @@
 (unless (file-exists-p org-mobile-inbox-for-pull)
   (shell-command (concat "touch " (expand-file-name org-mobile-inbox-for-pull))))
 ;; 设置需要同步的文件。
-(setq org-mobile-files (list "~/org/task.org"))
+(setq org-mobile-files (list "~/Nutstore-sync/orgzly/task.org"))
 ;;;###autoload
 (defun swint-org-mobile-sync (arg)
   "Synchronization of org mobile."
