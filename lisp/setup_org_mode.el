@@ -606,7 +606,8 @@
   :config
   (setq org-ref-insert-cite-key "\C-cb")
   (setq org-ref-bibtex-hydra-key-binding "\C-cj")
-  (setq org-ref-default-bibliography '("~/.bib/ALL.bib")
+  (setq org-ref-default-bibliography (delete (expand-file-name "~/.bib/Zotero.bib")
+                                             (directory-files "~/.bib" t "\\.bib$"))
         org-ref-bibliography-notes "~/Zotero/storage/TKM9D893/notes.org"
         org-latex-prefer-user-labels t
         org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex

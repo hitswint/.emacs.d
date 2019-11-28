@@ -804,10 +804,6 @@
   (setq awesome-tab-prefix-key [(meta \s)])
   :config
   ;; (awesome-tab-mode t)
-  (define-key awesome-tab-prefix-map (kbd "M-p") 'awesome-tab-backward)
-  (define-key awesome-tab-prefix-map (kbd "M-n") 'awesome-tab-forward)
-  (define-key awesome-tab-prefix-map (kbd "M-P") 'awesome-tab-select-beg-tab)
-  (define-key awesome-tab-prefix-map (kbd "M-N") 'awesome-tab-select-end-tab)
   (setq awesome-tab-cycle-scope 'tabs)
   (setq awesome-tab-common-group-name "i")
   (setq awesome-tab-buffer-groups-function 'swint-awesome-tab-buffer-groups)
@@ -835,4 +831,11 @@
   (define-key idf-mode-map (kbd "C-c C-,") 'idf-find-object-at-point)
   (define-key idf-mode-map (kbd "C-c C-.") 'pop-tag-mark))
 ;; ==================idf-mode======================
+;;; gnu-elpa-keyring-update
+;; ==========gnu-elpa-keyring-update===============
+(def-package! gnu-elpa-keyring-update
+  ;; 解决GPG公钥过期的问题。
+  ;; (setq package-check-signature nil) ;临时关闭验证，package-install安装。
+  :commands gnu-elpa-keyring-update)
+;; ==========gnu-elpa-keyring-update===============
 (provide 'setup_packages)

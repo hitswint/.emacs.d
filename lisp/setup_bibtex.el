@@ -65,7 +65,8 @@
   (setq bibtex-completion-cite-prompt-for-optional-arguments nil
         bibtex-completion-additional-search-fields '(keywords)
         bibtex-completion-pdf-field "file"
-        bibtex-completion-bibliography '("~/.bib/ALL.bib")
+        bibtex-completion-bibliography (delete (expand-file-name "~/.bib/Zotero.bib")
+                                               (directory-files "~/.bib" t "\\.bib$"))
         bibtex-completion-notes-path "~/Zotero/storage/TKM9D893/notes.org")
   (defvar bibtex-completion-bibliography/curr nil)
   (defun swint-helm-bibtex (&optional arg)
@@ -128,20 +129,22 @@
   (add-hook 'ebib-entry-mode-hook '(lambda ()
                                      ;; (setq word-wrap t) ;中文支持不好
                                      (setq truncate-lines nil)))
-  (setq ebib-index-columns '(("Author/Editor" 15 t)
-                             ("Year" 5 t)
-                             ("Title" 50 t)))
-  (setq ebib-hide-cursor nil)
-  (setq ebib-file-associations '(("pdf" . "llpp_qpdfview.sh") ("ps" . "gv")))
-  (setq ebib-truncate-file-names nil)
-  (setq ebib-preload-bib-files (delete "ALL.bib" (directory-files "~/.bib" nil "\\.bib$")))
-  (setq ebib-bib-search-dirs '("~/.bib"))
-  (setq ebib-notes-use-single-file (expand-file-name "~/Zotero/storage/TKM9D893/notes.org"))
-  (setq ebib-notes-template "* %T\n  :PROPERTIES:\n  %K\n  :END:\n>|<\n")
-  (setq ebib-reading-list-file "~/.bib/reading-list.org")
-  (setq ebib-use-timestamp t)
-  (setq ebib-timestamp-format "%Y-%m-%dT%TZ") ;same as zotero export
-  (setq ebib-index-default-sort '("timestamp" . descend))
+  (setq ebib-index-columns '(("Note" 1 t)
+                             ("Author/Editor" 20 t)
+                             ("Year" 4 t)
+                             ("Title" 50 t))
+        ebib-hide-cursor nil
+        ebib-file-associations '(("pdf" . "llpp_qpdfview.sh") ("ps" . "gv"))
+        ebib-truncate-file-names nil
+        ebib-preload-bib-files (directory-files "~/.bib" nil "\\.bib$")
+        ebib-bib-search-dirs '("~/.bib")
+        ebib-notes-use-single-file (expand-file-name "~/Zotero/storage/TKM9D893/notes.org")
+        ebib-notes-template "* %T\n  :PROPERTIES:\n  %K\n  :END:\n>|<\n"
+        ebib-reading-list-file "~/.bib/reading-list.org"
+        ebib-use-timestamp t
+        ebib-timestamp-format "%Y-%m-%dT%TZ" ;same as zotero export
+        ebib-index-default-sort '("timestamp" . descend)
+        ebib-index-window-size 20)
   (defun ebib-create-org-identifier/override (key _)
     (format ":Custom_ID: %s" key))
   (advice-add 'ebib-create-org-identifier :override #'ebib-create-org-identifier/override)
@@ -176,9 +179,9 @@
       (default
         (beep))))
   (defun ebib-join-bib ()
-    "Join to ALL.bib."
+    "Join to Zotero.bib."
     (interactive)
-    (when (y-or-n-p "Join All.bib?")
+    (when (y-or-n-p "Join Zotero.bib?")
       (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
         (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
       (let* ((ebib-join-command (concat "python " (expand-file-name "~/Documents/Python/ebib_bibtexparser.py")))

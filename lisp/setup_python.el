@@ -28,7 +28,7 @@
   (setq elpy-remove-modeline-lighter nil)
   :config
   (setq elpy-rpc-timeout nil)
-  (setq elpy-shell-use-project-root nil)
+  (setq elpy-shell-starting-directory nil)
   ;; ipython默认设置有bug，需要加--simple-prompt选项。
   (setq python-shell-interpreter "ipython"
         python-shell-interpreter-args "-i --simple-prompt --pylab")
