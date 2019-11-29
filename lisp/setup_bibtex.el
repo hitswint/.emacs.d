@@ -122,6 +122,9 @@
   (define-key ebib-index-mode-map (kbd "D") 'ebib-delete-entry-from-zotero)
   (define-key ebib-index-mode-map (kbd "j") 'ebib-join-bib)
   (define-key ebib-index-mode-map (kbd "C-x b") nil)
+  (smartrep-define-key ebib-index-mode-map "C-c"
+    '(("n" . ebib-next-collection)
+      ("p" . ebib-prev-collection)))
   (define-key ebib-entry-mode-map (kbd "C-x b") nil)
   (define-key ebib-strings-mode-map (kbd "C-x b") nil)
   (define-key ebib-entry-mode-map (kbd "C-p") nil)
@@ -130,6 +133,7 @@
                                      ;; (setq word-wrap t) ;中文支持不好
                                      (setq truncate-lines nil)))
   (setq ebib-index-columns '(("Note" 1 t)
+                             ("collection" 20 t)
                              ("Author/Editor" 20 t)
                              ("Year" 4 t)
                              ("Title" 50 t))
@@ -216,6 +220,20 @@
                           (message "Ebib delete %s done." mode-string)
                         (message "Ebib delete %s failed." mode-string)))
                      ((memq (process-status process) '(stop signal))
-                      (message "Ebib delete %s failed." mode-string)))))))))))
+                      (message "Ebib delete %s failed." mode-string))))))))))
+  (defun ebib-next-collection ()
+    (interactive)
+    (let ((current_collection (ebib--get-field-value-for-display
+                               "collection" (ebib--get-key-at-point) ebib--cur-db)))
+      (while (and (ebib-next-entry)
+                  (equal current_collection (ebib--get-field-value-for-display
+                                             "collection" (ebib--get-key-at-point) ebib--cur-db))))))
+  (defun ebib-prev-collection ()
+    (interactive)
+    (let ((current_collection (ebib--get-field-value-for-display
+                               "collection" (ebib--get-key-at-point) ebib--cur-db)))
+      (while (and (ebib-prev-entry)
+                  (equal current_collection (ebib--get-field-value-for-display
+                                             "collection" (ebib--get-key-at-point) ebib--cur-db)))))))
 ;; =====================ebib=======================
 (provide 'setup_bibtex)

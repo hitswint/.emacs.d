@@ -5,6 +5,7 @@
   ;; 1. doom//clean-byte-compiled-files并重启emacs，更新编译包。
   ;; 2. doom//byte-compile编译配置文件。
   ;; 3. 如出现undefined等提示，运行1命令重新安装perspective。
+  ;; 4. pdf-tools需要先加载再更新，否则部分函数显示未定义。
   :commands (persp-push-current-buffer
              persp-push-current-buffer-to-last
              swint-persp-switch
