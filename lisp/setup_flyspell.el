@@ -1,7 +1,7 @@
 ;;; flyspell
 ;; ================flyspell==================
 (def-package! flyspell
-  :bind ("M-g f" . swint-toggle-flyspell-mode)
+  :bind ("M-g F" . swint-toggle-flyspell-mode)
   :config
   (defun swint-toggle-flyspell-mode ()
     (interactive)
@@ -15,6 +15,7 @@
   (smartrep-define-key flyspell-mode-map "M-g"
     '(("M-p" . flyspell-goto-previous-error)
       ("M-n" . flyspell-goto-next-error)
+      ("f" . flyspell-auto-correct-word)
       ("M-f" . helm-flyspell-correct)))
   (defun flyspell-goto-previous-error (arg)
     "Go to arg previous spelling error."
