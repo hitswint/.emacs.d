@@ -55,7 +55,8 @@
 (def-package! auctex-latexmk
   :after tex
   :config
-  (auctex-latexmk-setup))
+  (auctex-latexmk-setup)
+  (advice-add 'TeX-engine-set :after #'(lambda (type) (auctex-latexmk-setup))))
 ;; =================auctex-latexmk=================
 ;;; latex-preview-pane
 ;; ==============latex-preview-pane================

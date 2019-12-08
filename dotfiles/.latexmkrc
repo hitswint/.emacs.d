@@ -14,6 +14,7 @@
 
 
 $pdflatex = 'xelatex -interaction=nonstopmode %O %S';
+# $pdflatex = 'pdflatex -interaction=nonstopmode %O %S';
 $postscript_mode = $dvi_mode = 0;
 $preview_continuous_mode = 1;
 $pdf_mode = 1;
