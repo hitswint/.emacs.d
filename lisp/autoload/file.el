@@ -57,9 +57,8 @@
                                      (dired-create-directory "./pic"))
                                    "./pic/")))
         screen-file)
-    (setq screen-file (concat (make-temp-name
-                               (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
-                                       "_" (format-time-string "%Y%m%d_"))) ".png"))
+    (setq screen-file (concat (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
+                                      "_" (format-time-string "%Y%m%d_%H%M%S")) ".png"))
     ;; (suspend-frame)
     (call-process-shell-command (concat "import " "\"" screen-file "\"" ))
     screen-file))

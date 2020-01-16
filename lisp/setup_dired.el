@@ -51,7 +51,8 @@
           ("gz" . "tar zvxf") ("tgz" . "tar zvxf") ("bz2" . "tar jvxf") ("tar" . "tar xf")
           ("tex" . "xelatex")
           ("dot" . "dot -Tpng -o dot.png")
-          ("c" . "gcc -Wall")))
+          ("c" . "gcc -Wall")
+          ("dia" . "dia")))
   ;; dired-do-shell-command打开方式。
   (setq async-shell-command-buffer 'new-buffer)
   (setq async-shell-command-display-buffer nil)

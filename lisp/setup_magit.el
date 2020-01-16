@@ -9,6 +9,9 @@
   :init
   (setq magit-auto-revert-mode nil)
   :config
+  (add-hook 'magit-status-mode-hook '(lambda ()
+                                       (highlight-parentheses-mode -1)
+                                       (auto-mark-mode -1)))
   (define-key magit-mode-map (kbd "<C-tab>") nil)
   (define-key magit-file-mode-map "\C-xg" nil)
   (define-key magit-file-mode-map "\C-x\M-g" nil)

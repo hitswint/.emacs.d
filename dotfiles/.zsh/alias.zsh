@@ -31,3 +31,4 @@ alias -s pdf=llpp
 alias ec='emacsclient -n'
 alias ecc='emacsclient -c -n'
 alias ect='emacsclient -t'
+alias dia="env GTK_IM_MODULE=xim dia"

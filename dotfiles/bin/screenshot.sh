@@ -13,13 +13,13 @@ fi
 case $input1 in
     s)
         # scrot -s
-        import ~/Downloads/ScreenShot_$(date '+%Y-%m-%d_at_%H:%M:%S').png
+        import ~/Downloads/ScreenShot_$(date '+%Y%m%d_%H%M%S').png
         ;;
     w)
-        sleep 0.2 ; scrot -bs 'ScreenShot_%Y-%m-%d_at_%H:%M:%S.png' -e 'mv $f ~/Downloads/'
+        sleep 0.2 ; scrot -bs 'ScreenShot_%Y%m%d_%H%M%S.png' -e 'mv $f ~/Downloads/'
         ;;
     d)
-        sleep 0.2 ; scrot 'ScreenShot_%Y-%m-%d_at_%H:%M:%S.png' -e 'mv $f ~/Downloads/'
+        sleep 0.2 ; scrot 'ScreenShot_%Y%m%d_%H%M%S.png' -e 'mv $f ~/Downloads/'
         ;;
     q)
         break

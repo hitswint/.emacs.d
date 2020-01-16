@@ -140,7 +140,7 @@
         ebib-hide-cursor nil
         ebib-file-associations '(("pdf" . "llpp_qpdfview.sh") ("ps" . "gv"))
         ebib-truncate-file-names nil
-        ebib-preload-bib-files (directory-files "~/.bib" nil "\\.bib$")
+        ebib-preload-bib-files (delete "Zotero.bib" (directory-files "~/.bib" nil "\\.bib$"))
         ebib-bib-search-dirs '("~/.bib")
         ebib-notes-use-single-file (expand-file-name "~/Zotero/storage/TKM9D893/notes.org")
         ebib-notes-template "* %T\n  :PROPERTIES:\n  %K\n  :END:\n>|<\n"
