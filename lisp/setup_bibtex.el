@@ -114,13 +114,14 @@
 (def-package! ebib
   :bind ("C-x M-b" . ebib)
   :config
+  ;; ebib-notes-display-note-symbol : Wrong type argument: stringp, (ebib--update-entry-buffer t)
   (define-key ebib-index-mode-map (kbd ",") 'ebib-prev-database)
   (define-key ebib-index-mode-map (kbd ".") 'ebib-next-database)
   (define-key ebib-index-mode-map (kbd "C-q") 'ebib-quit)
   (define-key ebib-index-mode-map (kbd "C-j") 'ebib-view-file)
   (define-key ebib-index-mode-map (kbd "<RET>") 'ebib-view-file-in-emacs)
-  (define-key ebib-index-mode-map (kbd "D") 'ebib-delete-entry-from-zotero)
-  (define-key ebib-index-mode-map (kbd "j") 'ebib-join-bib)
+  (define-key ebib-index-mode-map (kbd "C-c d") 'ebib-delete-entry-from-zotero)
+  (define-key ebib-index-mode-map (kbd "C-c j") 'ebib-join-bib)
   (define-key ebib-index-mode-map (kbd "C-x b") nil)
   (smartrep-define-key ebib-index-mode-map "C-c"
     '(("n" . ebib-next-collection)
@@ -142,7 +143,7 @@
         ebib-truncate-file-names nil
         ebib-preload-bib-files (delete "Zotero.bib" (directory-files "~/.bib" nil "\\.bib$"))
         ebib-bib-search-dirs '("~/.bib")
-        ebib-notes-use-single-file (expand-file-name "~/Zotero/storage/TKM9D893/notes.org")
+        ebib-notes-file (expand-file-name "~/Zotero/storage/TKM9D893/notes.org")
         ebib-notes-template "* %T\n  :PROPERTIES:\n  %K\n  :END:\n>|<\n"
         ebib-reading-list-file "~/.bib/reading-list.org"
         ebib-use-timestamp t
@@ -152,23 +153,6 @@
   (defun ebib-create-org-identifier/override (key _)
     (format ":Custom_ID: %s" key))
   (advice-add 'ebib-create-org-identifier :override #'ebib-create-org-identifier/override)
-  (defun ebib--display-fields/after (key &optional db match-str)
-    "Display first line of notes in entry mode."
-    (let ((buf (ebib--notes-buffer))
-          notes-string)
-      (with-current-buffer buf
-        (let ((location (ebib--notes-locate-note key)))
-          (when location
-            (goto-char location)
-            (org-back-to-heading)
-            (re-search-forward ":END:[ \t\n]*" nil t)
-            (setq notes-string (buffer-substring-no-properties
-                                (point) (line-end-position))))))
-      (goto-char (point-min))
-      (re-search-forward "\nannote[[:space:]]*$" nil t)
-      (if notes-string
-          (insert notes-string))))
-  (advice-add 'ebib--display-fields :after #'ebib--display-fields/after)
   (defun ebib-view-file-in-emacs (arg)
     (interactive "P")
     (ebib--execute-when
@@ -225,15 +209,15 @@
     (interactive)
     (let ((current_collection (ebib--get-field-value-for-display
                                "collection" (ebib--get-key-at-point) ebib--cur-db)))
-      (while (and (ebib-next-entry)
-                  (equal current_collection (ebib--get-field-value-for-display
-                                             "collection" (ebib--get-key-at-point) ebib--cur-db))))))
+      (while (equal current_collection (ebib--get-field-value-for-display
+                                        "collection" (ebib--get-key-at-point) ebib--cur-db))
+        (ebib-next-entry))))
   (defun ebib-prev-collection ()
     (interactive)
     (let ((current_collection (ebib--get-field-value-for-display
                                "collection" (ebib--get-key-at-point) ebib--cur-db)))
-      (while (and (ebib-prev-entry)
-                  (equal current_collection (ebib--get-field-value-for-display
-                                             "collection" (ebib--get-key-at-point) ebib--cur-db)))))))
+      (while (equal current_collection (ebib--get-field-value-for-display
+                                        "collection" (ebib--get-key-at-point) ebib--cur-db))
+        (ebib-prev-entry)))))
 ;; =====================ebib=======================
 (provide 'setup_bibtex)

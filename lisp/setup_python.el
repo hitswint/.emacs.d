@@ -142,7 +142,6 @@
   :config
   (bind-key "C-c c" 'jupyter-repl-associate-buffer python-mode-map)
   (defun swint-jupyter-run-repl ()
-    "Synchronization of bypy-sync."
     (interactive)
     (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
       (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
