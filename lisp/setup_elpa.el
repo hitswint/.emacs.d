@@ -71,7 +71,6 @@
                            dumb-jump
                            easy-kill
                            ebib
-                           ein
                            elisp-slime-nav
                            elmacro
                            elpy

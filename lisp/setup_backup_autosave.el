@@ -58,10 +58,6 @@
        (concat "tree " (expand-file-name "~") " -o "
                PC-tree-file)))))
 ;;;; 每次保存备份文件。
-(defun force-backup-of-buffer ()
-  (let ((buffer-backed-up nil))
-    (unless (eq major-mode 'ein:notebook-multilang-mode)
-      (backup-buffer))))
-(add-hook 'before-save-hook 'force-backup-of-buffer)
+(add-hook 'before-save-hook '(lambda () (let ((buffer-backed-up nil)) (backup-buffer))))
 ;; ============BACKUP-AUTOSAVE=============
 (provide 'setup_backup_autosave)
