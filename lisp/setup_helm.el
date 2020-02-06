@@ -1,7 +1,6 @@
 ;;; helm
 ;; ====================helm=====================
 (def-package! helm
-  :diminish helm-mode
   :commands (helm-find-files-1
              helm-insert-latex-math)
   :bind-keymap ("C-x c" . helm-command-map)

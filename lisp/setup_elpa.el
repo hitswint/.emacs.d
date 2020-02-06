@@ -157,8 +157,6 @@
                            pass
                            pdf-tools
                            peep-dired
-                           persp-projectile
-                           perspective
                            pinyin-search
                            pinyinlib
                            pkg-info

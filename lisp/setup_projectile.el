@@ -100,6 +100,7 @@
 ;;; persp-projectile
 ;; ================persp-projectile=============
 (def-package! persp-projectile
+  :load-path "site-lisp/persp-projectile-20180616.1944/"
   :commands projectile-persp-switch-project
   :init
   (bind-key "M-s M-'" 'projectile-persp-switch-project)

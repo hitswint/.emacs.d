@@ -42,7 +42,8 @@
   (add-to-list 'rm-blacklist " Isearch")
   (add-to-list 'rm-blacklist " OrgTbl")
   (add-to-list 'rm-blacklist " Omit")
-  (add-to-list 'rm-blacklist " ElDoc"))
+  (add-to-list 'rm-blacklist " ElDoc")
+  (add-to-list 'rm-blacklist " Helm"))
 ;; ================smart-mode-line=================
 ;;; nyan-mode
 ;; ===================nyan-mode====================
