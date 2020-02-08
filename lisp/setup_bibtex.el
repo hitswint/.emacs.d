@@ -114,7 +114,6 @@
 (def-package! ebib
   :bind ("C-x M-b" . ebib)
   :config
-  ;; ebib-notes-display-note-symbol : Wrong type argument: stringp, (ebib--update-entry-buffer t)
   (define-key ebib-index-mode-map (kbd ",") 'ebib-prev-database)
   (define-key ebib-index-mode-map (kbd ".") 'ebib-next-database)
   (define-key ebib-index-mode-map (kbd "C-q") 'ebib-quit)

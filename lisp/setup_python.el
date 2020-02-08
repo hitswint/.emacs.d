@@ -49,7 +49,7 @@
         (setq style-string (helm-comp-read "Style: " (list "plot" "scatter" "bar")
                                            :buffer "*helm python plot data-swint*"))
         (setq labels-string (read-string "xlabel_str, ylabel_str: "))
-        (setq fonts-string (read-string "tick_font, label_font, legend_font (default T,T,T): "))
+        (setq fonts-string (read-string "tick_font, label_font, legend_font (default t,t,t): "))
         (setq sizes-string (read-string "tick_size, label_size, legend_size (default 16,24,16): "))
         (setq colors-string (mapconcat 'identity (helm-comp-read "Colors: " (list "None" "r" "g" "b" "y" "c" "m" "k")
                                                                  :marked-candidates t
@@ -115,10 +115,16 @@ plot_data.file_plot('%s','%s','%s','%s'%s)" (expand-file-name "~/Documents/Pytho
   (setq elpy-remove-modeline-lighter nil)
   :config
   (setq elpy-rpc-timeout nil)
+  (setq elpy-get-info-from-shell t)
   (setq elpy-shell-starting-directory 'current-directory)
-  ;; ipython默认设置有bug，需要加--simple-prompt选项。
+  ;; 使用ipython作为交互环境。
   (setq python-shell-interpreter "ipython"
         python-shell-interpreter-args "-i --simple-prompt --pylab")
+  ;; 使用jupyter作为交互环境。
+  ;; (setq python-shell-interpreter "jupyter"
+  ;;       python-shell-interpreter-args "console --simple-prompt"
+  ;;       python-shell-prompt-detect-failure-warning nil)
+  ;; (add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter")
   (define-key elpy-mode-map (kbd "M-.") nil)
   (define-key elpy-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key elpy-mode-map (kbd "C-c C-.") 'pop-tag-mark)
@@ -169,4 +175,29 @@ plot_data.file_plot('%s','%s','%s','%s'%s)" (expand-file-name "~/Documents/Pytho
   (define-key jupyter-repl-interaction-mode-map (kbd "C-c C-/") #'jupyter-inspect-at-point)
   (define-key jupyter-repl-interaction-mode-map (kbd "C-c C-e") #'jupyter-eval-string-command))
 ;; ==================jupyter===================
+;;; jedi
+;; ===================jedi=====================
+(def-package! jedi
+  ;; 使用jedi:install-server安装服务端。
+  :commands jedi:setup
+  :init
+  (add-hook 'python-mode-hook '(lambda ()
+                                 (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
+                                   (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
+                                 (jedi:setup)))
+  :config
+  (setq jedi:complete-on-dot t)
+  (setq jedi:install-imenu t)
+  (add-hook 'jedi-mode-hook '(lambda ()
+                               (set (make-local-variable 'company-idle-delay) nil)))
+  (define-key jedi-mode-map (kbd "C-c C-o") 'jedi:get-in-function-call)
+  (define-key jedi-mode-map (kbd "M-u") 'jedi:complete)
+  (define-key jedi-mode-map (kbd "C-c C-/") 'jedi:show-doc)
+  (define-key jedi-mode-map (kbd "C-c C-,") 'jedi:goto-definition)
+  (define-key jedi-mode-map (kbd "C-c C-.") 'jedi:goto-definition-pop-marker)
+  (define-key jedi-mode-map (kbd "<C-tab>") nil)
+  (define-key jedi-mode-map (kbd "C-c ?") nil)
+  (define-key jedi-mode-map (kbd "C-c .") nil)
+  (define-key jedi-mode-map (kbd "C-c ,") nil))
+;; ===================jedi=====================
 (provide 'setup_python)

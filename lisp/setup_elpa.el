@@ -120,6 +120,7 @@
                            interleave
                            ivy
                            ivy-hydra
+                           jedi
                            js2-mode
                            jupyter
                            key-chord
