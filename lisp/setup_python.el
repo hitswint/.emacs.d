@@ -25,32 +25,33 @@
   (pyvenv-mode 1)
   ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换。
   (defalias 'workon 'pyvenv-workon)
+  (defvar swint-python-plot-hash (make-hash-table :test 'equal))
   (defun swint-python-plot-data (&optional arg)
     (interactive "P")
     (let (data-string files-list files-string file-exten header-line-string header-line-list columns-list columns-string rows-string column-x-string style-string labels-string fonts-string sizes-string colors-string lines-string markers-string save-string other-args send-other-args)
       (if (memq major-mode '(inferior-python-mode jupyter-repl-mode))
-          (setq data-string (read-string "data_x, data_y, label: "))
+          (setq data-string (puthash "data" (read-string "data_x, data_y, label: " (gethash "data" swint-python-plot-hash)) swint-python-plot-hash))
         (setq files-list (if (eq major-mode 'dired-mode) (dired-get-marked-files) (list (buffer-file-name))))
         (setq files-string (mapconcat 'identity files-list ","))
         (setq file-exten (downcase (file-name-extension (car files-list))))
         (setq header-line-string (shell-command-to-string (format "awk 'NR==1{print}' %s" (car files-list))))
         (setq header-line-list (if (equal file-exten "csv")
-                                   (split-string header-line-string "," t "[ \t\n]")
-                                 (mapcar 'number-to-string (number-sequence 0 (1- (length (split-string header-line-string "[ \t]+" t "[ \t\n]")))))))
+                                   (split-string header-line-string "," t "[ \t\n]+")
+                                 (mapcar 'number-to-string (number-sequence 0 (1- (length (split-string header-line-string "[ \t]+" t "[ \t\n]+")))))))
         (setq columns-list
               (helm-comp-read "Columns to plot: " header-line-list
                               :marked-candidates t
                               :buffer "*helm python plot data-swint*"))
         (setq columns-string (mapconcat 'identity columns-list ","))
-        (setq rows-string (read-string "Rows: " nil nil ":::"))
+        (setq rows-string (puthash "rows" (read-string "Rows: " (gethash "rows" swint-python-plot-hash) nil "::") swint-python-plot-hash))
         (setq column-x-string (helm-comp-read "Column_x: " (cons "None" header-line-list)
                                               :buffer "*helm python plot data-swint*")))
       (when arg
         (setq style-string (helm-comp-read "Style: " (list "plot" "scatter" "bar")
                                            :buffer "*helm python plot data-swint*"))
-        (setq labels-string (read-string "xlabel_str, ylabel_str: "))
-        (setq fonts-string (read-string "tick_font, label_font, legend_font (default t,t,t): "))
-        (setq sizes-string (read-string "tick_size, label_size, legend_size (default 16,24,16): "))
+        (setq labels-string (puthash "labels" (read-string "xlabel_str, ylabel_str: " (gethash "labels" swint-python-plot-hash)) swint-python-plot-hash))
+        (setq fonts-string (puthash "fonts" (read-string "tick_font, label_font, legend_font (default t,t,t): " (gethash "fonts" swint-python-plot-hash)) swint-python-plot-hash))
+        (setq sizes-string (puthash "sizes" (read-string "tick_size, label_size, legend_size (default 16,24,16): " (gethash "sizes" swint-python-plot-hash)) swint-python-plot-hash))
         (setq colors-string (mapconcat 'identity (helm-comp-read "Colors: " (list "None" "r" "g" "b" "y" "c" "m" "k")
                                                                  :marked-candidates t
                                                                  :buffer "*helm python plot data-swint*") ","))
@@ -188,6 +189,7 @@ plot_data.file_plot('%s','%s','%s','%s'%s)" (expand-file-name "~/Documents/Pytho
   :config
   (setq jedi:complete-on-dot t)
   (setq jedi:install-imenu t)
+  (setq jedi:tooltip-method nil)
   (add-hook 'jedi-mode-hook '(lambda ()
                                (set (make-local-variable 'company-idle-delay) nil)))
   (define-key jedi-mode-map (kbd "C-c C-o") 'jedi:get-in-function-call)

@@ -206,17 +206,23 @@
                       (message "Ebib delete %s failed." mode-string))))))))))
   (defun ebib-next-collection ()
     (interactive)
-    (let ((current_collection (ebib--get-field-value-for-display
-                               "collection" (ebib--get-key-at-point) ebib--cur-db)))
-      (while (equal current_collection (ebib--get-field-value-for-display
-                                        "collection" (ebib--get-key-at-point) ebib--cur-db))
+    (let ((current-collection (ebib--get-field-value-for-display
+                               "collection" (ebib--get-key-at-point) ebib--cur-db))
+          current-position)
+      (while (and (equal current-collection (ebib--get-field-value-for-display
+                                             "collection" (ebib--get-key-at-point) ebib--cur-db))
+                  (not (equal current-position (point))))
+        (setq current-position (point))
         (ebib-next-entry))))
   (defun ebib-prev-collection ()
     (interactive)
-    (let ((current_collection (ebib--get-field-value-for-display
-                               "collection" (ebib--get-key-at-point) ebib--cur-db)))
-      (while (equal current_collection (ebib--get-field-value-for-display
-                                        "collection" (ebib--get-key-at-point) ebib--cur-db))
+    (let ((current-collection (ebib--get-field-value-for-display
+                               "collection" (ebib--get-key-at-point) ebib--cur-db))
+          current-position)
+      (while (and (equal current-collection (ebib--get-field-value-for-display
+                                             "collection" (ebib--get-key-at-point) ebib--cur-db))
+                  (not (equal current-position (point))))
+        (setq current-position (point))
         (ebib-prev-entry)))))
 ;; =====================ebib=======================
 (provide 'setup_bibtex)

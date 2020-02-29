@@ -41,6 +41,10 @@
 
 ;;; Code:
 
+(require 'ctable)
+(require 's)
+(require 'dash)
+
 (defvar idf-mode-syntax-table
   (let ((st (make-syntax-table)))
     ;; Comments
@@ -81,18 +85,18 @@
 
 (defun idf-prev-object ()
   (interactive)
-  (re-search-backward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)") nil t))
+  (re-search-backward "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)" nil t))
 
 (defun idf-next-object ()
   (interactive)
   (goto-char (+ (line-end-position) 1))
-  (if (re-search-forward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)") nil t)
+  (if (re-search-forward "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)" nil t)
       (forward-line -1)))
 
 (defun idf-next-type ()
   (interactive)
   (goto-char (+ (line-end-position) 1))
-  (re-search-backward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)") nil t)
+  (re-search-backward "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)" nil t)
   (let* ((current-type (match-string 1))
          (next-type current-type))
     (while (equal next-type current-type)
@@ -103,7 +107,7 @@
 (defun idf-prev-type ()
   (interactive)
   (goto-char (+ (line-end-position) 1))
-  (re-search-backward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)") nil t)
+  (re-search-backward "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)" nil t)
   (let* ((current-type (match-string 1))
          (prev-type current-type))
     (while (equal prev-type current-type)
@@ -132,6 +136,65 @@
      (t
       (pop-tag-mark)
       (error "Don't know how to find '%s'" current-object)))))
+
+(defun idf-show-ctable ()
+  (interactive)
+  (let* ((idf-ctable-buffer "*idf-ctable*")
+         (search-beg (if (region-active-p)(region-beginning) (point-min)))
+         (search-end (if (region-active-p)(region-end) (point-max)))
+         (idf-object-list (save-excursion
+                            (goto-char (+ (line-end-position) 1))
+                            (re-search-backward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)") nil t)
+                            (let ((current-type (match-string 1))
+                                  current-class-string)
+                              (goto-char search-beg)
+                              (while (re-search-forward (concat "^[ \t]*" current-type ",\\([ \t]*\n\\|.*;[ \t]*\n\\)") search-end t)
+                                (push (buffer-substring (match-beginning 0) (re-search-forward ".*;.*\n" nil t)) current-class-string))
+                              (reverse current-class-string))))
+         (idf-keys (mapcar (lambda (x) (car (reverse (split-string x "[,;]" nil "[ \t]+"))))
+                           (split-string (car (sort (copy-sequence idf-object-list)
+                                                    (lambda (a b)
+                                                      (> (s-count-matches "\n" a) (s-count-matches "\n" b))))) "\n" t)))
+         (idf-contents (mapcar (lambda (x)
+                                 (mapcar (lambda (y) (cadr (reverse (split-string y "[,;]" nil "[ \t]+"))))
+                                         (split-string x "\n" t)))
+                               idf-object-list)))
+    (deactivate-mark)
+    (lexical-let ((curr-buf (current-buffer))
+                  (idf-class-name (caar idf-contents))
+                  (search-beg search-beg))
+      (switch-to-buffer-other-window idf-ctable-buffer)
+      (set-buffer idf-ctable-buffer)
+      (let* ((data (apply '-zip-fill (cons "" (cons idf-keys idf-contents))))
+             (param (copy-ctbl:param ctbl:default-rendering-param)))
+        (let ((cp
+               (ctbl:create-table-component-buffer
+                :buffer idf-ctable-buffer :width nil
+                :model
+                (make-ctbl:model
+                 :column-model
+                 (cons (make-ctbl:cmodel
+                        :title idf-class-name
+                        :min-width 5 :align 'left)
+                       (cl-loop for i from 1 to (length idf-contents)
+                                collect (make-ctbl:cmodel
+                                         :title (number-to-string i)
+                                         :min-width 5 :align 'left)))
+                 :data
+                 (if (= (length idf-contents) 1)
+                     (-mapcat (lambda (x) (list (list (car x) (cdr x)))) (cdr data))
+                   (cdr data)))
+                :param param)))
+          (ctbl:cp-add-click-hook
+           cp (lambda ()
+                (let ((column-id (cdr (ctbl:cp-get-selected cp)))
+                      (row-key (car (ctbl:cp-get-selected-data-row cp))))
+                  (switch-to-buffer-other-window curr-buf)
+                  (goto-char search-beg)
+                  (re-search-forward (concat "^[ \t]*" idf-class-name ",\\([ \t]*\n\\|.*;[ \t]*\n\\)") nil t column-id)
+                  (re-search-forward (concat "[,;].*" row-key) nil t)
+                  (goto-char (match-beginning 0)))))
+          (pop-to-buffer (ctbl:cp-get-buffer cp)))))))
 
 ;;;###autoload
 (define-derived-mode idf-mode text-mode "idf mode"

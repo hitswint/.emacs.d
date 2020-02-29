@@ -9,9 +9,10 @@
   :init
   (setq magit-auto-revert-mode nil)
   :config
-  (add-hook 'magit-status-mode-hook '(lambda ()
-                                       (highlight-parentheses-mode -1)
-                                       (auto-mark-mode -1)))
+  (dolist (hook '(magit-diff-mode-hook magit-status-mode-hook))
+    (add-hook hook '(lambda ()
+                      (highlight-parentheses-mode -1)
+                      (auto-mark-mode -1))))
   ;; 去除默认显示staged。当有大量staged时，更新变慢。
   (remove-hook 'magit-status-sections-hook 'magit-insert-staged-changes)
   (define-key magit-mode-map (kbd "C-c s") 'magit-diff-staged)

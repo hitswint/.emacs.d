@@ -727,7 +727,7 @@
   :defer 2
   :config
   (global-auto-revert-mode 1)
-  ;; Also auto refresh dired, but be quiet about it.
+  ;; 开启后导致修改文件后dired-mode中光标回到开始处。
   (setq global-auto-revert-non-file-buffers t)
   ;; (setq global-auto-revert-ignore-modes '(dired-mode))
   (setq auto-revert-verbose nil))
@@ -829,7 +829,8 @@
       ("f" . idf-next-type)
       ("b" . idf-prev-type)))
   (define-key idf-mode-map (kbd "C-c C-,") 'idf-find-object-at-point)
-  (define-key idf-mode-map (kbd "C-c C-.") 'pop-tag-mark))
+  (define-key idf-mode-map (kbd "C-c C-.") 'pop-tag-mark)
+  (define-key idf-mode-map (kbd "C-c '") 'idf-show-ctable))
 ;; ==================idf-mode======================
 ;;; gnu-elpa-keyring-update
 ;; ==========gnu-elpa-keyring-update===============

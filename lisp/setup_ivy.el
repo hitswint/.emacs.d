@@ -65,6 +65,7 @@
          ("M-s c d" . counsel-dpkg)
          ("M-s c g" . counsel-ag)
          ("M-s c p" . counsel-list-processes)
+         ("M-s c f" . counsel-fonts)
          ("M-s c M-y" . counsel-yank-pop))
   :config
   (defun swint-counsel-history ()

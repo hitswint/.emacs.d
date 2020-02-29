@@ -2,13 +2,14 @@
 ;; ==================dired=====================
 (def-package! dired
   :config
-  (def-package! dired-x)
+  (def-package! dired-x
+    :config
+    (add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
+    (setq dired-omit-verbose nil)
+    (setq dired-omit-size-limit nil))
   (def-package! dired-details
     :config
     (dired-details-install)
-    (setq dired-omit-verbose nil)
-    (setq dired-omit-size-limit nil)
-    (add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
     (setq dired-details-hidden-string "")
     (advice-add 'dired-details-show :after #'(lambda () (dired-hide-details-mode 0)))
     (advice-add 'dired-details-hide :after #'(lambda () (dired-hide-details-mode 1))))
@@ -19,18 +20,16 @@
                     '(diredp-ignored-file-name ((t (:foreground "#aaaaaa"))) t))
 ;;;; setup-and-keybindings
   ;; ==========setup-and-keybindings===========
-  (setq dired-auto-revert-buffer t)
+  (setq dired-auto-revert-buffer t) ;使用dired/dired-other-window/dired-other-frame时更新，与auto-revert-mode不同。
+  (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才自动更新。
+                                                (if (get-buffer-window (current-buffer)) (apply fn args))))
   (put 'dired-find-alternate-file 'disabled nil)
-  ;; 显示文件大小。
-  (setq dired-listing-switches "-alh")
-  ;; 文件夹间复制。
+  (setq dired-listing-switches "--group-directories-first -alhG1")
+  (setq dired-subdir-switches dired-listing-switches)
   (setq dired-dwim-target t)
-  ;; Allow editing file permissions.
   (setq wdired-allow-to-change-permissions t)
   (add-hook 'wdired-mode-hook 'undo-tree-mode)
-  ;; 不折行显示。
   (add-hook 'dired-after-readin-hook '(lambda () (setq truncate-lines t)))
-  ;; 默认打开方式。
   (setq file-extension-app-alist
         '(("pdf" . "llpp_qpdfview.sh") ("djvu" . "llpp")
           ("rmvb" . "mplayer") ("rm" . "mplayer") ("mp4" . "mplayer") ("avi" . "mplayer") ("flv" . "mplayer") ("f4v" . "mplayer") ("mpg" . "mplayer") ("mkv" . "mplayer") ("3gp" . "mplayer") ("wmv" . "mplayer") ("mov" . "mplayer") ("dat" . "mplayer") ("asf" . "mplayer") ("mpeg" . "mplayer") ("wma" . "mplayer") ("gif" . "mplayer")
@@ -52,8 +51,8 @@
           ("tex" . "xelatex")
           ("dot" . "dot -Tpng -o dot.png")
           ("c" . "gcc -Wall")
-          ("dia" . "dia")))
-  ;; dired-do-shell-command打开方式。
+          ("dia" . "dia")
+          ("blend" . "blender")))
   (setq async-shell-command-buffer 'new-buffer)
   (setq async-shell-command-display-buffer nil)
   (setq dired-guess-shell-alist-user
@@ -67,9 +66,9 @@
          (list "\\.xlsx$" "excel.sh * >/dev/null 2>&1 &")
          (list "\\.ps$" "display -flatten * >/dev/null 2>&1 &")
          (list "\\.eps$" "display -flatten * >/dev/null 2>&1 &")
-         (list "\\.jpg$" "display -flatten * >/dev/null 2>&1 &")
-         (list "\\.png$" "display -flatten * >/dev/null 2>&1 &")
-         (list "\\.bmp$" "display -flatten * >/dev/null 2>&1 &")
+         (list "\\.jpg$" "gimp * >/dev/null 2>&1 &")
+         (list "\\.png$" "gimp * >/dev/null 2>&1 &")
+         (list "\\.bmp$" "gimp * >/dev/null 2>&1 &")
          (list "\\.html$" "firefox * >/dev/null 2>&1 &")
          (list "\\.dwg$" "cad-2008.sh * >/dev/null 2>&1 &")
          (list "\\.dxf$" "cad-2008.sh * >/dev/null 2>&1 &")
@@ -130,7 +129,7 @@
               (define-key dired-sort-map "t" '(lambda () (interactive) ;"sort by Time"
                                                 (dired-sort-other (concat dired-listing-switches "t"))))
               (define-key dired-sort-map "n" '(lambda () (interactive) ;"sort by Name"
-                                                (dired-sort-other (concat dired-listing-switches ""))))))
+                                                (dired-sort-other (concat dired-listing-switches "v"))))))
   ;; ==========setup-and-keybindings===========
 ;;;; 默认文件夹排在最前面
   ;; =========默认文件夹排在最前面=============
@@ -144,14 +143,14 @@
          (fboundp 'dired-insert-set-properties)
          (dired-insert-set-properties (point-min) (point-max)))
     (set-buffer-modified-p nil))
-  (add-hook 'dired-after-readin-hook 'sof/dired-sort)
+  ;; (add-hook 'dired-after-readin-hook 'sof/dired-sort) ;通过设置dired-listing-switches实现
   ;; =========默认文件夹排在最前面=============
 ;;;; dired-next/previous-line
   ;; ========dired-next/previous-line==========
   (defadvice dired-next-line (around dired-next-line+ activate)
     "Replace current buffer if file is a directory."
     ad-do-it
-    (while (and  (not  (eobp)) (not ad-return-value))
+    (while (and (not (eobp)) (not ad-return-value))
       (forward-line)
       (setq ad-return-value(dired-move-to-filename)))
     (when (eobp)
@@ -160,7 +159,7 @@
   (defadvice dired-previous-line (around dired-previous-line+ activate)
     "Replace current buffer if file is a directory."
     ad-do-it
-    (while (and  (not  (bobp)) (not ad-return-value))
+    (while (and (not (bobp)) (not ad-return-value))
       (forward-line -1)
       (setq ad-return-value(dired-move-to-filename)))
     (when (bobp)
@@ -172,31 +171,69 @@
 ;; ================peep-dired==================
 (def-package! peep-dired
   ;; image-dired: Use C-t as prefix.
-  :bind (:map dired-mode-map
-              ("q" . peep-dired))
+  :commands global-peep-dired
+  :init
+  (add-hook 'dired-mode-hook (lambda ()
+                               (bind-key "TAB" '(lambda () (interactive) (unless (global-peep-dired 'toggle)
+                                                                           (delete-other-windows)
+                                                                           (peep-dired-cleanup)
+                                                                           (when (and (boundp 'image-dired-display-image-buffer)
+                                                                                      (get-buffer image-dired-display-image-buffer))
+                                                                             (kill-buffer image-dired-display-image-buffer))))
+                                         dired-mode-map)))
   :config
+  (define-globalized-minor-mode global-peep-dired peep-dired
+    (lambda () (when (eq major-mode 'dired-mode) (peep-dired 1))))
+  (require 'image-dired)
+  (defvar peep-preview-timer nil)
+  (defvar ranger-scope-extensions (cl-remove-if
+                                   (lambda (x)
+                                     (member x (list "gp" "tex" "dot" "c")))
+                                   (cl-loop for file-extension-pair in file-extension-app-alist
+                                            collect (car file-extension-pair))))
   (defun peep-dired-display-file-other-window/around (fn)
-    "Use image-dired for peep images."
-    (let ((image-entry-name (dired-file-name-at-point))
-          (peep-dired-image-extensions '("png" "PNG" "JPG" "jpg" "bmp" "BMP" "jpeg" "JPEG")))
-      (if (member (file-name-extension image-entry-name)
-                  peep-dired-image-extensions)
-          (add-to-list 'peep-dired-peeped-buffers
-                       (window-buffer
-                        (display-buffer
-                         (progn
-                           (require 'image-dired)
-                           (image-dired-create-display-image-buffer)
-                           (display-buffer image-dired-display-image-buffer)
-                           (image-dired-display-image image-entry-name)
-                           image-dired-display-image-buffer)
-                         t)))
-        (funcall fn))))
+    (unless (timerp peep-preview-timer)
+      (setq peep-preview-timer
+            (run-with-idle-timer
+             0.05 nil
+             (lambda (func)
+               (let ((file-entry-name (dired-file-name-at-point)))
+                 (if (not (file-directory-p file-entry-name))
+                     (let* ((cad-extensions (list "3mf" "amf" "dxf" "off" "stl"))
+                            (image-extensions (list "png" "jpg" "bmp" "jpeg"))
+                            (file-extension (ignore-errors (downcase (file-name-extension file-entry-name))))
+                            (peep-dired-preview-buffer
+                             (if (member file-extension (append cad-extensions image-extensions))
+                                 (let ((image-entry-name
+                                        (if (member file-extension image-extensions)
+                                            file-entry-name
+                                          (shell-command (format "openscad -o %speep-dired.png <(echo \"import(\\\"%s\\\");\")"
+                                                                 image-dired-dir (expand-file-name file-entry-name)))
+                                          (concat image-dired-dir "peep-dired.png"))))
+                                   (image-dired-create-display-image-buffer)
+                                   (display-buffer image-dired-display-image-buffer)
+                                   (image-dired-display-image image-entry-name)
+                                   image-dired-display-image-buffer)
+                               (with-current-buffer (get-buffer-create "*peep-preview*")
+                                 (buffer-disable-undo)
+                                 (erase-buffer)
+                                 (font-lock-mode -1)
+                                 (if (member file-extension ranger-scope-extensions)
+                                     (insert (shell-command-to-string (format "ranger_scope.sh %s 1000 100 '/tmp' 'False'"
+                                                                              (replace-regexp-in-string "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)" "\\\\\\1" file-entry-name))))
+                                   (insert-file-contents file-entry-name))
+                                 (set-buffer-modified-p nil)
+                                 (current-buffer)))))
+                       (add-to-list 'peep-dired-peeped-buffers
+                                    (window-buffer (display-buffer peep-dired-preview-buffer t))))
+                   (funcall func)))
+               (setq peep-preview-timer nil))
+             fn))))
   (advice-add 'peep-dired-display-file-other-window :around #'peep-dired-display-file-other-window/around)
-  (advice-add 'peep-dired-disable :after #'(lambda () (if (and (boundp 'image-dired-display-image-buffer)
-                                                               (get-buffer image-dired-display-image-buffer))
-                                                          (swint-kill-buffer image-dired-display-image-buffer))))
+  (advice-add 'peep-dired-disable :override #'(lambda () (setq peep-preview-timer nil)))
   (setq peep-dired-enable-on-directories nil)
+  (setq peep-dired-cleanup-on-disable t)
+  (setq peep-dired-cleanup-eagerly nil)
   (define-key peep-dired-mode-map (kbd "p") 'peep-dired-prev-file)
   (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)
   (define-key peep-dired-mode-map (kbd "C-p") nil)

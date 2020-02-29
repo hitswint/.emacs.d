@@ -4,9 +4,10 @@
 # --
 ${1:di}graph G
 {
+graph [ dpi = 300 ];
 ${2://}rankdir=LR;
 edge [fontname="${3:SimSun}", dir=${4:$$(yas/choose-value '("forward" "back" "both" "none"))}, arrowhead=${5:$$(yas/choose-value '("none" "normal" "inv" "dot" "odot" "invdot" "invodot" "tee" "empty" "invempty" "open" "halfopen" "diamond" "odiamond" "box" "obox" "crow"))}, arrowsize="${6:1}"];
-node [shape=${7:$$(yas/choose-value '("plaintext" "ellipse" "oval" "circle" "egg" "triangle" "box" "diamond" "trapezium" "parallelogram" "house" "hexagon" "octagon" "note" "tab" "box3d" "component"))}, fontname="${8:SimSun}", fontsize="${9:}", fontcolor="${10:$$(yas/choose-value '("black" "white" "red" "green" "blue" "yellow" "magenta" "cyan" "burlywood" "invis" "lightblue" "gray"))}", fillcolor="${11:$$(yas/choose-value '("white" "black" "red" "green" "blue" "yellow" "magenta" "cyan" "burlywood" "invis" "lightblue" "gray"))}", style=${12:$$(yas/choose-value '("filled" "solid" "dashed" "dotted" "bold" "invis" "rounded"))}];
+node [shape=${7:$$(yas/choose-value '("plaintext" "ellipse" "oval" "circle" "egg" "triangle" "box" "diamond" "trapezium" "parallelogram" "house" "hexagon" "octagon" "note" "tab" "box3d" "component"))}, fontname="${8:SimSun}", fontsize="${9:}", fontcolor="", fillcolor="white", style=${12:$$(yas/choose-value '("filled" "solid" "dashed" "dotted" "bold" "invis" "rounded"))}];
 // node [shape=plaintext,height=0,width=0,fixedsize=true];
 $0
 }

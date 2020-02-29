@@ -3,6 +3,6 @@
 # name: nodes
 # --
 {
-node[shape=${1:$$(yas/choose-value '("plaintext" "ellipse" "oval" "circle" "egg" "triangle" "box" "diamond" "trapezium" "parallelogram" "house" "hexagon" "octagon" "note" "tab" "box3d" "component"))}, fontname="${2:SimSun}", fontsize="${3:}", fontcolor="${4:$$(yas/choose-value '("black" "white" "red" "green" "blue" "yellow" "magenta" "cyan" "burlywood" "invis" "lightblue" "gray"))}", fillcolor="${5:$$(yas/choose-value '("white" "black" "red" "green" "blue" "yellow" "magenta" "cyan" "burlywood" "invis" "lightblue" "gray"))}", style=${6:$$(yas/choose-value '("filled" "solid" "dashed" "dotted" "bold" "invis" "rounded"))}];
-${7:} -> ${8:} ${9:en}$0;
+node[shape=${1:$$(yas/choose-value '("plaintext" "ellipse" "oval" "circle" "egg" "triangle" "box" "diamond" "trapezium" "parallelogram" "house" "hexagon" "octagon" "note" "tab" "box3d" "component"))}, fontname="${2:SimSun}", fontsize="${3:}", fontcolor="", fillcolor="white", style=${4:$$(yas/choose-value '("filled" "solid" "dashed" "dotted" "bold" "invis" "rounded"))}];
+${5:} -> ${6:} ${7:en}$0;
 }
