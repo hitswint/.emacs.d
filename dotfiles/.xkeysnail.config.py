@@ -4,7 +4,7 @@ import re
 from xkeysnail.transform import *
 
 # * [Global modemap] Change modifier keys as in xmodmap
-# define_modmap({Key.CAPSLOCK: Key.LEFT_CTRL})
+define_modmap({Key.CAPSLOCK: Key.LEFT_CTRL})
 # define_modmap({Key.ESC: Key.GRAVE})
 
 # * [Conditional modmap] Change modifier keys in certain applications
@@ -14,14 +14,14 @@ from xkeysnail.transform import *
 
 # * [Multipurpose modmap] Give a key two meanings.
 # A normal key when pressed and released, and a modifier key when held down with another key. See Xcape, Carabiner and caps2esc for ideas and concept.
-define_multipurpose_modmap(
-    # Enter is enter when pressed and released. Control when held down.
-    # {Key.ENTER: [Key.ENTER, Key.RIGHT_CTRL]}
+# define_multipurpose_modmap(
+#     # Enter is enter when pressed and released. Control when held down.
+#     # {Key.ENTER: [Key.ENTER, Key.RIGHT_CTRL]}
 
-    # Capslock is escape when pressed and released. Control when held down.
-    {Key.CAPSLOCK: [Key.ESC, Key.LEFT_CTRL]}
-    # To use this example, you can't remap capslock with define_modmap.
-)
+#     # Capslock is escape when pressed and released. Control when held down.
+#     {Key.CAPSLOCK: [Key.ESC, Key.LEFT_CTRL]}
+#     # To use this example, you can't remap capslock with define_modmap.
+# )
 
 # * Keybindings for Firefox/Chromium
 define_keymap(
@@ -37,6 +37,16 @@ define_keymap(
     },
     "Firefox and Chromium")
 
+# * Keybindings for Qpdfview
+define_keymap(
+    lambda wm_class: wm_class and wm_class[-1] in ("qpdfview"),
+    {
+        K("q"): [K("q"), K("C-f"), K("esc")],
+        K("C-apostrophe"): [K("M-Shift-m"), K("M-t")],
+        K("C-j"): [K("enter"), K("M-Shift-m")],
+    },
+    "Qpdfview")
+
 # * Keybindings for Zeal https://github.com/zealdocs/zeal/
 # define_keymap(re.compile("Zeal"), {
 #     # Ctrl+s to focus search area
@@ -45,7 +55,7 @@ define_keymap(
 
 # * Emacs-like keybindings in non-Emacs applications
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] not in ("Emacs", "URxvt", "Vncviewer") and wm_class[0] not in ("winword.exe"),
+    lambda wm_class: wm_class and wm_class[-1] not in ("Emacs", "URxvt", "Vncviewer", "Blender", "org.remmina.Remmina") and wm_class[0] not in ("winword.exe"),
     {
         # Cursor
         K("C-b"): with_mark(K("left")),

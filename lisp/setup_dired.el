@@ -107,9 +107,6 @@
                                                       (dired-kill-and-next-subdir)
                                                       (revert-buffer)))
               (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-on-files)
-              (define-key dired-mode-map (kbd "C-c c") 'swint-dired-cad-converter)
-              (define-key dired-mode-map (kbd "C-c C") '(lambda () (interactive)
-                                                          (swint-dired-cad-converter t)))
               (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
               (define-key dired-mode-map (kbd "M-RET") 'helm-dired-current-file)
               (define-key dired-mode-map (kbd "C-M-j") 'tc-lister-open-file)
@@ -237,7 +234,8 @@
   (define-key peep-dired-mode-map (kbd "p") 'peep-dired-prev-file)
   (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)
   (define-key peep-dired-mode-map (kbd "C-p") nil)
-  (define-key peep-dired-mode-map (kbd "C-n") nil))
+  (define-key peep-dired-mode-map (kbd "C-n") nil)
+  (define-key peep-dired-mode-map (kbd "q") nil))
 ;; ================peep-dired==================
 ;;; dired-async
 ;; ================dired-async=================

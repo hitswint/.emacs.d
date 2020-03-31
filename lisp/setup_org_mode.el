@@ -46,6 +46,10 @@
                (setq org-latex-default-figure-position "htbp")
                (setq org-latex-image-default-width "1\\linewidth")
                (setq org-latex-remove-logfiles nil)
+               (setq org-file-apps (cl-loop for file-extension-pair in file-extension-app-alist
+                                            collect (cons
+                                                     (concat "\\." (car file-extension-pair) "\\'")
+                                                     (concat (cdr file-extension-pair) " %s"))))
                (turn-on-font-lock)
                (iimage-mode)
                ;; 如果有#+ATTR_ORG: :width 100则设置为图片宽度为100，否则显示原尺寸。
@@ -70,7 +74,7 @@
                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
                (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
                (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
-               (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point-with-apps)
+               (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point)
                (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-org-open-at-point t)))
                (define-key org-mode-map (kbd "C-c M-,") '(lambda () (interactive) (swint-org-mobile-sync "down")))
                (define-key org-mode-map (kbd "C-c M-.") '(lambda () (interactive) (swint-org-mobile-sync "up")))
@@ -610,6 +614,7 @@
                                              (directory-files "~/.bib" t "\\.bib$"))
         org-ref-bibliography-notes "~/Zotero/storage/TKM9D893/notes.org"
         org-latex-prefer-user-labels t
+        org-ref-show-broken-links nil
         org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
         org-ref-notes-function '(lambda (thekey)
                                   (bibtex-completion-edit-notes

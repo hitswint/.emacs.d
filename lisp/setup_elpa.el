@@ -43,6 +43,8 @@
                            avy
                            avy-zap
                            backup-walker
+                           baidu-translate
+                           unicode-escape
                            bbyac
                            benchmark-init
                            bind-key
@@ -91,6 +93,7 @@
                            git-commit
                            git-timemachine
                            gnuplot-mode
+                           gnu-elpa-keyring-update
                            god-mode
                            google-translate
                            goto-chg
@@ -155,6 +158,7 @@
                            paredit-everywhere
                            parsebib
                            pass
+                           pdfgrep
                            pdf-tools
                            peep-dired
                            pinyin-search

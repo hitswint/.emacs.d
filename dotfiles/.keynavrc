@@ -12,10 +12,6 @@ h cut-left
 j cut-down
 k cut-up
 l cut-right
-super+h cut-left
-super+j cut-down
-super+k cut-up
-super+l cut-right
 shift+h move-left
 shift+j move-down
 shift+k move-up
@@ -24,10 +20,6 @@ semicolon cut-left,cut-up
 apostrophe cut-right,cut-up
 comma cut-left,cut-down
 period cut-right,cut-down
-super+semicolon cut-left,cut-up
-super+apostrophe cut-right,cut-up
-super+comma cut-left,cut-down
-super+period cut-right,cut-down
 shift+semicolon move-left,move-up
 shift+apostrophe move-right,move-up
 shift+comma move-left,move-down
@@ -37,9 +29,6 @@ space warp,click 1,end
 u warp,click 1,end
 i warp,click 2,end
 o warp,click 3,end
-super+u warp,click 1,end
-super+i warp,click 2,end
-super+o warp,click 3,end
 shift+u click 1
 shift+i click 2
 shift+o click 3

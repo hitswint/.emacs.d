@@ -86,7 +86,7 @@ plot_data.cli_plot([%s]%s)" (expand-file-name "~/Documents/Python") data-string 
                (python-shell-send-string python-command-string))
               ((equal major-mode 'jupyter-repl-mode)
                (jupyter-eval-string-command python-command-string))
-              (t (if (python-shell-get-process)
+              (t (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
                      (python-shell-send-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
 plot_data.file_plot('%s','%s','%s','%s'%s)" (expand-file-name "~/Documents/Python") files-string columns-string rows-string column-x-string (or send-other-args "")))
                    (let* ((plot-data-command (concat "python " (expand-file-name "~/Documents/Python/plot_data.py")

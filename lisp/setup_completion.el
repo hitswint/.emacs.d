@@ -173,7 +173,7 @@
 ;; ================company=====================
 (def-package! company
   :diminish company-mode
-  :after (:any company-try-hard yasnippet)
+  :after (:any company-try-hard yasnippet company-english-helper)
   :config
   (global-company-mode 1)
   (setq company-show-numbers t)
@@ -243,7 +243,7 @@
   :config
   (defun swint-company-english-helper-search ()
     (interactive)
-    (company-abort)
+    (ignore-errors (company-abort))
     (call-interactively 'company-english-helper-search)))
 ;; ==========company-english-helper============
 ;;; hippie-expand
@@ -324,7 +324,7 @@
   (yas-global-mode 1)
   (defun swint-complete-yasnippet ()
     (interactive)
-    (company-abort)
+    (ignore-errors (company-abort))
     (require 'auto-complete)
     (unless auto-complete-mode
       (auto-complete-mode t))

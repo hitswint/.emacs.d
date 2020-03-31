@@ -300,41 +300,6 @@
   (advice-add 'which-key-show-standard-help :override
               #'which-key-show-standard-help/override))
 ;; ====================which-key===================
-;;; pdf-tools
-;; ====================pdf-tools===================
-(def-package! pdf-tools
-  :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
-  :init
-  ;; Pdf-tools默认设置x-gtk-use-system-tooltips为nil。
-  (setq pdf-annot-tweak-tooltips nil)
-  :config
-  (pdf-tools-install)
-  (setq pdf-outline-imenu-use-flat-menus t)
-  ;; pdf-view-auto-slice-minor-mode 翻页自动切边。
-  ;; (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
-  ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。
-  ;; (add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
-  (define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save)
-  (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
-  (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
-  (define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
-  (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
-  (define-key pdf-view-mode-map (kbd "C-c l") 'swint-open-notes-file-for-pdf))
-;; ====================pdf-tools===================
-;;; doc-view-mode
-;; ==================doc-view-mode=================
-;; 使用soffice/unoconv转换。
-;; 默认缓存文件保存在/tmp和~/AppData/Local/Temp中，使用doc-view-clear-cache清理。
-(def-package! doc-view
-  :defer t
-  :config
-  (setq doc-view-continuous t)
-  (define-key doc-view-mode-map (kbd "M-v") 'doc-view-scroll-down-or-previous-page)
-  (define-key doc-view-mode-map (kbd "C-v") 'doc-view-scroll-up-or-next-page)
-  (define-key doc-view-mode-map (kbd "C-p") '(lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
-  (define-key doc-view-mode-map (kbd "C-n") '(lambda () (interactive) (doc-view-next-line-or-next-page 3)))
-  (define-key doc-view-mode-map (kbd "C-c l") 'swint-open-notes-file-for-pdf))
-;; ==================doc-view-mode=================
 ;;; backup
 ;; ======================backup====================
 (def-package! git-timemachine

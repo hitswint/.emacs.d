@@ -35,7 +35,7 @@
   (setq helm-kill-ring-threshold 1)
   (setq helm-external-programs-associations file-extension-app-alist)
   (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
-  (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'" "\\`\\*tramp.*\\*\\'")))
+  (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'" "\\`\\*tramp.*\\*\\'" "\\`\\*baidu-translate\\*\\'")))
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))
                     '(helm-ff-directory ((t (:foreground "yellow" :weight bold))))
@@ -501,6 +501,7 @@
   :bind (("C-x g" . helm-do-ag)
          ("C-x G" . helm-do-ag-buffers))
   :config
+  (setq helm-ag-base-command "ag --nocolor --nogroup --hidden")
   (setq helm-ag-command-option "--follow") ;Follow symlinks.
   ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果。
   (define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)

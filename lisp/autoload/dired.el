@@ -159,15 +159,18 @@
 ;;;###autoload
 (defun tc-lister-open-file ()
   (interactive)
-  (start-process-shell-command
-   "tc" "*tc*"
-   (concat "wine "
-           "~/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
-           (replace-regexp-in-string " " "\\\\ "
-                                     (expand-file-name (dired-get-filename))))))
+  (let ((string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)"))
+    (cl-flet ((escape-local (x)
+                            (replace-regexp-in-string string-to-escape
+                                                      "\\\\\\1" x)))
+      (start-process-shell-command
+       "tc" "*tc*"
+       (concat "wine "
+               "~/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
+               (escape-local (expand-file-name (dired-get-filename))))))))
 ;; ===============totalcmd===================
 ;;; 默认程序打开文件
-;; ============默认程序打开文件============
+;; =============默认程序打开文件=============
 ;;;###autoload
 (defun dired-async-shell-command-on-files ()
   (interactive)
@@ -184,9 +187,9 @@
                                  (file-name-nondirectory file)
                                file)
                              "\"")))))
-;; ============默认程序打开文件============
+;; =============默认程序打开文件=============
 ;;; 在当前目录下打开urxvt
-;; ========在当前目录下打开urxvt===========
+;; =========在当前目录下打开urxvt============
 ;;;###autoload
 (defun urxvt-default-directory (&optional arg)
   (interactive "P")
@@ -203,20 +206,49 @@
                                                                     nil t nil 'pyvenv-workon-history nil nil))))))
                                  (concat " -e zsh" " -is eval \"source "
                                          pyvenv-virtual-env-for-urxvt "bin/activate;\""))))))
-;; ========在当前目录下打开urxvt===========
-;;; cad文件版本转换
-;; ===========cad文件版本转换==============
+;; =========在当前目录下打开urxvt============
+;;; swint-dired-converter
+;; ============swint-dired-converter=========
 ;;;###autoload
-(defun swint-dired-cad-converter (&optional arg)
-  "Convert cad file version in dired-mode."
-  (interactive "P")
-  (let ((swint-dired-current-file (file-name-nondirectory (dired-get-filename))))
-    (start-process-shell-command
-     "TeighaFileConverter" "*TeighaFileConverter*"
-     (concat "TeighaFileConverter ./ ./dwg ACAD2004 DWG 0 1 "
-             (unless arg
-               swint-dired-current-file)))))
-;; ===========cad文件版本转换==============
+(defun swint-dired-converter ()
+  (interactive)
+  (let ((file-list (if (eq major-mode 'dired-mode)
+                       (dired-get-marked-files)
+                     (list (buffer-file-name))))
+        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "TeighaFileConverter")
+                                :buffer "*helm dired converter-swint*")))
+
+    (cond ((string= engine "pandoc")
+           (let ((output-format (read-string "Output format: ")))
+             (cl-loop for x in file-list
+                      do (shell-command (concat "pandoc -o " (file-name-base x)
+                                                "." output-format " " (file-name-nondirectory x))))))
+          ((string= engine "libreoffice")
+           (let ((output-format (read-string "Output format: ")))
+             (cl-loop for x in file-list
+                      do (shell-command (concat "libreoffice --headless --convert-to "
+                                                output-format
+                                                (when (equal output-format "csv")
+                                                  " --infilter=CSV:44,34,76,1")
+                                                " " (file-name-nondirectory x))))))
+          ((string= engine "pdftk")
+           (let ((output-args (read-string "Pdftk args(1-2west 4 5-end): ")))
+             (cl-loop for x in file-list
+                      do (shell-command (concat "pdftk " (file-name-nondirectory x) " cat "
+                                                output-args " output " (concat (file-name-base x) "-new.pdf"))))))
+          ((string= engine "TeighaFileConverter")
+           (let ((output-version (helm-comp-read "Output version: "
+                                                 (list "ACAD9" "ACAD10" "ACAD12" "ACAD13" "ACAD14" "ACAD2000" "ACAD2004" "ACAD2007" "ACAD2010")
+                                                 :buffer "*helm dired converter-swint*"))
+                 (output-type (helm-comp-read "Output type: "
+                                              (list "DWG" "DXF" "DXB")
+                                              :buffer "*helm dired converter-swint*"))
+                 (all-files (y-or-n-p "All files?")))
+             (cl-loop for x in file-list
+                      do (shell-command (concat (format "TeighaFileConverter ./ ./%s-%s %s %s 0 1 " output-type output-version output-version output-type)
+                                                (unless all-files
+                                                  (file-name-nondirectory x))))))))))
+;; ============swint-dired-converter=========
 ;;; dired-view-file-or-dir
 ;; ==========dired-view-file-or-dir==========
 (defconst +kilobyte+ 1024.0)

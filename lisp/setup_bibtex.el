@@ -53,21 +53,24 @@
   (add-hook 'LaTeX-mode-hook '(lambda ()
                                 (bind-key "C-c b" 'helm-bibtex-with-local-bibliography LaTeX-mode-map)))
   :config
-  (define-key helm-map (kbd "C-c j") '(lambda () (interactive)
-                                        (with-helm-alive-p
-                                          (helm-run-after-exit 'helm-bibtex-open-pdf-externally (helm-marked-candidates)))))
-  (define-key helm-map (kbd "C-c o") '(lambda () (interactive)
-                                        (with-helm-alive-p
-                                          (helm-run-after-exit 'helm-bibtex-open-pdf (helm-marked-candidates)))))
-  (define-key helm-map (kbd "C-c l") '(lambda () (interactive)
-                                        (with-helm-alive-p
-                                          (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
   (setq bibtex-completion-cite-prompt-for-optional-arguments nil
         bibtex-completion-additional-search-fields '(keywords)
         bibtex-completion-pdf-field "file"
         bibtex-completion-bibliography (delete (expand-file-name "~/.bib/Zotero.bib")
                                                (directory-files "~/.bib" t "\\.bib$"))
         bibtex-completion-notes-path "~/Zotero/storage/TKM9D893/notes.org")
+  (defvar helm-bibtex-map
+    (let ((map (make-sparse-keymap)))
+      (set-keymap-parent map helm-map)
+      (define-key map (kbd "C-c j") '(lambda () (interactive) (with-helm-alive-p
+                                                                (helm-run-after-exit 'helm-bibtex-open-pdf-externally (helm-marked-candidates)))))
+      (define-key map (kbd "C-c o") '(lambda () (interactive) (with-helm-alive-p
+                                                                (helm-run-after-exit 'helm-bibtex-open-pdf (helm-marked-candidates)))))
+      (define-key map (kbd "C-c l") '(lambda () (interactive) (with-helm-alive-p
+                                                                (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
+      map)
+    "Keymap for `helm-bibtex'.")
+  (helm-attrset 'keymap helm-bibtex-map helm-source-bibtex)
   (defvar bibtex-completion-bibliography/curr nil)
   (defun swint-helm-bibtex (&optional arg)
     "With a prefix ARG，choose bib file and execute bibtex-completion-clear-cache."
@@ -78,9 +81,9 @@
                             (directory-files (expand-file-name "~/.bib/") t "\\.bib$")
                             :marked-candidates t
                             :buffer "*helm bibtex-swint*")))
-    (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr))
-      (if (and (buffer-live-p (get-buffer "*helm bibtex*")) (not arg))
-          (helm-resume "*helm bibtex*")
+    (if (and (buffer-live-p (get-buffer "*helm bibtex*")) (not arg))
+        (helm-resume "*helm bibtex*")
+      (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr))
         (helm-bibtex arg bibtex-completion-bibliography/curr))))
   (defun bibtex-completion-get-entry-for-pdf (pdf-file)
     "Find entry for pdf-file in .bib file."
@@ -131,7 +134,7 @@
   (define-key ebib-entry-mode-map (kbd "C-n") nil)
   (add-hook 'ebib-entry-mode-hook '(lambda ()
                                      ;; (setq word-wrap t) ;中文支持不好
-                                     (setq truncate-lines nil)))
+                                     (setq truncate-lines t)))
   (setq ebib-index-columns '(("Note" 1 t)
                              ("collection" 20 t)
                              ("Author/Editor" 20 t)

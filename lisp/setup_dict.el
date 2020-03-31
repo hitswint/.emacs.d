@@ -7,7 +7,8 @@
   (smartrep-define-key global-map "M-s d"
     '(("b" . bing-dict-brief-cb-at-point)
       ("g" . google-translate-to-tip)
-      ("y" . youdao-dictionary-to-tip)))
+      ("y" . youdao-dictionary-to-tip)
+      ("d" . baidu-translate-at-point)))
   :config
   (defun bing-dict-brief-cb-at-point (&optional _word)
     "Search word at point."
@@ -56,5 +57,22 @@
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
       (youdao-dictionary--pos-tip (youdao-dictionary--format-result word)))))
+;; ===============youdao-dictionary==============
+;;; baidu-translate
+;; ===============youdao-dictionary==============
+(def-package! baidu-translate
+  :commands baidu-translate-at-point
+  :config
+  (def-package! unicode-escape
+    :after baidu-translate)
+  (setq baidu-translate-appid "20200329000407785")
+  (setq baidu-translate-security "oPVKtlEmfo4Q9KYHpjfy")
+  (defun baidu-translate-at-point (&optional _word)
+    "Search word at point and display result with pos-tip."
+    (interactive)
+    (let ((word (or _word (swint-get-words-at-point))))
+      (if (pyim-string-match-p "\\cc" word)
+          (baidu-translate-string word "auto" "en")
+        (baidu-translate-string word "auto" "zh")))))
 ;; ===============youdao-dictionary==============
 (provide 'setup_dict)

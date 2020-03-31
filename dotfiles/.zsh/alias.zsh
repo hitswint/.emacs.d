@@ -22,7 +22,7 @@ alias pp='percol --match-method pinyin'
 alias -s {htm,html}=firefox
 # alias -s {el,py,js,c,h,java,m,dot,gp,org,tex,txt}=emacsclient
 alias -s {rmvb,rm,mp4,avi,flv,f4v,mpg,mkv,3gp,wmv,mov,dat,asf,mpeg,wma}=mplayer
-alias -s {jpg,jpeg,png,bmp}="~/feh.sh"
+alias -s {jpg,jpeg,png,bmp}="~/bin/feh.sh"
 alias -s {eps,ps}=gv
 alias -s {doc,docx}=wps
 alias -s {xls,xlsx}=et
@@ -32,3 +32,4 @@ alias ec='emacsclient -n'
 alias ecc='emacsclient -c -n'
 alias ect='emacsclient -t'
 alias dia="env GTK_IM_MODULE=xim dia"
+alias qpdfview="qpdfview --unique"
