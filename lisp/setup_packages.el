@@ -723,13 +723,16 @@
 ;;; eaf
 ;; ======================eaf=======================
 (def-package! eaf
-  :commands eaf-open
   :load-path "site-lisp/emacs-application-framework/"
+  :commands eaf-open
+  :bind (:map dired-mode-map
+              ("E" . eaf-open-this-from-dired))
+  :custom
+  (eaf-grip-token "2b9cd942f6960d763364607f258f45196b55c660")
   :config
-  (setq eaf-grip-token "2b9cd942f6960d763364607f258f45196b55c660")
-  (advice-add 'eaf-open :before #'(lambda (url &optional app-name)
-                                    (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "eaf")
-                                      (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "eaf")))))
+  (advice-add 'eaf-open :before #'(lambda (url &optional app-name arguments open-always)
+                                    (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
+                                      (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))))
   (add-hook 'eaf-mode-hook (lambda ()
                              (set (make-local-variable 'ring-bell-function) 'ignore))))
 ;; ======================eaf=======================
@@ -757,16 +760,16 @@
 ;; ============insert-translated-name==============
 (def-package! insert-translated-name
   :load-path "site-lisp/insert-translated-name/"
-  :bind (("M-g d" . insert-translated-name-insert)
-         ("M-g D" . insert-translated-name-insert-original-translation)))
+  :bind (("M-g d" . insert-translated-name-replace)
+         ("M-g D" . insert-translated-name-insert))
+  :config
+  (setq insert-translated-name-default-style "origin"))
 ;; ============insert-translated-name==============
 ;;; awesome-tab
 ;; =================awesome-tab====================
 (def-package! awesome-tab
   :load-path "site-lisp/awesome-tab/"
   :commands awesome-tab-mode
-  :init
-  (setq awesome-tab-prefix-key [(meta \s)])
   :config
   ;; (awesome-tab-mode t)
   (setq awesome-tab-cycle-scope 'tabs)
@@ -804,4 +807,38 @@
   ;; (setq package-check-signature nil) ;临时关闭验证，package-install安装。
   :commands gnu-elpa-keyring-update)
 ;; ==========gnu-elpa-keyring-update===============
+;;; rg
+;; ===================rg===========================
+(def-package! rg
+  :commands rg-run
+  :bind ("M-s g" . rg-menu)
+  :config
+  (rg-enable-default-bindings (kbd "M-s g"))
+  (setq rg-executable (executable-find "rga"))
+  (setq rg-default-alias-fallback "everything")
+  (define-key rg-mode-map (kbd "C-p") 'compilation-previous-error)
+  (define-key rg-mode-map (kbd "C-n") 'compilation-next-error)
+  (define-key rg-mode-map (kbd "M-p") 'rg-prev-file)
+  (define-key rg-mode-map (kbd "M-n") 'rg-next-file)
+  (define-key rg-mode-map (kbd "C-j") 'rg-result-open-externally)
+  (defun rg-result-open-externally ()
+    (interactive)
+    (let ((file-name (or (save-excursion
+                           (goto-char (line-beginning-position))
+                           (when (re-search-forward "File:\\ \\(.*\\)" (line-end-position) t)
+                             (match-string-no-properties 1)))
+                         (save-excursion (when (re-search-backward "File:\\ \\(.*\\)" nil t)
+                                           (match-string-no-properties 1))))))
+      (if (string= (ignore-errors (downcase (file-name-extension file-name))) "pdf")
+          (start-process "Shell" nil shell-file-name shell-command-switch
+                         (concat "qpdfview --unique --search \"" (rg-search-pattern rg-cur-search)
+                                 "\" \""
+                                 file-name "#" (save-excursion
+                                                 (goto-char (line-beginning-position))
+                                                 (re-search-forward "Page\\ \\([[:digit:]]+\\):" nil t)
+                                                 (match-string-no-properties 1))
+                                 "\""))
+        (dired-async-shell-command
+         (expand-file-name file-name))))))
+;; ===================rg===========================
 (provide 'setup_packages)

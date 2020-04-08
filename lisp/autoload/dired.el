@@ -180,10 +180,13 @@
 (defun dired-async-shell-command (file)
   (interactive)
   (let ((file-exten (downcase (file-name-extension file))))
-    (let ((command (cdr (assoc file-exten file-extension-app-alist))))
+    (let* ((wine-p (member file-exten '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "dwg" "dxf" "caj" "nh" "kdh")))
+           (command (cdr (assoc file-exten file-extension-app-alist)))
+           (default-directory (or (if wine-p (ignore-errors (expand-file-name (file-name-directory file))))
+                                  default-directory)))
       (start-process "Shell" nil shell-file-name shell-command-switch
                      (concat command " " "\""
-                             (if (member file-exten '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "dwg" "dxf" "caj" "nh" "kdh"))
+                             (if wine-p
                                  (file-name-nondirectory file)
                                file)
                              "\"")))))

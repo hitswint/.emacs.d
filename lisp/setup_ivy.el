@@ -8,7 +8,17 @@
   (setq ivy-use-virtual-buffers t)
   (setq ivy-height 10)
   (setq ivy-count-format "%d/%d ")
+  (def-package! ivy-hydra
+    :after ivy)
+  (def-package! hydra
+    :after ivy-hydra)
   ;; https://github.com/pengpengxp/swiper/wiki/ivy-support-chinese-pinyin
+  (add-to-list 'ivy-re-builders-alist '(swiper . re-builder-pinyin))
+  (add-to-list 'ivy-re-builders-alist '(swiper-all . re-builder-pinyin))
+  (add-to-list 'ivy-re-builders-alist '(counsel-imenu . re-builder-pinyin))
+  (add-to-list 'ivy-re-builders-alist '(counsel-find-file . re-builder-pinyin))
+  (add-to-list 'ivy-re-builders-alist '(counsel-outline . re-builder-pinyin))
+  (add-to-list 'ivy-re-builders-alist '(counsel-yank-pop . re-builder-pinyin))
   (defun swint-pinyinlib-build-regexp-string (str)
     (cond ((equal str ".*") ".*")
           (t (pinyinlib-build-regexp-string str t))))
@@ -24,12 +34,7 @@
   (defun re-builder-pinyin (str)
     (or (pinyin-to-utf8 str)
         (ivy--regex-plus str)
-        (ivy--regex-ignore-order str)))
-  (setq ivy-re-builders-alist '((t . re-builder-pinyin)))
-  (def-package! ivy-hydra
-    :after ivy)
-  (def-package! hydra
-    :after ivy-hydra))
+        (ivy--regex-ignore-order str))))
 ;; =====================ivy========================
 ;;; swiper
 ;; ===================swiper=======================
