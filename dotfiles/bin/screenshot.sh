@@ -12,8 +12,8 @@ fi
 
 case $input1 in
     s)
-        # scrot -s
-        import ~/Downloads/ScreenShot_$(date '+%Y%m%d_%H%M%S').png
+        # import ~/Downloads/ScreenShot_$(date '+%Y%m%d_%H%M%S').png
+        sleep 0.2 ; scrot -s ~/Downloads/ScreenShot_$(date '+%Y%m%d_%H%M%S').png
         ;;
     w)
         sleep 0.2 ; scrot -bs 'ScreenShot_%Y%m%d_%H%M%S.png' -e 'mv $f ~/Downloads/'

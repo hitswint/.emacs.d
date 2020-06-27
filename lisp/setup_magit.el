@@ -4,8 +4,8 @@
   :diminish magit-auto-revert-mode
   :bind (("C-x M-g" . magit-status)
          ("C-x C-M-g" . magit-dispatch)
-         ("M-g M-," . swint-magit-clone-nutstore)
-         ("M-g M-." . swint-magit-remote-nutstore))
+         ("M-g M-<" . swint-magit-clone-nutstore)
+         ("M-g M->" . swint-magit-remote-nutstore))
   :init
   (setq magit-auto-revert-mode nil)
   :config
@@ -60,7 +60,9 @@
     (with-temp-file ".gitattributes"
       (insert (concat "*.doc diff=word" "\n" "*.docx diff=wordx")))
     (shell-command "git config diff.word.textconv catdoc")
-    (shell-command "git config diff.wordx.textconv docx2txt-git"))
+    (shell-command "git config diff.wordx.textconv pandoc\\ --to=plain")
+    (with-temp-file ".gitignore"
+      (insert (concat ".~*" "\n"))))
   (define-key magit-status-mode-map (kbd "C-c d") 'swint-magit-diff-doc)
   ;; =============使用git管理doc文件===============
   )

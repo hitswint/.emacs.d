@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+    <head>
+        <title>NetData Dashboard</title>
+        <meta name="application-name" content="netdata">
+
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="author" content="costa@tsaousis.gr">
+
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:image" content="https://cloud.githubusercontent.com/assets/2662304/22945737/e98cd0c6-f2fd-11e6-96f1-5501934b0955.png"/>
+        <meta property="og:url" content="http://my-netdata.io/"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:site_name" content="netdata"/>
+        <meta property="og:title" content="netdata - real-time performance monitoring, done right!"/>
+        <meta property="og:description" content="Stunning real-time dashboards, blazingly fast and extremely interactive. Zero configuration, zero dependencies, zero maintenance." />
+    </head>
+    <script>var netdataTheme = 'slate';</script>
+    <script type="text/javascript" src="dashboard.js?v20170724-1"></script>
+    <body>
+
+        <div class="container" style="width: 100%; padding-top: 10px; text-align: center; color: #AAA">
+
+            <!-- * rpi -->
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="http://swint.mynetgear.com:19999"> RPI <img class="netdata-badge" src="http://swint.mynetgear.com:19999/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation"><a href="#gauge_rpi" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
+                <li role="presentation"><a href="#easypiechart_rpi" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
+                    <embed class="netdata-badge" src="http://swint.mynetgear.com:19999/api/v1/badge.svg?chart=sensors.temp_thermal_zone0_thermal_thermal_zone0&label=0&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /></img>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="gauge_rpi">
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
+                         data-host="http://swint.mynetgear.com:19999"
+                         data-dimensions="used"
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used Swap"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#DD4400"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999"
+                         data-dimensions="in"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Read"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999"
+                         data-dimensions="out"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Write"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
+                         data-host="http://swint.mynetgear.com:19999"
+                         data-chart-library="gauge"
+                         data-title="CPU"
+                         data-units="%"
+                         data-gauge-max-value="100"
+                         data-width="20%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#22AA99"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999"
+                         data-dimensions="received"
+                         data-chart-library="easypiechart"
+                         data-title="Net Inbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999"
+                         data-dimensions="sent"
+                         data-chart-library="easypiechart"
+                         data-title="Net Outbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
+                         data-host="http://swint.mynetgear.com:19999"
+                         data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used RAM"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#EE9911"
+                         role="application"></div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="easypiechart_rpi">
+                    <div data-netdata="system.cpu"
+                         data-host="http://swint.mynetgear.com:19999"
+                         data-title="CPU"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                         data-dygraph-valuerange="[0, 100]"
+                    ></div>
+                    <div data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999"
+                         data-title="Disk"
+                         data-common-max="io"
+                         data-common-min="io"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999"
+                         data-common-max="traffic"
+                         data-common-min="traffic"
+                         data-title="Network"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.ram"
+                         data-host="http://swint.mynetgear.com:19999"
+                         data-common-max="ram"
+                         data-common-min="ram"
+                         data-title="RAM"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                </div>
+            </div>
+
+            <p></p>
+
+            <!-- * nas -->
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="http://swint.mynetgear.com:19999/host/Nas-lin/"> NAS <img class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation"><a href="#gauge_nas" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
+                <li role="presentation"><a href="#easypiechart_nas" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
+                    <embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=0&dimensions=Core%200&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=1&dimensions=Core%201&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=2&dimensions=Core%202&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=3&dimensions=Core%203&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=sensors.soc_dts0_virtual_0_temperature&label=dts0&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=sensors.soc_dts1_virtual_0_temperature&label=dts1&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
+                </div>
+                <div role="tabpanel" class="tab-pane" id="gauge_nas">
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
+                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-dimensions="used"
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used Swap"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#DD4400"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-dimensions="in"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Read"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-dimensions="out"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Write"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
+                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-chart-library="gauge"
+                         data-title="CPU"
+                         data-units="%"
+                         data-gauge-max-value="100"
+                         data-width="20%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#22AA99"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-dimensions="received"
+                         data-chart-library="easypiechart"
+                         data-title="Net Inbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-dimensions="sent"
+                         data-chart-library="easypiechart"
+                         data-title="Net Outbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
+                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used RAM"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#EE9911"
+                         role="application"></div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="easypiechart_nas">
+                    <div data-netdata="system.cpu"
+                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-title="CPU"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                         data-dygraph-valuerange="[0, 100]"
+                    ></div>
+                    <div data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-title="Disk"
+                         data-common-max="io"
+                         data-common-min="io"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-common-max="traffic"
+                         data-common-min="traffic"
+                         data-title="Network"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.ram"
+                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-common-max="ram"
+                         data-common-min="ram"
+                         data-title="RAM"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                </div>
+            </div>
+
+            <p></p>
+
+            <!-- * epyc -->
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="http://swint.mynetgear.com:19999/host/Epyc/"> EPYC <img class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Epyc/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation"><a href="#gauge_epyc" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
+                <li role="presentation"><a href="#easypiechart_epyc" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
+                    <embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Epyc/api/v1/badge.svg?chart=sensors.k10temp_pci_00c3_temperature&label=0&divide=2&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Epyc/api/v1/badge.svg?chart=sensors.k10temp_pci_00cb_temperature&label=1&divide=2&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Epyc/api/v1/badge.svg?chart=sensors.i350bb_pci_6100_temperature&label=pci&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
+                </div>
+                <div role="tabpanel" class="tab-pane" id="gauge_epyc">
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
+                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-dimensions="used"
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used Swap"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#DD4400"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-dimensions="in"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Read"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-dimensions="out"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Write"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
+                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-chart-library="gauge"
+                         data-title="CPU"
+                         data-units="%"
+                         data-gauge-max-value="100"
+                         data-width="20%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#22AA99"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-dimensions="received"
+                         data-chart-library="easypiechart"
+                         data-title="Net Inbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-dimensions="sent"
+                         data-chart-library="easypiechart"
+                         data-title="Net Outbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
+                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used RAM"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#EE9911"
+                         role="application"></div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="easypiechart_epyc">
+                    <div data-netdata="system.cpu"
+                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-title="CPU"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                         data-dygraph-valuerange="[0, 100]"
+                    ></div>
+                    <div data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-title="Disk"
+                         data-common-max="io"
+                         data-common-min="io"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-common-max="traffic"
+                         data-common-min="traffic"
+                         data-title="Network"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.ram"
+                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-common-max="ram"
+                         data-common-min="ram"
+                         data-title="RAM"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                </div>
+            </div>
+
+            <p></p>
+
+            <!-- * t510 -->
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="http://swint.mynetgear.com:19999/host/T510/"> T510 <img class="netdata-badge" src="http://swint.mynetgear.com:19999/host/T510/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation"><a href="#gauge_t510" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
+                <li role="presentation"><a href="#easypiechart_t510" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
+                    <embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/T510/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=0&dimensions=Core%200&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/T510/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=2&dimensions=Core%202&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/T510/api/v1/badge.svg?chart=sensors.acpitz_acpi_0_temperature&label=acpi&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/T510/api/v1/badge.svg?chart=sensors.thinkpad_isa_0000_fan&label=fan&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
+                </div>
+                <div role="tabpanel" class="tab-pane" id="gauge_t510">
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
+                         data-host="http://swint.mynetgear.com:19999/host/T510/"
+                         data-dimensions="used"
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used Swap"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#DD4400"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/T510/"
+                         data-dimensions="in"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Read"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/T510/"
+                         data-dimensions="out"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Write"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
+                         data-host="http://swint.mynetgear.com:19999/host/T510/"
+                         data-chart-library="gauge"
+                         data-title="CPU"
+                         data-units="%"
+                         data-gauge-max-value="100"
+                         data-width="20%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#22AA99"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/T510/"
+                         data-dimensions="received"
+                         data-chart-library="easypiechart"
+                         data-title="Net Inbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/T510/"
+                         data-dimensions="sent"
+                         data-chart-library="easypiechart"
+                         data-title="Net Outbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
+                         data-host="http://swint.mynetgear.com:19999/host/T510/"
+                         data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used RAM"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#EE9911"
+                         role="application"></div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="easypiechart_t510">
+                    <div data-netdata="system.cpu"
+                         data-host="http://swint.mynetgear.com:19999/host/T510/"
+                         data-title="CPU"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                         data-dygraph-valuerange="[0, 100]"
+                    ></div>
+                    <div data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/T510/"
+                         data-title="Disk"
+                         data-common-max="io"
+                         data-common-min="io"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/T510/"
+                         data-common-max="traffic"
+                         data-common-min="traffic"
+                         data-title="Network"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.ram"
+                         data-host="http://swint.mynetgear.com:19999/host/T510/"
+                         data-common-max="ram"
+                         data-common-min="ram"
+                         data-title="RAM"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                </div>
+            </div>
+
+            <p></p>
+
+            <!-- * x201 -->
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="http://swint.mynetgear.com:19999/host/X201/"> X201 <img class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X201/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation"><a href="#gauge_x201" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
+                <li role="presentation"><a href="#easypiechart_x201" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
+                    <embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X201/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=0&dimensions=Core%200&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X201/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=2&dimensions=Core%202&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X201/api/v1/badge.svg?chart=sensors.acpitz_acpi_0_temperature&label=acpi&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X201/api/v1/badge.svg?chart=sensors.thinkpad_isa_0000_fan&label=fan&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
+                </div>
+                <div role="tabpanel" class="tab-pane" id="gauge_x201">
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
+                         data-host="http://swint.mynetgear.com:19999/host/X201/"
+                         data-dimensions="used"
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used Swap"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#DD4400"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/X201/"
+                         data-dimensions="in"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Read"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/X201/"
+                         data-dimensions="out"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Write"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
+                         data-host="http://swint.mynetgear.com:19999/host/X201/"
+                         data-chart-library="gauge"
+                         data-title="CPU"
+                         data-units="%"
+                         data-gauge-max-value="100"
+                         data-width="20%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#22AA99"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/X201/"
+                         data-dimensions="received"
+                         data-chart-library="easypiechart"
+                         data-title="Net Inbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/X201/"
+                         data-dimensions="sent"
+                         data-chart-library="easypiechart"
+                         data-title="Net Outbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
+                         data-host="http://swint.mynetgear.com:19999/host/X201/"
+                         data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used RAM"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#EE9911"
+                         role="application"></div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="easypiechart_x201">
+                    <div data-netdata="system.cpu"
+                         data-host="http://swint.mynetgear.com:19999/host/X201/"
+                         data-title="CPU"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                         data-dygraph-valuerange="[0, 100]"
+                    ></div>
+                    <div data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/X201/"
+                         data-title="Disk"
+                         data-common-max="io"
+                         data-common-min="io"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/X201/"
+                         data-common-max="traffic"
+                         data-common-min="traffic"
+                         data-title="Network"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.ram"
+                         data-host="http://swint.mynetgear.com:19999/host/X201/"
+                         data-common-max="ram"
+                         data-common-min="ram"
+                         data-title="RAM"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                </div>
+            </div>
+
+            <p></p>
+
+            <!-- * dell -->
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="http://47.94.151.140:19998"> DELL <img class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation"><a href="#gauge_dell" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
+                <li role="presentation"><a href="#easypiechart_dell" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
+                    <embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=0&dimensions=Core%200&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=1&dimensions=Core%201&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=2&dimensions=Core%202&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=3&dimensions=Core%203&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.acpitz_acpi_0_temperature&label=acpi&divide=2&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.dell_smm_virtual_0_temperature&label=0&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.dell_smm_virtual_0_fan&label=fan&divide=2&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
+                </div>
+                <div role="tabpanel" class="tab-pane" id="gauge_dell">
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
+                         data-host="http://47.94.151.140:19998"
+                         data-dimensions="used"
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used Swap"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#DD4400"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://47.94.151.140:19998"
+                         data-dimensions="in"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Read"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://47.94.151.140:19998"
+                         data-dimensions="out"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Write"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
+                         data-host="http://47.94.151.140:19998"
+                         data-chart-library="gauge"
+                         data-title="CPU"
+                         data-units="%"
+                         data-gauge-max-value="100"
+                         data-width="20%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#22AA99"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://47.94.151.140:19998"
+                         data-dimensions="received"
+                         data-chart-library="easypiechart"
+                         data-title="Net Inbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://47.94.151.140:19998"
+                         data-dimensions="sent"
+                         data-chart-library="easypiechart"
+                         data-title="Net Outbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
+                         data-host="http://47.94.151.140:19998"
+                         data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used RAM"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#EE9911"
+                         role="application"></div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="easypiechart_dell">
+                    <div data-netdata="system.cpu"
+                         data-host="http://47.94.151.140:19998"
+                         data-title="CPU"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                         data-dygraph-valuerange="[0, 100]"
+                    ></div>
+                    <div data-netdata="system.io"
+                         data-host="http://47.94.151.140:19998"
+                         data-title="Disk"
+                         data-common-max="io"
+                         data-common-min="io"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.net"
+                         data-host="http://47.94.151.140:19998"
+                         data-common-max="traffic"
+                         data-common-min="traffic"
+                         data-title="Network"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.ram"
+                         data-host="http://47.94.151.140:19998"
+                         data-common-max="ram"
+                         data-common-min="ram"
+                         data-title="RAM"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                </div>
+            </div>
+
+            <p></p>
+
+            <!-- * ali -->
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="http://47.94.151.140:19999"> ALI <img class="netdata-badge" src="http://47.94.151.140:19999/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation"><a href="#gauge_ali" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
+                <li role="presentation"><a href="#easypiechart_ali" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane" id="gauge_ali">
+                    <!-- <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap" -->
+                    <!-- data-host="http://47.94.151.140:19999" -->
+                    <!-- data-dimensions="used" -->
+                    <!-- data-append-options="percentage" -->
+                    <!-- data-chart-library="easypiechart" -->
+                    <!-- data-title="Used Swap" -->
+                    <!-- data-units="%" -->
+                    <!-- data-easypiechart-max-value="100" -->
+                    <!-- data-width="9%" -->
+                    <!-- data-before="0" -->
+                    <!-- data-after="-600" -->
+                    <!-- data-points="600" -->
+                    <!-- data-colors="#DD4400" -->
+                    <!-- role="application"></div> -->
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://47.94.151.140:19999"
+                         data-dimensions="in"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Read"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://47.94.151.140:19999"
+                         data-dimensions="out"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Write"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
+                         data-host="http://47.94.151.140:19999"
+                         data-chart-library="gauge"
+                         data-title="CPU"
+                         data-units="%"
+                         data-gauge-max-value="100"
+                         data-width="20%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#22AA99"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://47.94.151.140:19999"
+                         data-dimensions="received"
+                         data-chart-library="easypiechart"
+                         data-title="Net Inbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://47.94.151.140:19999"
+                         data-dimensions="sent"
+                         data-chart-library="easypiechart"
+                         data-title="Net Outbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
+                         data-host="http://47.94.151.140:19999"
+                         data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used RAM"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#EE9911"
+                         role="application"></div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="easypiechart_ali">
+                    <div data-netdata="system.cpu"
+                         data-host="http://47.94.151.140:19999"
+                         data-title="CPU"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                         data-dygraph-valuerange="[0, 100]"
+                    ></div>
+                    <div data-netdata="system.io"
+                         data-host="http://47.94.151.140:19999"
+                         data-title="Disk"
+                         data-common-max="io"
+                         data-common-min="io"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.net"
+                         data-host="http://47.94.151.140:19999"
+                         data-common-max="traffic"
+                         data-common-min="traffic"
+                         data-title="Network"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.ram"
+                         data-host="http://47.94.151.140:19999"
+                         data-common-max="ram"
+                         data-common-min="ram"
+                         data-title="RAM"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+ var NETDATA_BADGES_AUTOREFRESH_SECONDS = 60;
+ function refreshNetdataBadges() {
+     var now = new Date().getTime().toString();
+     $('.netdata-badge').each(function() {
+         this.src = this.src.replace(/\&_=\d*/, '') + '&_=' + now;
+     });
+     setTimeout(refreshNetdataBadges, NETDATA_BADGES_AUTOREFRESH_SECONDS * 1000);
+ }
+ setTimeout(refreshNetdataBadges, NETDATA_BADGES_AUTOREFRESH_SECONDS * 1000);
+</script>

@@ -218,7 +218,7 @@
   (let ((file-list (if (eq major-mode 'dired-mode)
                        (dired-get-marked-files)
                      (list (buffer-file-name))))
-        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "TeighaFileConverter")
+        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "ODAFileConverter")
                                 :buffer "*helm dired converter-swint*")))
 
     (cond ((string= engine "pandoc")
@@ -239,7 +239,7 @@
              (cl-loop for x in file-list
                       do (shell-command (concat "pdftk " (file-name-nondirectory x) " cat "
                                                 output-args " output " (concat (file-name-base x) "-new.pdf"))))))
-          ((string= engine "TeighaFileConverter")
+          ((string= engine "ODAFileConverter")
            (let ((output-version (helm-comp-read "Output version: "
                                                  (list "ACAD9" "ACAD10" "ACAD12" "ACAD13" "ACAD14" "ACAD2000" "ACAD2004" "ACAD2007" "ACAD2010")
                                                  :buffer "*helm dired converter-swint*"))
@@ -248,7 +248,7 @@
                                               :buffer "*helm dired converter-swint*"))
                  (all-files (y-or-n-p "All files?")))
              (cl-loop for x in file-list
-                      do (shell-command (concat (format "TeighaFileConverter ./ ./%s-%s %s %s 0 1 " output-type output-version output-version output-type)
+                      do (shell-command (concat (format "ODAFileConverter ./ ./%s-%s %s %s 0 1 " output-type output-version output-version output-type)
                                                 (unless all-files
                                                   (file-name-nondirectory x))))))))))
 ;; ============swint-dired-converter=========

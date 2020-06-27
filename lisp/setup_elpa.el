@@ -176,6 +176,7 @@
                            rainbow-mode
                            readline-complete
                            recentf-ext
+                           rg
                            rich-minority
                            s
                            skewer-mode

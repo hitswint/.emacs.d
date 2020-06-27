@@ -60,7 +60,8 @@
     (setq screen-file (concat (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
                                       "_" (format-time-string "%Y%m%d_%H%M%S")) ".png"))
     ;; (suspend-frame)
-    (call-process-shell-command (concat "import " "\"" screen-file "\"" ))
+    (call-process-shell-command ;; (concat "import " "\"" screen-file "\"" )
+     (concat "scrot" " -s " "\"" screen-file "\"" ))
     screen-file))
 ;; ===================截图====================
 ;;; 插入截图

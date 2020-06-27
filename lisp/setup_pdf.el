@@ -36,9 +36,9 @@
 ;;; pdfgrep
 ;; =================pdfgrep========================
 (def-package! pdfgrep
-  :bind (("M-g f f" . pdfgrep-opened)
-         ("M-g f d" . pdfgrep-dired)
-         ("M-g F" . pdfgrep-zotero))
+  :bind (("M-s v v" . pdfgrep-opened)
+         ("M-s v d" . pdfgrep-dired)
+         ("M-s V" . pdfgrep-zotero))
   :config
   (require 'helm-ag)
   (pdfgrep-mode)
@@ -108,7 +108,7 @@ WHERE items.itemID = itemAttachments.itemID AND items.itemID in" "("
 ") ORDER BY items.itemID
 \""))) "\n" t))
              (zotero-file-list (mapcar #'(lambda (x) (escape-local (expand-file-name x zotero-storage))) zotero-file-list-orig)))
-        (if (and (> (length zotero-file-list) 0) (<= (length zotero-file-list) 10))
+        (if (and (> (length zotero-file-list) 1) (<= (length zotero-file-list) 10))
             (pdfgrep (concat (pdfgrep-default-command) (escape-local string-to-grep)
                              (string-join zotero-file-list " ")))
           (let* ((match-cache-list (split-string (shell-command-to-string

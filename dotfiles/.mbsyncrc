@@ -36,6 +36,7 @@ IMAPStore qq-remote
 Account QQ
 
 MaildirStore qq-local
+Subfolders Verbatim
 Path ~/Maildir/QQ/
 Inbox ~/Maildir/QQ/INBOX
 

@@ -12,6 +12,8 @@
                   " OR "
                   "flag:unread maildir:/Netease/INBOX"
                   " OR "
+                  "flag:unread maildir:/SJZU/INBOX"
+                  " OR "
                   "flag:unread maildir:/Hotmail/Inbox"
                   " OR "
                   "flag:unread maildir:/QQ/INBOX"))
@@ -35,6 +37,7 @@
         mu4e-completing-read-function 'completing-read
         mu4e-maildir-shortcuts '(("/Default/INBOX" . ?d)
                                  ("/Netease/INBOX" . ?n)
+                                 ("/SJZU/INBOX" . ?j)
                                  ("/Hotmail/Inbox" . ?h)
                                  ("/QQ/INBOX" . ?q))
         send-mail-function 'smtpmail-send-it
@@ -70,6 +73,21 @@
                     (smtpmail-default-smtp-server . "smtp.163.com")
                     (smtpmail-smtp-server . "smtp.163.com")
                     (smtpmail-smtp-service . 25)))
+          ,(make-mu4e-context
+            :name "SJZU"
+            :enter-func (lambda () (mu4e-message "Switch to the SJZU context"))
+            :match-func (lambda (msg)
+                          (when msg
+                            (mu4e-message-contact-field-matches msg
+                                                                :to "guiq.wang@sjzu.edu.cn")))
+            :vars '((user-mail-address . "guiq.wang@sjzu.edu.cn" )
+                    (user-full-name . "Guiqiang Wang" )
+                    (mu4e-sent-folder . "/SJZU/已发送")
+                    (mu4e-drafts-folder . "/SJZU/草稿箱")
+                    (mu4e-trash-folder . "/SJZU/已删除")
+                    (smtpmail-default-smtp-server . "smtphz.qiye.163.com")
+                    (smtpmail-smtp-server . "smtphz.qiye.163.com")
+                    (smtpmail-smtp-service . 465)))
           ,(make-mu4e-context
             :name "Hotmail"
             :enter-func (lambda () (mu4e-message "Switch to the Hotmail context"))

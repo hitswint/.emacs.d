@@ -60,3 +60,7 @@ if [ ! -f $HOME/git-repo/pinyin-completion/shell/pinyin-comp.zsh ];then
 else
     source-if-exists "${HOME}/git-repo/pinyin-completion/shell/pinyin-comp.zsh"
 fi
+
+if [[ -n $SSH_CONNECTION ]]; then
+    PROMPT="%{$fg_bold[yellow]%}%m%{$reset_color%} ${PROMPT}"
+fi
