@@ -488,7 +488,8 @@
   :bind (:map dired-mode-map
               ("C-c l" . swint-dired-interleave))
   :config
-  (setq interleave-disable-narrowing t)
+  (setq interleave-disable-narrowing t
+        interleave-insert-relative-name nil)
   (defun swint-dired-interleave ()
     (interactive)
     (let* ((pdf-file (dired-get-file-for-visit))
@@ -559,7 +560,6 @@
 (def-package! org-protocol-capture-html
   :load-path "site-lisp/org-protocol-capture-html/"
   :after org
-  :defer 2
   :config
   (add-to-list 'org-capture-templates
                '("h" "Html" entry (file+olp "~/Nutstore-sync/orgzly/orgzly.org" "Html")
@@ -648,4 +648,36 @@
       (funcall fn)))
   (advice-add 'org-pdfview-store-link :around #'org-pdfview-store-link/around))
 ;; ================org-pdfview==================
+;;; org-brain
+;; =================org-brain===================
+(use-package org-brain
+  :after org
+  :config
+  (bind-key "M-O b" 'org-brain-prefix-map)
+  (bind-key "b" 'swint-helm-ag-org-brain-tags org-brain-prefix-map)
+  (bind-key "C-c c" 'eh-org-set-tags-command org-mode-map)
+  (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
+  (setq org-brain-include-file-entries t
+        org-brain-file-entries-use-title nil
+        org-brain-headline-entry-name-format-string "%s:%s"
+        org-brain-default-file-parent nil)
+  (defun eh-org-brain-as-tags ()
+    (cl-remove-duplicates
+     (mapcar
+      (lambda (x)
+        (list (replace-regexp-in-string "/" ":" (car x))))
+      (org-brain--all-targets))))
+  (defun swint-helm-ag-org-brain-tags ()
+    (interactive)
+    (let ((org-brain-tags (helm-comp-read "Select org brain tags: "
+                                          (eh-org-brain-as-tags)
+                                          :marked-candidates t
+                                          :buffer "*helm ag org brain-swint*")))
+      (helm-do-ag org-directory org-directory
+                  (concat ":" (string-join org-brain-tags ":") ":"))))
+  (defun eh-org-set-tags-command ()
+    (interactive)
+    (let ((org-current-tag-alist (eh-org-brain-as-tags)))
+      (call-interactively 'counsel-org-tag))))
+;; =================org-brain===================
 (provide 'setup_org_mode)

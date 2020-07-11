@@ -78,9 +78,9 @@
         (goto-char (point-min))
         (let ((status 'annotated-locally))
           (while (search-forward-regexp
-                  (concat "^* " "\\[\\[file:") nil t)
-            (puthash (car (last (split-string (buffer-substring (line-beginning-position) (- (line-end-position) 2)) "\\[file:") 1))
-                     status files-status)))))
+                  (concat "^* " "\\[\\[file:.+\\]\\[file:" "\\(.+\\)\\]\\]")
+                  nil t)
+            (puthash (match-string-no-properties 1) status files-status)))))
     (unless only-annotated-locally
       ;; Parse status of files annotated globally.
       (with-temp-buffer
@@ -90,7 +90,8 @@
           (while (search-forward-regexp
                   (concat "^* " "\\[\\[file:.+\\]\\[file:"
                           (regexp-quote (abbreviate-file-name default-directory))
-                          "\\([^/]+\\)\\]\\]") nil t)
+                          "\\([^/]+\\)\\]\\]")
+                  nil t)
             (puthash (match-string-no-properties 1) status files-status))))
       ;; Parse status of files interleaved.
       (let ((pdf-files-interleaved (swint-interleaved-files))

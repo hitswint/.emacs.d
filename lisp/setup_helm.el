@@ -102,7 +102,7 @@
       `(or (,cl-remove-op (lambda (x) (,dired-op (equal (buffer-mode x) 'dired-mode)
                                                  (,persp-curr-op (and (bound-and-true-p persp-mode)
                                                                       (member x (remq nil (mapcar 'buffer-name (persp-buffers (persp-curr)))))))))
-                          (helm-buffer-list))
+                          (cl-remove-duplicates (helm-buffer-list)))
            (list (buffer-name (get-buffer-create (format "*Virtual helm %s buffers*" ,type)))))))
   (defvar helm-source-file-buffers-list/curr-persp nil)
   (defvar helm-source-file-buffers-list/other-persps nil)

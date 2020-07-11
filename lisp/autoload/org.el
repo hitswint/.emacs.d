@@ -12,7 +12,7 @@
     (concat "~"
             (replace-regexp-in-string
              "_" "/" (substring-no-properties (file-name-nondirectory (buffer-file-name)) 11 -5))
-            (car (last (split-string (substring-no-properties (org-get-heading) nil -2) "\\[file:") 1)))))
+            (car (last (split-string (substring-no-properties (org-get-heading t) nil -2) "\\[file:") 1)))))
 ;;;###autoload
 (defun swint-org-open-at-point (&optional in-emacs)
   "Open annotated file if annotation storage file exists."

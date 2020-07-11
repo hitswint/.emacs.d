@@ -38,7 +38,7 @@
             (goto-char (point-min))
             (search-forward string-from nil t)
             (if (org-at-heading-p)
-                (my/refile annotation-refile-to (org-get-heading)))
+                (my/refile annotation-refile-to (org-get-heading t)))
             (kill-buffer))
           (with-current-buffer (find-file annotation-refile-to)
             (widen)
