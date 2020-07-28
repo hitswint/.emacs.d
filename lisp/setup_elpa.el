@@ -148,8 +148,9 @@
                            nyan-mode
                            operate-on-number
                            org
+                           org-brain
                            org-noter
-                           org-pdfview
+                           org-pdftools
                            org-ref
                            outline-magic
                            outorg

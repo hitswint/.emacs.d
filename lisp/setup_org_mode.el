@@ -104,7 +104,7 @@
   ;; ===============Keybindings=================
 ;;;; GTD
   ;; ===================GTD=====================
-  (setq org-agenda-files (list "~/Nutstore-sync/orgzly/task.org"))
+  (setq org-agenda-files (directory-files "~/Nutstore-sync/orgzly/" t ".+\\.org"))
   ;; Do not show title of task in mode-line when using org-clock.
   (setq org-clock-heading-function
         (lambda ()
@@ -628,26 +628,13 @@
     (with-current-buffer buf
       (org-restart-font-lock))))
 ;; ==================org-ref====================
-;;; org-pdfview
-;; ================org-pdfview==================
-(def-package! org-pdfview
-  :commands (org-pdfview-open org-pdfview-complete-link org-pdfview-store-link)
-  :init
-  (add-hook 'org-mode-hook (lambda ()
-                             (if (fboundp 'org-link-set-parameters)
-                                 (org-link-set-parameters "pdfview"
-                                                          :follow #'org-pdfview-open
-                                                          :complete #'org-pdfview-complete-link
-                                                          :store #'org-pdfview-store-link)
-                               (org-add-link-type "pdfview" 'org-pdfview-open)
-                               (add-hook 'org-store-link-functions 'org-pdfview-store-link))))
+;;; org-pdftools
+;; ================org-pdftools=================
+(use-package org-pdftools
+  :hook (org-load . org-pdftools-setup-link)
   :config
-  (defun org-pdfview-store-link/around (fn)
-    "Use image-dired for peep images."
-    (let ((buffer-file-name (and (buffer-file-name) (abbreviate-file-name (buffer-file-name)))))
-      (funcall fn)))
-  (advice-add 'org-pdfview-store-link :around #'org-pdfview-store-link/around))
-;; ================org-pdfview==================
+  (setq org-pdftools-link-prefix "pdfview"))
+;; ================org-pdftools=================
 ;;; org-brain
 ;; =================org-brain===================
 (use-package org-brain
