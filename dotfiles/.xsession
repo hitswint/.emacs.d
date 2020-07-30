@@ -30,4 +30,6 @@ pgrep redshift || redshift -l 41.8:123.4 &
 # xmodmap -e " keycode 49 = Escape NoSymbol Escape "
 # xmodmap -e " keycode 9 = grave asciitilde grave asciitilde "
 
+pulseaudio -D
+
 exec dwm

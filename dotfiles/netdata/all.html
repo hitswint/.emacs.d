@@ -712,6 +712,143 @@
 
             <p></p>
 
+            <!-- * x250 -->
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="http://swint.mynetgear.com:19999/host/X250/"> X250 <img class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X250/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation"><a href="#gauge_x250" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
+                <li role="presentation"><a href="#easypiechart_x250" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
+                    <embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X250/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=0&dimensions=Core%200&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X250/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=2&dimensions=Core%201&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X250/api/v1/badge.svg?chart=sensors.acpitz_acpi_0_temperature&label=acpi&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X250/api/v1/badge.svg?chart=sensors.thinkpad_isa_0000_fan&label=fan&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
+                </div>
+                <div role="tabpanel" class="tab-pane" id="gauge_x250">
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
+                         data-host="http://swint.mynetgear.com:19999/host/X250/"
+                         data-dimensions="used"
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used Swap"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#DD4400"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/X250/"
+                         data-dimensions="in"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Read"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/X250/"
+                         data-dimensions="out"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Write"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
+                         data-host="http://swint.mynetgear.com:19999/host/X250/"
+                         data-chart-library="gauge"
+                         data-title="CPU"
+                         data-units="%"
+                         data-gauge-max-value="100"
+                         data-width="20%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#22AA99"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/X250/"
+                         data-dimensions="received"
+                         data-chart-library="easypiechart"
+                         data-title="Net Inbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/X250/"
+                         data-dimensions="sent"
+                         data-chart-library="easypiechart"
+                         data-title="Net Outbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
+                         data-host="http://swint.mynetgear.com:19999/host/X250/"
+                         data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used RAM"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#EE9911"
+                         role="application"></div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="easypiechart_x250">
+                    <div data-netdata="system.cpu"
+                         data-host="http://swint.mynetgear.com:19999/host/X250/"
+                         data-title="CPU"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                         data-dygraph-valuerange="[0, 100]"
+                    ></div>
+                    <div data-netdata="system.io"
+                         data-host="http://swint.mynetgear.com:19999/host/X250/"
+                         data-title="Disk"
+                         data-common-max="io"
+                         data-common-min="io"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.net"
+                         data-host="http://swint.mynetgear.com:19999/host/X250/"
+                         data-common-max="traffic"
+                         data-common-min="traffic"
+                         data-title="Network"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.ram"
+                         data-host="http://swint.mynetgear.com:19999/host/X250/"
+                         data-common-max="ram"
+                         data-common-min="ram"
+                         data-title="RAM"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                </div>
+            </div>
+
+            <p></p>
+
             <!-- * dell -->
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">

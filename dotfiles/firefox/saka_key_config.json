@@ -325,6 +325,7 @@
             }
           ]
         ],
+        "duplicateTabIncognito": [],
         "newWindow": [
           [
             {
@@ -541,6 +542,7 @@
         "hintNormalCharCSS": "",
         "hintActiveCharCSS": "opacity: 0.5;"
       }
-    }
+    },
+    "Blacklist": {}
   }
 }

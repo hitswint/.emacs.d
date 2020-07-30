@@ -1,0 +1,14 @@
+#!/bin/sh
+
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+exec /etc/X11/xinit/xinitrc     # 根据~/.xinitrc启动
+# fcitx
+# exec dwm &
+[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+xsetroot -solid black
+# vncconfig -iconic &
+# xterm -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
+# twm &
+# gnome-session &#
