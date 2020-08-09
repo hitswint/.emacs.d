@@ -85,7 +85,7 @@
             compile-targets)
         (setq compile-targets
               (cl-loop for target
-                       in (list lisp-dir site-lisp-dir)
+                       in (list lisp-dir perspective-dir) ;; site-lisp-dir
                        if (file-directory-p target)
                        nconc (nreverse (directory-files-recursively target "\\.el$"))
                        else if (file-exists-p target)
@@ -132,7 +132,8 @@
   (interactive)
   (let ((targets (append (list (expand-file-name "init.elc" (file-truename user-emacs-directory)))
                          (directory-files-recursively lisp-dir "\\.elc$")
-                         (directory-files-recursively site-lisp-dir "\\.elc$")))
+                         ;; (directory-files-recursively site-lisp-dir "\\.elc$")
+                         ))
         (default-directory (file-truename user-emacs-directory)))
     (unless (cl-loop for path in targets
                      if (file-exists-p path)

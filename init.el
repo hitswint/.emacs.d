@@ -14,6 +14,7 @@
 ;; ==================PATH==================
 (defvar site-lisp-dir (expand-file-name "site-lisp" user-emacs-directory))
 (defvar lisp-dir (expand-file-name "lisp" user-emacs-directory))
+(defvar perspective-dir (expand-file-name "perspective-20191127.1849" site-lisp-dir))
 (defvar doom-autoload-file (expand-file-name "autoloads.el" lisp-dir))
 (add-to-list 'load-path lisp-dir)
 (setq load-path (append load-path (directory-files site-lisp-dir t "^[^.]" t)))
