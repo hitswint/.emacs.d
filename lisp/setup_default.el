@@ -33,7 +33,7 @@
 (setq require-final-newline t)
 (setq load-prefer-newer t)
 (setq shift-select-mode nil)
-(setq epa-pinentry-mode 'loopback)      ;使用minibuffer输入密码。
+(setq epg-pinentry-mode 'loopback)      ;使用minibuffer输入密码。
 (setq delete-by-moving-to-trash t)
 (setq display-line-numbers-type t)
 (setq trash-directory "~/.Trash")

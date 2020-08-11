@@ -20,6 +20,7 @@
 (setq socks-server '("Default server" "127.0.0.1" 1080 5))
 ;;;###autoload
 (define-minor-mode shadowsocks-proxy-mode
+  "Mode for shadowsocks proxy."
   :global t
   :init-value nil
   :lighter " SS"

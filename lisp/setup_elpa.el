@@ -16,7 +16,6 @@
 ;; Optimization, no need to activate all the packages so early.
 (setq package-enable-at-startup nil
       package--init-file-ensured t
-      byte-compile-dynamic nil
       byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
 ;; 激活所有packages，也可以使用package-activate单独激活。
 (package-initialize)
@@ -30,7 +29,6 @@
                            ace-pinyin
                            aggressive-indent
                            anzu
-                           arduino-mode
                            async
                            auctex
                            auctex-latexmk
@@ -43,8 +41,8 @@
                            avy
                            avy-zap
                            backup-walker
-                           baidu-translate
                            unicode-escape
+                           baidu-translate
                            bbyac
                            benchmark-init
                            bind-key
@@ -87,6 +85,7 @@
                            fcitx
                            find-file-in-project
                            flycheck
+                           arduino-mode
                            flycheck-pos-tip
                            flycheck-ycmd
                            function-args

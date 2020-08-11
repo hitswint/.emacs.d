@@ -575,7 +575,7 @@
                      (match-string 1 url)))
            (title (or (org-protocol-capture-html--nbsp-to-space (string-trim (plist-get data :title))) ""))
            (content (or (org-protocol-capture-html--nbsp-to-space (string-trim (plist-get data :body))) ""))
-           (orglink (org-make-link-string
+           (orglink (org-link-make-string
                      url (if (string-match "[^[:space:]]" title) title url)))
            (org-capture-link-is-already-stored t)) ; avoid call to org-store-link
       (setq org-stored-links
@@ -590,7 +590,7 @@
             (message "Pandoc failed: %s" (buffer-string))
           (progn
             ;; Pandoc succeeded
-            (org-store-link-props :type type
+            (org-link-store-props :type type
                                   :annotation orglink
                                   :link url
                                   :description title

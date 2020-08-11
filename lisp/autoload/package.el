@@ -131,6 +131,7 @@
   "Delete all the compiled elc files in your Emacs configuration."
   (interactive)
   (let ((targets (append (list (expand-file-name "init.elc" (file-truename user-emacs-directory)))
+                         (directory-files-recursively perspective-dir "\\.elc$")
                          (directory-files-recursively lisp-dir "\\.elc$")
                          ;; (directory-files-recursively site-lisp-dir "\\.elc$")
                          ))
