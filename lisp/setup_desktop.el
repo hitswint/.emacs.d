@@ -50,6 +50,7 @@
   (add-to-list 'desktop-minor-mode-table '(auto-revert-mode nil))
   (add-to-list 'desktop-minor-mode-table '(flx-ido-mode nil))
   (add-to-list 'desktop-minor-mode-table '(helm-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(helm-ff-cache-mode nil))
   (add-to-list 'desktop-minor-mode-table '(aggressive-indent-mode nil))
   (add-to-list 'desktop-minor-mode-table '(elisp-slime-nav-mode nil))
   (add-to-list 'desktop-minor-mode-table '(rainbow-delimiters-mode nil))
@@ -105,6 +106,7 @@
   (add-to-list 'desktop-minor-mode-table '(xclipmon-mode nil))
   (add-to-list 'desktop-minor-mode-table '(dired-async-mode nil))
   (add-to-list 'desktop-minor-mode-table '(dired-omit-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(lsp-mode nil)))
+  (add-to-list 'desktop-minor-mode-table '(lsp-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(outshine-mode nil)))
 ;; ===================desktop====================
 (provide 'setup_desktop)

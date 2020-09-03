@@ -17,6 +17,10 @@
 (defun swint-org-open-at-point (&optional in-emacs)
   "Open annotated file if annotation storage file exists."
   (interactive)
+  (when (and (org-in-regexp org-link-bracket-re 1)
+             (string-match "\\`\\(pdf\\|pdfview\\):" (match-string-no-properties 1))
+             (not (org-link-get-parameter "pdfview" :follow)))
+    (org-pdftools-setup-link))
   (let* ((annotated-file (swint-get-annotated-file)) ;org-annotate
          (cite-results (ignore-errors (save-excursion (org-ref-get-bibtex-key-and-file))))
          (cite-file (and (cdr cite-results) (car (bibtex-completion-find-pdf (car cite-results))))) ;org-ref

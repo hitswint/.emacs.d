@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# key: color
+# name : color
+# --
+${1:$$(downcase (helm-colors))}$0

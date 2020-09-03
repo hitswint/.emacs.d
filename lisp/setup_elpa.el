@@ -112,7 +112,6 @@
                            helm-projectile
                            helm-swoop
                            helm-unicode
-                           helm-xref
                            highlight-indentation
                            highlight-parentheses
                            highlight-symbol
@@ -129,10 +128,6 @@
                            lacarte
                            latex-preview-pane
                            let-alist
-                           company-lsp
-                           cquery
-                           lsp-mode
-                           lsp-ui
                            magic-latex-buffer
                            magit
                            markdown-mode
@@ -248,8 +243,9 @@ Missing packages are installed automatically."
 ;;; benchmark-init
 ;; ================benchmark-init===================
 (def-package! benchmark-init
-  :disabled
+  ;; :disabled
   :config
+  ;; benchmark-init/show-durations-tree / benchmark-init/show-durations-tabulated
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 ;; ================benchmark-init===================
 ;;; exec-path-from-shell

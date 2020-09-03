@@ -1,36 +1,41 @@
-;;; lsp-mode
-;; =====================lsp-mode=====================
-(def-package! lsp-mode
-  :diminish lsp-mode
-  :commands lsp
+;;; nox
+;; =====================nox=====================
+(def-package! posframe
+  :load-path "site-lisp/posframe/"
+  :after nox)
+(def-package! nox
+  :load-path "site-lisp/nox/"
+  :bind ("M-g l" . nox)
   :init
   (global-set-key (kbd "C-x C-,") 'xref-find-definitions)
   (global-set-key (kbd "C-x C-.") 'xref-pop-marker-stack)
   (global-set-key (kbd "C-x C-/") 'xref-find-references)
   (global-set-key (kbd "C-x C-?") 'xref-find-apropos)
-  (add-hook 'c-mode-common-hook (lambda ()
-                                  (local-set-key (kbd "M-g l") 'lsp)))
-  (add-hook 'python-mode-hook (lambda ()
-                                (local-set-key (kbd "M-g l") 'lsp)))
   :config
-  ;; 自带客户端，默认支持的服务器为：C++(clangd)/Python(pyls)。
-  (require 'lsp-clients)
-  (setq lsp-auto-guess-root t)
-  (def-package! lsp-ui
-    :commands lsp-ui-mode
-    :init
-    (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-    :config
-    (setq lsp-ui-sideline-ignore-duplicate t)
-    (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-    (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
-  (def-package! helm-xref
-    :config
-    (setq xref-show-xrefs-function 'helm-xref-show-xrefs))
-  (def-package! company-lsp)
-  ;; C++使用cquery服务器。
-  (def-package! cquery
-    :config
-    (setq cquery-executable "~/git-repo/Emacs/cquery/build/release/bin/cquery")))
-;; =====================lsp-mode=====================
+  (dolist (hook (list
+                 'js-mode-hook
+                 'rust-mode-hook
+                 'python-mode-hook
+                 'ruby-mode-hook
+                 'java-mode-hook
+                 'sh-mode-hook
+                 'php-mode-hook
+                 'c-mode-common-hook
+                 'c-mode-hook
+                 'csharp-mode-hook
+                 'c++-mode-hook
+                 'haskell-mode-hook
+                 ))
+    (add-hook hook '(lambda () (nox-ensure))))
+  (setq nox-python-path (expand-file-name "~/.virtualenvs/py3/bin/python3"))
+  ;; (setq nox-mspyls-search-paths [])
+  (bind-key "M-g l" nil)
+  (bind-key "M-g L" 'nox-shutdown)
+  (bind-key "M-g l c" 'nox-reconnect)
+  (bind-key "M-g l b" 'nox-events-buffer)
+  (bind-key "M-g l e" 'nox-stderr-buffer)
+  (bind-key "M-g l r" 'nox-rename)
+  (bind-key "M-g l f" 'nox-format)
+  (bind-key "M-g l o" 'nox-show-doc))
+;; =====================nox=====================
 (provide 'setup_lsp)

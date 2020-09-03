@@ -22,3 +22,9 @@
 	path = site-lisp/awesome-tab
 	url = https://github.com/manateelazycat/awesome-tab
         ignore = dirty
+[submodule "site-lisp/nox"]
+	path = site-lisp/nox
+	url = https://github.com/manateelazycat/nox
+[submodule "site-lisp/posframe"]
+	path = site-lisp/posframe
+	url = https://github.com/tumashu/posframe

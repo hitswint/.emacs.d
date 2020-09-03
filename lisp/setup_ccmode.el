@@ -86,32 +86,29 @@
 ;; ==================function-args==============
 (def-package! function-args
   :diminish function-args-mode
-  :commands fa-config-default
+  :commands (moo-complete moo-jump-directory moo-jump-local fa-jump-maybe swint-fa-show)
   :init
-  (add-hook 'c-mode-common-hook 'fa-config-default)
+  (dolist (hook '(c-mode-common-hook asm-mode-hook))
+    (add-hook hook (lambda ()
+                     (local-set-key (kbd "C-c u") 'moo-complete)
+                     (local-set-key (kbd "C-c j") 'moo-jump-directory)
+                     (local-set-key (kbd "C-c i") 'moo-jump-local)
+                     (local-set-key (kbd "C-c o") 'swint-fa-show)
+                     (local-set-key (kbd "C-j") 'fa-jump-maybe))))
   :config
-  (define-key function-args-mode-map (kbd "C-c u") 'moo-complete)
-  (define-key function-args-mode-map (kbd "C-c j") 'moo-jump-directory)
-  (define-key function-args-mode-map (kbd "C-c i") 'moo-jump-local)
-  (define-key function-args-mode-map (kbd "C-c o") '(lambda () (interactive)
-                                                      (if (overlayp fa-overlay)
-                                                          (fa-abort)
-                                                        (fa-show))))
-  (define-key function-args-mode-map (kbd "C-j") 'fa-jump-maybe)
-  (define-key function-args-mode-map (kbd "M-o") nil)
-  (define-key function-args-mode-map (kbd "C-2") nil)
-  (define-key function-args-mode-map (kbd "M-n") nil)
-  (define-key function-args-mode-map (kbd "M-h") nil)
-  (define-key function-args-mode-map (kbd "M-u") nil)
-  (define-key function-args-mode-map (kbd "M-j") nil)
-  (define-key function-args-mode-map (kbd "C-M-j") nil)
-  (define-key function-args-mode-map (kbd "C-M-k") nil))
+  (function-args-mode 1) ;function-args-mode only trigger semantic-mode
+  (defun swint-fa-show ()
+    (interactive)
+    (if (overlayp fa-overlay)
+        (fa-abort)
+      (fa-show))))
 ;; ==================function-args==============
 ;;; semantic
 ;; ===================semantic==================
 (def-package! semantic
-  :commands semantic-mode
+  :after function-args
   :config
+  (semantic-mode 1)
   (setq semantic-idle-scheduler-idle-time 5)
   (semanticdb-enable-gnu-global-databases 'c-mode)
   (semanticdb-enable-gnu-global-databases 'c++-mode)
@@ -124,10 +121,13 @@
 ;; ==================hs-minor-mode==============
 (def-package! hideshow
   :diminish hs-minor-mode
-  :commands hs-minor-mode
+  :commands hs-toggle-hiding
   :init
-  (add-hook 'c-mode-common-hook 'hs-minor-mode)
+  (dolist (hook '(c-mode-common-hook asm-mode-hook))
+    (add-hook hook (lambda ()
+                     (local-set-key (kbd "C-c C-`") 'hs-toggle-hiding))))
   :config
+  (hs-minor-mode 1)
   (define-key hs-minor-mode-map (kbd "C-c C-`") 'hs-toggle-hiding))
 ;; ==================hs-minor-mode==============
 ;;; helm-gtags

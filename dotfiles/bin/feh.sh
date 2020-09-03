@@ -1,6 +1,7 @@
 #!/bin/bash
 
 shopt -s nullglob
+shopt -s nocaseglob
 
 if [[ ! -f $1 ]]; then
     echo "$0: first argument is not a file" >&2
@@ -14,7 +15,8 @@ shift
 
 cd -- "$dir"
 
-for i in *; do
+for i in *.{png,jpg,jpeg,bmp}; do
+    # file_ext=$(echo $file |awk -F . '{if (NF>1) {print $NF}}')
     [[ -f $i ]] || continue
     arr+=("$i")
     [[ $i == $file ]] && c=$((${#arr[@]} - 1))

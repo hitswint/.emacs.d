@@ -441,15 +441,22 @@
   ;; ========helm-open-file-with-lister=========
 ;;;; helm-locate
   ;; ==============helm-locate==================
-  ;; 默认使用/var/lib/mlocate/mlocate.db数据库，包含系统文件，使用cron每天定时更新或sudo updatedb更新。
+  ;; 默认使用/var/lib/mlocate/mlocate.db数据库，使用cron每天定时更新或sudo updatedb更新。
   (defun swint-helm-locate (&optional arg)
     (interactive "P")
-    (let ((helm-locate-create-db-command "updatedb -l 0 -o ~/.helm-locate.db -U ~/")
-          (helm-locate-command "locate -b -i %s -r %s -d ~/.helm-locate.db"))
-      (if arg ;; 更新~/.helm-locate.db文件。
-          (start-process-shell-command
-           "Updating-locate-db-file" "*Updating-locate-db-file*"
-           helm-locate-create-db-command)
+    (let* ((helm-ff-locate-db-filename "~/.helm-locate.db")
+           (helm-locate-create-db-command (format "updatedb -l 0 -o %s -U ~/" helm-ff-locate-db-filename))
+           (helm-locate-command (format "locate -b -i %%s -r %%s -d %s" helm-ff-locate-db-filename)))
+      (if (or arg (not (file-exists-p helm-ff-locate-db-filename))) ;; 更新~/.helm-locate.db
+          (let ((process (start-process-shell-command
+                          "Updating-locate-db-file" "*Updating-locate-db-file*"
+                          helm-locate-create-db-command)))
+            (message "Updating locate db file.")
+            (set-process-sentinel
+             process
+             (lambda (process signal)
+               (when (memq (process-status process) '(exit signal))
+                 (message "Updated locate db file.")))))
         (helm-locate nil))))
   ;; ==============helm-locate==================
   )

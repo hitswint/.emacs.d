@@ -34,6 +34,7 @@
 (setq load-prefer-newer t)
 (setq shift-select-mode nil)
 (setq epg-pinentry-mode 'loopback)      ;使用minibuffer输入密码。
+(setq history-delete-duplicates t)
 (setq delete-by-moving-to-trash t)
 (setq display-line-numbers-type t)
 (setq trash-directory "~/.Trash")

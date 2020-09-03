@@ -3,6 +3,7 @@
 (def-package! org
   :mode ("\\.[oO][rR][gG]\\'" . org-mode)
   :config
+  (setq org-modules nil)                ;随org启动的ol模块
 ;;;; Appearance
   ;; =================Appearance================
   (set-face-attribute 'org-level-5 nil :weight 'normal :foreground "cyan" :height 1.0)
@@ -42,10 +43,6 @@
                (setq org-special-ctrl-o t)
                (setq org-special-ctrl-k t)
                (setq org-capture-bookmark nil)
-               (setq org-format-latex-options '(:foreground default :background default :scale 1.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
-               (setq org-latex-default-figure-position "htbp")
-               (setq org-latex-image-default-width "1\\linewidth")
-               (setq org-latex-remove-logfiles nil)
                (setq org-file-apps (cl-loop for file-extension-pair in file-extension-app-alist
                                             collect (cons
                                                      (concat "\\." (car file-extension-pair) "\\'")
@@ -124,16 +121,21 @@
   ;; ===========使用ditaa输出ascii图片==========
   (setq org-confirm-babel-evaluate nil)
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
-  (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)
-                                                           (python . t)
-                                                           (shell . t)
-                                                           (latex . t)
-                                                           (gnuplot . t)
-                                                           (ditaa . t)
-                                                           (dot . t)
-                                                           (octave . t)
-                                                           (js . t)
-                                                           (css . t)))
+  (setq org-babel-load-languages '((emacs-lisp . t)
+                                   (python . t)
+                                   (shell . t)
+                                   (latex . t)
+                                   (gnuplot . t)
+                                   (ditaa . t)
+                                   (dot . t)
+                                   (octave . t)
+                                   (matlab . t)
+                                   (sqlite . t)
+                                   (js . t)
+                                   (css . t)))
+  ;; 自动加载过慢，改为手动加载
+  (advice-add 'org-babel-execute-src-block :before #'(lambda (&optional arg info params)
+                                                       (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)))
   ;; ===========使用ditaa输出ascii图片==========
 ;;;; cdlatex
   ;; ================cdlatex====================
@@ -559,7 +561,7 @@
 ;; =========org-protocol-capture-html===========
 (def-package! org-protocol-capture-html
   :load-path "site-lisp/org-protocol-capture-html/"
-  :after org
+  :disabled
   :config
   (add-to-list 'org-capture-templates
                '("h" "Html" entry (file+olp "~/Nutstore-sync/orgzly/orgzly.org" "Html")
@@ -631,18 +633,22 @@
 ;;; org-pdftools
 ;; ================org-pdftools=================
 (use-package org-pdftools
-  :hook (org-load . org-pdftools-setup-link)
+  ;; :hook (org-load-hook . org-pdftools-setup-link)
+  :after pdf-tools
   :config
   (setq org-pdftools-link-prefix "pdfview"))
 ;; ================org-pdftools=================
 ;;; org-brain
 ;; =================org-brain===================
 (use-package org-brain
-  :after org
+  :commands (swint-helm-ag-org-brain-tags eh-org-set-tags-command)
+  :init
+  (add-hook 'org-mode-hook (lambda ()
+                             (bind-key "M-O b b" 'swint-helm-ag-org-brain-tags org-mode-map)
+                             (bind-key "C-c l" 'eh-org-set-tags-command org-mode-map)))
   :config
   (bind-key "M-O b" 'org-brain-prefix-map)
   (bind-key "b" 'swint-helm-ag-org-brain-tags org-brain-prefix-map)
-  (bind-key "C-c c" 'eh-org-set-tags-command org-mode-map)
   (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
   (setq org-brain-include-file-entries t
         org-brain-file-entries-use-title nil
