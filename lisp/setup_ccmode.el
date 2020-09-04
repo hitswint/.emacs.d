@@ -26,7 +26,6 @@
               (define-key c-mode-base-map (kbd "C-c C-S-c") (lambda () (interactive)
                                                               (setq-local compilation-read-command nil)
                                                               (call-interactively 'compile)))
-              (define-key c-mode-base-map (kbd "C-c d") 'disaster)
               (define-key c-mode-base-map (kbd "C-M-q") nil)
               (define-key c-mode-base-map (kbd "(") nil)
               (define-key c-mode-base-map (kbd "{") nil)))

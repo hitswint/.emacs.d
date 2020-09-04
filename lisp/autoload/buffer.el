@@ -110,7 +110,7 @@ FILENAME defaults to `buffer-file-name'."
 ;;; 关闭buffer后切换到之前的buffer
 ;; ==========关闭buffer后切换到之前的buffer========
 ;; kill-buffer存在问题：1. 会切换到helm buffer；2. 切换persp时会切换到前一个persp的buffer。
-(defcustom swint-iswitchb-buffer-ignore '("^ " "\\` " "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'")
+(defcustom swint-iswitchb-buffer-ignore '("^ " "\\` " "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`\\*NOX.*\\*\\'" "\\`\\*nox.*\\*\\'")
   "Define ignore list."
   :group 'autoload-buffer
   :type '(repeat (choice regexp function)))
