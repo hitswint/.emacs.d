@@ -105,7 +105,7 @@
 ;;; semantic
 ;; ===================semantic==================
 (def-package! semantic
-  :after function-args
+  :after (:any function-args imenu)
   :config
   (semantic-mode 1)
   (setq semantic-idle-scheduler-idle-time 5)

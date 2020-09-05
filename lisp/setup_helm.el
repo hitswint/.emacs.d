@@ -543,7 +543,8 @@
           (save-excursion
             (save-restriction
               (widen)
-              (imenu--generic-function `((nil ,(concat (outshine-calc-outline-regexp) "\\(.*$\\)") 1))))))
+              ;; imenu中显示headings全部内容。
+              (imenu--generic-function `((nil ,(concat "^" (outshine-calc-outline-regexp) ".*$") 0))))))
     (imenu--truncate-items imenu-outshine--index-alist))
   (defun helm-imenu-outshine-candidates (&optional buffer)
     (with-current-buffer (or buffer helm-current-buffer)

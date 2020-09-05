@@ -38,6 +38,8 @@
                (setq truncate-lines nil)
                (setq org-hide-leading-stars t)
                (setq org-startup-folded 'content)
+               ;; org-mode先于imenu加载时未设置org-imenu-get-tree
+               (setq imenu-create-index-function 'org-imenu-get-tree)
                (setq org-imenu-depth 8)
                (setq org-special-ctrl-a/e t)
                (setq org-special-ctrl-o t)
@@ -644,8 +646,8 @@
   :commands (swint-helm-ag-org-brain-tags eh-org-set-tags-command)
   :init
   (add-hook 'org-mode-hook (lambda ()
-                             (bind-key "M-O b b" 'swint-helm-ag-org-brain-tags org-mode-map)
-                             (bind-key "C-c l" 'eh-org-set-tags-command org-mode-map)))
+                             (bind-key "M-O b b" 'swint-helm-ag-org-brain-tags)
+                             (bind-key "C-c c" 'eh-org-set-tags-command org-mode-map)))
   :config
   (bind-key "M-O b" 'org-brain-prefix-map)
   (bind-key "b" 'swint-helm-ag-org-brain-tags org-brain-prefix-map)
