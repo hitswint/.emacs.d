@@ -129,7 +129,8 @@ FORCE-OTHER-WINDOW is ignored."
     (window-configuration-to-register :sdcv))
   (let* ((word (or _word (swint-get-words-at-point)))
          (bing-result (ignore-errors (bing-dict-brief word t)))
-         (youdao-result (ignore-errors (youdao-dictionary--format-result word)))
+         (youdao-result (ignore-errors (youdao-dictionary--format-result
+                                        (youdao-dictionary--request word))))
          (baidu-result (ignore-errors
                          (if (pyim-string-match-p "\\cc" word)
                              (baidu-translate-string word "auto" "en")

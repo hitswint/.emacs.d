@@ -85,7 +85,9 @@
          ("C-M-/" . undo-tree-redo))
   :config
   (global-undo-tree-mode)
-  (define-key undo-tree-map (kbd "M-_") nil))
+  (define-key undo-tree-map (kbd "C-_") nil)
+  (define-key undo-tree-map (kbd "M-_") nil)
+  (define-key undo-tree-map (kbd "C-?") nil))
 ;; ==================undo-tree=====================
 ;;; auto-mark
 ;; ==================auto-mark=====================

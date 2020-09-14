@@ -17,6 +17,7 @@
   (def-package! helm-config)
   (def-package! helm-for-files)
   (helm-mode 1)
+  (helm-top-poll-mode 1)
   (setq helm-completing-read-handlers-alist '((describe-function . helm-completing-read-symbols)
                                               (describe-variable . helm-completing-read-symbols)
                                               (debug-on-entry . helm-completing-read-symbols)

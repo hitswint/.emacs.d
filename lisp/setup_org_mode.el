@@ -50,7 +50,7 @@
                                                      (concat "\\." (car file-extension-pair) "\\'")
                                                      (concat (cdr file-extension-pair) " %s"))))
                (turn-on-font-lock)
-               (iimage-mode)
+               (iimage-mode 1)
                ;; 如果有#+ATTR_ORG: :width 100则设置为图片宽度为100，否则显示原尺寸。
                (setq org-image-actual-width nil)
                ;; org-redisplay-inline-images(C-c C-x C-M-v) 更新图片。
@@ -636,8 +636,9 @@
 ;; ================org-pdftools=================
 (use-package org-pdftools
   ;; :hook (org-load-hook . org-pdftools-setup-link)
-  :after pdf-tools
+  :after (:all org pdf-tools)
   :config
+  (org-pdftools-setup-link)
   (setq org-pdftools-link-prefix "pdfview"))
 ;; ================org-pdftools=================
 ;;; org-brain

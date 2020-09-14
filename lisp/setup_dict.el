@@ -56,7 +56,8 @@
     "Search word at point and display result with pos-tip."
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
-      (youdao-dictionary--pos-tip (youdao-dictionary--format-result word)))))
+      (youdao-dictionary--pos-tip (youdao-dictionary--format-result
+                                   (youdao-dictionary--request word))))))
 ;; ===============youdao-dictionary==============
 ;;; baidu-translate
 ;; ===============youdao-dictionary==============
