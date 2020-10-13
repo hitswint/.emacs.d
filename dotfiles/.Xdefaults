@@ -12,7 +12,8 @@ URxvt.color12:DodgerBlue
 URxvt.menu:/etc/X11/rxvt.menu
 URxvt.preeditType:Root
 URxvt.scrollBar:False
-URxvt.font: -*-fixed-medium-r-*--18-*-*-*-*-*-iso10646-1,xft:WenQuanYi Bitmap Song:pixelsize=14:antialias=false
+! URxvt.font: -*-fixed-medium-r-*--18-*-*-*-*-*-iso10646-1,xft:WenQuanYi Bitmap Song:pixelsize=14:antialias=false
+URxvt.font: -*-fixed-medium-r-*--18-*-*-*-*-*-iso10646-1,xft:WenQuanYi Micro Hei Mono:pixelsize=14:antialias=true
 URxvt.iso14755: False
 URxvt*iso14755_52: False
 URxvt.searchable-scrollback: CM-s

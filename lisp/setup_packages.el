@@ -239,6 +239,7 @@
       (add-hook 'after-make-frame-functions 'swint-fcitx-setup)
     (add-hook 'after-init-hook 'swint-fcitx-setup))
   :config
+  ;; 需设置XMODIFIERS=@im=fcitx才能使用fcitx
   (defvar swint-fcitx-setup-done nil)
   (defun swint-fcitx-setup (&optional frame)
     (when (and (display-graphic-p frame) (not swint-fcitx-setup-done))

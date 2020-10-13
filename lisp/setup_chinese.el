@@ -9,6 +9,7 @@
     (with-selected-frame (or frame (selected-frame))
       (when (display-graphic-p frame)
         (cfs--set-font 11.5 1.2))))
+  ;; 需设置LC_CTYPE=zh_CN.UTF-8才能正确设置字体大小
   (if (and (fboundp 'daemonp) (daemonp))
       (add-hook 'after-make-frame-functions
                 'swint-cfs-set-font-with-saved-size)
