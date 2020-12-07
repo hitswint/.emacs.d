@@ -20,15 +20,15 @@
                          (or (getenv "CPPFLAGS") "")
                          (or (getenv "CFLAGS") "-Wall -g")
                          file)))))
-  (add-hook 'c-mode-common-hook
-            (lambda ()
-              (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
-              (define-key c-mode-base-map (kbd "C-c C-S-c") (lambda () (interactive)
-                                                              (setq-local compilation-read-command nil)
-                                                              (call-interactively 'compile)))
-              (define-key c-mode-base-map (kbd "C-M-q") nil)
-              (define-key c-mode-base-map (kbd "(") nil)
-              (define-key c-mode-base-map (kbd "{") nil)))
+  (dolist (hook '(c-mode-hook c++-mode-hook asm-mode-hook))
+    (add-hook hook (lambda ()
+                     (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
+                     (define-key c-mode-base-map (kbd "C-c C-S-c") (lambda () (interactive)
+                                                                     (setq-local compilation-read-command nil)
+                                                                     (call-interactively 'compile)))
+                     (define-key c-mode-base-map (kbd "C-M-q") nil)
+                     (define-key c-mode-base-map (kbd "(") nil)
+                     (define-key c-mode-base-map (kbd "{") nil))))
   ;; Available C style:
   ;; “gnu”: The default style for GNU projects
   ;; “k&r”: What Kernighan and Ritchie, the authors of C used in their book
@@ -47,8 +47,9 @@
 (def-package! gdb-mi
   :commands gdb-or-gud-go
   :init
-  (add-hook 'c-mode-common-hook (lambda ()
-                                  (local-set-key (kbd "C-c g") 'gdb-or-gud-go)))
+  (dolist (hook '(c-mode-hook c++-mode-hook))
+    (add-hook hook (lambda ()
+                     (local-set-key (kbd "C-c g") 'gdb-or-gud-go))))
   :config
   (define-key gud-mode-map (kbd "C-c G") 'gud-quit)
   ;; 直接使用gdb-or-gud-go弹出gud-comint-buffer未定义，先gdb，然后gdb-or-gud-go。
@@ -87,15 +88,16 @@
   :diminish function-args-mode
   :commands (moo-complete moo-jump-directory moo-jump-local fa-jump-maybe swint-fa-show)
   :init
-  (dolist (hook '(c-mode-common-hook asm-mode-hook))
+  (dolist (hook '(c-mode-hook c++-mode-hook asm-mode-hook))
     (add-hook hook (lambda ()
                      (local-set-key (kbd "C-c u") 'moo-complete)
-                     (local-set-key (kbd "C-c j") 'moo-jump-directory)
                      (local-set-key (kbd "C-c i") 'moo-jump-local)
+                     (local-set-key (kbd "C-c I") 'moo-jump-directory)
                      (local-set-key (kbd "C-c o") 'swint-fa-show)
-                     (local-set-key (kbd "C-j") 'fa-jump-maybe))))
+                     (local-set-key (kbd "C-c j") 'fa-jump-maybe))))
   :config
   (function-args-mode 1) ;function-args-mode only trigger semantic-mode
+  (assq-delete-all 'function-args-mode minor-mode-map-alist) ;解除默认按键绑定
   (defun swint-fa-show ()
     (interactive)
     (if (overlayp fa-overlay)
@@ -138,14 +140,14 @@
              helm-gtags-pop-stack
              helm-gtags-select)
   :init
-  (dolist (hook '(c-mode-common-hook asm-mode-hook))
+  (dolist (hook '(c-mode-hook c++-mode-hook asm-mode-hook))
     (add-hook hook (lambda ()
                      (local-set-key (kbd "C-c C-,") 'helm-gtags-dwim)
                      (local-set-key (kbd "C-c C-.") 'helm-gtags-pop-stack)
                      (local-set-key (kbd "C-c C-/") 'helm-gtags-select))))
   :config
-  (add-hook 'c-mode-common-hook 'helm-gtags-mode)
-  (add-hook 'asm-mode-hook 'helm-gtags-mode)
+  (dolist (hook '(c-mode-hook c++-mode-hook asm-mode-hook))
+    (add-hook hook 'helm-gtags-mode))
   (dolist (buf (buffer-list))
     (with-current-buffer buf
       (when (derived-mode-p 'c-mode 'C++-mode 'asm-mode)
@@ -179,4 +181,32 @@
 (def-package! disaster
   :commands disaster)
 ;; ==================disaster===================
+;;; meghanada
+;; =================meghanada===================
+(def-package! meghanada
+  :diminish meghanada-mode
+  :commands (meghanada-jump-declaration
+             meghanada-back-jump
+             meghanada-reference)
+  :init
+  (add-hook 'java-mode-hook (lambda ()
+                              (bind-key "C-c C-," 'meghanada-jump-declaration java-mode-map)
+                              (bind-key "C-c C-." 'meghanada-back-jump java-mode-map)
+                              (bind-key "C-c C-/" 'meghanada-reference java-mode-map)))
+  :config
+  (add-hook 'java-mode-hook 'meghanada-mode)
+  (dolist (buf (cl-remove-if-not (lambda (x)
+                                   (equal (buffer-mode x) 'java-mode))
+                                 (buffer-list)))
+    (with-current-buffer buf
+      (meghanada-mode)))
+  ;; 默认快捷键以C-c C-r和C-c C-c开头
+  (define-key meghanada-mode-map (kbd "C-c C-,") 'meghanada-jump-declaration)
+  (define-key meghanada-mode-map (kbd "C-c C-.") 'meghanada-back-jump)
+  (define-key meghanada-mode-map (kbd "C-c C-/") 'meghanada-reference)
+  (define-key meghanada-mode-map (kbd "C-c C-f") 'meghanada-code-beautify)
+  (define-key meghanada-mode-map (kbd "C-c c") 'meghanada-exec-main)
+  (define-key meghanada-mode-map (kbd "C-M-,") nil)
+  (define-key meghanada-mode-map (kbd "C-c C-<tab>") 'meghanada-switch-testcase))
+;; =================meghanada===================
 (provide 'setup_ccmode)

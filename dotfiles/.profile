@@ -50,3 +50,12 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
 fi
+
+export PULSE_SERVER="unix:/tmp/pulse-server"
+
+# JAVA
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+export GRADLE_HOME=/opt/gradle/gradle-6.7.1
+export PATH=${GRADLE_HOME}/bin:${PATH}

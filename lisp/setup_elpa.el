@@ -133,6 +133,7 @@
                            markdown-mode
                            math-symbol-lists
                            matlab-mode
+                           meghanada
                            mu4e-alert
                            multifiles
                            multiple-cursors

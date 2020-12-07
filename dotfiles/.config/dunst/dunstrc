@@ -1,5 +1,7 @@
 [global]
 font = Sans 10
+frame_width = 1
+frame_color = "#ffffff"
 
 # Allow a small subset of html markup:
 #   <b>bold</b>
@@ -11,7 +13,7 @@ font = Sans 10
 # <http://developer.gnome.org/pango/stable/PangoMarkupFormat.html>.
 # If markup is not allowed, those tags will be stripped out of the
 # message.
-allow_markup = yes
+markup = yes
 plain_text = no
 
 # The format of the message.  Possible variables are:
@@ -152,12 +154,8 @@ icon_position = off
 max_icon_size = 80
 
 # Paths to default icons.
-icon_folders = /usr/share/icons/Paper/16x16/mimetypes/:/usr/share/icons/Paper/48x48/status/:/usr/share/icons/Paper/16x16/devices/:/usr/share/icons/Paper/48x48/notifications/:/usr/share/icons/Paper/48x48/emblems/
+icon_path = /usr/share/icons/Paper/16x16/mimetypes/:/usr/share/icons/Paper/48x48/status/:/usr/share/icons/Paper/16x16/devices/:/usr/share/icons/Paper/48x48/notifications/:/usr/share/icons/Paper/48x48/emblems/
 
-
-[frame]
-width = 1
-color = "#ffffff"
 
 [shortcuts]
 

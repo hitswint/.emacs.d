@@ -55,7 +55,7 @@ fi
 Wind_id=`xdotool getactivewindow`;
 sleep 0.5
 
-if [ $(xdotool search --onlyvisible --class "llpp" | grep -i $Wind_id) ]; then
+if [ $(xdotool search --onlyvisible --class "URxvt" | grep -i $Wind_id) ]; then
     word=$(xclip -selection primary -o | sed 's/[\"]/\\&/g')
 else
     xdotool key --clearmodifiers ctrl+c

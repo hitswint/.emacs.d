@@ -17,8 +17,6 @@
   (remove-hook 'magit-status-sections-hook 'magit-insert-staged-changes)
   (define-key magit-mode-map (kbd "C-c s") 'magit-diff-staged)
   (define-key magit-mode-map (kbd "<C-tab>") nil)
-  (define-key magit-file-mode-map "\C-xg" nil)
-  (define-key magit-file-mode-map "\C-x\M-g" nil)
   (defun magit-exit-commit-mode ()
     (interactive)
     (swint-kill-buffer)

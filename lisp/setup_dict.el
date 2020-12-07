@@ -50,6 +50,7 @@
 ;; ===============youdao-dictionary==============
 (def-package! youdao-dictionary
   :commands (youdao-dictionary--format-result
+             youdao-dictionary--request
              youdao-dictionary-to-tip)
   :config
   (defun youdao-dictionary-to-tip (&optional _word)

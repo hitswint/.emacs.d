@@ -24,7 +24,7 @@
   (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才自动更新。
                                                 (if (get-buffer-window (current-buffer)) (apply fn args))))
   (put 'dired-find-alternate-file 'disabled nil)
-  (setq dired-listing-switches "--group-directories-first -alhG1v")
+  (setq dired-listing-switches "--group-directories-first -alhG1")
   (setq dired-subdir-switches dired-listing-switches)
   (setq dired-dwim-target t)
   (setq wdired-allow-to-change-permissions t)

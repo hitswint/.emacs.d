@@ -132,9 +132,7 @@ FORCE-OTHER-WINDOW is ignored."
          (youdao-result (ignore-errors (youdao-dictionary--format-result
                                         (youdao-dictionary--request word))))
          (baidu-result (ignore-errors
-                         (if (pyim-string-match-p "\\cc" word)
-                             (baidu-translate-string word "auto" "en")
-                           (baidu-translate-string word "auto" "zh"))
+                         (baidu-translate-at-point word)
                          (buffer-substring-no-properties (point-min) (point-max)))))
     (delete-other-windows)
     (switch-to-buffer "*online*")

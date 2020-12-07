@@ -110,7 +110,8 @@
 (def-package! auto-complete-clang
   :after auto-complete
   :config
-  (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
+  (dolist (hook '(c-mode-hook c++-mode-hook))
+    (add-hook hook 'ac-cc-mode-setup))
   (add-hook 'auto-complete-mode-hook '(lambda ()
                                         (if (memq major-mode '(c++-mode
                                                                c-mode))

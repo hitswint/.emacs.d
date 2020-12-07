@@ -55,10 +55,10 @@ then
     set --
 fi
 
-if [ ! -f $HOME/git-repo/pinyin-completion/shell/pinyin-comp.zsh ];then
-    git clone https://github.com/hitswint/pinyin-completion.git $HOME/git-repo/pinyin-completion
+if [ ! -f ${ZDOTDIR}/src/pinyin-completion/shell/pinyin-comp.zsh ];then
+    git clone https://github.com/hitswint/pinyin-completion.git ${ZDOTDIR}/src/pinyin-completion
 else
-    source-if-exists "${HOME}/git-repo/pinyin-completion/shell/pinyin-comp.zsh"
+    source-if-exists "${ZDOTDIR}/src/pinyin-completion/shell/pinyin-comp.zsh"
 fi
 
 if [[ -n $SSH_CONNECTION ]]; then

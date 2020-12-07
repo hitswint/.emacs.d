@@ -1,13 +1,13 @@
 #!/bin/zsh
 
-if [ ! -f $HOME/git-repo/antigen/antigen.zsh ];then
-    git clone https://github.com/zsh-users/antigen.git $HOME/git-repo/antigen
+if [ ! -f ${ZDOTDIR}/src/antigen/antigen.zsh ];then
+    git clone https://github.com/zsh-users/antigen.git ${ZDOTDIR}/src/antigen
 fi
 
-if [ -f $HOME/git-repo/antigen/antigen.zsh ];then
+if [ -f ${ZDOTDIR}/src/antigen/antigen.zsh ];then
     # Antigen
     # Bundles from oh-my-zsh
-    source $HOME/git-repo/antigen/antigen.zsh
+    source ${ZDOTDIR}/src/antigen/antigen.zsh
     antigen use oh-my-zsh
     antigen theme robbyrussell
     antigen bundle git

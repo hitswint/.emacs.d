@@ -107,6 +107,7 @@
   (add-to-list 'desktop-minor-mode-table '(dired-async-mode nil))
   (add-to-list 'desktop-minor-mode-table '(dired-omit-mode nil))
   (add-to-list 'desktop-minor-mode-table '(lsp-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(outshine-mode nil)))
+  (add-to-list 'desktop-minor-mode-table '(outshine-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(meghanada-mode nil)))
 ;; ===================desktop====================
 (provide 'setup_desktop)

@@ -159,7 +159,7 @@
     (interactive "P")
     (ebib--execute-when
       (entries
-       (let ((file (ebib-get-field-value ebib-file-field (ebib--get-key-at-point) ebib--cur-db 'noerror 'unbraced 'xref))
+       (let ((file (ebib-get-field-value "file" (ebib--get-key-at-point) ebib--cur-db 'noerror 'unbraced 'xref))
              (num (if (numberp arg) arg nil)))
          (let ((file-full-path (ebib--expand-file-name (ebib--select-file file num (ebib--get-key-at-point)))))
            (when (file-exists-p file-full-path)

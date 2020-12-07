@@ -119,5 +119,7 @@ bind-maps emacs -- '^xb' widget-switch-git-branch
 bind-maps emacs -- '^x\ew' widget-x-copy-region-as-kill
 bind-maps emacs -- '^x^w' widget-x-kill-region
 bind-maps emacs -- '^x^y' widget-x-yank
-bind-maps emacs -- '^X^[^_Db^_' widget-shell-bookmark-add-cwd
+bind-maps emacs -- '^x^[^_Db^_' widget-shell-bookmark-add-cwd
 bind-maps emacs -- '^[^_Db^_' widget-shell-bookmark-cd-to
+bind-maps emacs -- '^x,' widget-percol-rsync-pull
+bind-maps emacs -- '^x.' widget-percol-rsync-push

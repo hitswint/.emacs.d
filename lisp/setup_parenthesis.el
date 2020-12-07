@@ -73,7 +73,7 @@
 ;; ============highlight-parentheses============
 (def-package! highlight-parentheses
   :config
-  (set-face-attribute 'hl-paren-face nil :weight 'bold :strike-through t)
+  (set-face-attribute 'highlight-parentheses-highlight nil :weight 'bold :strike-through t)
   (defun hl-paren-create-overlays ()
     (let ((fg hl-paren-colors)
           (bg hl-paren-background-colors)
