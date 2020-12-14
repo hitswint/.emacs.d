@@ -253,7 +253,6 @@ Missing packages are installed automatically."
 ;; =============exec-path-from-shell================
 (def-package! exec-path-from-shell
   :config
-  (setq exec-path-from-shell-check-startup-files nil)
   (setq exec-path-from-shell-variables '("PATH" "MANPATH" "XAPIAN_CJK_NGRAM"))
   (setq exec-path-from-shell-arguments '("-l"))
   (exec-path-from-shell-initialize))

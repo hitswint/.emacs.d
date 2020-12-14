@@ -32,7 +32,7 @@
   (add-hook 'dired-after-readin-hook '(lambda () (setq truncate-lines t)))
   (setq file-extension-app-alist
         '(("pdf" . "llpp_qpdfview.sh") ("djvu" . "llpp") ("chm" . "xchm")
-          ("rmvb" . "mplayer") ("rm" . "mplayer") ("mp4" . "mplayer") ("avi" . "mplayer") ("flv" . "mplayer") ("f4v" . "mplayer") ("mpg" . "mplayer") ("mkv" . "mplayer") ("3gp" . "mplayer") ("wmv" . "mplayer") ("mov" . "mplayer") ("dat" . "mplayer") ("asf" . "mplayer") ("mpeg" . "mplayer") ("wma" . "mplayer")
+          ("rmvb" . "mplayer") ("rm" . "mplayer") ("mp4" . "mplayer") ("avi" . "mplayer") ("flv" . "mplayer") ("f4v" . "mplayer") ("mpg" . "mplayer") ("mkv" . "mplayer") ("3gp" . "mplayer") ("wmv" . "mplayer") ("mov" . "mplayer") ("dat" . "mplayer") ("asf" . "mplayer") ("mpeg" . "mplayer") ("wma" . "mplayer") ("webm" . "mplayer")
           ("mp3" . "mpg321") ("ape" . "mplayer")
           ("xoj" . "xournal")
           ("jpg" . "feh.sh") ("png" . "feh.sh") ("bmp" . "feh.sh") ("jpeg" . "feh.sh") ("gif" . "mplayer")
@@ -79,6 +79,7 @@
          (list "\\.flv$" "vlc * >/dev/null 2>&1 &")
          (list "\\.mov$" "vlc * >/dev/null 2>&1 &")
          (list "\\.mpg$" "vlc * >/dev/null 2>&1 &")
+         (list "\\.webm$" "vlc * >/dev/null 2>&1 &")
          (list "\\.tex$" "xelatex * >/dev/null 2>&1 &")
          (list "\\.c$" "gcc -Wall * >/dev/null 2>&1 &")
          (list "\\.ipynb$" "jupyter nbconvert --to python * >/dev/null 2>&1 &")))

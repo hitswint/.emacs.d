@@ -634,7 +634,7 @@
 ;; ==================org-ref====================
 ;;; org-pdftools
 ;; ================org-pdftools=================
-(use-package org-pdftools
+(def-package! org-pdftools
   ;; :hook (org-load-hook . org-pdftools-setup-link)
   :after (:all org pdf-tools)
   :config
@@ -643,7 +643,7 @@
 ;; ================org-pdftools=================
 ;;; org-brain
 ;; =================org-brain===================
-(use-package org-brain
+(def-package! org-brain
   :commands (swint-helm-ag-org-brain-tags eh-org-set-tags-command)
   :init
   (add-hook 'org-mode-hook (lambda ()
@@ -656,7 +656,8 @@
   (setq org-brain-include-file-entries t
         org-brain-file-entries-use-title nil
         org-brain-headline-entry-name-format-string "%s:%s"
-        org-brain-default-file-parent nil)
+        org-brain-default-file-parent nil
+        org-brain-completion-system 'helm)
   (defun eh-org-brain-as-tags ()
     (cl-remove-duplicates
      (mapcar

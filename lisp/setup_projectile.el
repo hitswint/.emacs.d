@@ -77,24 +77,22 @@
                              'projectile-persp-switch-project helm-source-projectile-projects-without-persp 0)
   (defun helm-projectile/override (&optional arg)
     (interactive "P")
-    (let ((curr-buf (current-buffer)))
-      (with-persp-mode-on
-       (helm-switch-persp/buffer curr-buf)
-       (if (not (projectile-project-p))
-           (setq helm-projectile-sources-list '(helm-source-projectile-projects-with-persp
-                                                helm-source-projectile-projects-without-persp))
-         (projectile-maybe-invalidate-cache arg)
+    (with-persp-mode-on
+     (if (not (projectile-project-p))
          (setq helm-projectile-sources-list '(helm-source-projectile-projects-with-persp
-                                              helm-source-projectile-projects-without-persp
-                                              helm-source-projectile-files-list
-                                              helm-source-projectile-buffers-list)))
-       (let ((helm-ff-transformer-show-only-basename nil))
-         (helm :sources helm-projectile-sources-list
-               :buffer "*helm projectile*"
-               :truncate-lines helm-projectile-truncate-lines
-               :prompt (projectile-prepend-project-name (if (projectile-project-p)
-                                                            "pattern: "
-                                                          "Switch to project: ")))))))
+                                              helm-source-projectile-projects-without-persp))
+       (projectile-maybe-invalidate-cache arg)
+       (setq helm-projectile-sources-list '(helm-source-projectile-projects-with-persp
+                                            helm-source-projectile-projects-without-persp
+                                            helm-source-projectile-files-list
+                                            helm-source-projectile-buffers-list)))
+     (let ((helm-ff-transformer-show-only-basename nil))
+       (helm :sources helm-projectile-sources-list
+             :buffer "*helm projectile*"
+             :truncate-lines helm-projectile-truncate-lines
+             :prompt (projectile-prepend-project-name (if (projectile-project-p)
+                                                          "pattern: "
+                                                        "Switch to project: "))))))
   (advice-add 'helm-projectile :override #'helm-projectile/override))
 ;; ==============helm-projectile================
 ;;; persp-projectile
