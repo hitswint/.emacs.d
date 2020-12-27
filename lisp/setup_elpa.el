@@ -183,6 +183,7 @@
                            swiper
                            tangotango-theme
                            term-keys
+                           undo-fu
                            undo-tree
                            use-package
                            vimish-fold

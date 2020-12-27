@@ -199,16 +199,6 @@ if point is at end of line , new-line-and-indent"
         (set-marker (mark-marker) pos)
         (setq mark-ring (nbutlast mark-ring))
         (goto-char (marker-position (car (last mark-ring))))))))
-;;;###autoload
-(defadvice pop-to-mark-command (around ensure-new-position activate)
-  (let ((p (point)))
-    (dotimes (i 10)
-      (when (= p (point)) ad-do-it))))
-;;;###autoload
-(defadvice unpop-to-mark-command (around ensure-new-position activate)
-  (let ((p (point)))
-    (dotimes (i 10)
-      (when (= p (point)) ad-do-it))))
 ;; ==================jump to mark==================
 ;;; diff two regions
 ;; ================diff two regions================
@@ -294,7 +284,7 @@ if point is at end of line , new-line-and-indent"
     (message "Please select region at first!")))
 ;; ================diff two regions================
 ;;; parenthesis
-;; =================parenthesis=================
+;; ===================parenthesis==================
 ;; (setq show-paren-style 'parenthesis)    ;Highlight just brackets.
 ;; (setq show-paren-style 'expression)     ;Highlight entire bracket expression.
 ;; (setq skeleton-pair t)                  ;自动插入匹配的括号。
@@ -362,4 +352,4 @@ if point is at end of line , new-line-and-indent"
 (defun insert-pair-tortoise-shell-bracket〔〕 () (interactive) (insert-bracket-pair "〔" "〕"))
 ;;;###autoload
 (defun insert-pair-math-bracket () (interactive) (insert-bracket-pair-with-space "$" "$"))
-;; =================parenthesis=================
+;; ===================parenthesis==================

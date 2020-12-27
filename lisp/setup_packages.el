@@ -81,14 +81,21 @@
 ;; ==================undo-tree=====================
 (def-package! undo-tree
   :diminish undo-tree-mode
-  :bind (("C-/" . undo-tree-undo)
-         ("C-M-/" . undo-tree-redo))
+  :bind ("C-x u" . undo-tree-visualize)
   :config
   (global-undo-tree-mode)
+  (define-key undo-tree-map (kbd "C-/") undo-tree-undo)
+  (define-key undo-tree-map (kbd "C-M-/") undo-tree-redo)
   (define-key undo-tree-map (kbd "C-_") nil)
   (define-key undo-tree-map (kbd "M-_") nil)
   (define-key undo-tree-map (kbd "C-?") nil))
 ;; ==================undo-tree=====================
+;;; undo-fu
+;; ===================undo-fu======================
+(def-package! undo-fu
+  :bind (("C-/" . undo-fu-only-undo)
+         ("C-M-/" . undo-fu-only-redo)))
+;; ===================undo-fu======================
 ;;; auto-mark
 ;; ==================auto-mark=====================
 (def-package! auto-mark

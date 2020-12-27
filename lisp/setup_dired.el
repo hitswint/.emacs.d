@@ -35,7 +35,7 @@
           ("rmvb" . "mplayer") ("rm" . "mplayer") ("mp4" . "mplayer") ("avi" . "mplayer") ("flv" . "mplayer") ("f4v" . "mplayer") ("mpg" . "mplayer") ("mkv" . "mplayer") ("3gp" . "mplayer") ("wmv" . "mplayer") ("mov" . "mplayer") ("dat" . "mplayer") ("asf" . "mplayer") ("mpeg" . "mplayer") ("wma" . "mplayer") ("webm" . "mplayer")
           ("mp3" . "mpg321") ("ape" . "mplayer")
           ("xoj" . "xournal")
-          ("jpg" . "feh.sh") ("png" . "feh.sh") ("bmp" . "feh.sh") ("jpeg" . "feh.sh") ("gif" . "mplayer")
+          ("jpg" . "feh.sh") ("png" . "feh.sh") ("bmp" . "feh.sh") ("jpeg" . "feh.sh") ("gif" . "animate")
           ("xcf" . "gimp")
           ("eps" . "gv") ("ps" . "gv")
           ("html" . "firefox") ("htm" . "firefox")
