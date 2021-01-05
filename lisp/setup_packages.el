@@ -77,19 +77,6 @@
   (setq expand-region-reset-fast-key "C-;"))
 ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end。
 ;; =================expand-region==================
-;;; undo-tree
-;; ==================undo-tree=====================
-(def-package! undo-tree
-  :diminish undo-tree-mode
-  :bind ("C-x u" . undo-tree-visualize)
-  :config
-  (global-undo-tree-mode)
-  (define-key undo-tree-map (kbd "C-/") undo-tree-undo)
-  (define-key undo-tree-map (kbd "C-M-/") undo-tree-redo)
-  (define-key undo-tree-map (kbd "C-_") nil)
-  (define-key undo-tree-map (kbd "M-_") nil)
-  (define-key undo-tree-map (kbd "C-?") nil))
-;; ==================undo-tree=====================
 ;;; undo-fu
 ;; ===================undo-fu======================
 (def-package! undo-fu

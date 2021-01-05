@@ -184,7 +184,6 @@
                            tangotango-theme
                            term-keys
                            undo-fu
-                           undo-tree
                            use-package
                            vimish-fold
                            visible-mark
@@ -199,6 +198,7 @@
                            wrap-region
                            yaml-mode
                            yasnippet
+                           yasnippet-snippets
                            ycmd
                            youdao-dictionary
                            ztree)

@@ -331,6 +331,8 @@
       (auto-complete-mode t))
     (unless (auto-complete '(ac-source-yasnippet))
       (call-interactively 'company-yasnippet))))
+(def-package! yasnippet-snippets
+  :after yasnippet)
 ;; =================yasnippet==================
 ;;; auto-yasnippet
 ;; ===============auto-yasnippet===============

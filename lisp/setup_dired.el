@@ -24,11 +24,10 @@
   (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才自动更新。
                                                 (if (get-buffer-window (current-buffer)) (apply fn args))))
   (put 'dired-find-alternate-file 'disabled nil)
-  (setq dired-listing-switches "--group-directories-first -alhG1")
+  (setq dired-listing-switches "--group-directories-first -alhG1v")
   (setq dired-subdir-switches dired-listing-switches)
   (setq dired-dwim-target t)
   (setq wdired-allow-to-change-permissions t)
-  (add-hook 'wdired-mode-hook 'undo-tree-mode)
   (add-hook 'dired-after-readin-hook '(lambda () (setq truncate-lines t)))
   (setq file-extension-app-alist
         '(("pdf" . "llpp_qpdfview.sh") ("djvu" . "llpp") ("chm" . "xchm")

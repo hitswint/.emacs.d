@@ -55,7 +55,6 @@
   (add-to-list 'desktop-minor-mode-table '(elisp-slime-nav-mode nil))
   (add-to-list 'desktop-minor-mode-table '(rainbow-delimiters-mode nil))
   (add-to-list 'desktop-minor-mode-table '(paredit-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(undo-tree-mode nil))
   (add-to-list 'desktop-minor-mode-table '(TeX-PDF-mode nil))
   (add-to-list 'desktop-minor-mode-table '(org-cdlatex-mode nil))
   (add-to-list 'desktop-minor-mode-table '(org-indent-mode nil))
