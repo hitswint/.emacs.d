@@ -188,7 +188,7 @@ if point is at end of line , new-line-and-indent"
 ;;; jump to mark
 ;; ==================jump to mark==================
 ;;;###autoload
-(defun unpop-to-mark-command ()
+(defun swint-unpop-to-mark-command ()
   "Unpop off mark ring. Does nothing if mark ring is empty."
   (interactive)
   (when mark-ring

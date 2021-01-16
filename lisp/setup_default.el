@@ -90,7 +90,7 @@
 (global-set-key (kbd "M-s _") 'jcs-dashify-underline)
 (global-set-key (kbd "C-j") 'open-line-or-new-line-dep-pos)
 (global-set-key (kbd "M-m") 'pop-to-mark-command)
-(global-set-key (kbd "M-M") 'unpop-to-mark-command)
+(global-set-key (kbd "M-M") 'swint-unpop-to-mark-command)
 (global-set-key (kbd "M-s =") '(lambda () (interactive)
                                  (if swint-diff-region-tag
                                      (diff-region-compare-with-b)

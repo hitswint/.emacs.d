@@ -38,6 +38,7 @@
   (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
   (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'" "\\`\\*tramp.*\\*\\'" "\\`\\*baidu-translate\\*\\'" "\\`\\*NOX.*\\*\\'" "\\`\\*nox.*\\*\\'" "\\`\\*org-brain-helm\\*\\'")))
   (setq helm-mounted-network-directories '("/mnt/share"))
+  (setq helm-ff-keep-cached-candidates nil)
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))
                     '(helm-ff-directory ((t (:foreground "yellow" :weight bold))))
@@ -111,15 +112,15 @@
   (defvar helm-source-recentf-file nil)
   (defun helm-file-buffers-list--init/curr-persp ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
-    (helm-attrset 'candidates (funcall (helm-attr 'buffer-list)))
+    (helm-set-attr 'candidates (funcall (helm-get-attr 'buffer-list)))
     (let ((result (cl-loop with allbufs = (memq 'helm-shadow-boring-buffers
-                                                (helm-attr
+                                                (helm-get-attr
                                                  'filtered-candidate-transformer
                                                  helm-source-file-buffers-list/curr-persp))
                            for b in (if allbufs
-                                        (helm-attr 'candidates)
+                                        (helm-get-attr 'candidates)
                                       (helm-skip-boring-buffers
-                                       (helm-attr 'candidates)
+                                       (helm-get-attr 'candidates)
                                        helm-source-file-buffers-list/curr-persp))
                            maximize (length b) into len-buf
                            maximize (length (helm-buffer--format-mode-name b))
@@ -149,15 +150,15 @@
      (help-message :initform 'helm-buffer-help-message)))
   (defun helm-file-buffers-list--init/other-persps ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
-    (helm-attrset 'candidates (funcall (helm-attr 'buffer-list)))
+    (helm-set-attr 'candidates (funcall (helm-get-attr 'buffer-list)))
     (let ((result (cl-loop with allbufs = (memq 'helm-shadow-boring-buffers
-                                                (helm-attr
+                                                (helm-get-attr
                                                  'filtered-candidate-transformer
                                                  helm-source-file-buffers-list/other-persps))
                            for b in (if allbufs
-                                        (helm-attr 'candidates)
+                                        (helm-get-attr 'candidates)
                                       (helm-skip-boring-buffers
-                                       (helm-attr 'candidates)
+                                       (helm-get-attr 'candidates)
                                        helm-source-file-buffers-list/other-persps))
                            maximize (length b) into len-buf
                            maximize (length (helm-buffer--format-mode-name b))
@@ -233,15 +234,15 @@
   (defvar helm-source-recentf-directory nil)
   (defun helm-dired-buffers-list--init/curr-persp ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
-    (helm-attrset 'candidates (funcall (helm-attr 'buffer-list)))
+    (helm-set-attr 'candidates (funcall (helm-get-attr 'buffer-list)))
     (let ((result (cl-loop with allbufs = (memq 'helm-shadow-boring-buffers
-                                                (helm-attr
+                                                (helm-get-attr
                                                  'filtered-candidate-transformer
                                                  helm-source-dired-buffers-list/curr-persp))
                            for b in (if allbufs
-                                        (helm-attr 'candidates)
+                                        (helm-get-attr 'candidates)
                                       (helm-skip-boring-buffers
-                                       (helm-attr 'candidates)
+                                       (helm-get-attr 'candidates)
                                        helm-source-dired-buffers-list/curr-persp))
                            maximize (length b) into len-buf
                            maximize (length (helm-buffer--format-mode-name b))
@@ -271,15 +272,15 @@
      (help-message :initform 'helm-buffer-help-message)))
   (defun helm-dired-buffers-list--init/other-persps ()
     ;; Issue #51 Create the list before `helm-buffer' creation.
-    (helm-attrset 'candidates (funcall (helm-attr 'buffer-list)))
+    (helm-set-attr 'candidates (funcall (helm-get-attr 'buffer-list)))
     (let ((result (cl-loop with allbufs = (memq 'helm-shadow-boring-buffers
-                                                (helm-attr
+                                                (helm-get-attr
                                                  'filtered-candidate-transformer
                                                  helm-source-dired-buffers-list/other-persps))
                            for b in (if allbufs
-                                        (helm-attr 'candidates)
+                                        (helm-get-attr 'candidates)
                                       (helm-skip-boring-buffers
-                                       (helm-attr 'candidates)
+                                       (helm-get-attr 'candidates)
                                        helm-source-dired-buffers-list/other-persps))
                            maximize (length b) into len-buf
                            maximize (length (helm-buffer--format-mode-name b))

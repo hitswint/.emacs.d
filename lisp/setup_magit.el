@@ -13,8 +13,9 @@
     (add-hook hook '(lambda ()
                       (highlight-parentheses-mode -1)
                       (auto-mark-mode -1))))
-  ;; 去除默认显示staged。当有大量staged时，更新变慢。
-  (remove-hook 'magit-status-sections-hook 'magit-insert-staged-changes)
+  ;; magit-status中去除headers/staged，使用magit-show-refs/magit-diff-staged替代
+  (dolist (hook '(magit-insert-status-headers magit-insert-staged-changes))
+    (remove-hook 'magit-status-sections-hook hook))
   (define-key magit-mode-map (kbd "C-c s") 'magit-diff-staged)
   (define-key magit-mode-map (kbd "<C-tab>") nil)
   (defun magit-exit-commit-mode ()
