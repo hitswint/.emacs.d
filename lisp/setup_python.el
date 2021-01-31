@@ -20,8 +20,8 @@
   :commands (pyvenv-workon-home pyvenv-activate)
   :bind (("C-x C-M-3" . pyvenv-workon)
          ("C-x C-M-#" . pyvenv-deactivate)
-         ("M-s M-p" . swint-python-plot-data)
-         ("M-s M-P" . swint-python-load-file))
+         ("M-o p" . swint-python-plot-data)
+         ("M-o P" . swint-python-load-file))
   :config
   (define-key minibuffer-local-map (kbd "C-c C-r") 'swint-python-select-variables)
   (pyvenv-mode 1)

@@ -123,3 +123,4 @@ bind-maps emacs -- '^x^[^_Db^_' widget-shell-bookmark-add-cwd
 bind-maps emacs -- '^[^_Db^_' widget-shell-bookmark-cd-to
 bind-maps emacs -- '^x,' widget-percol-rsync-pull
 bind-maps emacs -- '^x.' widget-percol-rsync-push
+bind-maps emacs -- '^x/' widget-percol-sshfs

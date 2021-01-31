@@ -85,3 +85,14 @@
 (define-key minibuffer-local-map (kbd "C-S-s") 'exit-minibuffer)
 (define-key minibuffer-local-map (kbd "C-S-r") 'exit-minibuffer)
 ;; =================拼音首字母搜索=================
+;;; shutdown-emacs-server
+;; =============shutdown-emacs-server==============
+;;;###autoload
+(defun shutdown-emacs-server ()
+  (interactive)
+  ;; 若在GUI下，关闭server之前重开一个frame，容纳后续弹窗
+  (when (and (eq window-system 'x) (display-graphic-p x-display-name))
+    (select-frame (make-frame-on-display x-display-name '((window-system . x)))))
+  (let ((last-nonmenu-event nil)) ;使弹窗使用dialog-box，而不是minibuffer
+    (save-buffers-kill-emacs)))
+;; =============shutdown-emacs-server==============

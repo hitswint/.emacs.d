@@ -7,16 +7,18 @@
   (sml/setup)
   (sml/apply-theme nil)
   (setq column-number-mode t)
+  (setq-default mode-line-format
+                ;; 去除vc-mode显示，mode-line-modes显示major/minor-mode
+                (delete '(vc-mode vc-mode) mode-line-format))
   (setq sml/col-number-format "%3c"
         sml/directory-truncation-string ""
         sml/line-number-format "%4l"
-        sml/mode-width 0
-        sml/name-width 40
+        sml/mode-width 'full
+        sml/name-width 64
         sml/new-mail-background-color "black"
         sml/position-percentage-format ""
-        sml/projectile-replacement-format "[%s]"
-        sml/shorten-mode-string ""
-        sml/use-projectile-p 'before-prefixes)
+        sml/shorten-modes nil
+        sml/shorten-mode-string "")
   (custom-set-faces '(sml/col-number ((t (:foreground "lawn green"))))
                     '(sml/filename ((t (:inherit sml/global :foreground "yellow" :weight bold))))
                     '(sml/line-number ((t (:foreground "gold"))))
@@ -28,9 +30,10 @@
                     '(sml/read-only ((t (:inherit sml/not-modified :foreground "gray50")))))
   ;; Replacer for path.
   (add-to-list 'sml/replacer-regexp-list '("^~/linux/" ":Lin:"))
-  (add-to-list 'sml/replacer-regexp-list '("^~/book/" ":Bk:"))
+  (add-to-list 'sml/replacer-regexp-list '("^~/book/" ":Book:"))
   (add-to-list 'sml/replacer-regexp-list '("^~/papers/" ":Pap:"))
   (add-to-list 'sml/replacer-regexp-list '("^~/tex/" ":TeX:"))
+  (add-to-list 'sml/replacer-regexp-list '("^~/myfile/" ":MY:"))
   (add-to-list 'sml/replacer-regexp-list '("^~/Downloads/" ":DL:"))
   (add-to-list 'sml/replacer-regexp-list '("^~/git-repo/" ":Git:"))
   (add-to-list 'sml/replacer-regexp-list '("^~/OpenFOAM/" ":OF:"))
@@ -50,6 +53,6 @@
 (def-package! nyan-mode
   :config
   (nyan-mode t)
-  (setq nyan-bar-length 20))
+  (setq nyan-bar-length 16))
 ;; ===================nyan-mode====================
 (provide 'setup_mode_line)

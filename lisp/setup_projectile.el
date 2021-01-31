@@ -1,13 +1,30 @@
 ;;; Projectile
 ;; ==================Projectile=================
 (def-package! projectile
-  :diminish projectile-mode
   :bind-keymap ("M-\"" . projectile-command-map)
+  :init
+  (setq projectile-mode-line-prefix " ")
   :config
+  (require 'vc-git)
   (projectile-mode t)
   (define-key projectile-mode-map (kbd "M-\"") 'projectile-command-map)
   (setq projectile-enable-caching t)
-  (setq projectile-completion-system 'helm))
+  (setq projectile-completion-system 'helm)
+  (setq projectile-mode-line-function 'swint-projectile-default-mode-line)
+  (defun swint-projectile-default-mode-line ()
+    "Report project name and type in the modeline."
+    (let ((project-name (projectile-project-name))
+          (current-branch (car (vc-git-branches))))
+      (format "%s[%s%s]"
+              projectile-mode-line-prefix
+              (or (truncate-string-to-width project-name 32) "-")
+              (if current-branch
+                  (format ":%s" (substring current-branch 0 3))
+                ""))))
+  (add-hook 'dired-after-readin-hook 'projectile-update-mode-line)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (projectile-update-mode-line))))
 ;; ==================Projectile=================
 ;;; helm-projectile
 ;; ==============helm-projectile================

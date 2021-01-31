@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+function widget-percol-sshfs()
+{
+    local remote=$(cat ~/.ssh/config | grep "^host " | awk '{print $2}' | percol)
+
+    if [[ $remote != "" ]]; then
+        local login=$(gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==remote {print $6}' remote="$remote")
+        local port=$(gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==remote {print $4}' remote="$remote")
+        local target=/mnt/sshfs/$remote
+
+        mkdir -p $target
+        sshfs -p $port $login:$HOME $target
+
+        cd $target
+    fi
+
+    zle reset-prompt
+}
+
+widget-percol-sshfs "$@"

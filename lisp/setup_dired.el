@@ -48,7 +48,8 @@
           ("rar" . "unrar x -o+") ("zip" . "unar") ("gz" . "tar zvxf") ("tgz" . "tar zvxf") ("bz2" . "tar jvxf") ("tar" . "tar xf")
           ("dot" . "dot -Tpng -o dot.png")
           ("dia" . "dia")
-          ("blend" . "blender")))
+          ("blend" . "blender")
+          ("foam" . "paraview")))
   (setq async-shell-command-buffer 'new-buffer)
   (setq async-shell-command-display-buffer nil)
   (setq dired-guess-shell-alist-user ; dired-do(async)-shell-command(!/&的默认命令

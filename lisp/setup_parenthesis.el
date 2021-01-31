@@ -75,8 +75,8 @@
   :config
   (set-face-attribute 'highlight-parentheses-highlight nil :weight 'bold :strike-through t)
   (defun hl-paren-create-overlays ()
-    (let ((fg hl-paren-colors)
-          (bg hl-paren-background-colors)
+    (let ((fg highlight-parentheses-colors)
+          (bg highlight-parentheses-background-colors)
           attributes)
       (while (or fg bg)
         (setq attributes (face-attr-construct 'hl-paren-face))

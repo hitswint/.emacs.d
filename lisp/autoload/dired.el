@@ -174,22 +174,26 @@
 ;;;###autoload
 (defun dired-async-shell-command-on-files ()
   (interactive)
-  (mapc #'dired-async-shell-command (dired-get-marked-files))
-  (dired-unmark-all-files ?*))
+  (let ((marked-files (dired-get-marked-files)))
+    (let ((inhibit-message t))
+      (dired-unmark-all-files ?*))
+    (mapc #'dired-async-shell-command marked-files)))
 ;;;###autoload
 (defun dired-async-shell-command (file)
   (interactive)
-  (let ((file-exten (downcase (file-name-extension file))))
+  (let ((file-exten (downcase (or (file-name-extension file) "None"))))
     (let* ((wine-p (member file-exten '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "dwg" "dxf" "caj" "nh" "kdh")))
            (command (cdr (assoc file-exten file-extension-app-alist)))
            (default-directory (or (if wine-p (ignore-errors (expand-file-name (file-name-directory file))))
                                   default-directory)))
-      (start-process "Shell" nil shell-file-name shell-command-switch
-                     (concat command " " "\""
-                             (if wine-p
-                                 (file-name-nondirectory file)
-                               file)
-                             "\"")))))
+      (if command
+          (start-process "Shell" nil shell-file-name shell-command-switch
+                         (concat command " " "\""
+                                 (if wine-p
+                                     (file-name-nondirectory file)
+                                   file)
+                                 "\""))
+        (message "No command for \"%s\"" (file-name-nondirectory file))))))
 ;; =============默认程序打开文件=============
 ;;; 在当前目录下打开urxvt
 ;; =========在当前目录下打开urxvt============

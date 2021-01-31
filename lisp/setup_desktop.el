@@ -31,11 +31,12 @@
   (add-to-list 'desktop-modes-not-to-save 'Info-mode)
   (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
   (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
-  (setq desktop-path '("~/.emacs.d/"))
-  (setq desktop-dirname "~/.emacs.d/")
-  (setq desktop-base-file-name "emacs-desktop")
-  (setq desktop-restore-frames nil)
-  (setq desktop-load-locked-desktop t)
+  (setq desktop-path '("~/.emacs.d/")
+        desktop-dirname "~/.emacs.d/"
+        desktop-base-file-name "emacs-desktop"
+        desktop-restore-frames nil
+        desktop-load-locked-desktop t
+        desktop-save t)
   (desktop-save-mode t)
   ;; Minor modes not to be saved.
   (add-to-list 'desktop-minor-mode-table '(abbrev-mode nil))
