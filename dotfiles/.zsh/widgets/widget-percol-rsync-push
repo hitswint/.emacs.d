@@ -2,7 +2,7 @@
 
 function widget-percol-rsync-push()
 {
-    local remote=$(cat ~/.ssh/config | grep "^host " | awk '{print $2}' | percol)
+    local remote=$(cat ~/.ssh/config | grep "^Host " | awk '{print $2}' | percol)
     local dir=$(print -- $PWD | replace-home-with-tilde)
     local local_files=$(ls -A | percol --match-method pinyin | tr '\n' '/' | sed 's/[[:space:]]*$//') # 生成a/b/c字符串
 

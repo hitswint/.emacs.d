@@ -2,7 +2,7 @@
 
 function widget-percol-rsync-pull()
 {
-    local remote=$(cat ~/.ssh/config | grep "^host " | awk '{print $2}' | percol)
+    local remote=$(cat ~/.ssh/config | grep "^Host " | awk '{print $2}' | percol)
     local dir=$(print -- $PWD | replace-home-with-tilde)
     local remote_files=$(ssh $remote '(cd '"$dir"' && ls -A | sed "s:^:$PWD/:") 2>/dev/null' | percol --match-method pinyin)
 

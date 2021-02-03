@@ -251,3 +251,6 @@ URxvt.keysym.S-Home: eval:scroll_to_top
 URxvt.keysym.S-End: eval:scroll_to_bottom
 URxvt.keysym.S-Prior: eval:scroll_up_pages 1
 URxvt.keysym.S-Next: eval:scroll_down_pages 1
+
+! rofi
+rofi.terminal: urxvt

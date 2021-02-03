@@ -320,7 +320,7 @@ Assuming .. and . is a current directory (like in FAR)"
   (let ((remote (completing-read "Remote repo: "
                                  (split-string
                                   (shell-command-to-string
-                                   "cat ~/.ssh/config | grep \"^host \" | awk '{print $2}'"))))
+                                   "cat ~/.ssh/config | grep \"^Host \" | awk '{print $2}'"))))
         (path (abbreviate-file-name default-directory))
         (is-sync (equal action "sync"))
         (is-push (equal action "push"))
