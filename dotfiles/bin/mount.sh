@@ -12,8 +12,8 @@ if [[ $remote == "local" ]]; then
 elif [[ $remote != "" ]];then
     target=/mnt/sshfs/$remote
     mkdir -p $target
-    sshfs $remote:$HOME $target
+    sshfs $remote:/ $target
 
-    cd $target # 该脚本运行在子进程下，直接改变目录会在执行结束之后返回父进程，导致切换失败
+    cd $target$HOME # 该脚本运行在子进程下，直接改变目录会在执行结束之后返回父进程，导致切换失败
     $SHELL     # source x.sh或重开一个子进程
 fi

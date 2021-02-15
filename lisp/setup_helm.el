@@ -38,7 +38,6 @@
   (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
   (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'" "\\`\\*tramp.*\\*\\'" "\\`\\*baidu-translate\\*\\'" "\\`\\*NOX.*\\*\\'" "\\`\\*nox.*\\*\\'" "\\`\\*org-brain-helm\\*\\'")))
   (setq helm-mounted-network-directories '("/mnt/share"))
-  (setq helm-ff-keep-cached-candidates nil)
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))
                     '(helm-ff-directory ((t (:foreground "yellow" :weight bold))))

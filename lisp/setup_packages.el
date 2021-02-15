@@ -563,6 +563,12 @@
   (global-diff-hl-mode)
   ;; 无需保存即显示diff，造成大文件卡顿。
   ;; (diff-hl-flydiff-mode)
+  ;; 只有当前diff-hl-dired-update进程结束后才启动新进程
+  (defun diff-hl-dired-update/around (orig-fn &rest args)
+    (unless (and (buffer-live-p diff-hl-dired-process-buffer)
+                 (get-buffer-process diff-hl-dired-process-buffer))
+      (apply orig-fn args)))
+  (advice-add 'diff-hl-dired-update :around #'diff-hl-dired-update/around)
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
   ;; 在已有dired-mode中开启diff-hl-dired-mode。
   (dolist (buf (cl-remove-if-not (lambda (x)

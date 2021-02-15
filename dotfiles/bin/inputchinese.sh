@@ -1,6 +1,6 @@
 #! /bin/bash
 
-zenity --text "输入汉字" --entry | xclip -selection primary -i
+zenity --text "输入汉字" --entry | xclip -selection clipboard -i
 
 sleep 0.2
 
