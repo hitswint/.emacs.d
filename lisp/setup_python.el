@@ -31,11 +31,11 @@
   (defun swint-python-load-file ()
     (interactive)
     (let* ((file-name (if (eq major-mode 'dired-mode) (dired-get-filename) (buffer-file-name)))
-           (header-line-string (shell-command-to-string (format "awk 'NR==1{printf $0}' %s" file-name)))) ;返回无回车的第1行
+           (header-line-string (shell-command-to-string (format "awk '!/^($|#)/' %s | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
       (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
           (python-shell-send-string
            (format "if 'pd' not in dir():import pandas as pd;import builtins;exec(\"def is_number(s):\\n try:  float(s)\\n except:  return False\\n return True\")
-df_%s=pd.read_csv('%s', header=None if builtins.all(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True)"
+df_%s=pd.read_csv('%s', header=None if builtins.all(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True, comment='#')"
                    (file-name-sans-extension (file-name-nondirectory file-name))
                    (expand-file-name file-name) header-line-string
                    (if (string= (ignore-errors (downcase (file-name-extension file-name))) "csv") "," "\\\\s+")))
@@ -55,8 +55,8 @@ df_%s=pd.read_csv('%s', header=None if builtins.all(is_number(ele) for ele in '%
     (interactive "P")
     (let (data-string files-list files-string columns-string rows-string file-x-string column-x-string row-x-string style-string labels-string fonts-string sizes-string colors-string lines-string markers-string save-string other-args send-other-args)
       (cl-flet ((plot-file-setup (data-file &optional is-x-p)
-                                 (let* ((header-line-string (shell-command-to-string (format "awk 'NR==1{print}' %s" data-file)))
-                                        (header-line-list (if (equal (downcase (file-name-extension data-file)) "csv")
+                                 (let* ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' %s | awk 'NR==1{print}'" data-file)))
+                                        (header-line-list (if (equal (ignore-errors (downcase (file-name-extension data-file))) "csv")
                                                               (split-string header-line-string "," t "[ \t\n]+")
                                                             (if (string-match "\"" header-line-string) ;非csv文件的首行用("x" "y" "z")
                                                                 (split-string header-line-string "\"" t "[ \t\n]+")

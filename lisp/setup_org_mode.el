@@ -605,13 +605,15 @@
 ;; =========org-protocol-capture-html===========
 ;;; org-ref
 ;; ==================org-ref====================
-(def-package! org-ref
+(def-package! org-ref-core
   :commands (org-ref-insert-link org-ref-get-bibtex-key-and-file)
   :init
   ;; C-c b 文献引用(citation)，C-u 元素引用(reference)，C-u C-u 跳转或新建label。
   (add-hook 'org-mode-hook (lambda ()
                              (bind-key "C-c b" 'org-ref-insert-link org-mode-map)))
   :config
+  ;; org-ref-insert-link在org-ref-core中定义，若直接(def-package! org-ref)提示函数未定义
+  (require 'org-ref)
   (setq org-ref-insert-cite-key "\C-cb")
   (setq org-ref-bibtex-hydra-key-binding "\C-cj")
   (setq org-ref-default-bibliography (delete (expand-file-name "~/.bib/Zotero.bib")

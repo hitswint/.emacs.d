@@ -24,8 +24,11 @@ Emacs_style='^.*(emacs@|Microsoft Word).*$'
 # emacsclient -e "(let ((helm-full-frame t)) (save-window-excursion (delete-other-windows) (helm-show-kill-ring)))"
 
 # 使用新建frame。
-emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(let (helm-quit-hook helm-after-action-hook) (dolist (hook '(helm-quit-hook helm-after-action-hook)) (add-hook hook (lambda () (write-region (current-kill 0) nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (delete-frame)))) (helm-show-kill-ring))"
+# emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(let (helm-quit-hook helm-after-action-hook) (dolist (hook '(helm-quit-hook helm-after-action-hook)) (add-hook hook (lambda () (write-region (current-kill 0) nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (delete-frame)))) (helm-show-kill-ring))" # 使用(current-kill 0)
+emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(let (helm-quit-hook helm-after-action-hook) (dolist (hook '(helm-quit-hook helm-after-action-hook)) (add-hook hook (lambda () (write-region helm-kill-ring-current nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (delete-frame)))) (helm-show-kill-ring))" # 使用helm-kill-ring-current
+
 wmctrl -ia $xwin_id
+
 if [[ $xwin_title =~ $Emacs_style  ]];then
     xdotool key --clearmodifiers ctrl+y
 else

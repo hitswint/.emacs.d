@@ -4,8 +4,7 @@
   :commands (helm-find-files-1
              helm-insert-latex-math)
   :bind-keymap ("C-x c" . helm-command-map)
-  :bind (("C-M-y" . helm-show-kill-ring)
-         ("C-'" . helm-bookmarks)
+  :bind (("C-'" . helm-bookmarks)
          ("C-," . swint-helm-file-buffers-list)
          ("C-." . swint-helm-dired-buffers-list)
          ("C-x C-f" . helm-find-files)
@@ -33,11 +32,11 @@
   (setq helm-buffer-details-flag nil)
   (setq helm-ff-newfile-prompt-p nil)
   (setq helm-split-window-default-side 'same)
-  (setq helm-kill-ring-threshold 1)
   (setq helm-external-programs-associations file-extension-app-alist)
+  (setq helm-fd-executable "fdfind")    ;helm-find-files下C-/启用
   (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
   (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'" "\\`\\*tramp.*\\*\\'" "\\`\\*baidu-translate\\*\\'" "\\`\\*NOX.*\\*\\'" "\\`\\*nox.*\\*\\'" "\\`\\*org-brain-helm\\*\\'")))
-  (setq helm-mounted-network-directories '("/mnt/share"))
+  ;; (setq helm-mounted-network-directories '("/mnt/share" "/mnt/sshfs"))
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))
                     '(helm-ff-directory ((t (:foreground "yellow" :weight bold))))
@@ -463,6 +462,28 @@
   ;; ==============helm-locate==================
   )
 ;; ====================helm=====================
+;;; helm-ring
+;; ==================helm-ring==================
+(def-package! helm-ring
+  :bind ("C-M-y" . helm-show-kill-ring)
+  :config
+  (bind-key "C-j" 'helm-kill-ring-action-save helm-kill-ring-map)
+  (setq helm-kill-ring-threshold 1)
+  (defvar helm-kill-ring-current nil)
+  (defun helm-kill-ring-action-save ()
+    (interactive)
+    (with-helm-alive-p
+      (helm-run-after-exit
+       #'(lambda () (let ((marked (helm-marked-candidates))
+                          (sep (if (equal helm-current-prefix-arg '(16))
+                                   (read-string "Separator: ")
+                                 helm-kill-ring-separator)))
+                      (setq helm-kill-ring-current
+                            (substring-no-properties
+                             (cl-loop for c in (butlast marked)
+                                      concat (concat c sep) into str
+                                      finally return (concat str (car (last marked))))))))))))
+;; ==================helm-ring==================
 ;;; helm_lacarte
 ;; ================helm_lacarte=================
 (def-package! lacarte

@@ -59,3 +59,6 @@ export JRE_HOME=${JAVA_HOME}/jre
 export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
 export GRADLE_HOME=/opt/gradle/gradle-6.7.1
 export PATH=${GRADLE_HOME}/bin:${PATH}
+
+# snap
+export PATH=/snap/bin:${PATH}

@@ -698,7 +698,12 @@
   ;; 开启后导致修改文件后dired-mode中光标回到开始处。
   (setq global-auto-revert-non-file-buffers t)
   ;; (setq global-auto-revert-ignore-modes '(dired-mode))
-  (setq auto-revert-verbose nil))
+  (setq auto-revert-verbose nil)
+  (setq auto-revert-interval 5)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (or (equal major-mode 'dired-mode) buffer-file-name)
+        (auto-revert--global-add-current-buffer)))))
 ;; =================Auto-revert-mode===============
 ;;; academic-phrases
 ;; =================academic-phrases===============

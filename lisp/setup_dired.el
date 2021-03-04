@@ -20,9 +20,9 @@
                     '(diredp-ignored-file-name ((t (:foreground "#aaaaaa"))) t))
 ;;;; setup-and-keybindings
   ;; ==========setup-and-keybindings===========
-  (setq dired-auto-revert-buffer t) ;使用dired/dired-other-window/dired-other-frame时更新，与auto-revert-mode不同。
-  (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才自动更新。
-                                                (if (get-buffer-window (current-buffer)) (apply fn args))))
+  (setq dired-auto-revert-buffer t) ;使用dired/dired-other-window/dired-other-frame时更新，与auto-revert-mode不同
+  (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才启用auto-revert-mode更新
+                                                (when (get-buffer-window (current-buffer)) (apply fn args))))
   (put 'dired-find-alternate-file 'disabled nil)
   (setq dired-listing-switches "--group-directories-first -alhG1v")
   (setq dired-subdir-switches dired-listing-switches)
@@ -42,7 +42,7 @@
           ("xls" . "et") ("xlsx" . "et")
           ("ppt" . "wpp") ("pptx" . "wpp")
           ("ods" . "libreoffice") ("odt" . "libreoffice")
-          ("dwg" . "librecad") ("dxf" . "librecad")
+          ("dwg" . "CADReader.sh") ("dxf" . "CADReader.sh")
           ("caj" . "caj.sh") ("nh" . "caj.sh") ("kdh" . "caj.sh")
           ("gp" . "gnuplot")
           ("rar" . "unrar x -o+") ("zip" . "unar") ("gz" . "tar zvxf") ("tgz" . "tar zvxf") ("bz2" . "tar jvxf") ("tar" . "tar xf")

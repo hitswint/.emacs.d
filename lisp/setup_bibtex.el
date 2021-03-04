@@ -70,7 +70,7 @@
                                                                 (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
       map)
     "Keymap for `helm-bibtex'.")
-  (helm-get-attr 'keymap helm-bibtex-map helm-source-bibtex)
+  (helm-set-attr 'keymap helm-bibtex-map helm-source-bibtex)
   (defvar bibtex-completion-bibliography/curr nil)
   (defun swint-helm-bibtex (&optional arg)
     "With a prefix ARG，choose bib file and execute bibtex-completion-clear-cache."

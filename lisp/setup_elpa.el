@@ -2,6 +2,7 @@
 ;; ====================package======================
 (require 'package)
 (setq package-archives '(("melpa" . "http://elpa.emacs-china.org/melpa/")
+                         ("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/")
                          ("gnu" . "http://elpa.emacs-china.org/gnu/")
                          ("org" . "http://elpa.emacs-china.org/org/")
                          ("marmalade" . "http://elpa.emacs-china.org/marmalade/")
