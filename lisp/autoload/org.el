@@ -86,3 +86,47 @@
                (message "Org-mobile %s failed." sync))
              (setcdr pos (remove (concat "Org-mobile " sync " ") (cdr pos))))))))))
 ;; =================mobileorg=================
+;;; swint-qpdfview-annotated
+;; ==========swint-qpdfview-annotated=========
+;;;###autoload
+(defun swint-qpdfview-annotated-open ()
+  "Open annotated file if annotation storage file exists."
+  (interactive)
+  (cl-flet ((find-page () (or (org-entry-get nil "NOTER_PAGE")
+                              (org-entry-get nil "interleave_page_note")
+                              (org-entry-get nil "annotated_page"))))
+    (let ((page (save-excursion (org-back-to-heading)
+                                (find-page)))
+          current-file)
+      (save-excursion
+        (while (not (or (ignore-errors (org-at-top-heading-p)) page))
+          (org-up-heading-safe)
+          (setq page (find-page))))
+      (save-excursion
+        (while (not (ignore-errors (org-at-top-heading-p)))
+          (org-up-heading-safe))
+        (setq current-file (or (swint-get-annotated-file)
+                               (car (bibtex-completion-find-pdf (org-entry-get nil "Custom_ID")))
+                               (interleave--find-pdf-path (current-buffer)))))
+      (if (and current-file page)
+          (start-process "Shell" nil shell-file-name shell-command-switch
+                         (concat "qpdfview --unique \"" (expand-file-name current-file)
+                                 "\"#" page))
+        (message "Cannot find file or page.")))))
+;;;###autoload
+(defun swint-qpdfview-annotated-new ()
+  "Open annotated file if annotation storage file exists."
+  (interactive)
+  (let* ((annotated-file (save-excursion
+                           (while (not (ignore-errors (org-at-top-heading-p)))
+                             (org-up-heading-safe))
+                           (swint-get-annotated-file)))
+         (qpdfview-database (expand-file-name "~/.local/share/qpdfview/qpdfview/database"))
+         (qpdfview-page (when (and (not (string-empty-p (shell-command-to-string "pgrep -x qpdfview"))) annotated-file)
+                          ;; 需在qpdfview设定中将Save database interval设置为0min，否则数据库无法及时更新
+                          (shell-command-to-string
+                           (format "sqlite3 %s \"select currentPage from tabs_v5 where filePath=\\\"%s\\\"\"" "~/.local/share/qpdfview/qpdfview/database" (expand-file-name annotated-file))))))
+    (if (string-empty-p qpdfview-page)
+        (message "No file annotated or not opened in qpdfview.")
+      (org-entry-put nil "annotated_page" (string-trim qpdfview-page)))))
+;; ==========swint-qpdfview-annotated=========

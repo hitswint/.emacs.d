@@ -40,6 +40,8 @@
          ("M-s v d" . pdfgrep-dired)
          ("M-s V" . pdfgrep-zotero))
   :config
+  ;; 三种方式pdfgrep/rg/helm-ag，速度从慢到快，文件数量小于5时用pdfgrep，小于100时用rg，其他用helm-ag
+  ;; pdfgrep-opened/pdfgrep-dired/pdfgrep-zotero分别针对已打开文件/当前文件夹/Zotero仓库
   (require 'helm-ag)
   (pdfgrep-mode)
   (define-key grep-mode-map (kbd "C-j") 'compile-goto-error-externally)
@@ -48,7 +50,7 @@
     (interactive)
     (let* ((loc (compilation--message->loc (get-text-property (line-beginning-position) 'compilation-message)))
            (file-name (caar (compilation--loc->file-struct loc)))
-           (meta (pdfgrep-current-page-and-match)))
+           (meta (pdfgrep-current-page-and-match (current-buffer))))
       (start-process "Shell" nil shell-file-name shell-command-switch
                      (concat "qpdfview --unique --search \"" (cdr meta) "\" \""
                              file-name "#" (number-to-string (car meta))
@@ -56,11 +58,14 @@
   (defun pdfgrep-dired ()
     (interactive)
     (let ((string-to-grep (read-string "Dired pdfgrep: "))
-          (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\|'\\|&\\)"))
+          (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\|'\\|&\\)")
+          (pdf-files (directory-files default-directory t "\\.pdf$")))
       (cl-flet ((escape-local (x)
                               (replace-regexp-in-string string-to-escape
                                                         "\\\\\\1" x)))
-        (pdfgrep (concat (pdfgrep-default-command) (escape-local string-to-grep) " *.pdf")))))
+        (if (<= (length pdf-files) 5)
+            (pdfgrep (concat (pdfgrep-default-command) (escape-local string-to-grep) " *.pdf"))
+          (rg-run string-to-grep "pdf" default-directory t nil (mapcar #'escape-local pdf-files))))))
   (defun pdfgrep-opened ()
     (interactive)
     (let* ((string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\|'\\|&\\)")
@@ -74,7 +79,7 @@
       (cl-flet ((escape-local (x)
                               (replace-regexp-in-string string-to-escape
                                                         "\\\\\\1" x)))
-        (if (<= (length qpdfview-file-list) 10)
+        (if (<= (length qpdfview-file-list) 5)
             (pdfgrep (concat (pdfgrep-default-command) (escape-local string-to-grep)
                              (cl-loop for x in qpdfview-file-list
                                       concat (concat " " (escape-local x)))
@@ -108,7 +113,7 @@ WHERE items.itemID = itemAttachments.itemID AND items.itemID in" "("
 ") ORDER BY items.itemID
 \""))) "\n" t))
              (zotero-file-list (mapcar #'(lambda (x) (escape-local (expand-file-name x zotero-storage))) zotero-file-list-orig)))
-        (if (and (> (length zotero-file-list) 1) (<= (length zotero-file-list) 10))
+        (if (and (> (length zotero-file-list) 1) (<= (length zotero-file-list) 5))
             (pdfgrep (concat (pdfgrep-default-command) (escape-local string-to-grep)
                              (string-join zotero-file-list " ")))
           (let* ((match-cache-list (split-string (shell-command-to-string

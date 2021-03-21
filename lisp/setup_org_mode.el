@@ -75,6 +75,8 @@
                (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
                (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point)
                (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-org-open-at-point t)))
+               (define-key org-mode-map (kbd "C-c J") 'swint-qpdfview-annotated-open)
+               (define-key org-mode-map (kbd "C-c L") 'swint-qpdfview-annotated-new)
                (define-key org-mode-map (kbd "C-c M-,") '(lambda () (interactive) (swint-org-mobile-sync "down")))
                (define-key org-mode-map (kbd "C-c M-.") '(lambda () (interactive) (swint-org-mobile-sync "up")))
                (smartrep-define-key org-mode-map "M-s"
@@ -488,7 +490,8 @@
 (def-package! interleave
   :commands (interleave-mode
              swint-dired-interleave
-             interleave-open-notes-file-for-pdf)
+             interleave-open-notes-file-for-pdf
+             interleave--find-pdf-path)
   :bind (:map dired-mode-map
               ("C-c l" . swint-dired-interleave))
   :config

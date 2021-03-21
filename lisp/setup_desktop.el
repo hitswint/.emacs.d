@@ -36,7 +36,9 @@
         desktop-base-file-name "emacs-desktop"
         desktop-restore-frames nil
         desktop-load-locked-desktop t
-        desktop-save t)
+        desktop-save t
+        desktop-auto-save-timeout 5
+        desktop-files-not-to-save "\\(\\`/[^/:]*:\\|(ftp)\\|/mnt/share/.*\\|/mnt/sshfs/.*\\'\\)")
   (desktop-save-mode t)
   ;; Minor modes not to be saved.
   (add-to-list 'desktop-minor-mode-table '(abbrev-mode nil))

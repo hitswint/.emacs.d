@@ -16,7 +16,8 @@ done
 
 tmp_file_base=/tmp/ScreenShot_ocr_$(date '+%Y%m%d_%H%M%S')
 
-sleep 0.2 ; scrot -s $tmp_file_base.png 2> /dev/null
+# sleep 0.2 ; scrot -s $tmp_file_base.png 2> /dev/null
+sleep 0.2 ; import $tmp_file_base.png 2> /dev/null
 mogrify -resize 300% $tmp_file_base.png
 mogrify -colorspace Gray $tmp_file_base.png
 

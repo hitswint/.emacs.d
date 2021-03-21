@@ -91,7 +91,7 @@
 (defun shutdown-emacs-server ()
   (interactive)
   ;; 若在GUI下，关闭server之前重开一个frame，容纳后续弹窗
-  (when (and (eq window-system 'x) (display-graphic-p x-display-name))
+  (when (and (eq window-system 'x) (display-graphic-p x-display-name) (null (frames-on-display-list)))
     (select-frame (make-frame-on-display x-display-name '((window-system . x)))))
   (let ((last-nonmenu-event nil)) ;使弹窗使用dialog-box，而不是minibuffer
     (save-buffers-kill-emacs)))
