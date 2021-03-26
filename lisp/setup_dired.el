@@ -330,4 +330,15 @@
     (let ((file (neo-buffer--get-filename-current-line)))
       (dired-async-shell-command file))))
 ;; =================neotree====================
+;;; dired-du
+;; ================dired-du====================
+(def-package! dired-du
+  :bind (:map dired-mode-map
+              ("V" . dired-du-mode))
+  :config
+  (setq dired-du-bind-mode nil
+        dired-du-bind-human-toggle nil
+        dired-du-bind-count-sizes nil
+        dired-du-size-format t))
+;; ================dired-du====================
 (provide 'setup_dired)

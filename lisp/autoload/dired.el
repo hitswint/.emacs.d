@@ -295,22 +295,18 @@
 If called on file - view it, on directory - calculate its size
 Assuming .. and . is a current directory (like in FAR)"
   (interactive)
-  (let ((file (dired-get-file-for-visit)))
-    (if (file-directory-p file)
-        (let ((filename (car (last (split-string file "/")))))
-          (when (or (string= filename "..")
-                    (string= filename "."))
-            (setq file (dired-current-directory)))
-          (let ((size (txm-file-or-dir-size file)))
-            (if (/= size -1 )
-                (message (concat (txm-format-file-size size)
-                                 " in "
-                                 filename
-                                 " ("
-                                 (number-to-string size)
-                                 " bytes)"))
-              (message (concat "Cannot determine size of " filename)))))
-      (view-file file))))
+  (let* ((file-list (dired-get-marked-files))
+         (total-size (cl-loop for x in file-list
+                              sum (txm-file-or-dir-size x))))
+
+    (if (/= total-size -1)
+        (message (concat (txm-format-file-size total-size)
+                         " in [ "
+                         (mapconcat 'file-name-nondirectory file-list " / ")
+                         " ] ("
+                         (number-to-string total-size)
+                         " bytes)"))
+      (message (concat "Cannot determine size of " filename)))))
 ;; ==========dired-view-file-or-dir==========
 ;;; swint-dired-rsync/unison
 ;; =========swint-dired-rsync/unison=========

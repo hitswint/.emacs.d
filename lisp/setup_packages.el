@@ -315,7 +315,7 @@
 ;; =======================vlf======================
 (def-package! vlf
   :bind (:map dired-mode-map
-              ("V" . dired-vlf))
+              ("C-c v" . dired-vlf))
   :init
   ;; Enable vlf when opening files bigger than 100MB.
   (setq large-file-warning-threshold 100000000)
