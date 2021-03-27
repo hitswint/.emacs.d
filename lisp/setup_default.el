@@ -33,6 +33,7 @@
 (setq require-final-newline t)
 (setq load-prefer-newer t)
 (setq shift-select-mode nil)
+(setq select-active-regions 'only)
 (setq epg-pinentry-mode 'loopback)      ;使用minibuffer输入密码。
 (setq history-delete-duplicates t)
 (setq delete-by-moving-to-trash t)
@@ -78,7 +79,8 @@
 (global-set-key (kbd "C-q") 'swint-kill-buffer)
 (global-set-key (kbd "M-c") 'toggle-letter-case)
 (global-set-key (kbd "M-Q") 'compact-uncompact-block)
-(global-set-key (kbd "C-w") 'cut-line-or-region)
+(global-set-key (kbd "C-w") 'kill-line-or-region)
+(global-set-key (kbd "C-S-w") 'delete-line-or-region)
 (global-set-key [(meta n)] 'window-move-up)
 (global-set-key [(meta p)] 'window-move-down)
 (global-set-key (kbd "C-x C-i") 'cleanup-buffer)

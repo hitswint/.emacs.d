@@ -58,6 +58,7 @@ sleep 0.5
 if [ $(xdotool search --onlyvisible --class "URxvt" | grep -i $Wind_id) ]; then
     word=$(xclip -selection primary -o | sed 's/[\"]/\\&/g')
 else
+    xdotool keyup ctrl+c
     xdotool key --clearmodifiers ctrl+c
     word=$(xclip -selection clipboard -o | sed 's/[\"]/\\&/g')
 fi
@@ -79,7 +80,9 @@ wmctrl -ia $xwin_id
 Emacs_style='^.*(emacs@|Microsoft Word).*$'
 
 if [[ $xwin_title =~ $Emacs_style  ]];then
+    xdotool keyup ctrl+y
     xdotool key --clearmodifiers ctrl+y
 else
+    xdotool keyup ctrl+v
     xdotool key --clearmodifiers ctrl+v
 fi

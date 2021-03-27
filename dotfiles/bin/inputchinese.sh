@@ -8,10 +8,13 @@ window_class=`xprop -id $(xprop -root _NET_ACTIVE_WINDOW | cut -d ' ' -f 5) | gr
 URxvt_style='^.*(URxvt|tabbed|llpp).*$'
 
 if [[ $window_class =~ $URxvt_style ]]; then
+    xdotool keyup shift+Insert
     xdotool key shift+Insert
 else
+    xdotool keyup ctrl+v
     xdotool key --clearmodifiers ctrl+v
 fi
 
 # sleep 0.1
+# xdotool keyup Return
 # xdotool key Return

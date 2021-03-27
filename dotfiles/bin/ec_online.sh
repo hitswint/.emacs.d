@@ -12,6 +12,7 @@ sleep 0.5
 if [ $(xdotool search --onlyvisible --class "URxvt" | grep -i $Wind_id) ]; then
     word=$(xclip -selection primary -o | sed 's/[\"]/\\&/g')
 else
+    xdotool keyup ctrl+c
     xdotool key --clearmodifiers ctrl+c
     word=$(xclip -selection clipboard -o | sed 's/[\"]/\\&/g')
 fi

@@ -59,12 +59,23 @@ When there is a text selection, act on the region."
 ;;; 复制和粘贴行
 ;; =================复制和粘贴行===================
 ;;;###autoload
-(defun cut-line-or-region ()
-  "Cut the current line, or current text selection."
-  (interactive)
+(defun kill-line-or-region (&optional arg)
+  "Kill the current line, or current text selection."
+  (interactive "p")
   (if (region-active-p)
       (kill-region (region-beginning) (region-end))
-    (kill-region (line-beginning-position) (line-beginning-position 2))))
+    (if arg
+        (kill-region (line-beginning-position) (line-beginning-position (+ arg 1)))
+      (kill-region (line-beginning-position) (line-beginning-position 2)))))
+;;;###autoload
+(defun delete-line-or-region (&optional arg)
+  "Delete the current line, or current text selection."
+  (interactive "p")
+  (if (region-active-p)
+      (delete-region (region-beginning) (region-end))
+    (if arg
+        (delete-region (line-beginning-position) (line-beginning-position (+ arg 1)))
+      (delete-region (line-beginning-position) (line-beginning-position 2)))))
 ;; =================复制和粘贴行===================
 ;;; 光标不动，窗口上下移动两三行
 ;; ========光标不动，窗口上下移动两三行============

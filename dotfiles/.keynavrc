@@ -1,9 +1,9 @@
 clear
 daemonize
 
-super+n start
+ctrl+super+n start
 Escape end
-Ctrl+g end
+ctrl+g end
 q record ~/.keynav_macros       #q+x
 shift+at playback               #@+x
 a history-back

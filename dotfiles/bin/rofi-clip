@@ -14,7 +14,9 @@ rofi.sh -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 # rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}' ; sleep 0.5; xdotool type $(xclip -o -selection clipboard)
 
 if [[ $xwin_title =~ $Emacs_style  ]];then
+    xdotool keyup ctrl+y
     xdotool key --clearmodifiers ctrl+y
 else
+    xdotool keyup ctrl+v
     xdotool key --clearmodifiers ctrl+v
 fi
