@@ -1,4 +1,4 @@
 #!/bin/bash
 
 Filename="${1//\//\\}"
-wine ~/.wine/drive_c/Program\ Files/CAJViewer/CAJViewer.exe "$Filename"
+env LANG=zh_CN.UTF-8 wine ~/.wine/drive_c/Program\ Files/CAJViewer/CAJViewer.exe "$Filename"

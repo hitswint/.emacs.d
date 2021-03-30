@@ -46,17 +46,24 @@
 # wmctrl -ia $xwin_id
 
 # * 方法2：直接将鼠标移动到当前窗口
-ActiveWindow="$(xdotool getactivewindow)"
+XRANDR=$(which xrandr)
+MONITORS=( $( ${XRANDR} | awk '( $2 == "connected" ){ print $1 }' ) )
+NUM_MONITORS=${#MONITORS[@]}
+# NUM_MONITORS=($(${XRANDR} --listmonitors | grep Monitors: | awk '{print $2}'))
 
-if [ -z $ActiveWindow ]
-then
-    urxvt &
-    APP_PID=$!
-    sleep 0.2
-    xdotool mousemove -w $(xdotool getactivewindow) --polar 0 0
-    kill $APP_PID
-else
-    xdotool mousemove -w $(xdotool getactivewindow) --polar 0 0
+if [ $NUM_MONITORS -gt 1 ]; then
+    ActiveWindow="$(xdotool getactivewindow)"
+
+    if [ -z $ActiveWindow ]
+    then
+        urxvt &
+        APP_PID=$!
+        sleep 0.2
+        xdotool mousemove -w $(xdotool getactivewindow) --polar 0 0
+        kill $APP_PID
+    else
+        xdotool mousemove -w $(xdotool getactivewindow) --polar 0 0
+    fi
 fi
 
 rofi "$@"

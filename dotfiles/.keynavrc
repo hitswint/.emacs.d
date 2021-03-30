@@ -1,9 +1,10 @@
 clear
-daemonize
+# daemonize
 
-ctrl+super+n start
-Escape end
-ctrl+g end
+# ctrl+super+n start
+# super+n start,windowzoom
+Escape quit
+ctrl+g quit
 q record ~/.keynav_macros       #q+x
 shift+at playback               #@+x
 a history-back
@@ -25,14 +26,24 @@ shift+apostrophe move-right,move-up
 shift+comma move-left,move-down
 shift+period move-right,move-down
 
-space warp,click 1,end
-u warp,click 1,end
-i warp,click 2,end
-o warp,click 3,end
+# space warp,click 1,end
+# u warp,click 1,end
+# i warp,click 2,end
+# o warp,click 3,end
+# shift+u click 1
+# shift+i click 2
+# shift+o click 3
+# slash warp,end
+
+space warp,click 1,quit
+u warp,click 1,quit
+i warp,click 2,quit
+o warp,click 3,quit
 shift+u click 1
 shift+i click 2
 shift+o click 3
-slash warp,end
+slash warp,quit
+
 
 w windowzoom
 c cursorzoom 200 200
@@ -44,7 +55,7 @@ shift+p warp,drag 1 shift
 ctrl+shift+p warp,drag 1 ctrl+shift
 alt+p warp,drag 1 alt
 
-super+shift+n start, grid 3x3
+# super+shift+n start, grid 3x3
 1 cell-select 1x1
 2 cell-select 2x1
 3 cell-select 3x1

@@ -22,7 +22,7 @@ dwm-multi-mon.sh single
 
 xkeysnail.sh &
 
-keynav &
+# keynav &
 
 pgrep redshift || redshift -l 41.8:123.4 &
 

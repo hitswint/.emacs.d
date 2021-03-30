@@ -3,6 +3,10 @@
 (def-package! shell
   :bind (("C-M-!" . shell)
          ("C-x C-M-1" . term))
+  ;; :init
+  ;; 使用zsh -ic无法加载alias，但bash可以，新建.bash_aliases
+  ;; (setq shell-file-name "bash")
+  ;; (setq shell-command-switch "-ic")
   :config
   (add-hook 'shell-mode-hook '(lambda ()
                                 (if (not (file-exists-p "~/.zsh_history"))

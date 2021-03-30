@@ -47,12 +47,12 @@
           ("gp" . "gnuplot")
           ("rar" . "unrar x -o+") ("zip" . "unar") ("gz" . "tar zvxf") ("tgz" . "tar zvxf") ("bz2" . "tar jvxf") ("tar" . "tar xf")
           ("dot" . "dot -Tpng -o dot.png")
-          ("dia" . "dia")
+          ("dia" . "env GTK_IM_MODULE=xim dia")
           ("blend" . "blender")
           ("foam" . "paraview")))
   (setq async-shell-command-buffer 'new-buffer)
   (setq async-shell-command-display-buffer nil)
-  (setq dired-guess-shell-alist-user ; dired-do(async)-shell-command(!/&的默认命令
+  (setq dired-guess-shell-alist-user ;dired-do(async)-shell-command(!/&)的默认命令
         (list
          (list "\\.pdf$" "adobe.sh * >/dev/null 2>&1 &")
          (list "\\.doc$" "word.sh * >/dev/null 2>&1 &")

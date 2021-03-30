@@ -37,6 +37,7 @@
 (setq epg-pinentry-mode 'loopback)      ;使用minibuffer输入密码。
 (setq history-delete-duplicates t)
 (setq delete-by-moving-to-trash t)
+(setq confirm-kill-processes nil)
 (setq display-line-numbers-type t)
 (setq trash-directory "~/.Trash")
 (setq tramp-default-method "ssh")
