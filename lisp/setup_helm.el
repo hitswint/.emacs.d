@@ -551,7 +551,8 @@
   :config
   (setq imenu-anywhere-delimiter " | "))
 (def-package! helm-imenu
-  :bind (("M-s i" . helm-semantic-or-imenu)
+  ;; helm-semantic-or-imenu
+  :bind (("M-s i" . helm-imenu)
          ("M-s M-i" . helm-imenu-outshine))
   :config
   (setq helm-imenu-delimiter " | ")
