@@ -328,11 +328,13 @@
   :load-path "site-lisp/org-annotate-file/"
   :commands (dired-k--parse-status
              dired-k--previous-highlighted-file
-             dired-k--next-highlighted-file)
+             dired-k--next-highlighted-file
+             dired-k--goto-file)
   :init
   (smartrep-define-key dired-mode-map "C-c"
     '(("p" . dired-k--previous-highlighted-file)
       ("n" . dired-k--next-highlighted-file)))
+  (bind-key "J" 'dired-k--goto-file dired-mode-map)
   :config
   (add-hook 'dired-after-readin-hook 'dired-k--highlight-buffer t)
   ;; 在已有dired-mode中开启dired-x-highlight。
@@ -340,7 +342,17 @@
                                    (equal (buffer-mode x) 'dired-mode))
                                  (buffer-list)))
     (with-current-buffer buf
-      (dired-k--highlight-buffer))))
+      (dired-k--highlight-buffer)))
+  (defun dired-k--goto-file ()
+    (interactive)
+    (let* ((files-status (dired-k--parse-status))
+           (highlighted-files-list (if files-status
+                                       (hash-table-keys files-status)))
+           (file-to-go (helm-comp-read "Annotated File: " highlighted-files-list
+                                       :marked-candidates nil
+                                       :buffer "*helm dired-k--highlight file*")))
+      (when file-to-go
+        (dired-goto-file (expand-file-name file-to-go))))))
 ;; Sync annotated status as operating.
 (def-package! dired-sync-highlight
   :load-path "site-lisp/org-annotate-file/"

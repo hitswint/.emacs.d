@@ -10,8 +10,11 @@ xwin_title=`xwininfo -id $xwin_id | sed -ne 's/xwininfo: .*"\([^"]\+\)"/\1/p'`
 Emacs_style='^.*(emacs@|Microsoft Word).*$'
 
 # greenclip与emacs/helm存在冲突
-rofi.sh -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
+# rofi.sh -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 # rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}' ; sleep 0.5; xdotool type $(xclip -o -selection clipboard)
+
+copyq toggle                    # 会立刻返回，无法等待后续选择
+while [ $(copyq visible) == "true" ] ; do sleep 0.2; done
 
 if [[ $xwin_title =~ $Emacs_style  ]];then
     xdotool keyup ctrl+y

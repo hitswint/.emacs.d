@@ -282,12 +282,26 @@
 ;; ===============dired-ranger=================
 (def-package! dired-ranger
   :bind (:map dired-mode-map
-              ("M-w" . swint-dired-ranger-copy))
+              ("M-w" . swint-dired-ranger-copy)
+              ("M-W" . swint-dired-clipboard-copy)
+              ("M-Y" . swint-dired-clipboard-paste))
   :config
   (defun swint-dired-ranger-copy ()
     (interactive)
     (easy-kill)
     (call-interactively 'dired-ranger-copy))
+  (defun swint-dired-clipboard-copy () ;导致界面卡死，可粘贴图片；C-g杀死xclip进程，无法复制
+    (interactive)
+    (let ((current-file (dired-get-filename nil t)))
+      ;; xclip复制大图片时卡住
+      ;; (shell-command (format "xclip -i -selection clipboard -t \"$(file -b --mime-type %s)\" %s" current-file current-file))
+      (shell-command (format "copyq copy \"$(file -b --mime-type %s)\" - < %s" current-file current-file))))
+  (defun swint-dired-clipboard-paste () ;只可粘贴图片
+    (interactive)
+    (let ((filename (read-from-minibuffer "File name: " nil nil t nil
+                                          (format-time-string "%Y%m%d_%H%M%S"))))
+      (shell-command (format "xclip -selection clipboard -t image/png -o > %s.png"
+                             filename))))
   ;; 加C-u不清除clipboards。
   (bind-key "C-y" 'dired-ranger-paste dired-mode-map)
   (bind-key "M-y" 'dired-ranger-move dired-mode-map))

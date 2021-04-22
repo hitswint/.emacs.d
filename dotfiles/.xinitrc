@@ -35,5 +35,6 @@ pgrep redshift || redshift -l 41.8:123.4 &
 pgrep pasystray || (pgrep pulseaudio && pasystray -i 5 || sleep 10 ; pasystray -i 5) &
 
 # greenclip daemon &
+copyq &
 
 exec dwm
