@@ -120,7 +120,8 @@
   (let* ((annotated-file (save-excursion
                            (while (not (ignore-errors (org-at-top-heading-p)))
                              (org-up-heading-safe))
-                           (swint-get-annotated-file)))
+                           (or (swint-get-annotated-file)
+                               (car (bibtex-completion-find-pdf (org-entry-get nil "Custom_ID"))))))
          (qpdfview-database (expand-file-name "~/.local/share/qpdfview/qpdfview/database"))
          (qpdfview-page (when (and (not (string-empty-p (shell-command-to-string "pgrep -x qpdfview"))) annotated-file)
                           ;; 需在qpdfview设定中将Save database interval设置为0min，否则数据库无法及时更新
@@ -128,5 +129,7 @@
                            (format "sqlite3 %s \"select currentPage from tabs_v5 where filePath=\\\"%s\\\"\"" "~/.local/share/qpdfview/qpdfview/database" (expand-file-name annotated-file))))))
     (if (string-empty-p qpdfview-page)
         (message "No file annotated or not opened in qpdfview.")
-      (org-entry-put nil "annotated_page" (string-trim qpdfview-page)))))
+      (if (file-equal-p (buffer-file-name) bibtex-completion-notes-path)
+          (org-entry-put nil "NOTER_PAGE" (string-trim qpdfview-page))
+        (org-entry-put nil "annotated_page" (string-trim qpdfview-page))))))
 ;; ==========swint-qpdfview-annotated=========

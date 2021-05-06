@@ -48,6 +48,7 @@
           ("rar" . "unrar x -o+") ("zip" . "unar") ("gz" . "tar zvxf") ("tgz" . "tar zvxf") ("bz2" . "tar jvxf") ("tar" . "tar xf")
           ("dot" . "dot -Tpng -o dot.png")
           ("dia" . "env GTK_IM_MODULE=xim dia")
+          ("drawio" . "env GTK_IM_MODULE=xim drawio")
           ("blend" . "blender")
           ("foam" . "paraview")))
   (setq async-shell-command-buffer 'new-buffer)

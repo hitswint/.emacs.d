@@ -30,5 +30,6 @@ alias ec='emacsclient -n'
 alias ecc='emacsclient -c -n'
 alias ect='emacsclient -t'
 alias dia="env GTK_IM_MODULE=xim dia"
+alias drawio="env GTK_IM_MODULE=xim drawio"
 alias qpdfview="qpdfview --unique"
 alias emacs="env LC_CTYPE=zh_CN.UTF-8 XMODIFIERS=@im=fcitx emacs"
