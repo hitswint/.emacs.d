@@ -174,6 +174,7 @@
                            rainbow-mode
                            readline-complete
                            recentf-ext
+                           restclient
                            rg
                            rich-minority
                            s

@@ -600,7 +600,15 @@
              gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode)))
+         ("\\.markdown\\'" . markdown-mode))
+  :init
+  (add-hook 'markdown-mode-hook 'markdown-display-inline-images)
+  :config
+  (setq markdown-open-image-command "feh.sh"
+        markdown-max-image-size '(640 . 480))
+  (define-key markdown-mode-map (kbd "C-c C-x C-M-v") 'markdown-display-inline-images)
+  (define-key markdown-mode-map (kbd "C-c C-x C-v") 'markdown-toggle-inline-images)
+  (define-key markdown-mode-map (kbd "C-c j") 'markdown-follow-thing-at-point))
 ;; =================markdown-mode==================
 ;;; highlight-indentation
 ;; =============highlight-indentation==============
