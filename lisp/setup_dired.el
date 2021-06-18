@@ -289,7 +289,9 @@
   :config
   (defun swint-dired-ranger-copy ()
     (interactive)
-    (easy-kill)
+    (if (region-active-p)
+        (easy-kill)
+      (dired-copy-filename-as-kill))
     (call-interactively 'dired-ranger-copy))
   (defun swint-dired-clipboard-copy () ;导致界面卡死，可粘贴图片；C-g杀死xclip进程，无法复制
     (interactive)

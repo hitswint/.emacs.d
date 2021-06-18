@@ -216,9 +216,11 @@ plot_data.file_plot('%s','%s','%s','%s','%s','%s'%s)" (expand-file-name "~/Docum
   (add-hook 'python-mode-hook (lambda ()
                                 (bind-key "C-c j" 'jedi:get-in-function-call python-mode-map)))
   :config
-  (setq jedi:complete-on-dot t)
-  (setq jedi:install-imenu t)
-  (setq jedi:tooltip-method nil)
+  (setq jedi:complete-on-dot t
+        jedi:install-imenu t
+        jedi:tooltip-method nil
+        jedi:get-in-function-call-delay 2000
+        jedi:get-in-function-call-timeout 5000)
   (add-hook 'jedi-mode-hook '(lambda ()
                                (set (make-local-variable 'company-idle-delay) nil)))
   (define-key jedi-mode-map (kbd "C-c j") 'jedi:get-in-function-call)

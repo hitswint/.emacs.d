@@ -37,7 +37,7 @@
                ;; (setq org-startup-indented t)
                (setq truncate-lines nil)
                (setq org-hide-leading-stars t)
-               (setq org-startup-folded 'content)
+               (setq org-startup-folded 'showeverything)
                ;; org-mode先于imenu加载时未设置org-imenu-get-tree
                (setq imenu-create-index-function 'org-imenu-get-tree)
                (setq org-imenu-depth 8)

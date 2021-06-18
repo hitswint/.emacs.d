@@ -223,38 +223,47 @@
                        (dired-get-marked-files)
                      (list (buffer-file-name))))
         (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "ODAFileConverter")
-                                :buffer "*helm dired converter-swint*")))
-
-    (cond ((string= engine "pandoc")
-           (let ((output-format (read-string "Output format: ")))
-             (cl-loop for x in file-list
-                      do (shell-command (concat "pandoc -o " (file-name-base x)
-                                                "." output-format " " (file-name-nondirectory x))))))
-          ((string= engine "libreoffice")
-           (let ((output-format (read-string "Output format: ")))
-             (cl-loop for x in file-list
-                      do (shell-command (concat "libreoffice --headless --convert-to "
-                                                output-format
-                                                (when (equal output-format "csv")
-                                                  " --infilter=CSV:44,34,76,1")
-                                                " " (file-name-nondirectory x))))))
-          ((string= engine "pdftk")
-           (let ((output-args (read-string "Pdftk args(1-2west 4 5-end): ")))
-             (cl-loop for x in file-list
-                      do (shell-command (concat "pdftk " (file-name-nondirectory x) " cat "
-                                                output-args " output " (concat (file-name-base x) "-new.pdf"))))))
-          ((string= engine "ODAFileConverter")
-           (let ((output-version (helm-comp-read "Output version: "
-                                                 (list "ACAD9" "ACAD10" "ACAD12" "ACAD13" "ACAD14" "ACAD2000" "ACAD2004" "ACAD2007" "ACAD2010")
-                                                 :buffer "*helm dired converter-swint*"))
-                 (output-type (helm-comp-read "Output type: "
-                                              (list "DWG" "DXF" "DXB")
-                                              :buffer "*helm dired converter-swint*"))
-                 (all-files (y-or-n-p "All files?")))
-             (cl-loop for x in file-list
-                      do (shell-command (concat (format "ODAFileConverter ./ ./%s-%s %s %s 0 1 " output-type output-version output-version output-type)
-                                                (unless all-files
-                                                  (file-name-nondirectory x))))))))))
+                                :buffer "*helm dired converter-swint*"))
+        (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)"))
+    (cl-flet ((escape-local (x)
+                            (replace-regexp-in-string string-to-escape
+                                                      "\\\\\\1" x)))
+      (cond ((string= engine "pandoc")
+             (let ((output-format (read-string "Output format: ")))
+               (cl-loop for x in file-list
+                        do (let ((filename (escape-local (file-name-nondirectory x))))
+                             (shell-command (concat "pandoc " (when (equal output-format "pdf")
+                                                                (read-string "Options: "
+                                                                             "--pdf-engine=xelatex --template=eisvogel.latex --toc -V toc-title=\"目录\" --number-sections --include-in-header ~/.pandoc/templates/chapter_break.tex -V geometry:a4paper -V geometry:margin=2cm -V CJKmainfont=\"SimSun\" -V mainfont=\"Times New Roman\" -V monofont=\"SimSun\""))
+                                                    " -o " (file-name-base filename)
+                                                    "." output-format " " filename))))))
+            ((string= engine "libreoffice")
+             (let ((output-format (read-string "Output format: ")))
+               (cl-loop for x in file-list
+                        do (let ((filename (escape-local (file-name-nondirectory x))))
+                             (shell-command (concat "libreoffice --headless --convert-to "
+                                                    output-format
+                                                    (when (equal output-format "csv")
+                                                      " --infilter=CSV:44,34,76,1")
+                                                    " " filename))))))
+            ((string= engine "pdftk")
+             (let ((output-args (read-string "Pdftk args(1-2west 4 5-end): ")))
+               (cl-loop for x in file-list
+                        do (let ((filename (escape-local (file-name-nondirectory x))))
+                             (shell-command (concat "pdftk " filename " cat "
+                                                    output-args " output " (concat (file-name-base filename) "_" output-args ".pdf")))))))
+            ((string= engine "ODAFileConverter")
+             (let ((output-version (helm-comp-read "Output version: "
+                                                   (list "ACAD9" "ACAD10" "ACAD12" "ACAD13" "ACAD14" "ACAD2000" "ACAD2004" "ACAD2007" "ACAD2010")
+                                                   :buffer "*helm dired converter-swint*"))
+                   (output-type (helm-comp-read "Output type: "
+                                                (list "DWG" "DXF" "DXB")
+                                                :buffer "*helm dired converter-swint*"))
+                   (all-files (y-or-n-p "All files?")))
+               (cl-loop for x in file-list
+                        do (let ((filename (escape-local (file-name-nondirectory x))))
+                             (shell-command (concat (format "ODAFileConverter ./ ./%s-%s %s %s 0 1 " output-type output-version output-version output-type)
+                                                    (unless all-files filename)))))))))))
 ;; ============swint-dired-converter=========
 ;;; dired-view-file-or-dir
 ;; ==========dired-view-file-or-dir==========

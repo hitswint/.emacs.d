@@ -19,7 +19,7 @@
               projectile-mode-line-prefix
               (or (truncate-string-to-width project-name 32) "-")
               (if current-branch
-                  (format ":%s" (substring current-branch 0 3))
+                  (format ":%s" (substring current-branch 0 (min 3 (length current-branch))))
                 ""))))
   (add-hook 'dired-after-readin-hook 'projectile-update-mode-line)
   (dolist (buf (buffer-list))

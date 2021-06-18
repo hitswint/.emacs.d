@@ -545,9 +545,14 @@
 ;;; dumb-jump
 ;; ==================dumb-jump=====================
 (def-package! dumb-jump
-  :bind (("M-s ," . dumb-jump-go)
-         ("M-s ." . dumb-jump-back)
-         ("M-s /" . dumb-jump-quick-look)))
+  :commands (dumb-jump-go
+             dumb-jump-back
+             dumb-jump-quick-look)
+  :init
+  (smartrep-define-key global-map "M-s"
+    '(("," . dumb-jump-go)
+      ("." . dumb-jump-back)
+      ("/" . dumb-jump-quick-look))))
 ;; ==================dumb-jump=====================
 ;;; diff-hl
 ;; ===================diff-hl======================

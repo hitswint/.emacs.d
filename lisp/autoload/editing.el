@@ -111,8 +111,8 @@ might be bad."
   "Perform a bunch of operations on the whitespace content of a buffer.
 Including indent-buffer, which should not be called automatically on save."
   (interactive)
-  (cleanup-buffer-safe)
-  (indent-region (point-min) (point-max)))
+  (indent-region (point-min) (point-max))
+  (cleanup-buffer-safe))
 ;; ============移除行尾的空格并indent==============
 ;;; 跳转到某行时行号暂时可见
 ;; ============跳转到某行时行号暂时可见============
