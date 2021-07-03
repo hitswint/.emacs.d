@@ -104,8 +104,9 @@ bind-maps emacs -- '^[^_Lf^_' redo
 bind-maps emacs -- '^[^_D"^_' set-mark-command
 bind-maps emacs -- '^[^_3B^_' widget-slash-backward-kill-word
 # Percol.
-bind-maps emacs -- '^xf' widget-swint-find-file
-bind-maps emacs -- '^xF' widget-swint-locate-file
+bind-maps emacs -- '^xf' widget-swint-fdfind
+bind-maps emacs -- '^xF' widget-swint-find-file
+bind-maps emacs -- '^xl' widget-swint-locate-file
 bind-maps emacs -- '^x^f' widget-swint-find-file-current-dir
 bind-maps emacs -- '^x^r' widget-percol-select-history
 bind-maps emacs -- '^x^i' widget-percol-cd-history

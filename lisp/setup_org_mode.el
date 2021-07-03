@@ -76,7 +76,7 @@
                (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point)
                (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-org-open-at-point t)))
                (define-key org-mode-map (kbd "C-c J") 'swint-qpdfview-annotated-open)
-               (define-key org-mode-map (kbd "C-c L") 'swint-qpdfview-annotated-new)
+               (define-key org-mode-map (kbd "C-c :") 'swint-qpdfview-annotated-new)
                (define-key org-mode-map (kbd "C-c M-,") '(lambda () (interactive) (swint-org-mobile-sync "down")))
                (define-key org-mode-map (kbd "C-c M-.") '(lambda () (interactive) (swint-org-mobile-sync "up")))
                (smartrep-define-key org-mode-map "M-s"
@@ -167,159 +167,6 @@
   (define-key org-mode-map (kbd "C-c v") 'org-toggle-latex-fragment)
   (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境。
   ;; =============org-latex-preview=============
-;;;; ox-latex
-  ;; ================ox-latex===================
-  (def-package! ox-latex
-    :defer t
-    :config
-    (setq org-latex-pdf-process
-          '("xelatex -interaction nonstopmode %f"
-            "xelatex -interaction nonstopmode %f"))
-    ;; 定义org markup(*_+/=~)等的转换。
-    (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
-                                        (code . verb)
-                                        (italic . "\\emph{%s}")
-                                        (strike-through . "\\sout{%s}")
-                                        (underline . "\\underline{%s}")
-                                        (verbatim . protectedtexttt)))
-    ;; 使用Listings宏包格式化源代码(只是把代码框用listing环境框起来，还需要额外的设置。
-    (setq org-export-latex-listings t)
-    (setq org-beamer-outline-frame-title "Outline")
-    (add-to-list 'org-latex-classes
-                 '("cn-article"
-                   "\\documentclass[11pt]{ctexart}
-\\usepackage[top=1in,bottom=1in,left=0.8in,right=0.8in]{geometry}
-\\usepackage{graphicx,amsmath,amssymb,subfigure,url,xspace,booktabs,tikz,float}
-\\usepackage[autoplay,loop]{animate}
-\\usepackage[absolute,overlay]{textpos}
-\\usetikzlibrary{arrows,shapes,chains,calc,positioning,decorations.markings}
-\\newcommand{\\eg}{e.g.,\\xspace}
-\\newcommand{\\bigeg}{E.g.,\\xspace}
-\\newcommand{\\etal}{\\textit{et~al.\\xspace}}
-\\newcommand{\\etc}{etc.\@\\xspace}
-\\newcommand{\\ie}{i.e.,\\xspace}
-\\newcommand{\\bigie}{I.e.,\\xspace}
-\\usepackage[super,square,sort&compress]{natbib}
-\\usepackage{hyperref}
-\\usepackage{hypernat}
-% \\renewcommand{\\citet}[1]{\\textsuperscript{\\cite{#1}}}
-\\usepackage[]{caption}
-\\captionsetup{font={small,it}}
-\\usepackage{comment}
-% \\usepackage[]{ctex}
-% \\usepackage[]{xeCJK}
-% \\setmainfont{Times New Roman}
-% \\setsansfont{Times New Roman}
-% \\usefonttheme[onlymath]{serif}
-% \\setCJKmainfont{SimSun}
-\\newcommand{\\song}{\\CJKfamily{zhsong}}
-\\newcommand{\\hei}{\\CJKfamily{zhhei}}
-\\newcommand{\\kai}{\\CJKfamily{zhkai}}
-\\newcommand{\\fang}{\\CJKfamily{zhfs}}
-\\newcommand{\\li}{\\CJKfamily{zhli}}
-\\newcommand{\\you}{\\CJKfamily{zhyou}}
-\\newcommand{\\erhao}{\\zihao{2}}
-\\newcommand{\\xiaoer}{\\fontsize{18pt}{\\baselineskip}\\selectfont}
-\\newcommand{\\sihao}{\\zihao{4}}
-\\newcommand{\\xiaosi}{\\fontsize{12pt}{\\baselineskip}\\selectfont}
-\\newcommand{\\wuhao}{\\zihao{5}}
-\\newcommand{\\xiaowu}{\\fontsize{9pt}{\\baselineskip}\\selectfont}
-\\newcommand{\\liuhao}{\\zihao{6}}
-[NO-DEFAULT-PACKAGES]
-[NO-PACKAGES]"
-                   ("\\section{%s}" . "\\section*{%s}")
-                   ("\\subsection{%s}" . "\\subsection*{%s}")
-                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-    ;; Beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)。
-    ;; 设定mainfont会导致公式环境中变量变成正体。
-    ;; 设定setsansfont使用Times New Roman无法使用英文斜体和粗体。
-    ;; 使用某些字体可以实现粗斜体，例如DejaVu Sans/DejaVu Sans Mono/DejaVu Serif等。
-    (add-to-list 'org-latex-classes
-                 '("cn-beamer"
-                   "\\documentclass[11pt]{beamer}
-% [xcolor=dvipsnames]
-\\usepackage{graphicx,subfigure,url,booktabs,tikz,float,fontspec}
-\\usepackage{amsmath,amssymb}
-\\DeclareGraphicsRule{*}{mps}{*}{}
-\\usepackage{xmpmulti}
-\\usepackage{colortbl,dcolumn}
-\\usepackage[autoplay,loop]{animate}
-\\usepackage[absolute,overlay]{textpos}
-\\usetikzlibrary{arrows,shapes,chains,calc,positioning,decorations.markings}
-\\usepackage{thumbpdf}
-\\usepackage{wasysym}
-\\usepackage{ucs}
-% \\usepackage[utf8]{inputenc}
-\\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
-\\usepackage{verbatim}
-\\usepackage[BoldFont,SlantFont,CJKnumber,CJKchecksingle]{xeCJK}
-% \\usepackage{times}
-% \\setmainfont{Times New Roman}
-\\setsansfont{Times New Roman}
-% {DejaVu Sans}{DejaVu Sans Mono}{DejaVu Serif}
-\\setCJKmainfont{SimSun}
-\\setCJKsansfont{SimSun}
-\\usefonttheme[onlymath]{serif}
-\\setCJKfamilyfont{song}{SimSun}
-\\setCJKfamilyfont{kai}{KaiTi}
-\\setCJKfamilyfont{hei}{SimHei}
-\\setCJKfamilyfont{you}{YouYuan}
-\\setCJKfamilyfont{li}{LiSu}
-\\setCJKfamilyfont{fang}{FangSong}
-\\setCJKfamilyfont{nsong}{NSimSun}
-\\setCJKfamilyfont{yh}{Microsoft YaHei}
-\\setCJKfamilyfont{asong}{Adobe Song Std}
-\\setCJKfamilyfont{afang}{Adobe FangSong Std}
-\\setCJKfamilyfont{ahei}{Adobe Heiti Std}
-\\setCJKfamilyfont{akai}{Adobe Kaiti Std}
-\\newcommand{\\song}{\\CJKfamily{song}}
-\\newcommand{\\kai}{\\CJKfamily{kai}}
-\\newcommand{\\hei}{\\CJKfamily{hei}}
-\\newcommand{\\you}{\\CJKfamily{you}}
-\\newcommand{\\li}{\\CJKfamily{li}}
-\\newcommand{\\fang}{\\CJKfamily{fang}}
-\\newcommand{\\nsong}{\\CJKfamily{nsong}}
-\\newcommand{\\yh}{\\CJKfamily{yh}}
-\\newcommand{\\asong}{\\CJKfamily{asong}}
-\\newcommand{\\afang}{\\CJKfamily{afang}}
-\\newcommand{\\ahei}{\\CJKfamily{ahei}}
-\\newcommand{\\akai}{\\CJKfamily{akai}}
-\\newcommand{\\erhao}{\\zihao{2}}
-\\newcommand{\\xiaoer}{\\fontsize{18pt}{\\baselineskip}\\selectfont}
-\\newcommand{\\sihao}{\\zihao{4}}
-\\newcommand{\\xiaosi}{\\fontsize{12pt}{\\baselineskip}\\selectfont}
-\\newcommand{\\wuhao}{\\zihao{5}}
-\\newcommand{\\xiaowu}{\\fontsize{9pt}{\\baselineskip}\\selectfont}
-\\newcommand{\\liuhao}{\\zihao{6}}
-\\renewcommand{\\today}{\\number\\year 年 \\number\\month 月 \\number\\day 日}
-\\usepackage[]{caption}
-\\captionsetup{font={small,it}}
-\\setbeamertemplate{caption}[numbered]
-\\usepackage{comment}
-\\subtitle{}
-\\subject{}
-\\institute{}
-[NO-DEFAULT-PACKAGES]
-[NO-PACKAGES]"
-                   ("\\section{%s}" . "\\section*{%s}")
-                   ;; ("\\begin{frame}[fragile]\\frametitle{%s}"
-                   ;;  "\\end{frame}"
-                   ;;  "\\begin{frame}[fragile]\\frametitle{%s}"
-                   ;;  "\\end{frame}")
-                   )))
-  ;; =================ox-latex====================
-;;;; ox-beamer
-  ;; =================ox-beamer===================
-  (def-package! ox-beamer
-    :defer t
-    :config
-    (add-to-list 'org-beamer-environments-extra
-                 '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
-    (add-to-list 'org-beamer-environments-extra
-                 '("uncoverenv" "U" "\\begin{uncoverenv}%a" "\\end{uncoverenv}")))
-  ;; =================ox-beamer===================
   )
 ;; =================org-mode====================
 ;;; org-annotate
@@ -361,9 +208,7 @@
 (def-package! org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands org-annotate-file
-  :bind (("C-x L" . org-annotate-file-current)
-         :map dired-mode-map
-         ("L" . org-annotate-file-current))
+  :bind ("C-x :" . org-annotate-file-current)
   :config
   (defun org-annotate-file-current ()
     (interactive)
@@ -381,9 +226,7 @@
 (def-package! swint-org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands swint-org-annotation-storage-file
-  :bind (("C-x l" . swint-org-annotate-file-current)
-         :map dired-mode-map
-         ("l" . swint-org-annotate-file-current)))
+  :bind ("C-x ;" . swint-org-annotate-file-current))
 ;; ===============org-annotate==================
 ;;; outline
 ;; ==================outline====================
@@ -505,7 +348,7 @@
              interleave-open-notes-file-for-pdf
              interleave--find-pdf-path)
   :bind (:map dired-mode-map
-              ("C-c l" . swint-dired-interleave))
+              ("C-c ;" . swint-dired-interleave))
   :config
   (setq interleave-disable-narrowing t
         interleave-insert-relative-name nil)
@@ -538,7 +381,7 @@
              swint-open-notes-file-for-pdf)
   :init
   (add-hook 'org-mode-hook (lambda ()
-                             (bind-key "C-c l" 'swint-noter/interleave org-mode-map)))
+                             (bind-key "C-c ;" 'swint-noter/interleave org-mode-map)))
   :config
   (defun swint-noter/interleave ()
     (interactive)
@@ -623,14 +466,16 @@
 (def-package! org-ref-core
   :commands (org-ref-insert-link org-ref-get-bibtex-key-and-file)
   :init
-  ;; C-c b 文献引用(citation)，C-u 元素引用(reference)，C-u C-u 跳转或新建label。
+  ;; C-c b 文献引用(citation)
+  ;; C-u 元素引用(reference) -> 默认ref:xxx，C-u 选择类型，C-u C-u 引用[[#xxx]]
+  ;; C-u C-u 跳转或新建label -> 若存在则跳转，否则新建
   (add-hook 'org-mode-hook (lambda ()
                              (bind-key "C-c b" 'org-ref-insert-link org-mode-map)))
+  (setq org-ref-insert-cite-key "\C-cb")
+  (setq org-ref-bibtex-hydra-key-binding "\C-cj")
   :config
   ;; org-ref-insert-link在org-ref-core中定义，若直接(def-package! org-ref)提示函数未定义
   (require 'org-ref)
-  (setq org-ref-insert-cite-key "\C-cb")
-  (setq org-ref-bibtex-hydra-key-binding "\C-cj")
   (setq org-ref-default-bibliography (delete (expand-file-name "~/.bib/Zotero.bib")
                                              (directory-files "~/.bib" t "\\.bib$"))
         org-ref-bibliography-notes "~/Zotero/storage/TKM9D893/notes.org"
@@ -694,4 +539,201 @@
     (let ((org-current-tag-alist (eh-org-brain-as-tags)))
       (call-interactively 'counsel-org-tag))))
 ;; =================org-brain===================
+;;; ox-latex
+;; =================ox-latex====================
+(def-package! ox-latex
+  :after ox
+  :config
+  (setq org-latex-pdf-process
+        '("xelatex -interaction nonstopmode %f"
+          "xelatex -interaction nonstopmode %f"))
+  ;; 定义org markup(*_+/=~)等的转换。
+  (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
+                                      (code . verb)
+                                      (italic . "\\emph{%s}")
+                                      (strike-through . "\\sout{%s}")
+                                      (underline . "\\underline{%s}")
+                                      (verbatim . protectedtexttt)))
+  ;; 使用Listings宏包格式化源代码(只是把代码框用listing环境框起来，还需要额外的设置。
+  (setq org-export-latex-listings t)
+  (setq org-beamer-outline-frame-title "Outline")
+  (add-to-list 'org-latex-classes
+               '("cn-article"
+                 "\\documentclass[11pt]{ctexart}
+\\usepackage[top=1in,bottom=1in,left=0.8in,right=0.8in]{geometry}
+\\usepackage{graphicx,amsmath,amssymb,subfigure,url,xspace,booktabs,tikz,float}
+\\usepackage[autoplay,loop]{animate}
+\\usepackage[absolute,overlay]{textpos}
+\\usetikzlibrary{arrows,shapes,chains,calc,positioning,decorations.markings}
+\\newcommand{\\eg}{e.g.,\\xspace}
+\\newcommand{\\bigeg}{E.g.,\\xspace}
+\\newcommand{\\etal}{\\textit{et~al.\\xspace}}
+\\newcommand{\\etc}{etc.\@\\xspace}
+\\newcommand{\\ie}{i.e.,\\xspace}
+\\newcommand{\\bigie}{I.e.,\\xspace}
+\\usepackage[super,square,sort&compress]{natbib}
+\\usepackage{hyperref}
+\\usepackage{hypernat}
+% \\renewcommand{\\citet}[1]{\\textsuperscript{\\cite{#1}}}
+\\usepackage[]{caption}
+\\captionsetup{font={small,it}}
+\\usepackage{comment}
+% \\usepackage[]{ctex}
+% \\usepackage[]{xeCJK}
+% \\setmainfont{Times New Roman}
+% \\setsansfont{Times New Roman}
+% \\usefonttheme[onlymath]{serif}
+% \\setCJKmainfont{SimSun}
+\\newcommand{\\song}{\\CJKfamily{zhsong}}
+\\newcommand{\\hei}{\\CJKfamily{zhhei}}
+\\newcommand{\\kai}{\\CJKfamily{zhkai}}
+\\newcommand{\\fang}{\\CJKfamily{zhfs}}
+\\newcommand{\\li}{\\CJKfamily{zhli}}
+\\newcommand{\\you}{\\CJKfamily{zhyou}}
+\\newcommand{\\erhao}{\\zihao{2}}
+\\newcommand{\\xiaoer}{\\fontsize{18pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\sihao}{\\zihao{4}}
+\\newcommand{\\xiaosi}{\\fontsize{12pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\wuhao}{\\zihao{5}}
+\\newcommand{\\xiaowu}{\\fontsize{9pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\liuhao}{\\zihao{6}}
+[NO-DEFAULT-PACKAGES]
+[NO-PACKAGES]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  ;; Beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)。
+  ;; 设定mainfont会导致公式环境中变量变成正体。
+  ;; 设定setsansfont使用Times New Roman无法使用英文斜体和粗体。
+  ;; 使用某些字体可以实现粗斜体，例如DejaVu Sans/DejaVu Sans Mono/DejaVu Serif等。
+  (add-to-list 'org-latex-classes
+               '("cn-beamer"
+                 "\\documentclass[11pt]{beamer}
+% [xcolor=dvipsnames]
+\\usepackage{graphicx,subfigure,url,booktabs,tikz,float,fontspec}
+\\usepackage{amsmath,amssymb}
+\\DeclareGraphicsRule{*}{mps}{*}{}
+\\usepackage{xmpmulti}
+\\usepackage{colortbl,dcolumn}
+\\usepackage[autoplay,loop]{animate}
+\\usepackage[absolute,overlay]{textpos}
+\\usetikzlibrary{arrows,shapes,chains,calc,positioning,decorations.markings}
+\\usepackage{thumbpdf}
+\\usepackage{wasysym}
+\\usepackage{ucs}
+% \\usepackage[utf8]{inputenc}
+\\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\\usepackage{verbatim}
+\\usepackage[BoldFont,SlantFont,CJKnumber,CJKchecksingle]{xeCJK}
+% \\usepackage{times}
+% \\setmainfont{Times New Roman}
+\\setsansfont{Times New Roman}
+% {DejaVu Sans}{DejaVu Sans Mono}{DejaVu Serif}
+\\setCJKmainfont{SimSun}
+\\setCJKsansfont{SimSun}
+\\usefonttheme[onlymath]{serif}
+\\setCJKfamilyfont{song}{SimSun}
+\\setCJKfamilyfont{kai}{KaiTi}
+\\setCJKfamilyfont{hei}{SimHei}
+\\setCJKfamilyfont{you}{YouYuan}
+\\setCJKfamilyfont{li}{LiSu}
+\\setCJKfamilyfont{fang}{FangSong}
+\\setCJKfamilyfont{nsong}{NSimSun}
+\\setCJKfamilyfont{yh}{Microsoft YaHei}
+\\setCJKfamilyfont{asong}{Adobe Song Std}
+\\setCJKfamilyfont{afang}{Adobe FangSong Std}
+\\setCJKfamilyfont{ahei}{Adobe Heiti Std}
+\\setCJKfamilyfont{akai}{Adobe Kaiti Std}
+\\newcommand{\\song}{\\CJKfamily{song}}
+\\newcommand{\\kai}{\\CJKfamily{kai}}
+\\newcommand{\\hei}{\\CJKfamily{hei}}
+\\newcommand{\\you}{\\CJKfamily{you}}
+\\newcommand{\\li}{\\CJKfamily{li}}
+\\newcommand{\\fang}{\\CJKfamily{fang}}
+\\newcommand{\\nsong}{\\CJKfamily{nsong}}
+\\newcommand{\\yh}{\\CJKfamily{yh}}
+\\newcommand{\\asong}{\\CJKfamily{asong}}
+\\newcommand{\\afang}{\\CJKfamily{afang}}
+\\newcommand{\\ahei}{\\CJKfamily{ahei}}
+\\newcommand{\\akai}{\\CJKfamily{akai}}
+\\newcommand{\\erhao}{\\zihao{2}}
+\\newcommand{\\xiaoer}{\\fontsize{18pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\sihao}{\\zihao{4}}
+\\newcommand{\\xiaosi}{\\fontsize{12pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\wuhao}{\\zihao{5}}
+\\newcommand{\\xiaowu}{\\fontsize{9pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\liuhao}{\\zihao{6}}
+\\renewcommand{\\today}{\\number\\year 年 \\number\\month 月 \\number\\day 日}
+\\usepackage[]{caption}
+\\captionsetup{font={small,it}}
+\\setbeamertemplate{caption}[numbered]
+\\usepackage{comment}
+\\subtitle{}
+\\subject{}
+\\institute{}
+[NO-DEFAULT-PACKAGES]
+[NO-PACKAGES]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ;; ("\\begin{frame}[fragile]\\frametitle{%s}"
+                 ;;  "\\end{frame}"
+                 ;;  "\\begin{frame}[fragile]\\frametitle{%s}"
+                 ;;  "\\end{frame}")
+                 )))
+;; =================ox-latex====================
+;;; ox-beamer
+;; =================ox-beamer===================
+(def-package! ox-beamer
+  :after ox
+  :config
+  (add-to-list 'org-beamer-environments-extra
+               '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
+  (add-to-list 'org-beamer-environments-extra
+               '("uncoverenv" "U" "\\begin{uncoverenv}%a" "\\end{uncoverenv}")))
+;; =================ox-beamer===================
+;;; ox-pandoc
+;; =================ox-pandoc===================
+(def-package! ox-pandoc
+  :after ox
+  :config
+  (setq org-pandoc-options '((standalone . t)))
+  (setq org-pandoc-options-for-docx '((standalone . nil)))
+  (setq org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex")))
+  (setq org-pandoc-options-for-latex-pdf '((pdf-engine . "xelatex")))
+  (defvar org-pandoc-table-fmt "表 %d")
+  (defvar org-pandoc-paragraph-fmt "图 %d")
+  (defvar org-pandoc-src-block-fmt "列表 %d")
+  ;; 仅支持[[xxx]]的引用，不支持ref:xxx形式(org-ref默认)，org-ref两者都支持
+  (defun org-pandoc-table/override (table contents info)
+    "Transcode a TABLE element from Org to Pandoc.
+CONTENTS is the contents of the table.  INFO is a plist holding
+contextual information."
+    (org-pandoc-set-caption-title table info org-pandoc-table-fmt
+                                  #'org-pandoc--has-caption-p)
+    ;; Export the table with it's modified caption
+    (org-export-expand table contents t))
+  (defun org-pandoc-paragraph/override (paragraph contents info)
+    "Transcode a PARAGRAPH element from Org to Pandoc.
+CONTENTS is the contents of the paragraph, as a string.  INFO is
+the plist used as a communication channel."
+    (when (org-html-standalone-image-p paragraph info)
+      ;; Standalone image.
+      (org-pandoc-set-caption-title paragraph info org-pandoc-paragraph-fmt
+                                    #'org-html-standalone-image-p))
+    ;; Export the paragraph verbatim. Like `org-org-identity', but also
+    ;; preserves #+ATTR_* tags in the output.
+    (org-export-expand paragraph contents t))
+  (defun org-pandoc-src-block/override (src-block contents info)
+    "Transcode a SRC-BLOCK element from Org to Pandoc.
+CONTENTS is the contents of the table. INFO is a plist holding
+contextual information."
+    (org-pandoc-set-caption-title src-block info org-pandoc-src-block-fmt
+                                  #'org-pandoc--has-caption-p)
+    ;; Export the src-block with it's modified caption
+    (org-export-expand src-block contents t))
+  (advice-add 'org-pandoc-table :override #'org-pandoc-table/override)
+  (advice-add 'org-pandoc-paragraph :override #'org-pandoc-paragraph/override)
+  (advice-add 'org-pandoc-src-block :override #'org-pandoc-src-block/override))
+;; =================ox-pandoc===================
 (provide 'setup_org_mode)

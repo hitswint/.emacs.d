@@ -4,16 +4,37 @@ function widget-percol-rsync-push()
 {
     local remote=$(cat ~/.ssh/config | grep "^Host " | awk '{print $2}' | percol)
     local dir=$(print -- $PWD | replace-home-with-tilde)
-    local local_files=$(ls -A | percol --match-method pinyin | tr '\n' '/' | sed 's/[[:space:]]*$//') # 生成a/b/c字符串
 
-    if [[ $local_files != "" ]]; then
-        IFS='/' read -rA ADDR <<< "$local_files" # 直接用\n分割有误，先替换成/。
-        unset IFS;
-        ADDR=($ADDR)            # Remove null elements from an array
-        rsync -arv --progress "${ADDR[@]}" $remote:$dir/ # 展开方式
-        # for i in "${ADDR[@]}"; do # 循环方式
-        #     rsync -arv --progress "$i" $remote:$dir
-        # done
+    if [[ $remote != "" ]]; then
+        # local local_files=$(ls -A | percol --match-method pinyin | tr '\n' '/' | sed 's/[[:space:]]*$//') # 生成/分割字符串：a/b/c
+        local local_files=$(ls -A | sed "s:^:$PWD/:" | percol --match-method pinyin | sed 's/[[:space:]]*$//')
+
+        # 若结果中含有双引号，使用fdfind继续选择
+        while [[ $local_files =~ ^\".*\"$ ]]; do
+            # 移除起止的双引号
+            local_files=`sed -e 's/^"//' -e 's/"$//' <<<"$local_files"`
+            # fdfind -L . ~/ 列出路径下所有文件
+            local_files=$(cd $local_files && fdfind -L | sed "s:^:$PWD/:" | percol --match-method pinyin | sed 's/[[:space:]]*$//')
+        done
+
+        if [[ $local_files != "" ]]; then
+            # * 使用IFS
+            # ** 使用\n分割：'\n'默认为字母n，$'\n'为分行。但传输多个文件时仍然出错
+            # IFS=$'\n' read -rA ADDR <<< "$local_files"
+            # ** 使用/代替\n分割：直接使用'\n'分割有误，先tr将\n替换为/，再以/分割
+            # IFS='/' read -rA ADDR <<< "$local_files"
+            # unset IFS;
+            # ADDR=($ADDR)            # Remove null elements from an array
+            # rsync -arv --progress "${ADDR[@]}" $remote:$dir/ # 展开方式
+
+            # ADDR=(${(s:-:)var})        # 按-分割成列表
+            ADDR=("${(f)local_files}") # 按\n分割成列表
+            ADDR=($ADDR)        # Remove null elements from an array
+            rsync -arv --progress "${ADDR[@]}" $remote:$dir/ # 展开方式
+            # for i in "${ADDR[@]}"; do # 循环方式
+            #     rsync -arv --progress "$i" $remote:$dir
+            # done
+        fi
     fi
 
     zle reset-prompt

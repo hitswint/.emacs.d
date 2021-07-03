@@ -22,9 +22,15 @@ mogrify -resize 300% $tmp_file_base.png
 mogrify -colorspace Gray $tmp_file_base.png
 
 if [ $1 == "chi_sim" ]; then
-    # 删除中文字间空格，tesseract识别中文效果不好
-    # cat $tmp_file_base.txt | sed 's/ //g' | xclip -selection clipboard -i
-    python3 ~/Documents/Python/ocr/ocr_baidu.py -i $tmp_file_base.png | xclip -selection clipboard -i
+    # tesseract识别中文效果不好
+    # tesseract $tmp_file_base.png $tmp_file_base -l $1 >> /dev/null
+    # cat $tmp_file_base.txt | sed 's/ //g' | xclip -selection clipboard -i # 删除中文字间空格
+
+    # 百度OCR已失效
+    # python3 ~/Documents/Python/ocr/ocr_baidu.py -i $tmp_file_base.png | xclip -selection clipboard -i
+
+    # paddleocr
+    zsh -is eval "source ~/.virtualenvs/ocr/bin/activate; python3 ~/Documents/Python/ocr/ocr_paddle.py -i $tmp_file_base.png && notify-send \"OCR finished!\""
 else
     # -l eng+chi_sim
     tesseract $tmp_file_base.png $tmp_file_base -l $1 >> /dev/null

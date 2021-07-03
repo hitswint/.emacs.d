@@ -2,6 +2,12 @@
 # X / _ / X
 percol.view.PROMPT  = ur"<bold><yellow>X / _ / X</yellow></bold> %q"
 
+import percol.actions as actions
+
+def finish_with_quote_output(percol):
+    percol.actions = (actions.output_to_stdout_double_quote, )
+    percol.finish()
+
 # Emacs like
 percol.import_keymap({
     "C-h" : lambda percol: percol.command.delete_backward_char(),
@@ -24,7 +30,7 @@ percol.import_keymap({
     "M-<" : lambda percol: percol.command.select_top(),
     "M->" : lambda percol: percol.command.select_bottom(),
     "C-m" : lambda percol: percol.finish(),
-    "C-j" : lambda percol: percol.finish(),
+    "C-j" : finish_with_quote_output,
     "C-g" : lambda percol: percol.cancel(),
     "M-t" : lambda percol: percol.command.toggle_mark_all(),
     "M-m" : lambda percol: percol.command.toggle_mark_and_next(),

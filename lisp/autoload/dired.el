@@ -232,9 +232,18 @@
              (let ((output-format (read-string "Output format: ")))
                (cl-loop for x in file-list
                         do (let ((filename (escape-local (file-name-nondirectory x))))
-                             (shell-command (concat "pandoc " (when (equal output-format "pdf")
+                             (shell-command (concat "pandoc " (cond
+                                                               ((string= (file-name-extension filename) "docx")
                                                                 (read-string "Options: "
-                                                                             "--pdf-engine=xelatex --template=eisvogel.latex --toc -V toc-title=\"目录\" --number-sections --include-in-header ~/.pandoc/templates/chapter_break.tex -V geometry:a4paper -V geometry:margin=2cm -V CJKmainfont=\"SimSun\" -V mainfont=\"Times New Roman\" -V monofont=\"SimSun\""))
+                                                                             "--extract-media ./pic"))
+                                                               ((equal output-format "docx")
+                                                                (read-string "Options: "
+                                                                             (format "--reference-doc=%s"
+                                                                                     (expand-file-name "~/.pandoc/reference_numfig.docx"))))
+                                                               ((equal output-format "pdf")
+                                                                (read-string "Options: "
+                                                                             "--pdf-engine=xelatex --template=eisvogel.latex --toc -V toc-title=\"目录\" --number-sections --include-in-header ~/.pandoc/templates/chapter_break.tex -V geometry:a4paper -V geometry:margin=2cm -V CJKmainfont=\"SimSun\" -V mainfont=\"Times New Roman\" -V monofont=\"SimSun\"")
+                                                                ))
                                                     " -o " (file-name-base filename)
                                                     "." output-format " " filename))))))
             ((string= engine "libreoffice")

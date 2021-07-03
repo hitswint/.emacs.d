@@ -4,18 +4,26 @@ function widget-percol-rsync-pull()
 {
     local remote=$(cat ~/.ssh/config | grep "^Host " | awk '{print $2}' | percol)
     local dir=$(print -- $PWD | replace-home-with-tilde)
-    local remote_files=$(ssh $remote '(cd '"$dir"' && ls -A | sed "s:^:$PWD/:") 2>/dev/null' | percol --match-method pinyin)
 
-    if [[ $remote_files != "" ]]; then
-        # ADDR=(${(s:-:)var})         # 按-分割成列表。
-        ADDR=("${(f)remote_files}") # 按\n分割成列表。
-        ADDR=($ADDR)            # Remove null elements from an array
+    if [[ $remote != "" ]]; then
+        local remote_files=$(ssh $remote '(cd '"$dir"' && ls -A | sed "s:^:$PWD/:") 2>/dev/null' | percol --match-method pinyin)
 
-        remote_args=()
-        for i in "${ADDR[@]}"; do # 循环方式
-            remote_args+=($remote:"'$i'")
+        # 若结果中含有双引号，使用fdfind继续选择
+        while [[ $remote_files =~ ^\".*\"$ ]]; do
+            remote_files=$(ssh $remote '(cd '"$remote_files"' && fdfind -L | sed "s:^:$PWD/:") 2>/dev/null' | percol --match-method pinyin)
         done
-        rsync -arv --progress "${remote_args[@]}" "./"
+
+        if [[ $remote_files != "" ]]; then
+            # ADDR=(${(s:-:)var})         # 按-分割成列表
+            ADDR=("${(f)remote_files}") # 按\n分割成列表
+            ADDR=($ADDR)        # Remove null elements from an array
+
+            remote_args=()
+            for i in "${ADDR[@]}"; do # 循环方式
+                remote_args+=($remote:"'$i'")
+            done
+            rsync -arv --progress "${remote_args[@]}" "./"
+        fi
     fi
 
     zle reset-prompt

@@ -66,7 +66,7 @@
                                                                 (helm-run-after-exit 'helm-bibtex-open-pdf-externally (helm-marked-candidates)))))
       (define-key map (kbd "C-c o") '(lambda () (interactive) (with-helm-alive-p
                                                                 (helm-run-after-exit 'helm-bibtex-open-pdf (helm-marked-candidates)))))
-      (define-key map (kbd "C-c l") '(lambda () (interactive) (with-helm-alive-p
+      (define-key map (kbd "C-c ;") '(lambda () (interactive) (with-helm-alive-p
                                                                 (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
       map)
     "Keymap for `helm-bibtex'.")

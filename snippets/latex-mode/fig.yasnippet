@@ -8,5 +8,5 @@
 \centering
 \includegraphics[width=0.5\linewidth]{${3:$$(if (file-directory-p "./pic") (concat "pic/" (yas-choose-value (directory-files "./pic"))) (yas-choose-value (directory-files "./")))}}$0
 \caption{${1:caption}}
-\label{fig:${2:$$(unless yas/modified-p (make-temp-name ""))}}
+\label{fig:${2:$$(unless yas/modified-p (make-temp-name (str-unicode-to-pinyin-initial (yas-field-value 1))))}}
 \end{figure}

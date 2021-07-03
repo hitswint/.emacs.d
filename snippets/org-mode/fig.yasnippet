@@ -2,9 +2,9 @@
 # key : fig
 # name : fig
 # --
-# #+ATTR_LATEX: :placement [H]
-#+CAPTION: ${1:}
-#+NAME: fig:${2:$$(unless yas/modified-p (make-temp-name ""))}
-#+ATTR_ORG: :width ${3:300}
-#+ATTR_LATEX: :width ${4:1}\linewidth,angle=0
+#+ATTR_ORG: :width ${1:300}
+#+ATTR_LATEX: :placement [htbp] :width ${2:1}\linewidth,angle=0
+#+ATTR_HTML: :width ${3:300}
+#+CAPTION: ${4:}
+#+NAME: fig:${5:$$(unless yas/modified-p (make-temp-name (str-unicode-to-pinyin-initial (yas-field-value 4))))}
 $0

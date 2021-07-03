@@ -309,7 +309,7 @@
 (def-package! visual-regexp
   :bind (("M-s r" . vr/query-replace)
          ("M-s R" . vr/replace)
-         ("M-s ;" . vr/mc-mark)))
+         ("M-s C-;" . vr/mc-mark)))
 ;; ===================visual-regexp================
 ;;; vlf
 ;; =======================vlf======================
@@ -508,7 +508,7 @@
              highlight-symbol-at-point
              highlight-symbol-get-symbol)
   :init
-  (smartrep-define-key global-map "C-x"
+  (smartrep-define-key global-map "M-s"
     '(("," . highlight-symbol-prev)
       ("." . highlight-symbol-next)
       (";" . highlight-symbol-at-point)))
@@ -533,7 +533,7 @@
   (add-to-list 'ahs-modes 'graphviz-dot-mode)
   (add-to-list 'ahs-modes 'arduino-mode)
   ;; C-u for whole buffer.
-  (define-key auto-highlight-symbol-mode-map (kbd "C-x /") 'ahs-edit-mode)
+  (define-key auto-highlight-symbol-mode-map (kbd "M-s /") 'ahs-edit-mode)
   (define-key auto-highlight-symbol-mode-map (kbd "M-<left>") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "M-<right>") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "M-S-<left>") nil)
@@ -549,7 +549,7 @@
              dumb-jump-back
              dumb-jump-quick-look)
   :init
-  (smartrep-define-key global-map "M-s"
+  (smartrep-define-key global-map "C-x"
     '(("," . dumb-jump-go)
       ("." . dumb-jump-back)
       ("/" . dumb-jump-quick-look))))
@@ -730,8 +730,8 @@
     (add-hook hook (lambda ()
                      (local-set-key (kbd "C-c r") 'reftex-mode))))
   :config
-  ;; 对元素的引用(reference)：C-c ( 添加label，C-c ) 引用label。
-  ;; 对文献的引用(citation)：C-c [ reftex-citation，C-c C-x [ org-reftex-citation。
+  ;; 对元素的引用(reference)：C-c ( 添加label，C-c ) 引用label
+  ;; 对文献的引用(citation)：C-c [ reftex-citation，C-c C-x [ org-reftex-citation
   (define-key reftex-mode-map (kbd "C-c r") 'reftex-parse-all)
   (setq reftex-plug-into-AUCTeX t
         reftex-toc-split-windows-horizontally t
@@ -757,9 +757,9 @@
 ;; =====================annot======================
 (def-package! annot
   :load-path "site-lisp/annot/src/"
-  :bind (("M-g a" . annot-edit/add)
-         ("M-g A" . annot-remove)
-         ("M-g M-a" . annot-add-image))
+  :bind (("M-g ;" . annot-edit/add)
+         ("M-g :" . annot-remove)
+         ("M-g M-;" . annot-add-image))
   :config
   (setq annot-directory "~/org/.annot")
   ;; 与volatile-highlights-mode有冲突。

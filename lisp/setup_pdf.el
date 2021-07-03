@@ -17,7 +17,7 @@
   (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
   (define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
   (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
-  (define-key pdf-view-mode-map (kbd "C-c l") 'swint-open-notes-file-for-pdf))
+  (define-key pdf-view-mode-map (kbd "C-c ;") 'swint-open-notes-file-for-pdf))
 ;; ====================pdf-tools===================
 ;;; doc-view-mode
 ;; ==================doc-view-mode=================
@@ -31,7 +31,7 @@
   (define-key doc-view-mode-map (kbd "C-v") 'doc-view-scroll-up-or-next-page)
   (define-key doc-view-mode-map (kbd "C-p") '(lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
   (define-key doc-view-mode-map (kbd "C-n") '(lambda () (interactive) (doc-view-next-line-or-next-page 3)))
-  (define-key doc-view-mode-map (kbd "C-c l") 'swint-open-notes-file-for-pdf))
+  (define-key doc-view-mode-map (kbd "C-c ;") 'swint-open-notes-file-for-pdf))
 ;; ==================doc-view-mode=================
 ;;; pdfgrep
 ;; =================pdfgrep========================

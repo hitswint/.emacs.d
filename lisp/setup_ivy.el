@@ -5,6 +5,7 @@
   :config
   (bind-key "M-s y" 'ivy-resume)
   (bind-key "C-h" 'ivy-avy ivy-minibuffer-map)
+  (bind-key "C-;" 'ivy-mark ivy-minibuffer-map)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-height 10)
   (setq ivy-count-format "%d/%d ")

@@ -152,6 +152,7 @@
                            outline-magic
                            outorg
                            outshine
+                           ox-pandoc
                            paredit
                            paredit-everywhere
                            parsebib

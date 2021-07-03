@@ -10,7 +10,7 @@
          ("C-x C-f" . helm-find-files)
          ("C-x f" . helm-find)
          ("M-x" . helm-M-x)
-         ("C-x F" . swint-helm-locate)
+         ("C-x l" . swint-helm-locate)
          ("C-x y" . helm-resume))
   :config
   (def-package! helm-config)
@@ -60,6 +60,8 @@
   (define-key helm-map (kbd "M-RET") 'helm-quit-and-find-file)
   (define-key helm-map (kbd "<C-tab>") 'helm-resume-previous-session-after-quit)
   (define-key helm-map (kbd "C-x y") 'helm-resume-list-buffers-after-quit)
+  (define-key helm-map (kbd "C-c C-k") 'helm-kill-selection-and-quit)
+  (define-key helm-map (kbd "C-c C-i") 'helm-insert-or-copy)
   (helm-define-key-with-subkeys helm-map (kbd "C-x Y") ?Y 'helm-run-cycle-resume)
   (helm-define-key-with-subkeys global-map (kbd "C-x Y") ?Y 'helm-cycle-resume)
   (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)

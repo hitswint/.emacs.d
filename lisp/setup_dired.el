@@ -283,15 +283,14 @@
 ;; ===============dired-ranger=================
 (def-package! dired-ranger
   :bind (:map dired-mode-map
+              ;; dired-copy-filename-as-kill直接复制文件名
               ("M-w" . swint-dired-ranger-copy)
               ("M-W" . swint-dired-clipboard-copy)
               ("M-Y" . swint-dired-clipboard-paste))
   :config
   (defun swint-dired-ranger-copy ()
     (interactive)
-    (if (region-active-p)
-        (easy-kill)
-      (dired-copy-filename-as-kill))
+    (easy-kill)
     (call-interactively 'dired-ranger-copy))
   (defun swint-dired-clipboard-copy () ;导致界面卡死，可粘贴图片；C-g杀死xclip进程，无法复制
     (interactive)

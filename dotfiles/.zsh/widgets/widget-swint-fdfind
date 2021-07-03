@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+function widget-swint-fdfind() {
+    LBUFFER=$(fdfind $LBUFFER | percol)
+    zle -R -c
+}
+
+widget-swint-fdfind "$@"

@@ -35,7 +35,7 @@ $0
 // 复杂节点必须用record或Mrecord，区别是Mrecord的角是圆的。
 // node[label="<f0>LEFT|<f1>MIDDLE|<f2>RIGHT"]，LEFT/MIDDLE/RIGHT 为显示的label；f0/f1/f2为子节点，用于控制连线，如node:f0 -> node:f1。
 // 当默认排列从上到下时，复杂节点从左到右排列；当默认排列从左到右时，复杂节点从上到下排列。复杂节点中用{}括起来的部分排列方向改变。
-// 如node[label="a|{b|c}|d"] 若默认排列从上到下，则ad横向排列，bc竖向排列在ad之间。
+// 如node[shape="record", label="a|{b|c}|d"] 若默认排列从上到下，则ad横向排列，bc竖向排列在ad之间。
 // ===========================NODE===========================
 // =========================SUBGRAPH=========================
 // 直接连接到子图上，先输入compound = true，然后通过lhead和ltail来连接，如:

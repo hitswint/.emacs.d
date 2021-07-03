@@ -13,5 +13,5 @@ $0 & \\\
 \bottomrule
 \end{tabular}
 \caption{${1:caption}}
-\label{tab:${2:$$(unless yas/modified-p (make-temp-name ""))}}
+\label{tab:${2:$$(unless yas/modified-p (make-temp-name (str-unicode-to-pinyin-initial (yas-field-value 1))))}}
 \end{table}

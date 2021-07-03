@@ -80,7 +80,7 @@ df_%s=pd.read_csv('%s', header=None if builtins.all(is_number(ele) for ele in '%
                                              :buffer "*helm python plot data-swint*"))
           (setq labels-string (puthash "labels" (read-string "xlabel_str, ylabel_str: " (gethash "labels" swint-python-plot-hash)) swint-python-plot-hash))
           (setq fonts-string (puthash "fonts" (read-string "tick_font, label_font, legend_font (default t,t,t): " (gethash "fonts" swint-python-plot-hash)) swint-python-plot-hash))
-          (setq sizes-string (puthash "sizes" (read-string "tick_size, label_size, legend_size (default 16,24,16): " (gethash "sizes" swint-python-plot-hash)) swint-python-plot-hash))
+          (setq sizes-string (puthash "sizes" (read-string "tick_size, label_size, legend_size (default 36,42,42): " (gethash "sizes" swint-python-plot-hash)) swint-python-plot-hash))
           ;; 可直接输入用逗号分割的colors/lines/markers。
           (setq colors-string (mapconcat 'identity (helm-comp-read "Colors: " (list "None" "r" "g" "b" "y" "c" "m" "k")
                                                                    :marked-candidates t

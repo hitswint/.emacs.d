@@ -2,9 +2,9 @@
 # key : table
 # name : table
 # --
+# #+ATTR_LATEX: :align cc
 #+CAPTION: ${1:}
-#+NAME: table:${2:$$(unless yas/modified-p (make-temp-name ""))}
-#+ATTR_LATEX: :align ${3:cc}
+#+NAME: table:${2:$$(unless yas/modified-p (make-temp-name (str-unicode-to-pinyin-initial (yas-field-value 1))))}
 |----+---+
 | $0 |   |
 |----+---+
