@@ -701,6 +701,7 @@
   (setq org-pandoc-options-for-docx '((standalone . nil)))
   (setq org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex")))
   (setq org-pandoc-options-for-latex-pdf '((pdf-engine . "xelatex")))
+  (add-to-list 'org-pandoc-valid-options 'citeproc)
   (defvar org-pandoc-table-fmt "表 %d")
   (defvar org-pandoc-paragraph-fmt "图 %d")
   (defvar org-pandoc-src-block-fmt "列表 %d")

@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # key: babel-src
-# name: src-babel
+# name: babel-src
 # --
 ${1::file ${2:$$(unless yas/modified-p (unless (file-exists-p ".ob-pic") (make-directory ".ob-pic")) (concat "./.ob-pic/" (make-temp-name (concat (file-name-base (or (buffer-file-name) (buffer-name))) "_" (format-time-string "%Y%m%d_"))) ".png"))}} ${3::var ${4:x=x}} :session :cache yes :tangle yes :results output :exports both$0

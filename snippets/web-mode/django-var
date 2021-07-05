@@ -2,6 +2,6 @@
 # contributor: David Miller <david@deadpansincerity.com>
 # group: django
 # name : django-var
-# key: var-django
+# key: django-var
 # --
 {{ ${1:item} }}

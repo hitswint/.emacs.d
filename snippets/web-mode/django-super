@@ -2,6 +2,6 @@
 # contributor: David Miller <david@deadpansincerity.com>
 # group: django
 # name : django-super
-# key : super-django
+# key : django-super
 # --
 {{ block.super }}$0

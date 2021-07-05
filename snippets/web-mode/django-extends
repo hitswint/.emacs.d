@@ -2,6 +2,6 @@
 # contributor: David Miller <david@deadpansincerity.com>
 # group: django
 # name : django-extends
-# key : extends-django
+# key : django-extends
 # --
 {% extends '${1:base.html}' %}$0
