@@ -61,6 +61,12 @@ else
     source-if-exists "${ZDOTDIR}/src/pinyin-completion/shell/pinyin-comp.zsh"
 fi
 
+if [ ! -f ${ZDOTDIR}/src/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh ];then
+    git clone https://github.com/hitswint/zsh-interactive-cd ${ZDOTDIR}/src/zsh-interactive-cd
+else
+    source-if-exists "${ZDOTDIR}/src/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh"
+fi
+
 if [[ -n $SSH_CONNECTION ]]; then
     PROMPT="%{$fg_bold[yellow]%}%m%{$reset_color%} ${PROMPT}"
 fi

@@ -17,6 +17,14 @@ if [ -f ${ZDOTDIR}/src/antigen/antigen.zsh ];then
     antigen bundle web-search
     antigen bundle z
 
+    antigen bundle Aloxaf/fzf-tab
+
+    # zstyle ':fzf-tab:*' fzf-command percol
+    zstyle ':fzf-tab:*' fzf-bindings 'alt-m:toggle' 'alt-t:toggle-all'
+    zstyle ':fzf-tab:*' switch-group 'alt-p' 'alt-n'
+    zstyle ':fzf-tab:*' fzf-flags --color=bg+:8
+    export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'--bind ctrl-v:page-down,alt-v:page-up'
+
     antigen bundle zsh-users/zsh-autosuggestions
     antigen bundle zsh-users/zsh-completions
     antigen bundle zsh-users/zsh-syntax-highlighting

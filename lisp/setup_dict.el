@@ -65,8 +65,7 @@
 (def-package! baidu-translate
   :commands baidu-translate-at-point
   :config
-  (def-package! unicode-escape
-    :after baidu-translate)
+  (def-package! unicode-escape :after baidu-translate)
   (setq baidu-translate-appid "20200329000407785")
   (setq baidu-translate-security "oPVKtlEmfo4Q9KYHpjfy")
   (defun baidu-translate-at-point (&optional _word)

@@ -222,7 +222,7 @@
   (let ((file-list (if (eq major-mode 'dired-mode)
                        (dired-get-marked-files)
                      (list (buffer-file-name))))
-        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "ODAFileConverter")
+        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "ODAFileConverter" "xlsx2csv")
                                 :buffer "*helm dired converter-swint*"))
         (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)"))
     (cl-flet ((escape-local (x)
@@ -238,8 +238,11 @@
                                                                              "--extract-media ./pic"))
                                                                ((equal output-format "docx")
                                                                 (read-string "Options: "
-                                                                             (format "--reference-doc=%s"
-                                                                                     (expand-file-name "~/.pandoc/reference_numfig.docx"))))
+                                                                             (format "--reference-doc=%s --citeproc --bibliography=%s --csl=%s -M reference-section-title=\"%s\""
+                                                                                     (expand-file-name "~/.pandoc/reference.docx")
+                                                                                     (expand-file-name "~/.bib/Zotero.bib")
+                                                                                     (expand-file-name "~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl")
+                                                                                     "参考文献")))
                                                                ((equal output-format "pdf")
                                                                 (read-string "Options: "
                                                                              "--pdf-engine=xelatex --template=eisvogel.latex --toc -V toc-title=\"目录\" --number-sections --include-in-header ~/.pandoc/templates/chapter_break.tex -V geometry:a4paper -V geometry:margin=2cm -V CJKmainfont=\"SimSun\" -V mainfont=\"Times New Roman\" -V monofont=\"SimSun\"")
@@ -256,11 +259,25 @@
                                                       " --infilter=CSV:44,34,76,1")
                                                     " " filename))))))
             ((string= engine "pdftk")
-             (let ((output-args (read-string "Pdftk args(1-2west 4 5-end): ")))
-               (cl-loop for x in file-list
-                        do (let ((filename (escape-local (file-name-nondirectory x))))
-                             (shell-command (concat "pdftk " filename " cat "
-                                                    output-args " output " (concat (file-name-base filename) "_" output-args ".pdf")))))))
+             (let* ((file-list-ordered (if (> (length file-list) 1)
+                                           (helm-comp-read "Select files with order: " file-list
+                                                           :marked-candidates t
+                                                           :buffer (concat "*helm dired converter-swint*"))
+                                         file-list))
+                    (file-args (cl-loop for x in file-list-ordered
+                                        for y from ?A to ?Z
+                                        collect (let ((filename (escape-local (file-name-nondirectory x))))
+                                                  (concat (char-to-string y) "=" filename))))
+                    (page-args (cl-loop for x in file-list-ordered
+                                        for y from ?A to ?Z
+                                        collect (mapconcat (lambda (arg) (concat (char-to-string y) arg))
+                                                           (split-string (read-string (concat (file-name-nondirectory x) " (1-2west 4 5-end): ") nil nil "1-end") " " t)
+                                                           " "))))
+               (shell-command (concat "pdftk " (mapconcat 'identity file-args " ") " cat " (mapconcat 'identity page-args " ") " output "
+                                      (cl-loop for x in file-list-ordered
+                                               for y in page-args
+                                               concat (concat (file-name-base (escape-local (file-name-nondirectory x))) ":" y "."))
+                                      "pdf"))))
             ((string= engine "ODAFileConverter")
              (let ((output-version (helm-comp-read "Output version: "
                                                    (list "ACAD9" "ACAD10" "ACAD12" "ACAD13" "ACAD14" "ACAD2000" "ACAD2004" "ACAD2007" "ACAD2010")
@@ -272,7 +289,16 @@
                (cl-loop for x in file-list
                         do (let ((filename (escape-local (file-name-nondirectory x))))
                              (shell-command (concat (format "ODAFileConverter ./ ./%s-%s %s %s 0 1 " output-type output-version output-version output-type)
-                                                    (unless all-files filename)))))))))))
+                                                    (unless all-files filename)))))))
+            ((string= engine "xlsx2csv")
+             (cl-loop for x in file-list
+                      do (let* ((filename (escape-local (file-name-nondirectory x)))
+                                (file-extension (ignore-errors (downcase (file-name-extension filename)))))
+                           (cond ((equal file-extension "xlsx")
+                                  (shell-command (concat "xlsx2csv -i -a " filename " " (file-name-sans-extension filename))))
+                                 ((equal file-extension "xls")
+                                  ;; 存在中文乱码问题，需设置charset，自带charset位于/usr/share/catdoc/下，但无中文支持
+                                  (shell-command (concat "xls2csv " filename " > " (file-name-sans-extension filename) ".csv")))))))))))
 ;; ============swint-dired-converter=========
 ;;; dired-view-file-or-dir
 ;; ==========dired-view-file-or-dir==========

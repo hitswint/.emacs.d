@@ -27,13 +27,13 @@
   (defun w3m-open-site-current-session (site)
     "Open site in current session with‘http://’appended."
     (interactive
-     (list (read-string "Enter website address(default: w3m-home):" nil nil "www.baidu.com" nil )))
+     (list (read-string "Enter website address(default: w3m-home):" nil nil "www.baidu.com" nil)))
     (w3m-goto-url
      (concat "http://" site)))
   (defun w3m-open-site-new-session (site)
     "Open site in new w3m session with‘http://’appended."
     (interactive
-     (list (read-string "Enter website address(default: w3m-home):" nil nil "www.baidu.com" nil )))
+     (list (read-string "Enter website address(default: w3m-home):" nil nil "www.baidu.com" nil)))
     (w3m-goto-url-new-session
      (concat "http://" site)))
   (defun w3m-new-tab ()
@@ -77,7 +77,7 @@
                     (split-string (shell-command-to-string
                                    ;; 直接读取places.sqlite会导致Error: database is locked，将其拷贝到/tmp下读取。
                                    (format "cp %s /tmp/; sqlite3 -separator '||' /tmp/places.sqlite \"select title,url from moz_places where last_visit_date is not null order by last_visit_date desc\" | head -1000"
-                                           (expand-file-name "places.sqlite" (helm-get-firefox-user-init-dir)))) "\n")))
+                                           (expand-file-name "places.sqlite" (helm-get-firefox-user-init-dir helm-firefox-default-directory)))) "\n")))
       :candidates (lambda ()
                     (cl-loop for f in helm-firefox-history-alist
                              collect (replace-regexp-in-string "\\(||\\)http.*\\'" "\n" f nil nil 1)))

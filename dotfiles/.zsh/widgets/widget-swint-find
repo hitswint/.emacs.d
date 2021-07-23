@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-function widget-swint-find-file()
+function widget-swint-find()
 {
     local fullpath=$*
     local filename=${fullpath##*/} # remove "/" from the beginning
@@ -16,4 +16,4 @@ function widget-swint-find-file()
     zle reset-prompt
 }
 
-widget-swint-find-file "$@"
+widget-swint-find "$@"

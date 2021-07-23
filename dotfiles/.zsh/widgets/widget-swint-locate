@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-function widget-swint-locate-file()
+function widget-swint-locate()
 {
     local selected=$(locate ~/ | percol)
     if [ $? -eq 0 ]; then
@@ -11,4 +11,4 @@ function widget-swint-locate-file()
     zle reset-prompt
 }
 
-widget-swint-locate-file "$@"
+widget-swint-locate "$@"

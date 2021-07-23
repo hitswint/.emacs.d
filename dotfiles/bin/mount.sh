@@ -1,14 +1,22 @@
 #!/bin/bash
 
-remote=$(cat ~/.ssh/config | grep "^Host " | awk '{print $2}' | sed "$ a local" | percol)
+# remote=$(cat ~/.ssh/config | grep "^Host " | awk '{print $2}' | sed "$ a local" | percol) # 最后一行后加local
+remote=$(cat ~/.ssh/config | grep "^Host " | awk '{print $2}' | sed "1 i local" | percol) # 第一行前加local
 
 if [[ $remote == "local" ]]; then
-    lsblk
-    read mydevice
-    pass_sudo=$(gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2=="localhost" {print $NF}')
-    echo $pass_sudo | sudo -S mount -o uid=1000,gid=1000 /dev/$mydevice /media/iso
-    cd /media/iso
-    $SHELL
+    # percol选择
+    mydevice=$(lsblk -nrp | awk '$6==type {print $1,$7}' type="part" | percol)
+
+    # 直接输入
+    # lsblk
+    # read mydevice
+
+    if [[ $mydevice != "" ]]; then
+        pass_sudo=$(gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2=="localhost" {print $NF}')
+        echo $pass_sudo | sudo -S mount -o uid=1000,gid=1000 $mydevice /media/iso
+        cd /media/iso
+        $SHELL
+    fi
 elif [[ $remote != "" ]];then
     target=/mnt/sshfs/$remote
     mkdir -p $target

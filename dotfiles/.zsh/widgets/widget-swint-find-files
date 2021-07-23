@@ -1,0 +1,59 @@
+#!/bin/zsh
+
+function widget-swint-find-files(){
+    tokens=(${(z)LBUFFER})
+
+    # 当$LBUFFER最后一个字符非空格时，以当前路径补全
+    if [[ (( $#tokens )) && ( $LBUFFER[-1] != " " ) ]]; then
+        dir=${tokens[-1]/#\~/$HOME}
+        dir=${dir/#\\/}
+        # 除去最后1个元素的命令行参数
+        LBUFFER="${tokens[1,-2]} "
+    fi
+
+    if [[ (-d $dir) || (-L $dir) ]];then
+        local_files_dir=`realpath "$dir"`/
+    else
+        local_files_dir=$PWD/
+    fi
+
+    # 排除结果中的文件夹：| grep -v /
+    local_files=$(ls -1 -ap $local_files_dir | percol --match-method pinyin)
+
+    # 若结果中含有双引号，继续选择
+    while [[ ($local_files =~ ^\".*\"$) && ((-d $local_files_dir) || (-L $local_files_dir))]]; do
+        # 移除起止的双引号
+        local_files=`sed -e 's/^"//' -e 's/"$//' <<<"$local_files"`
+
+        local_files_dir=$local_files_dir$local_files
+
+        if [[ -L $local_files_dir ]]; then
+            local_files_dir=$local_files_dir/
+        fi
+
+        local_files=$(ls -1 -ap $local_files_dir | percol --match-method pinyin)
+    done
+
+
+    if [[ $local_files != "" ]]; then
+        # ADDR=(${(s:-:)var})         # 按-分割成列表
+        ADDR=("${(f)local_files}") # 按\n分割成列表
+        ADDR=($ADDR)        # Remove null elements from an array
+
+        list_args=()
+
+        for i in "${ADDR[@]}"; do # 循环方式
+            # 使用realpath或readlink -f转换可能存在的相对路径
+            # 使用printf %q转义路径中可能存在的空格
+            list_args+=($(printf %q "$(realpath "$local_files_dir$i")"))
+        done
+
+        local new_left="${LBUFFER} ${list_args[@]} "
+        BUFFER=${new_left}${RBUFFER}
+        CURSOR=${#new_left}
+    fi
+
+    zle -R -c
+}
+
+widget-swint-find-files "$@"

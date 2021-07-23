@@ -105,9 +105,9 @@ bind-maps emacs -- '^[^_D"^_' set-mark-command
 bind-maps emacs -- '^[^_3B^_' widget-slash-backward-kill-word
 # Percol.
 bind-maps emacs -- '^xf' widget-swint-fdfind
-bind-maps emacs -- '^xF' widget-swint-find-file
-bind-maps emacs -- '^xl' widget-swint-locate-file
-bind-maps emacs -- '^x^f' widget-swint-find-file-current-dir
+bind-maps emacs -- '^xF' widget-swint-find
+bind-maps emacs -- '^xl' widget-swint-locate
+bind-maps emacs -- '^x^f' widget-swint-find-files
 bind-maps emacs -- '^x^r' widget-percol-select-history
 bind-maps emacs -- '^x^i' widget-percol-cd-history
 bind-maps emacs -- '^xi' widget-percol-insert-history
@@ -124,3 +124,4 @@ bind-maps emacs -- '^x^[^_Db^_' widget-shell-bookmark-add-cwd
 bind-maps emacs -- '^[^_Db^_' widget-shell-bookmark-cd-to
 bind-maps emacs -- '^x,' widget-percol-rsync-pull
 bind-maps emacs -- '^x.' widget-percol-rsync-push
+bind-maps emacs -- "\e^i" expand-or-complete

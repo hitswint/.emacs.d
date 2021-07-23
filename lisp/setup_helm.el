@@ -530,8 +530,10 @@
 (def-package! helm-ag
   ;; helm-do-ag 互动式搜索，但只能搜索一个词。
   ;; helm-ag 先输入词，可以在结果中搜索第二个词。
-  :bind (("C-x g" . helm-do-ag)
-         ("C-x G" . helm-do-ag-buffers))
+  :commands (helm-do-ag helm-do-ag-buffers)
+  :init
+  (bind-key "C-x g" '(lambda () (interactive) (let ((helm-truncate-lines t)) (call-interactively 'helm-do-ag))))
+  (bind-key "C-x G" '(lambda () (interactive) (let ((helm-truncate-lines t)) (call-interactively 'helm-do-ag-buffers))))
   :config
   (setq helm-ag-base-command "ag --nocolor --nogroup --hidden")
   (setq helm-ag-command-option "--follow") ;Follow symlinks.

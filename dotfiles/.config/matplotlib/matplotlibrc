@@ -1,0 +1,15 @@
+# 使用华文宋体
+# font.family        : serif
+# font.serif         : STSong, SimSun, Times New Roman, Times, DejaVu Serif, Bitstream Vera Serif, Computer Modern Roman, New Century Schoolbook, Century Schoolbook L, Utopia, ITC Bookman, Bookman, Nimbus Roman No9 L, Palatino, Charter, serif
+# mathtext.fontset : stix
+# axes.unicode_minus : False
+
+# 使用tex
+# https://scipy-cookbook.readthedocs.io/items/Matplotlib_UsingTex.html
+# font.family        : serif
+# font.serif         : Times, Palatino, New Century Schoolbook, Bookman, Computer Modern Roman
+# font.sans-serif    : Helvetica, Avant Garde, Computer Modern Sans serif
+# font.cursive       : Zapf Chancery
+# font.monospace     : Courier, Computer Modern Typewriter
+
+# text.usetex        : true

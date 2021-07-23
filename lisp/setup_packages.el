@@ -522,6 +522,7 @@
   :defer 2
   :config
   (global-auto-highlight-symbol-mode t)
+  (setq ahs-overlay-priority 0)
   (set-face-attribute 'ahs-face nil
                       :foreground "white"
                       :background "DarkMagenta")
