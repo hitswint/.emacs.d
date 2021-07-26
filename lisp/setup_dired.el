@@ -162,10 +162,128 @@
   ;; ========dired-next/previous-line==========
   )
 ;; ==================dired=====================
+;;; image-dired
+;; ===============image-dired==================
+(def-package! image-dired
+  ;; 默认以C-t为快捷键前缀
+  ;; C-t C-t 当前dired中显示缩略图
+  ;; C-t (./d/a) image-dired中显示(当前/选中/追加)文件缩略图
+  ;; C-t (i/x) Emacs(内/外)查看图片文件
+  ;; image-dired中m/u/d标记原文件，l/r/L/R旋转缩略图和原文件
+  ;; 缩略图和数据库文件保存在~/.emacs.d/image-dired/下
+  ;; 依赖：convert/mogrify/pngnq/pngcrush/optipng/jpegtran/exiftool/pdftoppm/ffmpegthumbnailer/openscad/unoconv/libreoffice
+  :after dired
+  :config
+  (bind-key "C-j" 'image-dired-thumbnail-display-external image-dired-thumbnail-mode-map)
+  (bind-key "M-i" '(lambda () (interactive) (if (global-image-dired-minor-mode 'toggle)
+                                                (image-dired-display-thumbs-all)
+                                              (when (get-buffer image-dired-thumbnail-buffer)
+                                                (kill-buffer image-dired-thumbnail-buffer))))
+            dired-mode-map)
+  (bind-key [tab] nil image-dired-minor-mode-map)
+  (setq image-dired-external-viewer "xdg-open"
+        image-dired-queue-active-limit  ;最大进程数为逻辑cpu数量的1/2
+        (/ (string-to-number (shell-command-to-string "cat /proc/cpuinfo | grep \"processor\" | wc -l")) 2)
+        image-dired-cmd-create-thumbnail-options ; 使用-thumbnail替换-resize，并配置-define读取大小，以加快速度
+        '("-define" "jpeg:size=%wx%h" "%f[0]" "-thumbnail" "%wx%h>" "-strip" "jpeg:%t")
+        image-dired-cmd-create-temp-image-options image-dired-cmd-create-thumbnail-options)
+  (define-globalized-minor-mode global-image-dired-minor-mode image-dired-minor-mode
+    (lambda () (when (eq major-mode 'dired-mode) (image-dired-minor-mode 1)))
+    :lighter " image-dired")
+  (defvar image-dired-file-extension-all (append image-file-name-extensions
+                                                 '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "pdf" "3mf" "amf" "dxf" "off" "stl" "rmvb" "rm" "mp4" "avi" "flv" "f4v" "mpg" "mkv" "3gp" "wmv" "mov" "dat" "asf" "mpeg" "wma" "webm")))
+  (defvar image-dired-file-regexp-all (concat "\\."
+                                              (regexp-opt (nconc (mapcar #'upcase image-dired-file-extension-all)
+                                                                 image-dired-file-extension-all)
+                                                          t)
+                                              "\\'"))
+  (defun image-dired-refresh-thumbnail-buffer (&optional arg)
+    (when (string-match-p image-dired-file-regexp-all (dired-get-filename))
+      (if (and (get-buffer image-dired-thumbnail-buffer)
+               (equal default-directory (buffer-local-value 'default-directory (get-buffer image-dired-thumbnail-buffer))))
+          (if (image-dired-track-thumbnail)
+              (display-buffer image-dired-thumbnail-buffer)
+            (image-dired-display-thumbs t t t)
+            (image-dired-track-thumbnail))
+        (image-dired-display-thumbs-all))))
+  (advice-add 'image-dired-dired-previous-line :after #'image-dired-refresh-thumbnail-buffer)
+  (advice-add 'image-dired-dired-next-line :after #'image-dired-refresh-thumbnail-buffer)
+  (defun image-dired-display-thumbs-all ()
+    (when (get-buffer image-dired-thumbnail-buffer)
+      (kill-buffer image-dired-thumbnail-buffer))
+    (let* ((file-num (length (directory-files default-directory nil image-dired-file-regexp-all)))
+           ;; 当文件数量>100时，预览前100张文件
+           (mark-num (if (> file-num 100)
+                         (dired-mark-if (and (not (looking-at-p dired-re-dot))
+                                             (not (eolp))
+                                             (let ((fn (dired-get-filename t t)))
+                                               (and fn (string-match-p image-dired-file-regexp-all fn)))
+                                             ;; count为宏dired-mark-if内部变量
+                                             (< count 100))
+                                        "matching file")
+                       (dired-mark-files-regexp image-dired-file-regexp-all))))
+      (when (and mark-num (> mark-num 0))
+        (image-dired-display-thumbs nil nil t)
+        (dired-unmark-all-files ?*)
+        (revert-buffer)
+        (image-dired-track-thumbnail))))
+  (defun image-dired-create-thumb-1/around (fn original-file thumbnail-file &rest args)
+    (if (string-match-p (image-file-name-regexp) original-file)
+        (apply fn original-file thumbnail-file args)
+      (let* ((file-ext (ignore-errors (downcase (file-name-extension original-file))))
+             (office-ext '("doc" "docx" "xls" "xlsx" "ppt" "pptx"))
+             (pdf-ext '("pdf"))
+             (cad-ext '("3mf" "amf" "dxf" "off" "stl"))
+             (video-ext '("rmvb" "rm" "mp4" "avi" "flv" "f4v" "mpg" "mkv" "3gp" "wmv" "mov" "dat" "asf" "mpeg" "wma" "webm"))
+             (process (start-process-shell-command "image-dired-create-thumbnail" nil
+                                                   (format (cond
+                                                            ((member file-ext office-ext)
+                                                             ;; "unoconv -f pdf -e PageRange=1-1 --stdout \"%1$s\" | pdftoppm -jpeg -f 1 -l 1 | convert -define jpeg:size=100x100 - -thumbnail 100x100 -strip jpeg:\"%2$s\""
+                                                             ;; libreoffice无法指定生成文件名字，也无法输出至stdout
+                                                             (let* ((temp-dir (make-temp-name (expand-file-name image-dired-dir)))
+                                                                    (temp-file (concat temp-dir "/" (file-name-base original-file) ".jpg")))
+                                                               ;; 同时运行多个实例需加-env:UserInstallation，当转换时间超过5秒，自动终止
+                                                               (concat "timeout 5 libreoffice \"-env:UserInstallation=file://" temp-dir "\" --headless --convert-to jpg --outdir \""
+                                                                       temp-dir "\" \"%1$s\" && convert -define jpeg:size=100x100 \""
+                                                                       temp-file "\" -thumbnail 100x100 -strip jpeg:\"%2$s\" || convert -font 黑体 label:\""
+                                                                       (file-name-nondirectory original-file) "\" -thumbnail 100x100 -strip jpeg:\"%2$s\" ; rm -r \""
+                                                                       temp-dir "\"")))
+                                                            ((member file-ext pdf-ext)
+                                                             ;; 使用convert转换pdf速度太慢
+                                                             ;; "convert -define jpeg:size=100x100 \"%1$s\"[0] -thumbnail 100x100 -strip jpeg:%2$s"
+                                                             "pdftoppm -jpeg -f 1 -l 1 \"%1$s\" | convert -define jpeg:size=100x100 - -thumbnail 100x100 -strip jpeg:\"%2$s\"")
+                                                            ((member file-ext cad-ext)
+                                                             (concat "openscad -o " image-dired-dir "image-dired.png"
+                                                                     " <(echo \"import(\\\"%1$s\\\");\") && convert -define jpeg:size=100x100 "
+                                                                     image-dired-dir "image-dired.png"
+                                                                     " -thumbnail 100x100 -strip jpeg:\"%2$s\""))
+                                                            ((member file-ext video-ext)
+                                                             "ffmpegthumbnailer -i \"%1$s\" -t 0% -s 0 -c jpeg -o - | convert -define jpeg:size=100x100 - -thumbnail 100x100 -strip jpeg:\"%2$s\""))
+                                                           original-file thumbnail-file))))
+        (lexical-let ((thumbnail-file-temp thumbnail-file)
+                      (original-file-temp original-file))
+          (setf (process-sentinel process)
+                (lambda (process status)
+                  (cl-decf image-dired-queue-active-jobs)
+                  (image-dired-thumb-queue-run)
+                  (if (not (and (eq (process-status process) 'exit)
+                                (zerop (process-exit-status process))))
+                      (message "Thumb could not be created for %s: %s"
+                               (abbreviate-file-name original-file-temp)
+                               (replace-regexp-in-string "\n" "" status))
+                    (set-file-modes thumbnail-file-temp #o600)
+                    (clear-image-cache thumbnail-file-temp)))))
+        process)))
+  (advice-add 'image-dired-create-thumb-1 :around #'image-dired-create-thumb-1/around)
+  (defun image-dired-thumb-name/around (fn file &rest args)
+    (if (string-match-p (image-file-name-regexp) file)
+        (apply fn file args)
+      (concat (apply fn file args) ".jpg")))
+  (advice-add 'image-dired-thumb-name :around #'image-dired-thumb-name/around))
+;; ===============image-dired==================
 ;;; peep-dired
 ;; ================peep-dired==================
 (def-package! peep-dired
-  ;; image-dired: Use C-t as prefix.
   :commands global-peep-dired
   :init
   (add-hook 'dired-mode-hook (lambda ()
@@ -179,7 +297,6 @@
   :config
   (define-globalized-minor-mode global-peep-dired peep-dired
     (lambda () (when (eq major-mode 'dired-mode) (peep-dired 1))))
-  (require 'image-dired)
   (defvar peep-preview-timer nil)
   (defvar ranger-scope-extensions (cl-remove-if
                                    (lambda (x)
@@ -194,31 +311,35 @@
              (lambda (func)
                (let ((file-entry-name (dired-file-name-at-point)))
                  (if (not (file-directory-p file-entry-name))
-                     (let* ((cad-extensions (list "3mf" "amf" "dxf" "off" "stl"))
-                            (image-extensions (list "png" "jpg" "bmp" "jpeg"))
+                     (let* ((image-extensions (list "png" "jpg" "bmp" "jpeg" "gif"))
+                            (cad-extensions (list "3mf" "amf" "dxf" "off" "stl"))
+                            (video-extensions (list "rmvb" "rm" "mp4" "avi" "flv" "f4v" "mpg" "mkv" "3gp" "wmv" "mov" "dat" "asf" "mpeg" "wma" "webm"))
                             (file-extension (ignore-errors (downcase (file-name-extension file-entry-name))))
                             (peep-dired-preview-buffer
-                             (if (member file-extension (append cad-extensions image-extensions))
-                                 (let ((image-entry-name
-                                        (if (member file-extension image-extensions)
-                                            file-entry-name
-                                          (shell-command (format "openscad -o %speep-dired.png <(echo \"import(\\\"%s\\\");\")"
-                                                                 image-dired-dir (expand-file-name file-entry-name)))
-                                          (concat image-dired-dir "peep-dired.png"))))
-                                   (image-dired-create-display-image-buffer)
-                                   (display-buffer image-dired-display-image-buffer)
-                                   (image-dired-display-image image-entry-name)
-                                   image-dired-display-image-buffer)
-                               (with-current-buffer (get-buffer-create "*peep-preview*")
-                                 (buffer-disable-undo)
-                                 (erase-buffer)
-                                 (font-lock-mode -1)
-                                 (if (member file-extension ranger-scope-extensions)
-                                     (insert (shell-command-to-string (format "ranger_scope.sh %s 1000 100 '/tmp' 'False'"
-                                                                              (replace-regexp-in-string "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)" "\\\\\\1" file-entry-name))))
-                                   (insert-file-contents file-entry-name))
-                                 (set-buffer-modified-p nil)
-                                 (current-buffer)))))
+                             (cond
+                              ((member file-extension image-extensions)
+                               (image-dired-dired-display-image)
+                               image-dired-display-image-buffer)
+                              ((member file-extension (append video-extensions cad-extensions))
+                               (shell-command (format (cond ((member file-extension video-extensions)
+                                                             "ffmpegthumbnailer -i \"%2$s\" -o %1$speep-dired.png -t 0%% -s 0")
+                                                            ((member file-extension cad-extensions)
+                                                             "openscad -o %1$speep-dired.png <(echo \"import(\\\"%2$s\\\");\")"))
+                                                      image-dired-dir (expand-file-name file-entry-name)))
+                               (image-dired-create-display-image-buffer)
+                               (display-buffer image-dired-display-image-buffer)
+                               (image-dired-display-image (expand-file-name "peep-dired.png" image-dired-dir))
+                               image-dired-display-image-buffer)
+                              (t (with-current-buffer (get-buffer-create "*peep-preview*")
+                                   (buffer-disable-undo)
+                                   (erase-buffer)
+                                   (font-lock-mode -1)
+                                   (if (member file-extension ranger-scope-extensions)
+                                       (insert (shell-command-to-string (format "ranger_scope.sh %s 1000 100 '/tmp' 'False'"
+                                                                                (replace-regexp-in-string "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)" "\\\\\\1" file-entry-name))))
+                                     (insert-file-contents file-entry-name))
+                                   (set-buffer-modified-p nil)
+                                   (current-buffer))))))
                        (add-to-list 'peep-dired-peeped-buffers
                                     (window-buffer (display-buffer peep-dired-preview-buffer t))))
                    (funcall func)))
