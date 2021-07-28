@@ -45,10 +45,9 @@
                                      ("markers" (list "o" "v" "^" "<" ">" "1" "2" "3" "4" "8" "s" "p" "P" "*" "h" "H" "+" "x" "X" "D" "d" "|" "_"))))
   (defun swint-python-load-file ()
     (interactive)
-    (let* ((file-name (if (eq major-mode 'dired-mode) (dired-get-filename) (buffer-file-name)))
-           (header-line-string (shell-command-to-string (format "awk '!/^($|#)/' %s | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
+    (let ((file-name (if (eq major-mode 'dired-mode) (dired-get-filename) (buffer-file-name))))
       (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
-          (let ((file-base-name (file-name-sans-extension (file-name-nondirectory file-name))))
+          (let ((file-base-name (file-name-base file-name)))
             (if (member (ignore-errors (downcase (file-name-extension file-name))) (list "xls" "xlsx"))
                 (python-shell-send-string
                  (format "
@@ -72,12 +71,14 @@ for k,v in dict_%s.items():
         # df = df.columns.to_frame().T.append(df, ignore_index=True)
         # df.columns = range(len(df.columns))
 " file-base-name (expand-file-name file-name) file-base-name file-base-name))
-              (python-shell-send-string
-               (format "if 'pd' not in dir():import pandas as pd;import builtins;exec(\"def is_number(s):\\n try:  float(s)\\n except:  return False\\n return True\")
+              (let ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' %s | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
+                (python-shell-send-string
+                 (format "if not set(['pd', 'builtins']) < set(dir()):import pandas as pd;import builtins;
+exec(\"def is_number(s):\\n try:  float(s)\\n except:  return False\\n return True\")
 df_%s=pd.read_csv('%s', header=None if builtins.all(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True, comment='#')"
-                       file-base-name
-                       (expand-file-name file-name) header-line-string
-                       (if (string= (ignore-errors (downcase (file-name-extension file-name))) "csv") "," "\\\\s+")))))
+                         file-base-name
+                         (expand-file-name file-name) header-line-string
+                         (if (string= (ignore-errors (downcase (file-name-extension file-name))) "csv") "," "\\\\s+"))))))
         (message "No python process found!" ))))
   (defun swint-python-insert-variables ()
     (interactive)

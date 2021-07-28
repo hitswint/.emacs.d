@@ -97,12 +97,6 @@ If buffer-or-name is nil return current buffer's mode."
 ;;; 获得不包括扩展名的文件名
 ;; ============获得不包括扩展名的文件名============
 ;;;###autoload
-(defun file-name-base (&optional filename)
-  "Return the base name of the FILENAME: no directory, no extension.
-FILENAME defaults to `buffer-file-name'."
-  (file-name-sans-extension
-   (file-name-nondirectory (or filename (buffer-file-name)))))
-;;;###autoload
 (defun file-basename (file)
   (let ((file-no-ending-slash (replace-regexp-in-string "/$" "" file)))
     (car (reverse (split-string file-no-ending-slash "/")))))
