@@ -98,5 +98,7 @@
   (let (;; 使弹窗使用dialog-box，而不是minibuffer
         ;; (last-nonmenu-event nil)
         )
+    (switch-to-buffer (messages-buffer))
+    (goto-char (point-max))
     (save-buffers-kill-emacs)))
 ;; =============shutdown-emacs-server==============

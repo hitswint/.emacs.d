@@ -335,7 +335,8 @@
                                    (erase-buffer)
                                    (font-lock-mode -1)
                                    (if (member file-extension ranger-scope-extensions)
-                                       (insert (shell-command-to-string (format "ranger_scope.sh %s 1000 100 '/tmp' 'False'"
+                                       (insert (shell-command-to-string (format "%s %s 1000 100 '/tmp' 'False'"
+                                                                                (expand-file-name "repos/ranger/ranger/data/scope.sh" user-emacs-directory)
                                                                                 (replace-regexp-in-string "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)" "\\\\\\1" file-entry-name))))
                                      (insert-file-contents file-entry-name))
                                    (set-buffer-modified-p nil)

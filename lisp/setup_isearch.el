@@ -15,6 +15,7 @@
 ;; ==================pinyin-search=================
 (def-package! pinyin-search
   :commands symbol-name-at-point
+  ;; 搜索时M-s p(isearch-toggle-pinyin)切换拼音搜索
   :bind (("C-s" . isearch-forward-pinyin)
          ("C-r" . isearch-backward-pinyin))
   :config
@@ -34,7 +35,6 @@
       (deactivate-mark)
       (isearch-yank-string swint-isearch-current-thing)))
   (define-key isearch-mode-map (kbd "C-t") 'isearch-thing)
-  (define-key isearch-mode-map (kbd "C-q") 'isearch-toggle-pinyin)
   ;; 转换后的regexp可能超过长度限制，导致re-search-forward产生"Regular expression too big"错误。
   (defun pinyin-search--pinyin-to-regexp/override (pinyin)
     "Wrap for Pinyin searching."
