@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# 使用xrandr速度较慢
+# * 使用xrandr速度较慢
 # XRANDR=$(which xrandr)
 # MONITORS=( $( ${XRANDR} | awk '( $2 == "connected" ){ print $1 }' ) )
 # NUM_MONITORS=${#MONITORS[@]}
 # # NUM_MONITORS=($(${XRANDR} --listmonitors | grep Monitors: | awk '{print $2}'))
 
-# 使用python中Gdk模块
+# * 使用python中Gdk模块
 NUM_MONITORS=$(python3 -c 'import gi; gi.require_version("Gdk", "3.0"); from gi.repository import Gdk; display=Gdk.Display.get_default(); print(display.get_n_monitors())')
 
 if [ $NUM_MONITORS -gt 1 ]; then

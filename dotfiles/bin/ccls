@@ -1,2 +1,2 @@
 #!/bin/sh
-exec "$HOME/git-repo/Emacs/ccls/Release/ccls" "$@"
+exec "$HOME/.emacs.d/nox/ccls/Release/ccls" "$@"

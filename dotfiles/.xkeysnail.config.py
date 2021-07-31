@@ -4,8 +4,11 @@ import re
 from xkeysnail.transform import *
 
 # * [Global modemap] Change modifier keys as in xmodmap
-define_modmap({Key.CAPSLOCK: Key.LEFT_CTRL})
-# define_modmap({Key.ESC: Key.GRAVE})
+define_modmap({Key.CAPSLOCK: Key.LEFT_CTRL,
+               # Poker键盘，交换Escape和grave
+               # Key.ESC: Key.GRAVE,
+               # Key.GRAVE: Key.ESC
+               })
 
 # * [Conditional modmap] Change modifier keys in certain applications
 # define_conditional_modmap(re.compile(r'Emacs'), {
@@ -124,15 +127,39 @@ emacs_dict = {
         K("u"): [K("C-z"), set_mark(False)],
     }}
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] not in ("Emacs", "URxvt", "Vncviewer", "Blender", "scrcpy", "VirtualBox Machine", "org.remmina.Remmina") and wm_class[0] not in ("winword.exe"),
+    lambda wm_class: wm_class and wm_class[-1] not in ("Emacs", "URxvt", "Vncviewer", "Blender", "scrcpy", "VirtualBox Machine", "org.remmina.Remmina") and wm_class[1] not in ("winword.exe"),
     emacs_dict,
     "Emacs-like keys")
+
+# * Remove Alt tip with win in Office/Wps
+# define_conditional_multipurpose_modmap(
+#     lambda wm_class: wm_class and wm_class[1] in ("winword.exe", "excel.exe", "powerpnt.exe", "wps", "et", "wpp"),
+#     {
+#         Key.LEFT_ALT: [Key.LEFT_META, Key.LEFT_ALT],
+#     })
+# dict_disable_alt = {
+#     K("M-b"): [with_mark(K("C-left"))],
+#     K("M-f"): [with_mark(K("C-right"))],
+#     K("M-v"): [with_mark(K("page_up"))],
+#     K("M-Shift-comma"): [with_mark(K("C-home"))],
+#     K("M-Shift-dot"): [with_mark(K("C-end"))],
+#     K("M-w"): [K("C-c"), set_mark(False)],
+#     K("M-d"): [K("C-delete"), set_mark(False)],
+#     K("C-M-slash"): [K("C-y"), set_mark(False)],
+#     K("C-M-semicolon"): [with_or_set_mark(K("C-right"))],
+#     K("M-Shift-key_5"): [K("C-h")]}
+# emacs_dict_disable_alt = emacs_dict.copy()
+# emacs_dict_disable_alt.update(dict_disable_alt)
+# define_keymap(
+#     lambda wm_class: wm_class and wm_class[1] in ("winword.exe", "excel.exe", "powerpnt.exe", "wps", "et", "wpp"),
+#     emacs_dict_disable_alt,
+#     "Emacs-like keys without alt")
 
 # * Keybindings for Remmina
 remmina_dict = emacs_dict.copy()
 remmina_dict.update(firefox_dict)
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("org.remmina.Remmina",),
+    lambda wm_class: wm_class and wm_class[-1] in ("org.remmina.Remmina",) and wm_class[0] in ("localhost:5901", "Epyc", "Remmina Remote Desktop Client"),
     remmina_dict,
     "Remmina")
 

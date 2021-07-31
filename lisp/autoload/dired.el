@@ -223,7 +223,7 @@
   (let ((file-list (if (eq major-mode 'dired-mode)
                        (dired-get-marked-files)
                      (list (buffer-file-name))))
-        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "ODAFileConverter" "xlsx2csv")
+        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "ODAFileConverter" "xlsx2csv" "convert")
                                 :buffer "*helm dired converter-swint*"))
         (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)"))
     (cl-flet ((escape-local (x)
@@ -299,7 +299,11 @@
                                   (shell-command (concat "xlsx2csv -i -a " filename " " (file-name-sans-extension filename))))
                                  ((equal file-extension "xls")
                                   ;; 存在中文乱码问题，需设置charset，自带charset位于/usr/share/catdoc/下，但无中文支持
-                                  (shell-command (concat "xls2csv " filename " > " (file-name-sans-extension filename) ".csv")))))))))))
+                                  (shell-command (concat "xls2csv " filename " > " (file-name-sans-extension filename) ".csv")))))))
+            ((string= engine "convert")
+             (let ((output-format (read-string "Output format: "))
+                   (input-string (mapconcat (lambda (arg) (escape-local (file-name-nondirectory arg))) file-list " ")))
+               (shell-command (read-string "Commands: " (concat "convert " input-string " " (file-name-base (car file-list)) "." output-format)))))))))
 ;; ============swint-dired-converter=========
 ;;; dired-view-file-or-dir
 ;; ==========dired-view-file-or-dir==========

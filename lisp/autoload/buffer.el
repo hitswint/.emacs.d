@@ -191,3 +191,23 @@ If buffer-or-name is nil return current buffer's mode."
   (when swint-killed-file-list
     (find-file (pop swint-killed-file-list))))
 ;; ==============undo-kill-buffer===============
+;;; swint-insert-zsh-completions
+;; =========swint-insert-zsh-completions========
+;;;###autoload
+(defun swint-insert-zsh-completions ()
+  (interactive)
+  (let* ((enable-recursive-minibuffers t)
+         (zsh-capture-completion-prog (expand-file-name "repos/zsh-capture-completion/capture.zsh" user-emacs-directory))
+         (minibuffer-contents-before-point (minibuffer-completion-contents))
+         (zsh-completion (car (split-string (helm-comp-read "Select options: "
+                                                            (split-string (shell-command-to-string
+                                                                           (format "%s '%s'" zsh-capture-completion-prog minibuffer-contents-before-point))
+                                                                          "\n" t)
+                                                            :buffer (concat "*helm zsh completions-swint*"))
+                                            " " t))))
+    (if (string-suffix-p " " minibuffer-contents-before-point)
+        (insert zsh-completion)
+      (when (re-search-backward (concat search-whitespace-regexp ".*"))
+        (replace-match (concat " " zsh-completion))))))
+(define-key minibuffer-local-map (kbd "C-x m") 'swint-insert-zsh-completions)
+;; =========swint-insert-zsh-completions========
