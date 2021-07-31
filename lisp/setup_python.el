@@ -26,6 +26,7 @@
   :config
   (define-key minibuffer-local-map (kbd "C-c m") 'swint-python-insert-data)
   (define-key minibuffer-local-map (kbd "C-c M") 'swint-python-insert-variables)
+  (define-key inferior-python-mode-map (kbd "M-o M-p") 'swint-python-load-mysql)
   (pyvenv-mode 1)
   ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换。
   (defalias 'workon 'pyvenv-workon)
@@ -48,9 +49,11 @@
     (let ((file-name (if (eq major-mode 'dired-mode) (dired-get-filename) (buffer-file-name))))
       (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
           (let ((file-base-name (file-name-base file-name)))
-            (if (member (ignore-errors (downcase (file-name-extension file-name))) (list "xls" "xlsx"))
-                (python-shell-send-string
-                 (format "
+            (cond
+             ;; 导入Excel文件
+             ((member (ignore-errors (downcase (file-name-extension file-name))) (list "xls" "xlsx"))
+              (python-shell-send-string
+               (format "
 if 'pd' not in dir():
     import pandas as pd
 if 'builtins' not in dir():
@@ -70,16 +73,53 @@ for k,v in dict_%s.items():
         # 或使用：
         # df = df.columns.to_frame().T.append(df, ignore_index=True)
         # df.columns = range(len(df.columns))
-" file-base-name (expand-file-name file-name) file-base-name file-base-name))
-              (let ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' %s | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
+" file-base-name (expand-file-name file-name) file-base-name file-base-name)))
+             ;; 导入sqlite文件
+             ((member (ignore-errors (downcase (file-name-extension file-name))) '("db" "sdb" "sqlite" "db3" "s3db" "sqlite3" "sl3" "db2" "s2db" "sqlite2" "sl2"))
+              (let ((table (helm-comp-read "Table to select: "
+                                           (split-string (shell-command-to-string (format "sqlite3 \"%s\" \".table\"" (expand-file-name file-name)))
+                                                         "[ \t\n]" t "[ \t\n]+")
+                                           :buffer "*helm python plot data-swint*")))
                 (python-shell-send-string
-                 (format "if not set(['pd', 'builtins']) < set(dir()):import pandas as pd;import builtins;
+                 (format "
+if 'pd' not in dir():
+    import pandas as pd
+if 'sql' not in dir():
+    import sqlalchemy as sql
+conn = sql.create_engine('sqlite:///%s')
+df_%s_%s = pd.read_sql('%s', conn)
+" (expand-file-name file-name) file-base-name table table))))
+             ;; 导入csv和其他文件
+             (t (let ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' %s | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
+                  (python-shell-send-string
+                   (format "if not set(['pd', 'builtins']) < set(dir()):import pandas as pd;import builtins;
 exec(\"def is_number(s):\\n try:  float(s)\\n except:  return False\\n return True\")
 df_%s=pd.read_csv('%s', header=None if builtins.all(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True, comment='#')"
-                         file-base-name
-                         (expand-file-name file-name) header-line-string
-                         (if (string= (ignore-errors (downcase (file-name-extension file-name))) "csv") "," "\\\\s+"))))))
+                           file-base-name
+                           (expand-file-name file-name) header-line-string
+                           (if (string= (ignore-errors (downcase (file-name-extension file-name))) "csv") "," "\\\\s+")))))))
         (message "No python process found!" ))))
+  (defun swint-python-load-mysql ()
+    (interactive)
+    (let* ((user (get-auth-user "mysql"))
+           (pass (get-auth-pass "mysql"))
+           (database (helm-comp-read "Database to select: "
+                                     (cdr (split-string (shell-command-to-string (format "mysql --user=%s --password=%s -e \"show databases;\"" user pass))
+                                                        "\n" t "[ \t\n]+"))
+                                     :buffer "*helm python plot data-swint*"))
+           (table (helm-comp-read "Table to select: "
+                                  (cdr (split-string (shell-command-to-string (format "mysql --user=%s --password=%s -e \"show tables;\" %s" user pass database))
+                                                     "\n" t "[ \t\n]+"))
+                                  :buffer "*helm python plot data-swint*")))
+      (python-shell-send-string
+       (format "
+if 'pd' not in dir():
+    import pandas as pd
+if 'sql' not in dir():
+    import sqlalchemy as sql
+conn = sql.create_engine('mysql+pymysql://%s:%s@localhost:3306/%s?charset=utf8')
+df_%s_%s = pd.read_sql('%s', conn)
+" user pass database database table table))))
   (defun swint-python-insert-variables ()
     (interactive)
     (cl-assert (minibuffer-window-active-p (selected-window)) nil
