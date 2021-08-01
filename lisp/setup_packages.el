@@ -49,6 +49,7 @@
   ;; mc/xxx函数都不在mc包中。
   :defer 2
   :config
+  (setq mc/always-run-for-all t)
   (add-to-list 'mc/unsupported-minor-modes 'auto-mark-mode)
   (add-to-list 'mc/unsupported-minor-modes 'highlight-indentation-current-column-mode)
   (bind-key "C-M-," 'mc/mark-previous-like-this)
@@ -66,7 +67,8 @@
       ("M-\"" . mc/insert-letters)
       ("M-?" . mc/sort-regions)
       ("M-m" . mc/mark-pop)))
-  (define-key mc/keymap (kbd "C-`") 'mc-hide-unmatched-lines-mode))
+  (define-key mc/keymap (kbd "C-`") 'mc-hide-unmatched-lines-mode)
+  (define-key mc/keymap (kbd "C-:") nil))
 ;; ================multiple-cursors================
 ;;; expand-region
 ;; =================expand-region==================

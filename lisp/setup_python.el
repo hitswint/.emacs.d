@@ -65,11 +65,12 @@ def is_number(s):
         return False
     return True
 names=locals()
-dict_%s=pd.read_excel('%s', sheet_name=None, header=0, comment='#')
-for k,v in dict_%s.items():
+names['dict_'+re.sub('\\W','_','%s')]=pd.read_excel('%s', sheet_name=None, header=0, comment='#')
+for k,v in names['dict_'+re.sub('\\W','_','%s')].items():
     if not v.empty:
         # 当第1行都是数字时，将原来读入的header变为第1行数据，使用0.1.2作为columns
-        names['df_%s_'+k]=v.T.reset_index().T if builtins.all(is_number(ele) for ele in v.columns) else v
+        # 使用re.sub('\W|^(?=\d)', '_', filename)将文件名转为合法的变量名，缺点是首字母是数字时加下划线
+        names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_',k)]=v.T.reset_index().T if builtins.all(is_number(ele) for ele in v.columns) else v
         # 或使用：
         # df = df.columns.to_frame().T.append(df, ignore_index=True)
         # df.columns = range(len(df.columns))
@@ -87,16 +88,17 @@ if 'pd' not in dir():
 if 'sql' not in dir():
     import sqlalchemy as sql
 conn = sql.create_engine('sqlite:///%s')
-df_%s_%s = pd.read_sql('%s', conn)
+names=locals()
+names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', conn)
 " (expand-file-name file-name) file-base-name table table))))
              ;; 导入csv和其他文件
-             (t (let ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' %s | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
+             (t (let ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' '%s' | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
                   (python-shell-send-string
                    (format "if not set(['pd', 'builtins']) < set(dir()):import pandas as pd;import builtins;
 exec(\"def is_number(s):\\n try:  float(s)\\n except:  return False\\n return True\")
-df_%s=pd.read_csv('%s', header=None if builtins.all(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True, comment='#')"
-                           file-base-name
-                           (expand-file-name file-name) header-line-string
+names=locals()
+names['df_'+re.sub('\\W','_','%s')]=pd.read_csv('%s', header=None if builtins.all(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True, comment='#')"
+                           file-base-name (expand-file-name file-name) header-line-string
                            (if (string= (ignore-errors (downcase (file-name-extension file-name))) "csv") "," "\\\\s+")))))))
         (message "No python process found!" ))))
   (defun swint-python-load-mysql ()
@@ -118,7 +120,8 @@ if 'pd' not in dir():
 if 'sql' not in dir():
     import sqlalchemy as sql
 conn = sql.create_engine('mysql+pymysql://%s:%s@localhost:3306/%s?charset=utf8')
-df_%s_%s = pd.read_sql('%s', conn)
+names=locals()
+names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', conn)
 " user pass database database table table))))
   (defun swint-python-insert-variables ()
     (interactive)
@@ -182,7 +185,7 @@ plot_data.fig_config(%s)" (expand-file-name "~/Documents/Python") args-string)))
     (interactive "P")
     (let (data-string files-list files-string columns-string file-x-string column-x-string style-string save-string shell-command-args send-string-args)
       (cl-flet ((plot-file-setup (data-file &optional is-x-p)
-                                 (let* ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' %s | awk 'NR==1{print}'" data-file)))
+                                 (let* ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' '%s' | awk 'NR==1{print}'" data-file)))
                                         (header-line-list (if (equal (ignore-errors (downcase (file-name-extension data-file))) "csv")
                                                               (split-string header-line-string "," t "[ \t\n]+")
                                                             (if (string-match "\"" header-line-string) ;非csv文件的首行用("x" "y" "z")
