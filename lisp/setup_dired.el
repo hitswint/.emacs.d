@@ -24,7 +24,7 @@
   (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才启用auto-revert-mode更新
                                                 (when (get-buffer-window (current-buffer)) (apply fn args))))
   (put 'dired-find-alternate-file 'disabled nil)
-  (setq dired-listing-switches "--group-directories-first -alhG1v")
+  (setq dired-listing-switches "--group-directories-first -alhG1")
   (setq dired-subdir-switches dired-listing-switches)
   (setq dired-dwim-target t)
   (setq wdired-allow-to-change-permissions t)
@@ -117,17 +117,20 @@
               (make-local-variable 'dired-sort-map)
               (setq dired-sort-map (make-sparse-keymap))
               (define-key dired-mode-map "s" dired-sort-map)
-              (define-key dired-sort-map "s" '(lambda () (interactive) ;"sort by Size"
-                                                (dired-sort-other (concat dired-listing-switches "S"))))
-              (define-key dired-sort-map "x" '(lambda () (interactive) ;"sort by eXtension"
-                                                (dired-sort-other (concat dired-listing-switches "X"))))
-              (define-key dired-sort-map "t" '(lambda () (interactive) ;"sort by Time"
-                                                (dired-sort-other (concat dired-listing-switches "t"))))
-              (define-key dired-sort-map "n" '(lambda () (interactive) ;"sort by Name"
-                                                (dired-sort-other (concat dired-listing-switches "v"))))))
+              (define-key dired-sort-map "s" '(lambda () (interactive) (dired-sort-switch "S"))) ;sort by Size
+              (define-key dired-sort-map "x" '(lambda () (interactive) (dired-sort-switch "X"))) ;sort by eXtension
+              (define-key dired-sort-map "t" '(lambda () (interactive) (dired-sort-switch "t"))) ;sort by Time
+              (define-key dired-sort-map "n" '(lambda () (interactive) (dired-sort-switch "v"))))) ;sort by Name
   ;; ==========setup-and-keybindings===========
-;;;; 默认文件夹排在最前面
-  ;; =========默认文件夹排在最前面=============
+;;;; dired-sort-switch
+  ;; ============dired-sort-switch=============
+  (defun dired-sort-switch (switch-arg)
+    (dired-sort-other
+     (concat dired-listing-switches switch-arg
+             (when (string-suffix-p switch-arg dired-actual-switches) "r"))))
+  ;; ============dired-sort-switch=============
+;;;; sof/dired-sort
+  ;; =============sof/dired-sort===============
   (defun sof/dired-sort ()
     "Dired sort hook to list directories first."
     (save-excursion
@@ -138,8 +141,8 @@
          (fboundp 'dired-insert-set-properties)
          (dired-insert-set-properties (point-min) (point-max)))
     (set-buffer-modified-p nil))
-  ;; (add-hook 'dired-after-readin-hook 'sof/dired-sort) ;通过设置dired-listing-switches实现
-  ;; =========默认文件夹排在最前面=============
+  ;; (add-hook 'dired-after-readin-hook 'sof/dired-sort)
+  ;; =============sof/dired-sort===============
 ;;;; dired-next/previous-line
   ;; ========dired-next/previous-line==========
   (defadvice dired-next-line (around dired-next-line+ activate)

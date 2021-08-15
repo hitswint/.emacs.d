@@ -3,4 +3,4 @@
 # name : tk-draw
 # group: tikz
 # --
-\draw[] (${2:0,0}) ${1:$$(yas/choose-value '("--" "edge[->,bend left]" "arc" "grid" "rectangle" "circle" "ellipse" "diamond" "trapezium"))} (${3:0,0});$0
+\draw[] (${2:$$(unless yas-modified-p (swint-cursor-localtion))}) ${1:$$(yas-choose-value '("--" "edge[->,bend left]" "arc" "grid" "rectangle" "circle" "ellipse" "parabola" "sin" "cos"))} (${3:$$(unless yas-modified-p (tikz-second-arg (yas-field-value 1)))});$0

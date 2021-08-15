@@ -323,6 +323,10 @@
   :bind ("M-I" . swint-complete-yasnippet)
   :config
   (yas-global-mode 1)
+  (defun yas-ivy-prompt (prompt choices &optional display-fn)
+    (require 'ivy)
+    (yas-completing-prompt prompt choices display-fn #'ivy-completing-read))
+  (setq yas-prompt-functions (cons #'yas-ivy-prompt yas-prompt-functions))
   (defun swint-complete-yasnippet ()
     (interactive)
     (ignore-errors (company-abort))

@@ -133,3 +133,11 @@
           (org-entry-put nil "NOTER_PAGE" (string-trim qpdfview-page))
         (org-entry-put nil "annotated_page" (string-trim qpdfview-page))))))
 ;; ==========swint-qpdfview-annotated=========
+;;; swint-cursor-localtion
+;; ===========swint-cursor-localtion==========
+;;;###autoload
+(defun swint-cursor-localtion ()
+  (interactive)
+  (let ((command-output (shell-command-to-string "cursor_loc.sh")))
+    (car (last (split-string command-output "\n" t "[\t\n]+")))))
+;; ===========swint-cursor-localtion==========

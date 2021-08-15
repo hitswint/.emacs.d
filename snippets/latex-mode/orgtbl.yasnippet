@@ -7,7 +7,7 @@
 % BEGIN RECEIVE ORGTBL ${3:name}
 % END RECEIVE ORGTBL $3
 \caption{${1:caption}}
-\label{tab:${2:$$(unless yas/modified-p (make-temp-name (str-unicode-to-pinyin-initial (yas-field-value 1))))}}
+\label{tab:${2:$$(unless yas-modified-p (make-temp-name (str-unicode-to-pinyin-initial (yas-field-value 1))))}}
 \end{table}
 \begin{comment}
 #+ORGTBL: SEND $3 orgtbl-to-latex :splice nil :skip 0

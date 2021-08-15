@@ -3,4 +3,4 @@
 # name: tk-coordinate
 # group: tikz
 # --
-\coordinate[label=${4:$$(yas/choose-value '("above" "below" "left" "right"))}:${5:}] (${1:}) at (${2:0},${3:0});$0
+\coordinate[label=${3:$$(yas-choose-value '("above" "below" "left" "right"))}:${4:text}] (${1:name}) at (${2:$$(unless yas-modified-p (swint-cursor-localtion))});$0

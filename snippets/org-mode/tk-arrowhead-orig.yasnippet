@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# key: tk-arrowhead-orig
+# name: tk-arrowhead-orig
+# group: tikz
+# --
+${2:->, }>=${1:$$(yas-choose-value '("stealth" "latex" "angle 90" "angle 60" "angle 45" "triangle 90" "triangle 60" "triangle 45" "left to" "right to" "open triangle"))}${3:, decoration=\{markings,mark=at position ${4:1.0} with \{\arrow[scale=${5:2.0},>=$1]\{${6:>}\}\}\},postaction=\{decorate\}}$0

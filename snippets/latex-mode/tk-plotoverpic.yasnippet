@@ -7,11 +7,6 @@
 \centering
 \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.9\linewidth]{${1:$$(if (file-directory-p "./pic") (concat "pic/" (yas-choose-value (directory-files "./pic"))) (yas-choose-value (directory-files "./")))}}};
 \begin{scope}[x={(image.south east)},y={(image.north west)}]
-\draw[help lines,semitransparent,semithick,xstep=.1,ystep=.1] (0,0) grid (1,1);
-\draw[help lines,semitransparent,very thin,xstep=.05,ystep=.05] (0,0) grid (1,1);
-\draw[help lines,semitransparent,ultra thin,xstep=.01,ystep=.01] (0,0) grid (1,1);
-\foreach \x in {0,1,...,9} { \node [anchor=south] at (\x/10,0) {\tiny \x}; \node [anchor=north] at (\x/10,1) {\tiny \x};}
-\foreach \y in {0,1,...,9} {\node [anchor=west] at (0,\y/10) {\tiny \y}; \node [anchor=east] at (1,\y/10) {\tiny \y}; }
 $0
 \end{scope}
 \end{tikzpicture}

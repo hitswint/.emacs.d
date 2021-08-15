@@ -171,3 +171,13 @@ define_keymap(
         K("j"): with_mark(K("down"))
     },
     "llpp")
+
+# * Keybindings for URxvt
+define_keymap(
+    lambda wm_class: wm_class and wm_class[-1] in ("URxvt"),
+    {
+        K("C-Super-enter"): K("Shift-down"),
+        K("C-M-TAB"): K("Shift-right"),
+        K("C-M-grave"): K("Shift-left"),
+    },
+    "URxvt")

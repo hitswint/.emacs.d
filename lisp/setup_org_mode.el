@@ -95,6 +95,8 @@
                                                            (call-interactively 'org-beginning-of-line)
                                                          (call-interactively 'smart-beginning-of-line))))
                (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)
+               (define-key org-mode-map (kbd "C-c l") '(lambda () (interactive)
+                                                         (insert (swint-cursor-localtion))))
                (define-key org-mode-map (kbd "C-j") nil)
                (define-key org-mode-map (kbd "RET") nil)
                (define-key org-mode-map [(control \,)] nil)
@@ -556,6 +558,7 @@
                                       (verbatim . protectedtexttt)))
   ;; 使用Listings宏包格式化源代码(只是把代码框用listing环境框起来，还需要额外的设置。
   (setq org-export-latex-listings t)
+  (setq org-latex-image-default-width ".6\\linewidth")
   (setq org-beamer-outline-frame-title "Outline")
   (add-to-list 'org-latex-classes
                '("cn-article"
@@ -564,7 +567,7 @@
 \\usepackage{graphicx,amsmath,amssymb,subfigure,url,xspace,booktabs,tikz,float}
 \\usepackage[autoplay,loop]{animate}
 \\usepackage[absolute,overlay]{textpos}
-\\usetikzlibrary{arrows,shapes,chains,calc,positioning,decorations.markings}
+\\usetikzlibrary{arrows,arrows.meta,shapes,chains,calc,positioning,decorations.markings}
 \\newcommand{\\eg}{e.g.,\\xspace}
 \\newcommand{\\bigeg}{E.g.,\\xspace}
 \\newcommand{\\etal}{\\textit{et~al.\\xspace}}
@@ -582,8 +585,9 @@
 % \\usepackage[]{xeCJK}
 % \\setmainfont{Times New Roman}
 % \\setsansfont{Times New Roman}
-% \\usefonttheme[onlymath]{serif}
 % \\setCJKmainfont{SimSun}
+% \\setCJKsansfont{SimSun}
+% \\usefonttheme[onlymath]{serif}
 \\newcommand{\\song}{\\CJKfamily{zhsong}}
 \\newcommand{\\hei}{\\CJKfamily{zhhei}}
 \\newcommand{\\kai}{\\CJKfamily{zhkai}}
@@ -619,7 +623,7 @@
 \\usepackage{colortbl,dcolumn}
 \\usepackage[autoplay,loop]{animate}
 \\usepackage[absolute,overlay]{textpos}
-\\usetikzlibrary{arrows,shapes,chains,calc,positioning,decorations.markings}
+\\usetikzlibrary{arrows,arrows.meta,shapes,chains,calc,positioning,decorations.markings}
 \\usepackage{thumbpdf}
 \\usepackage{wasysym}
 \\usepackage{ucs}
@@ -628,9 +632,9 @@
 \\usepackage{verbatim}
 \\usepackage[BoldFont,SlantFont,CJKnumber,CJKchecksingle]{xeCJK}
 % \\usepackage{times}
-% \\setmainfont{Times New Roman}
-\\setsansfont{Times New Roman}
 % {DejaVu Sans}{DejaVu Sans Mono}{DejaVu Serif}
+\\setmainfont{Times New Roman}
+\\setsansfont{Times New Roman}
 \\setCJKmainfont{SimSun}
 \\setCJKsansfont{SimSun}
 \\usefonttheme[onlymath]{serif}

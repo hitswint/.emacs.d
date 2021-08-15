@@ -10,7 +10,7 @@
 \usepackage{graphicx,amsmath,amssymb,subfigure,url,xspace,booktabs,tikz,float}
 \usepackage[autoplay,loop]{animate}
 \usepackage[absolute,overlay]{textpos}
-\usetikzlibrary{arrows,shapes,chains,calc,positioning,decorations.markings}
+\usetikzlibrary{arrows,arrows.meta,shapes,chains,calc,positioning,decorations.markings}
 \newcommand{\eg}{e.g.,\xspace}
 \newcommand{\bigeg}{E.g.,\xspace}
 \newcommand{\etal}{\textit{et~al.\xspace}}
@@ -28,8 +28,9 @@
 % \usepackage[]{xeCJK}
 % \setmainfont{Times New Roman}
 % \setsansfont{Times New Roman}
-% \usefonttheme[onlymath]{serif}
 % \setCJKmainfont{SimSun}
+% \setCJKsansfont{SimSun}
+% \usefonttheme[onlymath]{serif}
 \newcommand{\song}{\CJKfamily{zhsong}}
 \newcommand{\hei}{\CJKfamily{zhhei}}
 \newcommand{\kai}{\CJKfamily{zhkai}}
@@ -44,7 +45,7 @@
 \newcommand{\xiaowu}{\fontsize{9pt}{\baselineskip}\selectfont}
 \newcommand{\liuhao}{\zihao{6}}
 
-\title{${1:$$(unless yas/modified-p (file-name-base (buffer-name)))}}
+\title{${1:$$(unless yas-modified-p (file-name-base (buffer-name)))}}
 \author{${2:swint}}
 
 \begin{document}

@@ -3,7 +3,7 @@
 # name: gnuplot
 # --
 set term pngcairo enh font "simsun,16"
-datafile = "${1:$$(unless yas/modified-p (file-name-base (buffer-name)))}.data"
+datafile = "${1:$$(unless yas-modified-p (file-name-base (buffer-name)))}.data"
 set output "$1.png" # set title "$1"
 set xlabel "${2:}(${3:})" # 同时有上下标,a^@b_c
 set ylabel "${4:}(${5:{/Symbol \260}C})"

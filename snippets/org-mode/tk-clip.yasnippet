@@ -3,4 +3,4 @@
 # name: tk-clip
 # group: tikz
 # --
-\\${1:$$(yas/choose-value '("clip" "useasboundingbox"))}[${5:draw}] (${3:0,0}) ${2:$$(yas/choose-value '("grid" "rectangle" "circle" "ellipse" "diamond" "trapezium"))} (${4:0,0});$0
+\\${1:$$(yas-choose-value '("clip" "useasboundingbox"))}[${5:draw}] (${3:$$(unless yas-modified-p (swint-cursor-localtion))}) ${2:$$(yas-choose-value '("--" "edge[->,bend left]" "arc" "grid" "rectangle" "circle" "ellipse" "parabola" "sin" "cos"))} (${4:$$(unless yas-modified-p (tikz-second-arg (yas-field-value 2)))});$0
