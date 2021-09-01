@@ -1,19 +1,38 @@
 ;;; package
 ;; ====================package======================
 (require 'package)
-(setq package-archives '(("melpa" . "http://elpa.emacs-china.org/melpa/")
-                         ("melpa-stable" . "http://elpa.emacs-china.org/stable-melpa/")
-                         ("gnu" . "http://elpa.emacs-china.org/gnu/")
-                         ("org" . "http://elpa.emacs-china.org/org/")
-                         ;; ("marmalade" . "http://elpa.emacs-china.org/marmalade/")
-                         ;; ELPA for term-keys.
-                         ("cselpa" . "https://elpa.thecybershadow.net/packages/")))
-;; 使用官方源。
+;;;; 官方源
 ;; (setq package-archives '(("melpa" . "http://melpa.org/packages/")
 ;;                          ("gnu" . "http://elpa.gnu.org/packages/")
 ;;                          ("org" . "http://orgmode.org/elpa/")
 ;;                          ("elpa" . "http://tromey.com/elpa/")
 ;;                          ("marmalade" . "http://marmalade-repo.org/packages/")))
+;;;; emacs-china
+(setq package-archives '(("melpa" . "http://elpa.emacs-china.org/melpa/")
+                         ("melpa-stable" . "http://elpa.emacs-china.org/stable-melpa/")
+                         ("gnu" . "http://elpa.emacs-china.org/gnu/")
+                         ("org" . "http://elpa.emacs-china.org/org/")
+                         ("marmalade" . "http://elpa.emacs-china.org/marmalade/")
+                         ;; ELPA for term-keys.
+                         ("cselpa" . "https://elpa.thecybershadow.net/packages/")))
+;;;; 163
+;; (setq package-archives '(("gnu" . "http://mirrors.163.com/elpa/gnu/")
+;;                          ("melpa" . "http://mirrors.163.com/elpa/melpa/")
+;;                          ("melpa-stable" . "http://mirrors.163.com/elpa/melpa-stable/")
+;;                          ("org" . "http://mirrors.163.com/elpa/org/")
+;;                          ("marmalade" . "http://mirrors.163.com/elpa/marmalade/")))
+;;;; tsinghua
+;; (setq package-archives '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+;;                          ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+;;                          ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
+;;                          ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+;;                          ("marmalade" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/marmalade/")))
+;;;; ustc
+;; (setq package-archives '(("gnu" . "http://mirrors.ustc.edu.cn/elpa/gnu/")
+;;                          ("melpa" . "http://mirrors.ustc.edu.cn/elpa/melpa/")
+;;                          ("melpa-stable" . "http://mirrors.ustc.edu.cn/elpa/melpa-stable/")
+;;                          ("org" . "http://mirrors.ustc.edu.cn/elpa/org/")
+;;                          ("marmalade" . "http://mirrors.ustc.edu.cn/elpa/marmalade/")))
 ;; Optimization, no need to activate all the packages so early.
 (setq package-enable-at-startup nil
       package--init-file-ensured t
