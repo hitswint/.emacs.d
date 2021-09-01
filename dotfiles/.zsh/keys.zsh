@@ -103,7 +103,6 @@ bind-maps emacs -- '^[^_Lb^_' undo
 bind-maps emacs -- '^[^_Lf^_' redo
 bind-maps emacs -- '^[^_D"^_' set-mark-command
 bind-maps emacs -- '^[^_3B^_' widget-slash-backward-kill-word
-# Percol.
 bind-maps emacs -- '^xf' widget-swint-fdfind
 bind-maps emacs -- '^xF' widget-swint-find
 bind-maps emacs -- '^xl' widget-swint-locate

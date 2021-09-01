@@ -27,6 +27,13 @@
           ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others") "* %? %U %^g")
           ("j" "Journal" entry (file+olp+datetree "~/org/journal.org.gpg") "* %? %U")))
   ;; =================Capture===================
+;;;; ox
+  ;; ====================ox=====================
+  (put 'org-beamer-outline-frame-title 'safe-local-variable 'stringp)
+  (put 'org-pandoc-table-fmt 'safe-local-variable 'stringp)
+  (put 'org-pandoc-paragraph-fmt 'safe-local-variable 'stringp)
+  (put 'org-pandoc-src-block-fmt 'safe-local-variable 'stringp)
+  ;; ====================ox=====================
 ;;;; Keybindings
   ;; ===============Keybindings=================
   ;; %^{Description}
@@ -165,8 +172,9 @@
   ;; =================org输出doc================
 ;;;; org-latex-preview
   ;; =============org-latex-preview=============
-  ;; C-u 当前节，C-u C-u 当前buffer。
-  (define-key org-mode-map (kbd "C-c v") 'org-toggle-latex-fragment)
+  ;; 默认预览当前位置或当前节，加C-u清除当前节预览
+  ;; 加C-uC-u预览当前buffer，加C-uC-uC-u清除全部预览
+  (define-key org-mode-map (kbd "C-c v") 'org-latex-preview)
   (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境。
   ;; =============org-latex-preview=============
   )
@@ -587,7 +595,6 @@
 % \\setsansfont{Times New Roman}
 % \\setCJKmainfont{SimSun}
 % \\setCJKsansfont{SimSun}
-% \\usefonttheme[onlymath]{serif}
 \\newcommand{\\song}{\\CJKfamily{zhsong}}
 \\newcommand{\\hei}{\\CJKfamily{zhhei}}
 \\newcommand{\\kai}{\\CJKfamily{zhkai}}

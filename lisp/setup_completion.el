@@ -177,7 +177,7 @@
   :after (:any company-try-hard yasnippet company-english-helper)
   :config
   (global-company-mode 1)
-  (setq company-show-numbers t)
+  (setq company-show-quick-access t)
   (setq company-async-timeout 10)
   (define-key company-active-map (kbd "<tab>") nil)
   (define-key company-active-map (kbd "TAB") nil)

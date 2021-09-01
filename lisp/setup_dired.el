@@ -287,7 +287,7 @@
 ;;; peep-dired
 ;; ================peep-dired==================
 (def-package! peep-dired
-  :commands global-peep-dired
+  :commands (global-peep-dired peep-dired-find-file)
   :init
   (add-hook 'dired-mode-hook (lambda ()
                                (bind-key "TAB" '(lambda () (interactive) (unless (global-peep-dired 'toggle)
@@ -306,6 +306,42 @@
                                      (member x (list "gp" "tex" "dot" "c")))
                                    (cl-loop for file-extension-pair in file-extension-app-alist
                                             collect (car file-extension-pair))))
+  (defun peep-dired-find-file (file-name)
+    (let ((image-extensions (list "png" "jpg" "bmp" "jpeg" "gif"))
+          (cad-extensions (list "3mf" "amf" "dxf" "off" "stl"))
+          (video-extensions (list "rmvb" "rm" "mp4" "avi" "flv" "f4v" "mpg" "mkv" "3gp" "wmv" "mov" "dat" "asf" "mpeg" "wma" "webm"))
+          (file-extension (ignore-errors (downcase (file-name-extension file-name)))))
+      (cond
+       ((member file-extension image-extensions)
+        ;; image-dired-dired-display-image使用dired-get-filename，非dired无法调用
+        (image-dired-create-display-image-buffer)
+        (display-buffer image-dired-display-image-buffer)
+        (image-dired-display-image file-name)
+        image-dired-display-image-buffer)
+       ((member file-extension (append video-extensions cad-extensions))
+        (shell-command (format (cond ((member file-extension video-extensions)
+                                      "ffmpegthumbnailer -i \"%2$s\" -o %1$speep-dired.png -t 0%% -s 0")
+                                     ((member file-extension cad-extensions)
+                                      "openscad -o %1$speep-dired.png <(echo \"import(\\\"%2$s\\\");\")"))
+                               image-dired-dir (expand-file-name file-name)))
+        (image-dired-create-display-image-buffer)
+        (display-buffer image-dired-display-image-buffer)
+        (image-dired-display-image (expand-file-name "peep-dired.png" image-dired-dir))
+        image-dired-display-image-buffer)
+       (t (let ((peep-preview-buffer (get-buffer-create "*peep-preview*")))
+            (with-current-buffer peep-preview-buffer
+              (buffer-disable-undo)
+              (erase-buffer)
+              (font-lock-mode -1)
+              (if (member file-extension ranger-scope-extensions)
+                  (insert (shell-command-to-string (format "%s %s 1000 100 '/tmp' 'False'"
+                                                           (expand-file-name "repos/ranger/ranger/data/scope.sh" user-emacs-directory)
+                                                           (replace-regexp-in-string "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)" "\\\\\\1" file-name))))
+                (insert-file-contents file-name))
+              (goto-char (point-min))
+              (set-buffer-modified-p nil))
+            (display-buffer peep-preview-buffer)
+            peep-preview-buffer)))))
   (defun peep-dired-display-file-other-window/around (fn)
     (unless (timerp peep-preview-timer)
       (setq peep-preview-timer
@@ -313,40 +349,11 @@
              0.05 nil
              (lambda (func)
                (let ((file-entry-name (dired-file-name-at-point)))
-                 (if (not (file-directory-p file-entry-name))
-                     (let* ((image-extensions (list "png" "jpg" "bmp" "jpeg" "gif"))
-                            (cad-extensions (list "3mf" "amf" "dxf" "off" "stl"))
-                            (video-extensions (list "rmvb" "rm" "mp4" "avi" "flv" "f4v" "mpg" "mkv" "3gp" "wmv" "mov" "dat" "asf" "mpeg" "wma" "webm"))
-                            (file-extension (ignore-errors (downcase (file-name-extension file-entry-name))))
-                            (peep-dired-preview-buffer
-                             (cond
-                              ((member file-extension image-extensions)
-                               (image-dired-dired-display-image)
-                               image-dired-display-image-buffer)
-                              ((member file-extension (append video-extensions cad-extensions))
-                               (shell-command (format (cond ((member file-extension video-extensions)
-                                                             "ffmpegthumbnailer -i \"%2$s\" -o %1$speep-dired.png -t 0%% -s 0")
-                                                            ((member file-extension cad-extensions)
-                                                             "openscad -o %1$speep-dired.png <(echo \"import(\\\"%2$s\\\");\")"))
-                                                      image-dired-dir (expand-file-name file-entry-name)))
-                               (image-dired-create-display-image-buffer)
-                               (display-buffer image-dired-display-image-buffer)
-                               (image-dired-display-image (expand-file-name "peep-dired.png" image-dired-dir))
-                               image-dired-display-image-buffer)
-                              (t (with-current-buffer (get-buffer-create "*peep-preview*")
-                                   (buffer-disable-undo)
-                                   (erase-buffer)
-                                   (font-lock-mode -1)
-                                   (if (member file-extension ranger-scope-extensions)
-                                       (insert (shell-command-to-string (format "%s %s 1000 100 '/tmp' 'False'"
-                                                                                (expand-file-name "repos/ranger/ranger/data/scope.sh" user-emacs-directory)
-                                                                                (replace-regexp-in-string "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)" "\\\\\\1" file-entry-name))))
-                                     (insert-file-contents file-entry-name))
-                                   (set-buffer-modified-p nil)
-                                   (current-buffer))))))
-                       (add-to-list 'peep-dired-peeped-buffers
-                                    (window-buffer (display-buffer peep-dired-preview-buffer t))))
-                   (funcall func)))
+                 (if (file-directory-p file-entry-name)
+                     (funcall func)
+                   (let ((peep-dired-preview-buffer (peep-dired-find-file file-entry-name)))
+                     (add-to-list 'peep-dired-peeped-buffers
+                                  (window-buffer (display-buffer peep-dired-preview-buffer t))))))
                (setq peep-preview-timer nil))
              fn))))
   (advice-add 'peep-dired-display-file-other-window :around #'peep-dired-display-file-other-window/around)

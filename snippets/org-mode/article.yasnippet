@@ -2,6 +2,7 @@
 # key : article
 # name : article
 # --
+# -*- org-pandoc-paragraph-fmt: "图 %d"; org-pandoc-table-fmt: "表 %d"; org-pandoc-src-block-fmt: "列表 %d"; -*-
 #+LATEX_CLASS: cn-article
 #+TITLE: ${1:$$(unless yas-modified-p (file-name-base (buffer-name)))}
 #+SUBTITLE:
@@ -10,6 +11,6 @@
 #+OPTIONS: H:4
 #+LATEX_HEADER:
 #+BIBLIOGRAPHY: ~/.bib/Zotero.bib
-#+PANDOC_OPTIONS: citeproc:t csl:~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl toc:t
+#+PANDOC_OPTIONS: citeproc:t csl:~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl toc:t toc-depth:3
 #+PANDOC_METADATA: reference-section-title:参考文献
 $0

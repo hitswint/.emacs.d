@@ -274,11 +274,11 @@
                                         collect (mapconcat (lambda (arg) (concat (char-to-string y) arg))
                                                            (split-string (read-string (concat (file-name-nondirectory x) " (1-2west 4 5-end): ") nil nil "1-end") " " t)
                                                            " "))))
-               (shell-command (concat "pdftk " (mapconcat 'identity file-args " ") " cat " (mapconcat 'identity page-args " ") " output "
+               (shell-command (concat "pdftk " (mapconcat 'identity file-args " ") " cat " (mapconcat 'identity page-args " ") " output \""
                                       (cl-loop for x in file-list-ordered
                                                for y in page-args
                                                concat (concat (file-name-base (escape-local (file-name-nondirectory x))) ":" y "."))
-                                      "pdf"))))
+                                      "pdf\""))))
             ((string= engine "ODAFileConverter")
              (let ((output-version (helm-comp-read "Output version: "
                                                    (list "ACAD9" "ACAD10" "ACAD12" "ACAD13" "ACAD14" "ACAD2000" "ACAD2004" "ACAD2007" "ACAD2010")

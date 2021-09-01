@@ -8,7 +8,7 @@
          ("C-," . swint-helm-file-buffers-list)
          ("C-." . swint-helm-dired-buffers-list)
          ("C-x C-f" . helm-find-files)
-         ("C-x f" . helm-find)
+         ("C-x F" . helm-find)
          ("M-x" . helm-M-x)
          ("C-x l" . swint-helm-locate)
          ("C-x y" . helm-resume))
@@ -33,7 +33,6 @@
   (setq helm-ff-newfile-prompt-p nil)
   (setq helm-split-window-default-side 'same)
   (setq helm-external-programs-associations file-extension-app-alist)
-  (setq helm-fd-executable "fdfind")    ;helm-find-files下C-/启用
   (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
   (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'" "\\`\\*tramp.*\\*\\'" "\\`\\*baidu-translate\\*\\'" "\\`\\*NOX.*\\*\\'" "\\`\\*nox.*\\*\\'" "\\`\\*org-brain-helm\\*\\'")))
   ;; (setq helm-mounted-network-directories '("/mnt/share" "/mnt/sshfs"))
@@ -49,6 +48,7 @@
   ;; ===============keybindings=================
   (define-key helm-map (kbd "C-;") 'helm-toggle-visible-mark)
   (define-key helm-map (kbd "C-l") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "M-o") 'helm-peep-preview-persistent)
   (define-key helm-map (kbd "C-M-p") 'helm-previous-source)
   (define-key helm-map (kbd "C-M-n") 'helm-next-source)
   (define-key helm-map (kbd "M-U") 'helm-unmark-all)
@@ -65,6 +65,7 @@
   (helm-define-key-with-subkeys helm-map (kbd "C-x Y") ?Y 'helm-run-cycle-resume)
   (helm-define-key-with-subkeys global-map (kbd "C-x Y") ?Y 'helm-cycle-resume)
   (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)
+  (define-key helm-find-files-map (kbd "M-o") 'helm-peep-preview-persistent)
   (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
   (define-key helm-find-files-map (kbd "M-U") 'helm-unmark-all)
   (define-key helm-find-files-map (kbd "M-T") 'helm-toggle-all-marks)
@@ -83,6 +84,18 @@
   (define-key helm-command-map (kbd "u") 'helm-unicode)
   (bind-key "C-x M-f" '(lambda () (interactive) (helm-find-files-1 "/ssh:")))
   ;; ===============keybindings=================
+;;;; helm-fd
+  ;; =================helm-fd===================
+  (def-package! helm-fd
+    :bind ("C-x f" . swint-helm-fdfind)
+    :config
+    ;; helm-find-files下C-/启用
+    (setq helm-fd-executable "fdfind")
+    (add-to-list 'helm-fd-switches "--absolute-path")
+    (defun swint-helm-fdfind ()
+      (interactive)
+      (require 'helm-fd) (helm-fd-1 default-directory)))
+  ;; =================helm-fd===================
 ;;;; helm-pinyin
   ;; ================helm-pinyin================
   (require 'iswitchb-pinyin)
@@ -462,6 +475,16 @@
                  (message "Updated locate db file.")))))
         (helm-locate nil))))
   ;; ==============helm-locate==================
+;;;; helm-peep-preview-persistent
+  ;; ======helm-peep-preview-persistent=========
+  (defun helm-peep-preview-persistent ()
+    "Show properties without quitting helm."
+    (interactive)
+    (with-helm-alive-p
+      (helm-set-attr 'peep-preview-action 'peep-dired-find-file)
+      (helm-execute-persistent-action 'peep-preview-action)))
+  (put 'helm-peep-preview-persistent 'helm-only t)
+  ;; ======helm-peep-preview-persistent=========
   )
 ;; ====================helm=====================
 ;;; helm-ring

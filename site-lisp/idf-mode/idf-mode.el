@@ -53,27 +53,31 @@
     st)
   "Syntax table for idf-mode.")
 
+(defvar idf-type-prefix-regexp (concat "\\(^[ \t]*!.*\\|^[ \t]*\\|;.*\\)\n" "[ \t]*"))
+(defvar idf-type-regexp "\\([a-zA-Z0-9:]*\\)")
+(defvar idf-type-variable-separator-regexp "\\(,[^,;\n]*\n[ \t]*\\|,[ \t]*\\)")
+
 (defconst idf-font-lock-keywords
-  `((,(concat "^[ \t]*" "\\([ a-zA-Z0-9:]*\\)" ",[ \t]*\n")
-     (1 font-lock-type-face))
-    (,(concat "^[ \t]*" "\\([ a-zA-Z0-9:]*\\)" ",.*;[ \t]*\n")
-     (1 font-lock-type-face))
-    (,(concat "^[ \ta-zA-Z0-9:]*" ",[ \t]*\n" "[ \t]*" "\\(.*\\)" "[,;].*\n")
-     (1 font-lock-variable-name-face))
-    (,(concat "^[ \t]*" "\\(.*\\)" "[,;][ \t]*!- .+Name[ \t]*\n")
+  `((,(concat idf-type-prefix-regexp idf-type-regexp ",")
+     (2 font-lock-type-face))           ;前一行为注释行/空行/以;结尾
+    (,(concat idf-type-prefix-regexp idf-type-regexp idf-type-variable-separator-regexp "\\([^,;\n]*\\)" "[,;]")
+     (4 font-lock-variable-name-face))  ;variable与type同一行或不同行
+    (,(concat "^[ \t]*" "\\([^,;]*\\)" "[,;][ \t]*![ \t]*-.+[nN]ame")
      (1 font-lock-builtin-face))
-    (,(concat ".+!- " "\\(.*\\)" "\n")
+    (,(concat ".+![ \t]*-[ \t]*" "\\(.*\\)" "\n")
      (1 font-lock-keyword-face)))
   "Keywords for highlighting.")
 
-(defcustom idf-imenu-generic-expression
-  '((nil "^[ \t]*\\([a-zA-Z0-9:]*,\n[ \t]*.*\\)[,;].*\n" 1))
+(defcustom idf-imenu-generic-expression ;包含type与variable
+  '((nil "\\(^[ \t]*!.*\\|^[ \t]*\\|;.*\\)\n[ \t]*\\([a-zA-Z0-9:]*,[^,;]*\\)[,;]" 2))
   "The imenu regex to parse an outline of the idf file.")
 
 (defun idf-imenu-create-index-function ()
   (let ((default-index (imenu-default-create-index-function)))
     (cl-loop for i in default-index
-             collect (cons (replace-regexp-in-string ",[ \t]*\n[ \t]*" " | " (car i)) (cdr i)))))
+             collect (cons (replace-regexp-in-string (concat idf-type-variable-separator-regexp "\\([^,;\n]*\\)")
+                                                     " | " (car i) nil nil 1)
+                           (cdr i)))))
 
 (defun idf-set-imenu-generic-expression ()
   (make-local-variable 'imenu-generic-expression)
@@ -85,34 +89,35 @@
 
 (defun idf-prev-object ()
   (interactive)
-  (re-search-backward "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)" nil t))
+  (re-search-backward (concat idf-type-prefix-regexp idf-type-regexp ",") nil t)
+  (goto-char (match-beginning 2)))
 
 (defun idf-next-object ()
   (interactive)
   (goto-char (+ (line-end-position) 1))
-  (if (re-search-forward "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)" nil t)
-      (forward-line -1)))
+  (if (re-search-forward (concat idf-type-prefix-regexp idf-type-regexp ",") nil t)
+      (goto-char (match-beginning 2))))
 
 (defun idf-next-type ()
   (interactive)
   (goto-char (+ (line-end-position) 1))
-  (re-search-backward "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)" nil t)
-  (let* ((current-type (match-string 1))
+  (re-search-backward (concat idf-type-prefix-regexp idf-type-regexp ",") nil t)
+  (let* ((current-type (match-string 2))
          (next-type current-type))
     (while (equal next-type current-type)
       (if (idf-next-object)
-          (setq next-type (match-string 1))
+          (setq next-type (match-string 2))
         (setq next-type nil)))))
 
 (defun idf-prev-type ()
   (interactive)
   (goto-char (+ (line-end-position) 1))
-  (re-search-backward "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)" nil t)
-  (let* ((current-type (match-string 1))
+  (re-search-backward (concat idf-type-prefix-regexp idf-type-regexp ",") nil t)
+  (let* ((current-type (match-string 2))
          (prev-type current-type))
     (while (equal prev-type current-type)
       (if (idf-prev-object)
-          (setq prev-type (match-string 1))
+          (setq prev-type (match-string 2))
         (setq prev-type nil)))))
 
 (defun idf-find-object-at-point ()
@@ -131,7 +136,11 @@
     (cond
      (current-object
       (goto-char (point-max))
-      (unless (re-search-backward (concat "^[ \ta-zA-Z0-9:]*,[ \t]*\n[ \t]*" current-object "[,;].*\n") nil t)
+      (if (re-search-backward (concat idf-type-prefix-regexp idf-type-regexp
+                                      idf-type-variable-separator-regexp
+                                      current-object "[,;]")
+                              nil t)
+          (goto-char (match-beginning 2))
         (goto-char current-point)))
      (t
       (pop-tag-mark)
@@ -144,11 +153,11 @@
          (search-end (if (region-active-p)(region-end) (point-max)))
          (idf-object-list (save-excursion
                             (goto-char (+ (line-end-position) 1))
-                            (re-search-backward (concat "^[ \t]*\\([a-zA-Z0-9:]*\\),\\([ \t]*\n\\|.*;[ \t]*\n\\)") nil t)
-                            (let ((current-type (match-string 1))
+                            (re-search-backward (concat idf-type-prefix-regexp idf-type-regexp ",") nil t)
+                            (let ((current-type (match-string 2))
                                   current-class-string)
                               (goto-char search-beg)
-                              (while (re-search-forward (concat "^[ \t]*" current-type ",\\([ \t]*\n\\|.*;[ \t]*\n\\)") search-end t)
+                              (while (re-search-forward (concat idf-type-prefix-regexp current-type) search-end t)
                                 (push (buffer-substring (match-beginning 0) (re-search-forward ".*;.*\n" nil t)) current-class-string))
                               (reverse current-class-string))))
          (idf-keys (mapcar (lambda (x) (car (reverse (split-string x "[,;]" nil "[ \t]+"))))
@@ -167,31 +176,31 @@
       (set-buffer idf-ctable-buffer)
       (let* ((data (apply '-zip-fill (cons "" (cons idf-keys idf-contents))))
              (param (copy-ctbl:param ctbl:default-rendering-param)))
-        (let ((cp
-               (ctbl:create-table-component-buffer
-                :buffer idf-ctable-buffer :width nil
-                :model
-                (make-ctbl:model
-                 :column-model
-                 (cons (make-ctbl:cmodel
-                        :title idf-class-name
-                        :min-width 5 :align 'left)
-                       (cl-loop for i from 1 to (length idf-contents)
-                                collect (make-ctbl:cmodel
-                                         :title (number-to-string i)
-                                         :min-width 5 :align 'left)))
-                 :data
-                 (if (= (length idf-contents) 1)
-                     (-mapcat (lambda (x) (list (list (car x) (cdr x)))) (cdr data))
-                   (cdr data)))
-                :param param)))
+        (lexical-let ((cp
+                       (ctbl:create-table-component-buffer
+                        :buffer idf-ctable-buffer :width nil
+                        :model
+                        (make-ctbl:model
+                         :column-model
+                         (cons (make-ctbl:cmodel
+                                :title idf-class-name
+                                :min-width 5 :align 'left)
+                               (cl-loop for i from 1 to (length idf-contents)
+                                        collect (make-ctbl:cmodel
+                                                 :title (number-to-string i)
+                                                 :min-width 5 :align 'left)))
+                         :data
+                         (if (= (length idf-contents) 1)
+                             (-mapcat (lambda (x) (list (list (car x) (cdr x)))) (cdr data))
+                           (cdr data)))
+                        :param param)))
           (ctbl:cp-add-click-hook
            cp (lambda ()
                 (let ((column-id (cdr (ctbl:cp-get-selected cp)))
                       (row-key (car (ctbl:cp-get-selected-data-row cp))))
                   (switch-to-buffer-other-window curr-buf)
                   (goto-char search-beg)
-                  (re-search-forward (concat "^[ \t]*" idf-class-name ",\\([ \t]*\n\\|.*;[ \t]*\n\\)") nil t column-id)
+                  (re-search-forward (concat idf-type-prefix-regexp idf-class-name) nil t column-id)
                   (re-search-forward (concat "[,;].*" row-key) nil t)
                   (goto-char (match-beginning 0)))))
           (pop-to-buffer (ctbl:cp-get-buffer cp)))))))
