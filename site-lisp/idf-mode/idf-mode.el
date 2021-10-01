@@ -36,6 +36,7 @@
 ;; (define-key idf-mode-map (kbd "C-c C-b") 'idf-prev-type)
 ;; (define-key idf-mode-map (kbd "C-c C-f") 'idf-next-type)
 ;; (define-key idf-mode-map (kbd "C-c C-,") 'idf-find-object-at-point)
+;; (define-key idf-mode-map (kbd "C-c C-/") 'idf-reference-object-at-point)
 ;;
 ;; to your .emacs file.
 
@@ -53,17 +54,25 @@
     st)
   "Syntax table for idf-mode.")
 
+;; 前一行为注释行/空行/以;结尾
 (defvar idf-type-prefix-regexp (concat "\\(^[ \t]*!.*\\|^[ \t]*\\|;.*\\)\n" "[ \t]*"))
 (defvar idf-type-regexp "\\([a-zA-Z0-9:]*\\)")
+;; variable与type同一行或不同行
 (defvar idf-type-variable-separator-regexp "\\(,[^,;\n]*\n[ \t]*\\|,[ \t]*\\)")
 
 (defconst idf-font-lock-keywords
   `((,(concat idf-type-prefix-regexp idf-type-regexp ",")
-     (2 font-lock-type-face))           ;前一行为注释行/空行/以;结尾
+     (2 font-lock-type-face))
     (,(concat idf-type-prefix-regexp idf-type-regexp idf-type-variable-separator-regexp "\\([^,;\n]*\\)" "[,;]")
-     (4 font-lock-variable-name-face))  ;variable与type同一行或不同行
-    (,(concat "^[ \t]*" "\\([^,;]*\\)" "[,;][ \t]*![ \t]*-.+[nN]ame")
+     (4 font-lock-variable-name-face))
+    (,(concat "^[ \t]*" "\\([0-9.eE\\-]+\\)" "[,;]")
+     (1 font-lock-string-face))
+    (,(concat ",[ \t]*" "\\([0-9.eE\\-]+\\)")
+     (1 font-lock-string-face))
+    (,(concat "^[ \t]*" "\\([^,;]*\\)" "[,;][ \t]*![ \t]*-.+[nN]ames*$")
      (1 font-lock-builtin-face))
+    (,(concat "^[ \t]*" "\\([^,;]*\\)" "[,;][ \t]*![ \t]*-.+[tT]ype$")
+     (1 font-lock-function-name-face))
     (,(concat ".+![ \t]*-[ \t]*" "\\(.*\\)" "\n")
      (1 font-lock-keyword-face)))
   "Keywords for highlighting.")
@@ -142,6 +151,26 @@
                               nil t)
           (goto-char (match-beginning 2))
         (goto-char current-point)))
+     (t
+      (pop-tag-mark)
+      (error "Don't know how to find '%s'" current-object)))))
+
+(defun idf-reference-object-at-point ()
+  "Find the object at point."
+  (interactive)
+  (let ((current-point (point))
+        (current-object (save-excursion
+                          (goto-char (line-beginning-position))
+                          (re-search-forward "^[ \t]*\\(.*[,;]\\).*\n"
+                                             (line-beginning-position 2) t)
+                          (match-string 1))))
+    (if (fboundp 'xref-push-marker-stack)
+        (xref-push-marker-stack)
+      (with-no-warnings
+        (ring-insert find-tag-marker-ring (point-marker))))
+    (cond
+     (current-object
+      (helm-swoop :query current-object))
      (t
       (pop-tag-mark)
       (error "Don't know how to find '%s'" current-object)))))

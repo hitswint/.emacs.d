@@ -415,26 +415,30 @@
 ;; ===============dired-ranger=================
 (def-package! dired-ranger
   :bind (:map dired-mode-map
-              ;; dired-copy-filename-as-kill直接复制文件名
+              ;; w: dired-copy-filename-as-kill 复制文件名，加0复制绝对路径
               ("M-w" . swint-dired-ranger-copy)
               ("M-W" . swint-dired-clipboard-copy)
               ("M-Y" . swint-dired-clipboard-paste))
   :config
   (defun swint-dired-ranger-copy ()
     (interactive)
-    (easy-kill)
-    (call-interactively 'dired-ranger-copy))
-  (defun swint-dired-clipboard-copy () ;导致界面卡死，可粘贴图片；C-g杀死xclip进程，无法复制
+    (if (region-active-p)
+        (easy-kill)
+      (dired-copy-filename-as-kill 0)
+      (call-interactively 'dired-ranger-copy)))
+  (defun swint-dired-clipboard-copy (&optional filetocopy) ;导致界面卡死，可粘贴图片；C-g杀死xclip进程，无法复制
     (interactive)
-    (let ((current-file (dired-get-filename nil t)))
+    (let ((filename (or filetocopy
+                        (dired-get-filename nil t))))
       ;; xclip复制大图片时卡住
-      ;; (shell-command (format "xclip -i -selection clipboard -t \"$(file -b --mime-type %s)\" %s" current-file current-file))
-      (shell-command (format "copyq copy \"$(file -b --mime-type %s)\" - < %s" current-file current-file))))
-  (defun swint-dired-clipboard-paste () ;只可粘贴图片
+      ;; (shell-command (format "xclip -i -selection clipboard -t \"$(file -b --mime-type %s)\" %s" filename filename))
+      (when (file-exists-p filename)
+        (shell-command (format "copyq copy \"$(file -b --mime-type %s)\" - < \"%s\"" filename filename)))))
+  (defun swint-dired-clipboard-paste (&optional filetopaste) ;只可粘贴图片
     (interactive)
-    (let ((filename (read-from-minibuffer "File name: " nil nil t nil
-                                          (format-time-string "%Y%m%d_%H%M%S"))))
-      (shell-command (format "xclip -selection clipboard -t image/png -o > %s.png"
+    (let ((filename (or filetopaste
+                        (format-time-string "%Y%m%d_%H%M%S.png"))))
+      (shell-command (format "xclip -selection clipboard -t image/png -o > \"%s\""
                              filename))))
   ;; 加C-u不清除clipboards。
   (bind-key "C-y" 'dired-ranger-paste dired-mode-map)

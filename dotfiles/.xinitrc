@@ -16,9 +16,9 @@ nm-applet &
 # dbus-launch nm-applet &
 blueman-applet &
 
-# MPD daemon start (if no other user instance exists)
+# 使用systemctl --user的mpd.service
 # [ ! -s ~/.mpd/mpd.pid ] && mpd  # Fail to startup sometime
-[ ! -s ~/.mpd/mpd.pid ] ; mpd &
+# [ ! -s ~/.mpd/mpd.pid ] ; mpd &
 
 # dwm-multi-mon.sh single
 
@@ -65,6 +65,7 @@ pgrep redshift || redshift -l 41.8:123.4 &
 # xmodmap -e " keycode 9 = grave asciitilde grave asciitilde "
 
 # pulseaudio -D
+# 使用systemctl --user的pulseaudio.service
 pgrep pasystray || (pgrep pulseaudio && pasystray -i 5 || sleep 10 ; pasystray -i 5) &
 
 # greenclip daemon &

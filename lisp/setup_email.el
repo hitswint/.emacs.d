@@ -29,7 +29,7 @@
   (setq mu4e-change-filenames-when-moving t
         mu4e-view-prefer-html t
         mu4e-view-show-images t
-        mu4e-get-mail-command "mbsync -a; offlineimap"
+        mu4e-get-mail-command "mbsync -a" ; offlineimap
         mu4e-confirm-quit nil
         mu4e-update-interval 600
         message-kill-buffer-on-exit t
@@ -46,57 +46,45 @@
         `(,(make-mu4e-context
             :name "Default"
             :enter-func (lambda () (mu4e-message "Switch to the Default context"))
-            :match-func (lambda (msg)
-                          (when msg
-                            (mu4e-message-contact-field-matches msg
-                                                                :to "wgq_hit@126.com")))
+            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "wgq_hit@126.com")))
             :vars '((user-mail-address . "wgq_hit@126.com" )
-                    (user-full-name . "Guiqiang Wang" )
-                    (mu4e-sent-folder . "/Default/已发送")
-                    (mu4e-drafts-folder . "/Default/草稿箱")
-                    (mu4e-trash-folder . "/Default/已删除")
+                    (user-full-name . "guiq.wang" )
+                    (mu4e-sent-folder . "/Default/&XfJT0ZAB-")
+                    (mu4e-drafts-folder . "/Default/&g0l6P3ux-")
+                    (mu4e-trash-folder . "/Default/&XfJSIJZk-")
                     (smtpmail-default-smtp-server . "smtp.126.com")
                     (smtpmail-smtp-server . "smtp.126.com")
                     (smtpmail-smtp-service . 25)))
           ,(make-mu4e-context
             :name "Netease"
             :enter-func (lambda () (mu4e-message "Switch to the Netease context"))
-            :match-func (lambda (msg)
-                          (when msg
-                            (mu4e-message-contact-field-matches msg
-                                                                :to "wgq_713@163.com")))
+            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "wgq_713@163.com")))
             :vars '((user-mail-address . "wgq_713@163.com" )
-                    (user-full-name . "Guiqiang Wang" )
-                    (mu4e-sent-folder . "/Netease/已发送")
-                    (mu4e-drafts-folder . "/Netease/草稿箱")
-                    (mu4e-trash-folder . "/Netease/已删除")
+                    (user-full-name . "guiq.wang" )
+                    (mu4e-sent-folder . "/Netease/&XfJT0ZAB-")
+                    (mu4e-drafts-folder . "/Netease/&g0l6P3ux-")
+                    (mu4e-trash-folder . "/Netease/&XfJSIJZk-")
                     (smtpmail-default-smtp-server . "smtp.163.com")
                     (smtpmail-smtp-server . "smtp.163.com")
                     (smtpmail-smtp-service . 25)))
           ,(make-mu4e-context
             :name "SJZU"
             :enter-func (lambda () (mu4e-message "Switch to the SJZU context"))
-            :match-func (lambda (msg)
-                          (when msg
-                            (mu4e-message-contact-field-matches msg
-                                                                :to "guiq.wang@sjzu.edu.cn")))
+            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "guiq.wang@sjzu.edu.cn")))
             :vars '((user-mail-address . "guiq.wang@sjzu.edu.cn" )
-                    (user-full-name . "Guiqiang Wang" )
-                    (mu4e-sent-folder . "/SJZU/已发送")
-                    (mu4e-drafts-folder . "/SJZU/草稿箱")
-                    (mu4e-trash-folder . "/SJZU/已删除")
+                    (user-full-name . "guiq.wang" )
+                    (mu4e-sent-folder . "/SJZU/&XfJT0ZAB-")
+                    (mu4e-drafts-folder . "/SJZU/&g0l6P3ux-")
+                    (mu4e-trash-folder . "/SJZU/&XfJSIJZk-")
                     (smtpmail-default-smtp-server . "smtphz.qiye.163.com")
                     (smtpmail-smtp-server . "smtphz.qiye.163.com")
                     (smtpmail-smtp-service . 465)))
           ,(make-mu4e-context
             :name "Hotmail"
             :enter-func (lambda () (mu4e-message "Switch to the Hotmail context"))
-            :match-func (lambda (msg)
-                          (when msg
-                            (mu4e-message-contact-field-matches msg
-                                                                :to "wguiqiang@hotmail.com")))
+            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "wguiqiang@hotmail.com")))
             :vars '((user-mail-address . "wguiqiang@hotmail.com" )
-                    (user-full-name . "Guiqiang Wang" )
+                    (user-full-name . "guiq.wang" )
                     (mu4e-sent-folder . "/Hotmail/Sent")
                     (mu4e-drafts-folder . "/Hotmail/Drafts")
                     (mu4e-trash-folder . "/Hotmail/Deleted")
@@ -106,12 +94,9 @@
           ,(make-mu4e-context
             :name "QQ"
             :enter-func (lambda () (mu4e-message "Switch to the QQ context"))
-            :match-func (lambda (msg)
-                          (when msg
-                            (mu4e-message-contact-field-matches msg
-                                                                :to "278064399@qq.com")))
+            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "278064399@qq.com")))
             :vars '((user-mail-address . "278064399@qq.com")
-                    (user-full-name . "Guiqiang Wang")
+                    (user-full-name . "guiq.wang")
                     (mu4e-sent-folder . "/QQ/Sent Messages")
                     (mu4e-drafts-folder . "/QQ/Drafts")
                     (mu4e-trash-folder . "/QQ/Deleted Messages")

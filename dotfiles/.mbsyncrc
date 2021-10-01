@@ -1,3 +1,76 @@
+# ==========Default==========
+IMAPAccount Default
+Host imap.126.com
+Port 993
+User wgq_hit
+PassCmd "emacsclient --eval '(get-auth-pass \"imap.126.com\")' | tr -d \\\""
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore default-remote
+Account Default
+
+MaildirStore default-local
+Path ~/Maildir/Default/
+Inbox ~/Maildir/Default/INBOX
+
+Channel default
+Master :default-remote:
+Slave :default-local:
+Patterns * !垃圾邮件 !已删除 !已发送 !广告邮件 !病毒邮件 !草稿箱 !订阅邮件
+Create Both
+Expunge Both
+SyncState *
+
+# ==========Netease==========
+IMAPAccount Netease
+Host imap.163.com
+Port 993
+User wgq_713
+PassCmd "emacsclient --eval '(get-auth-pass \"imap.163.com\")' | tr -d \\\""
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore netease-remote
+Account Netease
+
+MaildirStore netease-local
+Path ~/Maildir/Netease/
+Inbox ~/Maildir/Netease/INBOX
+
+Channel netease
+Master :netease-remote:
+Slave :netease-local:
+Patterns * !垃圾邮件 !已删除 !已发送 !广告邮件 !草稿箱 !订阅邮件
+Create Both
+Expunge Both
+SyncState *
+
+# ==========SJZU==========
+IMAPAccount SJZU
+Host imaphz.qiye.163.com
+Port 993
+User guiq.wang@sjzu.edu.cn
+PassCmd "emacsclient --eval '(get-auth-pass \"imaphz.qiye.163.com\")' | tr -d \\\""
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore sjzu-remote
+Account SJZU
+
+MaildirStore sjzu-local
+Path ~/Maildir/SJZU/
+Inbox ~/Maildir/SJZU/INBOX
+
+Channel sjzu
+Master :sjzu-remote:
+Slave :sjzu-local:
+Patterns * !垃圾邮件 !已删除 !已发送 !广告邮件 !草稿箱
+Create Both
+Expunge Both
+SyncState *
+
+# ==========Hotmail==========
 IMAPAccount Hotmail
 Host imap-mail.outlook.com
 Port 993
@@ -23,6 +96,7 @@ Create Both
 Expunge Both
 SyncState *
 
+# ==========QQ==========
 IMAPAccount QQ
 Host imap.qq.com
 Port 993

@@ -277,7 +277,7 @@
                (shell-command (concat "pdftk " (mapconcat 'identity file-args " ") " cat " (mapconcat 'identity page-args " ") " output \""
                                       (cl-loop for x in file-list-ordered
                                                for y in page-args
-                                               concat (concat (file-name-base (escape-local (file-name-nondirectory x))) ":" y "."))
+                                               concat (concat (file-name-base (file-name-nondirectory x)) ":" y "."))
                                       "pdf\""))))
             ((string= engine "ODAFileConverter")
              (let ((output-version (helm-comp-read "Output version: "

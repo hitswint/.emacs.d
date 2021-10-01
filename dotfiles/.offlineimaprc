@@ -1,6 +1,6 @@
 [general]
-maxsyncaccounts = 2
-accounts = Default, Netease
+maxsyncaccounts = 3
+accounts = Default, Netease, SJZU
 pythonfile = ~/.offlineimap.py
 
 [Account Default]
@@ -37,6 +37,27 @@ nametrans = lambda foldername: foldername.decode('utf-8').encode('imap4-utf-7')
 remotehost = imap.163.com
 remoteusereval = get_user_emacs("imap.163.com")
 remotepasseval = get_password_emacs("imap.163.com")
+type = IMAP
+ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+holdconnectionopen = true
+keepalive = 120
+realdelete = yes
+nametrans = lambda foldername: foldername.decode('imap4-utf-7').encode('utf-8')
+
+[Account SJZU]
+localrepository = Local_sjzu
+remoterepository = Remote_sjzu
+
+[Repository Local_sjzu]
+type = Maildir
+localfolders = ~/Maildir/SJZU
+nametrans = lambda foldername: foldername.decode('utf-8').encode('imap4-utf-7')
+
+[Repository Remote_sjzu]
+remotehost = imaphz.qiye.163.com
+remoteusereval = get_user_emacs("imaphz.qiye.163.com")
+remotepasseval = get_password_emacs("imaphz.qiye.163.com")
 type = IMAP
 ssl = yes
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt

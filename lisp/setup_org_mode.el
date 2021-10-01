@@ -14,6 +14,9 @@
   (font-lock-add-keywords 'org-mode
                           '(("^ +\\([-*]\\) "
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  (setq org-use-sub-superscripts "{}")
+  (setq org-pretty-entities t)
+  (setq org-pretty-entities-include-sub-superscripts t)
   ;; =================Appearance================
 ;;;; Capture
   ;; =================Capture===================
@@ -104,6 +107,8 @@
                (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)
                (define-key org-mode-map (kbd "C-c l") '(lambda () (interactive)
                                                          (insert (swint-cursor-localtion))))
+               (define-key org-mode-map (kbd "C-c w") 'org-clipboard-copy)
+               (define-key org-mode-map (kbd "C-c y") 'org-clipboard-paste)
                (define-key org-mode-map (kbd "C-j") nil)
                (define-key org-mode-map (kbd "RET") nil)
                (define-key org-mode-map [(control \,)] nil)
@@ -177,6 +182,24 @@
   (define-key org-mode-map (kbd "C-c v") 'org-latex-preview)
   (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境。
   ;; =============org-latex-preview=============
+;;;; org-clipboard-copy/paste
+  ;; =========org-clipboard-copy/paste==========
+  (defun org-clipboard-copy ()
+    (interactive)
+    (let* ((context (org-element-lineage (org-element-context) '(link) t))
+           (filename (when (equal (org-element-property :type context) "file")
+                       (org-element-property :path context))))
+      (if (file-exists-p filename)
+          (swint-dired-clipboard-copy filename)
+        (message "No file at point"))))
+  (defun org-clipboard-paste ()
+    (interactive)
+    (let ((filename (format-time-string "./pic/%Y%m%d_%H%M%S.png")))
+      (unless (file-exists-p "pic")
+        (dired-create-directory "pic"))
+      (swint-dired-clipboard-paste filename)
+      (insert "[[" filename "]]")))
+  ;; =========org-clipboard-copy/paste==========
   )
 ;; =================org-mode====================
 ;;; org-annotate

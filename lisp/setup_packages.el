@@ -7,22 +7,13 @@
   (setq-default abbrev-mode t)
   ;; Stop asking whether to save newly added abbrev when quitting emacs.
   (setq save-abbrevs t)
+  ;; 编辑abbrev-table：
+  ;; C-x a g 将当前位置之前词语，全局加入abbrev
+  ;; C-x a + 将当前位置之前词语，当前mode下加入abbrev
+  ;; define-global-abbrev/define-mode-abbrev自定义abbrev
   (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
   (when (file-exists-p abbrev-file-name)
-    (quietly-read-abbrev-file))
-  ;; Sample use of emacs abbreviation feature.
-  (define-abbrev-table 'global-abbrev-table
-    '(("abqq" "278064399@qq.com")
-      ("abgg" "guiqiangw2013@gmail.com")
-      ("abhot" "wguiqiang@hotmail.com")
-      ("ab126" "wgq_hit@126.com")
-      ("ab163" "wgq_713@163.com")
-      ("abwgq" "Guiqiang Wang"))))
-;; 编辑abbrev-table：C-x a g为当前位置之前词语，全局加入abbrev。
-;; C-x a +为当前位置之前词语，在当前mode下加入abbrev。
-;; 上述命令前加前缀C-u 3表示当前位置之前三个词。
-;; define-global-abbrev/define-mode-abbrev自定义abbrev。
-;; 退出时会要求保存abbrev_defs文件。
+    (quietly-read-abbrev-file)))
 ;; ====================abbrev======================
 ;;; server
 ;; ====================server======================
@@ -75,9 +66,9 @@
 (def-package! expand-region
   :bind ("C-M-;" . er/expand-region)
   :config
+  ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end
   (setq expand-region-contract-fast-key ":")
   (setq expand-region-reset-fast-key "C-;"))
-;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end。
 ;; =================expand-region==================
 ;;; undo-fu
 ;; ===================undo-fu======================
@@ -239,7 +230,7 @@
   (defvar swint-fcitx-setup-done nil)
   (defun swint-fcitx-setup (&optional frame)
     (when (and (display-graphic-p frame) (not swint-fcitx-setup-done))
-      (fcitx-prefix-keys-add "M-s" "M-g" "M-O")
+      (fcitx-prefix-keys-add "M-s" "M-g" "M-o" "M-O")
       (fcitx-aggressive-setup)
       (fcitx-isearch-turn-on)
       (fcitx--defun-maybe "sdcv")
@@ -818,6 +809,7 @@
       ("b" . idf-prev-type)))
   (define-key idf-mode-map (kbd "C-c C-,") 'idf-find-object-at-point)
   (define-key idf-mode-map (kbd "C-c C-.") 'pop-tag-mark)
+  (define-key idf-mode-map (kbd "C-c C-/") 'idf-reference-object-at-point)
   (define-key idf-mode-map (kbd "C-c '") 'idf-show-ctable))
 ;; ==================idf-mode======================
 ;;; gnu-elpa-keyring-update
