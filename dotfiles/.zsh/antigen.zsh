@@ -15,10 +15,22 @@ if [ -f ${ZDOTDIR}/src/antigen/antigen.zsh ];then
     antigen bundle pip
     antigen bundle sudo
     antigen bundle web-search
-    antigen bundle z
 
+    # https://github.com/rupa/z
+    # 无法排除特定路径，导致/etc/fstab中automount的网络存储自动加载
+    # 需修改源代码(https://github.com/rupa/z/issues/189)
+    # antigen bundle z
+    # (( ${+_Z_EXCLUDE_DIRS} )) || typeset -ga _Z_EXCLUDE_DIRS
+    # _Z_EXCLUDE_DIRS+="/mnt/share"
+    # 或 _Z_EXCLUDE_DIRS=("/mnt/share")
+
+    # https://github.com/agkozak/zsh-z
+    antigen bundle agkozak/zsh-z
+    (( ${+ZSHZ_EXCLUDE_DIRS} )) || typeset -ga ZSHZ_EXCLUDE_DIRS
+    ZSHZ_EXCLUDE_DIRS+="/mnt/share"
+
+    # https://github.com/Aloxaf/fzf-tab/
     antigen bundle Aloxaf/fzf-tab
-
     # zstyle ':fzf-tab:*' fzf-command percol
     zstyle ':fzf-tab:*' fzf-bindings 'alt-m:toggle' 'alt-t:toggle-all'
     zstyle ':fzf-tab:*' switch-group 'alt-p' 'alt-n'

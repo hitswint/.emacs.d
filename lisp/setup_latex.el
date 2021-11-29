@@ -33,6 +33,10 @@
   (setq TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o")))
   ;; 使用imagemagick中convert转换为图片。win中默认使用imgconvert，可以将cygwin中convert改名为imgconvert。
   (add-to-list 'TeX-command-list '("LaTeX-standalone" "%`xelatex -shell-escape%(mode)%' %t" TeX-run-TeX nil t))
+  ;; 使用beamer-preview多线程快速更新，需pip安装pypdf2/colorlog/watchdog
+  ;; 指定--run 2是因为只编译一次时会出现临时页：Temporary page! LATEX was unable to guess the total number of pages
+  ;; 在导出模板cn-beamer中禁用animate包之后不生成临时页
+  (add-to-list 'TeX-command-list '("beamer-preview" "python ~/.emacs.d/repos/beamer-preview/beamer-preview.py --compiler xelatex --compiler-option=\"-interaction=nonstopmode\" --run 1 --watch %(t-filename-only)" TeX-run-command nil t))
   (setq TeX-view-program-selection '((output-pdf "Llpp") (output-dvi "Llpp")))
   ;; ============setup-and-keybindings=============
 ;;;; preview

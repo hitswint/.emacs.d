@@ -3,7 +3,7 @@
 # key: eq
 # name: \begin{equation} ... \end{equation}
 # --
+${1:"choose from export format..."$(unless yas-modified-p (let ((export-to (ivy-read "Export to: " '(office latex)))) (if (string-equal export-to "office") "" "# ")))}#+NAME: ${2:$$(unless yas-modified-p (reftex-label "equation" 'dont-insert))}
 \begin{equation}
-\label{${1:"waiting for reftex-label call..."$(unless yas-modified-p (reftex-label nil 'dont-insert))}}
-$0
+${3:$$(unless yas-modified-p (if (string-equal (yas-field-value 1) "# ") (format "\\label\{%s\}\n" (yas-field-value 2))))}$0
 \end{equation}

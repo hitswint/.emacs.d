@@ -15,6 +15,7 @@
                           '(("^ +\\([-*]\\) "
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
   (setq org-use-sub-superscripts "{}")
+  ;; 使用org-toggle-pretty-entities (C-c C-x \) 启闭
   (setq org-pretty-entities t)
   (setq org-pretty-entities-include-sub-superscripts t)
   ;; =================Appearance================
@@ -42,7 +43,7 @@
   ;; %^{Description}
   (add-hook 'org-mode-hook
             '(lambda ()
-               ;; 插入source code时高亮，C-c '打开相应major-mode编辑窗口。
+               ;; 插入source code时高亮，C-c '打开相应major-mode编辑窗口
                (setq org-src-fontify-natively t)
                ;; (setq org-startup-indented t)
                (setq truncate-lines nil)
@@ -61,10 +62,10 @@
                                                      (concat (cdr file-extension-pair) " %s"))))
                (turn-on-font-lock)
                (iimage-mode 1)
-               ;; 如果有#+ATTR_ORG: :width 100则设置为图片宽度为100，否则显示原尺寸。
+               ;; 如果有#+ATTR_ORG: :width 100则设置为图片宽度为100，否则显示原尺寸
                (setq org-image-actual-width nil)
-               ;; org-redisplay-inline-images(C-c C-x C-M-v) 更新图片。
-               ;; org-toggle-inline-images(C-c C-x C-v) 开关图片。
+               ;; org-redisplay-inline-images (C-c C-x C-M-v) 更新图片
+               ;; org-toggle-inline-images (C-c C-x C-v) 开关图片
                (org-display-inline-images)
                (setq org-use-speed-commands t)
                ;; ? org-speed-command-help
@@ -124,16 +125,16 @@
   (setq org-clock-heading-function
         (lambda ()
           (substring (nth 4 (org-heading-components)) 0 0)))
-  ;; 显示两周的agenda。
+  ;; 显示两周的agenda
   (setq org-agenda-span 'month)
-  ;; 设定todo的子项完成后主项自动完成。
+  ;; 设定todo的子项完成后主项自动完成
   (add-hook 'org-after-todo-statistics-hook '(lambda (n-done n-not-done)
                                                (let (org-log-done org-log-states)
                                                  (org-todo (if (= n-not-done 0) "DONE" "TODO")))))
   ;; 设定todo关键词。
   (setq org-todo-keywords
         '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")))
-  ;; |后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔。
+  ;; |后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔
   ;; ===================GTD=====================
 ;;;; org-babel
   ;; ===========使用ditaa输出ascii图片==========
@@ -170,8 +171,8 @@
   ;; ================cdlatex====================
 ;;;; org输出doc
   ;; =================org输出doc================
-  ;; 先生成odt文件(需要zip支持)，然后使用libreoffice转化成doc文件。
-  ;; 在win上转doc格式路径名中不能有中文。
+  ;; 先生成odt文件(需要zip支持)，然后使用libreoffice转化成doc文件
+  ;; 在win上转doc格式路径名中不能有中文
   (setq org-odt-preferred-output-format "doc")
   (define-key org-mode-map (kbd "C-c C-S-e") 'org-odt-export-to-odt)
   ;; =================org输出doc================
@@ -217,7 +218,7 @@
   (bind-key "J" 'dired-k--goto-file dired-mode-map)
   :config
   (add-hook 'dired-after-readin-hook 'dired-k--highlight-buffer t)
-  ;; 在已有dired-mode中开启dired-x-highlight。
+  ;; 在已有dired-mode中开启dired-x-highlight
   (dolist (buf (cl-remove-if-not (lambda (x)
                                    (equal (buffer-mode x) 'dired-mode))
                                  (buffer-list)))
@@ -237,7 +238,7 @@
 (def-package! dired-sync-highlight
   :load-path "site-lisp/org-annotate-file/"
   :after dired-x-highlight)
-;; 原有org-annotate-file用于全局注释。
+;; 原有org-annotate-file用于全局注释
 (def-package! org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands org-annotate-file
@@ -255,7 +256,7 @@
       (switch-to-buffer-other-window (current-buffer))
       (org-annotate-file (abbreviate-file-name (buffer-file-name))))))
   (setq org-annotate-file-storage-file "~/org/annotated/annotated.org"))
-;; 新建swint-org-annotate-file.el用于局部注释。
+;; 新建swint-org-annotate-file.el用于局部注释
 (def-package! swint-org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands swint-org-annotation-storage-file
@@ -352,7 +353,7 @@
              outshine-cycle-buffer
              outshine-calc-outline-regexp)
   :config
-  ;; Heading格式随mode不同，通常是M-;加*加空格。
+  ;; Heading格式随mode不同，通常是M-;加*加空格
   (setq outshine-use-speed-commands t)
   (setq outshine-imenu-show-headlines-p nil)
   (define-key outshine-mode-map (kbd "M-TAB") nil))
@@ -512,7 +513,6 @@
   (setq org-ref-default-bibliography (delete (expand-file-name "~/.bib/Zotero.bib")
                                              (directory-files "~/.bib" t "\\.bib$"))
         org-ref-bibliography-notes "~/Zotero/storage/TKM9D893/notes.org"
-        org-latex-prefer-user-labels t
         org-ref-show-broken-links nil
         org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
         org-ref-notes-function '(lambda (thekey)
@@ -580,17 +580,16 @@
   (setq org-latex-pdf-process
         '("xelatex -interaction nonstopmode %f"
           "xelatex -interaction nonstopmode %f"))
-  ;; 定义org markup(*_+/=~)等的转换。
+  ;; 定义org markup(*_+/=~)等的转换
   (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
                                       (code . verb)
                                       (italic . "\\emph{%s}")
                                       (strike-through . "\\sout{%s}")
                                       (underline . "\\underline{%s}")
                                       (verbatim . protectedtexttt)))
-  ;; 使用Listings宏包格式化源代码(只是把代码框用listing环境框起来，还需要额外的设置。
+  ;; 使用Listings宏包格式化源代码(只是把代码框用listing环境框起来，还需要额外的设置
   (setq org-export-latex-listings t)
   (setq org-latex-image-default-width ".6\\linewidth")
-  (setq org-beamer-outline-frame-title "Outline")
   (add-to-list 'org-latex-classes
                '("cn-article"
                  "\\documentclass[11pt]{ctexart}
@@ -651,7 +650,7 @@
 \\DeclareGraphicsRule{*}{mps}{*}{}
 \\usepackage{xmpmulti}
 \\usepackage{colortbl,dcolumn}
-\\usepackage[autoplay,loop]{animate}
+% \\usepackage[autoplay,loop]{animate}
 \\usepackage[absolute,overlay]{textpos}
 \\usetikzlibrary{arrows,arrows.meta,shapes,chains,calc,positioning,decorations.markings}
 \\usepackage{thumbpdf}
@@ -721,6 +720,15 @@
 (def-package! ox-beamer
   :after ox
   :config
+  ;; beamer-preview编译beamer文件时，需当前frame以外的页面保持不变
+  ;; 输出tex时默认自动生成随机label，导致每次导出的tex文件都不相同
+  ;; 对headline，取:CUSTOM_ID:或BEAMER_opt属性，可使用C-c C-x p设置
+  ;; 对figure/table，取#+NAME的值
+  ;; 若查找不到，则仍采用自动生成机制
+  (setq org-latex-prefer-user-labels t) ;使生成tex文件使用org文件中的label
+  (setq org-export-time-stamp-file nil) ;导出时间戳会使每次导出文件都不相同
+  (setq org-beamer-outline-frame-title "Outline")
+  (setq org-beamer-frame-default-options "label=") ;对frame，设置默认选项取消label
   (add-to-list 'org-beamer-environments-extra
                '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
   (add-to-list 'org-beamer-environments-extra
@@ -771,4 +779,16 @@ contextual information."
   (advice-add 'org-pandoc-paragraph :override #'org-pandoc-paragraph/override)
   (advice-add 'org-pandoc-src-block :override #'org-pandoc-src-block/override))
 ;; =================ox-pandoc===================
+;;; org-appear
+;; ================org-appear===================
+(def-package! org-appear
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-delay 1)
+  (setq org-appear-autoemphasis t)
+  (setq org-appear-autolinks t)
+  (setq org-appear-autosubmarkers t)
+  (setq org-appear-autoentities t)
+  (setq org-appear-autokeywords t))
+;; ================org-appear===================
 (provide 'setup_org_mode)

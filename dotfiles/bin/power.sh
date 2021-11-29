@@ -43,7 +43,7 @@ if [[ -t 0 ]]; then
         ssh rpi "~/bin/wol.sh"
     fi
 else
-    COMMANDS="WakeOnLan\nPoweroff system\nReboot system\nSuspend system\nHibernate system"
+    COMMANDS="Poweroff system\nReboot system\nSuspend system\nHibernate system"
     LAUNCHER="rofi.sh -width 30 -dmenu -i -p Power:"
     power_command=`echo -e $COMMANDS | $LAUNCHER | awk '{print $1}' | tr -d '\r\n'`
 
@@ -70,5 +70,7 @@ else
             *)
                 ;;
         esac
+    elif [[ (${#power_command} -eq 0) && (${#remote} -gt 0) ]]; then
+        ssh rpi "~/bin/wol.sh $remote"
     fi
 fi

@@ -363,6 +363,7 @@
   (setq peep-dired-cleanup-eagerly nil)
   (define-key peep-dired-mode-map (kbd "p") 'peep-dired-prev-file)
   (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)
+  (define-key peep-dired-mode-map (kbd "<backspace>") nil)
   (define-key peep-dired-mode-map (kbd "C-p") nil)
   (define-key peep-dired-mode-map (kbd "C-n") nil)
   (define-key peep-dired-mode-map (kbd "q") nil))
