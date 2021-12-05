@@ -3,6 +3,15 @@
 (def-package! bibtex
   :after (:any ebib helm-bibtex org-ref)
   :config
+  (setq bibtex-autokey-titleword-length nil
+        setq bibtex-autokey-titlewords-stretch 0
+        setq bibtex-autokey-titleword-separator ""
+        setq bibtex-autokey-name-case-convert-function 'bibtex-autokey-name-convert
+        setq bibtex-autokey-titleword-case-convert-function 'bibtex-autokey-titleword-convert
+        setq bibtex-autokey-before-presentation-function 'bibtex-autokey-add_pages
+        setq bibtex-autokey-name-year-separator "_"
+        setq bibtex-autokey-year-title-separator "_"
+        setq bibtex-autokey-year-length 4)
   (defun bibtex-autokey-name-convert (str)
     (if (pyim-string-match-p "\\cc" str)
         (let ((str-list (pyim-hanzi2pinyin str nil nil t)))
@@ -30,16 +39,7 @@
       (apply orig-fun args)))
   (defun bibtex-autokey-add_pages (key)
     (concat key "_" (bibtex-autokey-get-field "pages")))
-  (advice-add 'bibtex-autokey-get-title :around #'bibtex-autokey-get-title/around)
-  (setq bibtex-autokey-titleword-length nil)
-  (setq bibtex-autokey-titlewords-stretch 0)
-  (setq bibtex-autokey-titleword-separator "")
-  (setq bibtex-autokey-name-case-convert-function 'bibtex-autokey-name-convert)
-  (setq bibtex-autokey-titleword-case-convert-function 'bibtex-autokey-titleword-convert)
-  (setq bibtex-autokey-before-presentation-function 'bibtex-autokey-add_pages)
-  (setq bibtex-autokey-name-year-separator "_")
-  (setq bibtex-autokey-year-title-separator "_")
-  (setq bibtex-autokey-year-length 4))
+  (advice-add 'bibtex-autokey-get-title :around #'bibtex-autokey-get-title/around))
 ;; ====================bibtex======================
 ;;; helm-bibtex
 ;; ==================helm-bibtex===================

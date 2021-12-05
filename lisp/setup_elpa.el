@@ -3,48 +3,18 @@
 (require 'package)
 ;;;; 源
 ;;;;; 官方源
-;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-;;                          ("melpa-stable" . "https://stable.melpa.org/packages/")
-;;                          ("gnu" . "https://elpa.gnu.org/packages/")
-;;                          ("org" . "https://orgmode.org/elpa/")
-;;                          ;; ("elpa" . "http://tromey.com/elpa/") ;版本过老
-;;                          ;; ("marmalade" . "http://marmalade-repo.org/packages/")
-;;                          ))
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ;; ("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")
+                         ("cselpa" . "https://elpa.thecybershadow.net/packages/") ;term-keys
+                         ;; ("org" . "https://orgmode.org/elpa/") ;已失效
+                         ;; ("elpa" . "http://tromey.com/elpa/") ;版本过老
+                         ;; ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ))
 ;;;;; emacs-china
-;; (setq package-archives '(("melpa" . "http://elpa.emacs-china.org/melpa/")
-;;                          ("melpa-stable" . "http://elpa.emacs-china.org/stable-melpa/")
-;;                          ("gnu" . "http://elpa.emacs-china.org/gnu/")
-;;                          ("org" . "http://elpa.emacs-china.org/org/")
-;;                          ("marmalade" . "http://elpa.emacs-china.org/marmalade/")))
-(setq package-archives '(("melpa" . "http://elpa.zilongshanren.com/melpa/")
-                         ("melpa-stable" . "http://elpa.zilongshanren.com/stable-melpa/")
-                         ("gnu" . "http://elpa.zilongshanren.com/gnu/")
-                         ("org" . "http://elpa.zilongshanren.com/org/")))
-;;;;; https://github.com/d12frosted/elpa-mirror
-;; (setq package-archives '(("melpa" . "https://gitlab.com/d12frosted/elpa-mirror/raw/master/melpa/")
-;;                          ("melpa-stable" . "https://gitlab.com/d12frosted/elpa-mirror/raw/master/stable-melpa/")
-;;                          ("gnu" . "https://gitlab.com/d12frosted/elpa-mirror/raw/master/gnu/")
-;;                          ("org" . "https://gitlab.com/d12frosted/elpa-mirror/raw/master/org/")))
-;;;;; 163
-;; (setq package-archives '(("gnu" . "http://mirrors.163.com/elpa/gnu/")
-;;                          ("melpa" . "http://mirrors.163.com/elpa/melpa/")
-;;                          ("melpa-stable" . "http://mirrors.163.com/elpa/melpa-stable/")
-;;                          ("org" . "http://mirrors.163.com/elpa/org/")
-;;                          ("marmalade" . "http://mirrors.163.com/elpa/marmalade/")))
-;;;;; tsinghua
-;; (setq package-archives '(("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-;;                          ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
-;;                          ("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-;;                          ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-;;                          ("marmalade" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/marmalade/")))
-;;;;; ustc
-;; (setq package-archives '(("melpa" . "http://mirrors.ustc.edu.cn/elpa/melpa/")
-;;                          ("melpa-stable" . "http://mirrors.ustc.edu.cn/elpa/melpa-stable/")
-;;                          ("gnu" . "http://mirrors.ustc.edu.cn/elpa/gnu/")
-;;                          ("org" . "http://mirrors.ustc.edu.cn/elpa/org/")
-;;                          ("marmalade" . "http://mirrors.ustc.edu.cn/elpa/marmalade/")))
-;;;; ELPA for term-keys
-(add-to-list 'package-archives '("cselpa" . "https://elpa.thecybershadow.net/packages/") t)
+;; (setq package-archives '(("melpa" . "http://elpa.zilongshanren.com/melpa/")
+;;                          ;; ("melpa-stable" . "http://elpa.zilongshanren.com/stable-melpa/")
+;;                          ("gnu" . "http://elpa.zilongshanren.com/gnu/")))
 ;; Optimization, no need to activate all the packages so early.
 (setq package-enable-at-startup nil
       package--init-file-ensured t

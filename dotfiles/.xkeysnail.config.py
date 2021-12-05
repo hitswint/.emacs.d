@@ -177,7 +177,15 @@ define_keymap(
     lambda wm_class: wm_class and wm_class[-1] in ("URxvt"),
     {
         K("C-Super-enter"): K("Shift-down"),
-        K("C-M-TAB"): K("Shift-right"),
-        K("C-M-grave"): K("Shift-left"),
+        K("C-Super-TAB"): K("Shift-right"),
+        K("C-Super-grave"): K("Shift-left"),
     },
     "URxvt")
+
+# * Keybindings for Tab switch
+define_keymap(
+    lambda wm_class: wm_class and wm_class[-1] in ("Firefox", "Chromium", "qpdfview", "Wps", "Et", "Wpp"),
+    {
+        K("C-grave"): K("C-Shift-TAB"),
+    },
+    "Tab")

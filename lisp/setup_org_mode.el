@@ -498,26 +498,22 @@
 ;;; org-ref
 ;; ==================org-ref====================
 (def-package! org-ref-core
-  :commands (org-ref-insert-link org-ref-get-bibtex-key-and-file)
+  :commands (org-ref-insert-link
+             org-ref-insert-link-hydra/body
+             org-ref-bibtex-hydra/body
+             org-ref-get-bibtex-key-and-file)
   :init
   ;; C-c b 文献引用(citation)
   ;; C-u 元素引用(reference) -> 默认ref:xxx，C-u 选择类型，C-u C-u 引用[[#xxx]]
   ;; C-u C-u 跳转或新建label -> 若存在则跳转，否则新建
   (add-hook 'org-mode-hook (lambda ()
-                             (bind-key "C-c b" 'org-ref-insert-link org-mode-map)))
+                             (bind-key "C-c b" 'org-ref-insert-link org-mode-map)
+                             (bind-key "C-c B" 'org-ref-insert-link-hydra/body org-mode-map)))
   (setq org-ref-insert-cite-key "\C-cb")
-  (setq org-ref-bibtex-hydra-key-binding "\C-cj")
   :config
+  (bind-key "C-c j" 'org-ref-bibtex-hydra/body bibtex-mode-map)
   ;; org-ref-insert-link在org-ref-core中定义，若直接(def-package! org-ref)提示函数未定义
   (require 'org-ref)
-  (setq org-ref-default-bibliography (delete (expand-file-name "~/.bib/Zotero.bib")
-                                             (directory-files "~/.bib" t "\\.bib$"))
-        org-ref-bibliography-notes "~/Zotero/storage/TKM9D893/notes.org"
-        org-ref-show-broken-links nil
-        org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
-        org-ref-notes-function '(lambda (thekey)
-                                  (bibtex-completion-edit-notes
-                                   (list (car (org-ref-get-bibtex-key-and-file thekey))))))
   (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
         'org-ref-format-citation)
   ;; 在已有org-mode中更新链接高亮。
