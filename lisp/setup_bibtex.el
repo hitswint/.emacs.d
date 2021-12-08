@@ -4,14 +4,14 @@
   :after (:any ebib helm-bibtex org-ref)
   :config
   (setq bibtex-autokey-titleword-length nil
-        setq bibtex-autokey-titlewords-stretch 0
-        setq bibtex-autokey-titleword-separator ""
-        setq bibtex-autokey-name-case-convert-function 'bibtex-autokey-name-convert
-        setq bibtex-autokey-titleword-case-convert-function 'bibtex-autokey-titleword-convert
-        setq bibtex-autokey-before-presentation-function 'bibtex-autokey-add_pages
-        setq bibtex-autokey-name-year-separator "_"
-        setq bibtex-autokey-year-title-separator "_"
-        setq bibtex-autokey-year-length 4)
+        bibtex-autokey-titlewords-stretch 0
+        bibtex-autokey-titleword-separator ""
+        bibtex-autokey-name-case-convert-function 'bibtex-autokey-name-convert
+        bibtex-autokey-titleword-case-convert-function 'bibtex-autokey-titleword-convert
+        bibtex-autokey-before-presentation-function 'bibtex-autokey-add_pages
+        bibtex-autokey-name-year-separator "_"
+        bibtex-autokey-year-title-separator "_"
+        bibtex-autokey-year-length 4)
   (defun bibtex-autokey-name-convert (str)
     (if (pyim-string-match-p "\\cc" str)
         (let ((str-list (pyim-hanzi2pinyin str nil nil t)))
