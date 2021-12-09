@@ -25,7 +25,7 @@
            (dir-to-str (annotated-path (file-name-directory to)))
            (tar-from-str (annotated-path from))
            (tar-to-str (annotated-path to))
-           (annotation-storage-files (directory-files "~/org/annotated/" t tar-from-str)))
+           (annotation-storage-files (directory-files "~/org/annotated/" t (regexp-quote tar-from-str))))
       (when (member (file-name-nondirectory from) annotated-file-list)
         (let* ((annotation-refile-from (concat "~/org/annotated/" dir-from-str ").org"))
                (annotation-refile-to (concat "~/org/annotated/" dir-to-str ").org"))
@@ -69,7 +69,7 @@
             do (let* ((file-renamed-old (car file-renamed))
                       (file-renamed-new (cdr file-renamed))
                       (annotation-storage-files (directory-files "~/org/annotated/" t
-                                                                 (annotated-path file-renamed-old))))
+                                                                 (regexp-quote (annotated-path file-renamed-old)))))
                  (when (member (file-name-nondirectory file-renamed-old) annotated-file-list)
                    (let* ((link-old (concat "file:" (file-name-nondirectory file-renamed-old)))
                           (link-new (concat "file:" (file-name-nondirectory file-renamed-new)))
@@ -108,10 +108,10 @@
     (loop for file-deleted in files-deleted
           do (let ((annotation-storage-files
                     (directory-files "~/org/annotated/" t
-                                     (concat "annotated-("
-                                             (replace-regexp-in-string
-                                              "/" "_"
-                                              (substring-no-properties (abbreviate-file-name file-deleted) 1))))))
+                                     (regexp-quote (concat "annotated-("
+                                                           (replace-regexp-in-string
+                                                            "/" "_"
+                                                            (substring-no-properties (abbreviate-file-name file-deleted) 1)))))))
                (when (member (file-name-nondirectory file-deleted) annotated-file-list)
                  (let ((link-deleted (concat "file:" (file-name-nondirectory file-deleted))))
                    (with-current-buffer (find-file (swint-org-annotation-storage-file))

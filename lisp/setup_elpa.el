@@ -69,6 +69,7 @@
                            dired-filetype-face
                            dired-narrow
                            dired-ranger
+                           dired-subtree
                            disaster
                            drag-stuff
                            dumb-jump

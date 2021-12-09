@@ -178,10 +178,10 @@
   :after dired
   :config
   (bind-key "C-j" 'image-dired-thumbnail-display-external image-dired-thumbnail-mode-map)
-  (bind-key "M-i" '(lambda () (interactive) (if (global-image-dired-minor-mode 'toggle)
-                                                (image-dired-display-thumbs-all)
-                                              (when (get-buffer image-dired-thumbnail-buffer)
-                                                (kill-buffer image-dired-thumbnail-buffer))))
+  (bind-key "C-M-i" '(lambda () (interactive) (if (global-image-dired-minor-mode 'toggle)
+                                                  (image-dired-display-thumbs-all)
+                                                (when (get-buffer image-dired-thumbnail-buffer)
+                                                  (kill-buffer image-dired-thumbnail-buffer))))
             dired-mode-map)
   (bind-key [tab] nil image-dired-minor-mode-map)
   (setq image-dired-external-viewer "xdg-open"
@@ -290,7 +290,7 @@
   :commands (global-peep-dired peep-dired-find-file)
   :init
   (add-hook 'dired-mode-hook (lambda ()
-                               (bind-key "TAB" '(lambda () (interactive) (unless (global-peep-dired 'toggle)
+                               (bind-key "M-i" '(lambda () (interactive) (unless (global-peep-dired 'toggle)
                                                                            (delete-other-windows)
                                                                            (peep-dired-cleanup)
                                                                            (when (and (boundp 'image-dired-display-image-buffer)
@@ -494,4 +494,20 @@
         dired-du-bind-count-sizes nil
         dired-du-size-format t))
 ;; ================dired-du====================
+;;; dired-subtree
+;; =============dired-subtree==================
+(use-package dired-subtree
+  :bind (:map dired-mode-map
+              ("TAB" . dired-subtree-cycle)
+              ("<backtab>" . dired-subtree-remove))
+  :config
+  (cl-loop for (key . value) in '((dired-prev-subdir . dired-subtree-previous-sibling)
+                                  (dired-next-subdir . dired-subtree-next-sibling)
+                                  (dired-tree-up . dired-subtree-up)
+                                  (dired-tree-down . dired-subtree-down))
+           do (lexical-let ((value value))
+                (advice-add key :around #'(lambda (fn &rest args) (if dired-subtree-overlays
+                                                                      (call-interactively value)
+                                                                    (apply fn args)))))))
+;; =============dired-subtree==================
 (provide 'setup_dired)
