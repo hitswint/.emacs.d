@@ -223,7 +223,7 @@
   (let ((file-list (if (eq major-mode 'dired-mode)
                        (dired-get-marked-files)
                      (list (buffer-file-name))))
-        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "ODAFileConverter" "xlsx2csv" "convert")
+        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "ODAFileConverter" "xlsx2csv" "convert" "pdftoppm")
                                 :buffer "*helm dired converter-swint*"))
         (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)"))
     (cl-flet ((escape-local (x)
@@ -303,7 +303,12 @@
             ((string= engine "convert")
              (let ((output-format (read-string "Output format: "))
                    (input-string (mapconcat (lambda (arg) (escape-local (file-name-nondirectory arg))) file-list " ")))
-               (shell-command (read-string "Commands: " (concat "convert " input-string " " (file-name-base (car file-list)) "." output-format)))))))))
+               (shell-command (read-string "Commands: " (concat "convert " input-string " " (file-name-base (car file-list)) "." output-format)))))
+            ((string= engine "pdftoppm")
+             (let ((output-format (read-string "Output image format(png/jpeg/tiff/mono): ")))
+               (cl-loop for x in file-list
+                        do (let* ((filename (escape-local (file-name-nondirectory x))))
+                             (shell-command (concat "pdftoppm -" output-format " " filename " " filename))))))))))
 ;; ============swint-dired-converter=========
 ;;; dired-view-file-or-dir
 ;; ==========dired-view-file-or-dir==========

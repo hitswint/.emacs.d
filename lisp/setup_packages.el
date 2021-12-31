@@ -40,26 +40,54 @@
   ;; mc/xxx函数都不在mc包中。
   :defer 2
   :config
-  (setq mc/always-run-for-all t)
+  (setq mc/always-run-for-all t
+        mc/insert-numbers-default 1)
   (add-to-list 'mc/unsupported-minor-modes 'auto-mark-mode)
   (add-to-list 'mc/unsupported-minor-modes 'highlight-indentation-current-column-mode)
   (bind-key "C-M-," 'mc/mark-previous-like-this)
   (bind-key "C-M-." 'mc/mark-next-like-this)
   (bind-key "<C-M-mouse-1>" 'mc/add-cursor-on-click)
-  (smartrep-define-key global-map "C-x"
-    '(("C-M-," . mc/unmark-previous-like-this)
-      ("C-M-." . mc/unmark-next-like-this)
-      ("M-<" . mc/skip-to-previous-like-this)
-      ("M->" . mc/skip-to-next-like-this)
-      ("C-M-;" . mc/mark-all-like-this)
-      ("C-M-/" . mc/edit-lines)
-      ("C-M-'" . mc/mark-more-like-this-extended)
-      ("M-:" . mc/insert-numbers)
-      ("M-\"" . mc/insert-letters)
-      ("M-?" . mc/sort-regions)
-      ("M-m" . mc/mark-pop)))
+  (bind-key "C-x C-M-;" 'mc/mark-all-like-this)
+  (bind-key "C-x C-M-," 'mc/mark-all-like-this-beg)
+  (bind-key "C-x C-M-." 'mc/mark-all-like-this-end)
+  (bind-key "C-x C-M-/" 'mc/edit-lines)
+  (bind-key "C-x C-M-'" 'mc/mark-more-like-this-extended)
+  (smartrep-define-key global-map "C-x" '(("M-m" . mc/mark-pop)))
+  (add-to-list 'mc--default-cmds-to-run-once 'mc/mark-all-like-this-beg)
+  (add-to-list 'mc--default-cmds-to-run-once 'mc/mark-all-like-this-end)
+  (defun mc/mark-all-like-this-beg ()
+    (interactive)
+    (if (region-active-p)
+        (save-restriction
+          (widen)
+          (narrow-to-region (point-min) (region-end))
+          (mc/mark-all-like-this))
+      (save-excursion
+        (set-mark (point-min)))
+      (mc/edit-lines)))
+  (defun mc/mark-all-like-this-end ()
+    (interactive)
+    (if (region-active-p)
+        (save-restriction
+          (widen)
+          (narrow-to-region (region-beginning) (point-max))
+          (mc/mark-all-like-this))
+      (save-excursion
+        (set-mark (point-max)))
+      (mc/edit-lines)))
+  (advice-add 'mc/edit-lines :before #'(lambda (&optional arg) (unless (region-active-p)
+                                                                 (set-mark (point-max))
+                                                                 (goto-char (point-min)))))
   (define-key mc/keymap (kbd "C-`") 'mc-hide-unmatched-lines-mode)
-  (define-key mc/keymap (kbd "C-:") nil))
+  (define-key mc/keymap (kbd "C-'") 'mc/repeat-command)
+  (define-key mc/keymap (kbd "C-M-<") 'mc/unmark-previous-like-this)
+  (define-key mc/keymap (kbd "C-M->") 'mc/unmark-next-like-this)
+  (define-key mc/keymap (kbd "M-<") 'mc/skip-to-previous-like-this)
+  (define-key mc/keymap (kbd "M->") 'mc/skip-to-next-like-this)
+  (define-key mc/keymap (kbd "M-'") 'mc/insert-numbers)
+  (define-key mc/keymap (kbd "M-\"") 'mc/insert-letters)
+  (define-key mc/keymap (kbd "M-/") 'mc/sort-regions)
+  (define-key mc/keymap (kbd "M-?") 'mc/reverse-regions))
 ;; ================multiple-cursors================
 ;;; expand-region
 ;; =================expand-region==================

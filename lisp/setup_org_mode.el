@@ -735,6 +735,9 @@
 (def-package! ox-pandoc
   :after ox
   :config
+  ;; 存在org-pandoc-put-options: Org-Pandoc: Improper Option Name! bibliography问题
+  ;; https://github.com/kawabata/ox-pandoc/issues/85
+  ;; 暂时：#+PANDOC_OPTIONS中加入bibliography:~/.bib/Zotero.bib
   (setq org-pandoc-options '((standalone . t)))
   (setq org-pandoc-options-for-docx '((standalone . nil)))
   (setq org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex")))
