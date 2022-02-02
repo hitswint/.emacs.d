@@ -43,10 +43,10 @@
                            avy
                            avy-zap
                            backup-walker
-                           unicode-escape
                            baidu-translate
                            bbyac
                            benchmark-init
+                           bibtex-completion
                            bind-key
                            bing-dict
                            bm
@@ -191,6 +191,7 @@
                            tangotango-theme
                            term-keys
                            undo-fu
+                           unicode-escape
                            use-package
                            vimish-fold
                            visible-mark

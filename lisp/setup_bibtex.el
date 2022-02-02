@@ -41,17 +41,13 @@
     (concat key "_" (bibtex-autokey-get-field "pages")))
   (advice-add 'bibtex-autokey-get-title :around #'bibtex-autokey-get-title/around))
 ;; ====================bibtex======================
-;;; helm-bibtex
-;; ==================helm-bibtex===================
-(def-package! helm-bibtex
-  :commands (helm-bibtex-with-local-bibliography
-             bibtex-completion-find-pdf
+;;; bibtex-completion
+;; ==============bibtex-completion=================
+(def-package! bibtex-completion
+  :commands (bibtex-completion-find-pdf
+             bibtex-completion-get-value
+             bibtex-completion-edit-notes
              bibtex-completion-get-entry-for-pdf)
-  :bind (("C-x b" . swint-helm-bibtex)
-         ("C-x B" . helm-bibtex))
-  :init
-  (add-hook 'LaTeX-mode-hook '(lambda ()
-                                (bind-key "C-c b" 'helm-bibtex-with-local-bibliography LaTeX-mode-map)))
   :config
   (setq bibtex-completion-cite-prompt-for-optional-arguments nil
         bibtex-completion-additional-search-fields '(keywords)
@@ -59,6 +55,29 @@
         bibtex-completion-bibliography (delete (expand-file-name "~/.bib/Zotero.bib")
                                                (directory-files "~/.bib" t "\\.bib$"))
         bibtex-completion-notes-path "~/Zotero/storage/TKM9D893/notes.org")
+  (defun bibtex-completion-get-entry-for-pdf (pdf-file)
+    "Find entry for pdf-file in .bib file."
+    (with-temp-buffer
+      (mapc #'insert-file-contents
+            (-flatten (list bibtex-completion-bibliography)))
+      (goto-char (point-min))
+      (when (re-search-forward pdf-file nil t)
+        (re-search-backward (concat "^@\\(" parsebib--bibtex-identifier
+                                    "\\)[[:space:]]*[\(\{][[:space:]]*"
+                                    parsebib--key-regexp "[[:space:]]*,"))
+        (let ((entry-type (match-string 1)))
+          (reverse (bibtex-completion-prepare-entry (parsebib-read-entry entry-type) nil nil)))))))
+;; ==============bibtex-completion=================
+;;; helm-bibtex
+;; ==================helm-bibtex===================
+(def-package! helm-bibtex
+  :commands helm-bibtex-with-local-bibliography
+  :bind (("C-x b" . swint-helm-bibtex)
+         ("C-x B" . helm-bibtex))
+  :init
+  (add-hook 'LaTeX-mode-hook '(lambda ()
+                                (bind-key "C-c b" 'helm-bibtex-with-local-bibliography LaTeX-mode-map)))
+  :config
   (defvar helm-bibtex-map
     (let ((map (make-sparse-keymap)))
       (set-keymap-parent map helm-map)
@@ -85,18 +104,6 @@
         (helm-resume "*helm bibtex*")
       (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr))
         (helm-bibtex arg bibtex-completion-bibliography/curr))))
-  (defun bibtex-completion-get-entry-for-pdf (pdf-file)
-    "Find entry for pdf-file in .bib file."
-    (with-temp-buffer
-      (mapc #'insert-file-contents
-            (-flatten (list bibtex-completion-bibliography)))
-      (goto-char (point-min))
-      (when (re-search-forward pdf-file nil t)
-        (re-search-backward (concat "^@\\(" parsebib--bibtex-identifier
-                                    "\\)[[:space:]]*[\(\{][[:space:]]*"
-                                    parsebib--key-regexp "[[:space:]]*,"))
-        (let ((entry-type (match-string 1)))
-          (reverse (bibtex-completion-prepare-entry (parsebib-read-entry entry-type) nil nil))))))
   (defcustom helm-bibtex-pdf-open-externally-function '(lambda (fpath)
                                                          (dired-async-shell-command fpath))
     "The function used for opening PDF files externally."
