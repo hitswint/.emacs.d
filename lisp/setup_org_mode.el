@@ -535,13 +535,12 @@
 ;;; org-brain
 ;; =================org-brain===================
 (def-package! org-brain
-  :commands (swint-helm-ag-org-brain-tags eh-org-set-tags-command)
+  :commands eh-org-set-tags-command
+  :bind-keymap ("M-O b" . org-brain-prefix-map)
   :init
   (add-hook 'org-mode-hook (lambda ()
-                             (bind-key "M-O b b" 'swint-helm-ag-org-brain-tags)
                              (bind-key "C-c c" 'eh-org-set-tags-command org-mode-map)))
   :config
-  (bind-key "M-O b" 'org-brain-prefix-map)
   (bind-key "b" 'swint-helm-ag-org-brain-tags org-brain-prefix-map)
   (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
   (setq org-brain-include-file-entries t
@@ -549,6 +548,12 @@
         org-brain-headline-entry-name-format-string "%s:%s"
         org-brain-default-file-parent nil
         org-brain-completion-system 'helm)
+  ;; 使用~/.emacs.d/.org-id-locations保存条目id
+  (advice-add 'org-brain-visualize-quit :after #'(lambda () (kill-buffer "*org-brain*")
+                                                   (cl-loop for b in (buffer-list)
+                                                            do (--if-let (buffer-file-name b)
+                                                                   (when (file-in-directory-p it org-brain-path)
+                                                                     (kill-buffer b))))))
   (defun eh-org-brain-as-tags ()
     (cl-remove-duplicates
      (mapcar

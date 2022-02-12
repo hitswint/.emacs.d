@@ -128,7 +128,6 @@
     (add-hook hook (lambda ()
                      (local-set-key (kbd "C-c C-`") 'hs-toggle-hiding))))
   :config
-  (hs-minor-mode 1)
   (define-key hs-minor-mode-map (kbd "C-c C-`") 'hs-toggle-hiding))
 ;; ==================hs-minor-mode==============
 ;;; helm-gtags

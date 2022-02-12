@@ -342,6 +342,8 @@
     (unless (auto-complete '(ac-source-yasnippet))
       (call-interactively 'company-yasnippet))))
 (def-package! yasnippet-snippets
+  ;; 错误：byte-code: Recursive load
+  ;; 删除snippets/bibtex-mode/.yas-setup.el中(require 'yasnippet-snippets)
   :after yasnippet)
 ;; =================yasnippet==================
 ;;; auto-yasnippet
