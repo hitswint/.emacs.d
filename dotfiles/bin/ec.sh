@@ -16,4 +16,5 @@ then
 fi
 
 echo $server_socket
-emacsclient -a '' -c # -e "(swint-load-perspectives)"
+# emacsclient -a '' -c # -e "(swint-load-perspectives)"
+emacsclient -a '' -c -e "(swint-org-redisplay-inline-images)"

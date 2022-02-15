@@ -158,7 +158,10 @@
         ebib-use-timestamp t
         ebib-timestamp-format "%Y-%m-%dT%TZ" ;same as zotero export
         ebib-index-default-sort '("timestamp" . descend)
-        ebib-index-window-size 20)
+        ebib-index-window-size 20
+        ;; 未加{}的月份扩展错误，待解决。
+        ;; https://github.com/joostkremers/ebib/issues/242
+        ebib-expand-strings nil)
   (defun ebib-create-org-identifier/override (key _)
     (format ":Custom_ID: %s" key))
   (advice-add 'ebib-create-org-identifier :override #'ebib-create-org-identifier/override)

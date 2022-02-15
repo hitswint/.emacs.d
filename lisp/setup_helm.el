@@ -2,7 +2,8 @@
 ;; ====================helm=====================
 (def-package! helm
   :commands (helm-find-files-1
-             helm-insert-latex-math)
+             helm-insert-latex-math
+             helm-completing-read-default-1)
   :bind-keymap ("C-x c" . helm-command-map)
   :bind (("C-'" . helm-bookmarks)
          ("C-," . swint-helm-file-buffers-list)

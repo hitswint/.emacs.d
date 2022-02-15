@@ -141,3 +141,14 @@
   (let ((command-output (shell-command-to-string "cursor_loc.sh")))
     (car (last (split-string command-output "\n" t "[\t\n]+")))))
 ;; ===========swint-cursor-localtion==========
+;;; swint-org-redisplay-inline-images
+;; =====swint-org-redisplay-inline-images=====
+;;;###autoload
+(defun swint-org-redisplay-inline-images ()
+  (if (and (display-graphic-p) (not (featurep 'perspective)))
+      (dolist (buf (cl-remove-if-not (lambda (x)
+                                       (equal (buffer-mode x) 'org-mode))
+                                     (buffer-list)))
+        (with-current-buffer buf
+          (org-redisplay-inline-images)))))
+;; =====swint-org-redisplay-inline-images=====
