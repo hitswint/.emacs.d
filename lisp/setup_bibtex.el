@@ -13,14 +13,14 @@
         bibtex-autokey-year-title-separator "_"
         bibtex-autokey-year-length 4)
   (defun bibtex-autokey-name-convert (str)
-    (if (pyim-string-match-p "\\cc" str)
+    (if (pyim-string-match-p "\\cC" str)
         (let ((str-list (pyim-hanzi2pinyin str nil nil t)))
           (if (= (length str-list) 1)
               (car str-list)
             (completing-read "Choose: " str-list)))
       (funcall 'downcase str)))
   (defun bibtex-autokey-titleword-convert (str)
-    (if (pyim-string-match-p "\\cc" str)
+    (if (pyim-string-match-p "\\cC" str)
         (let ((str-list (pyim-hanzi2pinyin-capitalize str nil nil t)))
           (if (= (length str-list) 1)
               (car str-list)
@@ -31,7 +31,7 @@
           (titlestring
            (bibtex-autokey-get-field "title"
                                      bibtex-autokey-titleword-change-strings)))
-      (if (string-match-p "\\cc" titlestring)
+      (if (string-match-p "\\cC" titlestring)
           (setq bibtex-autokey-titleword-ignore nil)
         (setq bibtex-autokey-titleword-ignore
               '("A" "An" "On" "The" "Eine?" "Der" "Die" "Das"
@@ -81,9 +81,9 @@
   (defvar helm-bibtex-map
     (let ((map (make-sparse-keymap)))
       (set-keymap-parent map helm-map)
-      (define-key map (kbd "C-c j") '(lambda () (interactive) (with-helm-alive-p
-                                                                (helm-run-after-exit 'helm-bibtex-open-pdf-externally (helm-marked-candidates)))))
-      (define-key map (kbd "C-c o") '(lambda () (interactive) (with-helm-alive-p
+      (define-key map (kbd "C-j") '(lambda () (interactive) (with-helm-alive-p
+                                                              (helm-run-after-exit 'helm-bibtex-open-pdf-externally (helm-marked-candidates)))))
+      (define-key map (kbd "<RET>") '(lambda () (interactive) (with-helm-alive-p
                                                                 (helm-run-after-exit 'helm-bibtex-open-pdf (helm-marked-candidates)))))
       (define-key map (kbd "C-c ;") '(lambda () (interactive) (with-helm-alive-p
                                                                 (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
@@ -91,6 +91,12 @@
     "Keymap for `helm-bibtex'.")
   (helm-set-attr 'keymap helm-bibtex-map helm-source-bibtex)
   (defvar bibtex-completion-bibliography/curr nil)
+  ;; 改变helm-bibtex中Insert citation格式为cite:key
+  (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
+        'org-ref-2-format-citation)
+  (defun org-ref-2-format-citation (keys)
+    (s-join ", "
+            (--map (format "cite:%s" it) keys)))
   (defun swint-helm-bibtex (&optional arg)
     "With a prefix ARG，choose bib file and execute bibtex-completion-clear-cache."
     (interactive "P")

@@ -42,7 +42,8 @@
     "Search WORD simple translate result."
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
-      (if (pyim-string-match-p "\\cc" word)
+      ;; \\cc匹配中文字符，包括全角标点，\\cC匹配汉字
+      (if (pyim-string-match-p "\\cC" word)
           (google-translate-translate "zh-CN" "en" word 'popup)
         (google-translate-translate "en" "zh-CN" word 'popup)))))
 ;; ===============google-translate===============
@@ -72,7 +73,7 @@
     "Search word at point and display result with pos-tip."
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
-      (if (pyim-string-match-p "\\cc" word)
+      (if (pyim-string-match-p "\\cC" word)
           (baidu-translate-string word "auto" "en")
         (baidu-translate-string word "auto" "zh")))))
 ;; ===============youdao-dictionary==============

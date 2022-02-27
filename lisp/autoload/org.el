@@ -22,11 +22,9 @@
              (not (org-link-get-parameter "pdfview" :follow)))
     (org-pdftools-setup-link))
   (let* ((annotated-file (swint-get-annotated-file)) ;org-annotate
-         (cite-results (ignore-errors (save-excursion (org-ref-get-bibtex-key-and-file))))
-         (cite-file (and (cdr cite-results) (car (bibtex-completion-find-pdf (car cite-results))))) ;org-ref
          (noter-key (and (org-at-heading-p) (org-entry-get nil "Custom_ID")))
          (noter-file (car (bibtex-completion-find-pdf noter-key))) ;org-noter
-         (file-at-point (or annotated-file cite-file noter-file)))
+         (file-at-point (or annotated-file noter-file)))
     (if (and file-at-point (file-exists-p file-at-point))
         (org-open-file file-at-point in-emacs)
       (org-open-at-point in-emacs))))

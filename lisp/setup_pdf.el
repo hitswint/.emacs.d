@@ -98,7 +98,7 @@
              (zotero-database (expand-file-name "~/Zotero/zotero.sqlite"))
              (zotero-storage "~/Zotero/storage")
              (string-to-grep (read-string "Zotero pdfgrep: "))
-             (str-list (split-string string-to-grep (if (pyim-string-match-p "\\cc" string-to-grep) "" " ")
+             (str-list (split-string string-to-grep (if (pyim-string-match-p "\\cC" string-to-grep) "" " ")
                                      t "[ \t\n]+"))
              (zotero-file-list-orig (split-string
                                      (replace-regexp-in-string "|storage:" "/"

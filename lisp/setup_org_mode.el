@@ -10,6 +10,8 @@
   (set-face-attribute 'org-level-6 nil :weight 'normal :foreground "violet" :height 1.0)
   (set-face-attribute 'org-level-7 nil :weight 'normal :foreground "orange" :height 1.0)
   (set-face-attribute 'org-level-8 nil :weight 'normal :foreground "khaki" :height 1.0)
+  (custom-set-faces '(org-code ((t :inherit shadow)))
+                    '(org-meta-line ((t :inherit (font-lock-comment-face)))))
   (setq org-hide-emphasis-markers t)
   (font-lock-add-keywords 'org-mode
                           '(("^ +\\([-*]\\) "
@@ -18,6 +20,7 @@
   ;; 使用org-toggle-pretty-entities (C-c C-x \) 启闭
   (setq org-pretty-entities t)
   (setq org-pretty-entities-include-sub-superscripts t)
+  (setq org-adapt-indentation t)
   ;; =================Appearance================
 ;;;; Capture
   ;; =================Capture===================
@@ -500,8 +503,7 @@
 (def-package! org-ref-core
   :commands (org-ref-insert-link
              org-ref-insert-link-hydra/body
-             org-ref-bibtex-hydra/body
-             org-ref-get-bibtex-key-and-file)
+             org-ref-bibtex-hydra/body)
   :init
   ;; C-c b 文献引用(citation)
   ;; C-u 元素引用(reference) -> 默认ref:xxx，C-u 选择类型，C-u C-u 引用[[#xxx]]
@@ -514,8 +516,6 @@
   (bind-key "C-c j" 'org-ref-bibtex-hydra/body bibtex-mode-map)
   ;; org-ref-insert-link在org-ref-core中定义，若直接(def-package! org-ref)提示函数未定义
   (require 'org-ref)
-  (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
-        'org-ref-format-citation)
   ;; 在已有org-mode中更新链接高亮。
   (dolist (buf (cl-remove-if-not (lambda (x)
                                    (equal (buffer-mode x) 'org-mode))

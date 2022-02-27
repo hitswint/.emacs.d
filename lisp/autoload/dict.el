@@ -142,7 +142,7 @@ FORCE-OTHER-WINDOW is ignored."
     (sdcv-mode)
     (insert "*** Google Translate\n")
     (unless (ignore-errors
-              (if (pyim-string-match-p "\\cc" word)
+              (if (pyim-string-match-p "\\cC" word)
                   (google-translate-translate "zh-CN" "en" word 'current-buffer)
                 (google-translate-translate "en" "zh-CN" word 'current-buffer)))
       (insert "Nothing"))
