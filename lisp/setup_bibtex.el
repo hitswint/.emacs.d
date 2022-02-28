@@ -1,7 +1,7 @@
 ;;; bibtex
 ;; ====================bibtex======================
 (def-package! bibtex
-  :after (:any ebib helm-bibtex org-ref)
+  :after (:any ebib helm-bibtex org-ref oc)
   :config
   (setq bibtex-autokey-titleword-length nil
         bibtex-autokey-titlewords-stretch 0
@@ -83,20 +83,27 @@
       (set-keymap-parent map helm-map)
       (define-key map (kbd "C-j") '(lambda () (interactive) (with-helm-alive-p
                                                               (helm-run-after-exit 'helm-bibtex-open-pdf-externally (helm-marked-candidates)))))
-      (define-key map (kbd "<RET>") '(lambda () (interactive) (with-helm-alive-p
-                                                                (helm-run-after-exit 'helm-bibtex-open-pdf (helm-marked-candidates)))))
-      (define-key map (kbd "C-c ;") '(lambda () (interactive) (with-helm-alive-p
-                                                                (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
+      (define-key map (kbd "RET") '(lambda () (interactive) (with-helm-alive-p
+                                                              (helm-run-after-exit 'helm-bibtex-open-pdf (helm-marked-candidates)))))
+      (define-key map (kbd "M-;") '(lambda () (interactive) (with-helm-alive-p
+                                                              (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
+      (define-key map (kbd "M-RET") '(lambda () (interactive) (with-helm-alive-p
+                                                                (helm-run-after-exit 'helm-bibtex-insert-citation (helm-marked-candidates)))))
       map)
     "Keymap for `helm-bibtex'.")
   (helm-set-attr 'keymap helm-bibtex-map helm-source-bibtex)
   (defvar bibtex-completion-bibliography/curr nil)
   ;; 改变helm-bibtex中Insert citation格式为cite:key
   (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
-        'org-ref-2-format-citation)
-  (defun org-ref-2-format-citation (keys)
-    (s-join ", "
-            (--map (format "cite:%s" it) keys)))
+        'org-cite-format-citation)
+  ;; 当存在#+BIBLIOGRAPHY时，使用org-cite格式，否则使用pandoc默认格式
+  (defun org-cite-format-citation (keys)
+    (if (org-cite-list-bibliography-files)
+        (concat "[cite:" (s-join "; "
+                                 (--map (format "@%s" it) keys))
+                "]")
+      (concat "cite:" (s-join ","
+                              (--map (format "%s" it) keys)))))
   (defun swint-helm-bibtex (&optional arg)
     "With a prefix ARG，choose bib file and execute bibtex-completion-clear-cache."
     (interactive "P")
@@ -107,7 +114,8 @@
                             :marked-candidates t
                             :buffer "*helm bibtex-swint*")))
     (if (and (buffer-live-p (get-buffer "*helm bibtex*")) (not arg))
-        (helm-resume "*helm bibtex*")
+        (let ((helm-current-buffer (current-buffer)))
+          (helm-resume "*helm bibtex*"))
       (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr))
         (helm-bibtex arg bibtex-completion-bibliography/curr))))
   (defcustom helm-bibtex-pdf-open-externally-function '(lambda (fpath)

@@ -779,9 +779,9 @@
 ;; =====================annot======================
 (def-package! annot
   :load-path "site-lisp/annot/src/"
-  :bind (("M-g ;" . annot-edit/add)
-         ("M-g :" . annot-remove)
-         ("M-g M-;" . annot-add-image))
+  :bind (("M-g a a" . annot-edit/add)
+         ("M-g a r" . annot-remove)
+         ("M-g a i" . annot-add-image))
   :config
   (setq annot-directory "~/org/.annot")
   ;; 与volatile-highlights-mode有冲突。

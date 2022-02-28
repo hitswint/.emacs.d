@@ -215,9 +215,8 @@
              dired-k--next-highlighted-file
              dired-k--goto-file)
   :init
-  (smartrep-define-key dired-mode-map "C-c"
-    '(("p" . dired-k--previous-highlighted-file)
-      ("n" . dired-k--next-highlighted-file)))
+  (bind-key "P" 'dired-k--previous-highlighted-file dired-mode-map)
+  (bind-key "N" 'dired-k--next-highlighted-file dired-mode-map)
   (bind-key "J" 'dired-k--goto-file dired-mode-map)
   :config
   (add-hook 'dired-after-readin-hook 'dired-k--highlight-buffer t)
@@ -244,8 +243,12 @@
 ;; 原有org-annotate-file用于全局注释
 (def-package! org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
-  :commands org-annotate-file
-  :bind ("C-x :" . org-annotate-file-current)
+  :commands (org-annotate-file-current org-annotate-file)
+  :bind ("M-g :" . org-annotate-file-current)
+  :init
+  (dolist (hook '(dired-mode-hook pdf-view-mode-hook))
+    (add-hook hook (lambda () ()
+                     (local-set-key (kbd ":") 'org-annotate-file-current))))
   :config
   (defun org-annotate-file-current ()
     (interactive)
@@ -262,8 +265,12 @@
 ;; 新建swint-org-annotate-file.el用于局部注释
 (def-package! swint-org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
-  :commands swint-org-annotation-storage-file
-  :bind ("C-x ;" . swint-org-annotate-file-current))
+  :commands (swint-org-annotate-file-current swint-org-annotation-storage-file)
+  :bind ("M-g ;" . swint-org-annotate-file-current)
+  :init
+  (dolist (hook '(dired-mode-hook pdf-view-mode-hook))
+    (add-hook hook (lambda () ()
+                     (local-set-key (kbd ";") 'swint-org-annotate-file-current)))))
 ;; ===============org-annotate==================
 ;;; outline
 ;; ==================outline====================
@@ -385,7 +392,7 @@
              interleave-open-notes-file-for-pdf
              interleave--find-pdf-path)
   :bind (:map dired-mode-map
-              ("C-c ;" . swint-dired-interleave))
+              ("M-;" . swint-dired-interleave))
   :config
   (setq interleave-disable-narrowing t
         interleave-insert-relative-name nil)
@@ -418,7 +425,7 @@
              swint-open-notes-file-for-pdf)
   :init
   (add-hook 'org-mode-hook (lambda ()
-                             (bind-key "C-c ;" 'swint-noter/interleave org-mode-map)))
+                             (bind-key "M-g M-;" 'swint-noter/interleave org-mode-map)))
   :config
   (defun swint-noter/interleave ()
     (interactive)
@@ -511,7 +518,6 @@
   (add-hook 'org-mode-hook (lambda ()
                              (bind-key "C-c b" 'org-ref-insert-link org-mode-map)
                              (bind-key "C-c B" 'org-ref-insert-link-hydra/body org-mode-map)))
-  (setq org-ref-insert-cite-key "\C-cb")
   :config
   (bind-key "C-c j" 'org-ref-bibtex-hydra/body bibtex-mode-map)
   ;; org-ref-insert-link在org-ref-core中定义，若直接(def-package! org-ref)提示函数未定义
@@ -795,4 +801,21 @@ contextual information."
   (setq org-appear-autoentities t)
   (setq org-appear-autokeywords t))
 ;; ================org-appear===================
+;;; oc
+;; ====================oc=======================
+(def-package! oc
+  :after org
+  :config
+  ;; 速度较慢，RET选择，可选多个，M-RET插入
+  (bind-key "C-c C-x b" 'org-cite-insert org-mode-map)
+  (require 'oc-basic)
+  (require 'oc-csl)
+  (require 'oc-biblatex)
+  (require 'oc-natbib)
+  (setq org-cite-global-bibliography nil)
+  ;; org-cite-activate-processor/org-cite-follow-processor/org-cite-insert-processor/org-cite-export-processors -> 高亮/打开/插入/导出
+  (setq org-cite-csl-styles-dir "~/Zotero/styles/")
+  ;; locale影响本地化日期等，默认使用en-US，可下载其他：https://github.com/citation-style-language/locales
+  (setq org-cite-csl-locales-dir nil))
+;; ====================oc=======================
 (provide 'setup_org_mode)

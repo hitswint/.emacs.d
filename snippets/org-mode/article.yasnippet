@@ -10,7 +10,13 @@
 #+DATE: ${3:$$(unless yas-modified-p (format-time-string "%Y-%m-%d"))}
 #+OPTIONS: H:4
 #+LATEX_HEADER:
-#+BIBLIOGRAPHY: ~/.bib/Zotero.bib
+# 使用pandoc默认格式
 #+PANDOC_OPTIONS: citeproc:t bibliography:~/.bib/Zotero.bib csl:~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl toc:t toc-depth:3
 #+PANDOC_METADATA: reference-section-title:参考文献
+# 使用org-cite
+# #+CITE_EXPORT: csl china-national-standard-gb-t-7714-2015-numeric.csl
+# #+BIBLIOGRAPHY: ~/.bib/Zotero.bib
 $0
+
+# * 参考文献
+#   #+PRINT_BIBLIOGRAPHY:
