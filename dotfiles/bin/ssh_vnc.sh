@@ -22,11 +22,11 @@ case $input1 in
             port_client=`expr $port + 59`
         fi
 
-        # * 客户端实现转发
+        # * 客户端(Remmina)实现转发，login为服务端
         /usr/bin/autossh -M 0 -o "ServerAliveInterval 60" -o "ServerAliveCountMax 60" -N -L $port_client:127.0.0.1:5901 -p $port $login
         ;;
     s)
-        # * 服务端实现转发
+        # * 服务端(vncserver)实现转发，login为客户端
         systemctl --user start vncserver@:1.service
         /usr/bin/autossh -M 0 -o "ServerAliveInterval 60" -o "ServerAliveCountMax 60" -N -R 5901:127.0.0.1:5901 -p $port $login
         systemctl --user stop vncserver@:1.service

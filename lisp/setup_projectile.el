@@ -1,7 +1,9 @@
 ;;; Projectile
 ;; ==================Projectile=================
 (def-package! projectile
-  :bind-keymap ("M-\"" . projectile-command-map)
+  ;; :bind-keymap ("M-\"" . projectile-command-map)
+  ;; 需先于multiple-cursors启动，否则会覆盖后者M-"快捷键
+  :defer 1
   :init
   (setq projectile-mode-line-prefix " ")
   :config
@@ -45,13 +47,13 @@
                  (remhash p persp-projectile-hash)))))
   (defun swint-helm-projectile-ag ()
     (interactive)
-    (helm-run-after-exit
-     #'(lambda (arg)
-         (let ((current-prefix-arg arg))
-           (if current-prefix-arg
-               (helm-do-ag (projectile-project-root) (list (projectile-project-root)))
-             (helm-projectile-ag "--hidden"))))
-     current-prefix-arg))
+    (helm-run-after-exit #'(lambda (arg)
+                             (let ((current-prefix-arg arg)
+                                   (helm-truncate-lines t))
+                               (if current-prefix-arg
+                                   (helm-do-ag (projectile-project-root) (list (projectile-project-root)))
+                                 (helm-projectile-ag "--hidden"))))
+                         current-prefix-arg))
   (define-key helm-projectile-projects-map (kbd "C-s") 'swint-helm-projectile-ag)
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-j") '(lambda (project)
                                                                           (let ((projectile-completion-system 'helm))

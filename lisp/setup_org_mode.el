@@ -89,7 +89,6 @@
                (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
                (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point)
                (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-org-open-at-point t)))
-               (define-key org-mode-map (kbd "C-c J") 'swint-qpdfview-annotated-open)
                (define-key org-mode-map (kbd "C-c :") 'swint-qpdfview-annotated-new)
                (define-key org-mode-map (kbd "C-c M-,") '(lambda () (interactive) (swint-org-mobile-sync "down")))
                (define-key org-mode-map (kbd "C-c M-.") '(lambda () (interactive) (swint-org-mobile-sync "up")))
@@ -134,7 +133,7 @@
   (add-hook 'org-after-todo-statistics-hook '(lambda (n-done n-not-done)
                                                (let (org-log-done org-log-states)
                                                  (org-todo (if (= n-not-done 0) "DONE" "TODO")))))
-  ;; 设定todo关键词。
+  ;; 设定todo关键词
   (setq org-todo-keywords
         '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")))
   ;; |后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔
@@ -162,15 +161,16 @@
 ;;;; cdlatex
   ;; ================cdlatex====================
   (def-package! cdlatex
-    :diminish org-cdlatex-mode
-    :commands turn-on-org-cdlatex
+    :diminish (cdlatex-mode org-cdlatex-mode)
+    :commands (turn-on-cdlatex turn-on-org-cdlatex)
     :init
-    (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
-  ;; Environment templates can be inserted with C-c {.
-  ;; The <TAB> key will do template expansion if the cursor is inside a LaTeX fragment1. For example, <TAB> will expand fr to \frac{}{} and position the cursor correctly inside the first brace. Another <TAB> will get you into the second brace. Even outside fragments, <TAB> will expand environment abbreviations at the beginning of a line. For example, if you write ‘equ’ at the beginning of a line and press <TAB>, this abbreviation will be expanded to an equation environment. To get a list of all abbreviations, type M-x cdlatex-command-help.
-  ;; Pressing _ and ^ inside a LaTeX fragment will insert these characters together with a pair of braces. If you use <TAB> to move out of the braces, and if the braces surround only a single character or macro, they are removed again (depending on the variable cdlatex-simplify-sub-super-scripts).
-  ;; Pressing the backquote ` followed by a character inserts math macros, also outside LaTeX fragments. If you wait more than 1.5 seconds after the backquote, a help window will pop up.
-  ;; Pressing the single-quote ' followed by another character modifies the symbol before point with an accent or a font. If you wait more than 1.5 seconds after the single-quote, a help window will pop up. Character modification will work only inside LaTeX fragments; outside the quote is normal.
+    ;; C-c { 插入环境
+    ;; TAB 展开，如fr TAB展开\frac{}{}
+    ;; _^ 自动加{}
+    ;; ` `` ``` 插入符号，如` d输入\delta，`` d输入\partial
+    ;; ' 修改其后字符的字体
+    (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
+    (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex))
   ;; ================cdlatex====================
 ;;;; org输出doc
   ;; =================org输出doc================
@@ -184,6 +184,7 @@
   ;; 默认预览当前位置或当前节，加C-u清除当前节预览
   ;; 加C-uC-u预览当前buffer，加C-uC-uC-u清除全部预览
   (define-key org-mode-map (kbd "C-c v") 'org-latex-preview)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
   (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境。
   ;; =============org-latex-preview=============
 ;;;; org-clipboard-copy/paste
@@ -244,7 +245,7 @@
 (def-package! org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands (org-annotate-file-current org-annotate-file)
-  :bind ("M-g :" . org-annotate-file-current)
+  :bind ("C-x :" . org-annotate-file-current)
   :init
   (dolist (hook '(dired-mode-hook pdf-view-mode-hook))
     (add-hook hook (lambda () ()
@@ -266,7 +267,7 @@
 (def-package! swint-org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands (swint-org-annotate-file-current swint-org-annotation-storage-file)
-  :bind ("M-g ;" . swint-org-annotate-file-current)
+  :bind ("C-x ;" . swint-org-annotate-file-current)
   :init
   (dolist (hook '(dired-mode-hook pdf-view-mode-hook))
     (add-hook hook (lambda () ()
@@ -425,7 +426,7 @@
              swint-open-notes-file-for-pdf)
   :init
   (add-hook 'org-mode-hook (lambda ()
-                             (bind-key "M-g M-;" 'swint-noter/interleave org-mode-map)))
+                             (bind-key "C-c ;" 'swint-noter/interleave org-mode-map)))
   :config
   (defun swint-noter/interleave ()
     (interactive)
@@ -510,13 +511,14 @@
 (def-package! org-ref-core
   :commands (org-ref-insert-link
              org-ref-insert-link-hydra/body
-             org-ref-bibtex-hydra/body)
+             org-ref-bibtex-hydra/body
+             helm-insert-ref-link)
   :init
-  ;; C-c b 文献引用(citation)
-  ;; C-u 元素引用(reference) -> 默认ref:xxx，C-u 选择类型，C-u C-u 引用[[#xxx]]
-  ;; C-u C-u 跳转或新建label -> 若存在则跳转，否则新建
+  ;; org-ref-insert-link -> 文献引用(citation)
+  ;; C-u -> 交叉引用(reference)，默认ref:xxx，C-u 选择类型，C-u C-u 引用[[#xxx]]
+  ;; C-u C-u -> 跳转或新建label，若存在则跳转，否则新建
   (add-hook 'org-mode-hook (lambda ()
-                             (bind-key "C-c b" 'org-ref-insert-link org-mode-map)
+                             (bind-key "C-c b" 'helm-insert-ref-link org-mode-map)
                              (bind-key "C-c B" 'org-ref-insert-link-hydra/body org-mode-map)))
   :config
   (bind-key "C-c j" 'org-ref-bibtex-hydra/body bibtex-mode-map)
@@ -527,7 +529,20 @@
                                    (equal (buffer-mode x) 'org-mode))
                                  (buffer-list)))
     (with-current-buffer buf
-      (org-restart-font-lock))))
+      (org-restart-font-lock)))
+  (defun helm-insert-ref-link ()
+    (interactive)
+    (let ((label-name (helm-comp-read "Label: " (org-with-point-at 1
+                                                  (let ((case-fold-search t)
+                                                        (regexp (org-make-options-regexp '("NAME")))
+                                                        label-list)
+                                                    (while (re-search-forward regexp nil t)
+                                                      (let* ((element (org-element-at-point))
+                                                             (value (org-element-property :name element)))
+                                                        (push value label-list)))
+                                                    label-list)))))
+
+      (insert (format "[[%s]]" label-name)))))
 ;; ==================org-ref====================
 ;;; org-pdftools
 ;; ================org-pdftools=================

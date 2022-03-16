@@ -21,13 +21,31 @@
              (string-match "\\`\\(pdf\\|pdfview\\):" (match-string-no-properties 1))
              (not (org-link-get-parameter "pdfview" :follow)))
     (org-pdftools-setup-link))
-  (let* ((annotated-file (swint-get-annotated-file)) ;org-annotate
-         (noter-key (and (org-at-heading-p) (org-entry-get nil "Custom_ID")))
-         (noter-file (car (bibtex-completion-find-pdf noter-key))) ;org-noter
-         (file-at-point (or annotated-file noter-file)))
-    (if (and file-at-point (file-exists-p file-at-point))
-        (org-open-file file-at-point in-emacs)
-      (org-open-at-point in-emacs))))
+  (cl-flet* ((find-page () (or (org-entry-get nil "NOTER_PAGE")
+                               (org-entry-get nil "interleave_page_note")
+                               (org-entry-get nil "annotated_page")))
+             (get-annotate-page () (save-excursion
+                                     (org-back-to-heading)
+                                     (let ((page (find-page)))
+                                       (while (and (org-up-heading-safe) (null page))
+                                         (setq page (find-page)))
+                                       page)))
+             (get-annotate-file (global-p) (save-excursion
+                                             (when global-p
+                                               (while (org-up-heading-safe)))
+                                             (or (swint-get-annotated-file)
+                                                 (car (bibtex-completion-find-pdf (org-entry-get nil "Custom_ID")))
+                                                 (interleave--find-pdf-path (current-buffer))))))
+    (let ((annotate-file (when (or (ignore-errors (org-at-top-heading-p)) (org-at-keyword-p)) (get-annotate-file nil)))
+          (annotate-page (unless (org-in-regexp org-link-any-re) (get-annotate-page))))
+      (cond ((and annotate-file (file-exists-p annotate-file))
+             (org-open-file annotate-file in-emacs))
+            (annotate-page
+             (start-process "Shell" nil shell-file-name shell-command-switch
+                            (concat "qpdfview --unique \"" (expand-file-name (get-annotate-file t))
+                                    "\"#" annotate-page)))
+            (t
+             (org-open-at-point in-emacs))))))
 ;; ===========swint-org-open-at-point=========
 ;;; mobileorg
 ;; =================mobileorg=================
@@ -84,42 +102,17 @@
                (message "Org-mobile %s failed." sync))
              (setcdr pos (remove (concat "Org-mobile " sync " ") (cdr pos))))))))))
 ;; =================mobileorg=================
-;;; swint-qpdfview-annotated
-;; ==========swint-qpdfview-annotated=========
-;;;###autoload
-(defun swint-qpdfview-annotated-open ()
-  "Open annotated file if annotation storage file exists."
-  (interactive)
-  (cl-flet ((find-page () (or (org-entry-get nil "NOTER_PAGE")
-                              (org-entry-get nil "interleave_page_note")
-                              (org-entry-get nil "annotated_page"))))
-    (let ((page (save-excursion (org-back-to-heading)
-                                (find-page)))
-          current-file)
-      (save-excursion
-        (while (not (or (ignore-errors (org-at-top-heading-p)) page))
-          (org-up-heading-safe)
-          (setq page (find-page))))
-      (save-excursion
-        (while (not (ignore-errors (org-at-top-heading-p)))
-          (org-up-heading-safe))
-        (setq current-file (or (swint-get-annotated-file)
-                               (car (bibtex-completion-find-pdf (org-entry-get nil "Custom_ID")))
-                               (interleave--find-pdf-path (current-buffer)))))
-      (if (and current-file page)
-          (start-process "Shell" nil shell-file-name shell-command-switch
-                         (concat "qpdfview --unique \"" (expand-file-name current-file)
-                                 "\"#" page))
-        (message "Cannot find file or page.")))))
+;;; swint-qpdfview-annotated-new
+;; ========swint-qpdfview-annotated-new=======
 ;;;###autoload
 (defun swint-qpdfview-annotated-new ()
   "Open annotated file if annotation storage file exists."
   (interactive)
   (let* ((annotated-file (save-excursion
-                           (while (not (ignore-errors (org-at-top-heading-p)))
-                             (org-up-heading-safe))
+                           (while (org-up-heading-safe))
                            (or (swint-get-annotated-file)
-                               (car (bibtex-completion-find-pdf (org-entry-get nil "Custom_ID"))))))
+                               (car (bibtex-completion-find-pdf (org-entry-get nil "Custom_ID")))
+                               (interleave--find-pdf-path (current-buffer)))))
          (qpdfview-database (expand-file-name "~/.local/share/qpdfview/qpdfview/database"))
          (qpdfview-page (when (and (not (string-empty-p (shell-command-to-string "pgrep -x qpdfview"))) annotated-file)
                           ;; 需在qpdfview设定中将Save database interval设置为0min，否则数据库无法及时更新
@@ -127,10 +120,11 @@
                            (format "sqlite3 %s \"select currentPage from tabs_v5 where filePath=\\\"%s\\\"\"" "~/.local/share/qpdfview/qpdfview/database" (expand-file-name annotated-file))))))
     (if (string-empty-p qpdfview-page)
         (message "No file annotated or not opened in qpdfview.")
-      (if (file-equal-p (buffer-file-name) bibtex-completion-notes-path)
-          (org-entry-put nil "NOTER_PAGE" (string-trim qpdfview-page))
-        (org-entry-put nil "annotated_page" (string-trim qpdfview-page))))))
-;; ==========swint-qpdfview-annotated=========
+      (org-entry-put nil (cond ((file-in-directory-p (buffer-file-name) "~/org/annotated") "annotated_page")
+                               ((file-equal-p (buffer-file-name) bibtex-completion-notes-path) "NOTER_PAGE")
+                               ((file-in-directory-p (buffer-file-name) "~/org/interleave_notes") "interleave_page_note"))
+                     (string-trim qpdfview-page)))))
+;; ========swint-qpdfview-annotated-new=======
 ;;; swint-cursor-localtion
 ;; ===========swint-cursor-localtion==========
 ;;;###autoload

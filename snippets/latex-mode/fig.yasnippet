@@ -6,7 +6,7 @@
 # --
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{${3:$$(if (file-directory-p "./pic") (concat "pic/" (yas-choose-value (directory-files "./pic"))) (yas-choose-value (directory-files "./")))}}$0
-\caption{${1:caption}}
-\label{fig:${2:$$(unless yas-modified-p (make-temp-name (str-unicode-to-pinyin-initial (yas-field-value 1))))}}
+\includegraphics[width=0.5\linewidth]{${1:$$(unless yas-modified-p (or (yas-choose-value (directory-files-recursively "./" (image-file-name-regexp))) (swint-screenshot)))}}$0
+\caption{${2:$$(unless yas-modified-p (replace-regexp-in-string "_" " " (file-name-base (yas-field-value 1))))}}
+\label{fig:${3:$$(unless yas-modified-p (make-temp-name (concat (replace-regexp-in-string " " "_" (yas-field-value 2)) "_")))}}
 \end{figure}

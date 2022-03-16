@@ -324,7 +324,6 @@
   :config
   (yas-global-mode 1)
   (defun yas-ivy-prompt (prompt choices &optional display-fn)
-    (require 'ivy)
     (yas-completing-prompt prompt choices display-fn #'(lambda (prompt collection
                                                                        &optional predicate require-match initial-input
                                                                        history def inherit-input-method)

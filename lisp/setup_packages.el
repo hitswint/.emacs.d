@@ -752,8 +752,8 @@
     (add-hook hook (lambda ()
                      (local-set-key (kbd "C-c r") 'reftex-mode))))
   :config
-  ;; 对元素的引用(reference)：C-c ( 添加label，C-c ) 引用label
-  ;; 对文献的引用(citation)：C-c [ reftex-citation，C-c C-x [ org-reftex-citation
+  ;; 交叉引用(reference)：C-c ( 添加label，C-c ) 引用label
+  ;; 文献引用(citation)：C-c [ reftex-citation，C-c C-x [ org-reftex-citation
   (define-key reftex-mode-map (kbd "C-c r") 'reftex-parse-all)
   (setq reftex-plug-into-AUCTeX t
         reftex-toc-split-windows-horizontally t

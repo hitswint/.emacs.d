@@ -4,6 +4,6 @@
 # --
 #+ATTR_HTML: :width ${1:300}
 #+ATTR_LATEX: :placement [${2:$$(unless yas-modified-p "htbp")}] :width ${3:0.6}\linewidth :options angle=0
-#+CAPTION: ${4:}
-#+NAME: fig:${5:$$(unless yas-modified-p (make-temp-name (str-unicode-to-pinyin-initial (yas-field-value 4))))}
-$0
+#+CAPTION: ${5:$$(unless yas-modified-p (replace-regexp-in-string "_" " " (file-name-base (yas-field-value 4))))}
+#+NAME: fig:${6:$$(unless yas-modified-p (make-temp-name (concat (replace-regexp-in-string " " "_" (yas-field-value 5)) "_")))}
+[[${4:$$(unless yas-modified-p (or (yas-choose-value (directory-files-recursively "./" (image-file-name-regexp))) (swint-screenshot)))}]]$0

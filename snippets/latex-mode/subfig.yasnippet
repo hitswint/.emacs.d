@@ -5,5 +5,5 @@
 # name : \subfigure
 # --
 \subfigure[${1:caption}]{
-\label{fig:${2:$$(unless yas-modified-p (make-temp-name (str-unicode-to-pinyin-initial (yas-field-value 1))))}}
+\label{fig:${2:$$(unless yas-modified-p (make-temp-name (concat (replace-regexp-in-string " " "_" (yas-field-value 1)) "_")))}}
 \includegraphics[width=0.45\linewidth]{${3:$$(if (file-directory-p "./pic") (concat "pic/" (yas-choose-value (directory-files "./pic"))) (yas-choose-value (directory-files "./")))}}}

@@ -93,7 +93,7 @@
     "Keymap for `helm-bibtex'.")
   (helm-set-attr 'keymap helm-bibtex-map helm-source-bibtex)
   (defvar bibtex-completion-bibliography/curr nil)
-  ;; 改变helm-bibtex中Insert citation格式为cite:key
+  ;; 改变helm-bibtex中Insert citation格式
   (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
         'org-cite-format-citation)
   ;; 当存在#+BIBLIOGRAPHY时，使用org-cite格式，否则使用pandoc默认格式

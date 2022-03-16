@@ -1,6 +1,7 @@
 ;;; auctex
 ;; =====================auctex=====================
 (def-package! tex
+  :commands LaTeX-math-mode
   :mode ("\\.[tT][eE][xX]\\'" . latex-mode)
   :config
 ;;;; setup-and-keybindings
@@ -9,6 +10,7 @@
   (setq TeX-parse-self t)
   (setq-default TeX-master nil)
   (setq LaTeX-electric-left-right-brace t)
+  (setq LaTeX-math-abbrev-prefix "M-s `") ;LaTeX-math-mode与cdlatex的prefix冲突
   (mapc (lambda (mode)
           (add-hook 'TeX-mode-hook mode))
         (list 'LaTeX-math-mode

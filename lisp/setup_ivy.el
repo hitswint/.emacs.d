@@ -1,7 +1,7 @@
 ;;; ivy
 ;; =====================ivy========================
 (def-package! ivy
-  :after (:any swiper counsel)
+  :commands (ivy-read ivy-completing-read)
   :config
   (bind-key "M-s y" 'ivy-resume)
   (bind-key "C-h" 'ivy-avy ivy-minibuffer-map)
@@ -14,12 +14,8 @@
   (def-package! hydra
     :after ivy-hydra)
   ;; https://github.com/pengpengxp/swiper/wiki/ivy-support-chinese-pinyin
-  (add-to-list 'ivy-re-builders-alist '(swiper . re-builder-pinyin))
-  (add-to-list 'ivy-re-builders-alist '(swiper-all . re-builder-pinyin))
-  (add-to-list 'ivy-re-builders-alist '(counsel-imenu . re-builder-pinyin))
-  (add-to-list 'ivy-re-builders-alist '(counsel-find-file . re-builder-pinyin))
-  (add-to-list 'ivy-re-builders-alist '(counsel-outline . re-builder-pinyin))
-  (add-to-list 'ivy-re-builders-alist '(counsel-yank-pop . re-builder-pinyin))
+  ;; (add-to-list 'ivy-re-builders-alist '(swiper . re-builder-pinyin)) ;单独对某命令设置
+  (setq ivy-re-builders-alist '((t . re-builder-pinyin)))
   (defun swint-pinyinlib-build-regexp-string (str)
     (cond ((equal str ".*") ".*")
           (t (pinyinlib-build-regexp-string str t))))

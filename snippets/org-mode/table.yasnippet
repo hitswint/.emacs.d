@@ -4,7 +4,7 @@
 # --
 #+ATTR_LATEX: :placement [${1:$$(unless yas-modified-p "htbp")}]${2: :align ${3:cc}}
 #+CAPTION: ${4:}
-#+NAME: tab:${5:$$(unless yas-modified-p (make-temp-name (str-unicode-to-pinyin-initial (yas-field-value 4))))}
+#+NAME: tab:${5:$$(unless yas-modified-p (make-temp-name (concat (replace-regexp-in-string " " "_" (yas-field-value 4)) "_")))}
 |----+---+
 | $0 |   |
 |----+---+

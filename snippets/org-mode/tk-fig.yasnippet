@@ -12,5 +12,5 @@
 $0
 \end{tikzpicture}
 \caption{${1:caption}}
-\label{fig:${2:$$(unless yas-modified-p (make-temp-name (str-unicode-to-pinyin-initial (yas-field-value 1))))}}
+\label{fig:${2:$$(unless yas-modified-p (make-temp-name (concat (replace-regexp-in-string " " "_" (yas-field-value 1)) "_")))}}
 \end{figure}
