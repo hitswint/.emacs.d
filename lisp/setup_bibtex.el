@@ -83,15 +83,16 @@
       (set-keymap-parent map helm-map)
       (define-key map (kbd "C-j") '(lambda () (interactive) (with-helm-alive-p
                                                               (helm-run-after-exit 'helm-bibtex-open-pdf-externally (helm-marked-candidates)))))
-      (define-key map (kbd "RET") '(lambda () (interactive) (with-helm-alive-p
+      (define-key map (kbd "C-o") '(lambda () (interactive) (with-helm-alive-p
                                                               (helm-run-after-exit 'helm-bibtex-open-pdf (helm-marked-candidates)))))
       (define-key map (kbd "M-;") '(lambda () (interactive) (with-helm-alive-p
                                                               (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
-      (define-key map (kbd "M-RET") '(lambda () (interactive) (with-helm-alive-p
-                                                                (helm-run-after-exit 'helm-bibtex-insert-citation (helm-marked-candidates)))))
+      (define-key map (kbd "RET") '(lambda () (interactive) (with-helm-alive-p
+                                                              (helm-run-after-exit 'helm-bibtex-insert-citation (helm-marked-candidates)))))
       map)
     "Keymap for `helm-bibtex'.")
   (helm-set-attr 'keymap helm-bibtex-map helm-source-bibtex)
+  (helm-set-attr 'persistent-action 'helm-bibtex-insert-citation helm-source-bibtex)
   (defvar bibtex-completion-bibliography/curr nil)
   ;; 改变helm-bibtex中Insert citation格式
   (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
@@ -101,9 +102,10 @@
     (if (org-cite-list-bibliography-files)
         (concat "[cite:" (s-join "; "
                                  (--map (format "@%s" it) keys))
-                "]")
+                "] ")
       (concat "cite:" (s-join ","
-                              (--map (format "%s" it) keys)))))
+                              (--map (format "%s" it) keys))
+              " ")))
   (defun swint-helm-bibtex (&optional arg)
     "With a prefix ARG，choose bib file and execute bibtex-completion-clear-cache."
     (interactive "P")
