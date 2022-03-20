@@ -523,6 +523,7 @@
   (bind-key "C-c j" 'org-ref-bibtex-hydra/body bibtex-mode-map)
   ;; org-ref-insert-link在org-ref-core中定义，若直接(def-package! org-ref)提示函数未定义
   (require 'org-ref)
+  (require 'helm)
   ;; 在已有org-mode中更新链接高亮。
   (dolist (buf (cl-remove-if-not (lambda (x)
                                    (equal (buffer-mode x) 'org-mode))
@@ -545,21 +546,23 @@
     (interactive)
     (helm--push-and-remove-dups helm-org-ref-link-buffer 'helm-buffers)
     (setq helm-last-buffer helm-org-ref-link-buffer)
-    (let ((label-names (helm-comp-read "Label: " (org-with-point-at 1
-                                                   (let ((case-fold-search t)
-                                                         (regexp (org-make-options-regexp '("NAME")))
-                                                         label-list)
-                                                     (while (re-search-forward regexp nil t)
-                                                       (let* ((element (org-element-at-point))
-                                                              (value (org-element-property :name element)))
-                                                         (push value label-list)))
-                                                     (nreverse label-list)))
-                                       :marked-candidates t
-                                       :buffer helm-org-ref-link-buffer
-                                       :keymap helm-org-ref-link-map
-                                       :persistent-action (lambda (candidate)
-                                                            (with-helm-current-buffer
-                                                              (insert (format "[[%s]] " candidate)))))))
+    (let* ((helm-split-window-default-side 'below)
+           (helm-always-two-windows t)
+           (label-names (helm-comp-read "Label: " (org-with-point-at 1
+                                                    (let ((case-fold-search t)
+                                                          (regexp (org-make-options-regexp '("NAME")))
+                                                          label-list)
+                                                      (while (re-search-forward regexp nil t)
+                                                        (let* ((element (org-element-at-point))
+                                                               (value (org-element-property :name element)))
+                                                          (push value label-list)))
+                                                      (nreverse label-list)))
+                                        :marked-candidates t
+                                        :buffer helm-org-ref-link-buffer
+                                        :keymap helm-org-ref-link-map
+                                        :persistent-action (lambda (candidate)
+                                                             (with-helm-current-buffer
+                                                               (insert (format "[[%s]] " candidate)))))))
       ;; 将插入引用定义为keymap中的命令的话，存在类似helm-insert-or-copy的Quit警告问题
       (when (sequencep label-names)
         (insert (s-join " " (--map (format "[[%s]]" it) label-names)))))))

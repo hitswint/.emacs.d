@@ -87,20 +87,18 @@
   (defun swint-counsel-sh-history ()
     "Insert the bash history."
     (interactive)
-    (let (hist-cmd collection val)
-      (setq collection
-            (nreverse
-             (split-string (with-temp-buffer (insert-file-contents
-                                              (if (file-exists-p "~/.zsh_history")
-                                                  (file-truename "~/.zsh_history")
-                                                (file-truename "~/.bash_history")))
-                                             (while (re-search-forward "^: [0-9]+:[0-9];\\(.+\\)\n" nil t)
-                                               (replace-match "\\1\n"))
-                                             (buffer-string))
-                           "\n" t)))
-      (when (and collection (> (length collection) 0)
-                 (setq val (if (= 1 (length collection)) (car collection)
-                             (ivy-read (format "Bash/Zsh history:") collection))))
+    (let* ((collection (nreverse (split-string (if (file-exists-p "~/.zsh_history")
+                                                   ;; 直接读取.zsh_history时中文显示乱码，且每行为": 1647668977:0;df -h"，需进行替换
+                                                   ;; (f-read-text  (file-truename "~/.zsh_history")
+                                                   ;; (while (re-search-forward "^: [0-9]+:[0-9];\\(.+\\)\n" nil t)
+                                                   ;;   (replace-match "\\1\n"))
+                                                   (shell-command-to-string "zsh -i -c 'HISTSIZE=1000; fc -R ~/.zsh_history; fc -l -n 1'")
+                                                 (f-read-text (file-truename "~/.bash_history")))
+                                               "\n" t)))
+           (val (if (= 1 (length collection))
+                    (car collection)
+                  (ivy-read (format "Bash/Zsh history:") collection))))
+      (when val
         (insert val))))
   (defun counsel-read-file-for-rsync (files &optional initial-input)
     "Forward to `find-file'.

@@ -7,6 +7,7 @@
   (define-key python-mode-map (kbd "C-c C-c") 'python-shell-send-line-or-region)
   (define-key python-mode-map (kbd "C-c C-b") 'python-shell-send-buffer)
   (define-key python-mode-map (kbd "C-c C-e") 'python-shell-send-string)
+  (define-key inferior-python-mode-map (kbd "M-o M-p") 'swint-python-load-mysql)
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (defun python-shell-send-line-or-region ()
     (interactive)
@@ -17,7 +18,9 @@
 ;;; pyvenv
 ;; ===================pyvenv===================
 (def-package! pyvenv
-  :commands (pyvenv-workon-home pyvenv-activate)
+  :commands (pyvenv-workon-home
+             pyvenv-activate
+             swint-python-load-mysql)
   :bind (("C-x C-M-3" . pyvenv-workon)
          ("C-x C-M-#" . pyvenv-deactivate)
          ("M-o p" . swint-python-plot-data)
@@ -26,7 +29,6 @@
   :config
   (define-key minibuffer-local-map (kbd "C-c m") 'swint-python-insert-data)
   (define-key minibuffer-local-map (kbd "C-c M") 'swint-python-insert-variables)
-  (define-key inferior-python-mode-map (kbd "M-o M-p") 'swint-python-load-mysql)
   (pyvenv-mode 1)
   ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换。
   (defalias 'workon 'pyvenv-workon)
