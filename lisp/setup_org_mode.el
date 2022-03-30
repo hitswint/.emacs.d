@@ -668,12 +668,16 @@
 \\newcommand{\\fang}{\\CJKfamily{zhfs}}
 \\newcommand{\\li}{\\CJKfamily{zhli}}
 \\newcommand{\\you}{\\CJKfamily{zhyou}}
+\\newcommand{\\yihao}{\\zihao{1}}
+\\newcommand{\\xiaoyi}{\\zihao{-1}}
 \\newcommand{\\erhao}{\\zihao{2}}
-\\newcommand{\\xiaoer}{\\fontsize{18pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\xiaoer}{\\zihao{-2}}
+\\newcommand{\\sanhao}{\\zihao{3}}
+\\newcommand{\\xiaosan}{\\zihao{-3}}
 \\newcommand{\\sihao}{\\zihao{4}}
-\\newcommand{\\xiaosi}{\\fontsize{12pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\xiaosi}{\\zihao{-4}}
 \\newcommand{\\wuhao}{\\zihao{5}}
-\\newcommand{\\xiaowu}{\\fontsize{9pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\xiaowu}{\\zihao{-5}}
 \\newcommand{\\liuhao}{\\zihao{6}}
 [NO-DEFAULT-PACKAGES]
 [NO-PACKAGES]"
@@ -736,17 +740,25 @@
 \\newcommand{\\afang}{\\CJKfamily{afang}}
 \\newcommand{\\ahei}{\\CJKfamily{ahei}}
 \\newcommand{\\akai}{\\CJKfamily{akai}}
-\\newcommand{\\erhao}{\\zihao{2}}
+\\newcommand{\\chuhao}{\\fontsize{42pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\xiaochu}{\\fontsize{36pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\yihao}{\\fontsize{26pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\xiaoyi}{\\fontsize{24pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\erhao}{\\fontsize{22pt}{\\baselineskip}\\selectfont}
 \\newcommand{\\xiaoer}{\\fontsize{18pt}{\\baselineskip}\\selectfont}
-\\newcommand{\\sihao}{\\zihao{4}}
+\\newcommand{\\sanhao}{\\fontsize{16pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\xiaosan}{\\fontsize{15pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\sihao}{\\fontsize{14pt}{\\baselineskip}\\selectfont}
 \\newcommand{\\xiaosi}{\\fontsize{12pt}{\\baselineskip}\\selectfont}
-\\newcommand{\\wuhao}{\\zihao{5}}
+\\newcommand{\\wuhao}{\\fontsize{10.5pt}{\\baselineskip}\\selectfont}
 \\newcommand{\\xiaowu}{\\fontsize{9pt}{\\baselineskip}\\selectfont}
-\\newcommand{\\liuhao}{\\zihao{6}}
+\\newcommand{\\liuhao}{\\fontsize{7.5pt}{\\baselineskip}\\selectfont}
+\\newcommand{\\qihao}{\\fontsize{5.5pt}{\\baselineskip}\\selectfont}
 \\renewcommand{\\today}{\\number\\year 年 \\number\\month 月 \\number\\day 日}
 \\usepackage[]{caption}
 \\captionsetup{font={small,it}}
 \\setbeamertemplate{caption}[numbered]
+\\setbeamertemplate{frametitle continuation}{}
 \\usepackage{comment}
 \\subtitle{}
 \\subject{}
@@ -773,7 +785,7 @@
   (setq org-latex-prefer-user-labels t) ;使生成tex文件使用org文件中的label
   (setq org-export-time-stamp-file nil) ;导出时间戳会使每次导出文件都不相同
   (setq org-beamer-outline-frame-title "Outline")
-  (setq org-beamer-frame-default-options "label=") ;对frame，设置默认选项取消label
+  (setq org-beamer-frame-default-options "allowframebreaks,label=") ;; 设置\begin{frame}后[]选项
   (add-to-list 'org-beamer-environments-extra
                '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
   (add-to-list 'org-beamer-environments-extra
