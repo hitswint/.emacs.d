@@ -278,29 +278,13 @@
   :commands outline-cycle)
 (def-package! outline
   :diminish outline-minor-mode
-  :commands (outline-minor-mode
-             outline-previous-visible-heading
-             outline-next-visible-heading
-             outline-up-heading
-             outline-backward-same-level
-             outline-forward-same-level)
+  :commands outline-minor-mode
   :init
-  (dolist (hook '(prog-mode-hook TeX-mode-hook message-mode-hook))
-    (add-hook hook (lambda ()
-                     (local-set-key (kbd "M-s p") 'outline-previous-visible-heading)
-                     (local-set-key (kbd "M-s n") 'outline-next-visible-heading)
-                     (local-set-key (kbd "M-s u") 'outline-up-heading)
-                     (local-set-key (kbd "M-s b") 'outline-backward-same-level)
-                     (local-set-key (kbd "M-s f") 'outline-forward-same-level))))
-  (defvar outline-minor-mode-prefix "\M-O")
-  (add-hook 'outline-minor-mode-hook
-            (lambda () ;; 在latex-mode和org-mode中不开启outshine。
-              (unless (derived-mode-p 'latex-mode 'org-mode)
-                (outshine-mode))))
-  :config
   (add-hook 'prog-mode-hook 'outline-minor-mode)
   (add-hook 'TeX-mode-hook 'outline-minor-mode)
   (add-hook 'message-mode-hook 'outline-minor-mode)
+  (defvar outline-minor-mode-prefix "\M-O")
+  :config
   (dolist (buf (buffer-list))
     (with-current-buffer buf
       (when (derived-mode-p 'prog-mode 'tex-mode 'message-mode)
@@ -362,6 +346,11 @@
   :commands (outshine-mode
              outshine-cycle-buffer
              outshine-calc-outline-regexp)
+  :init
+  (add-hook 'outline-minor-mode-hook
+            (lambda () ;; 在latex-mode和org-mode中不开启outshine。
+              (unless (derived-mode-p 'latex-mode 'org-mode)
+                (outshine-mode))))
   :config
   ;; Heading格式随mode不同，通常是M-;加*加空格
   (setq outshine-use-speed-commands t)

@@ -354,12 +354,10 @@ Assuming .. and . is a current directory (like in FAR)"
                               sum (txm-file-or-dir-size x))))
 
     (if (/= total-size -1)
-        (message (concat (txm-format-file-size total-size)
-                         " in [ "
-                         (mapconcat 'file-name-nondirectory file-list " / ")
-                         " ] ("
-                         (number-to-string total-size)
-                         " bytes)"))
+        (message (concat
+                  "["
+                  (mapconcat 'file-name-nondirectory file-list " / ")
+                  "] --> " (txm-format-file-size total-size)))
       (message (concat "Cannot determine size of " filename)))))
 ;; ==========dired-view-file-or-dir==========
 ;;; swint-dired-rsync/unison
