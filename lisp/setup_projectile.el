@@ -55,11 +55,11 @@
                                  (helm-projectile-ag "--hidden"))))
                          current-prefix-arg))
   (define-key helm-projectile-projects-map (kbd "C-s") 'swint-helm-projectile-ag)
-  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-j") '(lambda (project)
+  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-j") #'(lambda (project)
                                                                           (let ((projectile-completion-system 'helm))
                                                                             (projectile-switch-project-by-name project))))
-  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-x j") '(lambda (project) (neotree-dir project)))
-  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-M-k") '(lambda (project) (helm-projectile-kill-persp)))
+  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-x j") #'(lambda (project) (neotree-dir project)))
+  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-M-k") #'(lambda (project) (helm-projectile-kill-persp)))
   (defvar helm-source-projectile-projects-with-persp
     (helm-build-sync-source "Projectile projects with persp"
       :candidates (lambda ()

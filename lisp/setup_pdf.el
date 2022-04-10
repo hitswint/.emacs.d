@@ -15,8 +15,8 @@
   (define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save)
   (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
   (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
-  (define-key pdf-view-mode-map (kbd "C-p") '(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
-  (define-key pdf-view-mode-map (kbd "C-n") '(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
+  (define-key pdf-view-mode-map (kbd "C-p") #'(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
+  (define-key pdf-view-mode-map (kbd "C-n") #'(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
   (define-key pdf-view-mode-map (kbd "M-;") 'swint-open-notes-file-for-pdf))
 ;; ====================pdf-tools===================
 ;;; doc-view-mode
@@ -29,8 +29,8 @@
   (setq doc-view-continuous t)
   (define-key doc-view-mode-map (kbd "M-v") 'doc-view-scroll-down-or-previous-page)
   (define-key doc-view-mode-map (kbd "C-v") 'doc-view-scroll-up-or-next-page)
-  (define-key doc-view-mode-map (kbd "C-p") '(lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
-  (define-key doc-view-mode-map (kbd "C-n") '(lambda () (interactive) (doc-view-next-line-or-next-page 3)))
+  (define-key doc-view-mode-map (kbd "C-p") #'(lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
+  (define-key doc-view-mode-map (kbd "C-n") #'(lambda () (interactive) (doc-view-next-line-or-next-page 3)))
   (define-key doc-view-mode-map (kbd "M-;") 'swint-open-notes-file-for-pdf))
 ;; ==================doc-view-mode=================
 ;;; pdfgrep
@@ -45,7 +45,7 @@
   (require 'helm-ag)
   (pdfgrep-mode)
   (define-key grep-mode-map (kbd "C-j") 'compile-goto-error-externally)
-  (add-hook 'grep-mode-hook '(lambda () (setq truncate-lines t)))
+  (add-hook 'grep-mode-hook #'(lambda () (setq truncate-lines t)))
   (defun compile-goto-error-externally ()
     (interactive)
     (let* ((loc (compilation--message->loc (get-text-property (line-beginning-position) 'compilation-message)))
@@ -124,9 +124,9 @@ WHERE items.itemID = itemAttachments.itemID AND items.itemID in" "("
             (if (<= (length match-cache-list) 100)
                 (rg-run string-to-grep "pdf" (expand-file-name zotero-storage) t nil zotero-dir-list)
               (let ((helm-ag-command-option "-G .zotero-ft-cache"))
-                (letf (((symbol-function 'helm-ag--marked-input)
-                        (lambda (escape)
-                          (replace-regexp-in-string " " "\\\\ " string-to-grep))))
+                (cl-letf (((symbol-function 'helm-ag--marked-input)
+                           (lambda (escape)
+                             (replace-regexp-in-string " " "\\\\ " string-to-grep))))
                   (helm-do-ag (expand-file-name zotero-storage) zotero-dir-list)))))))))
   (defun helm-ag-zotero-open-pdf (candidates &optional arg)
     (--if-let
@@ -140,9 +140,9 @@ WHERE items.itemID = itemAttachments.itemID AND items.itemID in" "("
                                                      " \"" pdffile "\"")))
                     'find-file))
       (message "No PDF(s) found.")))
-  (define-key helm-do-ag-map (kbd "C-c j") '(lambda () (interactive) (with-helm-alive-p
-                                                                       (helm-run-after-exit 'helm-ag-zotero-open-pdf (helm-marked-candidates) t))))
-  (define-key helm-do-ag-map (kbd "C-c o") '(lambda () (interactive) (with-helm-alive-p
-                                                                       (helm-run-after-exit 'helm-ag-zotero-open-pdf (helm-marked-candidates))))))
+  (define-key helm-do-ag-map (kbd "C-c j") #'(lambda () (interactive) (with-helm-alive-p
+                                                                        (helm-run-after-exit 'helm-ag-zotero-open-pdf (helm-marked-candidates) t))))
+  (define-key helm-do-ag-map (kbd "C-c o") #'(lambda () (interactive) (with-helm-alive-p
+                                                                        (helm-run-after-exit 'helm-ag-zotero-open-pdf (helm-marked-candidates))))))
 ;; =================pdfgrep========================
 (provide 'setup_pdf)

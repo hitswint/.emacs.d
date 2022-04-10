@@ -34,6 +34,6 @@
   :commands flycheck-pos-tip-mode
   :config
   ;; flycheck-pos-tip-mode会导致pos-tip弹出后快速隐藏。
-  (add-hook 'flycheck-mode-hook '(lambda () (flycheck-pos-tip-mode 'toggle))))
+  (add-hook 'flycheck-mode-hook #'(lambda () (flycheck-pos-tip-mode 'toggle))))
 ;; =============flycheck-pos-tip==============
 (provide 'setup_flycheck)

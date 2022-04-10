@@ -8,7 +8,7 @@
   ;; (setq shell-file-name "bash")
   ;; (setq shell-command-switch "-ic")
   :config
-  (add-hook 'shell-mode-hook '(lambda ()
+  (add-hook 'shell-mode-hook #'(lambda ()
                                 (if (not (file-exists-p "~/.zsh_history"))
                                     (setq comint-input-ring-file-name "~/.bash_history")
                                   (setq comint-input-ring-file-name "~/.zsh_history")
@@ -26,7 +26,7 @@
 (def-package! eshell
   :bind ("C-M-1" . eshell)
   :config
-  (add-hook 'eshell-mode-hook '(lambda()
+  (add-hook 'eshell-mode-hook #'(lambda()
                                  (setq scroll-margin 0
                                        eshell-scroll-to-bottom-on-output t
                                        eshell-scroll-show-maximum-output t)

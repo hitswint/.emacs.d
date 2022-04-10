@@ -10,7 +10,7 @@
   (setq magit-auto-revert-mode nil)
   :config
   (dolist (hook '(magit-diff-mode-hook magit-status-mode-hook))
-    (add-hook hook '(lambda ()
+    (add-hook hook #'(lambda ()
                       (highlight-parentheses-mode -1)
                       (auto-mark-mode -1))))
   ;; magit-status中去除headers/staged，使用magit-show-refs/magit-diff-staged替代

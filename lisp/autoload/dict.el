@@ -5,7 +5,7 @@
   "Major mode for sdcv."
   (when swint-fcitx-setup-done
     (fcitx--sdcv-maybe-deactivate))
-  (local-set-key (kbd "q") '(lambda () (interactive)
+  (local-set-key (kbd "q") #'(lambda () (interactive)
                               (swint-kill-buffer)
                               (jump-to-register :sdcv)
                               (when swint-fcitx-setup-done

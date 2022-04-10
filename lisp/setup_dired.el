@@ -28,7 +28,7 @@
   (setq dired-subdir-switches dired-listing-switches)
   (setq dired-dwim-target t)
   (setq wdired-allow-to-change-permissions t)
-  (add-hook 'dired-after-readin-hook '(lambda () (setq truncate-lines t)))
+  (add-hook 'dired-after-readin-hook #'(lambda () (setq truncate-lines t)))
   (setq file-extension-app-alist
         '(("pdf" . "llpp_qpdfview.sh") ("djvu" . "llpp") ("chm" . "xchm")
           ("rmvb" . "mplayer") ("rm" . "mplayer") ("mp4" . "mplayer") ("avi" . "mplayer") ("flv" . "mplayer") ("f4v" . "mplayer") ("mpg" . "mplayer") ("mkv" . "mplayer") ("3gp" . "mplayer") ("wmv" . "mplayer") ("mov" . "mplayer") ("dat" . "mplayer") ("asf" . "mplayer") ("mpeg" . "mplayer") ("wma" . "mplayer") ("webm" . "mplayer")
@@ -96,11 +96,11 @@
                                                      (let ((current-directory default-directory))
                                                        (find-alternate-file "..")
                                                        (dired-goto-file (expand-file-name current-directory)))))
-              (define-key dired-mode-map (kbd "i") '(lambda ()
+              (define-key dired-mode-map (kbd "i") #'(lambda ()
                                                       (interactive)
                                                       (call-interactively 'dired-maybe-insert-subdir)
                                                       (revert-buffer)))
-              (define-key dired-mode-map (kbd "I") '(lambda ()
+              (define-key dired-mode-map (kbd "I") #'(lambda ()
                                                       (interactive)
                                                       (dired-kill-and-next-subdir)
                                                       (revert-buffer)))
@@ -117,10 +117,10 @@
               (make-local-variable 'dired-sort-map)
               (setq dired-sort-map (make-sparse-keymap))
               (define-key dired-mode-map "s" dired-sort-map)
-              (define-key dired-sort-map "s" '(lambda () (interactive) (dired-sort-switch "S"))) ;sort by Size
-              (define-key dired-sort-map "x" '(lambda () (interactive) (dired-sort-switch "X"))) ;sort by eXtension
-              (define-key dired-sort-map "t" '(lambda () (interactive) (dired-sort-switch "t"))) ;sort by Time
-              (define-key dired-sort-map "n" '(lambda () (interactive) (dired-sort-switch "v"))))) ;sort by Name
+              (define-key dired-sort-map "s" #'(lambda () (interactive) (dired-sort-switch "S"))) ;sort by Size
+              (define-key dired-sort-map "x" #'(lambda () (interactive) (dired-sort-switch "X"))) ;sort by eXtension
+              (define-key dired-sort-map "t" #'(lambda () (interactive) (dired-sort-switch "t"))) ;sort by Time
+              (define-key dired-sort-map "n" #'(lambda () (interactive) (dired-sort-switch "v"))))) ;sort by Name
   ;; ==========setup-and-keybindings===========
 ;;;; dired-sort-switch
   ;; ============dired-sort-switch=============
@@ -178,7 +178,7 @@
   :after dired
   :config
   (bind-key "C-j" 'image-dired-thumbnail-display-external image-dired-thumbnail-mode-map)
-  (bind-key "C-M-i" '(lambda () (interactive) (if (global-image-dired-minor-mode 'toggle)
+  (bind-key "C-M-i" #'(lambda () (interactive) (if (global-image-dired-minor-mode 'toggle)
                                                   (image-dired-display-thumbs-all)
                                                 (when (get-buffer image-dired-thumbnail-buffer)
                                                   (kill-buffer image-dired-thumbnail-buffer))))
@@ -290,7 +290,7 @@
   :commands (global-peep-dired peep-dired-find-file)
   :init
   (add-hook 'dired-mode-hook (lambda ()
-                               (bind-key "M-i" '(lambda () (interactive) (unless (global-peep-dired 'toggle)
+                               (bind-key "M-i" #'(lambda () (interactive) (unless (global-peep-dired 'toggle)
                                                                            (delete-other-windows)
                                                                            (peep-dired-cleanup)
                                                                            (when (and (boundp 'image-dired-display-image-buffer)
@@ -374,7 +374,7 @@
   :diminish dired-async-mode
   :commands dired-async-mode
   :init
-  (add-hook 'dired-mode-hook '(lambda () (dired-async-mode 1)))
+  (add-hook 'dired-mode-hook #'(lambda () (dired-async-mode 1)))
   :config
   (defun dired-do-copy/before (&optional arg)
     "Redefine dired-do-copy to fix conflict between dired-async-mode and dired-sync-highlight."

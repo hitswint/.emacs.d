@@ -25,11 +25,11 @@
     :after auto-complete
     :config
     (add-hook 'shell-mode-hook 'pcomplete-shell-setup)
-    (add-hook 'auto-complete-mode-hook '(lambda ()
+    (add-hook 'auto-complete-mode-hook #'(lambda ()
                                           (if (eq major-mode 'shell-mode)
                                               (pcomplete-shell-setup))))
     (add-hook 'eshell-mode-hook 'ac-eshell-mode-setup)
-    (add-hook 'auto-complete-mode-hook '(lambda ()
+    (add-hook 'auto-complete-mode-hook #'(lambda ()
                                           (if (eq major-mode 'eshell-mode)
                                               (ac-eshell-mode-setup))))
     (defun ac-eshell-mode-setup ()
@@ -90,7 +90,7 @@
   :config
   (add-hook 'c++-mode-hook 'ac-c-header-init)
   (add-hook 'c-mode-hook 'ac-c-header-init)
-  (add-hook 'auto-complete-mode-hook '(lambda ()
+  (add-hook 'auto-complete-mode-hook #'(lambda ()
                                         (if (memq major-mode '(c++-mode
                                                                c-mode))
                                             (ac-c-header-init))))
@@ -112,7 +112,7 @@
   :config
   (dolist (hook '(c-mode-hook c++-mode-hook))
     (add-hook hook 'ac-cc-mode-setup))
-  (add-hook 'auto-complete-mode-hook '(lambda ()
+  (add-hook 'auto-complete-mode-hook #'(lambda ()
                                         (if (memq major-mode '(c++-mode
                                                                c-mode))
                                             (ac-cc-mode-setup))))
@@ -143,7 +143,7 @@
   :after auto-complete
   :config
   (add-hook 'LaTeX-mode-hook 'ac-auctex-setup)
-  (add-hook 'auto-complete-mode-hook '(lambda ()
+  (add-hook 'auto-complete-mode-hook #'(lambda ()
                                         (if (eq major-mode 'latex-mode)
                                             (ac-auctex-setup)))))
 ;; ================ac-auctex===================
@@ -153,7 +153,7 @@
   :after auto-complete
   :config
   (add-hook 'org-mode-hook 'ac-org-mode-setup)
-  (add-hook 'auto-complete-mode-hook '(lambda ()
+  (add-hook 'auto-complete-mode-hook #'(lambda ()
                                         (if (eq major-mode 'org-mode)
                                             (ac-org-mode-setup))))
   (defun ac-org-mode-setup ()
@@ -166,7 +166,7 @@
   :config
   (setq comint-process-echoes nil)
   (add-hook 'shell-mode-hook 'ac-rlc-setup-sources)
-  (add-hook 'auto-complete-mode-hook '(lambda ()
+  (add-hook 'auto-complete-mode-hook #'(lambda ()
                                         (if (eq major-mode 'shell-mode)
                                             (ac-rlc-setup-sources)))))
 ;; ===================shell====================

@@ -45,7 +45,7 @@
   ;; ===============Keybindings=================
   ;; %^{Description}
   (add-hook 'org-mode-hook
-            '(lambda ()
+            #'(lambda ()
                ;; 插入source code时高亮，C-c '打开相应major-mode编辑窗口
                (setq org-src-fontify-natively t)
                ;; (setq org-startup-indented t)
@@ -88,10 +88,10 @@
                (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
                (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
                (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point)
-               (define-key org-mode-map (kbd "C-c o") '(lambda () (interactive) (swint-org-open-at-point t)))
+               (define-key org-mode-map (kbd "C-c o") #'(lambda () (interactive) (swint-org-open-at-point t)))
                (define-key org-mode-map (kbd "C-c :") 'swint-qpdfview-annotated-new)
-               (define-key org-mode-map (kbd "C-c M-,") '(lambda () (interactive) (swint-org-mobile-sync "down")))
-               (define-key org-mode-map (kbd "C-c M-.") '(lambda () (interactive) (swint-org-mobile-sync "up")))
+               (define-key org-mode-map (kbd "C-c M-,") #'(lambda () (interactive) (swint-org-mobile-sync "down")))
+               (define-key org-mode-map (kbd "C-c M-.") #'(lambda () (interactive) (swint-org-mobile-sync "up")))
                (smartrep-define-key org-mode-map "M-s"
                  '(("p" . org-previous-visible-heading)
                    ("n" . org-next-visible-heading)
@@ -103,12 +103,12 @@
                    ("n" . org-next-item)
                    ("P" . org-beginning-of-item-list)
                    ("N" . org-end-of-item-list)))
-               (define-key org-mode-map (kbd "C-a") '(lambda () (interactive)
+               (define-key org-mode-map (kbd "C-a") #'(lambda () (interactive)
                                                        (if (or (org-at-heading-p) (org-at-item-p))
                                                            (call-interactively 'org-beginning-of-line)
                                                          (call-interactively 'smart-beginning-of-line))))
                (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)
-               (define-key org-mode-map (kbd "C-c l") '(lambda () (interactive)
+               (define-key org-mode-map (kbd "C-c l") #'(lambda () (interactive)
                                                          (insert (swint-cursor-localtion))))
                (define-key org-mode-map (kbd "C-c w") 'org-clipboard-copy)
                (define-key org-mode-map (kbd "C-c y") 'org-clipboard-paste)
@@ -130,7 +130,7 @@
   ;; 显示两周的agenda
   (setq org-agenda-span 'month)
   ;; 设定todo的子项完成后主项自动完成
-  (add-hook 'org-after-todo-statistics-hook '(lambda (n-done n-not-done)
+  (add-hook 'org-after-todo-statistics-hook #'(lambda (n-done n-not-done)
                                                (let (org-log-done org-log-states)
                                                  (org-todo (if (= n-not-done 0) "DONE" "TODO")))))
   ;; 设定todo关键词
@@ -523,7 +523,7 @@
   (defvar helm-org-ref-link-map
     (let ((map (make-sparse-keymap)))
       (set-keymap-parent map helm-map)
-      (define-key map (kbd "C-j") '(lambda () (interactive)
+      (define-key map (kbd "C-j") #'(lambda () (interactive)
                                      (helm-run-after-exit #'(lambda (_candidates)
                                                               (goto-char (point-min))
                                                               (search-forward (format "#+NAME: %s" (car _candidates)) nil t))
@@ -774,7 +774,7 @@
   (setq org-latex-prefer-user-labels t) ;使生成tex文件使用org文件中的label
   (setq org-export-time-stamp-file nil) ;导出时间戳会使每次导出文件都不相同
   (setq org-beamer-outline-frame-title "Outline")
-  (setq org-beamer-frame-default-options "allowframebreaks,label=") ;; 设置\begin{frame}后[]选项
+  (setq org-beamer-frame-default-options "label=") ;; 设置\begin{frame}后[]选项
   (add-to-list 'org-beamer-environments-extra
                '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
   (add-to-list 'org-beamer-environments-extra

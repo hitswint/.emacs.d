@@ -26,11 +26,11 @@
               (setq TeX-save-query nil)
               (imenu-add-menubar-index)
               (define-key LaTeX-mode-map (kbd "C-c f") 'TeX-font)
-              (define-key LaTeX-mode-map (kbd "C-q") '(lambda () (interactive)
+              (define-key LaTeX-mode-map (kbd "C-q") #'(lambda () (interactive)
                                                         (ignore-errors (kill-process (TeX-active-process)))
                                                         (swint-kill-buffer)))
               (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)
-              (define-key LaTeX-mode-map (kbd "C-c l") '(lambda () (interactive)
+              (define-key LaTeX-mode-map (kbd "C-c l") #'(lambda () (interactive)
                                                           (insert (swint-cursor-localtion))))))
   (setq TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o")))
   ;; 使用imagemagick中convert转换为图片。win中默认使用imgconvert，可以将cygwin中convert改名为imgconvert。

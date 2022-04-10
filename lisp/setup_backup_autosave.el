@@ -58,6 +58,6 @@
        (concat "tree " (expand-file-name "~") " -o "
                PC-tree-file)))))
 ;;;; 每次保存备份文件。
-(add-hook 'before-save-hook '(lambda () (let ((buffer-backed-up nil)) (backup-buffer))))
+(add-hook 'before-save-hook #'(lambda () (let ((buffer-backed-up nil)) (backup-buffer))))
 ;; ============BACKUP-AUTOSAVE=============
 (provide 'setup_backup_autosave)

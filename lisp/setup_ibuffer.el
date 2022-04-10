@@ -10,7 +10,7 @@
   ;; ======================ibuffer分组===========================
   (def-package! ibuf-ext
     :config
-    (add-hook 'ibuffer-mode-hook '(lambda () (if (not (bound-and-true-p persp-mode))
+    (add-hook 'ibuffer-mode-hook #'(lambda () (if (not (bound-and-true-p persp-mode))
                                                  (ibuffer-switch-to-saved-filter-groups "Filename")
                                                (ibuffer-create-saved-filter-groups-with-persp)
                                                (ibuffer-switch-to-saved-filter-groups "Persp"))))
@@ -30,7 +30,7 @@
              (itt (push "Persp" it)))
         (setq ibuffer-saved-filter-groups
               (push itt ibuffer-saved-filter-groups-without-persp))))
-    (define-key ibuffer-mode-map (kbd ":") '(lambda () (interactive)
+    (define-key ibuffer-mode-map (kbd ":") #'(lambda () (interactive)
                                               (ibuffer-create-saved-filter-groups-with-persp)
                                               (ibuffer-switch-to-saved-filter-groups "Persp")))
 ;;;; 按filename分组
@@ -57,7 +57,7 @@
                            (filename . "~/myfile")
                            (filename . "~/Music")
                            (filename . "~/Pictures")))))
-    (define-key ibuffer-mode-map (kbd ";") '(lambda () (interactive)
+    (define-key ibuffer-mode-map (kbd ";") #'(lambda () (interactive)
                                               (ibuffer-switch-to-saved-filter-groups "Filename"))))
   ;; ======================ibuffer分组===========================
   )

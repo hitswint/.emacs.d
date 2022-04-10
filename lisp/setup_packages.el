@@ -279,7 +279,7 @@
   (clean-aindent-mode t)
   (setq clean-aindent-is-simple-indent t)
   (define-key global-map (kbd "RET") 'newline-and-indent)
-  (define-key clean-aindent-mode--keymap (kbd "M-DEL") '(lambda ()
+  (define-key clean-aindent-mode--keymap (kbd "M-DEL") #'(lambda ()
                                                           (interactive)
                                                           (if (or paredit-mode
                                                                   paredit-everywhere-mode)
@@ -383,7 +383,7 @@
   (setq-default bm-buffer-persistence t)
   (add-hook 'find-file-hook 'bm-buffer-restore)
   (add-hook 'kill-buffer-hook 'bm-buffer-save)
-  (add-hook 'kill-emacs-hook '(lambda ()
+  (add-hook 'kill-emacs-hook #'(lambda ()
                                 (bm-buffer-save-all)
                                 (bm-repository-save)))
   (add-hook 'after-save-hook 'bm-buffer-save)

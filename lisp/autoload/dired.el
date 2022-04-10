@@ -273,12 +273,19 @@
                                         for y from ?A to ?Z
                                         collect (mapconcat (lambda (arg) (concat (char-to-string y) arg))
                                                            (split-string (read-string (concat (file-name-nondirectory x) " (1-2west 4 5-end): ") nil nil "1-end") " " t)
-                                                           " "))))
+                                                           " ")))
+                    (output-file (cl-loop for x in file-list-ordered
+                                          for y in page-args
+                                          concat (concat (s-left 10 (file-name-base (file-name-nondirectory x))) ":" y ";"))))
                (shell-command (concat "pdftk " (mapconcat 'identity file-args " ") " cat " (mapconcat 'identity page-args " ") " output \""
-                                      (cl-loop for x in file-list-ordered
-                                               for y in page-args
-                                               concat (concat (file-name-base (file-name-nondirectory x)) ":" y "."))
-                                      "pdf\""))))
+                                      ;; 输出文件可能过长，Linux中文件名最长允许255个字符(Byte)，UTF-8编码中每个汉字为3个字符
+                                      (if (> (string-bytes output-file) 250)
+                                          (if (multibyte-string-p output-file)
+                                              ;; 取前250个字符，末尾可能残存1/2个不完整字符
+                                              (substring (string-as-multibyte (s-left 250 (string-as-unibyte output-file))) 0 -2)
+                                            (s-left 250 output-file))
+                                        output-file)
+                                      ".pdf\""))))
             ((string= engine "ODAFileConverter")
              (let ((output-version (helm-comp-read "Output version: "
                                                    (list "ACAD9" "ACAD10" "ACAD12" "ACAD13" "ACAD14" "ACAD2000" "ACAD2004" "ACAD2007" "ACAD2010")
@@ -354,10 +361,9 @@ Assuming .. and . is a current directory (like in FAR)"
                               sum (txm-file-or-dir-size x))))
 
     (if (/= total-size -1)
-        (message (concat
-                  "["
-                  (mapconcat 'file-name-nondirectory file-list " / ")
-                  "] --> " (txm-format-file-size total-size)))
+        (message (concat (mapconcat 'file-name-nondirectory file-list "\n")
+                         "\n" (number-to-string (length file-list)) " files, "
+                         (txm-format-file-size total-size) " in total.\n"))
       (message (concat "Cannot determine size of " filename)))))
 ;; ==========dired-view-file-or-dir==========
 ;;; swint-dired-rsync/unison

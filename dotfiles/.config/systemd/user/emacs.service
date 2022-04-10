@@ -4,8 +4,8 @@ Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 
 [Service]
 Type=simple
-ExecStart=/opt/emacs27/bin/emacs --fg-daemon
-ExecStop=/opt/emacs27/bin/emacsclient --eval "(shutdown-emacs-server)"
+ExecStart=/opt/emacs28/bin/emacs --fg-daemon
+ExecStop=/opt/emacs28/bin/emacsclient --eval "(shutdown-emacs-server)"
 Environment=SSH_AUTH_SOCK=%t/keyring/ssh
 Environment="LC_CTYPE=zh_CN.UTF-8" "XMODIFIERS=@im=fcitx"
 Restart=on-failure

@@ -26,7 +26,7 @@
                  'csharp-mode-hook
                  'c++-mode-hook
                  'haskell-mode-hook))
-    (add-hook hook '(lambda () (nox-ensure)
+    (add-hook hook #'(lambda () (nox-ensure)
                       ;; 需先打开相应文件，下列快捷键才会生效。
                       (local-set-key (kbd "C-c c") 'nox-reconnect)
                       (local-set-key (kbd "C-c b e") 'nox-events-buffer)

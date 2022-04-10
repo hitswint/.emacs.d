@@ -45,7 +45,6 @@
                            backup-walker
                            baidu-translate
                            bbyac
-                           benchmark-init
                            bibtex-completion
                            bind-key
                            bing-dict
@@ -146,7 +145,6 @@
                            neotree
                            nyan-mode
                            operate-on-number
-                           org
                            org-appear
                            org-brain
                            org-noter
@@ -250,14 +248,6 @@ Missing packages are installed automatically."
                    (and (plist-member plist :unless) (eval (plist-get plist :unless)))))
     `(use-package ,name ,@plist)))
 ;; =================use-package=====================
-;;; benchmark-init
-;; ================benchmark-init===================
-(def-package! benchmark-init
-  ;; :disabled
-  :config
-  ;; benchmark-init/show-durations-tree / benchmark-init/show-durations-tabulated
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
-;; ================benchmark-init===================
 ;;; exec-path-from-shell
 ;; =============exec-path-from-shell================
 (def-package! exec-path-from-shell

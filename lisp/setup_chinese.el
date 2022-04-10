@@ -50,9 +50,9 @@
   (defun pyim-hanzi2pinyin-capitalize (string &optional shou-zi-mu separator
                                               return-list ignore-duo-yin-zi adjust-duo-yin-zi)
     (let ((orig-fun (symbol-function 'pyim-cchar2pinyin-get)))
-      (letf (((symbol-function 'pyim-cchar2pinyin-get)
-              (lambda (arg)
-                (mapcar #'capitalize (funcall orig-fun arg)))))
+      (cl-letf (((symbol-function 'pyim-cchar2pinyin-get)
+                 (lambda (arg)
+                   (mapcar #'capitalize (funcall orig-fun arg)))))
         (pyim-hanzi2pinyin string shou-zi-mu separator
                            return-list ignore-duo-yin-zi adjust-duo-yin-zi))))
   (def-package! pyim-basedict
