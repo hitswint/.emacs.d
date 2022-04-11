@@ -27,13 +27,13 @@
                  'c++-mode-hook
                  'haskell-mode-hook))
     (add-hook hook #'(lambda () (nox-ensure)
-                      ;; 需先打开相应文件，下列快捷键才会生效。
-                      (local-set-key (kbd "C-c c") 'nox-reconnect)
-                      (local-set-key (kbd "C-c b e") 'nox-events-buffer)
-                      (local-set-key (kbd "C-c b s") 'nox-stderr-buffer)
-                      (local-set-key (kbd "C-c r") 'nox-rename)
-                      (local-set-key (kbd "C-c f") 'nox-format)
-                      (local-set-key (kbd "C-c d") 'nox-show-doc))))
+                       ;; 需先打开相应文件，下列快捷键才会生效。
+                       (local-set-key (kbd "C-c c") 'nox-reconnect)
+                       (local-set-key (kbd "C-c b e") 'nox-events-buffer)
+                       (local-set-key (kbd "C-c b s") 'nox-stderr-buffer)
+                       (local-set-key (kbd "C-c r") 'nox-rename)
+                       (local-set-key (kbd "C-c f") 'nox-format)
+                       (local-set-key (kbd "C-c d") 'nox-show-doc))))
   (setq nox-python-path (expand-file-name "~/.virtualenvs/py3/bin/python3")))
 ;; =====================nox=====================
 (provide 'setup_lsp)

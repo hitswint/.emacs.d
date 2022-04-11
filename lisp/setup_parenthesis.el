@@ -13,10 +13,10 @@
 (global-set-key (kbd "’") 'insert-pair-single-curly-quote)
 (add-hook 'LaTeX-mode-hook
           #'(lambda ()
-             (define-key LaTeX-mode-map (kbd "$") 'insert-pair-math-bracket)))
+              (define-key LaTeX-mode-map (kbd "$") 'insert-pair-math-bracket)))
 (add-hook 'org-mode-hook
           #'(lambda ()
-             (define-key org-mode-map (kbd "$") 'insert-pair-math-bracket)))
+              (define-key org-mode-map (kbd "$") 'insert-pair-math-bracket)))
 ;; =================Keybindings=================
 ;;; wrap-region
 ;; ================wrap-region==================

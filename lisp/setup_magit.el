@@ -11,8 +11,8 @@
   :config
   (dolist (hook '(magit-diff-mode-hook magit-status-mode-hook))
     (add-hook hook #'(lambda ()
-                      (highlight-parentheses-mode -1)
-                      (auto-mark-mode -1))))
+                       (highlight-parentheses-mode -1)
+                       (auto-mark-mode -1))))
   ;; magit-status中去除headers/staged，使用magit-show-refs/magit-diff-staged替代
   (dolist (hook '(magit-insert-status-headers magit-insert-staged-changes))
     (remove-hook 'magit-status-sections-hook hook))

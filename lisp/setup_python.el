@@ -339,7 +339,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s', %s)" (expand-file-name "~/Document
         jedi:get-in-function-call-delay 2000
         jedi:get-in-function-call-timeout 5000)
   (add-hook 'jedi-mode-hook #'(lambda ()
-                               (set (make-local-variable 'company-idle-delay) nil)))
+                                (set (make-local-variable 'company-idle-delay) nil)))
   (define-key jedi-mode-map (kbd "C-c j") 'jedi:get-in-function-call)
   (define-key jedi-mode-map (kbd "M-u") 'jedi:complete)
   (define-key jedi-mode-map (kbd "C-c C-/") 'jedi:show-doc)

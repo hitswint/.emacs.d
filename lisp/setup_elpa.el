@@ -183,12 +183,10 @@
                            skewer-mode
                            smart-mode-line
                            smartrep
-                           smex
                            sudo-edit
                            swiper
                            tangotango-theme
                            term-keys
-                           undo-fu
                            unicode-escape
                            use-package
                            vimish-fold

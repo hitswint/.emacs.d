@@ -76,19 +76,19 @@
          ("C-x B" . helm-bibtex))
   :init
   (add-hook 'LaTeX-mode-hook #'(lambda ()
-                                (bind-key "C-c b" 'helm-bibtex-with-local-bibliography LaTeX-mode-map)))
+                                 (bind-key "C-c b" 'helm-bibtex-with-local-bibliography LaTeX-mode-map)))
   :config
   (defvar helm-bibtex-map
     (let ((map (make-sparse-keymap)))
       (set-keymap-parent map helm-map)
       (define-key map (kbd "C-j") #'(lambda () (interactive) (with-helm-alive-p
-                                                              (helm-run-after-exit 'helm-bibtex-open-pdf-externally (helm-marked-candidates)))))
+                                                               (helm-run-after-exit 'helm-bibtex-open-pdf-externally (helm-marked-candidates)))))
       (define-key map (kbd "C-o") #'(lambda () (interactive) (with-helm-alive-p
-                                                              (helm-run-after-exit 'helm-bibtex-open-pdf (helm-marked-candidates)))))
+                                                               (helm-run-after-exit 'helm-bibtex-open-pdf (helm-marked-candidates)))))
       (define-key map (kbd "M-;") #'(lambda () (interactive) (with-helm-alive-p
-                                                              (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
+                                                               (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
       (define-key map (kbd "RET") #'(lambda () (interactive) (with-helm-alive-p
-                                                              (helm-run-after-exit 'helm-bibtex-insert-citation (helm-marked-candidates)))))
+                                                               (helm-run-after-exit 'helm-bibtex-insert-citation (helm-marked-candidates)))))
       map)
     "Keymap for `helm-bibtex'.")
   (helm-set-attr 'keymap helm-bibtex-map helm-source-bibtex)
@@ -121,7 +121,7 @@
       (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr))
         (helm-bibtex arg bibtex-completion-bibliography/curr))))
   (defcustom helm-bibtex-pdf-open-externally-function #'(lambda (fpath)
-                                                         (dired-async-shell-command fpath))
+                                                          (dired-async-shell-command fpath))
     "The function used for opening PDF files externally."
     :group 'bibtex-completion
     :type 'function)
@@ -156,8 +156,8 @@
   (define-key ebib-entry-mode-map (kbd "C-p") nil)
   (define-key ebib-entry-mode-map (kbd "C-n") nil)
   (add-hook 'ebib-entry-mode-hook #'(lambda ()
-                                     ;; (setq word-wrap t) ;中文支持不好
-                                     (setq truncate-lines t)))
+                                      ;; (setq word-wrap t) ;中文支持不好
+                                      (setq truncate-lines t)))
   (setq ebib-index-columns '(("Note" 1 t)
                              ("collection" 20 t)
                              ("Author/Editor" 20 t)

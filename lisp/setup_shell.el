@@ -9,16 +9,16 @@
   ;; (setq shell-command-switch "-ic")
   :config
   (add-hook 'shell-mode-hook #'(lambda ()
-                                (if (not (file-exists-p "~/.zsh_history"))
-                                    (setq comint-input-ring-file-name "~/.bash_history")
-                                  (setq comint-input-ring-file-name "~/.zsh_history")
-                                  (setq comint-input-ring-separator "\n: \\([0-9]+\\):\\([0-9]+\\);"))
-                                (comint-read-input-ring t)
-                                (add-hook 'shell-mode-hook 'kill-shell-buffer-after-exit t)
-                                ;; 若virtualenvs开启，启动相应虚拟环境，并使用auto-complete补全命令。
-                                (if (bound-and-true-p pyvenv-virtual-env)
-                                    (process-send-string (get-process "shell")
-                                                         (concat "source " pyvenv-virtual-env "bin/activate\n")))))
+                                 (if (not (file-exists-p "~/.zsh_history"))
+                                     (setq comint-input-ring-file-name "~/.bash_history")
+                                   (setq comint-input-ring-file-name "~/.zsh_history")
+                                   (setq comint-input-ring-separator "\n: \\([0-9]+\\):\\([0-9]+\\);"))
+                                 (comint-read-input-ring t)
+                                 (add-hook 'shell-mode-hook 'kill-shell-buffer-after-exit t)
+                                 ;; 若virtualenvs开启，启动相应虚拟环境，并使用auto-complete补全命令。
+                                 (if (bound-and-true-p pyvenv-virtual-env)
+                                     (process-send-string (get-process "shell")
+                                                          (concat "source " pyvenv-virtual-env "bin/activate\n")))))
   (define-key shell-mode-map (kbd "C-q") 'comint-send-eof))
 ;; =====================shell======================
 ;;; eshell
@@ -27,12 +27,12 @@
   :bind ("C-M-1" . eshell)
   :config
   (add-hook 'eshell-mode-hook #'(lambda()
-                                 (setq scroll-margin 0
-                                       eshell-scroll-to-bottom-on-output t
-                                       eshell-scroll-show-maximum-output t)
-                                 (add-to-list 'eshell-output-filter-functions
-                                              'eshell-postoutput-scroll-to-bottom)
-                                 (define-key eshell-mode-map (kbd "M-s") nil))))
+                                  (setq scroll-margin 0
+                                        eshell-scroll-to-bottom-on-output t
+                                        eshell-scroll-show-maximum-output t)
+                                  (add-to-list 'eshell-output-filter-functions
+                                               'eshell-postoutput-scroll-to-bottom)
+                                  (define-key eshell-mode-map (kbd "M-s") nil))))
 ;; =====================eshell=====================
 ;;; eshell-prompt-extras
 ;; ==============eshell-prompt-extras==============

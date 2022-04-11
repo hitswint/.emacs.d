@@ -26,12 +26,12 @@
     :config
     (add-hook 'shell-mode-hook 'pcomplete-shell-setup)
     (add-hook 'auto-complete-mode-hook #'(lambda ()
-                                          (if (eq major-mode 'shell-mode)
-                                              (pcomplete-shell-setup))))
+                                           (if (eq major-mode 'shell-mode)
+                                               (pcomplete-shell-setup))))
     (add-hook 'eshell-mode-hook 'ac-eshell-mode-setup)
     (add-hook 'auto-complete-mode-hook #'(lambda ()
-                                          (if (eq major-mode 'eshell-mode)
-                                              (ac-eshell-mode-setup))))
+                                           (if (eq major-mode 'eshell-mode)
+                                               (ac-eshell-mode-setup))))
     (defun ac-eshell-mode-setup ()
       (add-to-list 'ac-sources 'ac-source-eshell-pcomplete))
     (defvar ac-source-eshell-pcomplete
@@ -91,9 +91,9 @@
   (add-hook 'c++-mode-hook 'ac-c-header-init)
   (add-hook 'c-mode-hook 'ac-c-header-init)
   (add-hook 'auto-complete-mode-hook #'(lambda ()
-                                        (if (memq major-mode '(c++-mode
-                                                               c-mode))
-                                            (ac-c-header-init))))
+                                         (if (memq major-mode '(c++-mode
+                                                                c-mode))
+                                             (ac-c-header-init))))
   (defun ac-c-header-init ()
     (add-to-list 'ac-sources 'ac-source-c-headers)
     (add-to-list 'achead:include-directories '"/usr/include/c++/4.9")
@@ -113,9 +113,9 @@
   (dolist (hook '(c-mode-hook c++-mode-hook))
     (add-hook hook 'ac-cc-mode-setup))
   (add-hook 'auto-complete-mode-hook #'(lambda ()
-                                        (if (memq major-mode '(c++-mode
-                                                               c-mode))
-                                            (ac-cc-mode-setup))))
+                                         (if (memq major-mode '(c++-mode
+                                                                c-mode))
+                                             (ac-cc-mode-setup))))
   (defun ac-cc-mode-setup ()
     (setq ac-sources
           (append '(ac-source-clang
@@ -144,8 +144,8 @@
   :config
   (add-hook 'LaTeX-mode-hook 'ac-auctex-setup)
   (add-hook 'auto-complete-mode-hook #'(lambda ()
-                                        (if (eq major-mode 'latex-mode)
-                                            (ac-auctex-setup)))))
+                                         (if (eq major-mode 'latex-mode)
+                                             (ac-auctex-setup)))))
 ;; ================ac-auctex===================
 ;;; ac-math
 ;; =================ac-math====================
@@ -154,8 +154,8 @@
   :config
   (add-hook 'org-mode-hook 'ac-org-mode-setup)
   (add-hook 'auto-complete-mode-hook #'(lambda ()
-                                        (if (eq major-mode 'org-mode)
-                                            (ac-org-mode-setup))))
+                                         (if (eq major-mode 'org-mode)
+                                             (ac-org-mode-setup))))
   (defun ac-org-mode-setup ()
     (add-to-list 'ac-sources 'ac-source-math-unicode)))
 ;; =================ac-math====================
@@ -167,8 +167,8 @@
   (setq comint-process-echoes nil)
   (add-hook 'shell-mode-hook 'ac-rlc-setup-sources)
   (add-hook 'auto-complete-mode-hook #'(lambda ()
-                                        (if (eq major-mode 'shell-mode)
-                                            (ac-rlc-setup-sources)))))
+                                         (if (eq major-mode 'shell-mode)
+                                             (ac-rlc-setup-sources)))))
 ;; ===================shell====================
 ;;; company
 ;; ================company=====================

@@ -46,79 +46,79 @@
   ;; %^{Description}
   (add-hook 'org-mode-hook
             #'(lambda ()
-               ;; 插入source code时高亮，C-c '打开相应major-mode编辑窗口
-               (setq org-src-fontify-natively t)
-               ;; (setq org-startup-indented t)
-               (setq truncate-lines nil)
-               (setq org-hide-leading-stars t)
-               (setq org-startup-folded 'showeverything)
-               ;; org-mode先于imenu加载时未设置org-imenu-get-tree
-               (setq imenu-create-index-function 'org-imenu-get-tree)
-               (setq org-imenu-depth 8)
-               (setq org-special-ctrl-a/e t)
-               (setq org-special-ctrl-o t)
-               (setq org-special-ctrl-k t)
-               (setq org-capture-bookmark nil)
-               (setq org-file-apps (cl-loop for file-extension-pair in file-extension-app-alist
-                                            collect (cons
-                                                     (concat "\\." (car file-extension-pair) "\\'")
-                                                     (concat (cdr file-extension-pair) " %s"))))
-               (turn-on-font-lock)
-               (iimage-mode 1)
-               ;; 如果有#+ATTR_ORG: :width 100则设置为图片宽度为100，否则显示原尺寸
-               (setq org-image-actual-width nil)
-               ;; org-redisplay-inline-images (C-c C-x C-M-v) 更新图片
-               ;; org-toggle-inline-images (C-c C-x C-v) 开关图片
-               (org-display-inline-images)
-               (setq org-use-speed-commands t)
-               ;; ? org-speed-command-help
-               ;; n/p/f/b/u navigation commands
-               ;; U/D/R/L org-shiftmeta up/down/right/left
-               ;; c org-cycle
-               ;; C org-shifttab
-               ;; @ org-mark-subtree
-               ;; i C-RET
-               ;; w org-refile
-               ;; I/O org-clock-in/out
-               ;; t org-todo
-               ;; ;/0/1/2/3 org-priority/A/B/C
-               ;; v org-agenda
-               ;; : org-set-tags-command
-               (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
-               (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
-               (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
-               (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point)
-               (define-key org-mode-map (kbd "C-c o") #'(lambda () (interactive) (swint-org-open-at-point t)))
-               (define-key org-mode-map (kbd "C-c :") 'swint-qpdfview-annotated-new)
-               (define-key org-mode-map (kbd "C-c M-,") #'(lambda () (interactive) (swint-org-mobile-sync "down")))
-               (define-key org-mode-map (kbd "C-c M-.") #'(lambda () (interactive) (swint-org-mobile-sync "up")))
-               (smartrep-define-key org-mode-map "M-s"
-                 '(("p" . org-previous-visible-heading)
-                   ("n" . org-next-visible-heading)
-                   ("u" . outline-up-heading)
-                   ("b" . org-backward-heading-same-level)
-                   ("f" . org-forward-heading-same-level)))
-               (smartrep-define-key org-mode-map "C-c"
-                 '(("p" . org-previous-item)
-                   ("n" . org-next-item)
-                   ("P" . org-beginning-of-item-list)
-                   ("N" . org-end-of-item-list)))
-               (define-key org-mode-map (kbd "C-a") #'(lambda () (interactive)
-                                                       (if (or (org-at-heading-p) (org-at-item-p))
-                                                           (call-interactively 'org-beginning-of-line)
-                                                         (call-interactively 'smart-beginning-of-line))))
-               (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)
-               (define-key org-mode-map (kbd "C-c l") #'(lambda () (interactive)
-                                                         (insert (swint-cursor-localtion))))
-               (define-key org-mode-map (kbd "C-c w") 'org-clipboard-copy)
-               (define-key org-mode-map (kbd "C-c y") 'org-clipboard-paste)
-               (define-key org-mode-map (kbd "C-j") nil)
-               (define-key org-mode-map (kbd "RET") nil)
-               (define-key org-mode-map [(control \,)] nil)
-               (define-key org-mode-map [(control \.)] nil)
-               (define-key org-mode-map [(control \#)] nil)
-               (define-key org-mode-map [(control tab)] nil)
-               (define-key org-mode-map [(control \')] nil)))
+                ;; 插入source code时高亮，C-c '打开相应major-mode编辑窗口
+                (setq org-src-fontify-natively t)
+                ;; (setq org-startup-indented t)
+                (setq truncate-lines nil)
+                (setq org-hide-leading-stars t)
+                (setq org-startup-folded 'showeverything)
+                ;; org-mode先于imenu加载时未设置org-imenu-get-tree
+                (setq imenu-create-index-function 'org-imenu-get-tree)
+                (setq org-imenu-depth 8)
+                (setq org-special-ctrl-a/e t)
+                (setq org-special-ctrl-o t)
+                (setq org-special-ctrl-k t)
+                (setq org-capture-bookmark nil)
+                (setq org-file-apps (cl-loop for file-extension-pair in file-extension-app-alist
+                                             collect (cons
+                                                      (concat "\\." (car file-extension-pair) "\\'")
+                                                      (concat (cdr file-extension-pair) " %s"))))
+                (turn-on-font-lock)
+                (iimage-mode 1)
+                ;; 如果有#+ATTR_ORG: :width 100则设置为图片宽度为100，否则显示原尺寸
+                (setq org-image-actual-width nil)
+                ;; org-redisplay-inline-images (C-c C-x C-M-v) 更新图片
+                ;; org-toggle-inline-images (C-c C-x C-v) 开关图片
+                (org-display-inline-images)
+                (setq org-use-speed-commands t)
+                ;; ? org-speed-command-help
+                ;; n/p/f/b/u navigation commands
+                ;; U/D/R/L org-shiftmeta up/down/right/left
+                ;; c org-cycle
+                ;; C org-shifttab
+                ;; @ org-mark-subtree
+                ;; i C-RET
+                ;; w org-refile
+                ;; I/O org-clock-in/out
+                ;; t org-todo
+                ;; ;/0/1/2/3 org-priority/A/B/C
+                ;; v org-agenda
+                ;; : org-set-tags-command
+                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
+                (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
+                (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
+                (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point)
+                (define-key org-mode-map (kbd "C-c o") #'(lambda () (interactive) (swint-org-open-at-point t)))
+                (define-key org-mode-map (kbd "C-c :") 'swint-qpdfview-annotated-new)
+                (define-key org-mode-map (kbd "C-c M-,") #'(lambda () (interactive) (swint-org-mobile-sync "down")))
+                (define-key org-mode-map (kbd "C-c M-.") #'(lambda () (interactive) (swint-org-mobile-sync "up")))
+                (smartrep-define-key org-mode-map "M-s"
+                  '(("p" . org-previous-visible-heading)
+                    ("n" . org-next-visible-heading)
+                    ("u" . outline-up-heading)
+                    ("b" . org-backward-heading-same-level)
+                    ("f" . org-forward-heading-same-level)))
+                (smartrep-define-key org-mode-map "C-c"
+                  '(("p" . org-previous-item)
+                    ("n" . org-next-item)
+                    ("P" . org-beginning-of-item-list)
+                    ("N" . org-end-of-item-list)))
+                (define-key org-mode-map (kbd "C-a") #'(lambda () (interactive)
+                                                         (if (or (org-at-heading-p) (org-at-item-p))
+                                                             (call-interactively 'org-beginning-of-line)
+                                                           (call-interactively 'smart-beginning-of-line))))
+                (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)
+                (define-key org-mode-map (kbd "C-c l") #'(lambda () (interactive)
+                                                           (insert (swint-cursor-localtion))))
+                (define-key org-mode-map (kbd "C-c w") 'org-clipboard-copy)
+                (define-key org-mode-map (kbd "C-c y") 'org-clipboard-paste)
+                (define-key org-mode-map (kbd "C-j") nil)
+                (define-key org-mode-map (kbd "RET") nil)
+                (define-key org-mode-map [(control \,)] nil)
+                (define-key org-mode-map [(control \.)] nil)
+                (define-key org-mode-map [(control \#)] nil)
+                (define-key org-mode-map [(control tab)] nil)
+                (define-key org-mode-map [(control \')] nil)))
   ;; ===============Keybindings=================
 ;;;; GTD
   ;; ===================GTD=====================
@@ -131,8 +131,8 @@
   (setq org-agenda-span 'month)
   ;; 设定todo的子项完成后主项自动完成
   (add-hook 'org-after-todo-statistics-hook #'(lambda (n-done n-not-done)
-                                               (let (org-log-done org-log-states)
-                                                 (org-todo (if (= n-not-done 0) "DONE" "TODO")))))
+                                                (let (org-log-done org-log-states)
+                                                  (org-todo (if (= n-not-done 0) "DONE" "TODO")))))
   ;; 设定todo关键词
   (setq org-todo-keywords
         '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")))
@@ -524,10 +524,10 @@
     (let ((map (make-sparse-keymap)))
       (set-keymap-parent map helm-map)
       (define-key map (kbd "C-j") #'(lambda () (interactive)
-                                     (helm-run-after-exit #'(lambda (_candidates)
-                                                              (goto-char (point-min))
-                                                              (search-forward (format "#+NAME: %s" (car _candidates)) nil t))
-                                                          (helm-marked-candidates))))
+                                      (helm-run-after-exit #'(lambda (_candidates)
+                                                               (goto-char (point-min))
+                                                               (search-forward (format "#+NAME: %s" (car _candidates)) nil t))
+                                                           (helm-marked-candidates))))
       map)
     "Keymap for `helm-org-ref-link'.")
   ;; RET 插入并退出 / C-l 连续插入 / C-j 跳转

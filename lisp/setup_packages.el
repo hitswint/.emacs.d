@@ -98,12 +98,6 @@
   (setq expand-region-contract-fast-key ":")
   (setq expand-region-reset-fast-key "C-;"))
 ;; =================expand-region==================
-;;; undo-fu
-;; ===================undo-fu======================
-(def-package! undo-fu
-  :bind (("C-/" . undo-fu-only-undo)
-         ("C-M-/" . undo-fu-only-redo)))
-;; ===================undo-fu======================
 ;;; auto-mark
 ;; ==================auto-mark=====================
 (def-package! auto-mark
@@ -280,11 +274,11 @@
   (setq clean-aindent-is-simple-indent t)
   (define-key global-map (kbd "RET") 'newline-and-indent)
   (define-key clean-aindent-mode--keymap (kbd "M-DEL") #'(lambda ()
-                                                          (interactive)
-                                                          (if (or paredit-mode
-                                                                  paredit-everywhere-mode)
-                                                              (call-interactively 'swint-backward-kill-word)
-                                                            (call-interactively 'clean-aindent--bsunindent)))))
+                                                           (interactive)
+                                                           (if (or paredit-mode
+                                                                   paredit-everywhere-mode)
+                                                               (call-interactively 'swint-backward-kill-word)
+                                                             (call-interactively 'clean-aindent--bsunindent)))))
 ;; RET：自动清除white space，光标停留在前一行indentation处。
 ;; M-DEL：unindent，回到前一行indentation处。
 ;; ===============clean-aindent-mode===============
@@ -296,7 +290,7 @@
 ;;; ztree
 ;; =====================ztree======================
 (def-package! ztree-diff
-  :bind ("M-g z" . ztree-diff))
+  :bind ("M-g =" . ztree-diff))
 ;; =====================ztree======================
 ;;; which-key
 ;; ====================which-key===================
@@ -361,12 +355,6 @@
   (define-key easy-kill-base-map (kbd ".") 'easy-kill-expand))
 ;; M-w ?: help 查看M-w prefix快捷键。
 ;; =====================easy-kill==================
-;;; smex
-;; ======================smex======================
-(def-package! smex
-  :bind (("M-s M-x" . smex)
-         ("M-s M-X" . smex-major-mode-commands)))
-;; ======================smex======================
 ;;; bm
 ;; =======================bm=======================
 (def-package! bm
@@ -384,8 +372,8 @@
   (add-hook 'find-file-hook 'bm-buffer-restore)
   (add-hook 'kill-buffer-hook 'bm-buffer-save)
   (add-hook 'kill-emacs-hook #'(lambda ()
-                                (bm-buffer-save-all)
-                                (bm-repository-save)))
+                                 (bm-buffer-save-all)
+                                 (bm-repository-save)))
   (add-hook 'after-save-hook 'bm-buffer-save)
   (add-hook 'after-revert-hook 'bm-buffer-restore)
   (setq bm-cycle-all-buffers nil)

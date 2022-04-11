@@ -11,9 +11,9 @@
   (def-package! ibuf-ext
     :config
     (add-hook 'ibuffer-mode-hook #'(lambda () (if (not (bound-and-true-p persp-mode))
-                                                 (ibuffer-switch-to-saved-filter-groups "Filename")
-                                               (ibuffer-create-saved-filter-groups-with-persp)
-                                               (ibuffer-switch-to-saved-filter-groups "Persp"))))
+                                                  (ibuffer-switch-to-saved-filter-groups "Filename")
+                                                (ibuffer-create-saved-filter-groups-with-persp)
+                                                (ibuffer-switch-to-saved-filter-groups "Persp"))))
 ;;;; 按persp分组
     (define-ibuffer-filter persp
         "Toggle current view to buffers with file or directory name matching QUALIFIER."
@@ -31,8 +31,8 @@
         (setq ibuffer-saved-filter-groups
               (push itt ibuffer-saved-filter-groups-without-persp))))
     (define-key ibuffer-mode-map (kbd ":") #'(lambda () (interactive)
-                                              (ibuffer-create-saved-filter-groups-with-persp)
-                                              (ibuffer-switch-to-saved-filter-groups "Persp")))
+                                               (ibuffer-create-saved-filter-groups-with-persp)
+                                               (ibuffer-switch-to-saved-filter-groups "Persp")))
 ;;;; 按filename分组
     (define-ibuffer-filter filename
         "Toggle current view to buffers with file or directory name matching QUALIFIER."
@@ -58,7 +58,7 @@
                            (filename . "~/Music")
                            (filename . "~/Pictures")))))
     (define-key ibuffer-mode-map (kbd ";") #'(lambda () (interactive)
-                                              (ibuffer-switch-to-saved-filter-groups "Filename"))))
+                                               (ibuffer-switch-to-saved-filter-groups "Filename"))))
   ;; ======================ibuffer分组===========================
   )
 ;; =========================ibuffer==============================
