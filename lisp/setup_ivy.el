@@ -79,8 +79,11 @@
      ((eq major-mode 'eshell-mode)
       (call-interactively 'counsel-esh-history))
      ((memq major-mode '(inferior-python-mode jupyter-repl-mode))
-      (let ((selected-hist (helm-comp-read "History: " (nreverse (cl-delete-if (lambda (x) (or (null x) (string-match-p "import codecs, os;" x)))
-                                                                               (split-string (python-shell-send-string-no-output "%hist -u -g -l 1000") "\n" t "[ \t\n]+")))
+      (let ((selected-hist (helm-comp-read "History: " (nreverse (cl-delete-if (lambda (x) (or (null x) (or (string-match-p "import codecs, os;" x)
+                                                                                                            (string-match-p "__PYTHON_EL_eval" x))))
+                                                                               (split-string (python-shell-send-string-no-output
+                                                                                              "get_ipython().run_line_magic(\"hist\", \"-u -g -l 1000\")")
+                                                                                             "\n" t "[ \t\n]+")))
                                            :buffer "*helm python history-swint*")))
         (insert (replace-regexp-in-string "^[0-9]*/*[0-9]+: " "" selected-hist))))
      (t (call-interactively 'swint-counsel-sh-history))))

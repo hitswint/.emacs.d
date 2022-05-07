@@ -130,7 +130,8 @@ names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', 
     (cl-assert (minibuffer-window-active-p (selected-window)) nil
                "Error: Attempt to use minibuffer history outside a minibuffer")
     (let ((enable-recursive-minibuffers t)
-          (elm (mapconcat 'identity (helm-comp-read "Variables: " (split-string (python-shell-send-string-no-output "%who")
+          (elm (mapconcat 'identity (helm-comp-read "Variables: " (split-string (python-shell-send-string-no-output
+                                                                                 "get_ipython().run_line_magic(\"who\", \"\")")
                                                                                 "[ \t]+" t "[ \t\n]+")
                                                     :marked-candidates t
                                                     :buffer "*helm python plot data-swint*")
@@ -140,7 +141,9 @@ names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', 
     (interactive)
     (cl-assert (minibuffer-window-active-p (selected-window)) nil
                "Error: Attempt to use minibuffer history outside a minibuffer")
-    (let ((df-list (split-string (python-shell-send-string-no-output "%who") "[ \t]+" t "[ \t\n]+")))
+    (let ((df-list (split-string (python-shell-send-string-no-output
+                                  "get_ipython().run_line_magic(\"who\", \"\")")
+                                 "[ \t]+" t "[ \t\n]+")))
       (cl-flet ((df-read (&optional is-x-p)
                          (let ((df-list (helm-comp-read (if is-x-p "x: " "y: ") (if is-x-p (cons "None" df-list) df-list)
                                                         :marked-candidates t

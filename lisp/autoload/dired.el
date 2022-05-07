@@ -276,7 +276,7 @@
                                                            " ")))
                     (output-file (cl-loop for x in file-list-ordered
                                           for y in page-args
-                                          concat (concat (s-left 10 (file-name-base (file-name-nondirectory x))) ":" y ";"))))
+                                          concat (concat (s-left 10 (file-name-base (file-name-nondirectory x))) ":" y "+"))))
                (shell-command (concat "pdftk " (mapconcat 'identity file-args " ") " cat " (mapconcat 'identity page-args " ") " output \""
                                       ;; 输出文件可能过长，Linux中文件名最长允许255个字符(Byte)，UTF-8编码中每个汉字为3个字符
                                       (if (> (string-bytes output-file) 250)

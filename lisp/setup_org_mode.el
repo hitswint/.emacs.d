@@ -4,6 +4,23 @@
   :mode ("\\.[oO][rR][gG]\\'" . org-mode)
   :config
   (setq org-modules nil)                ;随org启动的ol模块
+  (defvar org-outline-cmd-list '(org-previous-visible-heading
+                                 org-next-visible-heading
+                                 org-backward-heading-same-level
+                                 org-forward-heading-same-level
+                                 org-previous-item
+                                 org-next-item
+                                 org-beginning-of-item-list
+                                 org-end-of-item-list
+                                 outline-previous-visible-heading
+                                 outline-next-visible-heading
+                                 outline-backward-same-level
+                                 outline-forward-same-level))
+  (dolist (cmd org-outline-cmd-list)
+    (lexical-let ((cmd cmd))
+      (advice-add cmd :before #'(lambda (&rest arg)
+                                  (and (eq this-command cmd)
+                                       (or (member last-command org-outline-cmd-list) (push-mark)))))))
 ;;;; Appearance
   ;; =================Appearance================
   (set-face-attribute 'org-level-5 nil :weight 'normal :foreground "cyan" :height 1.0)
