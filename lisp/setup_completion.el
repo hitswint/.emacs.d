@@ -289,33 +289,6 @@
         (setq he-expand-list (cdr he-expand-list))
         t))))
 ;; ==============hippie-expand=================
-;;; ycmd
-;; ===================ycmd=====================
-(def-package! ycmd
-  :bind ("M-g y" . swint-toggle-ycmd)
-  :init
-  (setq ycmd-keymap-prefix (kbd "M-g M-y"))
-  :config
-  (set-variable 'ycmd-server-command `("python2" ,(expand-file-name "repos/ycmd/ycmd" user-emacs-directory)))
-  (set-variable 'ycmd-global-config (expand-file-name "repos/ycmd/examples/.ycm_extra_conf.py" user-emacs-directory))
-  (defun swint-toggle-ycmd ()
-    (interactive)
-    (ycmd-mode 'toggle)
-    (set (make-local-variable 'company-backends)
-         (if (member 'company-ycmd company-backends)
-             (delq 'company-ycmd (cl-remove-duplicates (mapcar #'identity company-backends)))
-           (cons 'company-ycmd (cl-remove-duplicates (mapcar #'identity company-backends))))))
-  (def-package! company-ycmd
-    :commands company-ycmd
-    :init
-    (setq ycmd-min-num-chars-for-completion 1))
-  (def-package! ycmd-eldoc
-    :config
-    (add-hook 'ycmd-mode-hook 'ycmd-eldoc-mode))
-  (def-package! flycheck-ycmd
-    :config
-    (flycheck-ycmd-setup)))
-;; ===================ycmd=====================
 ;;; yasnippet
 ;; =================yasnippet==================
 (def-package! yasnippet

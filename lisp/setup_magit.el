@@ -30,7 +30,7 @@
       (magit-with-refresh
        (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
   (define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend)
-;;; 初始化远程库和克隆远程库
+;;;; 初始化远程库和克隆远程库
   ;; ===========初始化远程库和克隆远程库===========
   ;; cygwin中使用git remote add/git clone的路径为file:///cygdrive/c/*。
   (defun swint-magit-clone-nutstore ()
@@ -52,7 +52,7 @@
       (magit-remote-add (read-string "Remote name: " "origin")
                         (read-string "Remote url: " remote-repo))))
   ;; ===========初始化远程库和克隆远程库===========
-;;; 使用git管理doc文件
+;;;; 使用git管理doc文件
   ;; =============使用git管理doc文件===============
   (defun swint-magit-diff-doc ()
     (interactive)

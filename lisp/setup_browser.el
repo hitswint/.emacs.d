@@ -104,4 +104,4 @@
           :truncate-lines t
           :buffer "*Helm Firefox History*")))
 ;; ===============helm-firefox================
-(provide 'setup_w3m)
+(provide 'setup_browser)

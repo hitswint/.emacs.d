@@ -467,50 +467,6 @@
   (define-key org-noter-notes-mode-map (kbd "C-M-o") 'org-noter-sync-current-note)
   (define-key org-noter-notes-mode-map (kbd "C-M-n") 'org-noter-sync-next-note))
 ;; =================org-noter===================
-;;; org-protocol-capture-html
-;; =========org-protocol-capture-html===========
-(def-package! org-protocol-capture-html
-  :load-path "site-lisp/org-protocol-capture-html/"
-  :disabled
-  :config
-  (add-to-list 'org-capture-templates
-               '("h" "Html" entry (file+olp "~/Nutstore-sync/orgzly/orgzly.org" "Html")
-                 "* %c %U\n%?\n%:initial"))
-  ;; Removed useless HTML elements.
-  (defun org-protocol-capture-html--with-pandoc (data)
-    (unless org-protocol-capture-html-pandoc-no-wrap-option
-      (org-protocol-capture-html--define-pandoc-wrap-const))
-    (let* ((template (or (plist-get data :template)
-                         org-protocol-default-template-key))
-           (url (org-protocol-sanitize-uri (plist-get data :url)))
-           (type (if (string-match "^\\([a-z]+\\):" url)
-                     (match-string 1 url)))
-           (title (or (org-protocol-capture-html--nbsp-to-space (string-trim (plist-get data :title))) ""))
-           (content (or (org-protocol-capture-html--nbsp-to-space (string-trim (plist-get data :body))) ""))
-           (orglink (org-link-make-string
-                     url (if (string-match "[^[:space:]]" title) title url)))
-           (org-capture-link-is-already-stored t)) ; avoid call to org-store-link
-      (setq org-stored-links
-            (cons (list url title) org-stored-links))
-      (kill-new orglink)
-      (with-temp-buffer
-        (insert content)
-        (if (not (zerop (call-process-region
-                         (point-min) (point-max)
-                         ;; Change "html" to "html-native_divs".
-                         "pandoc" t t nil "-f" "html-native_divs" "-t" "org" org-protocol-capture-html-pandoc-no-wrap-option)))
-            (message "Pandoc failed: %s" (buffer-string))
-          (progn
-            ;; Pandoc succeeded
-            (org-link-store-props :type type
-                                  :annotation orglink
-                                  :link url
-                                  :description title
-                                  :orglink orglink
-                                  :initial (buffer-string)))))
-      (org-protocol-capture-html--do-capture)
-      nil)))
-;; =========org-protocol-capture-html===========
 ;;; org-ref
 ;; ==================org-ref====================
 (def-package! org-ref-core
@@ -874,4 +830,4 @@ contextual information."
   ;; locale影响本地化日期等，默认使用en-US，可下载其他：https://github.com/citation-style-language/locales
   (setq org-cite-csl-locales-dir nil))
 ;; ====================oc=======================
-(provide 'setup_org_mode)
+(provide 'setup_org)

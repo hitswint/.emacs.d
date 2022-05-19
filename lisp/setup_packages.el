@@ -451,16 +451,6 @@
     (proced-toggle-auto-update 1))
   (add-hook 'proced-mode-hook 'proced-settings))
 ;; =====================Proced=====================
-;;; bbyac
-;; =====================bbyac======================
-(def-package! bbyac
-  :diminish bbyac-mode
-  :bind (("M-g M-u" . bbyac-expand-substring)
-         ("M-g M-U" . bbyac-expand-symbols))
-  :config
-  ;; (bbyac-global-mode 1)
-  (setq browse-kill-ring-display-style 'one-line))
-;; =====================bbyac======================
 ;;; vimish-fold
 ;; ==================vimish-fold===================
 (def-package! vimish-fold
@@ -658,8 +648,7 @@
 ;; =====================sudo=======================
 (def-package! sudo-edit
   ;; 需新建~/.ssh/sockets文件夹。
-  :commands (sudo-edit
-             sudo-dired)
+  :commands (sudo-edit sudo-dired)
   :config
   ;; M(dired-do-chmod)改变权限；O(dired-do-chown)改变owner；G(dired-do-chgrp)改变group。
   (defun sudo-dired ()
@@ -747,22 +736,6 @@
         reftex-toc-split-windows-horizontally t
         reftex-toc-split-windows-fraction 0.2))
 ;; =====================reftex=====================
-;;; eaf
-;; ======================eaf=======================
-(def-package! eaf
-  :load-path "site-lisp/emacs-application-framework/"
-  :commands eaf-open
-  :bind (:map dired-mode-map
-              ("E" . eaf-open-this-from-dired))
-  :custom
-  (eaf-grip-token "2b9cd942f6960d763364607f258f45196b55c660")
-  :config
-  (advice-add 'eaf-open :before #'(lambda (url &optional app-name arguments open-always)
-                                    (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
-                                      (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))))
-  (add-hook 'eaf-mode-hook (lambda ()
-                             (set (make-local-variable 'ring-bell-function) 'ignore))))
-;; ======================eaf=======================
 ;;; annot
 ;; =====================annot======================
 (def-package! annot
@@ -792,26 +765,6 @@
   :config
   (setq insert-translated-name-default-style "origin"))
 ;; ============insert-translated-name==============
-;;; awesome-tab
-;; =================awesome-tab====================
-(def-package! awesome-tab
-  :load-path "site-lisp/awesome-tab/"
-  :commands awesome-tab-mode
-  :config
-  ;; (awesome-tab-mode t)
-  (setq awesome-tab-cycle-scope 'tabs)
-  (setq awesome-tab-common-group-name "i")
-  (setq awesome-tab-buffer-groups-function 'swint-awesome-tab-buffer-groups)
-  (defun swint-awesome-tab-buffer-groups ()
-    (list
-     (cond
-      ((bound-and-true-p persp-mode)
-       (cl-loop for key in (nreverse (cons  "i" (nreverse (delete "i" (persp-names)))))
-                until (member (current-buffer)
-                              (persp-buffers (gethash key (perspectives-hash))))
-                finally return key))
-      (t "i")))))
-;; =================awesome-tab====================
 ;;; idf-mode
 ;; ==================idf-mode======================
 (def-package! idf-mode

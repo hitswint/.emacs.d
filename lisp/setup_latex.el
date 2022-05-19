@@ -66,25 +66,6 @@
   (auctex-latexmk-setup)
   (advice-add 'TeX-engine-set :after #'(lambda (type) (auctex-latexmk-setup))))
 ;; =================auctex-latexmk=================
-;;; latex-preview-pane
-;; ==============latex-preview-pane================
-(def-package! latex-preview-pane
-  :commands latex-preview-pane-mode
-  :config
-  ;; latex-preview-pane-enable绑定latex-mode-hook，无效。
-  ;; (add-hook 'TeX-mode-hook (lambda () (latex-preview-pane-mode 1)))
-  (define-key latex-preview-pane-mode-map (kbd "M-p") nil)
-  (define-key latex-preview-pane-mode-map (kbd "M-P") nil)
-  (setq pdf-latex-command "xelatex")
-  ;; 使auctex编译支持synctex。
-  (setq TeX-source-correlate-mode t)
-  (setq TeX-source-correlate-method 'synctex)
-  ;; 使latex-preview-pane编译支持synctex。
-  (setq shell-escape-mode "--synctex=1"))
-;; 原函数使用call-process同步编译，会导致hang。
-;; 改用start-process异步编译会造成auto-revert-buffers错误。
-;; 因为异步编译时，pdf-view仍然在更新，显示pdf文件被损坏。
-;; ==============latex-preview-pane================
 ;;; magic-latex-buffer
 ;; ==============magic-latex-buffer================
 (def-package! magic-latex-buffer

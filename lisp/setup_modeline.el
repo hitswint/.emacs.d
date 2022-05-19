@@ -55,4 +55,4 @@
   (nyan-mode t)
   (setq nyan-bar-length 16))
 ;; ===================nyan-mode====================
-(provide 'setup_mode_line)
+(provide 'setup_modeline)

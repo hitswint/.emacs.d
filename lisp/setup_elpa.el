@@ -44,7 +44,6 @@
                            avy-zap
                            backup-walker
                            baidu-translate
-                           bbyac
                            bibtex-completion
                            bind-key
                            bing-dict
@@ -58,7 +57,6 @@
                            company-quickhelp
                            company-try-hard
                            company-web
-                           company-ycmd
                            counsel
                            dash
                            diff-hl
@@ -90,7 +88,6 @@
                            flycheck
                            arduino-mode
                            flycheck-pos-tip
-                           flycheck-ycmd
                            function-args
                            git-commit
                            git-timemachine
@@ -129,7 +126,6 @@
                            jupyter
                            key-chord
                            lacarte
-                           latex-preview-pane
                            let-alist
                            magic-latex-buffer
                            magit
@@ -203,7 +199,6 @@
                            yaml-mode
                            yasnippet
                            yasnippet-snippets
-                           ycmd
                            youdao-dictionary
                            ztree)
   "A list of packages to ensure are installed at launch.")

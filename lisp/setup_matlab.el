@@ -47,4 +47,4 @@
                 (define-key matlab-shell-mode-map (kbd "<C-tab>") nil)
                 (define-key matlab-shell-mode-map (kbd "C-c <C-tab>") 'matlab-shell-c-tab))))
 ;; ======================matlab====================
-(provide 'setup_octave_matlab)
+(provide 'setup_matlab)
