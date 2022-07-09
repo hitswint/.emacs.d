@@ -498,9 +498,12 @@
 ;; =============dired-subtree==================
 (use-package dired-subtree
   :bind (:map dired-mode-map
-              ("TAB" . dired-subtree-cycle)
-              ("<backtab>" . dired-subtree-remove))
+              ("TAB" . dired-subtree-cycle))
   :config
+  (define-key dired-mode-map (kbd "<backtab>") #'(lambda () (interactive) (if (dired-subtree--is-expanded-p)
+                                                                              (dired-subtree-toggle)
+                                                                            (dired-subtree-remove))))
+  ;; C-M-p/n/u/d
   (cl-loop for (key . value) in '((dired-prev-subdir . dired-subtree-previous-sibling)
                                   (dired-next-subdir . dired-subtree-next-sibling)
                                   (dired-tree-up . dired-subtree-up)

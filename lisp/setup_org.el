@@ -312,17 +312,7 @@
       ("u" . outline-up-heading)
       ("b" . outline-backward-same-level)
       ("f" . outline-forward-same-level)))
-  (define-key outline-minor-mode-map (kbd "<M-S-return>") 'outline-insert-heading)
-  (define-key outline-minor-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
   (define-key outline-minor-mode-map (kbd "C-M-i") nil)
-  (add-hook 'outline-insert-heading-hook (lambda ()
-                                           (if (string-equal "" head)
-                                               (progn (call-interactively 'comment-dwim)
-                                                      (insert "* "))
-                                             (when (memq major-mode '(c++-mode
-                                                                      c-mode
-                                                                      arduino-mode))
-                                               (save-excursion (insert " */"))))))
   (add-hook 'TeX-mode-hook
             (lambda ()
               (define-key outline-minor-mode-map (kbd "\C-i") '(menu-item "maybe-latex/hide-show" nil :filter
@@ -372,7 +362,14 @@
   ;; Heading格式随mode不同，通常是M-;加*加空格
   (setq outshine-use-speed-commands t)
   (setq outshine-imenu-show-headlines-p nil)
-  (define-key outshine-mode-map (kbd "M-TAB") nil))
+  (add-hook 'outline-insert-heading-hook (lambda () (if (string-equal "" head)
+                                                        (progn (call-interactively 'comment-dwim)
+                                                               (insert "* "))
+                                                      (when (memq major-mode '(c-mode arduino-mode))
+                                                        (insert "/* * ")))))
+  (define-key outshine-mode-map (kbd "<M-S-return>") 'outshine-insert-heading)
+  (define-key outshine-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
+  (define-key outshine-mode-map (kbd "C-M-i") nil))
 (def-package! outorg
   ;; M-O # current heading.
   ;; C-u M-O # current buffer.

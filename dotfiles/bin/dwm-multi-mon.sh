@@ -27,8 +27,8 @@ echo "Secondary display device: $SECONDARY"
 
 if [ "$dmode" == "disconnected" ]; then
     xrandr --auto
-elif [ "$dmode" == "connected" ];then
-    if [ "$MODE" == "single" ];then
+elif [ "$dmode" == "connected" ]; then
+    if [ "$MODE" == "single" ]; then
         xrandr --output $SECONDARY --auto --left-of $PRIMARY
         xrandr --output $PRIMARY --off
         # xrandr  --output $PRIMARY --auto

@@ -16,7 +16,7 @@ Emacs_style='^.*(emacs@|Microsoft Word).*$'
 copyq toggle                    # 会立刻返回，无法等待后续选择
 while [ $(copyq visible) == "true" ] ; do sleep 0.2; done
 
-if [[ $xwin_title =~ $Emacs_style  ]];then
+if [[ $xwin_title =~ $Emacs_style  ]]; then
     xdotool keyup ctrl+y
     xdotool key --clearmodifiers ctrl+y
 else

@@ -321,7 +321,7 @@
 ;;; auto-yasnippet
 ;; ===============auto-yasnippet===============
 (def-package! auto-yasnippet
-  :bind (("M-g i" . aya-create)
-         ("M-g M-i" . aya-expand)))
+  :bind (("M-g M-i" . aya-expand)
+         ("M-g M-I" . aya-create)))
 ;; ===============auto-yasnippet===============
 (provide 'setup_completion)

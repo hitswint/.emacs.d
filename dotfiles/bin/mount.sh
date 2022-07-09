@@ -17,7 +17,7 @@ if [[ $remote == "local" ]]; then
         cd /media/iso
         $SHELL
     fi
-elif [[ $remote != "" ]];then
+elif [[ $remote != "" ]]; then
     target=/mnt/sshfs/$remote
     mkdir -p $target
     # mount默认: rw/suid/dev/exec/auto/nouser/async/relatime

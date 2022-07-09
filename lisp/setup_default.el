@@ -133,6 +133,8 @@
 (global-set-key (kbd "M-g <") #'(lambda () (interactive) (swint-bypy-sync)))
 (global-set-key (kbd "M-g >") #'(lambda () (interactive) (swint-bypy-sync t)))
 (global-set-key (kbd "M-g M-?") 'swint-unison-sync-backups)
+(global-set-key (kbd "M-g i d") 'insert-date)
+(global-set-key (kbd "M-g i t") 'insert-time)
 (global-set-key (kbd "C-M-q") 'swint-undo-kill-buffer)
 (global-set-key (kbd "C-/") 'undo)
 (global-set-key (kbd "C-M-/") 'undo-redo)

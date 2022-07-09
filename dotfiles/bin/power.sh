@@ -40,7 +40,7 @@ if [[ -t 0 ]]; then
             esac
         fi
     else
-        ssh rpi "~/bin/wol.sh"
+        ssh N5095 "~/bin/wol.sh"
     fi
 else
     COMMANDS="Poweroff system\nReboot system\nSuspend system\nHibernate system"
@@ -65,12 +65,12 @@ else
                 ssh $remote "systemctl hibernate"
                 ;;
             WakeOnLan)
-                ssh rpi "~/bin/wol.sh $remote"
+                ssh N5095 "~/bin/wol.sh $remote"
                 ;;
             *)
                 ;;
         esac
     elif [[ (${#power_command} -eq 0) && (${#remote} -gt 0) ]]; then
-        ssh rpi "~/bin/wol.sh $remote"
+        ssh N5095 "~/bin/wol.sh $remote"
     fi
 fi

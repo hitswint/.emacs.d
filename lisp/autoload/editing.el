@@ -364,3 +364,25 @@ if point is at end of line , new-line-and-indent"
 ;;;###autoload
 (defun insert-pair-math-bracket () (interactive) (insert-bracket-pair-with-space "$" "$"))
 ;; ===================parenthesis==================
+;;; insert
+;; ======================insert====================
+(defun insert-date (prefix)
+  "Insert the current date. With prefix-argument, use ISO format. With
+   two prefix arguments, write out the day and month name."
+  (interactive "P")
+  (let ((format (cond
+                 ((not prefix) "%Y%m%d")
+                 ((equal prefix '(4)) "%Y-%m-%d")
+                 ((equal prefix '(16)) "%x")))
+        ;; 可设置为"zh_CN.UTF-8"，输入中文格式
+        (system-time-locale "zh_CN.UTF-8"))
+    (insert (format-time-string format))))
+(defun insert-time (prefix)
+  (interactive "P")
+  (let ((format (cond
+                 ((not prefix) "%H:%M:%S")
+                 ((equal prefix '(4)) "%Y-%m-%d %H:%M:%S")
+                 ((equal prefix '(16)) "%c")))
+        (system-time-locale "zh_CN.UTF-8"))
+    (insert (format-time-string format))))
+;; ======================insert====================

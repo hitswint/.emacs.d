@@ -15,7 +15,7 @@ Emacs_style='^.*(emacs@|Microsoft Word).*$'
 # exit_hook()
 # {
 #     wmctrl -ia $xwin_id
-#     if [[ $xwin_title =~ $Emacs_style  ]];then
+#     if [[ $xwin_title =~ $Emacs_style  ]]; then
 #         xdotool keyup ctrl+y
 #         xdotool key --clearmodifiers ctrl+y
 #     else
@@ -31,7 +31,7 @@ emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(let (helm-quit-
 
 wmctrl -ia $xwin_id
 
-if [[ $xwin_title =~ $Emacs_style  ]];then
+if [[ $xwin_title =~ $Emacs_style  ]]; then
     xdotool keyup ctrl+y
     xdotool key --clearmodifiers ctrl+y
 else
