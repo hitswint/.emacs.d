@@ -1,15 +1,15 @@
 #!/bin/bash
 
-server=Nas
+server=N5095
 login=$(gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==server {print $6}' server="$server")
 port=$(gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==server {print $4}' server="$server")
-orig=/mnt/KIOXIA
-dest=/mnt/TOSHIBA-3000/share/${HOSTNAME}_backup
+orig=$HOME
+dest=/mnt/TOSHIBA/share/${HOSTNAME}_backup
 
-ping -c 1 192.168.1.105 &>/dev/null
+ping -c 1 192.168.1.101 &>/dev/null
 
 if [ $? -eq 0 ]; then
-    state=$(ssh Nas "sudo -S hdparm -C /dev/sdc" | awk 'END{print $NF}')
+    state=$(ssh $server "sudo -S hdparm -C /dev/sda" | awk 'END{print $NF}')
     if [ "$state" == "active/idle" ]; then
         echo "$state"
         # $HOME/git-repo/rsync-time-backup/rsync_tmbackup.sh --rsync-get-flags # 默认包含--compress选项。

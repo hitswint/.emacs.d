@@ -12,8 +12,8 @@
                          ;; ("marmalade" . "http://marmalade-repo.org/packages/")
                          ))
 ;;;;; emacs-china
-;; (setq package-archives '(("melpa" . "http://1.15.88.122/melpa/")
-;;                          ("gnu" . "http://1.15.88.122/gnu/")
+;; (setq package-archives '(("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+;;                          ("gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
 ;;                          ("cselpa" . "https://elpa.thecybershadow.net/packages/")))
 ;; Optimization, no need to activate all the packages so early.
 (setq package-enable-at-startup nil

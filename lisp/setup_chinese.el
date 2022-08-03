@@ -18,8 +18,7 @@
 ;;; pyim
 ;; ==================pyim==================
 (def-package! pyim
-  :commands (pyim-cwords-at-point
-             pyim-string-match-p
+  :commands (pyim-string-match-p
              pyim-hanzi2pinyin-capitalize)
   :bind (("C-x SPC" . pyim-convert-string-at-point)
          ("C-x S-SPC" . pyim-punctuation-translate-at-point))
@@ -58,6 +57,8 @@
   (def-package! pyim-basedict
     :config
     (pyim-basedict-enable)))
+(def-package! pyim-cstring-utils
+  :commands pyim-cstring-words-at-point)
 ;; ==================pyim==================
 ;;; pinyinlib
 ;; ===============pinyinlib================
