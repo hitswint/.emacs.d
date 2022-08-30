@@ -62,26 +62,23 @@
 ;;; ac-ispell
 ;; ==================ac-ispell=================
 (def-package! ac-ispell
-  :bind ("M-U" . swint-auto-complete-ispell)
+  :commands swint-auto-complete-ispell
   :config
   (bind-key "M-U" 'hippie-expand ac-completing-map)
   ;; 使用ac-source-dictionary补全单词。
   ;; (add-to-list 'ac-dictionary-files "~/.english-words")
   (ac-ispell-setup)
-  (defun swint-auto-complete-ispell (&optional arg)
+  (defun swint-auto-complete-ispell ()
     (interactive)
-    (ignore-errors (company-abort))
     (require 'auto-complete)
     (unless auto-complete-mode
       (auto-complete-mode t))
-    (cond
-     ((equal last-command 'hippie-expand)
-      (he-reset-string)
-      (hippie-expand arg))
-     ((equal last-command 'swint-auto-complete-ispell)
-      (hippie-expand arg))
-     (t (auto-complete '(ac-source-ispell-fuzzy
-                         ac-source-ispell))))))
+    (if (equal company-backend 'company-english-helper-search)
+        (progn (ignore-errors (company-abort))
+               (auto-complete '(ac-source-ispell-fuzzy
+                                ac-source-ispell)))
+      (ignore-errors (company-abort))
+      (call-interactively 'company-english-helper-search))))
 ;; ==================ac-ispell=================
 ;;; auto-complete-c-headers
 ;; =========auto-complete-c-headers============
@@ -189,6 +186,7 @@
     (define-key company-active-map (read-kbd-macro (format "C-%d" i)) 'company-complete-number)
     (define-key company-search-map (read-kbd-macro (format "C-%d" i)) 'company-complete-number))
   (setq company-backends (delete 'company-semantic company-backends))
+  (bind-key "M-U" 'swint-auto-complete-ispell company-active-map)
   ;; To complete for projects, you need to tell Clang your include paths.
   ;; Create a file named .dir-locals.el at your project root:
   ;; ((nil . ((company-clang-arguments . ("-I/home/<user>/project_root/include1/"
@@ -240,12 +238,17 @@
 ;; ==========company-english-helper============
 (def-package! company-english-helper
   :load-path "site-lisp/company-english-helper/"
-  :bind ("M-s M-u" . swint-company-english-helper-search)
+  :bind ("M-U" . swint-company-english-helper-search)
   :config
-  (defun swint-company-english-helper-search ()
+  (defun swint-company-english-helper-search (&optional arg)
     (interactive)
-    (ignore-errors (company-abort))
-    (call-interactively 'company-english-helper-search)))
+    (cond
+     ((equal last-command 'hippie-expand)
+      (he-reset-string)
+      (hippie-expand arg))
+     ((equal last-command 'swint-company-english-helper-search)
+      (hippie-expand arg))
+     (t (call-interactively 'company-english-helper-search)))))
 ;; ==========company-english-helper============
 ;;; hippie-expand
 ;; ==============hippie-expand=================

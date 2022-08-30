@@ -54,6 +54,9 @@
   (setq async-shell-command-buffer 'new-buffer)
   (setq async-shell-command-display-buffer nil)
   (setq dired-guess-shell-alist-user ;dired-do(async)-shell-command(!/&)的默认命令
+        ;; 若命令行中有 * ，则只执行一次，使用 * 替代所有文件名。使用*""输入*本义
+        ;; 若命令行中有 ? 或`?`，则分别对每个文件执行一次，使用 ? 替代每个文件名
+        ;; 若命令行中无上述字符，则只对当前文件执行，自动在末尾加文件名
         (list
          (list "\\.pdf$" "adobe.sh * >/dev/null 2>&1 &")
          (list "\\.doc$" "word.sh * >/dev/null 2>&1 &")

@@ -109,6 +109,7 @@
 (global-set-key (kbd "M-s M-d") 'swint-sdcv-to-tip)
 (global-set-key (kbd "M-s M-D") 'swint-sdcv-to-buffer)
 (global-set-key (kbd "M-s D") 'swint-online-to-buffer)
+(global-set-key (kbd "M-s O") 'occur)
 (global-set-key (kbd "C-s-<return>") 'urxvt-default-directory)
 (global-set-key (kbd "C-s-e") 'tc-open-default-directory)
 (global-set-key (kbd "C-S-s") 'swint-pinyin-search-forward)
