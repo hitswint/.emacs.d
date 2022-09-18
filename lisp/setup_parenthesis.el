@@ -142,7 +142,7 @@
   (add-hook 'wrap-region-before-wrap-hook 'wrap-region-add-space)
   (defun wrap-region-add-space ()
     "Add space around punctuations."
-    (when (member left '("*" "~" "/" "=" "+" "_" "$"))
+    (when (member left '("*" "~" "/" "=" "+" "_" "$" "!!" "@@" "%%" "&&"))
       (unless (or (char-equal (char-before (region-beginning)) 32)  ;空格
                   (char-equal (char-before (region-beginning)) 10)) ;回车
         (setq left (concat " " left)))
@@ -156,7 +156,11 @@
      ("=" "=" nil org-mode)
      ("+" "+" nil org-mode)
      ("_" "_" nil org-mode)
-     ("$" "$" nil (org-mode latex-mode)))))
+     ("$" "$" nil (org-mode latex-mode))
+     ("!!" "!!" "!" org-mode)
+     ("@@" "@@" "@" org-mode)
+     ("%%" "%%" "%" org-mode)
+     ("&&" "&&" "&" org-mode))))
 ;; ================wrap-region==================
 ;;; rainbow-delimiters
 ;; ==============rainbow-delimiters=============

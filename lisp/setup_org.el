@@ -551,7 +551,7 @@
         org-brain-headline-entry-name-format-string "%s:%s"
         org-brain-default-file-parent nil
         org-brain-completion-system 'helm)
-  ;; 使用~/.emacs.d/.org-id-locations保存条目id
+  ;; 使用org-id-locations-file(~/.emacs.d/.org-id-locations)保存条目id
   (advice-add 'org-brain-visualize-quit :after #'(lambda () (kill-buffer "*org-brain*")
                                                    (cl-loop for b in (buffer-list)
                                                             do (--if-let (buffer-file-name b)
@@ -827,4 +827,69 @@ contextual information."
   ;; locale影响本地化日期等，默认使用en-US，可下载其他：https://github.com/citation-style-language/locales
   (setq org-cite-csl-locales-dir nil))
 ;; ====================oc=======================
+;;; org-extra-emphasis
+;; ============org-extra-emphasis===============
+(def-package! org-extra-emphasis
+  :load-path "site-lisp/org-extra-emphasis/"
+  :after org
+  :config
+  (bind-key "M-O '" 'helm-insert-org-extra-emphasis org-mode-map)
+  (remove-hook 'org-mode-hook 'org-extra-emphasis-intraword-emphasis-mode)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (derived-mode-p 'org-mode)
+        (org-extra-emphasis-intraword-emphasis-mode -1))))
+  (custom-set-faces
+   '(org-extra-emphasis-01 ((t (:foreground "red" :underline t :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-02 ((t (:foreground "orange" :underline t :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-03 ((t (:foreground "yellow" :underline t :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-04 ((t (:foreground "green" :underline t :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-05 ((t (:foreground "cyan" :underline t :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-06 ((t (:foreground "DodgerBlue" :underline t :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-07 ((t (:foreground "magenta" :underline t :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-08 ((t (:foreground "orchid" :underline t :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-09 ((t (:background "DarkOrchid" :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-10 ((t (:background "DarkMagenta" :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-11 ((t (:background "DarkBlue" :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-12 ((t (:background "DarkCyan" :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-13 ((t (:background "DarkGreen" :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-14 ((t (:background "DarkGoldenrod" :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-15 ((t (:background "DarkOrange" :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-16 ((t (:background "DarkRed" :inherit org-extra-emphasis)))))
+  (defvar org-extra-emphasis-faces-alist
+    '(("red" "!!")
+      ("orange" "!@")
+      ("yellow" "!%")
+      ("green" "!&")
+      ("cyan" "@!")
+      ("DodgerBlue" "@@")
+      ("magenta" "@%")
+      ("orchid" "@&")
+      ("DarkOrchid" "%!")
+      ("DarkMagenta" "%@")
+      ("DarkBlue" "%%")
+      ("DarkCyan" "%&")
+      ("DarkGreen" "&!")
+      ("DarkGoldenrod" "&@")
+      ("DarkOrange" "&%")
+      ("DarkRed" "&&")))
+  (defun helm-insert-org-extra-emphasis ()
+    (interactive)
+    (let* ((color-list (cl-loop for emphasis-faces-pair in org-extra-emphasis-faces-alist
+                                collect (car emphasis-faces-pair)))
+           (color (helm-comp-read "Color: " color-list
+                                  :buffer "*helm insert org extra emphasis*"))
+           (wrapper (cadr (assoc color org-extra-emphasis-faces-alist))))
+      (if (region-active-p)
+          (wrap-region-with (concat (unless (or (char-equal (char-before (region-beginning)) 32)
+                                                (char-equal (char-before (region-beginning)) 10))
+                                      " ")
+                                    wrapper)
+                            (concat wrapper
+                                    (unless (or (char-equal (char-after (region-end)) 32)
+                                                (char-equal (char-after (region-end)) 10))
+                                      " ")))
+        (insert-bracket-pair-with-space wrapper wrapper)
+        (backward-char 1)))))
+;; ============org-extra-emphasis===============
 (provide 'setup_org)

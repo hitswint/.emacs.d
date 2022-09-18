@@ -46,7 +46,8 @@
   (add-to-list 'rm-blacklist " OrgTbl")
   (add-to-list 'rm-blacklist " Omit")
   (add-to-list 'rm-blacklist " ElDoc")
-  (add-to-list 'rm-blacklist " Helm"))
+  (add-to-list 'rm-blacklist " Helm")
+  (add-to-list 'rm-blacklist " ZWS"))
 ;; ================smart-mode-line=================
 ;;; nyan-mode
 ;; ===================nyan-mode====================
