@@ -520,11 +520,28 @@
 ;; ==========all-the-icons-dired===============
 (def-package! all-the-icons-dired
   :diminish all-the-icons-dired-mode
-  :commands all-the-icons-dired-mode
+  :commands swint-init-all-the-icons-dired
   :init
-  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+  (if (and (fboundp 'daemonp) (daemonp))
+      (add-hook 'after-make-frame-functions 'swint-init-all-the-icons-dired)
+    (add-hook 'window-setup-hook 'swint-init-all-the-icons-dired))
   :config
   (setq all-the-icons-dired-monochrome nil)
+  (defun swint-init-all-the-icons-dired (&optional frame)
+    (let ((dired-buffer-list (cl-remove-if-not (lambda (x)
+                                                 (equal (buffer-mode x) 'dired-mode))
+                                               (buffer-list))))
+      (if (display-graphic-p frame)
+          (progn (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+                 (dolist (buf dired-buffer-list)
+                   (with-current-buffer buf
+                     (all-the-icons-dired-mode 1)
+                     (revert-buffer))))
+        (progn (remove-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+               (dolist (buf dired-buffer-list)
+                 (with-current-buffer buf
+                   (all-the-icons-dired-mode -1)
+                   (revert-buffer)))))))
   (defun all-the-icons-dired--put-icon/override (pos)
     "Propertize POS with icon."
     (let* ((file (dired-get-filename 'relative 'noerror))
