@@ -519,21 +519,21 @@
 ;;; all-the-icons-dired
 ;; ==========all-the-icons-dired===============
 (def-package! all-the-icons-dired
-  ;; melpa版本过老，对齐有问题
-  :load-path "site-lisp/all-the-icons-dired/"
   :diminish all-the-icons-dired-mode
   :commands all-the-icons-dired-mode
   :init
   (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
   :config
   (setq all-the-icons-dired-monochrome nil)
-  (defun turn-on-all-the-icons-dired-mode ()
-    (if (and (display-graphic-p) (not (featurep 'perspective)))
-        (dolist (buf (cl-remove-if-not (lambda (x)
-                                         (equal (buffer-mode x) 'dired-mode))
-                                       (buffer-list)))
-          (with-current-buffer buf
-            (all-the-icons-dired-mode 1)
-            (revert-buffer))))))
+  (defun all-the-icons-dired--put-icon/override (pos)
+    "Propertize POS with icon."
+    (let* ((file (dired-get-filename 'relative 'noerror))
+           (icon (all-the-icons-dired--icon file)))
+      (put-text-property (1- pos) pos 'display
+                         (if (member file '("." ".."))
+                             "   \t"
+                           (concat " " icon "\t")))))
+  (advice-add 'all-the-icons-dired--put-icon :override #'all-the-icons-dired--put-icon/override)
+  (advice-add 'all-the-icons-dired--setup :before #'(lambda () (setq-local tab-width 1))))
 ;; ==========all-the-icons-dired===============
 (provide 'setup_dired)

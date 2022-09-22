@@ -102,10 +102,3 @@
     (goto-char (point-max))
     (save-buffers-kill-emacs)))
 ;; =============shutdown-emacs-server==============
-;;; swint-init-display-graphic
-;; ==========swint-init-display-graphic============
-;;;###autoload
-(defun swint-init-display-graphic ()
-  (turn-on-all-the-icons-dired-mode)
-  (swint-org-redisplay-inline-images))
-;; ==========swint-init-display-graphic============
