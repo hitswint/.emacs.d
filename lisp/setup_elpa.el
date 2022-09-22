@@ -30,6 +30,7 @@
                            ace-link
                            ace-pinyin
                            aggressive-indent
+                           all-the-icons
                            anzu
                            async
                            auctex
@@ -59,9 +60,9 @@
                            company-web
                            counsel
                            dash
+                           delight
                            diff-hl
                            diminish
-                           dired-details
                            dired-du
                            dired-filetype-face
                            dired-narrow
@@ -233,6 +234,7 @@ Missing packages are installed automatically."
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
+(require 'delight)
 (require 'bind-key)
 (defmacro def-package! (name &rest plist)
   (unless (and (bound-and-true-p byte-compile-current-file)

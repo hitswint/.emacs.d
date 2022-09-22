@@ -834,11 +834,8 @@ contextual information."
   :after org
   :config
   (bind-key "M-O '" 'helm-insert-org-extra-emphasis org-mode-map)
-  (remove-hook 'org-mode-hook 'org-extra-emphasis-intraword-emphasis-mode)
-  (dolist (buf (buffer-list))
-    (with-current-buffer buf
-      (when (derived-mode-p 'org-mode)
-        (org-extra-emphasis-intraword-emphasis-mode -1))))
+  ;; org-extra-emphasis-zws-display-char定义导致加载文件错误，可byte-compile-file解决：
+  ;; File mode specification error: (invalid-read-syntax \N{SPACING UNDERSCORE} 1 0)
   (custom-set-faces
    '(org-extra-emphasis-01 ((t (:foreground "red" :underline t :inherit org-extra-emphasis))))
    '(org-extra-emphasis-02 ((t (:foreground "orange" :underline t :inherit org-extra-emphasis))))
@@ -846,10 +843,10 @@ contextual information."
    '(org-extra-emphasis-04 ((t (:foreground "green" :underline t :inherit org-extra-emphasis))))
    '(org-extra-emphasis-05 ((t (:foreground "cyan" :underline t :inherit org-extra-emphasis))))
    '(org-extra-emphasis-06 ((t (:foreground "DodgerBlue" :underline t :inherit org-extra-emphasis))))
-   '(org-extra-emphasis-07 ((t (:foreground "magenta" :underline t :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-07 ((t (:foreground "SlateBlue" :underline t :inherit org-extra-emphasis))))
    '(org-extra-emphasis-08 ((t (:foreground "orchid" :underline t :inherit org-extra-emphasis))))
    '(org-extra-emphasis-09 ((t (:background "DarkOrchid" :inherit org-extra-emphasis))))
-   '(org-extra-emphasis-10 ((t (:background "DarkMagenta" :inherit org-extra-emphasis))))
+   '(org-extra-emphasis-10 ((t (:background "DarkSlateBlue" :inherit org-extra-emphasis))))
    '(org-extra-emphasis-11 ((t (:background "DarkBlue" :inherit org-extra-emphasis))))
    '(org-extra-emphasis-12 ((t (:background "DarkCyan" :inherit org-extra-emphasis))))
    '(org-extra-emphasis-13 ((t (:background "DarkGreen" :inherit org-extra-emphasis))))
@@ -863,10 +860,10 @@ contextual information."
       ("green" "!&")
       ("cyan" "@!")
       ("DodgerBlue" "@@")
-      ("magenta" "@%")
+      ("SlateBlue" "@%")
       ("orchid" "@&")
       ("DarkOrchid" "%!")
-      ("DarkMagenta" "%@")
+      ("DarkSlateBlue" "%@")
       ("DarkBlue" "%%")
       ("DarkCyan" "%&")
       ("DarkGreen" "&!")

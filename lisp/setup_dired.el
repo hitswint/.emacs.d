@@ -1,19 +1,16 @@
 ;;; dired
 ;; ==================dired=====================
 (def-package! dired
+  :delight "Dired"
   :config
   (def-package! dired-x
     :config
-    (add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
+    (bind-key ")" 'dired-omit-mode dired-mode-map)
+    (add-hook 'dired-mode-hook 'dired-omit-mode)
     (setq dired-omit-verbose nil)
     (setq dired-omit-size-limit nil))
-  (def-package! dired-details
-    :config
-    (dired-details-install)
-    (setq dired-details-hidden-string "")
-    (advice-add 'dired-details-show :after #'(lambda () (dired-hide-details-mode 0)))
-    (advice-add 'dired-details-hide :after #'(lambda () (dired-hide-details-mode 1))))
   (def-package! dired-filetype-face)
+  (add-hook 'dired-mode-hook 'dired-hide-details-mode)
   (setq dired-recursive-copies 'top)
   (setq dired-recursive-deletes 'always)
   (custom-set-faces '(diredp-compressed-file-suffix ((t (:foreground "#7b68ee"))) t)
@@ -366,6 +363,8 @@
   (setq peep-dired-cleanup-eagerly nil)
   (define-key peep-dired-mode-map (kbd "p") 'peep-dired-prev-file)
   (define-key peep-dired-mode-map (kbd "n") 'peep-dired-next-file)
+  (define-key peep-dired-mode-map (kbd "<SPC>") #'(lambda () (interactive)
+                                                    (peep-dired-display-file-other-window)))
   (define-key peep-dired-mode-map (kbd "<backspace>") nil)
   (define-key peep-dired-mode-map (kbd "C-p") nil)
   (define-key peep-dired-mode-map (kbd "C-n") nil)
@@ -457,6 +456,7 @@
   (setq neo-show-hidden-files nil)
   (setq neo-confirm-change-root 'off-p)
   (setq neo-window-fixed-size nil)
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
   (define-key neotree-mode-map "\C-j" 'neotree-shell-command)
   (define-key neotree-mode-map (kbd "b") 'neotree-select-previous-sibling-node)
   (define-key neotree-mode-map (kbd "f") 'neotree-select-next-sibling-node)
@@ -499,7 +499,7 @@
 ;; ================dired-du====================
 ;;; dired-subtree
 ;; =============dired-subtree==================
-(use-package dired-subtree
+(def-package! dired-subtree
   :bind (:map dired-mode-map
               ("TAB" . dired-subtree-cycle))
   :config
@@ -516,4 +516,24 @@
                                                                       (call-interactively value)
                                                                     (apply fn args)))))))
 ;; =============dired-subtree==================
+;;; all-the-icons-dired
+;; ==========all-the-icons-dired===============
+(def-package! all-the-icons-dired
+  ;; melpa版本过老，对齐有问题
+  :load-path "site-lisp/all-the-icons-dired/"
+  :diminish all-the-icons-dired-mode
+  :commands all-the-icons-dired-mode
+  :init
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+  :config
+  (setq all-the-icons-dired-monochrome nil)
+  (defun turn-on-all-the-icons-dired-mode ()
+    (if (and (display-graphic-p) (not (featurep 'perspective)))
+        (dolist (buf (cl-remove-if-not (lambda (x)
+                                         (equal (buffer-mode x) 'dired-mode))
+                                       (buffer-list)))
+          (with-current-buffer buf
+            (all-the-icons-dired-mode 1)
+            (revert-buffer))))))
+;; ==========all-the-icons-dired===============
 (provide 'setup_dired)

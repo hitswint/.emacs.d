@@ -86,7 +86,7 @@
 ;; ================emmet-mode==================
 ;;; restclient
 ;; ================restclient==================
-(use-package restclient
+(def-package! restclient
   ;; C-c C-c 发送请求，C-c C-u 复制curl命令
   :mode (("\\.http\\'" . restclient-mode)))
 ;; ================restclient==================

@@ -37,4 +37,9 @@
               ("C-p" . cycle-mini-previous-completion)
               ("C-n" . cycle-mini-next-completion)))
 ;; ================cycle-mini=================
+;; ==============all-the-icons================
+(def-package! all-the-icons
+  ;; :if (display-graphic-p)
+  :after (all-the-icons-dired neotree))
+;; ==============all-the-icons================
 (provide 'setup_appearance)

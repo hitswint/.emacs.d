@@ -9,7 +9,7 @@
   (setq column-number-mode t)
   (setq-default mode-line-format
                 ;; 去除vc-mode显示，mode-line-modes显示major/minor-mode
-                (delete '(vc-mode vc-mode) mode-line-format))
+                (delete '(vc-mode) mode-line-format))
   (setq sml/col-number-format "%3c"
         sml/directory-truncation-string ""
         sml/line-number-format "%4l"
