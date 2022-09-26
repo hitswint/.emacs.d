@@ -50,7 +50,7 @@
              bibtex-completion-get-entry-for-pdf)
   :config
   (setq bibtex-completion-cite-prompt-for-optional-arguments nil
-        bibtex-completion-additional-search-fields '(keywords)
+        bibtex-completion-additional-search-fields '(keywords timestamp)
         bibtex-completion-pdf-field "file"
         bibtex-completion-bibliography (delete (expand-file-name "~/.bib/Zotero.bib")
                                                (directory-files "~/.bib" t "\\.bib$"))
@@ -66,7 +66,14 @@
                                     "\\)[[:space:]]*[\(\{][[:space:]]*"
                                     parsebib--key-regexp "[[:space:]]*,"))
         (let ((entry-type (match-string 1)))
-          (reverse (bibtex-completion-prepare-entry (parsebib-read-entry entry-type) nil nil)))))))
+          (reverse (bibtex-completion-prepare-entry (parsebib-read-entry entry-type) nil nil))))))
+  (advice-add 'bibtex-completion-candidates :filter-return
+              #'(lambda (candidates)
+                  (if (assoc "timestamp" (car candidates))
+                      (sort candidates
+                            (lambda (a b) (> (float-time (parse-iso8601-time-string (cdr (assoc "timestamp" a))))
+                                             (float-time (parse-iso8601-time-string (cdr (assoc "timestamp" b)))))))
+                    candidates))))
 ;; ==============bibtex-completion=================
 ;;; helm-bibtex
 ;; ==================helm-bibtex===================
