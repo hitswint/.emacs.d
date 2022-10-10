@@ -1,20 +1,19 @@
 ;;; package
 ;; ====================package======================
 (require 'package)
-;;;; 源
-;;;;; 官方源
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ;; ("melpa-stable" . "https://stable.melpa.org/packages/")
-                         ("gnu" . "https://elpa.gnu.org/packages/")
-                         ("cselpa" . "https://elpa.thecybershadow.net/packages/") ;term-keys
-                         ;; ("org" . "https://orgmode.org/elpa/") ;已失效
-                         ;; ("elpa" . "http://tromey.com/elpa/") ;版本过老
-                         ;; ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ))
-;;;;; emacs-china
-;; (setq package-archives '(("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-;;                          ("gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-;;                          ("cselpa" . "https://elpa.thecybershadow.net/packages/")))
+;;;; 官方源
+;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+;;                          ;; ("melpa-stable" . "https://stable.melpa.org/packages/")
+;;                          ("gnu" . "https://elpa.gnu.org/packages/")
+;;                          ("cselpa" . "https://elpa.thecybershadow.net/packages/") ;term-keys
+;;                          ;; ("org" . "https://orgmode.org/elpa/") ;已失效
+;;                          ;; ("elpa" . "http://tromey.com/elpa/") ;版本过老
+;;                          ;; ("marmalade" . "http://marmalade-repo.org/packages/")
+;;                          ))
+;;;; emacs-china
+(setq package-archives '(("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+                         ("gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                         ("cselpa" . "https://elpa.thecybershadow.net/packages/")))
 ;; Optimization, no need to activate all the packages so early.
 (setq package-enable-at-startup nil
       package--init-file-ensured t

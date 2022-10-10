@@ -7,14 +7,14 @@ function widget-percol-rsync-push()
 
     if [[ $remote != "" ]]; then
         # local local_files=$(ls -A | percol --match-method pinyin | tr '\n' '/' | sed 's/[[:space:]]*$//') # 生成/分割字符串：a/b/c
-        local local_files=$(ls -A | sed "s:^:$PWD/:" | percol --match-method pinyin | sed 's/[[:space:]]*$//')
+        local local_files=$(ls -A | sed "1 i .." | sed "s:^:$PWD/:" | percol --match-method pinyin | sed 's/[[:space:]]*$//')
 
         # 若结果中含有双引号，使用fdfind继续选择
         while [[ $local_files =~ ^\".*\"$ ]]; do
             # 移除起止的双引号
             local_files=`sed -e 's/^"//' -e 's/"$//' <<<"$local_files"`
             # fdfind -L . ~/ 列出路径下所有文件
-            local_files=$(cd $local_files && fdfind -L | sed "s:^:$PWD/:" | percol --match-method pinyin | sed 's/[[:space:]]*$//')
+            local_files=$(cd $local_files && fdfind -L | sed "1 i .." | sed "s:^:$PWD/:" | percol --match-method pinyin | sed 's/[[:space:]]*$//')
         done
 
         if [[ $local_files != "" ]]; then

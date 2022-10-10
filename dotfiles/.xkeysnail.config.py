@@ -37,7 +37,7 @@ firefox_dict = {
     # K("C-o"): [K("C-a"), K("C-c"), launch(["gedit"]), sleep(0.5), K("C-v")]
     }
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("Firefox", "Chromium"),
+    lambda wm_class: wm_class and wm_class[-1] in ("firefox", "Chromium"),
     firefox_dict,
     "Firefox and Chromium")
 
@@ -184,7 +184,7 @@ define_keymap(
 
 # * Keybindings for Tab switch
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("Firefox", "Chromium", "qpdfview", "Wps", "Et", "Wpp"),
+    lambda wm_class: wm_class and wm_class[-1] in ("firefox", "Chromium", "qpdfview", "Wps", "Et", "Wpp"),
     {
         K("C-grave"): K("C-Shift-TAB"),
     },
