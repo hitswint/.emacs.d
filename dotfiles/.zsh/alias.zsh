@@ -33,3 +33,5 @@ alias dia="env GTK_IM_MODULE=xim dia"
 alias drawio="env GTK_IM_MODULE=xim drawio"
 alias qpdfview="qpdfview --unique"
 alias emacs="env LC_CTYPE=zh_CN.UTF-8 XMODIFIERS=@im=fcitx emacs"
+alias e="emacs -q --eval=\"(setq make-backup-files nil)\""
+alias sudo='sudo '

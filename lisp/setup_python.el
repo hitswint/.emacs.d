@@ -200,7 +200,7 @@ plot_data.fig_config(%s)" (expand-file-name "~/Documents/Python") args-string)))
                                                                       :marked-candidates t
                                                                       :buffer "*helm python plot data-swint*")))
                                    (mapconcat 'identity columns-list ","))))
-        (setq style-string (helm-comp-read "Style: " (list "plot" "stackplot" "step" "scatter" "bar" "barh" "stackbar" "stackbarh" "pie" "boxplot" "boxploth" "contourf")
+        (setq style-string (helm-comp-read "Style: " (list "plot" "stackplot" "step" "scatter" "bar" "barh" "stackbar" "stackbarh" "pie" "polar" "boxplot" "boxploth" "contourf")
                                            :buffer "*helm python plot data-swint*"))
         (if (memq major-mode '(inferior-python-mode jupyter-repl-mode))
             (setq data-string (puthash "data" (read-string "data_x, data_y, label: " (gethash "data" swint-python-plot-hash)) swint-python-plot-hash))

@@ -47,7 +47,8 @@
           ("dia" . "env GTK_IM_MODULE=xim dia")
           ("drawio" . "env GTK_IM_MODULE=xim drawio")
           ("blend" . "blender")
-          ("foam" . "paraview")))
+          ("foam" . "paraview")
+          ("eso" . "xEsoView.sh")))
   (setq async-shell-command-buffer 'new-buffer)
   (setq async-shell-command-display-buffer nil)
   (setq dired-guess-shell-alist-user ;dired-do(async)-shell-command(!/&)的默认命令

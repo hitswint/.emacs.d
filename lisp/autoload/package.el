@@ -147,8 +147,9 @@
 ;; ==================package-initialize===================
 ;; Without package.el initialization, you mainly lose two things:
 ;; 1. Emacs won’t load your packages’ autoloads files; 2. Your load-path will be empty.
-;; 下面函数计算load-path，使用use-package代替autoloads，但某些包仍然存在问题。
-;; 若有未定义函数，使用(autoload 'xxx-fun "org")或(load "xxx-autoloads" nil t)。
+;; 下面函数计算load-path，使用use-package代替autoloads，但某些包仍然存在问题
+;; 若有未定义函数，使用(autoload 'xxx-fun "org")或(load "xxx-autoloads" nil t)
+;; 使用locate-library返回require加载的文件路径
 ;; (defvar doom-init-p nil)
 ;; (defvar doom--refreshed-p nil)
 ;; (defvar doom--site-load-path load-path)

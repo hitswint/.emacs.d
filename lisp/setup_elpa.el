@@ -230,7 +230,7 @@ Missing packages are installed automatically."
 ;; ====================package======================
 ;;; use-package
 ;; =================use-package=====================
-;; :bind或:commands中需使用package或:config中的函数。
+;; :bind或:commands中需使用package或:config中的函数
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
