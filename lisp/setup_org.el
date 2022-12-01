@@ -476,10 +476,10 @@
   ;; C-u -> 交叉引用(reference)，默认ref:xxx，C-u 选择类型，C-u C-u 引用[[#xxx]]
   ;; C-u C-u -> 跳转或新建label，若存在则跳转，否则新建
   (add-hook 'org-mode-hook (lambda ()
-                             (bind-key "C-c b" 'helm-org-ref-link org-mode-map)
-                             (bind-key "C-c B" 'org-ref-insert-link-hydra/body org-mode-map)))
+                             (bind-key "C-c r" 'helm-org-ref-link org-mode-map)
+                             (bind-key "C-c R" 'org-ref-insert-link-hydra/body org-mode-map)))
   :config
-  (bind-key "C-c j" 'org-ref-bibtex-hydra/body bibtex-mode-map)
+  (bind-key "C-c r" 'org-ref-bibtex-hydra/body bibtex-mode-map)
   ;; org-ref-insert-link在org-ref-core中定义，若直接(def-package! org-ref)提示函数未定义
   (require 'org-ref)
   (require 'helm)

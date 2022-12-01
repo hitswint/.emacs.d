@@ -727,11 +727,11 @@
   :init
   (dolist (hook '(LaTeX-mode-hook org-mode-hook))
     (add-hook hook (lambda ()
-                     (local-set-key (kbd "C-c r") 'reftex-mode))))
+                     (local-set-key (kbd "C-c C-x r") 'reftex-mode))))
   :config
   ;; 交叉引用(reference)：C-c ( 添加label，C-c ) 引用label
   ;; 文献引用(citation)：C-c [ reftex-citation，C-c C-x [ org-reftex-citation
-  (define-key reftex-mode-map (kbd "C-c r") 'reftex-parse-all)
+  (define-key reftex-mode-map (kbd "C-c C-x r") 'reftex-parse-all)
   (setq reftex-plug-into-AUCTeX t
         reftex-toc-split-windows-horizontally t
         reftex-toc-split-windows-fraction 0.2))

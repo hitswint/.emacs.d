@@ -6,10 +6,10 @@
   (when swint-fcitx-setup-done
     (fcitx--sdcv-maybe-deactivate))
   (local-set-key (kbd "q") #'(lambda () (interactive)
-                              (swint-kill-buffer)
-                              (jump-to-register :sdcv)
-                              (when swint-fcitx-setup-done
-                                (fcitx--sdcv-maybe-activate)))))
+                               (swint-kill-buffer)
+                               (jump-to-register :sdcv)
+                               (when swint-fcitx-setup-done
+                                 (fcitx--sdcv-maybe-activate)))))
 (defvar sdcv-dictionary-list '("朗道英汉字典5.0"
                                "朗道汉英字典5.0"
                                "XDICT英汉辞典"
@@ -20,12 +20,13 @@
 (defun sdcv-search-with-dictionary (word dictionary-list &optional to-buffer)
   "Search some WORD with dictionary list."
   (mapconcat (lambda (dict)
-               (replace-regexp-in-string "^对不起，没有发现和.*\n" ""
+               (replace-regexp-in-string "^Nothing similar to.*\n" ""
                                          (shell-command-to-string
                                           (format "sdcv -n %s %s"
                                                   (concat "-u " dict) word))))
              (if to-buffer dictionary-list
-               (butlast dictionary-list)) (if to-buffer "\n")))
+               (butlast dictionary-list))
+             (if to-buffer "\n")))
 (defun sdcv-output-cleaner ()
   (outline-show-all)
   (goto-char (point-min))

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+transText="$@"
+
+function main {
+
+    if [[ -n $transText ]]; then
+
+        transResult=$(sdcv -n --utf8-input --utf8-output "$transText")
+
+        cat /dev/null > $transHistory_sdcv
+
+        echo "$transText" | xclip -selection clipboard
+
+        echo "$transResult" > $transHistory_sdcv
+
+        # Auto refresh content of each script mode
+        sh -c "sleep 0.05 ; rofi.sh -width 80 -l 32 -sidebar-mode -modi \"sdcv:rofi_trans_sdcv,ydcv:rofi_trans_ydcv\" -show sdcv" &
+        pkill -u $USER rofi
+    fi
+
+    cat $transHistory_sdcv
+}
+
+main

@@ -82,8 +82,10 @@
   :bind (("C-x b" . swint-helm-bibtex)
          ("C-x B" . helm-bibtex))
   :init
-  (add-hook 'LaTeX-mode-hook #'(lambda ()
-                                 (bind-key "C-c b" 'helm-bibtex-with-local-bibliography LaTeX-mode-map)))
+  ;; 根据org中#+BIBLIOGRAPHY:和tex中\bibliography{}定义，查找本地bib文件
+  (dolist (hook '(LaTeX-mode-hook org-mode-hook))
+    (add-hook hook (lambda ()
+                     (local-set-key (kbd "C-c b") 'helm-bibtex-with-local-bibliography))))
   :config
   (defvar helm-bibtex-map
     (let ((map (make-sparse-keymap)))
@@ -119,7 +121,8 @@
     (when (or arg (not bibtex-completion-bibliography/curr))
       (setq bibtex-completion-bibliography/curr
             (helm-comp-read "Bibtex completion bibliography: "
-                            (directory-files (expand-file-name "~/.bib/") t "\\.bib$")
+                            (append (directory-files (expand-file-name "~/.bib/") t "\\.bib$")
+                                    (directory-files default-directory t "\\.bib$"))
                             :marked-candidates t
                             :buffer "*helm bibtex-swint*")))
     (if (and (buffer-live-p (get-buffer "*helm bibtex*")) (not arg))

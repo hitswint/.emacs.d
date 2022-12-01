@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+transText="$@"
+
+function main {
+
+    if [[ -n $transText ]]; then
+
+        transResult=$(ydcv "$transText")
+
+        cat /dev/null > $transHistory_ydcv
+
+        echo "$transText" | xclip -selection clipboard
+
+        echo "$transResult" > $transHistory_ydcv
+
+        # Auto refresh content of each script mode
+        sh -c "sleep 0.05 ; rofi.sh -width 80 -l 32 -sidebar-mode -modi \"sdcv:rofi_trans_sdcv,ydcv:rofi_trans_ydcv\" -show ydcv" &
+        pkill -u $USER rofi
+    fi
+
+    cat $transHistory_ydcv
+}
+
+main

@@ -2,6 +2,10 @@
 
 import re
 from xkeysnail.transform import *
+import os
+
+def rofi_not_running():
+    return os.system("pidof rofi > /dev/null")!=0
 
 # * [Global modemap] Change modifier keys as in xmodmap
 define_modmap({Key.CAPSLOCK: Key.LEFT_CTRL,
@@ -37,13 +41,13 @@ firefox_dict = {
     # K("C-o"): [K("C-a"), K("C-c"), launch(["gedit"]), sleep(0.5), K("C-v")]
     }
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("firefox", "Chromium"),
+    lambda wm_class: wm_class and wm_class[-1] in ("firefox", "Chromium") and rofi_not_running(),
     firefox_dict,
     "Firefox and Chromium")
 
 # * Keybindings for Qpdfview
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("qpdfview"),
+    lambda wm_class: wm_class and wm_class[-1] in ("qpdfview") and rofi_not_running(),
     {
         K("q"): [K("q"), K("C-f"), K("esc")],
         K("C-apostrophe"): [K("M-Shift-m"), K("M-t")],
@@ -127,7 +131,7 @@ emacs_dict = {
         K("u"): [K("C-z"), set_mark(False)],
     }}
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] not in ("Emacs", "URxvt", "Vncviewer", "Blender", "scrcpy", "VirtualBox Machine", "org.remmina.Remmina") and wm_class[1] not in ("winword.exe"),
+    lambda wm_class: wm_class and wm_class[-1] not in ("Emacs", "URxvt", "Vncviewer", "Blender", "scrcpy", "VirtualBox Machine", "org.remmina.Remmina") and wm_class[1] not in ("winword.exe") and rofi_not_running(),
     emacs_dict,
     "Emacs-like keys")
 
@@ -159,13 +163,13 @@ define_keymap(
 remmina_dict = emacs_dict.copy()
 remmina_dict.update(firefox_dict)
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("org.remmina.Remmina",) and wm_class[0] in ("localhost:5901", "Epyc", "Remmina Remote Desktop Client"),
+    lambda wm_class: wm_class and wm_class[-1] in ("org.remmina.Remmina",) and wm_class[0] in ("Remmina Remote Desktop Client") and rofi_not_running(),
     remmina_dict,
     "Remmina")
 
 # * Keybindings for llpp
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("llpp",),
+    lambda wm_class: wm_class and wm_class[-1] in ("llpp",) and rofi_not_running(),
     {
         K("k"): with_mark(K("up")),
         K("j"): with_mark(K("down"))
@@ -174,7 +178,7 @@ define_keymap(
 
 # * Keybindings for URxvt
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("URxvt"),
+    lambda wm_class: wm_class and wm_class[-1] in ("URxvt") and rofi_not_running(),
     {
         K("C-Super-enter"): K("Shift-down"),
         K("C-Super-TAB"): K("Shift-right"),
@@ -184,7 +188,7 @@ define_keymap(
 
 # * Keybindings for Tab switch
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("firefox", "Chromium", "qpdfview", "Wps", "Et", "Wpp"),
+    lambda wm_class: wm_class and wm_class[-1] in ("firefox", "Chromium", "qpdfview", "Wps", "Et", "Wpp") and rofi_not_running(),
     {
         K("C-grave"): K("C-Shift-TAB"),
     },
