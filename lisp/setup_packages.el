@@ -638,11 +638,11 @@
 ;;; pass
 ;; =====================pass=======================
 (def-package! pass
-  :bind ("M-g s" . pass)
+  :bind ("C-x P" . pass)
   :config
   (setq pass-show-keybindings nil))
 (def-package! helm-pass
-  :bind ("M-g M-s" . helm-pass))
+  :bind ("C-x p" . helm-pass))
 ;; =====================pass=======================
 ;;; sudo
 ;; =====================sudo=======================

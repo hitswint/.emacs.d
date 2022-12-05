@@ -81,8 +81,12 @@
      ((memq major-mode '(inferior-python-mode jupyter-repl-mode))
       (let ((selected-hist (helm-comp-read "History: " (nreverse (cl-delete-if (lambda (x) (or (null x) (or (string-match-p "import codecs, os;" x)
                                                                                                             (string-match-p "__PYTHON_EL_eval" x))))
-                                                                               (split-string (python-shell-send-string-no-output
-                                                                                              "get_ipython().run_line_magic(\"hist\", \"-u -g -l 1000\")")
+                                                                               ;; 直接使用python-shell-send-string-no-output返回hist结果速度过慢，加-f以通过~/.ipython_history中转
+                                                                               (split-string (let ((ipython-history-file (expand-file-name "~/.ipython_history")))
+                                                                                               (delete-file ipython-history-file) ; 先删除历史文件，否则弹出overwrite确认提示
+                                                                                               (python-shell-send-string-no-output
+                                                                                                (format "get_ipython().run_line_magic(\"hist\", \"-u -g -l 1000 -f %s\")" ipython-history-file))
+                                                                                               (shell-command-to-string (format "cat %s" ipython-history-file)))
                                                                                              "\n" t "[ \t\n]+")))
                                            :buffer "*helm python history-swint*")))
         (insert (replace-regexp-in-string "^[0-9]*/*[0-9]+: " "" selected-hist))))

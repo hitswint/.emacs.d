@@ -42,18 +42,34 @@ fi
 export transHistory_sdcv=$HOME/.rofi_trans_sdcv
 export transHistory_ydcv=$HOME/.rofi_trans_ydcv
 
+# 可指定sdcv/ydcv模式，也可自动选择
 if [[ $1 == "sdcv" ]]; then
-    transResult=$(sdcv -n --utf8-input --utf8-output "$selectText")
+    transmode=sdcv
+    transResult_sdcv=$(sdcv "$selectText")
     cat /dev/null > $transHistory_sdcv
-    echo "$transResult" > $transHistory_sdcv
+    echo "$transResult_sdcv" > $transHistory_sdcv
 elif [[ $1 == "ydcv" ]]; then
-    transResult=$(ydcv "$selectText")
+    transmode=ydcv
+    transResult_ydcv=$(ydcv "$selectText")
     cat /dev/null > $transHistory_ydcv
-    echo "$transResult" > $transHistory_ydcv
+    echo "$transResult_ydcv" > $transHistory_ydcv
+else
+    transmode=sdcv
+    transResult_sdcv=$(sdcv -n -e --utf8-input --utf8-output "$selectText")
+
+    if [[ $transResult_sdcv == *'Nothing similar to'* ]]; then
+        transmode=ydcv
+        transResult_ydcv=$(ydcv "$selectText")
+        cat /dev/null > $transHistory_ydcv
+        echo "$transResult_ydcv" > $transHistory_ydcv
+    else
+        cat /dev/null > $transHistory_sdcv
+        echo "$transResult_sdcv" > $transHistory_sdcv
+    fi
 fi
 
 # https://github.com/garyparrot/rofi-translate
-rofi.sh -width 80 -l 32 -sidebar-mode -modi "sdcv:rofi_trans_sdcv,ydcv:rofi_trans_ydcv" -show $1
+rofi.sh -width 80 -lines 32 -sidebar-mode -modi "sdcv:rofi_trans_sdcv,ydcv:rofi_trans_ydcv" -show $transmode
 
 # ** 直接复制选择项
 # *** 使用kb-secondary-copy

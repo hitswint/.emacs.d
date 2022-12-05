@@ -10,22 +10,20 @@
                                (jump-to-register :sdcv)
                                (when swint-fcitx-setup-done
                                  (fcitx--sdcv-maybe-activate)))))
-(defvar sdcv-dictionary-list '("朗道英汉字典5.0"
-                               "朗道汉英字典5.0"
-                               "XDICT英汉辞典"
-                               "XDICT汉英辞典"
+(defvar sdcv-dictionary-list '("懒虫简明英汉词典"
+                               "懒虫简明汉英词典"
                                "新世纪英汉科技大词典"
                                "新世纪汉英科技大词典"
-                               "Collins\\ Cobuild\\ English\\ Dictionary"))
+                               "21世纪英汉汉英双向词典"
+                               "简明英汉字典增强版"))
 (defun sdcv-search-with-dictionary (word dictionary-list &optional to-buffer)
   "Search some WORD with dictionary list."
   (mapconcat (lambda (dict)
                (replace-regexp-in-string "^Nothing similar to.*\n" ""
                                          (shell-command-to-string
-                                          (format "sdcv -n %s %s"
+                                          (format "sdcv -n -e %s \"%s\""
                                                   (concat "-u " dict) word))))
-             (if to-buffer dictionary-list
-               (butlast dictionary-list))
+             dictionary-list
              (if to-buffer "\n")))
 (defun sdcv-output-cleaner ()
   (outline-show-all)
