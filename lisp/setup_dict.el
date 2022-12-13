@@ -6,7 +6,7 @@
   :init
   (smartrep-define-key global-map "M-s d"
     '(("b" . bing-dict-brief-cb-at-point)
-      ("g" . google-translate-to-tip)
+      ("g" . google-translate-translate_chieng)
       ("y" . youdao-dictionary-to-tip)
       ("d" . baidu-translate-at-point)))
   :config
@@ -20,7 +20,7 @@
 ;; ===============google-translate===============
 (def-package! google-translate
   :commands (google-translate-translate
-             google-translate-to-tip)
+             google-translate-translate_chieng)
   :init
   (setq google-translate-base-url
         "http://translate.google.cn/translate_a/single")
@@ -32,13 +32,14 @@
         '(("en" . "zh-CN") ("zh-CN" . "en")))
   :config
   (setq google-translate-backend-method 'wget)
+  (setq google-translate-output-destination 'echo-area)
   (defun google-translate-current-buffer-output-translation/override (gtos)
     "Output translation to current buffer."
     (google-translate-buffer-insert-translation gtos)
     (message "Translated text was added to current buffer."))
   (advice-add 'google-translate-current-buffer-output-translation :override
               #'google-translate-current-buffer-output-translation/override)
-  (defun google-translate-to-tip (&optional _word)
+  (defun google-translate-translate_chieng (&optional _word)
     "Search WORD simple translate result."
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
@@ -55,11 +56,10 @@
              youdao-dictionary-to-tip)
   :config
   (defun youdao-dictionary-to-tip (&optional _word)
-    "Search word at point and display result with pos-tip."
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
-      (youdao-dictionary--pos-tip (youdao-dictionary--format-result
-                                   (youdao-dictionary--request word))))))
+      (youdao-dictionary--posframe-tip (youdao-dictionary--format-result
+                                        (youdao-dictionary--request word))))))
 ;; ===============youdao-dictionary==============
 ;;; baidu-translate
 ;; ===============youdao-dictionary==============
@@ -70,7 +70,6 @@
   (setq baidu-translate-appid "20200329000407785")
   (setq baidu-translate-security "oPVKtlEmfo4Q9KYHpjfy")
   (defun baidu-translate-at-point (&optional _word)
-    "Search word at point and display result with pos-tip."
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
       (if (pyim-string-match-p "\\cC" word)

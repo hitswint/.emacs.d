@@ -106,6 +106,7 @@
 (global-set-key (kbd "C-+") 'swint-count-words-region)
 (global-set-key (kbd "M-g o") 'swint-dired-converter)
 (global-set-key (kbd "M-s M-e") 'show-some-last-messages)
+(global-set-key (kbd "M-s e") 'switch-to-messages-buffer)
 (global-set-key (kbd "M-s M-d") 'swint-sdcv-to-tip)
 (global-set-key (kbd "M-s M-D") 'swint-sdcv-to-buffer)
 (global-set-key (kbd "M-s D") 'swint-online-to-buffer)

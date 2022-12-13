@@ -830,7 +830,7 @@ contextual information."
 ;;; org-extra-emphasis
 ;; ============org-extra-emphasis===============
 (def-package! org-extra-emphasis
-  :load-path "site-lisp/org-extra-emphasis/"
+  :load-path "repos/org-extra-emphasis/"
   :after org
   :config
   (bind-key "M-O '" 'helm-insert-org-extra-emphasis org-mode-map)

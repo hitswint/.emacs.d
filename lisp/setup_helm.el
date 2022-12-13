@@ -35,7 +35,7 @@
   (setq helm-split-window-default-side 'same)
   (setq helm-external-programs-associations file-extension-app-alist)
   (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
-  (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'" "\\`\\*tramp.*\\*\\'" "\\`\\*baidu-translate\\*\\'" "\\`\\*NOX.*\\*\\'" "\\`\\*nox.*\\*\\'" "\\`\\*org-brain-helm\\*\\'" "\\`\\*Org Preview LaTeX Output\\*\\'")))
+  (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'" "\\`\\*tramp.*\\*\\'" "\\`\\*baidu-translate\\*\\'" "\\`\\*org-brain-helm\\*\\'" "\\`\\*Org Preview LaTeX Output\\*\\'")))
   ;; (setq helm-mounted-network-directories '("/mnt/share" "/mnt/sshfs"))
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))

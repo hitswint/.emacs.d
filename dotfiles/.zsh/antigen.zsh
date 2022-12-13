@@ -32,6 +32,8 @@ if [ -f ${ZDOTDIR}/src/antigen/antigen.zsh ];then
     # https://github.com/Aloxaf/fzf-tab/
     antigen bundle Aloxaf/fzf-tab
     # zstyle ':fzf-tab:*' fzf-command percol
+    zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+    zstyle ':fzf-tab:*' popup-pad 0 0
     zstyle ':fzf-tab:*' fzf-bindings 'alt-m:toggle' 'alt-t:toggle-all'
     zstyle ':fzf-tab:*' switch-group 'alt-p' 'alt-n'
     zstyle ':fzf-tab:*' fzf-flags --color=bg+:8

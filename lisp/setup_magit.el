@@ -1,5 +1,7 @@
 ;;; magit
 ;; ====================magit=======================
+(def-package! transient
+  :commands transient-define-prefix)
 (def-package! magit
   :diminish magit-auto-revert-mode
   :bind (("C-x M-g" . magit-status)

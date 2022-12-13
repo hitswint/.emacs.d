@@ -29,17 +29,20 @@
   (outline-show-all)
   (goto-char (point-min))
   (while (re-search-forward "Found\\ .*\\ items,\\ similar\\ to\\ \\(.*\\)\\.\n-->\\(.*\\)\n-->\\(.*\\)" nil t)
-    (replace-match "*** \\2-(\\1) \n**** \\3"))
-  (goto-char (point-min))
-  (while (re-search-forward "-->\\(.*\\)\n-->\\(.*\\)" nil t)
-    (replace-match "**** \\2"))
+    ;; (replace-match "*** \\2-(\\1) \n**** \\3")
+    (replace-match "*** \\2-(\\1)")
+    )
+  ;; sdcv使用-e选项，只有精确匹配，删除标题行
+  ;; (goto-char (point-min))
+  ;; (while (re-search-forward "-->\\(.*\\)\n-->\\(.*\\)" nil t)
+  ;;   (replace-match "**** \\2"))
   (goto-char (point-min))
   (while (re-search-forward "^\n" nil t)
     (replace-match ""))
   (goto-char (point-min))
   (while (re-search-forward "\n+" nil t)
     (replace-match "\n"))
-  (indent-region (point-min) (point-max))
+  (indent-region (point-min) (point-max) 0)
   (goto-char (point-min)))
 ;;;; 优先纵向分割窗口
 ;; ============优先纵向分割窗口==============
@@ -73,16 +76,41 @@ FORCE-OTHER-WINDOW is ignored."
 (add-to-list 'display-buffer-alist '("\\`\\*bing-google\\*\\'" display-new-buffer))
 ;; ============优先纵向分割窗口==============
 ;;;###autoload
-(defun swint-sdcv-to-tip (&optional _word)
+(defun swint-sdcv-to-tip (arg &optional _word)
   "Search WORD simple translate result."
-  (interactive)
+  (interactive "P")
   (let ((word (or _word (swint-get-words-at-point))))
-    (pos-tip-show
-     (replace-regexp-in-string "-->\\(.*\\)\n-->\\(.*\\)\n" "\\1：\\2"
-                               (replace-regexp-in-string
-                                "\\(^Found\\ [[:digit:]]+\\ items,\\ similar\\ to \\(.*\\)\\.\n\\)" ""
-                                (sdcv-search-with-dictionary word sdcv-dictionary-list)))
-     nil nil nil 0)))
+    (if arg
+        (pos-tip-show
+         (replace-regexp-in-string "-->\\(.*\\)\n-->\\(.*\\)\n" "\\1：\\2"
+                                   (replace-regexp-in-string
+                                    "\\(^Found\\ [[:digit:]]+\\ items,\\ similar\\ to \\(.*\\)\\.\n\\)" ""
+                                    (sdcv-search-with-dictionary word sdcv-dictionary-list)))
+         nil nil nil 0)
+      (with-current-buffer (get-buffer-create "*sdcv*")
+        (let ((inhibit-read-only t))
+          (buffer-disable-undo)
+          (erase-buffer)
+          (sdcv-mode)
+          (insert (sdcv-search-with-dictionary word sdcv-dictionary-list t))
+          (sdcv-output-cleaner)))
+      (posframe-show "*sdcv*"
+                     :left-fringe 8
+                     :right-fringe 8
+                     :internal-border-color (face-foreground 'default)
+                     :internal-border-width 1)
+      (unwind-protect
+          (let ((curr-event (read-event)))
+            (while (member curr-event '(134217840 134217838))
+              (cond ((eq curr-event 134217838)
+                     (posframe-funcall "*sdcv*" #'(lambda () (ignore-errors (scroll-up-command)))))
+                    ((eq curr-event 134217840)
+                     (posframe-funcall "*sdcv*" #'(lambda () (ignore-errors (scroll-down-command))))))
+              (setq curr-event (read-event)))
+            (push curr-event unread-command-events))
+        (progn
+          (posframe-delete "*sdcv*")
+          (other-frame 0))))))
 ;;;###autoload
 (defun swint-sdcv-to-buffer (&optional _word)
   (interactive)

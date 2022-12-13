@@ -1,8 +1,8 @@
 ;;; emms
 ;; ================emms==================
 (def-package! emms
-  :bind (("M-s e l" . emms-playlist-mode-go)
-         ("M-s e o" . emms-play-file)
+  :bind (("M-g e l" . emms-playlist-mode-go)
+         ("M-g e o" . emms-play-file)
          ("<s-down>" . emms-pause)
          ("<S-s-down>" . emms-stop)
          ("<s-left>" . emms-seek-backward)

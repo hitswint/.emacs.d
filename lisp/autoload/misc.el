@@ -84,7 +84,7 @@
 ;; ===============get-words-at-point===============
 ;;; show-some-last-messages
 ;; ============show-some-last-messages=============
-(defvar default-messages-to-show 4
+(defvar default-messages-to-show 10
   "Default number of messages for `show-some-last-messages'.")
 ;;;###autoload
 (defun show-some-last-messages (count)
@@ -107,4 +107,12 @@
                     (point))
                   (point-max))))
       (delete-region (point-max) prev-point-max))))
+;;;###autoload
+(defun switch-to-messages-buffer ()
+  "Show COUNT last lines of the `*Messages*' buffer."
+  (interactive)
+  (swint-persp-switch "i")
+  (delete-other-windows)
+  (switch-to-buffer "*Messages*")
+  (goto-char (point-max)))
 ;; ============show-some-last-messages=============

@@ -462,8 +462,8 @@
 (def-package! clipmon
   :after easy-kill
   :config
-  (bind-key "M-g w" 'clipmon-mode)
-  (bind-key "M-g M-w" 'clipmon-autoinsert-toggle)
+  (bind-key "M-g M-w" 'clipmon-mode)
+  (bind-key "M-g M-W" 'clipmon-autoinsert-toggle)
   (clipmon-mode 1)
   (advice-add 'clipmon-mode-start :after #'(lambda () (xclipmon-mode 0)))
   (advice-add 'clipmon-mode-stop :after #'(lambda () (xclipmon-mode 1)))
@@ -688,7 +688,7 @@
   (custom-set-faces '(ido-first-match ((t (:foreground "yellow" :weight bold))))
                     '(ido-only-match ((((class color)) (:foreground "DeepSkyBlue1" :weight bold))))
                     '(ido-subdir ((t (:foreground "green")))))
-  (setq ido-ignore-buffers '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Compile\\=Log\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*compilation\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\` " "\\`.english-words\\'" "\\`\\*NOX.*\\*\\'" "\\`\\*nox.*\\*\\'")))
+  (setq ido-ignore-buffers '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Compile\\=Log\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*compilation\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\` " "\\`.english-words\\'")))
 ;; ======================ido=======================
 ;;; term-keys
 ;; ===================term-keys====================
@@ -739,7 +739,7 @@
 ;;; annot
 ;; =====================annot======================
 (def-package! annot
-  :load-path "site-lisp/annot/src/"
+  :load-path "repos/annot/src/"
   :bind (("M-g a a" . annot-edit/add)
          ("M-g a r" . annot-remove)
          ("M-g a i" . annot-add-image))
@@ -759,7 +759,7 @@
 ;;; insert-translated-name
 ;; ============insert-translated-name==============
 (def-package! insert-translated-name
-  :load-path "site-lisp/insert-translated-name/"
+  :load-path "repos/insert-translated-name/"
   :bind (("M-g d" . insert-translated-name-replace)
          ("M-g D" . insert-translated-name-insert))
   :config

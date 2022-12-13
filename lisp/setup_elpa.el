@@ -164,6 +164,7 @@
                            popup
                            popup-kill-ring
                            pos-tip
+                           posframe
                            projectile
                            pyim
                            pyim-basedict

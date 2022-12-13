@@ -109,6 +109,7 @@
   (add-to-list 'desktop-minor-mode-table '(outshine-mode nil))
   (add-to-list 'desktop-minor-mode-table '(meghanada-mode nil))
   (add-to-list 'desktop-minor-mode-table '(org-extra-emphasis-intraword-emphasis-mode nil))
-  (add-to-list 'desktop-minor-mode-table '(all-the-icons-dired-mode nil)))
+  (add-to-list 'desktop-minor-mode-table '(all-the-icons-dired-mode nil))
+  (add-to-list 'desktop-minor-mode-table '(lsp-bridge-mode nil)))
 ;; ===================desktop====================
 (provide 'setup_desktop)
