@@ -200,20 +200,22 @@
 ;;;###autoload
 (defun urxvt-default-directory (&optional arg)
   (interactive "P")
-  (start-process "Urxvt" nil shell-file-name shell-command-switch
-                 (concat "$(tabbed -c -d > /tmp/tabbed.xid);urxvt -pe default,-tabbed -embed $(</tmp/tabbed.xid) -cd "
-                         "\"" (expand-file-name default-directory) "\""
-                         ;; 启动bash终端同时开启virtualenv
-                         (when arg
-                           (require 'pyvenv)
-                           (let ((pyvenv-virtual-env-for-urxvt
-                                  (or pyvenv-virtual-env
-                                      (file-name-as-directory
-                                       (format "%s/%s" (pyvenv-workon-home)
-                                               (completing-read "Work on: " (pyvenv-virtualenv-list)
-                                                                nil t nil 'pyvenv-workon-history nil nil))))))
-                             (concat " -e zsh" " -is eval \"source "
-                                     pyvenv-virtual-env-for-urxvt "bin/activate;\""))))))
+  (let* ((curr-dired (dired-get-filename nil t))
+         (curr-dir (if curr-dired (file-name-directory curr-dired) default-directory)))
+    (start-process "Urxvt" nil shell-file-name shell-command-switch
+                   (concat "$(tabbed -c -d > /tmp/tabbed.xid);urxvt -pe default,-tabbed -embed $(</tmp/tabbed.xid) -cd "
+                           "\"" (expand-file-name curr-dir) "\""
+                           ;; 启动bash终端同时开启virtualenv
+                           (when arg
+                             (require 'pyvenv)
+                             (let ((pyvenv-virtual-env-for-urxvt
+                                    (or pyvenv-virtual-env
+                                        (file-name-as-directory
+                                         (format "%s/%s" (pyvenv-workon-home)
+                                                 (completing-read "Work on: " (pyvenv-virtualenv-list)
+                                                                  nil t nil 'pyvenv-workon-history nil nil))))))
+                               (concat " -e zsh" " -is eval \"source "
+                                       pyvenv-virtual-env-for-urxvt "bin/activate;\"")))))))
 ;; =========在当前目录下打开urxvt============
 ;;; swint-dired-converter
 ;; ============swint-dired-converter=========

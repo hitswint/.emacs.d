@@ -79,52 +79,58 @@ FORCE-OTHER-WINDOW is ignored."
 (defun swint-sdcv-to-tip (arg &optional _word)
   "Search WORD simple translate result."
   (interactive "P")
-  (let ((word (or _word (swint-get-words-at-point))))
-    (if arg
-        (pos-tip-show
-         (replace-regexp-in-string "-->\\(.*\\)\n-->\\(.*\\)\n" "\\1：\\2"
-                                   (replace-regexp-in-string
-                                    "\\(^Found\\ [[:digit:]]+\\ items,\\ similar\\ to \\(.*\\)\\.\n\\)" ""
-                                    (sdcv-search-with-dictionary word sdcv-dictionary-list)))
-         nil nil nil 0)
-      (with-current-buffer (get-buffer-create "*sdcv*")
-        (let ((inhibit-read-only t))
-          (buffer-disable-undo)
-          (erase-buffer)
-          (sdcv-mode)
-          (insert (sdcv-search-with-dictionary word sdcv-dictionary-list t))
-          (sdcv-output-cleaner)))
-      (posframe-show "*sdcv*"
-                     :left-fringe 8
-                     :right-fringe 8
-                     :internal-border-color (face-foreground 'default)
-                     :internal-border-width 1)
-      (unwind-protect
-          (let ((curr-event (read-event)))
-            (while (member curr-event '(134217840 134217838))
-              (cond ((eq curr-event 134217838)
-                     (posframe-funcall "*sdcv*" #'(lambda () (ignore-errors (scroll-up-command)))))
-                    ((eq curr-event 134217840)
-                     (posframe-funcall "*sdcv*" #'(lambda () (ignore-errors (scroll-down-command))))))
-              (setq curr-event (read-event)))
-            (push curr-event unread-command-events))
-        (progn
-          (posframe-delete "*sdcv*")
-          (other-frame 0))))))
+  (let* ((word (or _word (swint-get-words-at-point)))
+         (sdcv-result (sdcv-search-with-dictionary word sdcv-dictionary-list t)))
+    (if (string-match-p  "\\`[ \t\n\r]*\\'" sdcv-result)
+        (message "Nothing")
+      (if arg
+          (pos-tip-show
+           (replace-regexp-in-string "-->\\(.*\\)\n-->\\(.*\\)\n" "\\1：\\2"
+                                     (replace-regexp-in-string
+                                      "\\(^Found\\ [[:digit:]]+\\ items,\\ similar\\ to \\(.*\\)\\.\n\\)" ""
+                                      (sdcv-search-with-dictionary word sdcv-dictionary-list)))
+           nil nil nil 0)
+        (with-current-buffer (get-buffer-create "*sdcv*")
+          (let ((inhibit-read-only t))
+            (buffer-disable-undo)
+            (erase-buffer)
+            (sdcv-mode)
+            (insert sdcv-result)
+            (sdcv-output-cleaner)))
+        (posframe-show "*sdcv*"
+                       :left-fringe 8
+                       :right-fringe 8
+                       :internal-border-color (face-foreground 'default)
+                       :internal-border-width 1)
+        (unwind-protect
+            (let ((curr-event (read-event)))
+              (while (member curr-event '(134217840 134217838))
+                (cond ((eq curr-event 134217838)
+                       (posframe-funcall "*sdcv*" #'(lambda () (ignore-errors (scroll-up-command)))))
+                      ((eq curr-event 134217840)
+                       (posframe-funcall "*sdcv*" #'(lambda () (ignore-errors (scroll-down-command))))))
+                (setq curr-event (read-event)))
+              (push curr-event unread-command-events))
+          (progn
+            (posframe-delete "*sdcv*")
+            (other-frame 0)))))))
 ;;;###autoload
 (defun swint-sdcv-to-buffer (&optional _word)
   (interactive)
-  (let ((word (or _word (swint-get-words-at-point))))
-    (unless (member (buffer-name) '("*sdcv*" "*online*"))
-      (window-configuration-to-register :sdcv))
-    (delete-other-windows)
-    (switch-to-buffer "*sdcv*")
-    (set-buffer "*sdcv*")
-    (buffer-disable-undo)
-    (erase-buffer)
-    (sdcv-mode)
-    (insert (sdcv-search-with-dictionary word sdcv-dictionary-list t))
-    (sdcv-output-cleaner)))
+  (let* ((word (or _word (swint-get-words-at-point)))
+         (sdcv-result (sdcv-search-with-dictionary word sdcv-dictionary-list t)))
+    (if (string-match-p  "\\`[ \t\n\r]*\\'" sdcv-result)
+        (message "Nothing")
+      (unless (member (buffer-name) '("*sdcv*" "*online*"))
+        (window-configuration-to-register :sdcv))
+      (delete-other-windows)
+      (switch-to-buffer "*sdcv*")
+      (set-buffer "*sdcv*")
+      (buffer-disable-undo)
+      (erase-buffer)
+      (sdcv-mode)
+      (insert sdcv-result)
+      (sdcv-output-cleaner))))
 ;; ==================sdcv====================
 ;;; online
 ;; =================online===================

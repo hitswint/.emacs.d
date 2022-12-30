@@ -86,15 +86,15 @@
 ;; ==================function-args==============
 (def-package! function-args
   :diminish function-args-mode
-  :commands (moo-complete moo-jump-directory moo-jump-local fa-jump-maybe swint-fa-show)
+  :commands (moo-complete moo-jump-local moo-jump-directory fa-jump-maybe swint-fa-show)
   :init
   (dolist (hook '(c-mode-hook c++-mode-hook asm-mode-hook))
     (add-hook hook (lambda ()
                      (local-set-key (kbd "C-c u") 'moo-complete)
                      (local-set-key (kbd "C-c i") 'moo-jump-local)
                      (local-set-key (kbd "C-c I") 'moo-jump-directory)
-                     (local-set-key (kbd "C-c o") 'swint-fa-show)
-                     (local-set-key (kbd "C-c j") 'fa-jump-maybe))))
+                     (local-set-key (kbd "C-c j") 'fa-jump-maybe)
+                     (local-set-key (kbd "C-c o") 'swint-fa-show))))
   :config
   (function-args-mode 1) ;function-args-mode only trigger semantic-mode
   (assq-delete-all 'function-args-mode minor-mode-map-alist) ;解除默认按键绑定
@@ -107,14 +107,15 @@
 ;;; semantic
 ;; ===================semantic==================
 (def-package! semantic
-  :after (:any function-args imenu)
+  :after (:any function-args helm)
   :config
   (semantic-mode 1)
   (setq semantic-idle-scheduler-idle-time 5)
-  (semanticdb-enable-gnu-global-databases 'c-mode)
-  (semanticdb-enable-gnu-global-databases 'c++-mode)
-  ;; (add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
+  ;; 弹出警告：Selecting deleted buffer
+  ;; (semanticdb-enable-gnu-global-databases 'c-mode)
+  ;; (semanticdb-enable-gnu-global-databases 'c++-mode)
   (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+  ;; (add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
   ;; 默认semantic快捷键以C-c ,为前缀。
   (define-key semantic-mode-map (kbd "C-c ,") nil))
 ;; ===================semantic==================
@@ -149,7 +150,7 @@
     (add-hook hook 'helm-gtags-mode))
   (dolist (buf (buffer-list))
     (with-current-buffer buf
-      (when (derived-mode-p 'c-mode 'C++-mode 'asm-mode)
+      (when (derived-mode-p 'c-mode 'c++-mode 'asm-mode)
         (helm-gtags-mode))))
   (defun helm-gtags--find-tag-simple/around (fn &rest args)
     (let ((helm-execute-action-at-once-if-one nil))
@@ -159,7 +160,6 @@
         helm-gtags-auto-update t
         helm-gtags-use-input-at-cursor t
         helm-gtags-pulse-at-cursor t
-        helm-gtags-prefix-key "\M-s"
         helm-gtags-suggested-key-mapping nil)
   (smartrep-define-key helm-gtags-mode-map "C-c"
     '(("C-," . helm-gtags-dwim)

@@ -3,7 +3,7 @@
 (def-package! python
   :mode ("\\.py\\'" . python-mode)
   :config
-  (bind-key "C-M-#" 'run-python)
+  (bind-key "M-o M-P" 'run-python)
   (define-key python-mode-map (kbd "C-c C-c") 'python-shell-send-line-or-region)
   (define-key python-mode-map (kbd "C-c C-b") 'python-shell-send-buffer)
   (define-key python-mode-map (kbd "C-c C-e") 'python-shell-send-string)
@@ -21,11 +21,11 @@
   :commands (pyvenv-workon-home
              pyvenv-activate
              swint-python-load-mysql)
-  :bind (("C-x C-M-3" . pyvenv-workon)
-         ("C-x C-M-#" . pyvenv-deactivate)
+  :bind (("M-o C-M-p" . pyvenv-workon)
+         ("M-o C-M-S-p" . pyvenv-deactivate)
          ("M-o p" . swint-python-plot-data)
          ("M-o P" . swint-python-fig-config)
-         ("M-o M-p" . swint-python-load-file))
+         ("M-o C-p" . swint-python-load-file))
   :config
   (define-key minibuffer-local-map (kbd "C-c m") 'swint-python-insert-data)
   (define-key minibuffer-local-map (kbd "C-c M") 'swint-python-insert-variables)
@@ -262,7 +262,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s', %s)" (expand-file-name "~/Document
   :diminish elpy-mode
   :commands (elpy-shell-switch-to-shell toggle-elpy-mode-all-buffers)
   :init
-  (bind-key "C-M-3" 'elpy-shell-switch-to-shell)
+  (bind-key "M-o M-p" 'elpy-shell-switch-to-shell)
   (add-hook 'python-mode-hook (lambda ()
                                 (bind-key "C-c e" 'toggle-elpy-mode-all-buffers python-mode-map)))
   (setq elpy-remove-modeline-lighter nil)
@@ -311,8 +311,8 @@ plot_data.file_plot('%s','%s','%s','%s','%s', %s)" (expand-file-name "~/Document
 ;;; jupyter
 ;; ==================jupyter===================
 (def-package! jupyter
-  :bind (("M-s 3" . swint-jupyter-run-repl)
-         ("M-s #" . jupyter-connect-repl))
+  :bind (("M-o j" . swint-jupyter-run-repl)
+         ("M-o J" . jupyter-connect-repl))
   :config
   (bind-key "C-c c" 'jupyter-repl-associate-buffer python-mode-map)
   (defun swint-jupyter-run-repl ()

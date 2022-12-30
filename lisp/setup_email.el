@@ -2,8 +2,8 @@
 ;; =======================mu4e=========================
 (def-package! mu4e
   :load-path "/usr/share/emacs/site-lisp/mu4e"
-  :bind (("C-M-7" . mu4e)
-         ("C-x M" . mu4e-compose-new))
+  :bind (("M-o m" . mu4e)
+         ("M-o M" . mu4e-compose-new))
   :config
   (def-package! mu4e-alert
     :config
@@ -107,7 +107,7 @@
 ;;; helm-mu
 ;; ======================helm-mu=======================
 (def-package! helm-mu
-  :bind (("M-s m" . helm-mu)
-         ("M-s M" . helm-mu-contacts)))
+  :bind (("M-o M-m" . helm-mu)
+         ("M-o M-M" . helm-mu-contacts)))
 ;; ======================helm-mu=======================
 (provide 'setup_email)

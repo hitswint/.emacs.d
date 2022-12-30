@@ -32,10 +32,11 @@
                                               (dired-create-directory)))
   (setq helm-buffer-details-flag nil)
   (setq helm-ff-newfile-prompt-p nil)
+  ;; (add-to-list 'display-buffer-alist '("^\\*helm .*" (display-buffer-at-bottom))) ;在底部打开helm
   (setq helm-split-window-default-side 'same)
   (setq helm-external-programs-associations file-extension-app-alist)
   (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
-  (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'" "\\`\\*tramp.*\\*\\'" "\\`\\*baidu-translate\\*\\'" "\\`\\*org-brain-helm\\*\\'" "\\`\\*Org Preview LaTeX Output\\*\\'")))
+  (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'" "\\`\\*tramp.*\\*\\'" "\\`\\*baidu-translate\\*\\'" "\\`\\*org-brain-helm\\*\\'" "\\`\\*Org Preview LaTeX Output\\*\\'")))
   ;; (setq helm-mounted-network-directories '("/mnt/share" "/mnt/sshfs"))
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))
@@ -435,10 +436,14 @@
   ;; ======在其他helm-buffer中运行helm命令======
   (defun swint-helm-file-buffers-after-quit ()
     (interactive)
-    (helm-run-after-exit #'(lambda () (swint-helm-file-buffers-list))))
+    (if (equal helm-buffer "*helm file buffers*")
+        (call-interactively 'helm-maybe-exit-minibuffer)
+      (helm-run-after-exit #'(lambda () (swint-helm-file-buffers-list)))))
   (defun swint-helm-dired-buffers-after-quit ()
     (interactive)
-    (helm-run-after-exit #'(lambda () (swint-helm-dired-buffers-list))))
+    (if (equal helm-buffer "*helm dired buffers*")
+        (call-interactively 'helm-maybe-exit-minibuffer)
+      (helm-run-after-exit #'(lambda () (swint-helm-dired-buffers-list)))))
   (defun swint-helm-bookmarks-after-quit ()
     (interactive)
     (helm-run-after-exit #'(lambda () (helm-bookmarks))))
@@ -563,7 +568,9 @@
   ;; helm-ag 先输入词，可以在结果中搜索第二个词。
   :commands (helm-do-ag helm-do-ag-buffers)
   :init
-  (bind-key "C-x g" #'(lambda () (interactive) (let ((helm-truncate-lines t)) (call-interactively 'helm-do-ag))))
+  (bind-key "C-x g" #'(lambda () (interactive) (let ((helm-truncate-lines t)) (if current-prefix-arg
+                                                                                  (call-interactively 'helm-do-ag)
+                                                                                (helm-do-ag default-directory)))))
   (bind-key "C-x G" #'(lambda () (interactive) (let ((helm-truncate-lines t)) (call-interactively 'helm-do-ag-buffers))))
   :config
   (setq helm-ag-base-command "ag --nocolor --nogroup --hidden")

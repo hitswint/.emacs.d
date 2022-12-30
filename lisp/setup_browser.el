@@ -1,8 +1,8 @@
 ;;; w3m
 ;; ===================w3m=====================
 (def-package! w3m
-  :bind (("C-M-5" . w3m)
-         ("C-M-%" . w3m-youdao-sample-sentences))
+  :bind (("M-o M-w" . w3m)
+         ("M-o w" . w3m-youdao-sample-sentences))
   :config
   ;; Use w3m to display youdao sample sentences.
   (defun w3m-youdao-sample-sentences (&optional _word)

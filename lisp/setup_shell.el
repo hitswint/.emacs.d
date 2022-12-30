@@ -1,8 +1,8 @@
 ;;; shell
 ;; =====================shell======================
 (def-package! shell
-  :bind (("C-M-!" . shell)
-         ("C-x C-M-1" . term))
+  :bind (("M-o s" . shell)
+         ("M-o S" . term))
   ;; :init
   ;; 使用zsh -ic无法加载alias，但bash可以，新建.bash_aliases
   ;; (setq shell-file-name "bash")
@@ -24,7 +24,7 @@
 ;;; eshell
 ;; =====================eshell=====================
 (def-package! eshell
-  :bind ("C-M-1" . eshell)
+  :bind ("M-o M-s" . eshell)
   :config
   (add-hook 'eshell-mode-hook #'(lambda()
                                   (setq scroll-margin 0

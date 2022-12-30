@@ -443,7 +443,7 @@
 ;; =====================Proced=====================
 (def-package! proced
   :commands proced-process-attributes
-  :bind ("C-M-4" . proced)
+  :bind ("M-o M-r" . proced)
   :config
   (define-key proced-mode-map (kbd "q") 'kill-buffer-and-window)
   ;; Proced自动更新，10秒。
@@ -822,4 +822,71 @@
         (dired-async-shell-command
          (expand-file-name file-name))))))
 ;; ===================rg===========================
+;;; awesome-tab
+;; ===============awesome-tab======================
+(def-package! awesome-tab
+  :load-path "repos/awesome-tab/"
+  :after (:all helm perspective)
+  :config
+  (setq awesome-tab-display-line 'header-line)
+  (setq awesome-tab-display-icon t)
+  (setq awesome-tab-height 120)
+  (setq awesome-tab-active-bar-height 20)
+  (setq awesome-tab-dark-selected-foreground-color "white")
+  (setq awesome-tab-dark-active-bar-color "white")
+  (setq awesome-tab-cycle-scope 'tabs)
+  (setq awesome-tab-auto-scroll-flag t)
+  (setq awesome-tab-label-max-length 30)
+  (defun awesome-tab-buffer-groups ()
+    (list
+     (cond
+      ((memq major-mode '(magit-process-mode
+                          magit-status-mode
+                          magit-diff-mode
+                          magit-log-mode
+                          magit-file-mode
+                          magit-blob-mode
+                          magit-blame-mode
+                          ))
+       "Magit")
+      (t
+       (let ((proj-name (awesome-tab-get-group-name (current-buffer))))
+         (if (equal proj-name awesome-tab-common-group-name)
+             (if (member (current-buffer) (persp-buffers (persp-curr)))
+                 (persp-name (persp-curr))
+               awesome-tab-common-group-name)
+           proj-name))))))
+  (defun awesome-tab-hide-tab/around (fn x)
+    (or (funcall fn x)
+        (let ((name (format "%s" x)))
+          (or (string-match-p (helm--concat-regexps helm-boring-buffer-regexp-list) name)
+              (string-prefix-p "*scratch*" name)
+              (string-prefix-p "*Messages*" name)))))
+  (advice-add 'awesome-tab-hide-tab :around #'awesome-tab-hide-tab/around)
+  (defun my-select-window ()
+    (interactive)
+    (interactive)
+    (let* ((event last-command-event)
+           (key (make-vector 1 event))
+           (key-desc (key-description key))
+           (tab-index (string-to-number
+                       ;; Fix issue #81 that `last-command-event' is not keystroke.
+                       (cond ((equal (length key-desc) 1)
+                              key-desc)
+                             (t
+                              (car (nreverse (split-string key-desc "-"))))))))
+      (awesome-tab-select-visible-nth-tab tab-index)))
+  (global-set-key (kbd "C-M-`") 'awesome-tab-backward-tab)
+  (global-set-key (kbd "C-M-<tab>") 'awesome-tab-forward-tab)
+  (global-set-key (kbd "C-M-S-<iso-lefttab>") 'awesome-tab-move-current-tab-to-right)
+  (global-set-key (kbd "C-M-~") 'awesome-tab-move-current-tab-to-left)
+  (global-set-key (kbd "C-M-1") 'my-select-window)
+  (global-set-key (kbd "C-M-2") 'my-select-window)
+  (global-set-key (kbd "C-M-3") 'my-select-window)
+  (global-set-key (kbd "C-M-4") 'my-select-window)
+  (global-set-key (kbd "C-M-5") 'my-select-window)
+  (global-set-key (kbd "C-M-6") 'my-select-window)
+  (global-set-key (kbd "C-M-7") 'my-select-window)
+  (awesome-tab-mode t))
+;; ===============awesome-tab======================
 (provide 'setup_packages)

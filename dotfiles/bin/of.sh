@@ -1,5 +1,35 @@
 #!/bin/bash
 
-xhost +
-openfoam10-linux -d $HOME/OpenFOAM/${USER}-10 -x # -u
-# openfoam-dev-linux -d $HOME/OpenFOAM/${USER}-dev -x # -u
+if [ x$1 == x ]; then
+    echo "Choose:"
+    echo "com) openfoam.com"
+    echo "org) openfoam.org"
+    read flavour
+else
+    flavour=$1
+fi
+
+if [ x$2 == x ]; then
+    if [ $flavour = "com" ]; then
+        version=$(docker images | awk '($1~/^opencfd/) {print $2}' | awk '!a[$1]++{print}' | percol)
+    elif [ $flavour = "org" ]; then
+        version=$(docker images | awk -F"-" '($1~/^openfoam\/openfoam/) {print substr($1,18,length($1))}' | awk '!a[$1]++{print}' | percol)
+    fi
+else
+    version=$2
+fi
+
+case $flavour in
+    com)
+        # https://hub.docker.com/r/opencfd/openfoam-default
+        openfoam-docker -$version -default -dir=$HOME/OpenFOAM/${USER}-com/
+        ;;
+    org)
+        # https://hub.docker.com/u/openfoam
+        xhost +
+        openfoam$version-linux -d $HOME/OpenFOAM/${USER}-$version -x # -u
+        ;;
+    q)
+        break
+        ;;
+esac
