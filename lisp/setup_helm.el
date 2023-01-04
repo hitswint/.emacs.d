@@ -14,7 +14,6 @@
          ("C-x l" . swint-helm-locate)
          ("C-x y" . helm-resume))
   :config
-  (def-package! helm-config)
   (def-package! helm-for-files)
   (helm-mode 1)
   (helm-top-poll-mode 1)

@@ -131,6 +131,16 @@
       (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr)
             (helm-truncate-lines t))
         (helm-bibtex arg bibtex-completion-bibliography/curr))))
+  ;; helm-source-bibtex为(DISPLAY . REAL)类型，显示和匹配DISPLAY，但选中执行action的参数为REAL
+  ;; Dired中位于文件行时，显示文献条目(DISPLAY)，但匹配key(REAL)
+  (advice-add 'swint-helm-bibtex :around #'(lambda (fn &rest args)
+                                             (if (equal major-mode 'dired-mode)
+                                                 (save-excursion (goto-char (point-min)) (apply fn args))
+                                               (apply fn args))))
+  (advice-add 'helm-bibtex :around #'(lambda (fn &rest args)
+                                       (if (equal major-mode 'dired-mode)
+                                           (save-excursion (goto-char (point-min)) (apply fn args))
+                                         (apply fn args))))
   (defcustom helm-bibtex-pdf-open-externally-function #'(lambda (fpath)
                                                           (dired-async-shell-command fpath))
     "The function used for opening PDF files externally."

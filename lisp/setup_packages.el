@@ -262,9 +262,14 @@
 ;; ================aggressive-indent===============
 (def-package! aggressive-indent
   :diminish aggressive-indent-mode
-  :config
-  (add-to-list 'aggressive-indent-excluded-modes 'asm-mode)
-  (global-aggressive-indent-mode 1))
+  :commands aggressive-indent-mode
+  :init
+  (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
+    (add-hook hook 'aggressive-indent-mode))
+  ;; :config
+  ;; (add-to-list 'aggressive-indent-excluded-modes 'asm-mode)
+  ;; (global-aggressive-indent-mode 1)
+  )
 ;; ================aggressive-indent===============
 ;;; clean-aindent-mode
 ;; ===============clean-aindent-mode===============

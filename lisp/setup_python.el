@@ -7,7 +7,6 @@
   (define-key python-mode-map (kbd "C-c C-c") 'python-shell-send-line-or-region)
   (define-key python-mode-map (kbd "C-c C-b") 'python-shell-send-buffer)
   (define-key python-mode-map (kbd "C-c C-e") 'python-shell-send-string)
-  (define-key inferior-python-mode-map (kbd "M-o M-p") 'swint-python-load-mysql)
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (defun python-shell-send-line-or-region ()
     (interactive)
@@ -18,14 +17,13 @@
 ;;; pyvenv
 ;; ===================pyvenv===================
 (def-package! pyvenv
-  :commands (pyvenv-workon-home
-             pyvenv-activate
-             swint-python-load-mysql)
+  :commands (pyvenv-workon-home pyvenv-activate)
   :bind (("M-o C-M-p" . pyvenv-workon)
          ("M-o C-M-S-p" . pyvenv-deactivate)
          ("M-o p" . swint-python-plot-data)
          ("M-o P" . swint-python-fig-config)
-         ("M-o C-p" . swint-python-load-file))
+         ("M-o C-p" . swint-python-load-file)
+         ("M-o C-P" . swint-python-load-mysql))
   :config
   (define-key minibuffer-local-map (kbd "C-c m") 'swint-python-insert-data)
   (define-key minibuffer-local-map (kbd "C-c M") 'swint-python-insert-variables)
@@ -106,18 +104,19 @@ names['df_'+re.sub('\\W','_','%s')]=pd.read_csv('%s', header=None if builtins.al
         (message "No python process found!" ))))
   (defun swint-python-load-mysql ()
     (interactive)
-    (let* ((user (get-auth-user "mysql"))
-           (pass (get-auth-pass "mysql"))
-           (database (helm-comp-read "Database to select: "
-                                     (cdr (split-string (shell-command-to-string (format "mysql --user=%s --password=%s -e \"show databases;\"" user pass))
-                                                        "\n" t "[ \t\n]+"))
-                                     :buffer "*helm python plot data-swint*"))
-           (table (helm-comp-read "Table to select: "
-                                  (cdr (split-string (shell-command-to-string (format "mysql --user=%s --password=%s -e \"show tables;\" %s" user pass database))
-                                                     "\n" t "[ \t\n]+"))
-                                  :buffer "*helm python plot data-swint*")))
-      (python-shell-send-string
-       (format "
+    (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
+        (let* ((user (get-auth-user "mysql"))
+               (pass (get-auth-pass "mysql"))
+               (database (helm-comp-read "Database to select: "
+                                         (cdr (split-string (shell-command-to-string (format "mysql --user=%s --password=%s -e \"show databases;\"" user pass))
+                                                            "\n" t "[ \t\n]+"))
+                                         :buffer "*helm python plot data-swint*"))
+               (table (helm-comp-read "Table to select: "
+                                      (cdr (split-string (shell-command-to-string (format "mysql --user=%s --password=%s -e \"show tables;\" %s" user pass database))
+                                                         "\n" t "[ \t\n]+"))
+                                      :buffer "*helm python plot data-swint*")))
+          (python-shell-send-string
+           (format "
 if 'pd' not in dir():
     import pandas as pd
 if 'sql' not in dir():
@@ -125,7 +124,8 @@ if 'sql' not in dir():
 conn = sql.create_engine('mysql+pymysql://%s:%s@localhost:3306/%s?charset=utf8')
 names=locals()
 names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', conn)
-" user pass database database table table))))
+" user pass database database table table)))
+      (message "No python process found!")))
   (defun swint-python-insert-variables ()
     (interactive)
     (cl-assert (minibuffer-window-active-p (selected-window)) nil
