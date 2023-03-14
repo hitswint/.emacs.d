@@ -10,11 +10,13 @@
   (bind-key "C-x C-." 'xref-pop-marker-stack)
   (bind-key "C-x C-/" 'xref-find-references)
   (bind-key "C-x C-?" 'xref-find-apropos)
+  (setq lsp-bridge-enable-mode-line nil)
   :config
   (require 'yasnippet)
   (yas-global-mode 1)
   (setq lsp-bridge-c-lsp-server "clangd")
   (setq lsp-bridge-python-lsp-server "pyright")
+  (setq lsp-bridge-python-ruff-lsp-server "pyright-background-analysis_ruff")
   (setq lsp-bridge-complete-manually nil) ;lsp-bridge-popup-complete-menu
   (setq acm-enable-quick-access nil)
   (setq acm-quick-access-modifier 'control) ;acm-complete-quick-access
@@ -38,9 +40,10 @@
      ("M-p" "scrool down" lsp-bridge-popup-documentation-scroll-down :transient t)
      ("M-n" "scroll up" lsp-bridge-popup-documentation-scroll-up :transient t)
      ("q" "quit" transient-quit-all)])
-  (define-key acm-mode-map (kbd "M-RET") #'acm-insert-common)
   (define-key acm-mode-map (kbd "M-<") #'acm-select-first)
   (define-key acm-mode-map (kbd "M->") #'acm-select-last)
+  (define-key acm-mode-map (kbd "M-RET") #'acm-insert-common)
+  (define-key acm-mode-map (kbd "C-s") #'acm-filter)
   (define-key acm-mode-map (kbd "C-o") #'acm-doc-toggle)
   (define-key acm-mode-map (kbd "M-p") #'acm-doc-scroll-down)
   (define-key acm-mode-map (kbd "M-n") #'acm-doc-scroll-up)
@@ -62,6 +65,8 @@
   (define-key lsp-bridge-mode-map (kbd "C-c M-d") #'lsp-bridge-diagnostic-list)
   (define-key lsp-bridge-mode-map (kbd "C-c M-w") #'lsp-bridge-diagnostic-copy)
   (define-key lsp-bridge-mode-map (kbd "C-c M-i") #'lsp-bridge-diagnostic-ignore)
+  (define-key lsp-bridge-mode-map (kbd "C-c M-a") #'lsp-bridge-code-action)
+  (define-key lsp-bridge-mode-map (kbd "C-c M-f") #'lsp-bridge-code-format)
   (define-key lsp-bridge-mode-map (kbd "C-c d") #'lsp-bridge-toggle-sdcv-helper))
 ;; =====================lsp-bridge=====================
 (provide 'setup_lsp)

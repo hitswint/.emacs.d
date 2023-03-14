@@ -1,0 +1,3 @@
+#!/bin/sh
+
+emacs -q -nw --eval="(setq make-backup-files nil)" "$@"

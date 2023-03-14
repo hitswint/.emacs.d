@@ -35,6 +35,15 @@
       (deactivate-mark)
       (isearch-yank-string swint-isearch-current-thing)))
   (define-key isearch-mode-map (kbd "C-t") 'isearch-thing)
+  (defun isearch-mark-current ()
+    (interactive)
+    ;; (let ((start (overlay-start isearch-overlay))
+    ;;       (end (overlay-end isearch-overlay)))
+    ;;   (push-mark start t t)
+    ;;   (goto-char end))
+    (push-mark isearch-other-end t t)
+    (isearch-exit))
+  (define-key isearch-mode-map (kbd "C-M-;") 'isearch-mark-current)
   ;; 转换后的regexp可能超过长度限制，导致re-search-forward产生"Regular expression too big"错误。
   (defun pinyin-search--pinyin-to-regexp/override (pinyin)
     "Wrap for Pinyin searching."

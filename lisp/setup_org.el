@@ -354,13 +354,15 @@
              outshine-cycle-buffer
              outshine-calc-outline-regexp)
   :init
+  ;; Heading格式随mode不同，通常是M-;加*加空格
   (add-hook 'outline-minor-mode-hook
-            (lambda () ;; 在latex-mode和org-mode中不开启outshine。
+            (lambda ()            ;latex-mode/org-mode中不开启outshine
               (unless (derived-mode-p 'latex-mode 'org-mode)
                 (outshine-mode))))
   :config
-  ;; Heading格式随mode不同，通常是M-;加*加空格
-  (setq outshine-use-speed-commands t)
+  ;; 与lsp-bridge冲突，acm-filter依赖self-insert-command，但outshine对其重新绑定
+  (setq outshine-use-speed-commands nil)
+  (define-key outshine-mode-map (vector 'remap 'self-insert-command) nil)
   (setq outshine-imenu-show-headlines-p nil)
   (add-hook 'outline-insert-heading-hook (lambda () (if (string-equal "" head)
                                                         (progn (call-interactively 'comment-dwim)

@@ -132,15 +132,15 @@
             (helm-truncate-lines t))
         (helm-bibtex arg bibtex-completion-bibliography/curr))))
   ;; helm-source-bibtex为(DISPLAY . REAL)类型，显示和匹配DISPLAY，但选中执行action的参数为REAL
-  ;; Dired中位于文件行时，显示文献条目(DISPLAY)，但匹配key(REAL)
+  ;; Dired中位于文件行或Python某些代码(plt.axvline)时，显示文献条目(DISPLAY)，但匹配key(REAL)
   (advice-add 'swint-helm-bibtex :around #'(lambda (fn &rest args)
-                                             (if (equal major-mode 'dired-mode)
-                                                 (save-excursion (goto-char (point-min)) (apply fn args))
-                                               (apply fn args))))
+                                             (if (memq major-mode '(org-mode latex-mode))
+                                                 (apply fn args)
+                                               (with-temp-buffer (apply fn args)))))
   (advice-add 'helm-bibtex :around #'(lambda (fn &rest args)
-                                       (if (equal major-mode 'dired-mode)
-                                           (save-excursion (goto-char (point-min)) (apply fn args))
-                                         (apply fn args))))
+                                       (if (memq major-mode '(org-mode latex-mode))
+                                           (apply fn args)
+                                         (with-temp-buffer (apply fn args)))))
   (defcustom helm-bibtex-pdf-open-externally-function #'(lambda (fpath)
                                                           (dired-async-shell-command fpath))
     "The function used for opening PDF files externally."
@@ -159,7 +159,7 @@
 ;;; ebib
 ;; =====================ebib=======================
 (def-package! ebib
-  :bind ("C-x M-b" . ebib)
+  :bind ("C-x C-b" . ebib)
   :config
   (define-key ebib-index-mode-map (kbd ",") 'ebib-prev-database)
   (define-key ebib-index-mode-map (kbd ".") 'ebib-next-database)
@@ -221,7 +221,7 @@
     (when (y-or-n-p "Join Zotero.bib?")
       (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
         (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
-      (let* ((ebib-join-command (concat "python " (expand-file-name "~/Documents/Python/ebib_bibtexparser.py")))
+      (let* ((ebib-join-command (concat "python " (expand-file-name "~/Documents/Python/bibtex/ebib_bibtexparser.py")))
              (process (start-process-shell-command "ebib-join" "*ebib-join*" ebib-join-command)))
         (message "Ebib joining.")
         (set-process-sentinel
@@ -240,7 +240,7 @@
                               (truncate-string-to-width item-title 100 nil nil t)))
         (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
           (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
-        (let* ((ebib-delete-command (concat "python " (expand-file-name "~/Documents/Python/ebib_pyzotero.py")
+        (let* ((ebib-delete-command (concat "python " (expand-file-name "~/Documents/Python/bibtex/ebib_pyzotero.py")
                                             " -t " "\"" item-title "\""))
                (process (start-process-shell-command "ebib-delete" "*ebib-delete*" ebib-delete-command)))
           (lexical-let ((mode-string (truncate-string-to-width item-title 100 nil nil t)))

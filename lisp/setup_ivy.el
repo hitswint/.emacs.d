@@ -15,7 +15,9 @@
     :after ivy-hydra)
   ;; https://github.com/pengpengxp/swiper/wiki/ivy-support-chinese-pinyin
   ;; (add-to-list 'ivy-re-builders-alist '(swiper . re-builder-pinyin)) ;单独对某命令设置
-  (setq ivy-re-builders-alist '((t . re-builder-pinyin)))
+  (setq ivy-re-builders-alist '((counsel-M-x . ivy--regex-plus)
+                                (counsel-ag . ivy--regex-plus)
+                                (t . re-builder-pinyin)))
   (defun swint-pinyinlib-build-regexp-string (str)
     (cond ((equal str ".*") ".*")
           (t (pinyinlib-build-regexp-string str t))))
@@ -27,7 +29,8 @@
     (cond ((equal 0 (length str)) nil)
           (t (mapconcat 'swint-pinyinlib-build-regexp-string
                         (remove nil (mapcar 'swint-pinyin-regexp-helper
-                                            (split-string str ""))) ""))))
+                                            (split-string str "")))
+                        ""))))
   (defun re-builder-pinyin (str)
     (or (pinyin-to-utf8 str)
         (ivy--regex-plus str)
@@ -59,6 +62,7 @@
   :commands counsel-read-file-for-rsync
   :bind (("M-X" . counsel-M-x)
          ("C-x C-r" . swint-counsel-history)
+         ("M-s c b" . counsel-switch-buffer)
          ("M-s c u" . counsel-unicode-char)
          ("M-s c l" . counsel-locate)
          ("M-s c i" . counsel-imenu)

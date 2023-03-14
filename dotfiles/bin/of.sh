@@ -19,17 +19,19 @@ else
     version=$2
 fi
 
-case $flavour in
-    com)
-        # https://hub.docker.com/r/opencfd/openfoam-default
-        openfoam-docker -$version -default -dir=$HOME/OpenFOAM/${USER}-com/
-        ;;
-    org)
-        # https://hub.docker.com/u/openfoam
-        xhost +
-        openfoam$version-linux -d $HOME/OpenFOAM/${USER}-$version -x # -u
-        ;;
-    q)
-        break
-        ;;
-esac
+if [[ ( x$flavour != x ) && ( x$version != x ) ]]; then
+    case $flavour in
+        com)
+            # https://hub.docker.com/r/opencfd/openfoam-default
+            openfoam-docker -$version -default -dir=$HOME/OpenFOAM/${USER}-com/
+            ;;
+        org)
+            # https://hub.docker.com/u/openfoam
+            xhost +
+            openfoam$version-linux -d $HOME/OpenFOAM/${USER}-$version -x # -u
+            ;;
+        q)
+            break
+            ;;
+    esac
+fi

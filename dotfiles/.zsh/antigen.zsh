@@ -27,7 +27,8 @@ if [ -f ${ZDOTDIR}/src/antigen/antigen.zsh ];then
     # https://github.com/agkozak/zsh-z
     antigen bundle agkozak/zsh-z
     (( ${+ZSHZ_EXCLUDE_DIRS} )) || typeset -ga ZSHZ_EXCLUDE_DIRS
-    ZSHZ_EXCLUDE_DIRS+="/mnt/share"
+    ZSHZ_EXCLUDE_DIRS+="/mnt"
+    export ZSHZ_NO_RESOLVE_SYMLINKS=1
 
     # https://github.com/Aloxaf/fzf-tab/
     antigen bundle Aloxaf/fzf-tab

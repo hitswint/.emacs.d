@@ -92,10 +92,11 @@
 ;;; expand-region
 ;; =================expand-region==================
 (def-package! expand-region
-  :bind ("C-M-;" . er/expand-region)
+  :bind (("C-M-;" . er/expand-region)
+         ("C-M-:" . er/contract-region))
   :config
   ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end
-  (setq expand-region-contract-fast-key ":")
+  (setq expand-region-contract-fast-key "C-:")
   (setq expand-region-reset-fast-key "C-;"))
 ;; =================expand-region==================
 ;;; auto-mark
@@ -355,6 +356,14 @@
   (global-set-key [remap kill-ring-save] 'easy-kill)
   (global-set-key [remap mark-sexp] 'easy-mark)
   :config
+  (setq interprogram-cut-function 'gui-select-text-with-copyq)
+  (defun gui-select-text-with-copyq (text)
+    (if (string-empty-p (shell-command-to-string "pgrep -x copyq"))
+        (gui-select-text text)
+      (let ((inhibit-message t)
+            (message-log-max nil))
+        (write-region text nil "/tmp/eaclipboard")
+        (shell-command (format "copyq copy - < /tmp/eaclipboard && copyq add - < /tmp/eaclipboard")))))
   (define-key easy-kill-base-map (kbd "C-w") 'easy-kill-region)
   (define-key easy-kill-base-map (kbd ",") 'easy-kill-shrink)
   (define-key easy-kill-base-map (kbd ".") 'easy-kill-expand))
@@ -616,6 +625,12 @@
   :config
   (setq markdown-open-image-command "feh.sh"
         markdown-max-image-size '(640 . 480))
+  (smartrep-define-key markdown-mode-map "M-s"
+    '(("p" . markdown-outline-previous)
+      ("n" . markdown-outline-next)
+      ("u" . markdown-outline-up)
+      ("b" . markdown-outline-previous-same-level)
+      ("f" . markdown-outline-next-same-level)))
   (define-key markdown-mode-map (kbd "C-c C-x C-M-v") 'markdown-display-inline-images)
   (define-key markdown-mode-map (kbd "C-c C-x C-v") 'markdown-toggle-inline-images)
   (define-key markdown-mode-map (kbd "C-c j") 'markdown-follow-thing-at-point))
@@ -891,6 +906,7 @@
   (global-set-key (kbd "C-M-4") 'my-select-window)
   (global-set-key (kbd "C-M-5") 'my-select-window)
   (global-set-key (kbd "C-M-6") 'my-select-window)
+  (define-key key-translation-map (kbd "C-M-^") (kbd "C-M-6"))
   (global-set-key (kbd "C-M-7") 'my-select-window)
   (awesome-tab-mode t))
 ;; ===============awesome-tab======================

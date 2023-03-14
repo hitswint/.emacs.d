@@ -1,7 +1,7 @@
 ;;; ibuffer
 ;; =========================ibuffer==============================
 (def-package! ibuffer
-  :bind ("C-x C-b" . ibuffer)
+  :bind ("C-x C-M-<tab>" . ibuffer)
   :config
   (setq ibuffer-expert t
         ibuffer-show-empty-filter-groups nil)

@@ -29,13 +29,42 @@
                                               (swint-org-annotate-file)
                                               (dired-do-copy)
                                               (dired-create-directory)))
+  ;; https://www.n16f.net/blog/investigating-a-ffap-issue-in-emacs/
+  (advice-add 'helm-guess-filename-at-point :override
+              #'(lambda () (with-helm-current-buffer
+                             (let ((ffap-machine-p-known 'accept)
+                                   (ffap-machine-p-local 'accept)
+                                   (ffap-machine-p-unknown 'reject))
+                               (run-hook-with-args-until-success 'file-name-at-point-functions)))))
   (setq helm-buffer-details-flag nil)
   (setq helm-ff-newfile-prompt-p nil)
   ;; (add-to-list 'display-buffer-alist '("^\\*helm .*" (display-buffer-at-bottom))) ;在底部打开helm
   (setq helm-split-window-default-side 'same)
   (setq helm-external-programs-associations file-extension-app-alist)
   (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
-  (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list '("\\`Enjoy\\ Music\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\`.english-words\\'" "\\`\\*Help\\*\\'" "\\`\\*tramp.*\\*\\'" "\\`\\*baidu-translate\\*\\'" "\\`\\*org-brain-helm\\*\\'" "\\`\\*Org Preview LaTeX Output\\*\\'")))
+  (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list
+                                               '("\\`Enjoy\\ Music\\'"
+                                                 "\\`\\*Ibuffer\\*\\'"
+                                                 "\\`\\*calculator\\*\\'"
+                                                 "\\`\\*Calendar\\*\\'"
+                                                 "\\`\\*Process\\ List\\*\\'"
+                                                 "\\`\\*toc\\*\\'"
+                                                 "\\`\\*buffer-selection\\*\\'"
+                                                 "\\`\\*Disabled\\ Command\\*\\'"
+                                                 "\\`\\*Mingus\\*\\'"
+                                                 "\\`\\*Ido\\ Completions\\*\\'"
+                                                 "\\`.english-words\\'"
+                                                 "\\`\\*Help\\*\\'"
+                                                 "\\`\\*tramp.*\\*\\'"
+                                                 "\\`\\*baidu-translate\\*\\'"
+                                                 "\\`\\*org-brain-helm\\*\\'"
+                                                 "\\`\\*Org\\ Help\\*\\'"
+                                                 "\\`\\*Org\\ Preview\\ LaTeX\\ Output\\*\\'"
+                                                 "\\`magit-diff:"
+                                                 "\\`\\*lsp-bridge"
+                                                 "\\`\\*plot-data\\*\\'"
+                                                 "\\`\\*Async\\ Shell\\ Command\\*\\'"
+                                                 "\\`\\*Shell\\ Command\\ Output\\*\\'")))
   ;; (setq helm-mounted-network-directories '("/mnt/share" "/mnt/sshfs"))
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))
@@ -575,8 +604,11 @@
   (setq helm-ag-base-command "ag --nocolor --nogroup --hidden")
   (setq helm-ag-command-option "--follow") ;Follow symlinks.
   ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果。
+  (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)
   (define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)
-  (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action))
+  (define-key helm-ag-map (kbd "C-l") 'helm-execute-persistent-action)
+  (define-key helm-do-ag-map (kbd "C-h") 'helm-ag--do-ag-up-one-level)
+  (define-key helm-do-ag-map (kbd "C-l") 'helm-execute-persistent-action))
 ;; =================helm-ag=====================
 ;;; helm-descbinds
 ;; ==============helm-descbinds=================

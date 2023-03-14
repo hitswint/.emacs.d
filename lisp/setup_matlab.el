@@ -15,6 +15,7 @@
                                                   (if mark-active
                                                       (call-interactively 'octave-send-region)
                                                     (call-interactively 'octave-send-buffer))))
+  (define-key octave-mode-map (kbd "C-c C-b") 'octave-send-buffer)
   (define-key octave-mode-map (kbd "M-.") nil)
   (define-key octave-mode-map (kbd "C-h") nil)
   (define-key inferior-octave-mode-map (kbd "C-c C-,") 'octave-find-definition)

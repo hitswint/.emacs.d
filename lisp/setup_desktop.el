@@ -3,7 +3,6 @@
 (def-package! saveplace
   :config
   (if (fboundp 'save-place-mode)
-      ;; Emacs 25 has a proper mode for `save-place'
       (save-place-mode)
     (setq-default save-place t))
   (setq save-place-forget-unreadable-files nil))

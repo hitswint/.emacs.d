@@ -43,7 +43,7 @@ if [[ -t 0 ]]; then
         ssh N5095 "~/bin/wol.sh"
     fi
 else
-    COMMANDS="Poweroff system\nReboot system\nSuspend system\nHibernate system"
+    COMMANDS="Poweroff\nReboot\nSuspend\nHibernate"
     LAUNCHER="rofi.sh -width 30 -dmenu -i -p Power:"
     power_command=`echo -e $COMMANDS | $LAUNCHER | awk '{print $1}' | tr -d '\r\n'`
 

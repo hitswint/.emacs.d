@@ -7,6 +7,9 @@
   (define-key python-mode-map (kbd "C-c C-c") 'python-shell-send-line-or-region)
   (define-key python-mode-map (kbd "C-c C-b") 'python-shell-send-buffer)
   (define-key python-mode-map (kbd "C-c C-e") 'python-shell-send-string)
+  (add-hook 'python-mode-hook #'(lambda ()  ;参考elpy-module-sane-defaults
+                                  (setq forward-sexp-function nil)  ;默认python-nav-forward-sexp
+                                  (setq comment-inline-offset 2)))
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (defun python-shell-send-line-or-region ()
     (interactive)
@@ -23,7 +26,7 @@
          ("M-o p" . swint-python-plot-data)
          ("M-o P" . swint-python-fig-config)
          ("M-o C-p" . swint-python-load-file)
-         ("M-o C-P" . swint-python-load-mysql))
+         ("M-o C-S-p" . swint-python-load-mysql))
   :config
   (define-key minibuffer-local-map (kbd "C-c m") 'swint-python-insert-data)
   (define-key minibuffer-local-map (kbd "C-c M") 'swint-python-insert-variables)
@@ -44,7 +47,8 @@
                                                                     (defined-colors))))
                                      ("lines" (list "-" "--" "-." ":"))
                                      ("markers" (list "o" "v" "^" "<" ">" "1" "2" "3" "4" "8" "s" "p" "P" "*" "h" "H" "+" "x" "X" "D" "d" "|" "_"))
-                                     ("hatchs" (list "/" "\\" "|" "-" "+" "x" "o" "O" "." "*" "//" "\\\\\\\\" "||" "--" "++" "xx" "oo" "OO" ".." "**"))))
+                                     ("hatchs" (list "/" "\\" "|" "-" "+" "x" "o" "O" "." "*" "//" "\\\\\\\\" "||" "--" "++" "xx" "oo" "OO" ".." "**"))
+                                     ("polyfit" (list "1" "2" "3" "4" "5"))))
   (defun swint-python-load-file ()
     (interactive)
     (let ((file-name (if (eq major-mode 'dired-mode) (dired-get-filename) (buffer-file-name))))
@@ -92,6 +96,34 @@ conn = sql.create_engine('sqlite:///%s')
 names=locals()
 names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', conn)
 " (expand-file-name file-name) file-base-name table table))))
+             ;; 需修改esoreader.py源文件，data = {v[1:]: self.data[self.dd.index[v]] for v in variables} -> data = {':'.join(filter(None, v[1:])): self.data[self.dd.index[v]] for v in variables}
+             ((member (ignore-errors (downcase (file-name-extension file-name))) '("eso" "mtr"))
+              (python-shell-send-string
+               (format "
+if 'esoreader' not in dir():
+    import esoreader
+esofile=esoreader.read_from_path('%s')
+names=locals()
+for freq in ['TimeStep', 'Hourly', 'Daily', 'Monthly', 'Annual', 'RunPeriod']:
+    if esofile.find_variable('', frequency=freq):
+        names['df_'+re.sub('\\W','_','%s_')+freq] = esofile.to_frame('', frequency=freq)
+" (expand-file-name file-name) file-base-name)))
+             ((member (ignore-errors (downcase (file-name-extension file-name))) '("epw"))
+              (python-shell-send-string
+               (format "
+if 'epw' not in dir():
+    from epw import epw
+names=locals()
+names['epw_'+re.sub('\\W','_','%1$s')] = epw()
+names['epw_'+re.sub('\\W','_','%1$s')].read(r'%2$s')
+names['df_'+re.sub('\\W','_','%1$s')] = names['epw_'+re.sub('\\W','_','%1$s')].dataframe
+names['df_'+re.sub('\\W','_','%1$s')]['Time'] = names['df_'+re.sub('\\W','_','%1$s')]['Year'].map(str)
+for x in ['Month', 'Day']:
+    # 增加Time列，将月/日补零
+    names['df_'+re.sub('\\W','_','%1$s')]['Time'] += '-' + names['df_'+re.sub('\\W','_','%1$s')][x].map(lambda x: str(x).zfill(2))
+# 处理24:00:00时间转换错误：ParserError: hour must be in 0..23
+names['df_'+re.sub('\\W','_','%1$s')]['Time'] = pd.to_datetime(names['df_'+re.sub('\\W','_','%1$s')]['Time']) + pd.to_timedelta(names['df_'+re.sub('\\W','_','%1$s')]['Hour'].map(str) + ':' + names['df_'+re.sub('\\W','_','%1$s')]['Minute'].map(str) + ':00')
+" file-base-name (expand-file-name file-name))))
              ;; 导入csv和其他文件
              (t (let ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' '%s' | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
                   (python-shell-send-string
@@ -177,15 +209,50 @@ names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', 
   (defun swint-python-fig-config ()
     (interactive)
     (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
-        (let* ((config-list (helm-comp-read "Configs: " (list "tick_font" "tick_size" "label_font" "label_size" "legend_font" "legend_size" "legend_ncol")
+        (let* ((config-list (helm-comp-read "Configs: " (list "tick_font" "tick_size" "label_font" "label_size" "time_formatter" "legend_font" "legend_size" "legend_ncol" "text" "annotate" "axline" "patch" "remove")
                                             :marked-candidates t
                                             :buffer "*helm python fig config-swint*"))
                (args-list (cl-loop for x in config-list
-                                   collect (format "%s='%s'" x (read-string (concat x ": ")))))
+                                   collect (cond
+                                            ((equal x "text")
+                                             (concat (format "text='%s'" (read-string "text($\\\\alpha$): "))
+                                                     (format ",text_config='%s'" (read-string "text_config(x,y): "))
+                                                     (format ",text_config_optional='%s'" (read-string "text_config_optional: " "56,s,k"))))
+                                            ((equal x "annotate")
+                                             (concat (format "annotate='%s'" (read-string "annotate($\\\\alpha$): "))
+                                                     (format ",annotate_config='%s'" (read-string "annotate_config(x,y,x[text],y[text]): "))
+                                                     (format ",annotate_config_optional='%s'" (read-string "annotate_config_optional: "
+                                                                                                           "56,s,k,arrowstyle=\"simple\",connectionstyle=\"arc3\",edgecolor=\"k\",facecolor=\"w\",fill=False,linestyle=\"-\",linewidth=2"))))
+                                            ((equal x "axline")
+                                             (concat (format "axline='%s'" (read-string "axline(h/v): "))
+                                                     (format ",axline_config='%s'" (read-string "axline_config(coordinate): "))
+                                                     (format ",axline_config_optional='%s'" (read-string "axline_config_optional: " "-,k"))))
+                                            ((equal x "patch")
+                                             (let ((patch (helm-comp-read "Patch: " (list "Circle" "Rectangle" "Ellipse" "RegularPolygon")
+                                                                          :buffer "*helm python plot data-swint*")))
+                                               (concat (format "patch='%s'" patch)
+                                                       (format ",patch_config='%s'"
+                                                               (cond ((equal patch "Circle")
+                                                                      (read-string "Circle(x,y,R): "))
+                                                                     ((equal patch "Rectangle")
+                                                                      (read-string "Rectangle(x,y,w,h,angle=0): "))
+                                                                     ((equal patch "Ellipse")
+                                                                      (read-string "Ellipse(x,y,w,h,angle=0): "))
+                                                                     ((equal patch "RegularPolygon")
+                                                                      (read-string "RegularPolygon(x,y,n,R,orientation=0): "))))
+                                                       (format ",patch_config_optional='%s'" (read-string "patch_config_optional: " "edgecolor=\"k\",facecolor=\"w\",fill=False,linestyle=\"-\",linewidth=2")))))
+                                            ((equal x "remove")
+                                             (format "remove='%s'" (helm-comp-read "Remove: " (list "text" "annotate" "axline" "patch")
+                                                                                   :buffer "*helm python plot data-swint*")))
+                                            ((equal x "time_formatter")
+                                             (concat (format "time_locator='%s'" (read-string "time_locator(Second/Minute/Hour/Day/Weekday/Month/Year/Auto,rotation): " "Auto,30"))
+                                                     (format ",time_formatter='%s'" (read-string "time_formatter: " "%Y/%m/%d %H:%M:%S"))))
+                                            (t
+                                             (format "%s='%s'" x (read-string (concat x ": ")))))))
                (args-string (mapconcat 'identity args-list ",")))
           (when args-string
             (python-shell-send-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
-plot_data.fig_config(%s)" (expand-file-name "~/Documents/Python") args-string))))
+plot_data.fig_config(%s)" (expand-file-name "~/Documents/Python/plot") args-string))))
       (message "No python process found!")))
   (defun swint-python-plot-data ()
     (interactive)
@@ -211,11 +278,11 @@ plot_data.fig_config(%s)" (expand-file-name "~/Documents/Python") args-string)))
           (setq file-x-string (helm-comp-read "File as x: " (cons "None" (directory-files default-directory nil directory-files-no-dot-files-regexp))
                                               :buffer "*helm python plot data-swint*"))
           (setq column-x-string (plot-file-setup (if (string= file-x-string "None") (car files-list) file-x-string) t)))
-        (let* ((config-list (helm-comp-read "Configs: " (list "None" "rows" "row_x" "labels" "fonts" "sizes" "colors" "lines" "markers" "hatchs" "Save")
+        (let* ((config-list (helm-comp-read "Configs: " (list "None" "rows" "row_x" "labels" "fonts" "sizes" "colors" "lines" "markers" "hatchs" "polyfit" "twinx" "Save")
                                             :marked-candidates t
                                             :buffer "*helm python fig config-swint*"))
-               ;; 从列表中除去多个元素，也可以用：(cl-set-difference config-list '("Save" "None") :test 'equal)
-               (args-alist (cl-loop for x in (seq-difference config-list '("Save" "None"))
+               ;; 从列表中除去多个元素，也可以用：(cl-set-difference config-list '("twinx" "Save" "None") :test 'equal)
+               (args-alist (cl-loop for x in (seq-difference config-list '("twinx" "Save" "None"))
                                     collect (cons x (if (listp (gethash x swint-python-plot-hash))
                                                         (mapconcat 'identity (helm-comp-read (concat x ": ") (gethash x swint-python-plot-hash)
                                                                                              :marked-candidates t
@@ -225,23 +292,26 @@ plot_data.fig_config(%s)" (expand-file-name "~/Documents/Python") args-string)))
           (setq shell-command-args (concat (mapconcat #'(lambda (x)
                                                           (format "--%s \"%s\"" (car x) (cdr x)))
                                                       args-alist " ")
+                                           (if (member "twinx" config-list) " --twinx ")
                                            (if (member "Save" config-list) " --save ")))
-          (setq send-string-args (concat (mapconcat #'(lambda (x)
-                                                        (format "%s='%s'" (car x) (cdr x)))
-                                                    args-alist ",")
+          (setq send-string-args (concat (if args-alist
+                                             (concat "," (mapconcat #'(lambda (x)
+                                                                        (format "%s='%s'" (car x) (cdr x)))
+                                                                    args-alist ",")))
+                                         (if (member "twinx" config-list) ",twinx=True")
                                          (if (member "Save" config-list) ",save=True"))))
         (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
           (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
         (let ((python-command-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
-plot_data.cli_plot([%s],'%s', %s)" (expand-file-name "~/Documents/Python") data-string style-string (or send-string-args ""))))
+plot_data.cli_plot([%s],'%s' %s)" (expand-file-name "~/Documents/Python/plot") data-string style-string (or send-string-args ""))))
           (cond ((equal major-mode 'inferior-python-mode)
                  (python-shell-send-string python-command-string))
                 ((equal major-mode 'jupyter-repl-mode)
                  (jupyter-eval-string-command python-command-string))
                 (t (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
                        (python-shell-send-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
-plot_data.file_plot('%s','%s','%s','%s','%s', %s)" (expand-file-name "~/Documents/Python") files-string columns-string file-x-string column-x-string style-string (or send-string-args "")))
-                     (let* ((plot-data-command (concat "python " (expand-file-name "~/Documents/Python/plot_data.py")
+plot_data.file_plot('%s','%s','%s','%s','%s' %s)" (expand-file-name "~/Documents/Python/plot") files-string columns-string file-x-string column-x-string style-string (or send-string-args "")))
+                     (let* ((plot-data-command (concat "python " (expand-file-name "~/Documents/Python/plot/plot_data.py")
                                                        " -i " "\"" files-string "\""
                                                        " -y " "\"" columns-string "\""
                                                        " -I " "\"" file-x-string "\""
@@ -282,6 +352,18 @@ plot_data.file_plot('%s','%s','%s','%s','%s', %s)" (expand-file-name "~/Document
   (define-key elpy-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key elpy-mode-map (kbd "C-c C-.") 'pop-tag-mark)
   (define-key elpy-mode-map (kbd "C-c C-/") 'elpy-doc)
+  (define-key elpy-mode-map (kbd "M-TAB") 'elpy-company-backend)
+  (define-key elpy-mode-map (kbd "C-c C-f") 'elpy-find-file)
+  (define-key elpy-mode-map (kbd "C-c C-n") 'elpy-flymake-next-error)
+  (define-key elpy-mode-map (kbd "C-c C-o") 'elpy-occur-definitions)
+  (define-key elpy-mode-map (kbd "C-c C-p") 'elpy-flymake-previous-error)
+  (define-key elpy-mode-map (kbd "C-c M-f") 'elpy-format-code)
+  (define-key elpy-mode-map (kbd "C-c C-s") 'elpy-rgrep-symbol)
+  (define-key elpy-mode-map (kbd "C-c C-r") elpy-refactor-map)
+  (define-key elpy-mode-map (kbd "C-c C-x") elpy-django-mode-map)
+  (define-key elpy-mode-map (kbd "C-c C-c") nil)
+  (define-key elpy-mode-map (kbd "C-c C-b") nil)
+  (define-key elpy-mode-map (kbd "C-c C-e") nil)
   (define-key inferior-python-mode-map (kbd "C-q") 'comint-send-eof)
   (define-key inferior-python-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key inferior-python-mode-map (kbd "C-c C-.") 'pop-tag-mark)

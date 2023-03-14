@@ -91,14 +91,14 @@
 (defun shutdown-emacs-server ()
   (interactive)
   ;; 若在GUI下，关闭server之前重开一个frame，容纳后续弹窗
-  (when (and (not (eq window-system 'x)) x-display-name)
-    (when (not x-display-name) (setq x-display-name (getenv "DISPLAY")))
-    (window-system-initialization)
-    (select-frame (make-frame-on-display x-display-name '((window-system . x)))))
-  (let (;; 使弹窗使用dialog-box，而不是minibuffer
-        ;; (last-nonmenu-event nil)
-        )
-    (switch-to-buffer (messages-buffer))
-    (goto-char (point-max))
-    (save-buffers-kill-emacs)))
+  ;; (when (and (not (eq window-system 'x)) x-display-name)
+  ;;   (when (not x-display-name) (setq x-display-name (getenv "DISPLAY")))
+  ;;   (window-system-initialization)
+  ;;   (select-frame (make-frame-on-display x-display-name '((window-system . x)))))
+  ;; (let (;; 使弹窗使用dialog-box，而不是minibuffer
+  ;;       ;; (last-nonmenu-event nil)
+  ;;       )
+  ;;   (switch-to-buffer (messages-buffer))
+  ;;   (goto-char (point-max)))
+  (save-buffers-kill-emacs))
 ;; =============shutdown-emacs-server==============

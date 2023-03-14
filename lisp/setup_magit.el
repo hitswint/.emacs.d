@@ -15,10 +15,9 @@
     (add-hook hook #'(lambda ()
                        (highlight-parentheses-mode -1)
                        (auto-mark-mode -1))))
-  ;; magit-status中去除headers/staged，使用magit-show-refs/magit-diff-staged替代
+  ;; magit-status中去除headers/staged，使用magit-show-refs(y)/magit-diff-staged(ds)/magit-diff-unstaged(du)
   (dolist (hook '(magit-insert-status-headers magit-insert-staged-changes))
     (remove-hook 'magit-status-sections-hook hook))
-  (define-key magit-mode-map (kbd "C-c s") 'magit-diff-staged)
   (define-key magit-mode-map (kbd "<C-tab>") nil)
   (defun magit-exit-commit-mode ()
     (interactive)
