@@ -2,11 +2,10 @@
 # key : table
 # name : table
 # --
-#+ATTR_LATEX: :placement [${1:$$(unless yas-modified-p "htbp")}]${2: :align ${3:cc}}
-#+CAPTION: ${4:}
-#+NAME: tab:${5:$$(unless yas-modified-p (make-temp-name (concat (replace-regexp-in-string " " "_" (yas-field-value 4)) "_")))}
+#+ATTR_LATEX: :placement [htbp] :align cc
+#+CAPTION: ${1:}
+#+NAME: tbl:${2:$$(unless yas-modified-p (make-temp-name (concat (ivy-read "Export to: " '(latex office)) ":" (replace-regexp-in-string " " "_" (yas-field-value 1)) ":")))}
+#+LABEL: tbl:$2
 |----+---+
 | $0 |   |
-|----+---+
-|    |   |
 |----+---+

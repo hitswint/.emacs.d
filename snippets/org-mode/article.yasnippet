@@ -2,7 +2,6 @@
 # key : article
 # name : article
 # --
-# -*- org-pandoc-paragraph-fmt: "图 %d"; org-pandoc-table-fmt: "表 %d"; org-pandoc-src-block-fmt: "列表 %d"; -*-
 #+LATEX_CLASS: cn-article
 #+TITLE: ${1:$$(unless yas-modified-p (file-name-base (buffer-name)))}
 #+SUBTITLE:
@@ -10,13 +9,19 @@
 #+DATE: ${3:$$(unless yas-modified-p (format-time-string "%Y-%m-%d"))}
 #+OPTIONS: H:9
 #+LATEX_HEADER:
-# 使用pandoc默认格式
-#+PANDOC_OPTIONS: citeproc:t bibliography:~/.bib/Zotero.bib csl:~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl toc:t toc-depth:3
+# ===================PANDOC===================
+#+PANDOC_OPTIONS: toc:t toc-depth:3
+# ==================citeproc==================
+#+PANDOC_OPTIONS: citeproc:t
+#+PANDOC_OPTIONS: bibliography:${4:$$(unless yas-modified-p (expand-file-name "~/.bib/Zotero.bib"))} csl:${5:$$(unless yas-modified-p (expand-file-name "~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl"))}
 #+PANDOC_METADATA: reference-section-title:参考文献
-# 使用org-cite
-# #+CITE_EXPORT: csl china-national-standard-gb-t-7714-2015-numeric.csl
-# #+BIBLIOGRAPHY: ~/.bib/Zotero.bib
-$0
-
+# ==================org-cite===================
+# #+BIBLIOGRAPHY: $4
+# #+CITE_EXPORT: csl $5
 # * 参考文献
 #   #+PRINT_BIBLIOGRAPHY:
+# ===============pandoc-crossref==============
+#+PANDOC_OPTIONS: filter:pandoc-crossref
+#+PANDOC_METADATA: figureTitle:图 figPrefix:图 tableTitle:表 tblPrefix:表 eqnPrefix:式 autoEqnLabels:true titleDelim: chapters:false chapDelim:-
+
+$0

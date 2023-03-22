@@ -209,7 +209,7 @@ names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', 
   (defun swint-python-fig-config ()
     (interactive)
     (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
-        (let* ((config-list (helm-comp-read "Configs: " (list "tick_font" "tick_size" "label_font" "label_size" "time_formatter" "legend_font" "legend_size" "legend_ncol" "text" "annotate" "axline" "patch" "remove")
+        (let* ((config-list (helm-comp-read "Configs: " (list "xlabel" "ylabel" "fonts" "sizes" "time_formatter" "legend_ncol" "text" "annotate" "axline" "patch" "remove")
                                             :marked-candidates t
                                             :buffer "*helm python fig config-swint*"))
                (args-list (cl-loop for x in config-list
@@ -245,7 +245,7 @@ names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', 
                                              (format "remove='%s'" (helm-comp-read "Remove: " (list "text" "annotate" "axline" "patch")
                                                                                    :buffer "*helm python plot data-swint*")))
                                             ((equal x "time_formatter")
-                                             (concat (format "time_locator='%s'" (read-string "time_locator(Second/Minute/Hour/Day/Weekday/Month/Year/Auto,rotation): " "Auto,30"))
+                                             (concat (format "time_locator='%s'" (read-string "time_locator(Second/Minute/Hour/Day/Weekday/Month/Year/Auto,rotation): " "Auto,0"))
                                                      (format ",time_formatter='%s'" (read-string "time_formatter: " "%Y/%m/%d %H:%M:%S"))))
                                             (t
                                              (format "%s='%s'" x (read-string (concat x ": ")))))))
@@ -393,6 +393,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" (expand-file-name "~/Documents
 ;;; jupyter
 ;; ==================jupyter===================
 (def-package! jupyter
+  ;; 依赖emacs-zmq，自动安装失败时，可手动下载emacs-zmq.so并置于zmq.el同文件夹下
   :bind (("M-o j" . swint-jupyter-run-repl)
          ("M-o J" . jupyter-connect-repl))
   :config
@@ -428,9 +429,10 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" (expand-file-name "~/Documents
                                 (set (make-local-variable 'company-idle-delay) nil)))
   (define-key jedi-mode-map (kbd "C-c j") 'jedi:get-in-function-call)
   (define-key jedi-mode-map (kbd "M-u") 'jedi:complete)
-  (define-key jedi-mode-map (kbd "C-c C-/") 'jedi:show-doc)
   (define-key jedi-mode-map (kbd "C-c C-,") 'jedi:goto-definition)
   (define-key jedi-mode-map (kbd "C-c C-.") 'jedi:goto-definition-pop-marker)
+  (define-key jedi-mode-map (kbd "C-c C-/") 'jedi:show-doc)
+  (define-key jedi-mode-map (kbd "C-c /") 'helm-jedi-related-names)
   (define-key jedi-mode-map (kbd "<C-tab>") nil)
   (define-key jedi-mode-map (kbd "C-c ?") nil)
   (define-key jedi-mode-map (kbd "C-c .") nil)

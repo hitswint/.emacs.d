@@ -4,16 +4,20 @@ Wind_id=`xdotool getactivewindow`;
 sleep 0.5
 
 if [ $(xdotool search --onlyvisible --class "URxvt" | grep -i $Wind_id) ]; then
-    selectText=$(xclip -selection primary -o | sed 's/[\"]/\\&/g')
-elif [ $(xdotool search --onlyvisible --class "Emacs" | grep -i $Wind_id) ]; then
-    xdotool keyup alt+w
-    xdotool key --clearmodifiers alt+w
-    selectText=$(xclip -selection clipboard -o | sed 's/[\"]/\\&/g')
+    selectText=$(xclip -selection primary -o)
 else
-    xdotool keyup ctrl+c
-    xdotool key --clearmodifiers ctrl+c
-    selectText=$(xclip -selection clipboard -o | sed 's/[\"]/\\&/g')
+    if [ $(xdotool search --onlyvisible --class "Emacs" | grep -i $Wind_id) ]; then
+        xdotool keyup alt+w
+        xdotool key --clearmodifiers alt+w
+        sleep 1
+    else
+        xdotool keyup ctrl+c
+        xdotool key --clearmodifiers ctrl+c
+    fi
+    selectText=$(xclip -selection clipboard -o)
 fi
+
+selectText=$(echo $selectText | sed 's/[\"]/\\&/g' | tr -d '\n')
 
 # * dict.sh
 # https://gist.github.com/Amooti73/9dac66ffee26f93baf211ab8c05949cd
@@ -41,6 +45,7 @@ fi
 # * rofi-translate
 export transHistory_sdcv=$HOME/.rofi_trans_sdcv
 export transHistory_ydcv=$HOME/.rofi_trans_ydcv
+ydcv_orig=$(cat $transHistory_ydcv)
 
 # 可指定sdcv/ydcv模式，也可自动选择
 if [[ $1 == "sdcv" ]]; then
@@ -70,6 +75,19 @@ fi
 
 # https://github.com/garyparrot/rofi-translate
 rofi.sh -width 80 -lines 32 -sidebar-mode -modi "sdcv:rofi_trans_sdcv,ydcv:rofi_trans_ydcv" -show $transmode
+
+ydcv_curr=$(cat $transHistory_ydcv)
+
+if [[ ($ydcv_orig != $ydcv_curr) && ($ydcv_curr == *'Translation'*) ]]; then
+    # 返回匹配Translation:的下一行，并去除首尾空格
+    # echo $ydcv_curr | awk '/Translation:/{ getline; print }' | awk '{$1=$1;print}'
+    # echo $ydcv_curr | awk '/Translation:/{ getline; print }' | awk '{$1=$1};1'
+    # echo $ydcv_curr | sed -n '/Translation:/{ n; p }' | awk '{$1=$1};1'
+    # 返回匹配Translation:后的所有行
+    # echo $ydcv_curr | sed -n '/Translation:/,$p' | tail -n +2
+    cat $transHistory_ydcv | sed -n '/Translation:/ { :a; n; p; ba; }' | awk '{$1=$1;print}' | xclip -selection clipboard
+fi
+
 
 # ** 直接复制选择项
 # *** 使用kb-secondary-copy

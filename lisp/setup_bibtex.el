@@ -106,12 +106,10 @@
   ;; 改变helm-bibtex中Insert citation格式
   (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
         'org-cite-format-citation)
-  ;; 当存在#+BIBLIOGRAPHY时，使用org-cite格式，否则使用pandoc默认格式
+  ;; 当存在#+BIBLIOGRAPHY时，使用org-cite格式，否则使用citeproc格式
   (defun org-cite-format-citation (keys)
     (if (org-cite-list-bibliography-files)
-        (concat "[cite:" (s-join "; "
-                                 (--map (format "@%s" it) keys))
-                "] ")
+        (bibtex-completion-format-citation-org-cite keys)
       (concat "cite:" (s-join ","
                               (--map (format "%s" it) keys))
               " ")))

@@ -7,7 +7,7 @@
 % BEGIN RECEIVE ORGTBL ${3:name}
 % END RECEIVE ORGTBL $3
 \caption{${1:caption}}
-\label{tab:${2:$$(unless yas-modified-p (make-temp-name (concat (replace-regexp-in-string " " "_" (yas-field-value 1)) "_")))}}
+\label{tbl:${2:$$(unless yas-modified-p (make-temp-name (concat (replace-regexp-in-string " " "_" (yas-field-value 1)) ":")))}}
 \end{table}
 \begin{comment}
 #+ORGTBL: SEND $3 orgtbl-to-latex :splice nil :skip 0

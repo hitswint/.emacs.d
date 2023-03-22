@@ -241,7 +241,7 @@
                                                                              "--extract-media ./pic"))
                                                                ((equal output-format "docx")
                                                                 (read-string "Options: "
-                                                                             (format "--reference-doc=%s --citeproc --bibliography=%s --csl=%s -M reference-section-title=\"%s\""
+                                                                             (format "--reference-doc=%s --toc --toc-depth=3 --citeproc --bibliography=%s --csl=%s --metadata reference-section-title:\"%s\" --metadata=figureTitle:图 --metadata=figPrefix:图 --metadata=tableTitle:表 --metadata=tblPrefix:表 --metadata=eqnPrefix:式 --metadata=autoEqnLabels:true --metadata=titleDelim: --metadata=chapters:false --metadata=chapDelim:- --filter=pandoc-crossref"
                                                                                      (expand-file-name "~/.pandoc/reference.docx")
                                                                                      (expand-file-name "~/.bib/Zotero.bib")
                                                                                      (expand-file-name "~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl")
@@ -312,12 +312,12 @@
             ((string= engine "convert")
              (let ((output-format (read-string "Output format: "))
                    (input-string (mapconcat (lambda (arg) (escape-local (file-name-nondirectory arg))) file-list " ")))
-               (shell-command (read-string "Commands: " (concat "convert " input-string " " (file-name-base (car file-list)) "." output-format)))))
+               (shell-command (read-string "Commands: " (concat "convert " input-string " " (make-temp-name (concat (escape-local (file-name-base (car file-list))) "_")) "." output-format)))))
             ((string= engine "pdftoppm")
              (let ((output-format (read-string "Output image format(png/jpeg/tiff/mono): ")))
                (cl-loop for x in file-list
                         do (let* ((filename (escape-local (file-name-nondirectory x))))
-                             (shell-command (concat "pdftoppm -" output-format " " filename " " filename))))))))))
+                             (shell-command (concat "pdftoppm -" output-format " -r 500 " filename " " filename))))))))))
 ;; ============swint-dired-converter=========
 ;;; dired-view-file-or-dir
 ;; ==========dired-view-file-or-dir==========

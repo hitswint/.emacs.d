@@ -54,9 +54,6 @@
 ;;;; ox
   ;; ====================ox=====================
   (put 'org-beamer-outline-frame-title 'safe-local-variable 'stringp)
-  (put 'org-pandoc-table-fmt 'safe-local-variable 'stringp)
-  (put 'org-pandoc-paragraph-fmt 'safe-local-variable 'stringp)
-  (put 'org-pandoc-src-block-fmt 'safe-local-variable 'stringp)
   ;; ====================ox=====================
 ;;;; Keybindings
   ;; ===============Keybindings=================
@@ -523,10 +520,14 @@
                                         :keymap helm-org-ref-link-map
                                         :persistent-action (lambda (candidate)
                                                              (with-helm-current-buffer
-                                                               (insert (format "[[%s]] " candidate)))))))
+                                                               (if (string-prefix-p "office" (cadr (split-string candidate ":")))
+                                                                   (insert (format "[cite:@%s] " candidate))
+                                                                 (insert (format "[[%s]] " candidate))))))))
       ;; 将插入引用定义为keymap中的命令的话，存在类似helm-insert-or-copy的Quit警告问题
       (when (sequencep label-names)
-        (insert (s-join " " (--map (format "[[%s]]" it) label-names)))))))
+        (if (string-prefix-p "office" (cadr (split-string (car label-names) ":")))
+            (insert (bibtex-completion-format-citation-org-cite label-names))
+          (insert (s-join " " (--map (format "[[%s]]" it) label-names))))))))
 ;; ==================org-ref====================
 ;;; org-pdftools
 ;; ================org-pdftools=================
@@ -757,48 +758,11 @@
 (def-package! ox-pandoc
   :after ox
   :config
-  ;; 存在org-pandoc-put-options: Org-Pandoc: Improper Option Name! bibliography问题
-  ;; https://github.com/kawabata/ox-pandoc/issues/85
-  ;; 暂时：#+PANDOC_OPTIONS中加入bibliography:~/.bib/Zotero.bib
   (setq org-pandoc-options '((standalone . t)))
   (setq org-pandoc-options-for-docx '((standalone . nil)))
   (setq org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex")))
   (setq org-pandoc-options-for-latex-pdf '((pdf-engine . "xelatex")))
-  (add-to-list 'org-pandoc-valid-options 'citeproc)
-  (defvar org-pandoc-table-fmt "表 %d")
-  (defvar org-pandoc-paragraph-fmt "图 %d")
-  (defvar org-pandoc-src-block-fmt "列表 %d")
-  ;; 仅支持[[xxx]]的引用，不支持ref:xxx形式(org-ref默认)，org-ref两者都支持
-  (defun org-pandoc-table/override (table contents info)
-    "Transcode a TABLE element from Org to Pandoc.
-CONTENTS is the contents of the table.  INFO is a plist holding
-contextual information."
-    (org-pandoc-set-caption-title table info org-pandoc-table-fmt
-                                  #'org-pandoc--has-caption-p)
-    ;; Export the table with it's modified caption
-    (org-export-expand table contents t))
-  (defun org-pandoc-paragraph/override (paragraph contents info)
-    "Transcode a PARAGRAPH element from Org to Pandoc.
-CONTENTS is the contents of the paragraph, as a string.  INFO is
-the plist used as a communication channel."
-    (when (org-html-standalone-image-p paragraph info)
-      ;; Standalone image.
-      (org-pandoc-set-caption-title paragraph info org-pandoc-paragraph-fmt
-                                    #'org-html-standalone-image-p))
-    ;; Export the paragraph verbatim. Like `org-org-identity', but also
-    ;; preserves #+ATTR_* tags in the output.
-    (org-export-expand paragraph contents t))
-  (defun org-pandoc-src-block/override (src-block contents info)
-    "Transcode a SRC-BLOCK element from Org to Pandoc.
-CONTENTS is the contents of the table. INFO is a plist holding
-contextual information."
-    (org-pandoc-set-caption-title src-block info org-pandoc-src-block-fmt
-                                  #'org-pandoc--has-caption-p)
-    ;; Export the src-block with it's modified caption
-    (org-export-expand src-block contents t))
-  (advice-add 'org-pandoc-table :override #'org-pandoc-table/override)
-  (advice-add 'org-pandoc-paragraph :override #'org-pandoc-paragraph/override)
-  (advice-add 'org-pandoc-src-block :override #'org-pandoc-src-block/override))
+  (add-to-list 'org-pandoc-valid-options 'citeproc))
 ;; =================ox-pandoc===================
 ;;; org-appear
 ;; ================org-appear===================

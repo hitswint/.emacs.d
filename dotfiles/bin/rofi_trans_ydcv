@@ -19,7 +19,14 @@ function main {
         pkill -u $USER rofi
     fi
 
-    cat $transHistory_ydcv
+    # 将长行分割成80宽度的短行
+    # cat $transHistory_ydcv | fold -s -w80
+    # cat $transHistory_ydcv | fmt -80
+    # cat $transHistory_ydcv | sed -r 's/(.{80})/\1\n/g'
+    # 匹配汉字
+    # perl -CIO -pe 's/\p{Script_Extensions=Han}+/x$&/g'
+    # perl -CSD -Mutf8 -pe 's/\p{Han}+/x$&/g'
+    cat $transHistory_ydcv | perl -CSD -Mutf8 -pe 's/(.{80}[^\p{Han}]*)/\1\n/g' | sed -E 's/(.{80}[^ ]*) /\1\n/g'
 }
 
 main
