@@ -355,8 +355,13 @@
   :init
   (global-set-key [remap kill-ring-save] 'easy-kill)
   (global-set-key [remap mark-sexp] 'easy-mark)
+  (global-set-key (kbd "M-W") #'(lambda () (interactive)
+                                  (let ((interprogram-cut-function 'gui-select-text-with-copyq))
+                                    (call-interactively 'easy-kill))))
+  (global-set-key (kbd "C-S-w") #'(lambda () (interactive)
+                                    (let ((interprogram-cut-function 'gui-select-text-with-copyq))
+                                      (call-interactively 'kill-line-or-region))))
   :config
-  (setq interprogram-cut-function 'gui-select-text-with-copyq)
   (defun gui-select-text-with-copyq (text)
     (if (string-empty-p (shell-command-to-string "pgrep -x copyq"))
         (gui-select-text text)
@@ -364,10 +369,10 @@
             (message-log-max nil))
         (write-region text nil "/tmp/eaclipboard")
         (shell-command (format "copyq copy - < /tmp/eaclipboard && copyq add - < /tmp/eaclipboard")))))
+  ;; M-w ?: help 查看M-w prefix快捷键。
   (define-key easy-kill-base-map (kbd "C-w") 'easy-kill-region)
   (define-key easy-kill-base-map (kbd ",") 'easy-kill-shrink)
   (define-key easy-kill-base-map (kbd ".") 'easy-kill-expand))
-;; M-w ?: help 查看M-w prefix快捷键。
 ;; =====================easy-kill==================
 ;;; bm
 ;; =======================bm=======================

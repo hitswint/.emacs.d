@@ -67,15 +67,6 @@ When there is a text selection, act on the region."
     (if arg
         (kill-region (line-beginning-position) (line-beginning-position (+ arg 1)))
       (kill-region (line-beginning-position) (line-beginning-position 2)))))
-;;;###autoload
-(defun delete-line-or-region (&optional arg)
-  "Delete the current line, or current text selection."
-  (interactive "p")
-  (if (region-active-p)
-      (delete-region (region-beginning) (region-end))
-    (if arg
-        (delete-region (line-beginning-position) (line-beginning-position (+ arg 1)))
-      (delete-region (line-beginning-position) (line-beginning-position 2)))))
 ;; =================复制和粘贴行===================
 ;;; 光标不动，窗口上下移动两三行
 ;; ========光标不动，窗口上下移动两三行============

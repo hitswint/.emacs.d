@@ -25,6 +25,7 @@
 (setq make-pointer-invisible t)         ;打字时光标不可见。
 (setq diary-file "~/org/journal.org.gpg")
 (setq disabled-command-function nil)
+(setq undo-no-redo t)
 (setq uniquify-buffer-name-style 'forward)
 (setq-default indent-tabs-mode nil)
 (setq auto-window-vscroll nil)          ;解决C-n卡顿。
@@ -80,7 +81,6 @@
 (global-set-key (kbd "M-c") 'toggle-letter-case)
 (global-set-key (kbd "M-Q") 'compact-uncompact-block)
 (global-set-key (kbd "C-w") 'kill-line-or-region)
-(global-set-key (kbd "C-S-w") 'delete-line-or-region)
 (global-set-key [(meta n)] 'window-move-up)
 (global-set-key [(meta p)] 'window-move-down)
 (global-set-key (kbd "C-x C-i") 'cleanup-buffer)
