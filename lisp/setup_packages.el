@@ -915,4 +915,14 @@
   (global-set-key (kbd "C-M-7") 'my-select-window)
   (awesome-tab-mode t))
 ;; ===============awesome-tab======================
+;;; modelica-mode
+;; ==============modelica-mode=====================
+(use-package modelica-mode
+  :mode ("\\.mo\\'" . modelica-mode)
+  :config
+  (define-key modelica-mode-map (kbd "C-M-{") 'modelica-backward-block)
+  (define-key modelica-mode-map (kbd "C-M-}") 'modelica-forward-block)
+  (define-key modelica-mode-map (kbd "M-n") nil)
+  (define-key modelica-mode-map (kbd "M-p") nil))
+;; ==============modelica-mode=====================
 (provide 'setup_packages)

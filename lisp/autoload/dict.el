@@ -75,6 +75,30 @@ FORCE-OTHER-WINDOW is ignored."
 (add-to-list 'display-buffer-alist '("\\`\\*sdcv\\*\\'" display-new-buffer))
 (add-to-list 'display-buffer-alist '("\\`\\*bing-google\\*\\'" display-new-buffer))
 ;; ============优先纵向分割窗口==============
+(defun posframe-scroll-or-switch (buffer)
+  (let (switch-to-posframe-buffer)
+    (unwind-protect
+        (let ((curr-event (read-event)))
+          (setq switch-to-posframe-buffer (catch 'break
+                                            (while (member curr-event '(134217840 134217838 134217829))
+                                              (cond ((eq curr-event 134217838) ;M-n
+                                                     (posframe-funcall buffer #'(lambda () (ignore-errors (scroll-up-command)))))
+                                                    ((eq curr-event 134217840) ;M-p
+                                                     (posframe-funcall buffer #'(lambda () (ignore-errors (scroll-down-command)))))
+                                                    ((eq curr-event 134217829) ;M-e
+                                                     (throw 'break t)))
+                                              (setq curr-event (read-event)))))
+          (unless switch-to-posframe-buffer
+            (push curr-event unread-command-events)))
+      (progn
+        (if switch-to-posframe-buffer
+            (progn (posframe-delete-frame buffer)
+                   (other-frame 0)
+                   (switch-to-buffer buffer)
+                   (setq-local cursor-type t)
+                   (setq-local cursor-in-non-selected-windows t))
+          (posframe-delete buffer)
+          (other-frame 0))))))
 ;;;###autoload
 (defun swint-sdcv-to-tip (arg &optional _word)
   "Search WORD simple translate result."
@@ -102,18 +126,7 @@ FORCE-OTHER-WINDOW is ignored."
                        :right-fringe 8
                        :internal-border-color (face-foreground 'default)
                        :internal-border-width 1)
-        (unwind-protect
-            (let ((curr-event (read-event)))
-              (while (member curr-event '(134217840 134217838))
-                (cond ((eq curr-event 134217838)
-                       (posframe-funcall "*sdcv*" #'(lambda () (ignore-errors (scroll-up-command)))))
-                      ((eq curr-event 134217840)
-                       (posframe-funcall "*sdcv*" #'(lambda () (ignore-errors (scroll-down-command))))))
-                (setq curr-event (read-event)))
-              (push curr-event unread-command-events))
-          (progn
-            (posframe-delete "*sdcv*")
-            (other-frame 0)))))))
+        (posframe-scroll-or-switch "*sdcv*")))))
 ;;;###autoload
 (defun swint-sdcv-to-buffer (&optional _word)
   (interactive)

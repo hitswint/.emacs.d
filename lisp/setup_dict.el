@@ -62,7 +62,7 @@
                                         (youdao-dictionary--request word))))))
 ;; ===============youdao-dictionary==============
 ;;; baidu-translate
-;; ===============youdao-dictionary==============
+;; ================baidu-translate===============
 (def-package! baidu-translate
   :commands baidu-translate-at-point
   :config
@@ -75,5 +75,5 @@
       (if (pyim-string-match-p "\\cC" word)
           (baidu-translate-string word "auto" "en")
         (baidu-translate-string word "auto" "zh")))))
-;; ===============youdao-dictionary==============
+;; ================baidu-translate===============
 (provide 'setup_dict)

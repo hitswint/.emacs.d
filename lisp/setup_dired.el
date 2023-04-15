@@ -50,7 +50,7 @@
           ("foam" . "paraview")
           ("eso" . "xEsoView.sh") ("mtr" . "xEsoView.sh")
           ("idf" . "urxvt -e zsh -is eval ep.sh")
-          ("osm" . "OpenStudioApp ")))
+          ("osm" . "OpenStudioApp")))
   (setq async-shell-command-buffer 'new-buffer)
   (setq async-shell-command-display-buffer nil)
   (setq dired-guess-shell-alist-user ;dired-do(async)-shell-command(!/&)的默认命令

@@ -78,8 +78,7 @@
                               (pyim-cstring-words-at-point)
                             (pyim-cstring-words-at-point t))))
       (if (<= (length words-at-point) 1)
-          (read-string (format "Get Words (default %s): " (car (car words-at-point)))
-                       nil nil (car (car words-at-point)))
+          (read-string "Get Words: " (car (car words-at-point)))
         (ivy-read "Get Words:" (cl-remove-duplicates (mapcar 'car words-at-point)))))))
 ;; ===============get-words-at-point===============
 ;;; show-some-last-messages
