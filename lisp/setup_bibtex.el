@@ -102,6 +102,12 @@
     "Keymap for `helm-bibtex'.")
   (helm-set-attr 'keymap helm-bibtex-map helm-source-bibtex)
   (helm-set-attr 'persistent-action 'helm-bibtex-insert-citation helm-source-bibtex)
+  ;; https://github.com/tmalsburg/helm-bibtex/issues/425
+  ;; 问题：helm-source-bibtex为(DISPLAY . REAL)类型，显示和匹配DISPLAY，但选中执行action的参数为REAL
+  ;; Dired中位于文件行或Python某些代码(plt.axvline)时，显示文献条目(DISPLAY)，但匹配key(REAL)
+  ;; 原因：helm-fuzzy-highlight-matches中helm-guess-filename-at-point会根据当前鼠标下内容返回不同值
+  ;; 设置nohighlight以屏蔽helm-fuzzy-highlight-matches
+  ;; (helm-set-attr 'nohighlight t helm-source-bibtex)
   (defvar bibtex-completion-bibliography/curr nil)
   ;; 改变helm-bibtex中Insert citation格式
   (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
@@ -116,29 +122,20 @@
   (defun swint-helm-bibtex (&optional arg)
     "With a prefix ARG，choose bib file and execute bibtex-completion-clear-cache."
     (interactive "P")
-    (when (or arg (not bibtex-completion-bibliography/curr))
-      (setq bibtex-completion-bibliography/curr
-            (helm-comp-read "Bibtex completion bibliography: "
-                            (append (directory-files (expand-file-name "~/.bib/") t "\\.bib$")
-                                    (directory-files default-directory t "\\.bib$"))
-                            :marked-candidates t
-                            :buffer "*helm bibtex-swint*")))
-    (if (and (buffer-live-p (get-buffer "*helm bibtex*")) (not arg))
-        (let ((helm-current-buffer (current-buffer)))
-          (helm-resume "*helm bibtex*"))
-      (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr)
-            (helm-truncate-lines t))
-        (helm-bibtex arg bibtex-completion-bibliography/curr))))
-  ;; helm-source-bibtex为(DISPLAY . REAL)类型，显示和匹配DISPLAY，但选中执行action的参数为REAL
-  ;; Dired中位于文件行或Python某些代码(plt.axvline)时，显示文献条目(DISPLAY)，但匹配key(REAL)
-  (advice-add 'swint-helm-bibtex :around #'(lambda (fn &rest args)
-                                             (if (memq major-mode '(org-mode latex-mode))
-                                                 (apply fn args)
-                                               (with-temp-buffer (apply fn args)))))
-  (advice-add 'helm-bibtex :around #'(lambda (fn &rest args)
-                                       (if (memq major-mode '(org-mode latex-mode))
-                                           (apply fn args)
-                                         (with-temp-buffer (apply fn args)))))
+    (cl-letf (((symbol-function 'helm-guess-filename-at-point) (lambda ())))
+      (when (or arg (not bibtex-completion-bibliography/curr))
+        (setq bibtex-completion-bibliography/curr
+              (helm-comp-read "Bibtex completion bibliography: "
+                              (append (directory-files (expand-file-name "~/.bib/") t "\\.bib$")
+                                      (directory-files default-directory t "\\.bib$"))
+                              :marked-candidates t
+                              :buffer "*helm bibtex-swint*")))
+      (if (and (buffer-live-p (get-buffer "*helm bibtex*")) (not arg))
+          (let ((helm-current-buffer (current-buffer)))
+            (helm-resume "*helm bibtex*"))
+        (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr)
+              (helm-truncate-lines t))
+          (helm-bibtex arg bibtex-completion-bibliography/curr)))))
   (defcustom helm-bibtex-pdf-open-externally-function #'(lambda (fpath)
                                                           (dired-async-shell-command fpath))
     "The function used for opening PDF files externally."
@@ -183,7 +180,7 @@
                              ("Year" 4 t)
                              ("Title" 50 t))
         ebib-hide-cursor nil
-        ebib-file-associations '(("pdf" . "llpp_qpdfview.sh") ("ps" . "gv"))
+        ebib-file-associations '(("pdf" . "pdfviewer.sh") ("ps" . "gv"))
         ebib-truncate-file-names nil
         ebib-preload-bib-files (delete "Zotero.bib" (directory-files "~/.bib" nil "\\.bib$"))
         ebib-bib-search-dirs '("~/.bib")
@@ -194,25 +191,20 @@
         ebib-timestamp-format "%Y-%m-%dT%TZ" ;same as zotero export
         ebib-index-default-sort '("timestamp" . descend)
         ebib-index-window-size 20
-        ;; 未加{}的月份扩展错误，待解决。
-        ;; https://github.com/joostkremers/ebib/issues/242
-        ebib-expand-strings nil)
+        ebib-expand-strings t)
   (defun ebib-create-org-identifier/override (key _)
     (format ":Custom_ID: %s" key))
   (advice-add 'ebib-create-org-identifier :override #'ebib-create-org-identifier/override)
   (defun ebib-view-file-in-emacs (arg)
     (interactive "P")
-    (ebib--execute-when
-      (entries
-       (let ((file (ebib-get-field-value "file" (ebib--get-key-at-point) ebib--cur-db 'noerror 'unbraced 'xref))
-             (num (if (numberp arg) arg nil)))
-         (let ((file-full-path (ebib--expand-file-name (ebib--select-file file num (ebib--get-key-at-point)))))
-           (when (file-exists-p file-full-path)
-             (message "Opening `%s'" file-full-path)
-             (ebib-lower)
-             (find-file file-full-path)))))
-      (default
-        (beep))))
+    (ebib--execute-when (entries
+                         (let ((file (ebib-get-field-value "file" (ebib--get-key-at-point) ebib--cur-db 'noerror 'unbraced 'xref))
+                               (num (if (numberp arg) arg nil)))
+                           (let ((file-full-path (ebib--expand-file-name (ebib--select-file file num (ebib--get-key-at-point)))))
+                             (when (file-exists-p file-full-path)
+                               (message "Opening `%s'" file-full-path)
+                               (ebib-lower)
+                               (find-file file-full-path))))) (default (beep))))
   (defun ebib-join-bib ()
     "Join to Zotero.bib."
     (interactive)

@@ -50,8 +50,9 @@ define_keymap(
     lambda wm_class: wm_class and wm_class[-1] in ("qpdfview") and rofi_not_running(),
     {
         K("q"): [K("q"), K("C-f"), K("esc")],
-        K("C-apostrophe"): [K("M-Shift-m"), K("M-t")],
+        K("C-comma"): [K("M-Shift-m"), K("M-t")],
         K("C-j"): [K("enter"), K("M-Shift-m")],
+        K("C-apostrophe"): [K("M-Shift-m"), K("F6"), K("M-Shift-m")],
     },
     "Qpdfview")
 
@@ -167,14 +168,14 @@ define_keymap(
     remmina_dict,
     "Remmina")
 
-# * Keybindings for llpp
+# * Keybindings for pdfviewer
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("llpp",) and rofi_not_running(),
+    lambda wm_class: wm_class and wm_class[-1] in ("llpp", "Wpspdf") and rofi_not_running(),
     {
         K("k"): with_mark(K("up")),
         K("j"): with_mark(K("down"))
     },
-    "llpp")
+    "pdfviewer")
 
 # * Keybindings for URxvt
 define_keymap(
@@ -188,7 +189,7 @@ define_keymap(
 
 # * Keybindings for Tab switch
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("firefox", "Chromium", "qpdfview", "Wps", "Et", "Wpp") and rofi_not_running(),
+    lambda wm_class: wm_class and wm_class[-1] in ("firefox", "Chromium", "qpdfview", "Wps", "Et", "Wpp", "Wpspdf", "Wpsoffice") and rofi_not_running(),
     {
         K("C-grave"): K("C-Shift-TAB"),
     },

@@ -27,7 +27,7 @@
   (setq wdired-allow-to-change-permissions t)
   (add-hook 'dired-after-readin-hook #'(lambda () (setq truncate-lines t)))
   (setq file-extension-app-alist
-        '(("pdf" . "llpp_qpdfview.sh") ("djvu" . "llpp") ("chm" . "xchm")
+        '(("pdf" . "pdfviewer.sh") ("djvu" . "llpp") ("chm" . "xchm")
           ("rmvb" . "mpv") ("rm" . "mpv") ("mp4" . "mpv") ("avi" . "mpv") ("flv" . "mpv") ("f4v" . "mpv") ("mpg" . "mpv") ("mkv" . "mpv") ("3gp" . "mpv") ("wmv" . "mpv") ("mov" . "mpv") ("dat" . "mpv") ("asf" . "mpv") ("mpeg" . "mpv") ("wma" . "mpv") ("webm" . "mpv")
           ("mp3" . "mpg321") ("ape" . "mpv")
           ("xoj" . "xournal")

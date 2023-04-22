@@ -48,7 +48,6 @@
         '(("i" "Idea" entry (file+headline "~/Nutstore-sync/orgzly/task.org" "Idea List") "* TODO %? %^g")
           ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
           ("c" "Computer" entry (file+headline "~/org/notes-computer.org" "Computer") "* %? %U %^g")
-          ("o" "Others" entry (file+headline "~/org/notes-others.org" "Others") "* %? %U %^g")
           ("j" "Journal" entry (file+olp+datetree "~/org/journal.org.gpg") "* %? %U")))
   ;; =================Capture===================
 ;;;; ox
@@ -553,8 +552,9 @@
         org-brain-file-entries-use-title nil
         org-brain-headline-entry-name-format-string "%s:%s"
         org-brain-default-file-parent nil
-        org-brain-completion-system 'helm)
-  ;; 使用org-id-locations-file(~/.emacs.d/.org-id-locations)保存条目id
+        org-brain-completion-system 'helm
+        org-brain-child-linebreak-sexp 'most-positive-fixnum)
+  ;; 使用org-id-locations-file(~/.emacs.d/.org-id-locations)保存条目id，使用org-brain-update-id-locations手动更新
   (advice-add 'org-brain-visualize-quit :after #'(lambda () (kill-buffer "*org-brain*")
                                                    (cl-loop for b in (buffer-list)
                                                             do (--if-let (buffer-file-name b)

@@ -406,10 +406,9 @@
   :config
   (defun helm-bm-action-switch-to-buffer/override (candidate)
     "Switch to buffer of CANDIDATE."
-    (helm-bm-with-candidate candidates
-      (helm-switch-persp/buffer bufname)
-      (goto-char (point-min))
-      (forward-line (1- lineno))))
+    (helm-bm-with-candidate candidates (helm-switch-persp/buffer bufname)
+                            (goto-char (point-min))
+                            (forward-line (1- lineno))))
   (advice-add 'helm-bm-action-switch-to-buffer :override
               #'helm-bm-action-switch-to-buffer/override))
 ;; ====================helm-bm=====================

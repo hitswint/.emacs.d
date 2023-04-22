@@ -10,6 +10,8 @@ else
         xdotool keyup alt+w
         xdotool key --clearmodifiers alt+w
         sleep 1
+    elif [ $(xdotool search --onlyvisible --class "qpdfview" | grep -i $Wind_id) ]; then
+        echo None
     else
         xdotool keyup ctrl+c
         xdotool key --clearmodifiers ctrl+c
