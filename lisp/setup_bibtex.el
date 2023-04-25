@@ -167,10 +167,11 @@
   (smartrep-define-key ebib-index-mode-map "C-c"
     '(("n" . ebib-next-collection)
       ("p" . ebib-prev-collection)))
-  (define-key ebib-entry-mode-map (kbd "C-x b") nil)
   (define-key ebib-strings-mode-map (kbd "C-x b") nil)
+  (define-key ebib-entry-mode-map (kbd "C-x b") nil)
   (define-key ebib-entry-mode-map (kbd "C-p") nil)
   (define-key ebib-entry-mode-map (kbd "C-n") nil)
+  (define-key ebib-entry-mode-map (kbd "z") 'ebib-leave-ebib-windows)
   (add-hook 'ebib-entry-mode-hook #'(lambda ()
                                       ;; (setq word-wrap t) ;中文支持不好
                                       (setq truncate-lines t)))
@@ -190,7 +191,7 @@
         ebib-use-timestamp t
         ebib-timestamp-format "%Y-%m-%dT%TZ" ;same as zotero export
         ebib-index-default-sort '("timestamp" . descend)
-        ebib-index-window-size 20
+        ebib-index-window-size 30
         ebib-expand-strings t)
   (defun ebib-create-org-identifier/override (key _)
     (format ":Custom_ID: %s" key))

@@ -44,8 +44,6 @@
                  '("Filename"
                    ("Coding" (or
                               (filename . "~/Documents")
-                              (filename . "~/Dropbox")
-                              (filename . "~/Nutstore")
                               (filename . "~/.emacs.d")))
                    ("Reference" (or
                                  (filename . "~/papers")

@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 function widget-swint-ag() {
-    LBUFFER=$LBUFFER$(ag -C 1000 ./ | percol | tr '\n' ' ' | \
+    LBUFFER=$LBUFFER$(ag -C 1000 ./ | percol --match-method pinyin | tr '\n' ' ' | \
                           sed 's/[[:space:]]*$//' | cut -f1 -d ":")
     zle -R -c
 }

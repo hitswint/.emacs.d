@@ -45,7 +45,7 @@
   (global-set-key (kbd "M-O c") 'org-capture)
   (global-set-key (kbd "M-O a") 'org-agenda)
   (setq org-capture-templates
-        '(("i" "Idea" entry (file+headline "~/Nutstore-sync/orgzly/task.org" "Idea List") "* TODO %? %^g")
+        '(("i" "Idea" entry (file+headline "~/webdav-sync/orgzly/task.org" "Idea List") "* TODO %? %^g")
           ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
           ("c" "Computer" entry (file+headline "~/org/notes-computer.org" "Computer") "* %? %U %^g")
           ("j" "Journal" entry (file+olp+datetree "~/org/journal.org.gpg") "* %? %U")))
@@ -53,6 +53,7 @@
 ;;;; ox
   ;; ====================ox=====================
   (put 'org-beamer-outline-frame-title 'safe-local-variable 'stringp)
+  (setq org-export-preserve-breaks t)
   ;; ====================ox=====================
 ;;;; Keybindings
   ;; ===============Keybindings=================
@@ -135,7 +136,7 @@
   ;; ===============Keybindings=================
 ;;;; GTD
   ;; ===================GTD=====================
-  (setq org-agenda-files (directory-files "~/Nutstore-sync/orgzly/" t ".+\\.org"))
+  (setq org-agenda-files (directory-files "~/webdav-sync/orgzly/" t ".+\\.org"))
   ;; Do not show title of task in mode-line when using org-clock.
   (setq org-clock-heading-function
         (lambda ()

@@ -2,7 +2,7 @@
 
 function widget-swint-locate()
 {
-    local selected=$(locate ~/ | percol)
+    local selected=$(locate ~/ | percol --match-method pinyin)
     if [ $? -eq 0 ]; then
         local new_left="${LBUFFER} ${selected} "
         BUFFER=${new_left}${RBUFFER}

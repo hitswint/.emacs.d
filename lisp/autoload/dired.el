@@ -47,21 +47,26 @@
 ;;; webdav_sync同步文件
 ;; =========webdav_sync同步文件==============
 ;;;###autoload
-(defun swint-nutstore-sync (arg)
-  "Synchronization of Nutstore-sync."
+(defun swint-webdav-sync (arg)
+  "Synchronization of webdav-sync."
   (interactive)
-  (let* ((user (replace-regexp-in-string "@" "%40" (get-auth-user "Nutstore")))
-         (pass (get-auth-pass "Nutstore"))
+  (let* (;; Nutstore用户名为邮箱，需替代@
+         ;; (user (replace-regexp-in-string "@" "%40" (get-auth-user "Nutstore-sync")))
+         (user_orig (split-string (get-auth-user "webdav-sync") "@"))
+         (user (car user_orig))
+         (host (cadr user_orig))
+         (pass (get-auth-pass "webdav-sync"))
+         (port (get-auth-port "webdav-sync"))
          (process
           (start-process-shell-command
            "webdav_sync" "*webdav_sync*"
            (concat "java -Dderby.system.home=" (expand-file-name "~/.webdav_sync/")
                    " -Dbe.re.http.no-compress -jar " (expand-file-name "~/.webdav_sync/webdav_sync1_1_6.jar")
-                   " -r -" arg " -u https://" user ":" pass "@dav.jianguoyun.com/dav/Nutstore-sync/ -d "
-                   (expand-file-name "~/Nutstore-sync/")))))
+                   " -r -" arg " -u https://" user ":" pass "@" host ":" port "/dav/webdav-sync/ -d "
+                   (expand-file-name "~/webdav-sync/")))))
     (lexical-let ((pos (memq 'mode-line-modes mode-line-format))
                   (arg arg))
-      (setcdr pos (cons (concat "Nutstore-sync " arg " ") (cdr pos)))
+      (setcdr pos (cons (concat "webdav-sync " arg " ") (cdr pos)))
       (set-process-sentinel
        process
        (lambda (process signal)
@@ -69,9 +74,9 @@
            (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
                                                (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
              (if (string-equal webdav_sync-process-output "Done.\n")
-                 (message "Nutstore-sync %s done." arg)
-               (message "Nutstore-sync %s failed." arg))
-             (setcdr pos (remove (concat "Nutstore-sync " arg " ") (cdr pos))))))))))
+                 (message "webdav-sync %s done." arg)
+               (message "webdav-sync %s failed." arg))
+             (setcdr pos (remove (concat "webdav-sync " arg " ") (cdr pos))))))))))
 ;; =========webdav_sync同步文件==============
 ;;; unison
 ;; ================unison====================

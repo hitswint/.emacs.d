@@ -40,6 +40,12 @@
   (let* ((netrc (netrc-parse (expand-file-name "~/.authinfo.gpg")))
          (hostentry (netrc-machine netrc host)))
     (when hostentry (netrc-get hostentry "password"))))
+;;;###autoload
+(defun get-auth-port (host)
+  (require 'netrc)
+  (let* ((netrc (netrc-parse (expand-file-name "~/.authinfo.gpg")))
+         (hostentry (netrc-machine netrc host)))
+    (when hostentry (netrc-get hostentry "port"))))
 ;; ====================get-auth====================
 ;;; 截图
 ;; ===================截图====================

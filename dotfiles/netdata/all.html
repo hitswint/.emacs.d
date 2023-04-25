@@ -27,21 +27,21 @@
 
         <div class="container" style="width: 100%; padding-top: 10px; text-align: center; color: #AAA">
 
-            <!-- * rpi -->
+            <!-- * n5095 -->
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="http://swint.mynetgear.com:19999"> RPI <img class="netdata-badge" src="http://swint.mynetgear.com:19999/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
-                <li role="presentation"><a href="#gauge_rpi" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
-                <li role="presentation"><a href="#easypiechart_rpi" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
+                <li role="presentation" class="active"><a href="https://home.guiq.wang:4433/netdata/"> N5095 <img class="netdata-badge" src="https://home.guiq.wang:4433/netdata/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation"><a href="#gauge_n5095" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
+                <li role="presentation"><a href="#easypiechart_n5095" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
-                    <embed class="netdata-badge" src="http://swint.mynetgear.com:19999/api/v1/badge.svg?chart=sensors.temp_thermal_zone0_thermal_thermal_zone0&label=0&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /></img>
+                <div role="tabpanel" class="tab-pane active text-left" id="badge_n5095">
+                    <embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/api/v1/badge.svg?chart=sensors.coretemp-isa-0000_temperature&label=0&dimensions=Core%200&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/api/v1/badge.svg?chart=sensors.coretemp-isa-0000_temperature&label=1&dimensions=Core%201&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/api/v1/badge.svg?chart=sensors.coretemp-isa-0000_temperature&label=2&dimensions=Core%202&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/api/v1/badge.svg?chart=sensors.coretemp-isa-0000_temperature&label=3&dimensions=Core%203&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/api/v1/badge.svg?chart=sensors.acpitz-acpi-0_temperature&label=acpi&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
                 </div>
-                <div role="tabpanel" class="tab-pane" id="gauge_rpi">
+                <div role="tabpanel" class="tab-pane" id="gauge_n5095">
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
-                         data-host="http://swint.mynetgear.com:19999"
+                         data-host="https://home.guiq.wang:4433/netdata/"
                          data-dimensions="used"
                          data-append-options="percentage"
                          data-chart-library="easypiechart"
@@ -55,7 +55,7 @@
                          data-colors="#DD4400"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999"
+                         data-host="https://home.guiq.wang:4433/netdata/"
                          data-dimensions="in"
                          data-chart-library="easypiechart"
                          data-title="Disk Read"
@@ -66,7 +66,7 @@
                          data-common-units="system.io.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999"
+                         data-host="https://home.guiq.wang:4433/netdata/"
                          data-dimensions="out"
                          data-chart-library="easypiechart"
                          data-title="Disk Write"
@@ -77,7 +77,7 @@
                          data-common-units="system.io.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
-                         data-host="http://swint.mynetgear.com:19999"
+                         data-host="https://home.guiq.wang:4433/netdata/"
                          data-chart-library="gauge"
                          data-title="CPU"
                          data-units="%"
@@ -88,7 +88,7 @@
                          data-colors="#22AA99"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999"
+                         data-host="https://home.guiq.wang:4433/netdata/"
                          data-dimensions="received"
                          data-chart-library="easypiechart"
                          data-title="Net Inbound"
@@ -99,7 +99,7 @@
                          data-common-units="system.net.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999"
+                         data-host="https://home.guiq.wang:4433/netdata/"
                          data-dimensions="sent"
                          data-chart-library="easypiechart"
                          data-title="Net Outbound"
@@ -110,7 +110,7 @@
                          data-common-units="system.net.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
-                         data-host="http://swint.mynetgear.com:19999"
+                         data-host="https://home.guiq.wang:4433/netdata/"
                          data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
                          data-append-options="percentage"
                          data-chart-library="easypiechart"
@@ -123,9 +123,9 @@
                          data-colors="#EE9911"
                          role="application"></div>
                 </div>
-                <div role="tabpanel" class="tab-pane" id="easypiechart_rpi">
+                <div role="tabpanel" class="tab-pane" id="easypiechart_n5095">
                     <div data-netdata="system.cpu"
-                         data-host="http://swint.mynetgear.com:19999"
+                         data-host="https://home.guiq.wang:4433/netdata/"
                          data-title="CPU"
                          data-chart-library="dygraph"
                          data-width="100%"
@@ -133,7 +133,7 @@
                          data-dygraph-valuerange="[0, 100]"
                     ></div>
                     <div data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999"
+                         data-host="https://home.guiq.wang:4433/netdata/"
                          data-title="Disk"
                          data-common-max="io"
                          data-common-min="io"
@@ -142,7 +142,7 @@
                          data-after="-300"
                     ></div>
                     <div data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999"
+                         data-host="https://home.guiq.wang:4433/netdata/"
                          data-common-max="traffic"
                          data-common-min="traffic"
                          data-title="Network"
@@ -151,7 +151,7 @@
                          data-after="-300"
                     ></div>
                     <div data-netdata="system.ram"
-                         data-host="http://swint.mynetgear.com:19999"
+                         data-host="https://home.guiq.wang:4433/netdata/"
                          data-common-max="ram"
                          data-common-min="ram"
                          data-title="RAM"
@@ -164,21 +164,21 @@
 
             <p></p>
 
-            <!-- * nas -->
+            <!-- * r3600 -->
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="http://swint.mynetgear.com:19999/host/Nas-lin/"> NAS <img class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
-                <li role="presentation"><a href="#gauge_nas" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
-                <li role="presentation"><a href="#easypiechart_nas" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
+                <li role="presentation" class="active"><a href="https://home.guiq.wang:4433/netdata/host/R3600/"> R3600 <img class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/R3600/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation"><a href="#gauge_r3600" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
+                <li role="presentation"><a href="#easypiechart_r3600" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
-                    <embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=0&dimensions=Core%200&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=1&dimensions=Core%201&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=2&dimensions=Core%202&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=3&dimensions=Core%203&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=sensors.soc_dts0_virtual_0_temperature&label=dts0&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Nas-lin/api/v1/badge.svg?chart=sensors.soc_dts1_virtual_0_temperature&label=dts1&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
+                <div role="tabpanel" class="tab-pane active text-left" id="badge_r3600">
+                    <embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/R3600/api/v1/badge.svg?chart=sensors.k10temp-pci-00c3_temperature&label=cpu&divide=3&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/R3600/api/v1/badge.svg?chart=sensors.nvme-pci-0100_temperature&label=nvme0&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/R3600/api/v1/badge.svg?chart=sensors.nvme-pci-0600_temperature&label=nvme1&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
                 </div>
-                <div role="tabpanel" class="tab-pane" id="gauge_nas">
+                <div role="tabpanel" class="tab-pane" id="gauge_r3600">
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
-                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/R3600/"
                          data-dimensions="used"
                          data-append-options="percentage"
                          data-chart-library="easypiechart"
@@ -192,7 +192,7 @@
                          data-colors="#DD4400"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/R3600/"
                          data-dimensions="in"
                          data-chart-library="easypiechart"
                          data-title="Disk Read"
@@ -203,7 +203,7 @@
                          data-common-units="system.io.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/R3600/"
                          data-dimensions="out"
                          data-chart-library="easypiechart"
                          data-title="Disk Write"
@@ -214,7 +214,7 @@
                          data-common-units="system.io.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
-                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/R3600/"
                          data-chart-library="gauge"
                          data-title="CPU"
                          data-units="%"
@@ -225,7 +225,7 @@
                          data-colors="#22AA99"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/R3600/"
                          data-dimensions="received"
                          data-chart-library="easypiechart"
                          data-title="Net Inbound"
@@ -236,7 +236,7 @@
                          data-common-units="system.net.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/R3600/"
                          data-dimensions="sent"
                          data-chart-library="easypiechart"
                          data-title="Net Outbound"
@@ -247,7 +247,7 @@
                          data-common-units="system.net.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
-                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/R3600/"
                          data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
                          data-append-options="percentage"
                          data-chart-library="easypiechart"
@@ -260,9 +260,9 @@
                          data-colors="#EE9911"
                          role="application"></div>
                 </div>
-                <div role="tabpanel" class="tab-pane" id="easypiechart_nas">
+                <div role="tabpanel" class="tab-pane" id="easypiechart_r3600">
                     <div data-netdata="system.cpu"
-                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/R3600/"
                          data-title="CPU"
                          data-chart-library="dygraph"
                          data-width="100%"
@@ -270,7 +270,7 @@
                          data-dygraph-valuerange="[0, 100]"
                     ></div>
                     <div data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/R3600/"
                          data-title="Disk"
                          data-common-max="io"
                          data-common-min="io"
@@ -279,7 +279,7 @@
                          data-after="-300"
                     ></div>
                     <div data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/R3600/"
                          data-common-max="traffic"
                          data-common-min="traffic"
                          data-title="Network"
@@ -288,7 +288,144 @@
                          data-after="-300"
                     ></div>
                     <div data-netdata="system.ram"
-                         data-host="http://swint.mynetgear.com:19999/host/Nas-lin/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/R3600/"
+                         data-common-max="ram"
+                         data-common-min="ram"
+                         data-title="RAM"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                </div>
+            </div>
+
+            <p></p>
+
+            <!-- * redmibook -->
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="https://home.guiq.wang:4433/netdata/host/Redmibook/"> Redmibook <img class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/Redmibook/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation"><a href="#gauge_redmibook" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
+                <li role="presentation"><a href="#easypiechart_redmibook" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active text-left" id="badge_redmibook">
+                    <embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/Redmibook/api/v1/badge.svg?chart=sensors.k10temp-pci-00c3_temperature&label=cpu&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/Redmibook/api/v1/badge.svg?chart=sensors.amdgpu-pci-0300_temperature&label=gpu&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/Redmibook/api/v1/badge.svg?chart=sensors.acpitz-acpi-0_temperature&label=acpi&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/Redmibook/api/v1/badge.svg?chart=sensors.nvme-pci-0200_temperature&label=nvme&divide=2&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/Redmibook/api/v1/badge.svg?chart=powersupply_capacity.BATT&label=bat&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
+                </div>
+                <div role="tabpanel" class="tab-pane" id="gauge_redmibook">
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Redmibook/"
+                         data-dimensions="used"
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used Swap"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#DD4400"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Redmibook/"
+                         data-dimensions="in"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Read"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Redmibook/"
+                         data-dimensions="out"
+                         data-chart-library="easypiechart"
+                         data-title="Disk Write"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.io.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Redmibook/"
+                         data-chart-library="gauge"
+                         data-title="CPU"
+                         data-units="%"
+                         data-gauge-max-value="100"
+                         data-width="20%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#22AA99"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Redmibook/"
+                         data-dimensions="received"
+                         data-chart-library="easypiechart"
+                         data-title="Net Inbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Redmibook/"
+                         data-dimensions="sent"
+                         data-chart-library="easypiechart"
+                         data-title="Net Outbound"
+                         data-width="11%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-common-units="system.net.mainhead"
+                         role="application"></div>
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Redmibook/"
+                         data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used RAM"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#EE9911"
+                         role="application"></div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="easypiechart_redmibook">
+                    <div data-netdata="system.cpu"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Redmibook/"
+                         data-title="CPU"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                         data-dygraph-valuerange="[0, 100]"
+                    ></div>
+                    <div data-netdata="system.io"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Redmibook/"
+                         data-title="Disk"
+                         data-common-max="io"
+                         data-common-min="io"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.net"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Redmibook/"
+                         data-common-max="traffic"
+                         data-common-min="traffic"
+                         data-title="Network"
+                         data-chart-library="dygraph"
+                         data-width="100%"
+                         data-after="-300"
+                    ></div>
+                    <div data-netdata="system.ram"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Redmibook/"
                          data-common-max="ram"
                          data-common-min="ram"
                          data-title="RAM"
@@ -304,18 +441,18 @@
             <!-- * epyc -->
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="http://swint.mynetgear.com:19999/host/Epyc/"> EPYC <img class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Epyc/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation" class="active"><a href="https://home.guiq.wang:4433/netdata/host/Epyc/"> EPYC <img class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/Epyc/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
                 <li role="presentation"><a href="#gauge_epyc" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
                 <li role="presentation"><a href="#easypiechart_epyc" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
-                    <embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Epyc/api/v1/badge.svg?chart=sensors.k10temp_pci_00c3_temperature&label=0&divide=2&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Epyc/api/v1/badge.svg?chart=sensors.k10temp_pci_00cb_temperature&label=1&divide=2&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/Epyc/api/v1/badge.svg?chart=sensors.i350bb_pci_6100_temperature&label=pci&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
+                <div role="tabpanel" class="tab-pane active text-left" id="badge_epyc">
+                    <embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/Epyc/api/v1/badge.svg?chart=sensors.k10temp-pci-00c3_temperature&label=0&divide=6&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/Epyc/api/v1/badge.svg?chart=sensors.k10temp-pci-00cb_temperature&label=1&divide=6&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/Epyc/api/v1/badge.svg?chart=sensors.i350bb-pci-6100_temperature&label=pci&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="https://home.guiq.wang:4433/netdata/host/Epyc/api/v1/badge.svg?chart=sensors.nvme-pci-6200_temperature&label=nvme&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
                 </div>
                 <div role="tabpanel" class="tab-pane" id="gauge_epyc">
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
-                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Epyc/"
                          data-dimensions="used"
                          data-append-options="percentage"
                          data-chart-library="easypiechart"
@@ -329,7 +466,7 @@
                          data-colors="#DD4400"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Epyc/"
                          data-dimensions="in"
                          data-chart-library="easypiechart"
                          data-title="Disk Read"
@@ -340,7 +477,7 @@
                          data-common-units="system.io.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Epyc/"
                          data-dimensions="out"
                          data-chart-library="easypiechart"
                          data-title="Disk Write"
@@ -351,7 +488,7 @@
                          data-common-units="system.io.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
-                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Epyc/"
                          data-chart-library="gauge"
                          data-title="CPU"
                          data-units="%"
@@ -362,7 +499,7 @@
                          data-colors="#22AA99"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Epyc/"
                          data-dimensions="received"
                          data-chart-library="easypiechart"
                          data-title="Net Inbound"
@@ -373,7 +510,7 @@
                          data-common-units="system.net.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Epyc/"
                          data-dimensions="sent"
                          data-chart-library="easypiechart"
                          data-title="Net Outbound"
@@ -384,7 +521,7 @@
                          data-common-units="system.net.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
-                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Epyc/"
                          data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
                          data-append-options="percentage"
                          data-chart-library="easypiechart"
@@ -399,7 +536,7 @@
                 </div>
                 <div role="tabpanel" class="tab-pane" id="easypiechart_epyc">
                     <div data-netdata="system.cpu"
-                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Epyc/"
                          data-title="CPU"
                          data-chart-library="dygraph"
                          data-width="100%"
@@ -407,7 +544,7 @@
                          data-dygraph-valuerange="[0, 100]"
                     ></div>
                     <div data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Epyc/"
                          data-title="Disk"
                          data-common-max="io"
                          data-common-min="io"
@@ -416,7 +553,7 @@
                          data-after="-300"
                     ></div>
                     <div data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Epyc/"
                          data-common-max="traffic"
                          data-common-min="traffic"
                          data-title="Network"
@@ -425,418 +562,7 @@
                          data-after="-300"
                     ></div>
                     <div data-netdata="system.ram"
-                         data-host="http://swint.mynetgear.com:19999/host/Epyc/"
-                         data-common-max="ram"
-                         data-common-min="ram"
-                         data-title="RAM"
-                         data-chart-library="dygraph"
-                         data-width="100%"
-                         data-after="-300"
-                    ></div>
-                </div>
-            </div>
-
-            <p></p>
-
-            <!-- * t510 -->
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="http://swint.mynetgear.com:19999/host/T510/"> T510 <img class="netdata-badge" src="http://swint.mynetgear.com:19999/host/T510/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
-                <li role="presentation"><a href="#gauge_t510" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
-                <li role="presentation"><a href="#easypiechart_t510" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
-            </ul>
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
-                    <embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/T510/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=0&dimensions=Core%200&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/T510/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=2&dimensions=Core%202&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/T510/api/v1/badge.svg?chart=sensors.acpitz_acpi_0_temperature&label=acpi&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/T510/api/v1/badge.svg?chart=sensors.thinkpad_isa_0000_fan&label=fan&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
-                </div>
-                <div role="tabpanel" class="tab-pane" id="gauge_t510">
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
-                         data-host="http://swint.mynetgear.com:19999/host/T510/"
-                         data-dimensions="used"
-                         data-append-options="percentage"
-                         data-chart-library="easypiechart"
-                         data-title="Used Swap"
-                         data-units="%"
-                         data-easypiechart-max-value="100"
-                         data-width="9%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-colors="#DD4400"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/T510/"
-                         data-dimensions="in"
-                         data-chart-library="easypiechart"
-                         data-title="Disk Read"
-                         data-width="11%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-common-units="system.io.mainhead"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/T510/"
-                         data-dimensions="out"
-                         data-chart-library="easypiechart"
-                         data-title="Disk Write"
-                         data-width="11%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-common-units="system.io.mainhead"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
-                         data-host="http://swint.mynetgear.com:19999/host/T510/"
-                         data-chart-library="gauge"
-                         data-title="CPU"
-                         data-units="%"
-                         data-gauge-max-value="100"
-                         data-width="20%"
-                         data-after="-600"
-                         data-points="600"
-                         data-colors="#22AA99"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/T510/"
-                         data-dimensions="received"
-                         data-chart-library="easypiechart"
-                         data-title="Net Inbound"
-                         data-width="11%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-common-units="system.net.mainhead"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/T510/"
-                         data-dimensions="sent"
-                         data-chart-library="easypiechart"
-                         data-title="Net Outbound"
-                         data-width="11%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-common-units="system.net.mainhead"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
-                         data-host="http://swint.mynetgear.com:19999/host/T510/"
-                         data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
-                         data-append-options="percentage"
-                         data-chart-library="easypiechart"
-                         data-title="Used RAM"
-                         data-units="%"
-                         data-easypiechart-max-value="100"
-                         data-width="9%"
-                         data-after="-600"
-                         data-points="600"
-                         data-colors="#EE9911"
-                         role="application"></div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="easypiechart_t510">
-                    <div data-netdata="system.cpu"
-                         data-host="http://swint.mynetgear.com:19999/host/T510/"
-                         data-title="CPU"
-                         data-chart-library="dygraph"
-                         data-width="100%"
-                         data-after="-300"
-                         data-dygraph-valuerange="[0, 100]"
-                    ></div>
-                    <div data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/T510/"
-                         data-title="Disk"
-                         data-common-max="io"
-                         data-common-min="io"
-                         data-chart-library="dygraph"
-                         data-width="100%"
-                         data-after="-300"
-                    ></div>
-                    <div data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/T510/"
-                         data-common-max="traffic"
-                         data-common-min="traffic"
-                         data-title="Network"
-                         data-chart-library="dygraph"
-                         data-width="100%"
-                         data-after="-300"
-                    ></div>
-                    <div data-netdata="system.ram"
-                         data-host="http://swint.mynetgear.com:19999/host/T510/"
-                         data-common-max="ram"
-                         data-common-min="ram"
-                         data-title="RAM"
-                         data-chart-library="dygraph"
-                         data-width="100%"
-                         data-after="-300"
-                    ></div>
-                </div>
-            </div>
-
-            <p></p>
-
-            <!-- * x201 -->
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="http://swint.mynetgear.com:19999/host/X201/"> X201 <img class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X201/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
-                <li role="presentation"><a href="#gauge_x201" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
-                <li role="presentation"><a href="#easypiechart_x201" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
-            </ul>
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
-                    <embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X201/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=0&dimensions=Core%200&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X201/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=2&dimensions=Core%202&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X201/api/v1/badge.svg?chart=sensors.acpitz_acpi_0_temperature&label=acpi&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X201/api/v1/badge.svg?chart=sensors.thinkpad_isa_0000_fan&label=fan&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
-                </div>
-                <div role="tabpanel" class="tab-pane" id="gauge_x201">
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
-                         data-host="http://swint.mynetgear.com:19999/host/X201/"
-                         data-dimensions="used"
-                         data-append-options="percentage"
-                         data-chart-library="easypiechart"
-                         data-title="Used Swap"
-                         data-units="%"
-                         data-easypiechart-max-value="100"
-                         data-width="9%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-colors="#DD4400"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/X201/"
-                         data-dimensions="in"
-                         data-chart-library="easypiechart"
-                         data-title="Disk Read"
-                         data-width="11%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-common-units="system.io.mainhead"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/X201/"
-                         data-dimensions="out"
-                         data-chart-library="easypiechart"
-                         data-title="Disk Write"
-                         data-width="11%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-common-units="system.io.mainhead"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
-                         data-host="http://swint.mynetgear.com:19999/host/X201/"
-                         data-chart-library="gauge"
-                         data-title="CPU"
-                         data-units="%"
-                         data-gauge-max-value="100"
-                         data-width="20%"
-                         data-after="-600"
-                         data-points="600"
-                         data-colors="#22AA99"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/X201/"
-                         data-dimensions="received"
-                         data-chart-library="easypiechart"
-                         data-title="Net Inbound"
-                         data-width="11%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-common-units="system.net.mainhead"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/X201/"
-                         data-dimensions="sent"
-                         data-chart-library="easypiechart"
-                         data-title="Net Outbound"
-                         data-width="11%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-common-units="system.net.mainhead"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
-                         data-host="http://swint.mynetgear.com:19999/host/X201/"
-                         data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
-                         data-append-options="percentage"
-                         data-chart-library="easypiechart"
-                         data-title="Used RAM"
-                         data-units="%"
-                         data-easypiechart-max-value="100"
-                         data-width="9%"
-                         data-after="-600"
-                         data-points="600"
-                         data-colors="#EE9911"
-                         role="application"></div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="easypiechart_x201">
-                    <div data-netdata="system.cpu"
-                         data-host="http://swint.mynetgear.com:19999/host/X201/"
-                         data-title="CPU"
-                         data-chart-library="dygraph"
-                         data-width="100%"
-                         data-after="-300"
-                         data-dygraph-valuerange="[0, 100]"
-                    ></div>
-                    <div data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/X201/"
-                         data-title="Disk"
-                         data-common-max="io"
-                         data-common-min="io"
-                         data-chart-library="dygraph"
-                         data-width="100%"
-                         data-after="-300"
-                    ></div>
-                    <div data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/X201/"
-                         data-common-max="traffic"
-                         data-common-min="traffic"
-                         data-title="Network"
-                         data-chart-library="dygraph"
-                         data-width="100%"
-                         data-after="-300"
-                    ></div>
-                    <div data-netdata="system.ram"
-                         data-host="http://swint.mynetgear.com:19999/host/X201/"
-                         data-common-max="ram"
-                         data-common-min="ram"
-                         data-title="RAM"
-                         data-chart-library="dygraph"
-                         data-width="100%"
-                         data-after="-300"
-                    ></div>
-                </div>
-            </div>
-
-            <p></p>
-
-            <!-- * x250 -->
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="http://swint.mynetgear.com:19999/host/X250/"> X250 <img class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X250/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
-                <li role="presentation"><a href="#gauge_x250" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
-                <li role="presentation"><a href="#easypiechart_x250" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
-            </ul>
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
-                    <embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X250/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=0&dimensions=Core%200&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X250/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=2&dimensions=Core%201&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X250/api/v1/badge.svg?chart=sensors.acpitz_acpi_0_temperature&label=acpi&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://swint.mynetgear.com:19999/host/X250/api/v1/badge.svg?chart=sensors.thinkpad_isa_0000_fan&label=fan&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
-                </div>
-                <div role="tabpanel" class="tab-pane" id="gauge_x250">
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
-                         data-host="http://swint.mynetgear.com:19999/host/X250/"
-                         data-dimensions="used"
-                         data-append-options="percentage"
-                         data-chart-library="easypiechart"
-                         data-title="Used Swap"
-                         data-units="%"
-                         data-easypiechart-max-value="100"
-                         data-width="9%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-colors="#DD4400"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/X250/"
-                         data-dimensions="in"
-                         data-chart-library="easypiechart"
-                         data-title="Disk Read"
-                         data-width="11%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-common-units="system.io.mainhead"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/X250/"
-                         data-dimensions="out"
-                         data-chart-library="easypiechart"
-                         data-title="Disk Write"
-                         data-width="11%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-common-units="system.io.mainhead"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
-                         data-host="http://swint.mynetgear.com:19999/host/X250/"
-                         data-chart-library="gauge"
-                         data-title="CPU"
-                         data-units="%"
-                         data-gauge-max-value="100"
-                         data-width="20%"
-                         data-after="-600"
-                         data-points="600"
-                         data-colors="#22AA99"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/X250/"
-                         data-dimensions="received"
-                         data-chart-library="easypiechart"
-                         data-title="Net Inbound"
-                         data-width="11%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-common-units="system.net.mainhead"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/X250/"
-                         data-dimensions="sent"
-                         data-chart-library="easypiechart"
-                         data-title="Net Outbound"
-                         data-width="11%"
-                         data-before="0"
-                         data-after="-600"
-                         data-points="600"
-                         data-common-units="system.net.mainhead"
-                         role="application"></div>
-                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
-                         data-host="http://swint.mynetgear.com:19999/host/X250/"
-                         data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
-                         data-append-options="percentage"
-                         data-chart-library="easypiechart"
-                         data-title="Used RAM"
-                         data-units="%"
-                         data-easypiechart-max-value="100"
-                         data-width="9%"
-                         data-after="-600"
-                         data-points="600"
-                         data-colors="#EE9911"
-                         role="application"></div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="easypiechart_x250">
-                    <div data-netdata="system.cpu"
-                         data-host="http://swint.mynetgear.com:19999/host/X250/"
-                         data-title="CPU"
-                         data-chart-library="dygraph"
-                         data-width="100%"
-                         data-after="-300"
-                         data-dygraph-valuerange="[0, 100]"
-                    ></div>
-                    <div data-netdata="system.io"
-                         data-host="http://swint.mynetgear.com:19999/host/X250/"
-                         data-title="Disk"
-                         data-common-max="io"
-                         data-common-min="io"
-                         data-chart-library="dygraph"
-                         data-width="100%"
-                         data-after="-300"
-                    ></div>
-                    <div data-netdata="system.net"
-                         data-host="http://swint.mynetgear.com:19999/host/X250/"
-                         data-common-max="traffic"
-                         data-common-min="traffic"
-                         data-title="Network"
-                         data-chart-library="dygraph"
-                         data-width="100%"
-                         data-after="-300"
-                    ></div>
-                    <div data-netdata="system.ram"
-                         data-host="http://swint.mynetgear.com:19999/host/X250/"
+                         data-host="https://home.guiq.wang:4433/netdata/host/Epyc/"
                          data-common-max="ram"
                          data-common-min="ram"
                          data-title="RAM"
@@ -852,18 +578,18 @@
             <!-- * dell -->
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="http://47.94.151.140:19998"> DELL <img class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation" class="active"><a href="http://101.201.38.124:19999/host/Dell/"> DELL <img class="netdata-badge" src="http://101.201.38.124:19999/host/Dell/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
                 <li role="presentation"><a href="#gauge_dell" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
                 <li role="presentation"><a href="#easypiechart_dell" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active text-left" id="badge_rpi">
-                    <embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=0&dimensions=Core%200&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=1&dimensions=Core%201&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=2&dimensions=Core%202&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.coretemp_isa_0000_temperature&label=3&dimensions=Core%203&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.acpitz_acpi_0_temperature&label=acpi&divide=2&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.dell_smm_virtual_0_temperature&label=0&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://47.94.151.140:19998/api/v1/badge.svg?chart=sensors.dell_smm_virtual_0_fan&label=fan&divide=2&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
+                <div role="tabpanel" class="tab-pane active text-left" id="badge_dell">
+                    <embed class="netdata-badge" src="http://101.201.38.124:19999/host/Dell/api/v1/badge.svg?chart=sensors.coretemp-isa-0000_temperature&label=0&dimensions=Core%200&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://101.201.38.124:19999/host/Dell/api/v1/badge.svg?chart=sensors.coretemp-isa-0000_temperature&label=1&dimensions=Core%201&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://101.201.38.124:19999/host/Dell/api/v1/badge.svg?chart=sensors.coretemp-isa-0000_temperature&label=2&dimensions=Core%202&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://101.201.38.124:19999/host/Dell/api/v1/badge.svg?chart=sensors.coretemp-isa-0000_temperature&label=3&dimensions=Core%203&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://101.201.38.124:19999/host/Dell/api/v1/badge.svg?chart=sensors.acpitz-acpi-0_temperature&label=acpi&divide=2&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://101.201.38.124:19999/host/Dell/api/v1/badge.svg?chart=sensors.dell_smm-virtual-0_temperature&label=0&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" /><embed class="netdata-badge" src="http://101.201.38.124:19999/host/Dell/api/v1/badge.svg?chart=sensors.dell_smm-virtual-0_fan&label=fan&divide=2&units=null&value_color=grey:null%7Cblue&precision=0&refresh=10" type="image/svg+xml" height="20" />
                 </div>
                 <div role="tabpanel" class="tab-pane" id="gauge_dell">
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
-                         data-host="http://47.94.151.140:19998"
+                         data-host="http://101.201.38.124:19999/host/Dell/"
                          data-dimensions="used"
                          data-append-options="percentage"
                          data-chart-library="easypiechart"
@@ -877,7 +603,7 @@
                          data-colors="#DD4400"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://47.94.151.140:19998"
+                         data-host="http://101.201.38.124:19999/host/Dell/"
                          data-dimensions="in"
                          data-chart-library="easypiechart"
                          data-title="Disk Read"
@@ -888,7 +614,7 @@
                          data-common-units="system.io.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://47.94.151.140:19998"
+                         data-host="http://101.201.38.124:19999/host/Dell/"
                          data-dimensions="out"
                          data-chart-library="easypiechart"
                          data-title="Disk Write"
@@ -899,7 +625,7 @@
                          data-common-units="system.io.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
-                         data-host="http://47.94.151.140:19998"
+                         data-host="http://101.201.38.124:19999/host/Dell/"
                          data-chart-library="gauge"
                          data-title="CPU"
                          data-units="%"
@@ -910,7 +636,7 @@
                          data-colors="#22AA99"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://47.94.151.140:19998"
+                         data-host="http://101.201.38.124:19999/host/Dell/"
                          data-dimensions="received"
                          data-chart-library="easypiechart"
                          data-title="Net Inbound"
@@ -921,7 +647,7 @@
                          data-common-units="system.net.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://47.94.151.140:19998"
+                         data-host="http://101.201.38.124:19999/host/Dell/"
                          data-dimensions="sent"
                          data-chart-library="easypiechart"
                          data-title="Net Outbound"
@@ -932,7 +658,7 @@
                          data-common-units="system.net.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
-                         data-host="http://47.94.151.140:19998"
+                         data-host="http://101.201.38.124:19999/host/Dell/"
                          data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
                          data-append-options="percentage"
                          data-chart-library="easypiechart"
@@ -947,7 +673,7 @@
                 </div>
                 <div role="tabpanel" class="tab-pane" id="easypiechart_dell">
                     <div data-netdata="system.cpu"
-                         data-host="http://47.94.151.140:19998"
+                         data-host="http://101.201.38.124:19999/host/Dell/"
                          data-title="CPU"
                          data-chart-library="dygraph"
                          data-width="100%"
@@ -955,7 +681,7 @@
                          data-dygraph-valuerange="[0, 100]"
                     ></div>
                     <div data-netdata="system.io"
-                         data-host="http://47.94.151.140:19998"
+                         data-host="http://101.201.38.124:19999/host/Dell/"
                          data-title="Disk"
                          data-common-max="io"
                          data-common-min="io"
@@ -964,7 +690,7 @@
                          data-after="-300"
                     ></div>
                     <div data-netdata="system.net"
-                         data-host="http://47.94.151.140:19998"
+                         data-host="http://101.201.38.124:19999/host/Dell/"
                          data-common-max="traffic"
                          data-common-min="traffic"
                          data-title="Network"
@@ -973,7 +699,7 @@
                          data-after="-300"
                     ></div>
                     <div data-netdata="system.ram"
-                         data-host="http://47.94.151.140:19998"
+                         data-host="http://101.201.38.124:19999/host/Dell/"
                          data-common-max="ram"
                          data-common-min="ram"
                          data-title="RAM"
@@ -989,29 +715,29 @@
             <!-- * ali -->
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="http://47.94.151.140:19999"> ALI <img class="netdata-badge" src="http://47.94.151.140:19999/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
+                <li role="presentation" class="active"><a href="http://101.201.38.124:19999/"> ALI <img class="netdata-badge" src="http://101.201.38.124:19999/api/v1/badge.svg?chart=system.uptime&label=%20"></img> </a></li>
                 <li role="presentation"><a href="#gauge_ali" aria-controls="gauge" role="tab" data-toggle="tab">Charts</a></li>
                 <li role="presentation"><a href="#easypiechart_ali" aria-controls="easypiechart" role="tab" data-toggle="tab">Hist</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane" id="gauge_ali">
-                    <!-- <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap" -->
-                    <!-- data-host="http://47.94.151.140:19999" -->
-                    <!-- data-dimensions="used" -->
-                    <!-- data-append-options="percentage" -->
-                    <!-- data-chart-library="easypiechart" -->
-                    <!-- data-title="Used Swap" -->
-                    <!-- data-units="%" -->
-                    <!-- data-easypiechart-max-value="100" -->
-                    <!-- data-width="9%" -->
-                    <!-- data-before="0" -->
-                    <!-- data-after="-600" -->
-                    <!-- data-points="600" -->
-                    <!-- data-colors="#DD4400" -->
-                    <!-- role="application"></div> -->
+                    <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.swap"
+                         data-host="http://101.201.38.124:19999/"
+                         data-dimensions="used"
+                         data-append-options="percentage"
+                         data-chart-library="easypiechart"
+                         data-title="Used Swap"
+                         data-units="%"
+                         data-easypiechart-max-value="100"
+                         data-width="9%"
+                         data-before="0"
+                         data-after="-600"
+                         data-points="600"
+                         data-colors="#DD4400"
+                         role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://47.94.151.140:19999"
+                         data-host="http://101.201.38.124:19999/"
                          data-dimensions="in"
                          data-chart-library="easypiechart"
                          data-title="Disk Read"
@@ -1022,7 +748,7 @@
                          data-common-units="system.io.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.io"
-                         data-host="http://47.94.151.140:19999"
+                         data-host="http://101.201.38.124:19999/"
                          data-dimensions="out"
                          data-chart-library="easypiechart"
                          data-title="Disk Write"
@@ -1033,7 +759,7 @@
                          data-common-units="system.io.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.cpu"
-                         data-host="http://47.94.151.140:19999"
+                         data-host="http://101.201.38.124:19999/"
                          data-chart-library="gauge"
                          data-title="CPU"
                          data-units="%"
@@ -1044,7 +770,7 @@
                          data-colors="#22AA99"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://47.94.151.140:19999"
+                         data-host="http://101.201.38.124:19999/"
                          data-dimensions="received"
                          data-chart-library="easypiechart"
                          data-title="Net Inbound"
@@ -1055,7 +781,7 @@
                          data-common-units="system.net.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.net"
-                         data-host="http://47.94.151.140:19999"
+                         data-host="http://101.201.38.124:19999/"
                          data-dimensions="sent"
                          data-chart-library="easypiechart"
                          data-title="Net Outbound"
@@ -1066,7 +792,7 @@
                          data-common-units="system.net.mainhead"
                          role="application"></div>
                     <div class="netdata-container" style="margin-right: 5px;" data-netdata="system.ram"
-                         data-host="http://47.94.151.140:19999"
+                         data-host="http://101.201.38.124:19999/"
                          data-dimensions="used|buffers|active|wired" // active and wired are FreeBSD stats
                          data-append-options="percentage"
                          data-chart-library="easypiechart"
@@ -1081,7 +807,7 @@
                 </div>
                 <div role="tabpanel" class="tab-pane" id="easypiechart_ali">
                     <div data-netdata="system.cpu"
-                         data-host="http://47.94.151.140:19999"
+                         data-host="http://101.201.38.124:19999/"
                          data-title="CPU"
                          data-chart-library="dygraph"
                          data-width="100%"
@@ -1089,7 +815,7 @@
                          data-dygraph-valuerange="[0, 100]"
                     ></div>
                     <div data-netdata="system.io"
-                         data-host="http://47.94.151.140:19999"
+                         data-host="http://101.201.38.124:19999/"
                          data-title="Disk"
                          data-common-max="io"
                          data-common-min="io"
@@ -1098,7 +824,7 @@
                          data-after="-300"
                     ></div>
                     <div data-netdata="system.net"
-                         data-host="http://47.94.151.140:19999"
+                         data-host="http://101.201.38.124:19999/"
                          data-common-max="traffic"
                          data-common-min="traffic"
                          data-title="Network"
@@ -1107,7 +833,7 @@
                          data-after="-300"
                     ></div>
                     <div data-netdata="system.ram"
-                         data-host="http://47.94.151.140:19999"
+                         data-host="http://101.201.38.124:19999/"
                          data-common-max="ram"
                          data-common-min="ram"
                          data-title="RAM"

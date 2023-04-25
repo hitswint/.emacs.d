@@ -64,7 +64,8 @@
                                                  "\\`\\*lsp-bridge"
                                                  "\\`\\*plot-data\\*\\'"
                                                  "\\`\\*Async\\ Shell\\ Command\\*\\'"
-                                                 "\\`\\*Shell\\ Command\\ Output\\*\\'")))
+                                                 "\\`\\*Shell\\ Command\\ Output\\*\\'"
+                                                 "\\`\\*Ebib-.*\\*\\'")))
   ;; (setq helm-mounted-network-directories '("/mnt/share" "/mnt/sshfs"))
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))
@@ -150,7 +151,7 @@
                                                  (,persp-curr-op (and (bound-and-true-p persp-mode)
                                                                       (member x (remq nil (mapcar 'buffer-name (persp-buffers (persp-curr)))))))))
                           (cl-remove-duplicates (helm-buffer-list)))
-           (list (buffer-name (get-buffer-create (format "*Virtual helm %s buffers*" ,type)))))))
+           (list (buffer-name (get-buffer-create (format "*helm virtual %s buffers*" ,type)))))))
   (defvar helm-source-file-buffers-list/curr-persp nil)
   (defvar helm-source-file-buffers-list/other-persps nil)
   (defvar helm-source-recentf-file nil)

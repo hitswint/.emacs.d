@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 function widget-swint-fdfind() {
-    LBUFFER=$(fdfind -L $LBUFFER | percol)
+    LBUFFER=$(fdfind -L $LBUFFER | percol --match-method pinyin)
     zle -R -c
 }
 
