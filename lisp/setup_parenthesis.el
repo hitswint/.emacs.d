@@ -170,7 +170,7 @@
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'text-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'dired-mode-hook 'rainbow-delimiters-mode)
-  ;; 在org-mode中打开rainbow会让org本身的highlight失效。
+  ;; 在org-mode中打开rainbow会让org本身的highlight失效
   (add-hook 'org-mode-hook 'rainbow-delimiters-mode-disable)
   :config
   (custom-set-faces '(rainbow-delimiters-depth-1-face ((t (:foreground "yellow"))))
@@ -195,7 +195,7 @@
           attributes)
       (while (or fg bg)
         (setq attributes (face-attr-construct 'hl-paren-face))
-        ;; 取消改变括号前景颜色。
+        ;; 取消改变括号前景颜色
         ;; (when (car fg)
         ;;   (setq attributes (plist-put attributes :foreground (car fg))))
         (pop fg)

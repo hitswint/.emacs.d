@@ -10,6 +10,7 @@
          ("\\.i\\'" . c-mode)
          ("\\.ii\\'" . c++-mode))
   :config
+  (setq c-default-style "linux")
   (defun c-compile-current-file ()
     (interactive)
     (unless (file-exists-p "Makefile")
@@ -28,19 +29,7 @@
                                                                      (call-interactively 'compile)))
                      (define-key c-mode-base-map (kbd "C-M-q") nil)
                      (define-key c-mode-base-map (kbd "(") nil)
-                     (define-key c-mode-base-map (kbd "{") nil))))
-  ;; Available C style:
-  ;; “gnu”: The default style for GNU projects
-  ;; “k&r”: What Kernighan and Ritchie, the authors of C used in their book
-  ;; “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
-  ;; “whitesmith”: Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
-  ;; “stroustrup”: What Stroustrup, the author of C++ used in his book
-  ;; “ellemtel”: Popular C++ coding standards as defined by “Programming in C++, Rules and Recommendations,” Erik Nyquist and Mats Henricson, Ellemtel
-  ;; “linux”: What the Linux developers use for kernel development
-  ;; “python”: What Python developers use for extension modules
-  ;; “java”: The default style for java-mode (see below)
-  ;; “user”: When you want to define your own style
-  (setq c-default-style "linux"))
+                     (define-key c-mode-base-map (kbd "{") nil)))))
 ;; ===================ccmode====================
 ;;; gdb
 ;; =====================gdb=====================
@@ -52,7 +41,7 @@
                      (local-set-key (kbd "C-c g") 'gdb-or-gud-go))))
   :config
   (define-key gud-mode-map (kbd "C-c G") 'gud-quit)
-  ;; 直接使用gdb-or-gud-go弹出gud-comint-buffer未定义，先gdb，然后gdb-or-gud-go。
+  ;; 直接使用gdb-or-gud-go弹出gud-comint-buffer未定义，先gdb，然后gdb-or-gud-go
   (defun gdb-or-gud-go (&optional arg)
     "If gdb isn't running; run gdb, else call gud-go."
     (interactive "P")
@@ -74,12 +63,10 @@
       (kill-buffer (gdb-breakpoints-buffer-name))
       (kill-buffer (gdb-inferior-io-name))
       (kill-buffer "*Buffer List*"))
-    ;; 关闭gdb buffer。
     (with-current-buffer gud-comint-buffer
       (comint-skip-input)
       (kill-process (get-buffer-process gud-comint-buffer))
       (delete-other-windows)))
-  ;; 关闭gdb的process时，关闭buffer。
   (add-hook 'gdb-mode-hook 'kill-shell-buffer-after-exit t))
 ;; =====================gdb=====================
 ;;; function-args
@@ -116,7 +103,7 @@
   ;; (semanticdb-enable-gnu-global-databases 'c++-mode)
   (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
   ;; (add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
-  ;; 默认semantic快捷键以C-c ,为前缀。
+  ;; 默认semantic快捷键以C-c ,为前缀
   (define-key semantic-mode-map (kbd "C-c ,") nil))
 ;; ===================semantic==================
 ;;; hs-minor-mode

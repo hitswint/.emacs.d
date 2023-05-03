@@ -15,7 +15,7 @@
           (add-hook 'TeX-mode-hook mode))
         (list 'LaTeX-math-mode
               'turn-on-orgtbl
-              'TeX-fold-mode ; C-c C-o C-b打开fold，C-c C-o b关闭fold。
+              'TeX-fold-mode ; C-c C-o C-b打开fold，C-c C-o b关闭fold
               'LaTeX-install-toolbar))
   (add-hook 'LaTeX-mode-hook
             (lambda ()
@@ -33,7 +33,7 @@
               (define-key LaTeX-mode-map (kbd "C-c l") #'(lambda () (interactive)
                                                            (insert (swint-cursor-localtion))))))
   (setq TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o")))
-  ;; 使用imagemagick中convert转换为图片。win中默认使用imgconvert，可以将cygwin中convert改名为imgconvert。
+  ;; 使用imagemagick中convert转换为图片。win中默认使用imgconvert，可以将cygwin中convert改名为imgconvert
   (add-to-list 'TeX-command-list '("LaTeX-standalone" "%`xelatex -shell-escape%(mode)%' %t" TeX-run-TeX nil t))
   ;; 使用beamer-preview多线程快速更新，需pip安装pypdf2/colorlog/watchdog
   ;; 指定--run 2是因为只编译一次时会出现临时页：Temporary page! LATEX was unable to guess the total number of pages
@@ -59,7 +59,7 @@
 ;; =====================auctex=====================
 ;;; auctex-latexmk
 ;; =================auctex-latexmk=================
-;; texlive默认包含latexmk，只需加入.latexmkrc配置文件。
+;; texlive默认包含latexmk，只需加入.latexmkrc配置文件
 (def-package! auctex-latexmk
   :after tex
   :config

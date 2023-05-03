@@ -115,10 +115,9 @@
               (define-key dired-mode-map (kbd "C-M-j") 'tc-lister-open-file)
               (define-key dired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-beginning-of-buffer)
               (define-key dired-mode-map (vector 'remap 'end-of-buffer) 'dired-end-of-buffer)
-              ;; 在dired对mark的多个文件内容进行查找。
+              ;; 在dired对mark的多个文件内容进行查找
               (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
               (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
-              ;; 文件夹排序。
               (make-local-variable 'dired-sort-map)
               (setq dired-sort-map (make-sparse-keymap))
               (define-key dired-mode-map "s" dired-sort-map)
@@ -448,7 +447,7 @@
                         (format-time-string "%Y%m%d_%H%M%S.png"))))
       (shell-command (format "xclip -selection clipboard -t image/png -o > \"%s\""
                              filename))))
-  ;; 加C-u不清除clipboards。
+  ;; 加C-u不清除clipboards
   (bind-key "C-y" 'dired-ranger-paste dired-mode-map)
   (bind-key "M-y" 'dired-ranger-move dired-mode-map))
 ;; ===============dired-ranger=================

@@ -1,11 +1,11 @@
 ;;; BACKUP-AUTOSAVE
 ;; ============BACKUP-AUTOSAVE=============
-;; 将backup和autosave文件都放在~/.emacs.d/.saves文件夹下。
-(setq backup-by-copying t               ;don't clobber symlinks
+;; 将backup/autosave文件都放在~/.emacs.d/.saves下
+(setq backup-by-copying t
       delete-old-versions t
       kept-new-versions 6
       kept-old-versions 2
-      version-control t)                ;use versioned backups
+      version-control t)
 (defconst temp-files-save-dir
   (format "%s%s/" (expand-file-name user-emacs-directory) ".saves"))
 (setq backup-directory-alist `((".*" . ,temp-files-save-dir)))
@@ -16,13 +16,13 @@
       (week (* 60 60 24 7))
       (month (* 60 60 24 30))
       (current (float-time (current-time))))
-;;;; 每周清理backup/autosave文件。
+;;;; 每周：清理backup/autosave文件
   (message "Cleaning backup/autosave files...")
   (dolist (file (directory-files temp-files-save-dir t directory-files-no-dot-files-regexp))
     (when (> (- current (float-time (cl-sixth (file-attributes file)))) week)
       (message "%s" file)
       (delete-file file t)))
-;;;; 每天清理trashcan。
+;;;; 每天：清理trashcan
   (message "Cleaning trashcan...")
   (dolist (file (directory-files trash-directory t directory-files-no-dot-files-regexp))
     (when (and (or (backup-file-name-p file) (auto-save-file-name-p (file-name-nondirectory file)))
@@ -40,14 +40,14 @@
     (unless (file-exists-p PC-path)
       (dired-create-directory PC-path)
       (message "Created %s" PC-path))
-;;;; 每月备份apt history文件。
+;;;; 每月：备份apt history文件
     (when (or (not (file-exists-p PC-apt-history-file))
               (> (- current (float-time (cl-sixth (file-attributes PC-apt-history-file))))
                  month))
       (message "Updating apt history: %s" PC-apt-history-file)
       (cl-loop for it in (directory-files "/var/log/apt/" t "history\\.log")
                do (copy-file it PC-path t)))
-;;;; 每月更新file system tree文件。
+;;;; 每月：更新file system tree文件
     (when (or (not (file-exists-p PC-tree-file))
               (> (- current (float-time (cl-sixth (file-attributes PC-tree-file))))
                  month))
@@ -57,7 +57,7 @@
        "Updating-file-system-tree" "*Updating-file-system-tree*"
        (concat "tree " (expand-file-name "~") " -o "
                PC-tree-file)))))
-;;;; 每次保存备份文件。
+;;;; 每次保存备份文件
 (add-hook 'before-save-hook #'(lambda () (let ((buffer-backed-up nil)) (backup-buffer))))
 ;; ============BACKUP-AUTOSAVE=============
 (provide 'setup_backup)

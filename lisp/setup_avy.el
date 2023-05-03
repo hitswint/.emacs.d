@@ -18,10 +18,10 @@
   (add-to-list 'avy-key-to-char-alist '(?\M-w . ?W))
   (add-to-list 'avy-key-to-char-alist '(?\C-\; . ?:))
   (add-to-list 'avy-key-to-char-alist '(?\M-f . ?F))
-  ;; 默认当前窗口，加C-u时所有窗口。
+  ;; 默认当前窗口，加C-u时所有窗口
   (setq avy-all-windows nil)
   (setq avy-all-windows-alt t)
-  ;; 修复at-full造成ace-pinyin显示不正确的问题。
+  ;; 修复at-full造成ace-pinyin显示不正确的问题
   (defun avy--overlay-at-full (path leaf)
     "Create an overlay with PATH at LEAF.
 PATH is a list of keys from tree root to LEAF.
@@ -60,7 +60,7 @@ LEAF is normally ((BEG . END) . WND)."
                         (min (+ beg
                                 (cond
                                  ((or (eq (char-after) ?\t)) 1)
-                                 ;; 当(point)和(+ (point) 1)位置处有中文字符时，确定正确的end位置。
+                                 ;; 当(point)和(+ (point) 1)位置处有中文字符时，确定正确的end位置
                                  ((and (char-after (+ (point) 1))
                                        (> (+ (char-width (char-after)) (char-width (char-after (+ (point) 1)))) 2))
                                   (if (> len (char-width (char-after)))
@@ -90,7 +90,7 @@ LEAF is normally ((BEG . END) . WND)."
                 (concat str (make-string (max (- tab-width len) 0) ?\ )))
                (t
                 ;; Add padding for wide-width character.
-                ;; 确定是否添加padding。
+                ;; 确定是否添加padding
                 (save-excursion
                   (goto-char beg)
                   (if (and (char-after)
@@ -108,7 +108,7 @@ LEAF is normally ((BEG . END) . WND)."
 ;;; avy-zap
 ;; ===================avy-zap===================
 (def-package! avy-zap
-  ;; avy-zap-up-to-char-dwim保留char，而avy-zap-to-char-dwim不保留。
+  ;; avy-zap-up-to-char-dwim保留char，而avy-zap-to-char-dwim不保留
   :commands (avy-zap-to-char-dwim
              avy-zap-up-to-char-dwim))
 ;; ===================avy-zap===================

@@ -198,7 +198,7 @@
   ;; 默认 -> 预览当前位置或当前节 / C-u -> 清除当前节预览 / C-u C-u -> 预览当前buffer / C-u C-u C-u 清除全部预览
   (define-key org-mode-map (kbd "C-c v") 'org-latex-preview)
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-  (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境。
+  (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境
   ;; =============org-latex-preview=============
 ;;;; org-clipboard-copy/paste
   ;; =========org-clipboard-copy/paste==========
@@ -482,7 +482,7 @@
   ;; org-ref-insert-link在org-ref-core中定义，若直接(def-package! org-ref)提示函数未定义
   (require 'org-ref)
   (require 'helm)
-  ;; 在已有org-mode中更新链接高亮。
+  ;; 在已有org-mode中更新链接高亮
   (dolist (buf (cl-remove-if-not (lambda (x)
                                    (equal (buffer-mode x) 'org-mode))
                                  (buffer-list)))
@@ -649,10 +649,10 @@
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-  ;; Beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)。
-  ;; 设定mainfont会导致公式环境中变量变成正体。
-  ;; 设定setsansfont使用Times New Roman无法使用英文斜体和粗体。
-  ;; 使用某些字体可以实现粗斜体，例如DejaVu Sans/DejaVu Sans Mono/DejaVu Serif等。
+  ;; Beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)
+  ;; 设定mainfont会导致公式环境中变量变成正体
+  ;; 设定setsansfont使用Times New Roman无法使用英文斜体和粗体
+  ;; 使用某些字体可以实现粗斜体，例如DejaVu Sans/DejaVu Sans Mono/DejaVu Serif等
   (add-to-list 'org-latex-classes
                '("cn-beamer"
                  "\\documentclass[11pt]{beamer}

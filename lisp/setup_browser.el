@@ -4,7 +4,6 @@
   :bind (("M-o M-w" . w3m)
          ("M-o w" . w3m-youdao-sample-sentences))
   :config
-  ;; Use w3m to display youdao sample sentences.
   (defun w3m-youdao-sample-sentences (&optional _word)
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
@@ -75,7 +74,7 @@
       :init (lambda ()
               (setq helm-firefox-history-alist
                     (split-string (shell-command-to-string
-                                   ;; 直接读取places.sqlite会导致Error: database is locked，将其拷贝到/tmp下读取。
+                                   ;; 直接读取places.sqlite会导致Error: database is locked，将其拷贝到/tmp下读取
                                    (format "cp %s /tmp/; sqlite3 -separator '||' /tmp/places.sqlite \"select title,url from moz_places where last_visit_date is not null order by last_visit_date desc\" | head -1000"
                                            (expand-file-name "places.sqlite" (helm-get-firefox-user-init-dir helm-firefox-default-directory)))) "\n")))
       :candidates (lambda ()

@@ -19,8 +19,8 @@
   (define-key ac-completing-map "\C-n" 'ac-next)
 ;;;; eshell
   ;; ==================eshell==================
-  ;; pcomplete会自动启动，造成打开eshell时读取ac-sources错误。
-  ;; 放在auto-complete中，使其只有当ac开启时才能够执行。
+  ;; pcomplete会自动启动，造成打开eshell时读取ac-sources错误
+  ;; 放在auto-complete中，使其只有当ac开启时才能够执行
   (def-package! pcomplete
     :after auto-complete
     :config
@@ -65,7 +65,7 @@
   :commands swint-auto-complete-ispell
   :config
   (bind-key "M-U" 'hippie-expand ac-completing-map)
-  ;; 使用ac-source-dictionary补全单词。
+  ;; 使用ac-source-dictionary补全单词
   ;; (add-to-list 'ac-dictionary-files "~/.english-words")
   (ac-ispell-setup)
   (defun swint-auto-complete-ispell ()
@@ -268,7 +268,6 @@
           ;; try-complete-lisp-symbol-partially
           ;; try-complete-lisp-symbol
           ))
-  ;; Bin Chen写的补全单词函数，但无法使用ido界面，显示undo次数过多。
   (defun try-expand-by-dict (old)
     ;; Old is true if we have already attempted an expansion.
     (unless (bound-and-true-p ispell-minor-mode)

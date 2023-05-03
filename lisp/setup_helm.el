@@ -57,6 +57,7 @@
                                                  "\\`\\*Help\\*\\'"
                                                  "\\`\\*tramp.*\\*\\'"
                                                  "\\`\\*baidu-translate\\*\\'"
+                                                 "\\`\\*lingva\\*\\'"
                                                  "\\`\\*org-brain-helm\\*\\'"
                                                  "\\`\\*Org\\ Help\\*\\'"
                                                  "\\`\\*Org\\ Preview\\ LaTeX\\ Output\\*\\'"
@@ -131,11 +132,11 @@
 ;;;; helm-pinyin
   ;; ================helm-pinyin================
   (require 'iswitchb-pinyin)
-  ;; 支持中文拼音首字母匹配，会使helm-find-files匹配过多。
+  ;; 支持中文拼音首字母匹配，会使helm-find-files匹配过多
   (cl-defun helm-mm-3-match/around (orig-fn str &rest args)
     (apply orig-fn (concat str "|" (str-unicode-to-pinyin-initial str)) args))
   (advice-add 'helm-mm-3-match :around #'helm-mm-3-match/around)
-  ;; 默认在输入前面加空格解决匹配问题。
+  ;; 默认在输入前面加空格解决匹配问题
   (defun helm-find-files-1/around (orig-fn fname &rest args)
     (apply orig-fn (concat fname " ") args))
   (advice-add 'helm-find-files-1 :around #'helm-find-files-1/around)
@@ -499,7 +500,7 @@
   ;; ========helm-open-file-with-lister=========
 ;;;; helm-locate
   ;; ==============helm-locate==================
-  ;; 默认使用/var/lib/mlocate/mlocate.db数据库，使用cron每天定时更新或sudo updatedb更新。
+  ;; 默认使用/var/lib/mlocate/mlocate.db数据库，使用cron每天定时更新或sudo updatedb更新
   (defun swint-helm-locate (&optional arg)
     (interactive "P")
     (let* ((helm-ff-locate-db-filename "~/.helm-locate.db")
@@ -558,7 +559,7 @@
   :bind (("<escape> M-x" . lacarte-execute-command)
          ("C-x `" . lacarte-execute-menu-command))
   :config
-  ;; 使用helm-insert-latex-math代替。
+  ;; 使用helm-insert-latex-math代替
   (defvar helm-source-lacarte-math
     '((name . "Math Symbols")
       (init . (lambda()
@@ -581,7 +582,7 @@
   :bind (("M-s M-s" . helm-swoop)
          ("M-s M-S" . helm-multi-swoop-all))
   :config
-  ;; helm-swoop 中使用C-c C-e编辑，C-x C-s保存。
+  ;; helm-swoop 中使用C-c C-e编辑，C-x C-s保存
   (define-key isearch-mode-map (kbd "M-s M-s") 'helm-swoop-from-isearch)
   (define-key helm-swoop-map (kbd "M-S") 'helm-multi-swoop-all-from-helm-swoop))
 ;; ================helm-swoop===================
@@ -593,8 +594,8 @@
 ;;; helm-ag
 ;; =================helm-ag=====================
 (def-package! helm-ag
-  ;; helm-do-ag 互动式搜索，但只能搜索一个词。
-  ;; helm-ag 先输入词，可以在结果中搜索第二个词。
+  ;; helm-do-ag 互动式搜索，但只能搜索一个词
+  ;; helm-ag 先输入词，可以在结果中搜索第二个词
   :commands (helm-do-ag helm-do-ag-buffers)
   :init
   (bind-key "C-x g" #'(lambda () (interactive) (let ((helm-truncate-lines t)) (if current-prefix-arg
@@ -604,7 +605,7 @@
   :config
   (setq helm-ag-base-command "ag --nocolor --nogroup --hidden")
   (setq helm-ag-command-option "--follow") ;Follow symlinks.
-  ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果。
+  ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果
   (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)
   (define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)
   (define-key helm-ag-map (kbd "C-l") 'helm-execute-persistent-action)
@@ -640,7 +641,7 @@
           (save-excursion
             (save-restriction
               (widen)
-              ;; imenu中显示headings全部内容。
+              ;; imenu中显示headings全部内容
               (imenu--generic-function `((nil ,(concat "^" (outshine-calc-outline-regexp) ".*$") 0))))))
     (imenu--truncate-items imenu-outshine--index-alist))
   (defun helm-imenu-outshine-candidates (&optional buffer)

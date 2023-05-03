@@ -1,10 +1,10 @@
 ;;; Setup
 ;; ===================Setup=====================
 (setq use-short-answers t)
-(global-font-lock-mode t)               ;语法高亮。
-(auto-image-file-mode t)                ;打开图片显示功能。
-(transient-mark-mode t)                 ;高亮选中得区域。
-(show-paren-mode t)                     ;显示括号匹配。
+(global-font-lock-mode t)               ;语法高亮显示
+(auto-image-file-mode t)                ;打开图片显示
+(transient-mark-mode t)                 ;高亮选中区域
+(show-paren-mode t)                     ;显示括号匹配
 (global-linum-mode -1)
 (global-hl-line-mode t)
 (fringe-mode)
@@ -16,32 +16,32 @@
   (scroll-bar-mode -1))
 (when (fboundp 'horizontal-scroll-bar-mode)
   (horizontal-scroll-bar-mode -1))
-(mouse-avoidance-mode 'animate)         ;光标靠近鼠标指针时，让鼠标指针自动让开。
-(setq fill-column 80)                   ;默认显示 80列就换行。
-(setq visible-bell t)                   ;关闭烦人的出错时的提示声。
-(setq mouse-yank-at-point t)            ;支持中键粘贴。
-(setq kill-ring-max 200)                ;用一个很大的 kill ring。
-(setq next-line-add-newlines t)         ;最后一行自动打开新行。
-(setq make-pointer-invisible t)         ;打字时光标不可见。
+(mouse-avoidance-mode 'animate)         ;光标靠近鼠标时，自动移开鼠标
+(setq fill-column 80)                   ;默认显示80列换行
+(setq visible-bell t)                   ;关闭错误提示声
+(setq mouse-yank-at-point t)            ;支持中键粘贴
+(setq kill-ring-max 200)                ;设置kill ring长度
+(setq next-line-add-newlines t)         ;最后行时自动打开新行
+(setq make-pointer-invisible t)         ;打字时光标不可见
 (setq diary-file "~/org/journal.org.gpg")
 (setq disabled-command-function nil)
 (setq undo-no-redo t)
 (setq uniquify-buffer-name-style 'forward)
 (setq-default indent-tabs-mode nil)
-(setq auto-window-vscroll nil)          ;解决C-n卡顿。
+(setq auto-window-vscroll nil)          ;解决C-n卡顿
 (setq save-interprogram-paste-before-kill t)
 (setq require-final-newline t)
 (setq load-prefer-newer t)
 (setq shift-select-mode nil)
 (setq select-active-regions 'only)
-(setq epg-pinentry-mode 'loopback)      ;使用minibuffer输入密码。
+(setq epg-pinentry-mode 'loopback)      ;使用minibuffer输入密码
 (setq history-delete-duplicates t)
 (setq delete-by-moving-to-trash t)
 (setq confirm-kill-processes nil)
 (setq display-line-numbers-type t)
 (setq trash-directory "~/.Trash")
 (setq tramp-default-method "ssh")
-(setq tramp-ssh-controlmaster-options   ;默认设置导致helm启动慢。
+(setq tramp-ssh-controlmaster-options   ;默认设置导致helm启动慢
       "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 ;; (setq debug-on-error t)
 (set-face-attribute 'highlight nil :background "black")

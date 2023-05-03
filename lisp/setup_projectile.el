@@ -34,7 +34,7 @@
   :bind ("M-'" . helm-projectile)
   :config
   (helm-projectile-on)
-  ;; 设置切换project的默认操作。
+  ;; 设置切换project的默认操作
   (setq projectile-switch-project-action 'helm-projectile)
   (defun helm-projectile-kill-persp ()
     "Kill selected persps for projects."
@@ -125,11 +125,11 @@
   :config
   (defun projectile-persp-switch-project/after (project-to-switch)
     (projectile-add-known-project project-to-switch)
-    ;; 将project-to-switch加入persp-projectile-hash中。
+    ;; 将project-to-switch加入persp-projectile-hash中
     (puthash project-to-switch
              (file-name-nondirectory (directory-file-name project-to-switch))
              persp-projectile-hash)
-    ;; 删除不在projectile-known-projects中的project。
+    ;; 删除不在projectile-known-projects中的project
     (cl-loop for p in (hash-table-keys persp-projectile-hash)
              do (unless (member p projectile-known-projects)
                   (remhash p persp-projectile-hash))))

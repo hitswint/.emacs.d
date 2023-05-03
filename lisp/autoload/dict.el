@@ -46,10 +46,10 @@
   (goto-char (point-min)))
 ;;;; 优先纵向分割窗口
 ;; ============优先纵向分割窗口==============
-;; 设置split-xxx-threshold无法达到要求。
+;; 设置split-xxx-threshold无法达到要求
 ;; (setq split-height-threshold nil)
 ;; (setq split-width-threshold 0)
-;; 设置display-buffer-function会影响其他package。
+;; 设置display-buffer-function会影响其他package
 ;; (setq display-buffer-function 'display-new-buffer)
 (defun display-new-buffer (buffer force-other-window)
   "If BUFFER is visible, select it.
@@ -173,30 +173,37 @@ FORCE-OTHER-WINDOW is ignored."
   (interactive)
   (unless (member (buffer-name) '("*sdcv*" "*online*"))
     (window-configuration-to-register :sdcv))
-  (let* ((word (or _word (swint-get-words-at-point)))
-         (bing-result (ignore-errors (bing-dict-brief word t)))
-         (youdao-result (ignore-errors (youdao-dictionary--format-result
-                                        (youdao-dictionary--request word))))
-         (baidu-result (ignore-errors
-                         (baidu-translate-at-point word)
-                         (buffer-substring-no-properties (point-min) (point-max)))))
+  (let ((word (or _word (swint-get-words-at-point)))
+        (dict-list (helm-comp-read "Select files with order: " '("Google" "Bing" "Youdao" "Baidu" "Lingva")
+                                   :marked-candidates t
+                                   :buffer (concat "*helm dired converter-swint*"))))
     (delete-other-windows)
     (switch-to-buffer "*online*")
     (set-buffer "*online*")
     (buffer-disable-undo)
     (erase-buffer)
     (sdcv-mode)
-    (insert "*** Google Translate\n")
-    (unless (ignore-errors
-              (if (pyim-string-match-p "\\cC" word)
-                  (google-translate-translate "zh-CN" "en" word 'current-buffer)
-                (google-translate-translate "en" "zh-CN" word 'current-buffer)))
-      (insert "Nothing"))
-    (insert "\n\n*** Bing Dict\n")
-    (insert (or bing-result "Nothing"))
-    (insert "\n\n*** Youdao Dictionary\n")
-    (insert (or youdao-result "Nothing"))
-    (insert "\n\n*** Baidu Translate\n")
-    (insert (or baidu-result "Nothing"))
-    (online-output-cleaner)))
+    (cl-loop for dict in dict-list do
+             (let ((result (ignore-errors (save-excursion
+                                            (cond ((equal dict "Google")
+                                                   (google-translate-translate_chieng word 'kill-ring)
+                                                   (current-kill 0))
+                                                  ((equal dict "Bing")
+                                                   (bing-dict-brief word t))
+                                                  ((equal dict "Youdao")
+                                                   (youdao-dictionary--format-result (youdao-dictionary--request word)))
+                                                  ((equal dict "Baidu")
+                                                   (baidu-translate-at-point word)
+                                                   (buffer-substring-no-properties (point-min) (point-max)))
+                                                  ((equal dict "Lingva")
+                                                   (lingva-translate-at-point word)
+                                                   (while (not (get-buffer "*lingva*"))
+                                                     (sit-for 1))
+                                                   (current-kill 0)))))))
+               (insert (format "\n\n*** %s\n" dict))
+               (insert (or result "Nothing"))))
+    (online-output-cleaner)
+    (cl-loop for b in '("*baidu-translate*" "*lingva*")
+             do (when (get-buffer b)
+                  (kill-buffer b)))))
 ;; =================online===================

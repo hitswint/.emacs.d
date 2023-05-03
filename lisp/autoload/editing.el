@@ -96,7 +96,7 @@ might be bad."
   (delete-trailing-whitespace)
   (set-buffer-file-coding-system 'utf-8))
 ;; Various superfluous white-space. Just say no.
-;; (add-hook 'before-save-hook 'cleanup-buffer-safe) ;会导致mew发送附件时，保存失败，进而发送失败。
+;; (add-hook 'before-save-hook 'cleanup-buffer-safe) ;会导致mew发送附件时，保存失败，进而发送失败
 ;;;###autoload
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
@@ -289,7 +289,7 @@ if point is at end of line , new-line-and-indent"
 ;; ===================parenthesis==================
 ;; (setq show-paren-style 'parenthesis)    ;Highlight just brackets.
 ;; (setq show-paren-style 'expression)     ;Highlight entire bracket expression.
-;; (setq skeleton-pair t)                  ;自动插入匹配的括号。
+;; (setq skeleton-pair t)                  ;自动插入匹配的括号
 ;; (global-set-key (kbd "(") 'skeleton-pair-insert-maybe)
 ;; (global-set-key (kbd "[") 'skeleton-pair-insert-maybe)
 ;; (global-set-key (kbd "{") 'skeleton-pair-insert-maybe)

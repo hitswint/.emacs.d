@@ -58,7 +58,7 @@
 ;;; counsel
 ;; ===================counsel======================
 (def-package! counsel
-  ;; 按键逻辑：helm(C-x c x)/counsel(M-s c x)。
+  ;; 按键逻辑：helm(C-x c x)/counsel(M-s c x)
   :commands counsel-read-file-for-rsync
   :bind (("M-X" . counsel-M-x)
          ("C-x C-r" . swint-counsel-history)

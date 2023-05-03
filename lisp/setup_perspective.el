@@ -2,10 +2,10 @@
 ;; =================perspective=================
 (def-package! perspective
   ;; 编译流程：
-  ;; 1. doom//clean-byte-compiled-files并重启emacs，更新编译包。
-  ;; 2. doom//byte-compile编译配置文件。
-  ;; 3. 如出现undefined等提示，运行1命令重新安装perspective。
-  ;; 4. pdf-tools需要先加载再更新，否则部分函数显示未定义。
+  ;; 1. doom//clean-byte-compiled-files并重启emacs，更新编译包
+  ;; 2. doom//byte-compile编译配置文件
+  ;; 3. 如出现undefined等提示，运行1命令重新安装perspective
+  ;; 4. pdf-tools需要先加载再更新，否则部分函数显示未定义
   :load-path perspective-dir
   :commands (persp-push-current-buffer
              persp-push-current-buffer-to-last
@@ -45,7 +45,7 @@
     (persp-save)
     (set-frame-parameter nil 'persp--curr persp)
     (persp-set-local-variables (persp-local-variables persp))
-    ;; 切换persp会打乱buffer list顺序，因persp-reactivate-buffers后(persp-buffers persp)顺序不对。
+    ;; 切换persp会打乱buffer list顺序，因persp-reactivate-buffers后(persp-buffers persp)顺序不对
     (persp-reactivate-buffers
      (mapcar 'get-buffer (cl-remove-if-not
                           (lambda (x)
@@ -91,7 +91,7 @@ See also `persp-switch' and `persp-remove-buffer'."
 ;;;; 开启时加载perspectives
   ;; ========emacs开启时加载perspectives========
   (defun swint-load-perspectives ()
-    ;; 升级到emacs24.5之后，(persp-mode)启动初始化错误，这里重新初始化。
+    ;; 升级到emacs24.5之后，(persp-mode)启动初始化错误，这里重新初始化
     (persp-mode 1)
     (remove-hook 'ido-make-buffer-list-hook 'persp-set-ido-buffers)
     (when (load swint-perspectives-saved-file t)

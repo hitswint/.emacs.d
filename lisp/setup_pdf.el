@@ -3,14 +3,14 @@
 (def-package! pdf-tools
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :init
-  ;; Pdf-tools默认设置x-gtk-use-system-tooltips为nil。
+  ;; Pdf-tools默认设置x-gtk-use-system-tooltips为nil
   (setq pdf-annot-tweak-tooltips nil)
   :config
   (pdf-tools-install)
   (setq pdf-outline-imenu-use-flat-menus t)
-  ;; pdf-view-auto-slice-minor-mode 翻页自动切边。
+  ;; pdf-view-auto-slice-minor-mode 翻页自动切边
   ;; (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
-  ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)。
+  ;; 打开pdf时手动切边一次。手动切边(s b)，重设(s r)
   ;; (add-hook 'pdf-view-mode-hook 'pdf-view-set-slice-from-bounding-box)
   (define-key pdf-view-mode-map (kbd "M-w") 'pdf-view-kill-ring-save)
   (define-key pdf-view-mode-map (kbd "M-v") 'pdf-view-scroll-down-or-previous-page)
@@ -21,8 +21,8 @@
 ;; ====================pdf-tools===================
 ;;; doc-view-mode
 ;; ==================doc-view-mode=================
-;; 使用soffice/unoconv转换。
-;; 默认缓存文件保存在/tmp和~/AppData/Local/Temp中，使用doc-view-clear-cache清理。
+;; 使用soffice/unoconv转换
+;; 默认缓存文件保存在/tmp和~/AppData/Local/Temp中，使用doc-view-clear-cache清理
 (def-package! doc-view
   :defer t
   :config

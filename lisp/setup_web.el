@@ -24,7 +24,7 @@
                              (bind-key "C-c s" 'swint-run-skewer web-mode-map)))
   :config
   (define-key html-mode-map (kbd "C-c s") 'swint-run-skewer)
-  ;; 在html-mode下，使用skewer实现html/js/css代码的实时eval。
+  ;; 在html-mode下，使用skewer实现html/js/css代码的实时eval
   (defun swint-run-skewer (&optional arg)
     (interactive "P")
     (let ((skewer-declaration
@@ -46,7 +46,7 @@
   (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
   (define-key js2-mode-map (kbd "M-.") nil)
   (define-key js2-mode-map (kbd "C-c C-,") 'js2-jump-to-definition)
-  ;; 在js2-mode下，run-skewer打开空白网页，eval实时展现。
+  ;; 在js2-mode下，run-skewer打开空白网页，eval实时展现
   (define-key js2-mode-map (kbd "C-c s") 'run-skewer))
 ;; =================js2-mode===================
 ;;; skewer-mode

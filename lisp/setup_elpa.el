@@ -18,9 +18,8 @@
 (setq package-enable-at-startup nil
       package--init-file-ensured t
       byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
-;; 激活所有packages，也可以使用package-activate单独激活。
+;; 激活所有packages，也可以使用package-activate单独激活
 (package-initialize)
-;; 借自prelude。
 (defvar prelude-packages '(ac-html-bootstrap
                            ac-ispell
                            ac-math
@@ -128,6 +127,7 @@
                            key-chord
                            lacarte
                            let-alist
+                           lingva
                            magic-latex-buffer
                            magit
                            markdown-mode

@@ -388,7 +388,7 @@ Assuming .. and . is a current directory (like in FAR)"
         (is-pull (equal action "pull"))
         (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)")
         rsync/unison-command)
-    ;; 对于rsync，escape本地路径用\，远程路径用\\\。
+    ;; 对于rsync，escape本地路径用\，远程路径用\\\
     (cl-flet ((escape-local (x)
                             (replace-regexp-in-string string-to-escape
                                                       "\\\\\\1" x))
@@ -409,7 +409,7 @@ Assuming .. and . is a current directory (like in FAR)"
                                 (setq remote-files
                                       (helm-comp-read "Remote files: "
                                                       (split-string (shell-command-to-string
-                                                                     ;; 连接remote列出path下文件绝对路径，并不显示错误信息。
+                                                                     ;; 连接remote列出path下文件绝对路径，并不显示错误信息
                                                                      (format "ssh %s '(cd %s && ls -A | sed \"s:^:`pwd`/:\") 2>/dev/null'"
                                                                              remote (escape-local path))) "\n")
                                                       :marked-candidates t

@@ -17,18 +17,6 @@
   (dolist (hook '(magit-insert-status-headers magit-insert-staged-changes))
     (remove-hook 'magit-status-sections-hook hook))
   (define-key magit-mode-map (kbd "<C-tab>") nil)
-  (defun magit-exit-commit-mode ()
-    (interactive)
-    (swint-kill-buffer)
-    (delete-window))
-  (define-key git-commit-mode-map (kbd "C-c C-k") 'magit-exit-commit-mode)
-  ;; C-c C-a to amend without any prompt.
-  (defun magit-just-amend ()
-    (interactive)
-    (save-window-excursion
-      (magit-with-refresh
-       (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
-  (define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend)
 ;;;; 使用git管理doc文件
   ;; =============使用git管理doc文件===============
   (defun swint-magit-diff-doc ()

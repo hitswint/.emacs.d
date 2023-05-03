@@ -8,7 +8,8 @@
     '(("b" . bing-dict-brief-cb-at-point)
       ("g" . google-translate-translate_chieng)
       ("y" . youdao-dictionary-to-tip)
-      ("d" . baidu-translate-at-point)))
+      ("d" . baidu-translate-at-point)
+      ("l" . lingva-translate-at-point)))
   :config
   (defun bing-dict-brief-cb-at-point (&optional _word)
     "Search word at point."
@@ -39,14 +40,15 @@
     (message "Translated text was added to current buffer."))
   (advice-add 'google-translate-current-buffer-output-translation :override
               #'google-translate-current-buffer-output-translation/override)
-  (defun google-translate-translate_chieng (&optional _word)
+  (defun google-translate-translate_chieng (&optional _word _dest)
     "Search WORD simple translate result."
     (interactive)
-    (let ((word (or _word (swint-get-words-at-point))))
+    (let ((word (or _word (swint-get-words-at-point)))
+          (dest (or _dest 'popup)))
       ;; \\cc匹配中文字符，包括全角标点，\\cC匹配汉字
       (if (pyim-string-match-p "\\cC" word)
-          (google-translate-translate "zh-CN" "en" word 'popup)
-        (google-translate-translate "en" "zh-CN" word 'popup)))))
+          (google-translate-translate "zh-CN" "en" word dest)
+        (google-translate-translate "en" "zh-CN" word dest)))))
 ;; ===============google-translate===============
 ;;; youdao-dictionary
 ;; ===============youdao-dictionary==============
@@ -76,4 +78,17 @@
           (baidu-translate-string word "auto" "en")
         (baidu-translate-string word "auto" "zh")))))
 ;; ================baidu-translate===============
+;;; lingva
+;; =====================lingva===================
+(def-package! lingva
+  :commands lingva-translate-at-point
+  :config
+  (defun lingva-translate-at-point (&optional _word)
+    (interactive)
+    (let* ((word (or _word (swint-get-words-at-point)))
+           (chinese-p (pyim-string-match-p "\\cC" word))
+           (lingva-source (if chinese-p "zh" "en"))
+           (lingva-target (if chinese-p "en" "zh")))
+      (lingva-translate nil word))))
+;; =====================lingva===================
 (provide 'setup_dict)

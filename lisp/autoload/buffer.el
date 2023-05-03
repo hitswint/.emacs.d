@@ -103,7 +103,7 @@ If buffer-or-name is nil return current buffer's mode."
 ;; ============获得不包括扩展名的文件名============
 ;;; 关闭buffer后切换到之前的buffer
 ;; ==========关闭buffer后切换到之前的buffer========
-;; kill-buffer存在问题：1. 会切换到helm buffer；2. 切换persp时会切换到前一个persp的buffer。
+;; kill-buffer存在问题：1. 会切换到helm buffer；2. 切换persp时会切换到前一个persp的buffer
 (defcustom swint-iswitchb-buffer-ignore '("^ " "\\` " "\\`\\*sdcv\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*Compile\\-Log\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*Calendar\\*\\'" "\\`Enjoy\\ Music\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'")
   "Define ignore list."
   :group 'autoload-buffer
@@ -127,7 +127,7 @@ If buffer-or-name is nil return current buffer's mode."
          (buffers_name (mapcar 'buffer-name buffers))
          (buffers-persp-curr
           (or (and (bound-and-true-p persp-mode)
-                   ;; 只使用(persp-buffers persp-curr)产生的buffer list顺序不对，无法切换回之前的buffer。
+                   ;; 只使用(persp-buffers persp-curr)产生的buffer list顺序不对，无法切换回之前的buffer
                    (cl-remove-if-not
                     (lambda (x) (member x (remq nil (mapcar 'buffer-name (persp-buffers (persp-curr))))))
                     buffers_name))

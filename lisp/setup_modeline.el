@@ -3,7 +3,7 @@
 (def-package! smart-mode-line
   :config
   (setq sml/no-confirm-load-theme t)
-  ;; 设定theme为dark/light/respectful/automatic。
+  ;; 设定theme为dark/light/respectful/automatic
   (sml/setup)
   (sml/apply-theme nil)
   (setq column-number-mode t)

@@ -3,7 +3,7 @@
 (def-package! octave
   :mode ("\\.m$" . octave-mode)
   :config
-  ;; ac-octave/auto-complete-octave编译配置都有问题。
+  ;; ac-octave/auto-complete-octave编译配置都有问题
   (add-hook 'octave-mode-hook #'(lambda () (when (eq window-system 'x)
                                              (font-lock-mode 1))))
   (add-hook 'inferior-octave-mode-hook 'turn-on-font-lock)
@@ -25,7 +25,6 @@
   (define-key inferior-octave-mode-map [down] 'comint-next-input)
   (define-key inferior-octave-mode-map (kbd "M-.") nil)
   (define-key inferior-octave-mode-map (kbd "C-h") nil)
-  ;; 使用%注释。
   (setq octave-comment-start "%")
   (setq octave-comment-char ?%)
   (setq octave-auto-indent t))

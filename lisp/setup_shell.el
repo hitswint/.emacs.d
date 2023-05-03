@@ -15,7 +15,7 @@
                                    (setq comint-input-ring-separator "\n: \\([0-9]+\\):\\([0-9]+\\);"))
                                  (comint-read-input-ring t)
                                  (add-hook 'shell-mode-hook 'kill-shell-buffer-after-exit t)
-                                 ;; 若virtualenvs开启，启动相应虚拟环境，并使用auto-complete补全命令。
+                                 ;; 若virtualenvs开启，启动相应虚拟环境，并使用auto-complete补全命令
                                  (if (bound-and-true-p pyvenv-virtual-env)
                                      (process-send-string (get-process "shell")
                                                           (concat "source " pyvenv-virtual-env "bin/activate\n")))))

@@ -4,7 +4,6 @@
   :load-path "site-lisp/chinese-fonts-setup/"
   :config
   (setq cfs--current-profile-name "profile-lin")
-  ;; Emacs启动时自动设定fontsize。
   (defun swint-cfs-set-font-with-saved-size (&optional frame)
     (with-selected-frame (or frame (selected-frame))
       (when (display-graphic-p frame)
@@ -26,26 +25,23 @@
   (setq default-input-method "pyim")
   (bind-key "C-S-SPC" 'toggle-input-method)
   :config
-  ;; 使用pyim-fuzzy-pinyin-alist设置模糊音。
-  ;; 设置选词框显示方式posframe/popup/minibuffer。
-  (setq pyim-page-tooltip 'popup)
-  ;; 开启拼音搜索功能。
-  ;; (pyim-isearch-mode 1)
-  ;; 设置词条获取方式。
-  ;; (setq pyim-backends '(dcache-personal dcache-common pinyin-chars pinyin-shortcode pinyin-znabc))
-  ;; 使用探针(probe)函数判断当前语境以确定当前输入法和标点形式。
+  ;; 使用pyim-fuzzy-pinyin-alist设置模糊音
+  (setq pyim-page-tooltip 'popup)       ;posframe/popup/minibuffer
+  ;; (pyim-isearch-mode 1)                 ;开启拼音搜索功能
+  ;; (setq pyim-backends '(dcache-personal dcache-common pinyin-chars pinyin-shortcode pinyin-znabc)) ;设置词条获取方式
+  ;; 使用探针(probe)函数判断当前语境以确定当前输入法和标点形式
   (setq-default pyim-english-input-switch-functions
                 '(pyim-probe-program-mode
                   pyim-probe-org-speed-commands
                   pyim-probe-isearch-mode
                   pyim-probe-org-structure-template
                   pyim-probe-dynamic-english
-                  ;; 在minibuffer关闭中文输入。
+                  ;; 在minibuffer关闭中文输入
                   window-minibuffer-p))
   (setq-default pyim-punctuation-half-width-functions
                 '(pyim-probe-punctuation-line-beginning
                   pyim-probe-punctuation-after-punctuation))
-  ;; 转化拼音首字母大写。
+  ;; 转化拼音首字母大写
   (defun pyim-hanzi2pinyin-capitalize (string &optional shou-zi-mu separator
                                               return-list ignore-duo-yin-zi adjust-duo-yin-zi)
     (let ((orig-fun (symbol-function 'pyim-cchar2pinyin-get)))

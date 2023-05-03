@@ -37,7 +37,7 @@
 ;;; multiple-cursors
 ;; ================multiple-cursors================
 (def-package! multiple-cursors
-  ;; mc/xxx函数都不在mc包中。
+  ;; mc/xxx函数都不在mc包中
   :defer 2
   :config
   (setq mc/always-run-for-all t
@@ -110,7 +110,7 @@
           (undo . ignore)
           (goto-last-change . jump)
           (goto-last-change-reverse . jump)))
-  ;; 会导致(void-variable last-command-char)错误。
+  ;; 会导致(void-variable last-command-char)错误
   ;; (setq auto-mark-command-classifiers
   ;;       (list (lambda (command)
   ;;               (if (and (eq command 'self-insert-command)
@@ -196,7 +196,7 @@
          ("M-F" . drag-stuff-right))
   :config
   (drag-stuff-global-mode t)
-  ;; 重新定义drag-stuff-define-keys函数，取消"M+方向键"的快捷键。
+  ;; 重新定义drag-stuff-define-keys函数，取消"M+方向键"的快捷键
   (defun drag-stuff-define-keys/override ()
     "Defines keys for `drag-stuff-mode'."
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'up) nil)
@@ -221,14 +221,14 @@
 (def-package! pos-tip
   :commands pos-tip-show
   :config
-  ;; 使用Gtk+ tooltip需配置x-gtk-use-system-tooltips，修改~/.emacs.d/gtkrc配置字体。
+  ;; 使用Gtk+ tooltip需配置x-gtk-use-system-tooltips，修改~/.emacs.d/gtkrc配置字体
   (setq x-gtk-use-system-tooltips t))
 ;; ===================pos-tip======================
 ;;; elmacro
 ;; ===================elmacro======================
 (def-package! elmacro
-  ;; F3开始录制宏，再次F3插入计数，F4停止录制。
-  ;; elmacro-show-last-macro将宏转换为elisp。
+  ;; F3开始录制宏，再次F3插入计数，F4停止录制
+  ;; elmacro-show-last-macro将宏转换为elisp
   :commands elmacro-mode)
 ;; ===================elmacro======================
 ;;; hungry-delete
@@ -285,8 +285,8 @@
                                                                    paredit-everywhere-mode)
                                                                (call-interactively 'swint-backward-kill-word)
                                                              (call-interactively 'clean-aindent--bsunindent)))))
-;; RET：自动清除white space，光标停留在前一行indentation处。
-;; M-DEL：unindent，回到前一行indentation处。
+;; RET：自动清除white space，光标停留在前一行indentation处
+;; M-DEL：unindent，回到前一行indentation处
 ;; ===============clean-aindent-mode===============
 ;;; multifiles
 ;; ===================multifiles===================
@@ -309,7 +309,7 @@
   (setq which-key-sort-order 'which-key-description-order)
   (bind-key "M-s x" 'which-key-show-major-mode)
   (bind-key "M-s X" 'which-key-show-minor-mode-keymap)
-  ;; 默认C-h启用describe-prefix-bindings。
+  ;; 默认C-h启用describe-prefix-bindings
   (defun which-key-show-standard-help/override (&optional _)
     (interactive)
     (let ((which-key-inhibit t))
@@ -369,7 +369,7 @@
             (message-log-max nil))
         (write-region text nil "/tmp/eaclipboard")
         (shell-command (format "copyq copy - < /tmp/eaclipboard && copyq add - < /tmp/eaclipboard")))))
-  ;; M-w ?: help 查看M-w prefix快捷键。
+  ;; M-w ?: help 查看M-w prefix快捷键
   (define-key easy-kill-base-map (kbd "C-w") 'easy-kill-region)
   (define-key easy-kill-base-map (kbd ",") 'easy-kill-shrink)
   (define-key easy-kill-base-map (kbd ".") 'easy-kill-expand))
@@ -414,7 +414,7 @@
 ;; ====================helm-bm=====================
 ;;; operate-on-number
 ;; ================operate-on-number===============
-;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字。
+;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字
 (def-package! operate-on-number
   :commands (apply-operation-to-number-at-point
              operate-on-number-at-point)
@@ -464,7 +464,7 @@
   :bind ("M-o M-r" . proced)
   :config
   (define-key proced-mode-map (kbd "q") 'kill-buffer-and-window)
-  ;; Proced自动更新，10秒。
+  ;; Proced自动更新，10秒
   (defun proced-settings ()
     (proced-toggle-auto-update 1))
   (add-hook 'proced-mode-hook 'proced-settings))
@@ -485,7 +485,7 @@
   (clipmon-mode 1)
   (advice-add 'clipmon-mode-start :after #'(lambda () (xclipmon-mode 0)))
   (advice-add 'clipmon-mode-stop :after #'(lambda () (xclipmon-mode 1)))
-  ;; 原clipmon--get-selection中文乱码，另有时yank内容不更新。修改后clipmon-autoinsert失效。
+  ;; 原clipmon--get-selection中文乱码，另有时yank内容不更新。修改后clipmon-autoinsert失效
   (advice-add 'clipmon--get-selection :override #'(lambda () (current-kill 0)))
   (defvar xclipmon-process nil)
   (define-minor-mode xclipmon-mode
@@ -577,14 +577,14 @@
 (def-package! diff-hl
   :defer 2
   :config
-  ;; 默认快捷键以C-x v为前缀。
+  ;; 默认快捷键以C-x v为前缀
   (smartrep-define-key global-map "C-x v"
     '((";" . diff-hl-mark-hunk)
       ("," . diff-hl-previous-hunk)
       ("." . diff-hl-next-hunk)
       ("/" . diff-hl-revert-hunk)))
   (global-diff-hl-mode)
-  ;; 无需保存即显示diff，造成大文件卡顿。
+  ;; 无需保存即显示diff，造成大文件卡顿
   ;; (diff-hl-flydiff-mode)
   ;; 只有当前diff-hl-dired-update进程结束后才启动新进程
   (defun diff-hl-dired-update/around (orig-fn &rest args)
@@ -593,7 +593,7 @@
       (apply orig-fn args)))
   (advice-add 'diff-hl-dired-update :around #'diff-hl-dired-update/around)
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
-  ;; 在已有dired-mode中开启diff-hl-dired-mode。
+  ;; 在已有dired-mode中开启diff-hl-dired-mode
   (dolist (buf (cl-remove-if-not (lambda (x)
                                    (equal (buffer-mode x) 'dired-mode))
                                  (buffer-list)))
@@ -671,10 +671,10 @@
 ;;; sudo
 ;; =====================sudo=======================
 (def-package! sudo-edit
-  ;; 需新建~/.ssh/sockets文件夹。
+  ;; 需新建~/.ssh/sockets文件夹
   :commands (sudo-edit sudo-dired)
   :config
-  ;; M(dired-do-chmod)改变权限；O(dired-do-chown)改变owner；G(dired-do-chgrp)改变group。
+  ;; M(dired-do-chmod)改变权限；O(dired-do-chown)改变owner；G(dired-do-chgrp)改变group
   (defun sudo-dired ()
     (interactive)
     (require 'tramp)
@@ -732,7 +732,7 @@
   :config
   (setq auto-revert-verbose nil)
   (setq auto-revert-interval 5)
-  ;; 开启后导致修改文件后dired-mode中光标回到开始处。
+  ;; 开启后导致修改文件后dired-mode中光标回到开始处
   (setq global-auto-revert-non-file-buffers t)
   ;; (setq global-auto-revert-ignore-modes '(dired-mode))
   (global-auto-revert-mode 1))
@@ -769,7 +769,7 @@
          ("M-g a i" . annot-add-image))
   :config
   (setq annot-directory "~/org/.annot")
-  ;; 与volatile-highlights-mode有冲突。
+  ;; 与volatile-highlights-mode有冲突
   (vhl/unload-extension 'kill)
   (vhl/unload-extension 'delete)
   (dolist (buf (cl-remove-if-not (lambda (x)
@@ -808,8 +808,8 @@
 ;;; gnu-elpa-keyring-update
 ;; ==========gnu-elpa-keyring-update===============
 (def-package! gnu-elpa-keyring-update
-  ;; 解决GPG公钥过期的问题。
-  ;; (setq package-check-signature nil) ;临时关闭验证，package-install安装。
+  ;; 解决GPG公钥过期的问题
+  ;; (setq package-check-signature nil) ;临时关闭验证，package-install安装
   :commands gnu-elpa-keyring-update)
 ;; ==========gnu-elpa-keyring-update===============
 ;;; rg

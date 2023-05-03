@@ -31,7 +31,7 @@
   (define-key minibuffer-local-map (kbd "C-c m") 'swint-python-insert-data)
   (define-key minibuffer-local-map (kbd "C-c M") 'swint-python-insert-variables)
   (pyvenv-mode 1)
-  ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换。
+  ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换
   (defalias 'workon 'pyvenv-workon)
   (require 'ht)
   (defvar swint-python-plot-hash (ht ("data" "")
@@ -40,7 +40,7 @@
                                      ("labels" "x,y")
                                      ("fonts" "t,t,t")
                                      ("sizes" "48,56,48")
-                                     ;; 可直接输入用逗号分割的colors/lines/markers。
+                                     ;; 可直接输入用逗号分割的colors/lines/markers
                                      ("colors" (nconc (list "r" "g" "b" "y" "c" "m" "k" "C0" "C1" "C2" "C3" "C4" "C5" "C6" "C7" "C8" "C9")
                                                       (cl-remove-if (lambda (x)
                                                                       (string-match "[ \t\n\r]+" x))
@@ -340,10 +340,10 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" (expand-file-name "~/Documents
   (setq elpy-rpc-timeout nil)
   (setq elpy-get-info-from-shell t)
   (setq elpy-shell-starting-directory 'current-directory)
-  ;; 使用ipython作为交互环境。
+  ;; 使用ipython作为交互环境
   (setq python-shell-interpreter "ipython"
         python-shell-interpreter-args "-i --simple-prompt --pylab")
-  ;; 使用jupyter作为交互环境。
+  ;; 使用jupyter作为交互环境
   ;; (setq python-shell-interpreter "jupyter"
   ;;       python-shell-interpreter-args "console --simple-prompt"
   ;;       python-shell-prompt-detect-failure-warning nil)
@@ -371,11 +371,11 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" (expand-file-name "~/Documents
   (advice-add 'elpy-shell-switch-to-shell :before #'(lambda ()
                                                       (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
                                                         (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))))
-  ;; 使用global-elpy-mode方式开启elpy-mode。
+  ;; 使用global-elpy-mode方式开启elpy-mode
   ;; (define-global-minor-mode global-elpy-mode elpy-mode
   ;;   (lambda () (when (eq major-mode 'python-mode) (elpy-mode 1))))
   ;; (global-elpy-mode 1)
-  ;; 在opened python buffer中开关elpy-mode。
+  ;; 在opened python buffer中开关elpy-mode
   (defun toggle-elpy-mode-all-buffers ()
     (interactive)
     (if elpy-modules-initialized-p
@@ -414,7 +414,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" (expand-file-name "~/Documents
 ;;; jedi
 ;; ===================jedi=====================
 (def-package! jedi
-  ;; 使用jedi:install-server安装服务端。
+  ;; 使用jedi:install-server安装服务端
   :commands jedi:get-in-function-call
   :init
   (add-hook 'python-mode-hook (lambda ()
