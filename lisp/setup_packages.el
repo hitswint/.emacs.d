@@ -924,4 +924,9 @@
   (define-key modelica-mode-map (kbd "M-n") nil)
   (define-key modelica-mode-map (kbd "M-p") nil))
 ;; ==============modelica-mode=====================
+;;; vundo
+;; ===================vundo========================
+(def-package! vundo
+  :bind ("C-x u" . vundo))
+;; ===================vundo========================
 (provide 'setup_packages)

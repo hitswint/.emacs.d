@@ -191,6 +191,7 @@
                            visible-mark
                            visual-regexp
                            vlf
+                           vundo
                            volatile-highlights
                            w3m
                            web-mode
