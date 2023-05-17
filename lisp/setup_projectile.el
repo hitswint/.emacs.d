@@ -60,19 +60,22 @@
                                                                              (projectile-switch-project-by-name project))))
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-x j") #'(lambda (project) (neotree-dir project)))
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-M-k") #'(lambda (project) (helm-projectile-kill-persp)))
+  (defvar helm-source-projectile-projects-current
+    (helm-build-sync-source "Projectile projects current"
+      :candidates (lambda ()
+                    (list (abbreviate-file-name (projectile-project-root))))
+      :fuzzy-match helm-projectile-fuzzy-match
+      :keymap helm-projectile-projects-map
+      :mode-line helm-read-file-name-mode-line-string
+      :action 'helm-source-projectile-projects-actions)
+    "Helm source for known projectile projects.")
   (defvar helm-source-projectile-projects-with-persp
     (helm-build-sync-source "Projectile projects with persp"
       :candidates (lambda ()
-                    (if (projectile-project-p)
-                        (cons (abbreviate-file-name (projectile-project-root))
-                              (cl-remove-if-not
-                               (lambda (x)
-                                 (member x (hash-table-keys persp-projectile-hash)))
-                               (projectile-relevant-known-projects)))
-                      (cl-remove-if-not
-                       (lambda (x)
-                         (member x (hash-table-keys persp-projectile-hash)))
-                       projectile-known-projects)))
+                    (cl-remove-if-not
+                     (lambda (x)
+                       (member x (hash-table-keys persp-projectile-hash)))
+                     (projectile-relevant-known-projects)))
       :fuzzy-match helm-projectile-fuzzy-match
       :keymap helm-projectile-projects-map
       :mode-line helm-read-file-name-mode-line-string
@@ -101,10 +104,11 @@
          (setq helm-projectile-sources-list '(helm-source-projectile-projects-with-persp
                                               helm-source-projectile-projects-without-persp))
        (projectile-maybe-invalidate-cache arg)
-       (setq helm-projectile-sources-list '(helm-source-projectile-projects-with-persp
-                                            helm-source-projectile-projects-without-persp
+       (setq helm-projectile-sources-list '(helm-source-projectile-projects-current
+                                            helm-source-projectile-projects-with-persp
+                                            helm-source-projectile-buffers-list
                                             helm-source-projectile-files-list
-                                            helm-source-projectile-buffers-list)))
+                                            helm-source-projectile-projects-without-persp)))
      (let ((helm-ff-transformer-show-only-basename nil))
        (helm :sources helm-projectile-sources-list
              :buffer "*helm projectile*"
