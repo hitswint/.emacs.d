@@ -34,30 +34,22 @@
   :bind ("M-'" . helm-projectile)
   :config
   (helm-projectile-on)
-  ;; 设置切换project的默认操作
-  (setq projectile-switch-project-action 'helm-projectile)
+  ;; 设置切换project的默认操作，切换后可C-tab切换回helm-projectile
+  ;; helm-projectile-find-file只能切换一次，projectile-find-file会切换persp
+  (setq projectile-switch-project-action 'helm-projectile-find-file-dwim)
   (defun helm-projectile-kill-persp ()
     "Kill selected persps for projects."
-    (let* ((projects (helm-marked-candidates :with-wildcard t)))
+    (let ((projects (helm-marked-candidates :with-wildcard t)))
       (with-helm-display-marked-candidates
         helm-marked-buffer-name
         projects
         (cl-loop for p in projects do
                  (persp-kill (file-basename p))
                  (remhash p persp-projectile-hash)))))
-  (defun swint-helm-projectile-ag ()
-    (interactive)
-    (helm-run-after-exit #'(lambda (arg)
-                             (let ((current-prefix-arg arg)
-                                   (helm-truncate-lines t))
-                               (if current-prefix-arg
-                                   (helm-do-ag (projectile-project-root) (list (projectile-project-root)))
-                                 (helm-projectile-ag "--hidden"))))
-                         current-prefix-arg))
-  (define-key helm-projectile-projects-map (kbd "C-s") 'swint-helm-projectile-ag)
-  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-j") #'(lambda (project)
-                                                                           (let ((projectile-completion-system 'helm))
-                                                                             (projectile-switch-project-by-name project))))
+  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-s") #'(lambda (project) (let ((helm-truncate-lines t))
+                                                                                             (helm-do-ag project))))
+  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-j") #'(lambda (project) (let ((projectile-completion-system 'helm))
+                                                                                             (projectile-switch-project-by-name project))))
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-x j") #'(lambda (project) (neotree-dir project)))
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-M-k") #'(lambda (project) (helm-projectile-kill-persp)))
   (defvar helm-source-projectile-projects-current
@@ -94,6 +86,8 @@
       :action 'helm-source-projectile-projects-actions)
     "Helm source for known projectile projects.")
   (helm-add-action-to-source "Projectile persp switch project"
+                             'projectile-persp-switch-project helm-source-projectile-projects-current 0)
+  (helm-add-action-to-source "Projectile persp switch project"
                              'projectile-persp-switch-project helm-source-projectile-projects-with-persp 0)
   (helm-add-action-to-source "Projectile persp switch project"
                              'projectile-persp-switch-project helm-source-projectile-projects-without-persp 0)
@@ -107,11 +101,11 @@
        (setq helm-projectile-sources-list '(helm-source-projectile-projects-current
                                             helm-source-projectile-projects-with-persp
                                             helm-source-projectile-buffers-list
-                                            helm-source-projectile-files-list
+                                            ;; helm-source-projectile-files-list
                                             helm-source-projectile-projects-without-persp)))
      (let ((helm-ff-transformer-show-only-basename nil))
        (helm :sources helm-projectile-sources-list
-             :buffer "*helm projectile*"
+             :buffer "*helm projectile-swint*"
              :truncate-lines helm-projectile-truncate-lines
              :prompt (projectile-prepend-project-name (if (projectile-project-p)
                                                           "pattern: "
