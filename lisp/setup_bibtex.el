@@ -102,12 +102,6 @@
     "Keymap for `helm-bibtex'.")
   (helm-set-attr 'keymap helm-bibtex-map helm-source-bibtex)
   (helm-set-attr 'persistent-action 'helm-bibtex-insert-citation helm-source-bibtex)
-  ;; https://github.com/tmalsburg/helm-bibtex/issues/425
-  ;; 问题：helm-source-bibtex为(DISPLAY . REAL)类型，显示和匹配DISPLAY，但选中执行action的参数为REAL
-  ;; Dired中位于文件行或Python某些代码(plt.axvline)时，显示文献条目(DISPLAY)，但匹配key(REAL)
-  ;; 原因：helm-fuzzy-highlight-matches中helm-guess-filename-at-point会根据当前鼠标下内容返回不同值
-  ;; 设置nohighlight以屏蔽helm-fuzzy-highlight-matches
-  ;; (helm-set-attr 'nohighlight t helm-source-bibtex)
   (defvar bibtex-completion-bibliography/curr nil)
   ;; 改变helm-bibtex中Insert citation格式
   (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
@@ -122,20 +116,19 @@
   (defun swint-helm-bibtex (&optional arg)
     "With a prefix ARG，choose bib file and execute bibtex-completion-clear-cache."
     (interactive "P")
-    (cl-letf (((symbol-function 'helm-guess-filename-at-point) (lambda ())))
-      (when (or arg (not bibtex-completion-bibliography/curr))
-        (setq bibtex-completion-bibliography/curr
-              (helm-comp-read "Bibtex completion bibliography: "
-                              (append (directory-files (expand-file-name "~/.bib/") t "\\.bib$")
-                                      (directory-files default-directory t "\\.bib$"))
-                              :marked-candidates t
-                              :buffer "*helm bibtex-swint*")))
-      (if (and (buffer-live-p (get-buffer "*helm bibtex*")) (not arg))
-          (let ((helm-current-buffer (current-buffer)))
-            (helm-resume "*helm bibtex*"))
-        (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr)
-              (helm-truncate-lines t))
-          (helm-bibtex arg bibtex-completion-bibliography/curr)))))
+    (when (or arg (not bibtex-completion-bibliography/curr))
+      (setq bibtex-completion-bibliography/curr
+            (helm-comp-read "Bibtex completion bibliography: "
+                            (append (directory-files (expand-file-name "~/.bib/") t "\\.bib$")
+                                    (directory-files default-directory t "\\.bib$"))
+                            :marked-candidates t
+                            :buffer "*helm bibtex-swint*")))
+    (if (and (buffer-live-p (get-buffer "*helm bibtex*")) (not arg))
+        (let ((helm-current-buffer (current-buffer)))
+          (helm-resume "*helm bibtex*"))
+      (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr)
+            (helm-truncate-lines t))
+        (helm-bibtex arg bibtex-completion-bibliography/curr))))
   (defcustom helm-bibtex-pdf-open-externally-function #'(lambda (fpath)
                                                           (dired-async-shell-command fpath))
     "The function used for opening PDF files externally."
