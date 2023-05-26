@@ -425,7 +425,7 @@
               ;; w: dired-copy-filename-as-kill 复制文件名，加0复制绝对路径
               ("M-w" . swint-dired-ranger-copy)
               ("M-W" . swint-dired-clipboard-copy)
-              ("M-Y" . swint-dired-clipboard-paste))
+              ("C-S-y" . swint-dired-clipboard-paste))
   :config
   (defun swint-dired-ranger-copy ()
     (interactive)
@@ -433,6 +433,33 @@
         (easy-kill)
       (dired-copy-filename-as-kill 0)
       (call-interactively 'dired-ranger-copy)))
+  ;; 由于dired-async对dired-create-files增加advice，导致复制多个文件时加C-u只保留第1个
+  (defun swint-dired-ranger-paste ()
+    (interactive)
+    (cl-flet ((get-files () (mapcar #'(lambda (x)
+                                        (mapconcat 'identity (cdr x) " "))
+                                    (ring-elements dired-ranger-copy-ring))))
+      (let ((selected-files (helm-comp-read "Paste: " (get-files)
+                                            :marked-candidates t
+                                            :buffer "*helm dired ranger paste-swint*")))
+        (cl-loop for f in selected-files do
+                 (let ((index (cl-position f (get-files) :test 'equal)))
+                   (dired-ranger-paste index)
+                   (unless helm-current-prefix-arg
+                     (ring-remove dired-ranger-copy-ring index)))))))
+  (defun swint-dired-ranger-move ()
+    (interactive)
+    (cl-flet ((get-files () (mapcar #'(lambda (x)
+                                        (mapconcat 'identity (cdr x) " "))
+                                    (ring-elements dired-ranger-copy-ring))))
+      (let ((selected-files (helm-comp-read "Move: " (get-files)
+                                            :marked-candidates t
+                                            :buffer "*helm dired ranger move-swint*")))
+        (cl-loop for f in selected-files do
+                 (let ((index (cl-position f (get-files) :test 'equal)))
+                   (dired-ranger-move index)
+                   (unless helm-current-prefix-arg
+                     (ring-remove dired-ranger-copy-ring index)))))))
   (defun swint-dired-clipboard-copy (&optional filetocopy) ;导致界面卡死，可粘贴图片；C-g杀死xclip进程，无法复制
     (interactive)
     (let ((filename (or filetocopy
@@ -449,7 +476,9 @@
                              filename))))
   ;; 加C-u不清除clipboards
   (bind-key "C-y" 'dired-ranger-paste dired-mode-map)
-  (bind-key "M-y" 'dired-ranger-move dired-mode-map))
+  (bind-key "M-y" 'dired-ranger-move dired-mode-map)
+  (bind-key "C-M-y" 'swint-dired-ranger-paste dired-mode-map)
+  (bind-key "M-Y" 'swint-dired-ranger-move dired-mode-map))
 ;; ===============dired-ranger=================
 ;;; neotree
 ;; =================neotree====================
