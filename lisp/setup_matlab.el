@@ -34,6 +34,9 @@
 (def-package! matlab
   :commands (matlab-mode
              matlab-shell)
+  :init
+  ;; 默认修改magic-mode-alist，使得打开.m文件始终加载matlab-mode，无法加载octave-mode
+  (setq magic-mode-alist (remove '(matlab-is-matlab-file . matlab-mode) magic-mode-alist))
   :config
   (setq matlab-indent-function-body t)
   (setq matlab-shell-command-switches '("-nodesktop -nosplash"))

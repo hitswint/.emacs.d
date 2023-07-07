@@ -6,4 +6,5 @@ dir_true=$(readlink -f "$dir_name") # 转换路径，若为.时转为当前路�
 filepath=$dir_true/$file_name
 filepath_win="${filepath//\//\\}"
 
-wine ~/.wine/drive_c/Program\ Files/CADReader/CADReader.exe "Z:$filepath_win"
+# wine ~/.wine/drive_c/Program\ Files/CADReader/CADReader.exe "Z:$filepath_win"
+wine ~/.wine/drive_c/Program\ Files/CADReaderInternational/CADReader.exe "Z:$filepath_win"

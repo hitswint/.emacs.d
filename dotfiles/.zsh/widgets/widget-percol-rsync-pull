@@ -20,7 +20,7 @@ function widget-percol-rsync-pull()
 
             remote_args=()
             for i in "${ADDR[@]}"; do # 循环方式
-                remote_args+=($remote:"'$i'")
+                remote_args+=($remote:"$i")
             done
             rsync -arv --progress "${remote_args[@]}" "./"
         fi

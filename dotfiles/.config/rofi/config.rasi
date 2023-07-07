@@ -100,7 +100,7 @@ configuration {
 	kb-page-next: "Page_Down,Control+v";
 	kb-row-first: "Home,KP_Home,Alt+less";
 	kb-row-last: "End,KP_End,Alt+greater";
-	kb-row-select: "Control+l";
+/*	kb-row-select: "Control+l";*/
 /*	kb-screenshot: "Alt+S";*/
 /*	kb-ellipsize: "Alt+period";*/
 /*	kb-toggle-case-sensitivity: "grave,dead_grave";*/

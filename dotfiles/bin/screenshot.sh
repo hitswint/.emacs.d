@@ -29,4 +29,7 @@ case $input1 in
         ;;
 esac
 
-xclip -selection clipboard -t image/png -i < $screenshot_file
+# 会保留xclip进程，若关闭则无法粘贴
+# xclip -selection clipboard -t image/png -i < $screenshot_file
+
+copyq copy $(file -b --mime-type $screenshot_file) - < $screenshot_file

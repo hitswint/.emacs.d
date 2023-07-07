@@ -1,0 +1,35 @@
+swipe:
+  # 由libinput-three-finger-drag代替
+  # 3:
+  #   begin:
+  #     command: xdotool mousedown 1
+  #   update:
+  #     command: xdotool mousemove_relative -- $move_x, $move_y
+  #     interval: 0.01
+  #     accel: 4
+  #   end:
+  #     command: xdotool mouseup 1
+  4:
+    left:
+      command: 'xdotool key alt+equal'
+    right:
+      command: 'xdotool key alt+minus'
+    up:
+      command: 'xdotool key super+space'
+    down:
+      command: 'xdotool key alt+space'
+pinch:
+  2:
+    in:
+      command: 'xdotool keydown Ctrl click 4 keyup Ctrl'
+      threshold: 0.3
+      interval: 0.2
+    out:
+      command: 'xdotool keydown Ctrl click 5 keyup Ctrl'
+      threshold: 0.3
+      interval: 0.2
+hold:
+  3:
+    command: 'rofi-trans.sh'
+  4:
+    command: 'screenshot.sh s'
