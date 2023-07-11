@@ -115,9 +115,9 @@
               (define-key dired-mode-map (kbd "C-M-j") 'tc-lister-open-file)
               (define-key dired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-beginning-of-buffer)
               (define-key dired-mode-map (vector 'remap 'end-of-buffer) 'dired-end-of-buffer)
-              ;; 在dired对mark的多个文件内容进行查找
-              (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch)
+              (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch) ;对mark的多个文件内容进行查找
               (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
+              (smartrep-define-key dired-mode-map "C-c" '(("d" . dired-duplicate-file)))
               (make-local-variable 'dired-sort-map)
               (setq dired-sort-map (make-sparse-keymap))
               (define-key dired-mode-map "s" dired-sort-map)
@@ -167,6 +167,24 @@
     (when (bobp)
       (call-interactively 'dired-next-line)))
   ;; ========dired-next/previous-line==========
+;;;; dired-duplicate-file
+  ;; ==========dired-duplicate-file============
+  (defun dired-duplicate-file ()
+    "Duplicate the current file in Dired."
+    (interactive)
+    (cl-loop for f in (dired-get-marked-files)
+             do (let* ((ctr 1)
+                       (base (file-name-sans-extension f))
+                       (ext (file-name-extension f t))
+                       (target (format "%s_[%d]%s" base ctr ext)))
+                  (while (file-exists-p target)
+                    (setq ctr (1+ ctr)
+                          target (format "%s_[%d]%s" base ctr ext)))
+                  (if (file-directory-p f)
+                      (copy-directory f target)
+                    (copy-file f target))))
+    (revert-buffer))
+  ;; ==========dired-duplicate-file============
   )
 ;; ==================dired=====================
 ;;; image-dired
@@ -424,8 +442,8 @@
   :bind (:map dired-mode-map
               ;; w: dired-copy-filename-as-kill 复制文件名，加0复制绝对路径
               ("M-w" . swint-dired-ranger-copy)
-              ("M-W" . swint-dired-clipboard-copy)
-              ("C-S-y" . swint-dired-clipboard-paste))
+              ("C-c w" . swint-dired-clipboard-copy)
+              ("C-c y" . swint-dired-clipboard-paste))
   :config
   (defun swint-dired-ranger-copy ()
     (interactive)
