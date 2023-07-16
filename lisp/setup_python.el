@@ -49,6 +49,7 @@
                                      ("markers" (list "o" "v" "^" "<" ">" "1" "2" "3" "4" "8" "s" "p" "P" "*" "h" "H" "+" "x" "X" "D" "d" "|" "_"))
                                      ("hatchs" (list "/" "\\" "|" "-" "+" "x" "o" "O" "." "*" "//" "\\\\\\\\" "||" "--" "++" "xx" "oo" "OO" ".." "**"))
                                      ("polyfit" (list "1" "2" "3" "4" "5"))))
+  (defvar swint-python-plot-exec-path (expand-file-name "~/Documents/Python/plot"))
   (defun swint-python-load-file ()
     (interactive)
     (let ((file-name (if (eq major-mode 'dired-mode) (dired-get-filename) (buffer-file-name))))
@@ -252,7 +253,7 @@ names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', 
                (args-string (mapconcat 'identity args-list ",")))
           (when args-string
             (python-shell-send-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
-plot_data.fig_config(%s)" (expand-file-name "~/Documents/Python/plot") args-string))))
+plot_data.fig_config(%s)" swint-python-plot-exec-path args-string))))
       (message "No python process found!")))
   (defun swint-python-plot-data ()
     (interactive)
@@ -303,15 +304,15 @@ plot_data.fig_config(%s)" (expand-file-name "~/Documents/Python/plot") args-stri
         (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
           (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
         (let ((python-command-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
-plot_data.cli_plot([%s],'%s' %s)" (expand-file-name "~/Documents/Python/plot") data-string style-string (or send-string-args ""))))
+plot_data.cli_plot([%s],'%s' %s)" swint-python-plot-exec-path data-string style-string (or send-string-args ""))))
           (cond ((equal major-mode 'inferior-python-mode)
                  (python-shell-send-string python-command-string))
                 ((equal major-mode 'jupyter-repl-mode)
                  (jupyter-eval-string-command python-command-string))
                 (t (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
                        (python-shell-send-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
-plot_data.file_plot('%s','%s','%s','%s','%s' %s)" (expand-file-name "~/Documents/Python/plot") files-string columns-string file-x-string column-x-string style-string (or send-string-args "")))
-                     (let* ((plot-data-command (concat "python " (expand-file-name "~/Documents/Python/plot/plot_data.py")
+plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path files-string columns-string file-x-string column-x-string style-string (or send-string-args "")))
+                     (let* ((plot-data-command (concat "python " (expand-file-name "plot_data.py" swint-python-plot-exec-path)
                                                        " -i " "\"" files-string "\""
                                                        " -y " "\"" columns-string "\""
                                                        " -I " "\"" file-x-string "\""

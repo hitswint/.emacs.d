@@ -26,7 +26,7 @@ function main {
     # 匹配汉字
     # perl -CIO -pe 's/\p{Script_Extensions=Han}+/x$&/g'
     # perl -CSD -Mutf8 -pe 's/\p{Han}+/x$&/g'
-    cat $transHistory_ydcv | perl -CSD -Mutf8 -pe 's/(.{80}[^\p{Han}]*)/\1\n/g' | sed -E 's/(.{80}[^ ]*) /\1\n/g'
+    cat $transHistory_ydcv | perl -CSD -Mutf8 -pe 's/(.{40}[^\p{Han}]*)/\1\n/g' | sed -E 's/(.{80}[^ ]*) /\1\n/g'
 }
 
 main
