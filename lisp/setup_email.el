@@ -1,7 +1,7 @@
 ;;; mu4e
 ;; =======================mu4e=========================
 (use-package mu4e
-  :load-path "/usr/share/emacs/site-lisp/mu4e"
+  :load-path "/usr/share/emacs/site-lisp/elpa-src/mu4e-1.8.14"
   :bind (("M-o m" . mu4e)
          ("M-o M" . mu4e-compose-new))
   :config
@@ -21,11 +21,6 @@
     (mu4e-alert-set-default-style 'libnotify)
     (mu4e-alert-enable-notifications)
     (mu4e-alert-enable-mode-line-display))
-  (use-package org-mu4e
-    :config
-    (setq org-mu4e-convert-to-html t)
-    (define-key mu4e-view-mode-map (kbd "C-c o") 'mu4e-org-mode)
-    (define-key mu4e-compose-mode-map (kbd "C-c o") 'org-mu4e-compose-org-mode))
   (setq mu4e-change-filenames-when-moving t
         mu4e-view-prefer-html t
         mu4e-view-show-images t
