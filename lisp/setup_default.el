@@ -52,6 +52,7 @@
         inhibit-default-init t
         initial-major-mode 'fundamental-mode
         initial-scratch-message nil))
+(setq native-comp-jit-compilation nil)
 ;; ===================Setup=====================
 ;;; Keybindings
 ;; ================Keybindings==================

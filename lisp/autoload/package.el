@@ -28,6 +28,7 @@
 (defun doom//reload-autoloads ()
   "Refreshes the autoloads.el file, specified by `doom-autoload-file'."
   (interactive)
+  (require 'autoload)
   (if (not noninteractive)
       (and (doom-packages--async-run 'doom//reload-autoloads)
            (load doom-autoload-file))
@@ -38,6 +39,8 @@
       (when (file-exists-p doom-autoload-file)
         (delete-file doom-autoload-file)
         (message "Deleted old autoloads.el"))
+      ;; update-file-autoloads已弃用，后续可用loaddefs-generate替代
+      ;; (loaddefs-generate (expand-file-name "autoload" lisp-dir) doom-autoload-file)
       (dolist (file (reverse targets))
         (message
          (cond ((not (doom-packages--read-if-cookies file))
