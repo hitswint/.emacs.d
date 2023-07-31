@@ -1,8 +1,8 @@
 ;;; lsp-bridge
 ;; =====================lsp-bridge=====================
-(def-package! posframe
+(use-package posframe
   :commands posframe-show)
-(def-package! lsp-bridge
+(use-package lsp-bridge
   :load-path "repos/lsp-bridge/"
   :bind ("M-g l" . swint-toggle-lsp-bridge)
   :init

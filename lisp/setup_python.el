@@ -1,6 +1,6 @@
 ;;; python-mode
 ;; =================python-mode================
-(def-package! python
+(use-package python
   :mode ("\\.py\\'" . python-mode)
   :config
   (bind-key "M-o M-P" 'run-python)
@@ -19,7 +19,7 @@
 ;; =================python-mode================
 ;;; pyvenv
 ;; ===================pyvenv===================
-(def-package! pyvenv
+(use-package pyvenv
   :commands (pyvenv-workon-home pyvenv-activate)
   :bind (("M-o C-M-p" . pyvenv-workon)
          ("M-o C-M-S-p" . pyvenv-deactivate)
@@ -329,7 +329,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
 ;; ===================pyvenv===================
 ;;; elpy
 ;; ====================elpy====================
-(def-package! elpy
+(use-package elpy
   :diminish elpy-mode
   :commands (elpy-shell-switch-to-shell toggle-elpy-mode-all-buffers)
   :init
@@ -393,7 +393,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
 ;; ====================elpy====================
 ;;; jupyter
 ;; ==================jupyter===================
-(def-package! jupyter
+(use-package jupyter
   ;; 依赖emacs-zmq，自动安装失败时，可手动下载emacs-zmq.so并置于zmq.el同文件夹下
   :bind (("M-o j" . swint-jupyter-run-repl)
          ("M-o J" . jupyter-connect-repl))
@@ -414,7 +414,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
 ;; ==================jupyter===================
 ;;; jedi
 ;; ===================jedi=====================
-(def-package! jedi
+(use-package jedi
   ;; 使用jedi:install-server安装服务端
   :commands jedi:get-in-function-call
   :init

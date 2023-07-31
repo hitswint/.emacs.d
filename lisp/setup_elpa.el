@@ -45,7 +45,6 @@
                            backup-walker
                            baidu-translate
                            bibtex-completion
-                           bind-key
                            bing-dict
                            bm
                            buttercup
@@ -145,6 +144,8 @@
                            org-appear
                            org-brain
                            org-noter
+                           djvu
+                           nov
                            org-pdftools
                            org-ref
                            outline-magic
@@ -186,7 +187,6 @@
                            tangotango-theme
                            term-keys
                            unicode-escape
-                           use-package
                            vimish-fold
                            visible-mark
                            visual-regexp
@@ -230,24 +230,18 @@ Missing packages are installed automatically."
 ;; Run package installation.
 (prelude-install-packages)
 ;; ====================package======================
+;; ====================package======================
 ;;; use-package
 ;; =================use-package=====================
 ;; :bind或:commands中需使用package或:config中的函数
-(eval-when-compile
-  (require 'use-package))
+(require 'use-package)
 (require 'diminish)
 (require 'delight)
 (require 'bind-key)
-(defmacro def-package! (name &rest plist)
-  (unless (and (bound-and-true-p byte-compile-current-file)
-               (or (and (plist-member plist :if)     (not (eval (plist-get plist :if))))
-                   (and (plist-member plist :when)   (not (eval (plist-get plist :when))))
-                   (and (plist-member plist :unless) (eval (plist-get plist :unless)))))
-    `(use-package ,name ,@plist)))
 ;; =================use-package=====================
 ;;; exec-path-from-shell
 ;; =============exec-path-from-shell================
-(def-package! exec-path-from-shell
+(use-package exec-path-from-shell
   :config
   (setq exec-path-from-shell-variables '("PATH" "MANPATH" "XAPIAN_CJK_NGRAM"))
   (setq exec-path-from-shell-arguments '("-l"))
@@ -255,7 +249,7 @@ Missing packages are installed automatically."
 ;; =============exec-path-from-shell================
 ;;; smartrep
 ;; ===================smartrep======================
-(def-package! smartrep
+(use-package smartrep
   :config
   (setq smartrep-mode-line-string-activated nil)
   (smartrep-define-key global-map "<escape>"

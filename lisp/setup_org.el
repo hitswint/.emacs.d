@@ -1,6 +1,6 @@
 ;;; org-mode
 ;; =================org-mode====================
-(def-package! org
+(use-package org
   :mode ("\\.[oO][rR][gG]\\'" . org-mode)
   :config
   (setq org-modules nil)                ;随org启动的ol模块
@@ -174,7 +174,7 @@
   ;; ===========使用ditaa输出ascii图片==========
 ;;;; cdlatex
   ;; ================cdlatex====================
-  (def-package! cdlatex
+  (use-package cdlatex
     :diminish (cdlatex-mode org-cdlatex-mode)
     :commands (turn-on-cdlatex turn-on-org-cdlatex)
     :init
@@ -222,7 +222,7 @@
 ;; =================org-mode====================
 ;;; org-annotate
 ;; ===============org-annotate==================
-(def-package! dired-x-highlight
+(use-package dired-x-highlight
   :load-path "site-lisp/org-annotate-file/"
   :commands (dired-k--parse-status
              dired-k--previous-highlighted-file
@@ -251,11 +251,11 @@
       (when file-to-go
         (dired-goto-file (expand-file-name file-to-go))))))
 ;; Sync annotated status as operating.
-(def-package! dired-sync-highlight
+(use-package dired-sync-highlight
   :load-path "site-lisp/org-annotate-file/"
   :after dired-x-highlight)
 ;; 原有org-annotate-file用于全局注释
-(def-package! org-annotate-file
+(use-package org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands (org-annotate-file-current org-annotate-file)
   :bind ("C-x :" . org-annotate-file-current)
@@ -277,7 +277,7 @@
       (org-annotate-file (abbreviate-file-name (buffer-file-name))))))
   (setq org-annotate-file-storage-file "~/org/annotated/annotated.org"))
 ;; 新建swint-org-annotate-file.el用于局部注释
-(def-package! swint-org-annotate-file
+(use-package swint-org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands (swint-org-annotate-file-current swint-org-annotation-storage-file)
   :bind ("C-x ;" . swint-org-annotate-file-current)
@@ -288,9 +288,9 @@
 ;; ===============org-annotate==================
 ;;; outline
 ;; ==================outline====================
-(def-package! outline-magic
+(use-package outline-magic
   :commands outline-cycle)
-(def-package! outline
+(use-package outline
   :diminish outline-minor-mode
   :commands outline-minor-mode
   :init
@@ -345,7 +345,7 @@
 ;; ==================outline====================
 ;;; outshine
 ;; ==================outshine===================
-(def-package! outshine
+(use-package outshine
   :diminish outshine-mode
   :commands (outshine-mode
              outshine-cycle-buffer
@@ -369,12 +369,12 @@
   (define-key outshine-mode-map (kbd "<M-S-return>") 'outshine-insert-heading)
   (define-key outshine-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
   (define-key outshine-mode-map (kbd "C-M-i") nil))
-(def-package! outorg
+(use-package outorg
   ;; M-O # current heading.
   ;; C-u M-O # current buffer.
   ;; M-# outorg-copy-edits-and-exit.
   :after outshine)
-(def-package! navi-mode
+(use-package navi-mode
   :commands (navi-search-and-switch
              navi-switch-to-twin-buffer)
   :init
@@ -388,7 +388,7 @@
 ;; ==================outshine===================
 ;;; interleave
 ;; =================interleave==================
-(def-package! interleave
+(use-package interleave
   :commands (interleave-mode
              swint-dired-interleave
              interleave-open-notes-file-for-pdf
@@ -421,7 +421,7 @@
 ;; =================interleave==================
 ;;; org-noter
 ;; =================org-noter===================
-(def-package! org-noter
+(use-package org-noter
   :commands (org-noter
              swint-noter/interleave
              swint-open-notes-file-for-pdf)
@@ -429,6 +429,8 @@
   (add-hook 'org-mode-hook (lambda ()
                              (bind-key "C-c ;" 'swint-noter/interleave org-mode-map)))
   :config
+  (require 'djvu)
+  (require 'nov)
   (defun swint-noter/interleave ()
     (interactive)
     (let* ((key (org-entry-get nil "Custom_ID"))
@@ -465,7 +467,7 @@
 ;; =================org-noter===================
 ;;; org-ref
 ;; ==================org-ref====================
-(def-package! org-ref-core
+(use-package org-ref-core
   :commands (org-ref-insert-link
              org-ref-insert-link-hydra/body
              org-ref-bibtex-hydra/body
@@ -479,7 +481,7 @@
                              (bind-key "C-c R" 'org-ref-insert-link-hydra/body org-mode-map)))
   :config
   (bind-key "C-c r" 'org-ref-bibtex-hydra/body bibtex-mode-map)
-  ;; org-ref-insert-link在org-ref-core中定义，若直接(def-package! org-ref)提示函数未定义
+  ;; org-ref-insert-link在org-ref-core中定义，若直接(use-package org-ref)提示函数未定义
   (require 'org-ref)
   (require 'helm)
   ;; 在已有org-mode中更新链接高亮
@@ -531,7 +533,7 @@
 ;; ==================org-ref====================
 ;;; org-pdftools
 ;; ================org-pdftools=================
-(def-package! org-pdftools
+(use-package org-pdftools
   ;; :hook (org-load-hook . org-pdftools-setup-link)
   :after (:all org pdf-tools)
   :config
@@ -540,7 +542,7 @@
 ;; ================org-pdftools=================
 ;;; org-brain
 ;; =================org-brain===================
-(def-package! org-brain
+(use-package org-brain
   :commands eh-org-set-tags-command
   :bind-keymap ("M-O b" . org-brain-prefix-map)
   :init
@@ -582,7 +584,7 @@
 ;; =================org-brain===================
 ;;; ox-latex
 ;; =================ox-latex====================
-(def-package! ox-latex
+(use-package ox-latex
   :after ox
   :config
   (setq org-latex-pdf-process
@@ -737,7 +739,7 @@
 ;; =================ox-latex====================
 ;;; ox-beamer
 ;; =================ox-beamer===================
-(def-package! ox-beamer
+(use-package ox-beamer
   :after ox
   :config
   ;; beamer-preview编译beamer文件时，需当前frame以外的页面保持不变
@@ -756,7 +758,7 @@
 ;; =================ox-beamer===================
 ;;; ox-pandoc
 ;; =================ox-pandoc===================
-(def-package! ox-pandoc
+(use-package ox-pandoc
   :after ox
   :config
   (setq org-pandoc-options '((standalone . t)))
@@ -767,7 +769,7 @@
 ;; =================ox-pandoc===================
 ;;; org-appear
 ;; ================org-appear===================
-(def-package! org-appear
+(use-package org-appear
   :hook (org-mode . org-appear-mode)
   :config
   (setq org-appear-delay 1)
@@ -779,7 +781,7 @@
 ;; ================org-appear===================
 ;;; oc
 ;; ====================oc=======================
-(def-package! oc
+(use-package oc
   :after org
   :config
   ;; 速度较慢，RET选择，可选多个，M-RET插入
@@ -796,7 +798,7 @@
 ;; ====================oc=======================
 ;;; org-extra-emphasis
 ;; ============org-extra-emphasis===============
-(def-package! org-extra-emphasis
+(use-package org-extra-emphasis
   :load-path "repos/org-extra-emphasis/"
   :after org
   :config

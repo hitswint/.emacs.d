@@ -1,6 +1,6 @@
 ;;; emms
 ;; ================emms==================
-(def-package! emms
+(use-package emms
   :bind (("M-o M-e" . emms-playlist-mode-go)
          ("M-o e" . emms-play-file)
          ("<s-down>" . emms-pause)
@@ -12,7 +12,7 @@
          ("<C-s-down>" . emms-volume-lower)
          ("<C-s-up>" . emms-volume-raise))
   :config
-  (def-package! emms-setup
+  (use-package emms-setup
     :config
     (emms-all)
     (emms-default-players))
@@ -27,7 +27,7 @@
         emms-playing-time-display-format "")
 ;;;; emms-mpd
   ;; ==============emms-mpd================
-  (def-package! emms-player-mpd
+  (use-package emms-player-mpd
     :config
     (define-key emms-playlist-mode-map (kbd "C-c c") 'emms-player-mpd-connect)
     (advice-add 'emms-playlist-mode-go :before #'emms-player-mpd-connect)

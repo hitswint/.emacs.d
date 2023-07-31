@@ -1,6 +1,6 @@
 ;;; auctex
 ;; =====================auctex=====================
-(def-package! tex
+(use-package tex
   :commands LaTeX-math-mode
   :mode ("\\.[tT][eE][xX]\\'" . latex-mode)
   :config
@@ -43,7 +43,7 @@
   ;; ============setup-and-keybindings=============
 ;;;; preview
   ;; ==================preview=====================
-  (def-package! preview
+  (use-package preview
     :commands (preview-at-point
                preview-clearout-buffer)
     :init
@@ -60,7 +60,7 @@
 ;;; auctex-latexmk
 ;; =================auctex-latexmk=================
 ;; texlive默认包含latexmk，只需加入.latexmkrc配置文件
-(def-package! auctex-latexmk
+(use-package auctex-latexmk
   :after tex
   :config
   (auctex-latexmk-setup)
@@ -68,7 +68,7 @@
 ;; =================auctex-latexmk=================
 ;;; magic-latex-buffer
 ;; ==============magic-latex-buffer================
-(def-package! magic-latex-buffer
+(use-package magic-latex-buffer
   :diminish magic-latex-buffer
   :commands magic-latex-buffer
   :init

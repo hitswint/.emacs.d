@@ -1,6 +1,6 @@
 ;;; pdf-tools
 ;; ====================pdf-tools===================
-(def-package! pdf-tools
+(use-package pdf-tools
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :init
   ;; Pdf-tools默认设置x-gtk-use-system-tooltips为nil
@@ -23,7 +23,7 @@
 ;; ==================doc-view-mode=================
 ;; 使用soffice/unoconv转换
 ;; 默认缓存文件保存在/tmp和~/AppData/Local/Temp中，使用doc-view-clear-cache清理
-(def-package! doc-view
+(use-package doc-view
   :defer t
   :config
   (setq doc-view-continuous t)
@@ -35,7 +35,7 @@
 ;; ==================doc-view-mode=================
 ;;; pdfgrep
 ;; =================pdfgrep========================
-(def-package! pdfgrep
+(use-package pdfgrep
   :bind (("M-s v v" . pdfgrep-opened)
          ("M-s v d" . pdfgrep-dired)
          ("M-s V" . pdfgrep-zotero))

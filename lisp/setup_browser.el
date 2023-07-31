@@ -1,6 +1,6 @@
 ;;; w3m
 ;; ===================w3m=====================
-(def-package! w3m
+(use-package w3m
   :bind (("M-o M-w" . w3m)
          ("M-o w" . w3m-youdao-sample-sentences))
   :config
@@ -60,7 +60,7 @@
 ;; ===================w3m=====================
 ;;; helm-firefox
 ;; ===============helm-firefox================
-(def-package! helm-firefox
+(use-package helm-firefox
   :commands (helm-firefox-bookmarks
              helm-firefox-history)
   :init

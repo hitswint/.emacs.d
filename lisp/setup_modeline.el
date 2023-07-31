@@ -1,12 +1,13 @@
 ;;; smart-mode-line
 ;; ================smart-mode-line=================
-(def-package! smart-mode-line
+(use-package smart-mode-line
   :config
   (setq sml/no-confirm-load-theme t)
   ;; 设定theme为dark/light/respectful/automatic
   (sml/setup)
   (sml/apply-theme nil)
-  (setq column-number-mode t)
+  (line-number-mode t)
+  (column-number-mode t)
   (setq-default mode-line-format
                 ;; 去除vc-mode显示，mode-line-modes显示major/minor-mode
                 (delete '(vc-mode) mode-line-format))
@@ -51,7 +52,7 @@
 ;; ================smart-mode-line=================
 ;;; nyan-mode
 ;; ===================nyan-mode====================
-(def-package! nyan-mode
+(use-package nyan-mode
   :config
   (nyan-mode t)
   (setq nyan-bar-length 16))

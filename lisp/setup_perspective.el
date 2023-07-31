@@ -1,6 +1,6 @@
 ;;; perspective
 ;; =================perspective=================
-(def-package! perspective
+(use-package perspective
   ;; 编译流程：
   ;; 1. doom//clean-byte-compiled-files并重启emacs，更新编译包
   ;; 2. doom//byte-compile编译配置文件

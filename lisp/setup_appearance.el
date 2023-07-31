@@ -20,20 +20,20 @@
 ;; ====================全屏===================
 ;;; tangotango-theme
 ;; ==============tangotango-theme=============
-(def-package! tangotango-theme
+(use-package tangotango-theme
   :config
   (load-theme 'tangotango t))
 ;; ==============tangotango-theme=============
 ;;; cycle-mini
 ;; ================cycle-mini=================
-(def-package! cycle-mini
+(use-package cycle-mini
   :load-path "site-lisp/cycle-mini/"
   :bind (:map minibuffer-local-completion-map
               ("C-p" . cycle-mini-previous-completion)
               ("C-n" . cycle-mini-next-completion)))
 ;; ================cycle-mini=================
 ;; ==============all-the-icons================
-(def-package! all-the-icons
+(use-package all-the-icons
   ;; :if (display-graphic-p)
   :after (all-the-icons-dired neotree))
 ;; ==============all-the-icons================

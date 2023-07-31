@@ -1,6 +1,6 @@
 ;;; paredit
 ;; =================paredit=====================
-(def-package! paredit
+(use-package paredit
   :diminish paredit-mode
   :commands enable-paredit-mode
   :init
@@ -76,7 +76,7 @@
 ;; =================paredit=====================
 ;;; paredit-everywhere
 ;; ==============paredit-everything=============
-(def-package! paredit-everywhere
+(use-package paredit-everywhere
   :diminish paredit-everywhere-mode
   :commands paredit-everywhere-mode
   :init
@@ -131,7 +131,7 @@
 ;; =================Keybindings=================
 ;;; wrap-region
 ;; ================wrap-region==================
-(def-package! wrap-region
+(use-package wrap-region
   :diminish wrap-region-mode
   :commands wrap-region-mode
   :init
@@ -164,7 +164,7 @@
 ;; ================wrap-region==================
 ;;; rainbow-delimiters
 ;; ==============rainbow-delimiters=============
-(def-package! rainbow-delimiters
+(use-package rainbow-delimiters
   :commands rainbow-delimiters-mode
   :init
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
@@ -186,7 +186,7 @@
 ;; ==============rainbow-delimiters=============
 ;;; highlight-parentheses
 ;; ============highlight-parentheses============
-(def-package! highlight-parentheses
+(use-package highlight-parentheses
   :config
   (set-face-attribute 'highlight-parentheses-highlight nil :weight 'bold :strike-through t)
   (defun hl-paren-create-overlays ()

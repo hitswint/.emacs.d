@@ -5,7 +5,6 @@
 (auto-image-file-mode t)                ;打开图片显示
 (transient-mark-mode t)                 ;高亮选中区域
 (show-paren-mode t)                     ;显示括号匹配
-(global-linum-mode -1)
 (global-hl-line-mode t)
 (fringe-mode)
 (menu-bar-mode -1)
@@ -38,6 +37,7 @@
 (setq history-delete-duplicates t)
 (setq delete-by-moving-to-trash t)
 (setq confirm-kill-processes nil)
+(global-display-line-numbers-mode -1)
 (setq display-line-numbers-type t)
 (setq trash-directory "~/.Trash")
 (setq tramp-default-method "ssh")
@@ -84,7 +84,7 @@
 (global-set-key [(meta n)] 'window-move-up)
 (global-set-key [(meta p)] 'window-move-down)
 (global-set-key (kbd "C-x C-i") 'cleanup-buffer)
-(global-set-key (kbd "M-g g") 'linum-mode)
+(global-set-key (kbd "M-g g") 'display-line-numbers-mode)
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
 (global-set-key (kbd "M-s M-;") 'comment-or-uncomment-region-or-line)
 (global-set-key (kbd "C-a") 'smart-beginning-of-line)
@@ -135,6 +135,7 @@
 (global-set-key (kbd "M-g <") #'(lambda () (interactive) (swint-bypy-sync)))
 (global-set-key (kbd "M-g >") #'(lambda () (interactive) (swint-bypy-sync t)))
 (global-set-key (kbd "M-g M-?") 'swint-unison-sync-backups)
+(global-set-key (kbd "M-g i") nil)
 (global-set-key (kbd "M-g i d") 'insert-date)
 (global-set-key (kbd "M-g i t") 'insert-time)
 (global-set-key (kbd "C-M-q") 'swint-undo-kill-buffer)

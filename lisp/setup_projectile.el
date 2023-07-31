@@ -1,6 +1,6 @@
 ;;; Projectile
 ;; ==================Projectile=================
-(def-package! projectile
+(use-package projectile
   ;; :bind-keymap ("M-\"" . projectile-command-map)
   ;; 需先于multiple-cursors启动，否则会覆盖后者M-"快捷键
   :defer 1
@@ -30,7 +30,7 @@
 ;; ==================Projectile=================
 ;;; helm-projectile
 ;; ==============helm-projectile================
-(def-package! helm-projectile
+(use-package helm-projectile
   :bind ("M-'" . helm-projectile)
   :config
   (helm-projectile-on)
@@ -114,7 +114,7 @@
 ;; ==============helm-projectile================
 ;;; persp-projectile
 ;; ================persp-projectile=============
-(def-package! persp-projectile
+(use-package persp-projectile
   :load-path "site-lisp/persp-projectile-20180616.1944/"
   :commands projectile-persp-switch-project
   :init

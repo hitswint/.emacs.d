@@ -1,6 +1,6 @@
 ;;; abbrev
 ;; ====================abbrev======================
-(def-package! abbrev
+(use-package abbrev
   :diminish abbrev-mode
   :config
   ;; Turn on abbrev mode globally.
@@ -17,7 +17,7 @@
 ;; ====================abbrev======================
 ;;; server
 ;; ====================server======================
-(def-package! server
+(use-package server
   :config
   (unless (or (and (fboundp 'daemonp) (daemonp))
               (server-running-p))
@@ -25,10 +25,10 @@
 ;; ====================server======================
 ;;; recentf
 ;; ====================recentf=====================
-(def-package! recentf
+(use-package recentf
   :commands recentf-mode
   :config
-  (def-package! recentf-ext)
+  (use-package recentf-ext)
   (recentf-mode 1)
   (setq recentf-max-saved-items 100)
   (setq recentf-exclude
@@ -36,7 +36,7 @@
 ;; ====================recentf=====================
 ;;; multiple-cursors
 ;; ================multiple-cursors================
-(def-package! multiple-cursors
+(use-package multiple-cursors
   ;; mc/xxx函数都不在mc包中
   :defer 2
   :config
@@ -91,7 +91,7 @@
 ;; ================multiple-cursors================
 ;;; expand-region
 ;; =================expand-region==================
-(def-package! expand-region
+(use-package expand-region
   :bind (("C-M-;" . er/expand-region)
          ("C-M-:" . er/contract-region))
   :config
@@ -101,7 +101,7 @@
 ;; =================expand-region==================
 ;;; auto-mark
 ;; ==================auto-mark=====================
-(def-package! auto-mark
+(use-package auto-mark
   :load-path "site-lisp/auto-mark/"
   :config
   (setq auto-mark-command-class-alist
@@ -124,7 +124,7 @@
 ;; ==================auto-mark=====================
 ;;; visible-mark
 ;; ================visible-mark====================
-(def-package! visible-mark
+(use-package visible-mark
   :config
   (global-visible-mark-mode 1)
   (setq visible-mark-max 2)
@@ -147,7 +147,7 @@
 ;; ================visible-mark====================
 ;;; God-mode
 ;; ====================God-mode====================
-(def-package! god-mode
+(use-package god-mode
   :diminish god-local-mode
   :bind ("<S-escape>" . god-local-mode)
   :config
@@ -162,7 +162,7 @@
 ;; ====================God-mode====================
 ;;; elisp-slime-nav
 ;; =================elisp-slime-nav================
-(def-package! help
+(use-package help
   :commands help-command
   :config
   (define-key 'help-command (kbd "C-l") 'find-library)
@@ -170,7 +170,7 @@
   (define-key 'help-command (kbd "C-k") 'find-function-on-key)
   (define-key 'help-command (kbd "C-v") 'find-variable)
   (define-key 'help-command (char-to-string help-char) nil))
-(def-package! elisp-slime-nav
+(use-package elisp-slime-nav
   :diminish elisp-slime-nav-mode
   :commands elisp-slime-nav-mode
   :init
@@ -188,7 +188,7 @@
 ;; =================elisp-slime-nav================
 ;;; drag stuff
 ;; ===================drag stuff===================
-(def-package! drag-stuff
+(use-package drag-stuff
   :diminish drag-stuff-mode
   :bind (("M-P" . drag-stuff-up)
          ("M-N" . drag-stuff-down)
@@ -207,7 +207,7 @@
 ;; ===================drag stuff===================
 ;;; popup-kill-ring
 ;; ================popup-kill-ring=================
-(def-package! popup-kill-ring
+(use-package popup-kill-ring
   :bind ("M-Y" . popup-kill-ring)
   :config
   (setq popup-kill-ring-interactive-insert nil)
@@ -218,7 +218,7 @@
 ;; ================popup-kill-ring=================
 ;;; pos-tip
 ;; ===================pos-tip======================
-(def-package! pos-tip
+(use-package pos-tip
   :commands pos-tip-show
   :config
   ;; 使用Gtk+ tooltip需配置x-gtk-use-system-tooltips，修改~/.emacs.d/gtkrc配置字体
@@ -226,14 +226,14 @@
 ;; ===================pos-tip======================
 ;;; elmacro
 ;; ===================elmacro======================
-(def-package! elmacro
+(use-package elmacro
   ;; F3开始录制宏，再次F3插入计数，F4停止录制
   ;; elmacro-show-last-macro将宏转换为elisp
   :commands elmacro-mode)
 ;; ===================elmacro======================
 ;;; hungry-delete
 ;; ===================hungry-delete================
-(def-package! hungry-delete
+(use-package hungry-delete
   :diminish hungry-delete-mode
   :config
   (add-to-list 'hungry-delete-except-modes 'dired-mode)
@@ -242,7 +242,7 @@
 ;; ===================hungry-delete================
 ;;; fcitx
 ;; ======================fcitx=====================
-(def-package! fcitx
+(use-package fcitx
   :commands swint-fcitx-setup
   :init
   (if (and (fboundp 'daemonp) (daemonp))
@@ -261,7 +261,7 @@
 ;; ======================fcitx=====================
 ;;; aggressive-indent
 ;; ================aggressive-indent===============
-(def-package! aggressive-indent
+(use-package aggressive-indent
   :diminish aggressive-indent-mode
   :commands aggressive-indent-mode
   :init
@@ -274,7 +274,7 @@
 ;; ================aggressive-indent===============
 ;;; clean-aindent-mode
 ;; ===============clean-aindent-mode===============
-(def-package! clean-aindent-mode
+(use-package clean-aindent-mode
   :config
   (clean-aindent-mode t)
   (setq clean-aindent-is-simple-indent t)
@@ -290,17 +290,17 @@
 ;; ===============clean-aindent-mode===============
 ;;; multifiles
 ;; ===================multifiles===================
-(def-package! multifiles
+(use-package multifiles
   :bind ("M-g m" . mf/mirror-region-in-multifile))
 ;; ===================multifiles===================
 ;;; ztree
 ;; =====================ztree======================
-(def-package! ztree-diff
+(use-package ztree-diff
   :bind ("M-g =" . ztree-diff))
 ;; =====================ztree======================
 ;;; which-key
 ;; ====================which-key===================
-(def-package! which-key
+(use-package which-key
   :diminish which-key-mode
   :defer 2
   :config
@@ -320,28 +320,28 @@
 ;; ====================which-key===================
 ;;; backup
 ;; ======================backup====================
-(def-package! git-timemachine
+(use-package git-timemachine
   :bind ("M-s M-b" . git-timemachine))
-(def-package! backup-walker
+(use-package backup-walker
   :bind ("M-s M-B" . backup-walker-start))
 ;; ======================backup====================
 ;;; visual-regexp
 ;; ===================visual-regexp================
-(def-package! visual-regexp
+(use-package visual-regexp
   :bind (("M-s r" . vr/query-replace)
          ("M-s R" . vr/replace)
          ("M-s C-;" . vr/mc-mark)))
 ;; ===================visual-regexp================
 ;;; vlf
 ;; =======================vlf======================
-(def-package! vlf
+(use-package vlf
   :bind (:map dired-mode-map
               ("C-c v" . dired-vlf))
   :init
   ;; Enable vlf when opening files bigger than 100MB.
   (setq large-file-warning-threshold 100000000)
   :config
-  (def-package! vlf-setup)
+  (use-package vlf-setup)
   (smartrep-define-key vlf-mode-map ""
     '(("n" . vlf-next-batch)
       ("p" . vlf-prev-batch)))
@@ -350,7 +350,7 @@
 ;; =======================vlf======================
 ;;; easy-kill
 ;; =====================easy-kill==================
-(def-package! easy-kill
+(use-package easy-kill
   :bind ("M-w" . kill-ring-save)
   :init
   (global-set-key [remap kill-ring-save] 'easy-kill)
@@ -376,7 +376,7 @@
 ;; =====================easy-kill==================
 ;;; bm
 ;; =======================bm=======================
-(def-package! bm
+(use-package bm
   :commands (bm-toggle
              bm-previous
              bm-next)
@@ -401,7 +401,7 @@
 ;; =======================bm=======================
 ;;; helm-bm
 ;; ====================helm-bm=====================
-(def-package! helm-bm
+(use-package helm-bm
   :bind ("C-M-'" . helm-bm)
   :config
   (defun helm-bm-action-switch-to-buffer/override (candidate)
@@ -415,7 +415,7 @@
 ;;; operate-on-number
 ;; ================operate-on-number===============
 ;; 两种操作方式：C-= 计算符号，支持C-u前缀数字；C-= = 依次确定计算符号和数字
-(def-package! operate-on-number
+(use-package operate-on-number
   :commands (apply-operation-to-number-at-point
              operate-on-number-at-point)
   :init
@@ -434,7 +434,7 @@
 ;; ================operate-on-number===============
 ;;; goto-last-change
 ;; =================goto-last-change===============
-(def-package! goto-chg
+(use-package goto-chg
   :bind ("M-?" . swint-goto-last-change)
   :config
   (defun swint-goto-last-change ()
@@ -459,7 +459,7 @@
 ;; =================goto-last-change===============
 ;;; Proced
 ;; =====================Proced=====================
-(def-package! proced
+(use-package proced
   :commands proced-process-attributes
   :bind ("M-o M-r" . proced)
   :config
@@ -471,13 +471,13 @@
 ;; =====================Proced=====================
 ;;; vimish-fold
 ;; ==================vimish-fold===================
-(def-package! vimish-fold
+(use-package vimish-fold
   :bind (("C-x C-`" . vimish-fold)
          ("C-x C-~" . vimish-fold-delete)))
 ;; ==================vimish-fold===================
 ;;; clipmon
 ;; ====================clipmon=====================
-(def-package! clipmon
+(use-package clipmon
   :after easy-kill
   :config
   (bind-key "M-g M-w" 'clipmon-mode)
@@ -500,14 +500,14 @@
 ;; ====================clipmon=====================
 ;;; volatile-highlights
 ;; ==============volatile-highlights===============
-(def-package! volatile-highlights
+(use-package volatile-highlights
   :diminish volatile-highlights-mode
   :config
   (volatile-highlights-mode t))
 ;; ==============volatile-highlights===============
 ;;; quickrun
 ;; ===================quickrun=====================
-(def-package! quickrun
+(use-package quickrun
   :bind (("M-s q" . swint-quickrun)
          ("M-s Q" . quickrun-shell))
   :config
@@ -519,7 +519,7 @@
 ;; ===================quickrun=====================
 ;;; highlight-symbol
 ;; ================highlight-symbol================
-(def-package! highlight-symbol
+(use-package highlight-symbol
   :commands (highlight-symbol-prev
              highlight-symbol-next
              highlight-symbol-at-point
@@ -534,7 +534,7 @@
 ;; ================highlight-symbol================
 ;;; auto-highlight-symbol
 ;; =============auto-highlight-symbol==============
-(def-package! auto-highlight-symbol
+(use-package auto-highlight-symbol
   :diminish auto-highlight-symbol-mode
   :defer 2
   :config
@@ -562,7 +562,7 @@
 ;; =============auto-highlight-symbol==============
 ;;; dumb-jump
 ;; ==================dumb-jump=====================
-(def-package! dumb-jump
+(use-package dumb-jump
   :commands (dumb-jump-go
              dumb-jump-back
              dumb-jump-quick-look)
@@ -574,7 +574,7 @@
 ;; ==================dumb-jump=====================
 ;;; diff-hl
 ;; ===================diff-hl======================
-(def-package! diff-hl
+(use-package diff-hl
   :defer 2
   :config
   ;; 默认快捷键以C-x v为前缀
@@ -613,12 +613,12 @@
 ;; ===================diff-hl======================
 ;;; evil-nerd-commenter
 ;; =============evil-nerd-commenter================
-(def-package! evil-nerd-commenter
+(use-package evil-nerd-commenter
   :bind ("M-:" . evilnc-comment-or-uncomment-lines))
 ;; =============evil-nerd-commenter================
 ;;; markdown-mode
 ;; =================markdown-mode==================
-(def-package! markdown-mode
+(use-package markdown-mode
   :commands (markdown-mode
              gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
@@ -641,7 +641,7 @@
 ;; =================markdown-mode==================
 ;;; highlight-indentation
 ;; =============highlight-indentation==============
-(def-package! highlight-indentation
+(use-package highlight-indentation
   :diminish (highlight-indentation-mode
              highlight-indentation-current-column-mode)
   :init
@@ -649,7 +649,7 @@
 ;; =============highlight-indentation==============
 ;;; rainbow-mode
 ;; =================rainbow-mode===================
-(def-package! rainbow-mode
+(use-package rainbow-mode
   :diminish rainbow-mode
   :commands rainbow-mode
   :init
@@ -661,16 +661,16 @@
 ;; =================rainbow-mode===================
 ;;; pass
 ;; =====================pass=======================
-(def-package! pass
+(use-package pass
   :bind ("C-x P" . pass)
   :config
   (setq pass-show-keybindings nil))
-(def-package! helm-pass
+(use-package helm-pass
   :bind ("C-x p" . helm-pass))
 ;; =====================pass=======================
 ;;; sudo
 ;; =====================sudo=======================
-(def-package! sudo-edit
+(use-package sudo-edit
   ;; 需新建~/.ssh/sockets文件夹
   :commands (sudo-edit sudo-dired)
   :config
@@ -685,14 +685,14 @@
 ;; =====================sudo=======================
 ;;; gnuplot
 ;; ====================gnuplot=====================
-(def-package! gnuplot-mode
+(use-package gnuplot-mode
   :mode ("\\.\\(gp\\|gnuplot\\)$" . gnuplot-mode)
   :config
   (define-key gnuplot-mode-map (kbd "C-c C-v") 'swint-open-output-file))
 ;; ====================gnuplot=====================
 ;;; graphviz-dot-mode
 ;; ================graphviz-dot-mode===============
-(def-package! graphviz-dot-mode
+(use-package graphviz-dot-mode
   :mode ("\\.dot\\'" . graphviz-dot-mode)
   :config
   (define-key graphviz-dot-mode-map (kbd "C-c C-c") 'compile)
@@ -700,7 +700,7 @@
 ;; ================graphviz-dot-mode===============
 ;;; ido
 ;; ======================ido=======================
-(def-package! ido
+(use-package ido
   :defer t
   :config
   (setq ido-auto-merge-delay-time 0.7
@@ -716,17 +716,17 @@
 ;; ======================ido=======================
 ;;; term-keys
 ;; ===================term-keys====================
-(def-package! term-keys
+(use-package term-keys
   :config
   (term-keys-mode t))
 ;; ===================term-keys====================
 ;; ===================yaml-mode====================
-(def-package! yaml-mode
+(use-package yaml-mode
   :mode ("\\.yml\\'" . yaml-mode))
 ;; ===================yaml-mode====================
 ;;; Auto-revert-mode
 ;; =================Auto-revert-mode===============
-(def-package! autorevert
+(use-package autorevert
   :diminish auto-revert-mode
   :defer 2
   :config
@@ -739,13 +739,13 @@
 ;; =================Auto-revert-mode===============
 ;;; academic-phrases
 ;; =================academic-phrases===============
-(def-package! academic-phrases
+(use-package academic-phrases
   :bind (("M-s a" . academic-phrases-by-section)
          ("M-s A" . academic-phrases)))
 ;; =================academic-phrases===============
 ;;; reftex
 ;; =====================reftex=====================
-(def-package! reftex
+(use-package reftex
   :diminish reftex-mode
   :commands (reftex-mode reftex-label)
   :init
@@ -762,7 +762,7 @@
 ;; =====================reftex=====================
 ;;; annot
 ;; =====================annot======================
-(def-package! annot
+(use-package annot
   :load-path "repos/annot/src/"
   :bind (("M-g a a" . annot-edit/add)
          ("M-g a r" . annot-remove)
@@ -782,7 +782,7 @@
 ;; =====================annot======================
 ;;; insert-translated-name
 ;; ============insert-translated-name==============
-(def-package! insert-translated-name
+(use-package insert-translated-name
   :load-path "repos/insert-translated-name/"
   :bind (("M-g d" . insert-translated-name-replace)
          ("M-g D" . insert-translated-name-insert))
@@ -791,7 +791,7 @@
 ;; ============insert-translated-name==============
 ;;; idf-mode
 ;; ==================idf-mode======================
-(def-package! idf-mode
+(use-package idf-mode
   :load-path "site-lisp/idf-mode/"
   :mode ("\\.[iI][dD][fF]\\'" . idf-mode)
   :config
@@ -807,14 +807,14 @@
 ;; ==================idf-mode======================
 ;;; gnu-elpa-keyring-update
 ;; ==========gnu-elpa-keyring-update===============
-(def-package! gnu-elpa-keyring-update
+(use-package gnu-elpa-keyring-update
   ;; 解决GPG公钥过期的问题
   ;; (setq package-check-signature nil) ;临时关闭验证，package-install安装
   :commands gnu-elpa-keyring-update)
 ;; ==========gnu-elpa-keyring-update===============
 ;;; rg
 ;; ===================rg===========================
-(def-package! rg
+(use-package rg
   :commands rg-run
   :bind ("M-s g" . rg-menu)
   :config
@@ -848,7 +848,7 @@
 ;; ===================rg===========================
 ;;; awesome-tab
 ;; ===============awesome-tab======================
-(def-package! awesome-tab
+(use-package awesome-tab
   :load-path "repos/awesome-tab/"
   :after (:all helm perspective)
   :config
@@ -926,7 +926,7 @@
 ;; ==============modelica-mode=====================
 ;;; vundo
 ;; ===================vundo========================
-(def-package! vundo
+(use-package vundo
   :bind ("C-x u" . vundo))
 ;; ===================vundo========================
 (provide 'setup_packages)

@@ -1,15 +1,15 @@
 ;;; dired
 ;; ==================dired=====================
-(def-package! dired
+(use-package dired
   :delight "Dired"
   :config
-  (def-package! dired-x
+  (use-package dired-x
     :config
     (bind-key ")" 'dired-omit-mode dired-mode-map)
     (add-hook 'dired-mode-hook 'dired-omit-mode)
     (setq dired-omit-verbose nil)
     (setq dired-omit-size-limit nil))
-  (def-package! dired-filetype-face)
+  (use-package dired-filetype-face)
   (add-hook 'dired-mode-hook 'dired-hide-details-mode)
   (setq dired-recursive-copies 'top)
   (setq dired-recursive-deletes 'always)
@@ -189,7 +189,7 @@
 ;; ==================dired=====================
 ;;; image-dired
 ;; ===============image-dired==================
-(def-package! image-dired
+(use-package image-dired
   ;; 默认以C-t为快捷键前缀
   ;; C-t C-t 当前dired中显示缩略图
   ;; C-t (./d/a) image-dired中显示(当前/选中/追加)文件缩略图
@@ -197,14 +197,17 @@
   ;; image-dired中m/u/d标记原文件，l/r/L/R旋转缩略图和原文件
   ;; 缩略图和数据库文件保存在~/.emacs.d/image-dired/下
   ;; 依赖：convert/mogrify/pngnq/pngcrush/optipng/jpegtran/exiftool/pdftoppm/ffmpegthumbnailer/openscad/unoconv/libreoffice
-  :after dired
+  :commands (global-image-dired-minor-mode image-dired-display-thumbs-all)
+  :init
+  (add-hook 'dired-mode-hook (lambda ()
+                               (bind-key "C-M-i" #'(lambda () (interactive) (if (global-image-dired-minor-mode 'toggle)
+                                                                                (image-dired-display-thumbs-all)
+                                                                              (when (get-buffer image-dired-thumbnail-buffer)
+                                                                                (kill-buffer image-dired-thumbnail-buffer))))
+                                         dired-mode-map)))
   :config
+  (require 'image-dired-dired)
   (bind-key "C-j" 'image-dired-thumbnail-display-external image-dired-thumbnail-mode-map)
-  (bind-key "C-M-i" #'(lambda () (interactive) (if (global-image-dired-minor-mode 'toggle)
-                                                   (image-dired-display-thumbs-all)
-                                                 (when (get-buffer image-dired-thumbnail-buffer)
-                                                   (kill-buffer image-dired-thumbnail-buffer))))
-            dired-mode-map)
   (bind-key [tab] nil image-dired-minor-mode-map)
   (setq image-dired-external-viewer "xdg-open"
         image-dired-queue-active-limit  ;最大进程数为逻辑cpu数量的1/2
@@ -308,7 +311,7 @@
 ;; ===============image-dired==================
 ;;; peep-dired
 ;; ================peep-dired==================
-(def-package! peep-dired
+(use-package peep-dired
   :commands (global-peep-dired peep-dired-find-file)
   :init
   (add-hook 'dired-mode-hook (lambda ()
@@ -394,7 +397,7 @@
 ;; ================peep-dired==================
 ;;; dired-async
 ;; ================dired-async=================
-(def-package! dired-async
+(use-package dired-async
   :diminish dired-async-mode
   :commands dired-async-mode
   :init
@@ -424,7 +427,7 @@
 ;; ================dired-async=================
 ;;; dired-narrow
 ;; ===============dired-narrow=================
-(def-package! dired-narrow
+(use-package dired-narrow
   :bind (:map dired-mode-map
               ("/" . dired-narrow))
   :config
@@ -438,7 +441,7 @@
 ;; ===============dired-narrow=================
 ;;; dired-ranger
 ;; ===============dired-ranger=================
-(def-package! dired-ranger
+(use-package dired-ranger
   :bind (:map dired-mode-map
               ;; w: dired-copy-filename-as-kill 复制文件名，加0复制绝对路径
               ("M-w" . swint-dired-ranger-copy)
@@ -500,7 +503,7 @@
 ;; ===============dired-ranger=================
 ;;; neotree
 ;; =================neotree====================
-(def-package! neotree
+(use-package neotree
   :bind ("C-x j" . neotree-project-or-current-dir)
   :config
   (setq neo-smart-open nil)
@@ -544,7 +547,7 @@
 ;; =================neotree====================
 ;;; dired-du
 ;; ================dired-du====================
-(def-package! dired-du
+(use-package dired-du
   :bind (:map dired-mode-map
               ("V" . dired-du-mode))
   :config
@@ -555,7 +558,7 @@
 ;; ================dired-du====================
 ;;; dired-subtree
 ;; =============dired-subtree==================
-(def-package! dired-subtree
+(use-package dired-subtree
   :bind (:map dired-mode-map
               ("TAB" . dired-subtree-toggle)
               ("<backtab>" . dired-subtree-cycle))
@@ -613,7 +616,7 @@
 ;; =============dired-subtree==================
 ;;; all-the-icons-dired
 ;; ==========all-the-icons-dired===============
-(def-package! all-the-icons-dired
+(use-package all-the-icons-dired
   :diminish all-the-icons-dired-mode
   :commands swint-init-all-the-icons-dired
   :init

@@ -1,6 +1,6 @@
 ;;; chinese-fonts-setup
 ;; ==========chinese-fonts-setup===========
-(def-package! chinese-fonts-setup
+(use-package chinese-fonts-setup
   :load-path "site-lisp/chinese-fonts-setup/"
   :config
   (setq cfs--current-profile-name "profile-lin")
@@ -16,7 +16,7 @@
 ;; ==========chinese-fonts-setup===========
 ;;; pyim
 ;; ==================pyim==================
-(def-package! pyim
+(use-package pyim
   :commands (pyim-string-match-p
              pyim-hanzi2pinyin-capitalize)
   :bind (("C-x SPC" . pyim-convert-string-at-point)
@@ -50,15 +50,15 @@
                    (mapcar #'capitalize (funcall orig-fun arg)))))
         (pyim-hanzi2pinyin string shou-zi-mu separator
                            return-list ignore-duo-yin-zi adjust-duo-yin-zi))))
-  (def-package! pyim-basedict
+  (use-package pyim-basedict
     :config
     (pyim-basedict-enable)))
-(def-package! pyim-cstring-utils
+(use-package pyim-cstring-utils
   :commands pyim-cstring-words-at-point)
 ;; ==================pyim==================
 ;;; pinyinlib
 ;; ===============pinyinlib================
-(def-package! pinyinlib
+(use-package pinyinlib
   :commands pinyinlib-build-regexp-string)
 ;; ===============pinyinlib================
 (provide 'setup_chinese)

@@ -1,6 +1,6 @@
 ;;; ivy
 ;; =====================ivy========================
-(def-package! ivy
+(use-package ivy
   :commands (ivy-read ivy-completing-read)
   :config
   (bind-key "M-s y" 'ivy-resume)
@@ -9,9 +9,9 @@
   (setq ivy-use-virtual-buffers t)
   (setq ivy-height 10)
   (setq ivy-count-format "%d/%d ")
-  (def-package! ivy-hydra
+  (use-package ivy-hydra
     :after ivy)
-  (def-package! hydra
+  (use-package hydra
     :after ivy-hydra)
   ;; https://github.com/pengpengxp/swiper/wiki/ivy-support-chinese-pinyin
   ;; (add-to-list 'ivy-re-builders-alist '(swiper . re-builder-pinyin)) ;单独对某命令设置
@@ -38,7 +38,7 @@
 ;; =====================ivy========================
 ;;; swiper
 ;; ===================swiper=======================
-(def-package! swiper
+(use-package swiper
   :commands swiper-from-isearch
   :bind (("M-s s" . swint-swiper)
          ("M-s S" . swiper-all))
@@ -57,7 +57,7 @@
 ;; ===================swiper=======================
 ;;; counsel
 ;; ===================counsel======================
-(def-package! counsel
+(use-package counsel
   ;; 按键逻辑：helm(C-x c x)/counsel(M-s c x)
   :commands counsel-read-file-for-rsync
   :bind (("M-X" . counsel-M-x)

@@ -1,6 +1,6 @@
 ;;; flycheck
 ;; ===============flycheck====================
-(def-package! flycheck
+(use-package flycheck
   :bind ("M-g C" . swint-toggle-flycheck-mode)
   :config
   ;; https://github.com/emacs-grammarly/flycheck-grammarly 支持grammarly，但连网速度慢
@@ -25,12 +25,12 @@
 ;; ===============flycheck====================
 ;;; helm-flycheck
 ;; ==============helm-flycheck================
-(def-package! helm-flycheck
+(use-package helm-flycheck
   :commands helm-flycheck)
 ;; ==============helm-flycheck================
 ;;; flycheck-pos-tip
 ;; =============flycheck-pos-tip==============
-(def-package! flycheck-pos-tip
+(use-package flycheck-pos-tip
   :commands flycheck-pos-tip-mode
   :config
   ;; flycheck-pos-tip-mode会导致pos-tip弹出后快速隐藏

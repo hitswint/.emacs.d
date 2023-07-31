@@ -1,6 +1,6 @@
 ;;; winner-mode
 ;; =================winner-mode=================
-(def-package! winner
+(use-package winner
   :bind (("M-/" . winner-undo)
          ("M-s M-/" . winner-redo))
   :config
@@ -8,7 +8,7 @@
 ;; =================winner-mode=================
 ;;; window-numbering
 ;; ==============window-numbering===============
-(def-package! window-numbering
+(use-package window-numbering
   :bind (("C-<tab>" . select-previously-selected-window)
          ("<C-S-iso-lefttab>" . transpose-with-previously-selected-window))
   :config
@@ -94,7 +94,7 @@ If prefix ARG is given, delete the window instead of selecting it."
 ;; ==============window-numbering===============
 ;;; windmove
 ;; ================windmove=====================
-(def-package! windmove
+(use-package windmove
   :commands (swint-windmove-left
              swint-windmove-right
              swint-windmove-up

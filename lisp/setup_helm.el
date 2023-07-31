@@ -1,6 +1,6 @@
 ;;; helm
 ;; ====================helm=====================
-(def-package! helm
+(use-package helm
   :commands (helm-find-files-1
              helm-insert-latex-math
              helm-completing-read-default-1)
@@ -14,7 +14,7 @@
          ("C-x l" . swint-helm-locate)
          ("C-x y" . helm-resume))
   :config
-  (def-package! helm-for-files)
+  (use-package helm-for-files)
   (helm-mode 1)
   (helm-top-poll-mode 1)
   (setq helm-completing-read-handlers-alist '((describe-function . helm-completing-read-symbols)
@@ -119,7 +119,7 @@
   ;; ===============keybindings=================
 ;;;; helm-fd
   ;; =================helm-fd===================
-  (def-package! helm-fd
+  (use-package helm-fd
     :bind ("C-x f" . swint-helm-fdfind)
     :config
     ;; helm-find-files下C-/启用
@@ -532,7 +532,7 @@
 ;; ====================helm=====================
 ;;; helm-ring
 ;; ==================helm-ring==================
-(def-package! helm-ring
+(use-package helm-ring
   :bind ("C-M-y" . helm-show-kill-ring)
   :config
   (bind-key "C-j" 'helm-kill-ring-action-save helm-kill-ring-map)
@@ -554,7 +554,7 @@
 ;; ==================helm-ring==================
 ;;; helm_lacarte
 ;; ================helm_lacarte=================
-(def-package! lacarte
+(use-package lacarte
   :commands helm-math-symbols
   :bind (("<escape> M-x" . lacarte-execute-command)
          ("C-x `" . lacarte-execute-menu-command))
@@ -578,7 +578,7 @@
 ;; ================helm_lacarte=================
 ;;; helm-swoop
 ;; ================helm-swoop===================
-(def-package! helm-swoop
+(use-package helm-swoop
   :bind (("M-s M-s" . helm-swoop)
          ("M-s M-S" . helm-multi-swoop-all))
   :config
@@ -588,12 +588,12 @@
 ;; ================helm-swoop===================
 ;;; helm-unicode
 ;; ===============helm-unicode==================
-(def-package! helm-unicode
+(use-package helm-unicode
   :commands helm-unicode)
 ;; ===============helm-unicode==================
 ;;; helm-ag
 ;; =================helm-ag=====================
-(def-package! helm-ag
+(use-package helm-ag
   ;; helm-do-ag 互动式搜索，但只能搜索一个词
   ;; helm-ag 先输入词，可以在结果中搜索第二个词
   :commands (helm-do-ag helm-do-ag-buffers)
@@ -614,18 +614,18 @@
 ;; =================helm-ag=====================
 ;;; helm-descbinds
 ;; ==============helm-descbinds=================
-(def-package! helm-descbinds
+(use-package helm-descbinds
   :commands helm-descbinds)
 ;; ==============helm-descbinds=================
 ;;; helm-imenu
 ;; ================helm-imenu===================
-(def-package! imenu
+(use-package imenu
   :commands imenu-choose-buffer-index)
-(def-package! imenu-anywhere
+(use-package imenu-anywhere
   :bind ("M-s I" . helm-imenu-anywhere)
   :config
   (setq imenu-anywhere-delimiter " | "))
-(def-package! helm-imenu
+(use-package helm-imenu
   :bind (("M-s i" . helm-semantic-or-imenu)
          ("M-s o" . helm-imenu-outshine))
   :config
@@ -681,7 +681,7 @@
 ;; ================helm-imenu===================
 ;;; ace-jump-helm-line
 ;; ============ace-jump-helm-line===============
-(def-package! ace-jump-helm-line
+(use-package ace-jump-helm-line
   :commands ace-jump-helm-line
   :config
   (setq ace-jump-helm-line-keys (append (number-sequence ?a ?z)
@@ -690,7 +690,7 @@
 ;; ============ace-jump-helm-line===============
 ;;; key-chord
 ;; ================key-chord====================
-(def-package! key-chord
+(use-package key-chord
   :after helm
   :config
   (key-chord-mode 1)

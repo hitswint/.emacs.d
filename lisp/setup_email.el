@@ -1,11 +1,11 @@
 ;;; mu4e
 ;; =======================mu4e=========================
-(def-package! mu4e
+(use-package mu4e
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :bind (("M-o m" . mu4e)
          ("M-o M" . mu4e-compose-new))
   :config
-  (def-package! mu4e-alert
+  (use-package mu4e-alert
     :config
     (setq mu4e-alert-interesting-mail-query
           (concat "flag:unread maildir:/Default/INBOX"
@@ -21,7 +21,7 @@
     (mu4e-alert-set-default-style 'libnotify)
     (mu4e-alert-enable-notifications)
     (mu4e-alert-enable-mode-line-display))
-  (def-package! org-mu4e
+  (use-package org-mu4e
     :config
     (setq org-mu4e-convert-to-html t)
     (define-key mu4e-view-mode-map (kbd "C-c o") 'mu4e-org-mode)
@@ -106,7 +106,7 @@
 ;; =======================mu4e=========================
 ;;; helm-mu
 ;; ======================helm-mu=======================
-(def-package! helm-mu
+(use-package helm-mu
   :bind (("M-o M-m" . helm-mu)
          ("M-o M-M" . helm-mu-contacts)))
 ;; ======================helm-mu=======================

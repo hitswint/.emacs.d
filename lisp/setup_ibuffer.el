@@ -1,6 +1,6 @@
 ;;; ibuffer
 ;; =========================ibuffer==============================
-(def-package! ibuffer
+(use-package ibuffer
   :bind ("C-x <tab>" . ibuffer)
   :config
   (setq ibuffer-expert t
@@ -8,7 +8,7 @@
   (define-key ibuffer-mode-map (kbd "i") 'ibuffer-jump-to-filter-group)
 ;;;; ibuffer分组
   ;; ======================ibuffer分组===========================
-  (def-package! ibuf-ext
+  (use-package ibuf-ext
     :config
     (add-hook 'ibuffer-mode-hook #'(lambda () (if (not (bound-and-true-p persp-mode))
                                                   (ibuffer-switch-to-saved-filter-groups "Filename")
@@ -37,8 +37,8 @@
     (define-ibuffer-filter filename
         "Toggle current view to buffers with file or directory name matching QUALIFIER."
       (:description "filename" :reader (read-from-minibuffer "Filter by file/directory name (regexp): "))
-      (ibuffer-awhen (or (buffer-local-value 'buffer-file-name buf)
-                         (buffer-local-value 'dired-directory buf))
+      (when-let ((it (or (buffer-local-value 'buffer-file-name buf)
+                         (buffer-local-value 'dired-directory buf))))
         (string-match qualifier it)))
     (add-to-list 'ibuffer-saved-filter-groups
                  '("Filename"

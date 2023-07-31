@@ -1,6 +1,6 @@
 ;;; Anzu
 ;; =====================Anzu=======================
-(def-package! anzu
+(use-package anzu
   :diminish anzu-mode
   :bind (("M-s M-r" . anzu-query-replace)
          ("M-s M-R" . anzu-query-replace-regexp))
@@ -13,7 +13,7 @@
 ;; =====================Anzu=======================
 ;;; pinyin-search
 ;; ==================pinyin-search=================
-(def-package! pinyin-search
+(use-package pinyin-search
   :commands symbol-name-at-point
   ;; 搜索时M-s p(isearch-toggle-pinyin)切换拼音搜索
   :bind (("C-s" . isearch-forward-pinyin)

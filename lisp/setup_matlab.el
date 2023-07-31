@@ -1,6 +1,6 @@
 ;;; octave
 ;; ======================octave====================
-(def-package! octave
+(use-package octave
   :mode ("\\.m$" . octave-mode)
   :config
   ;; ac-octave/auto-complete-octave编译配置都有问题
@@ -31,7 +31,7 @@
 ;; ======================octave====================
 ;;; matlab
 ;; ======================matlab====================
-(def-package! matlab
+(use-package matlab
   :commands (matlab-mode
              matlab-shell)
   :init

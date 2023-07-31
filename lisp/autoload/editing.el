@@ -113,11 +113,11 @@ Including indent-buffer, which should not be called automatically on save."
   (interactive)
   (unwind-protect
       (progn
-        (linum-mode 1)
+        (display-line-numbers-mode 1)
         (let ((line-num (read-number "Goto line: ")))
           (goto-char (point-min))
           (forward-line (1- line-num))))
-    (linum-mode -1)))
+    (display-line-numbers-mode -1)))
 ;; ============跳转到某行时行号暂时可见============
 ;;; 注释/反注释-行或区域
 ;; ==============注释/反注释-行或区域==============

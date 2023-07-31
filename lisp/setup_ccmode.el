@@ -1,6 +1,6 @@
 ;;; ccmode
 ;; ===================ccmode====================
-(def-package! cc-mode
+(use-package cc-mode
   :mode (("\\.\\(cc\\|hh\\)\\'" . c++-mode)
          ("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode)
          ("\\.\\(CC?\\|HH?\\)\\'" . c++-mode)
@@ -33,7 +33,7 @@
 ;; ===================ccmode====================
 ;;; gdb
 ;; =====================gdb=====================
-(def-package! gdb-mi
+(use-package gdb-mi
   :commands gdb-or-gud-go
   :init
   (dolist (hook '(c-mode-hook c++-mode-hook))
@@ -71,7 +71,7 @@
 ;; =====================gdb=====================
 ;;; function-args
 ;; ==================function-args==============
-(def-package! function-args
+(use-package function-args
   :diminish function-args-mode
   :commands (moo-complete moo-jump-local moo-jump-directory fa-jump-maybe swint-fa-show)
   :init
@@ -93,7 +93,7 @@
 ;; ==================function-args==============
 ;;; semantic
 ;; ===================semantic==================
-(def-package! semantic
+(use-package semantic
   :after (:any function-args helm)
   :config
   (semantic-mode 1)
@@ -108,7 +108,7 @@
 ;; ===================semantic==================
 ;;; hs-minor-mode
 ;; ==================hs-minor-mode==============
-(def-package! hideshow
+(use-package hideshow
   :diminish hs-minor-mode
   :commands hs-toggle-hiding
   :init
@@ -120,7 +120,7 @@
 ;; ==================hs-minor-mode==============
 ;;; helm-gtags
 ;; ==================helm-gtags=================
-(def-package! helm-gtags
+(use-package helm-gtags
   :diminish helm-gtags-mode
   :commands (helm-gtags-mode
              helm-gtags-dwim
@@ -158,18 +158,18 @@
 ;; ==================helm-gtags=================
 ;;; arduino
 ;; ===================arduino===================
-(def-package! arduino-mode
+(use-package arduino-mode
   :mode (("\\.pde\\'" . arduino-mode)
          ("\\.ino\\'" . arduino-mode)))
 ;; ===================arduino===================
 ;;; disaster
 ;; ==================disaster===================
-(def-package! disaster
+(use-package disaster
   :commands disaster)
 ;; ==================disaster===================
 ;;; meghanada
 ;; =================meghanada===================
-(def-package! meghanada
+(use-package meghanada
   :diminish meghanada-mode
   :commands (meghanada-jump-declaration
              meghanada-back-jump

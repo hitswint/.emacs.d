@@ -1,6 +1,6 @@
 ;;; bing-dict
 ;; ==================bing-dict===================
-(def-package! bing-dict
+(use-package bing-dict
   :commands (bing-dict-brief
              bing-dict-brief-cb-at-point)
   :init
@@ -19,7 +19,7 @@
 ;; ==================bing-dict===================
 ;;; google-translate
 ;; ===============google-translate===============
-(def-package! google-translate
+(use-package google-translate
   :commands (google-translate-translate
              google-translate-translate_chieng)
   :init
@@ -52,7 +52,7 @@
 ;; ===============google-translate===============
 ;;; youdao-dictionary
 ;; ===============youdao-dictionary==============
-(def-package! youdao-dictionary
+(use-package youdao-dictionary
   :commands (youdao-dictionary--format-result
              youdao-dictionary--request
              youdao-dictionary-to-tip)
@@ -65,10 +65,10 @@
 ;; ===============youdao-dictionary==============
 ;;; baidu-translate
 ;; ================baidu-translate===============
-(def-package! baidu-translate
+(use-package baidu-translate
   :commands baidu-translate-at-point
   :config
-  (def-package! unicode-escape :after baidu-translate)
+  (use-package unicode-escape :after baidu-translate)
   (setq baidu-translate-appid "20200329000407785")
   (setq baidu-translate-security "oPVKtlEmfo4Q9KYHpjfy")
   (defun baidu-translate-at-point (&optional _word)
@@ -80,7 +80,7 @@
 ;; ================baidu-translate===============
 ;;; lingva
 ;; =====================lingva===================
-(def-package! lingva
+(use-package lingva
   :commands lingva-translate-at-point
   :config
   (defun lingva-translate-at-point (&optional _word)

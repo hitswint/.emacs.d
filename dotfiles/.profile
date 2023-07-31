@@ -43,7 +43,7 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 
 # User configuration
-export PATH="/opt/emacs28/bin:/usr/local/MATLAB/R2011b/bin:$HOME/bin:$HOME/.local/bin:$PATH"
+export PATH="/opt/emacs29/bin:/usr/local/MATLAB/R2011b/bin:$HOME/bin:$HOME/.local/bin:$PATH"
 export MANPATH="/usr/local/man:$MANPATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"

@@ -1,6 +1,6 @@
 ;;; bibtex
 ;; ====================bibtex======================
-(def-package! bibtex
+(use-package bibtex
   :after (:any ebib helm-bibtex org-ref oc)
   :config
   (setq bibtex-autokey-titleword-length nil
@@ -43,7 +43,7 @@
 ;; ====================bibtex======================
 ;;; bibtex-completion
 ;; ==============bibtex-completion=================
-(def-package! bibtex-completion
+(use-package bibtex-completion
   :commands (bibtex-completion-find-pdf
              bibtex-completion-get-value
              bibtex-completion-edit-notes
@@ -77,7 +77,7 @@
 ;; ==============bibtex-completion=================
 ;;; helm-bibtex
 ;; ==================helm-bibtex===================
-(def-package! helm-bibtex
+(use-package helm-bibtex
   :commands helm-bibtex-with-local-bibliography
   :bind (("C-x b" . swint-helm-bibtex)
          ("C-x B" . helm-bibtex))
@@ -146,7 +146,7 @@
 ;; ==================helm-bibtex===================
 ;;; ebib
 ;; =====================ebib=======================
-(def-package! ebib
+(use-package ebib
   :bind ("C-x C-b" . ebib)
   :config
   (define-key ebib-index-mode-map (kbd ",") 'ebib-prev-database)

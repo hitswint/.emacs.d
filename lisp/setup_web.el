@@ -1,6 +1,6 @@
 ;;; web-mode
 ;; ==================web-mode==================
-(def-package! web-mode
+(use-package web-mode
   :mode (("\\.phtml\\'" . web-mode)
          ("\\.tpl\\.php\\'" . web-mode)
          ("\\.[agj]sp\\'" . web-mode)
@@ -17,7 +17,7 @@
 ;; ==================web-mode==================
 ;;; html-mode
 ;; =================html-mode==================
-(def-package! sgml-mode
+(use-package sgml-mode
   :commands swint-run-skewer
   :init
   (add-hook 'web-mode-hook (lambda ()
@@ -40,7 +40,7 @@
 ;; =================html-mode==================
 ;;; js2-mode
 ;; =================js2-mode===================
-(def-package! js2-mode
+(use-package js2-mode
   :mode ("\\.js\\'" . js2-mode)
   :config
   (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
@@ -51,18 +51,18 @@
 ;; =================js2-mode===================
 ;;; skewer-mode
 ;; ================skewer-mode=================
-(def-package! skewer-mode
+(use-package skewer-mode
   :diminish skewer-mode
   :commands skewer-mode
   :init
   (add-hook 'js2-mode-hook 'skewer-mode))
-(def-package! skewer-html
+(use-package skewer-html
   :diminish skewer-html-mode
   :commands skewer-html-mode
   :init
   (add-hook 'html-mode-hook 'skewer-html-mode)
   (add-hook 'web-mode-hook 'skewer-html-mode))
-(def-package! skewer-css
+(use-package skewer-css
   :diminish skewer-css-mode
   :commands skewer-css-mode
   :init
@@ -70,7 +70,7 @@
 ;; ================skewer-mode=================
 ;;; emmet-mode
 ;; ================emmet-mode==================
-(def-package! emmet-mode
+(use-package emmet-mode
   :diminish emmet-mode
   :commands emmet-mode
   :init
@@ -86,7 +86,7 @@
 ;; ================emmet-mode==================
 ;;; restclient
 ;; ================restclient==================
-(def-package! restclient
+(use-package restclient
   ;; C-c C-c 发送请求，C-c C-u 复制curl命令
   :mode (("\\.http\\'" . restclient-mode)))
 ;; ================restclient==================

@@ -1,6 +1,6 @@
 ;;; shell
 ;; =====================shell======================
-(def-package! shell
+(use-package shell
   :bind (("M-o s" . shell)
          ("M-o S" . term))
   ;; :init
@@ -23,7 +23,7 @@
 ;; =====================shell======================
 ;;; eshell
 ;; =====================eshell=====================
-(def-package! eshell
+(use-package eshell
   :bind ("M-o M-s" . eshell)
   :config
   (add-hook 'eshell-mode-hook #'(lambda()
@@ -36,7 +36,7 @@
 ;; =====================eshell=====================
 ;;; eshell-prompt-extras
 ;; ==============eshell-prompt-extras==============
-(def-package! eshell-prompt-extras
+(use-package eshell-prompt-extras
   :after eshell
   :config
   (with-eval-after-load "esh-opt"
