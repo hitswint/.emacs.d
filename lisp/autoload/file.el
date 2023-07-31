@@ -26,27 +26,6 @@
         (dired-async-shell-command output-file)
       (message "Warning: No export file."))))
 ;; =============swint-open-output-file=============
-;;; get-auth
-;; ====================get-auth====================
-;;;###autoload
-(defun get-auth-user (host)
-  (require 'netrc)
-  (let* ((netrc (netrc-parse (expand-file-name "~/.authinfo.gpg")))
-         (hostentry (netrc-machine netrc host)))
-    (when hostentry (netrc-get hostentry "login"))))
-;;;###autoload
-(defun get-auth-pass (host)
-  (require 'netrc)
-  (let* ((netrc (netrc-parse (expand-file-name "~/.authinfo.gpg")))
-         (hostentry (netrc-machine netrc host)))
-    (when hostentry (netrc-get hostentry "password"))))
-;;;###autoload
-(defun get-auth-port (host)
-  (require 'netrc)
-  (let* ((netrc (netrc-parse (expand-file-name "~/.authinfo.gpg")))
-         (hostentry (netrc-machine netrc host)))
-    (when hostentry (netrc-get hostentry "port"))))
-;; ====================get-auth====================
 ;;; 截图
 ;; ===================截图====================
 ;; Screenshot-local截图到./pic文件夹中，screenshot截图到~/org/pic文件夹中

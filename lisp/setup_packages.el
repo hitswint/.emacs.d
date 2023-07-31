@@ -929,4 +929,23 @@
 (use-package vundo
   :bind ("C-x u" . vundo))
 ;; ===================vundo========================
+;;; auth-source
+;; =================auth-source====================
+(use-package auth-source
+  :commands (get-auth-user get-auth-port get-auth-pass)
+  :config
+  (setq auth-sources '("~/.authinfo" "~/.authinfo.gpg" "~/.netrc"))
+  (defun get-auth-user (host)
+    (let ((hostentry (auth-source-search :host host)))
+      (when hostentry
+        (plist-get (car hostentry) :user))))
+  (defun get-auth-port (host)
+    (let ((hostentry (auth-source-search :host host)))
+      (when hostentry
+        (plist-get (car hostentry) :port))))
+  (defun get-auth-pass (host)
+    (let ((hostentry (auth-source-search :host host)))
+      (when hostentry
+        (funcall (plist-get (car hostentry) :secret))))))
+;; =================auth-source====================
 (provide 'setup_packages)
