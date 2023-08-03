@@ -10,14 +10,24 @@
   (column-number-mode t)
   (setq-default mode-line-format
                 ;; 去除vc-mode显示，mode-line-modes显示major/minor-mode
-                (delete '(vc-mode) mode-line-format))
+                (delete '(vc-mode vc-mode) mode-line-format))
   (setq sml/col-number-format "%3c"
         sml/directory-truncation-string ""
         sml/line-number-format "%4l"
+        ;; 升级29之后buffer名字前有额外空格
+        ;; 设置mode-line-buffer-identification为默认值"%b"时无空格，而其他值都有空格
+        ;; 采用compact模式，使用单个空格代替连续空格
+        mode-line-compact 'long
         sml/mode-width 'full
         sml/name-width 64
+        sml/shorten-directory t
+        sml/use-projectile-p nil
         sml/new-mail-background-color "black"
-        sml/position-percentage-format ""
+        sml/position-percentage-format nil
+        mode-line-percent-position nil
+        sml/show-frame-identification nil
+        sml/show-remote t
+        sml/extra-filler -4
         sml/shorten-modes nil
         sml/shorten-mode-string "")
   (custom-set-faces '(sml/col-number ((t (:foreground "lawn green"))))

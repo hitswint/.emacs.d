@@ -10,6 +10,7 @@
   :commands (persp-push-current-buffer
              persp-push-current-buffer-to-last
              swint-persp-switch
+             persp-switch-last
              swint-load-perspectives)
   :init
   (bind-key "C-8" #'(lambda () (interactive) (swint-persp-switch "8")))
@@ -25,13 +26,14 @@
   (bind-key "C-~" 'persp-push-current-buffer-to-last)
   (defmacro with-persp-mode-on (&rest body)
     "Switch to the perspective given by NAME while evaluating BODY."
-    `(progn (unless (and persp-mode (frame-parameter nil 'swint-persp-loadp))
+    `(progn (unless (and (bound-and-true-p persp-mode) (frame-parameter nil 'swint-persp-loadp))
               (swint-load-perspectives))
             ,@body))
   (defvar swint-persp-loadp nil)
   :config
   (setq persp-initial-frame-name "i"
         persp-modestring-dividers '("" "" "")
+        persp-show-modestring t
         swint-perspectives-saved-file "~/.emacs.d/saved-perspectives.el")
   (set-face-attribute 'persp-selected-face nil :foreground "green" :weight 'bold)
   (defun persp-format-name (name)
