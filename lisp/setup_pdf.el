@@ -63,8 +63,8 @@
                          (directory-files-recursively default-directory "\\.pdf$")
                        (directory-files default-directory t "\\.pdf$"))))
       (cl-flet ((escape-local (x)
-                              (replace-regexp-in-string string-to-escape
-                                                        "\\\\\\1" x)))
+                  (replace-regexp-in-string string-to-escape
+                                            "\\\\\\1" x)))
         (if (or arg (>= (length pdf-files) 5))
             (rg-run string-to-grep "pdf" default-directory t nil (mapcar #'escape-local pdf-files))
           (pdfgrep (concat (pdfgrep-default-command) (escape-local string-to-grep) " *.pdf"))))))
@@ -79,8 +79,8 @@
                                                "\n" t)))
            (string-to-grep (read-string "Opened pdfgrep: ")))
       (cl-flet ((escape-local (x)
-                              (replace-regexp-in-string string-to-escape
-                                                        "\\\\\\1" x)))
+                  (replace-regexp-in-string string-to-escape
+                                            "\\\\\\1" x)))
         (if (<= (length qpdfview-file-list) 5)
             (pdfgrep (concat (pdfgrep-default-command) (escape-local string-to-grep)
                              (cl-loop for x in qpdfview-file-list
@@ -94,8 +94,8 @@
   (defun pdfgrep-zotero ()
     (interactive)
     (cl-flet ((escape-local (x)
-                            (replace-regexp-in-string string-to-escape
-                                                      "\\\\\\1" x)))
+                (replace-regexp-in-string string-to-escape
+                                          "\\\\\\1" x)))
       (let* ((string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\|'\\|&\\)")
              (zotero-database (expand-file-name "~/Zotero/zotero.sqlite"))
              (zotero-storage "~/Zotero/storage")

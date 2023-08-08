@@ -168,7 +168,19 @@
   (add-hook 'ebib-entry-mode-hook #'(lambda ()
                                       ;; (setq word-wrap t) ;中文支持不好
                                       (setq truncate-lines t)))
+  (defcustom ebib-file-symbol "F"
+    "Symbol used to indicate the presence of a file for the current entry."
+    :group 'ebib
+    :type '(string :tag "File symbol"))
+  (defun ebib-display-file-symbol (field key db)
+    (if (ebib-get-field-value field key db 'noerror 'unbraced 'xref)
+        (propertize ebib-file-symbol
+                    'face '(:height 0.8 :inherit ebib-link-face))
+      (propertize (make-string (string-width ebib-file-symbol) ?\s)
+                  'face '(:height 0.8))))
+  (add-to-list 'ebib-field-transformation-functions '("file" . ebib-display-file-symbol))
   (setq ebib-index-columns '(("Note" 1 t)
+                             ("file" 1 t)
                              ("collection" 20 t)
                              ("Author/Editor" 20 t)
                              ("Year" 4 t)

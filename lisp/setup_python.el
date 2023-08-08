@@ -82,6 +82,7 @@ for k,v in names['dict_'+re.sub('\\W','_','%s')].items():
         # df.columns = range(len(df.columns))
 " file-base-name (expand-file-name file-name) file-base-name file-base-name)))
              ;; 导入sqlite文件
+             ;; sql-sqlite(进入命令行) / sqlite-mode-open-file(展示表格)
              ((member (ignore-errors (downcase (file-name-extension file-name))) '("db" "sdb" "sqlite" "db3" "s3db" "sqlite3" "sl3" "db2" "s2db" "sqlite2" "sl2"))
               (let ((table (helm-comp-read "Table to select: "
                                            (split-string (shell-command-to-string (format "sqlite3 \"%s\" \".table\"" (expand-file-name file-name)))
@@ -179,22 +180,22 @@ names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', 
                                   "get_ipython().run_line_magic(\"who\", \"\")")
                                  "[ \t]+" t "[ \t\n]+")))
       (cl-flet ((df-read (&optional is-x-p)
-                         (let ((df-list (helm-comp-read (if is-x-p "x: " "y: ") (if is-x-p (cons "None" df-list) df-list)
-                                                        :marked-candidates t
-                                                        :buffer "*helm python plot data-swint*")))
-                           (if is-x-p
-                               (car df-list)
-                             df-list)))
+                  (let ((df-list (helm-comp-read (if is-x-p "x: " "y: ") (if is-x-p (cons "None" df-list) df-list)
+                                                 :marked-candidates t
+                                                 :buffer "*helm python plot data-swint*")))
+                    (if is-x-p
+                        (car df-list)
+                      df-list)))
                 (columns-read (df &optional is-x-p)
-                              (let ((column-list (helm-comp-read (if is-x-p "Column as x: " "Columns to plot: ")
-                                                                 (cons (if is-x-p "None" "")
-                                                                       (split-string (python-shell-send-string-no-output (format "\",\".join(%s.columns)" df))
-                                                                                     "," t "[ \t\n']+"))
-                                                                 :marked-candidates t
-                                                                 :buffer "*helm python plot data-swint*")))
-                                (if is-x-p
-                                    (car column-list)
-                                  column-list))))
+                  (let ((column-list (helm-comp-read (if is-x-p "Column as x: " "Columns to plot: ")
+                                                     (cons (if is-x-p "None" "")
+                                                           (split-string (python-shell-send-string-no-output (format "\",\".join(%s.columns)" df))
+                                                                         "," t "[ \t\n']+"))
+                                                     :marked-candidates t
+                                                     :buffer "*helm python plot data-swint*")))
+                    (if is-x-p
+                        (car column-list)
+                      column-list))))
         (let* ((enable-recursive-minibuffers t)
                (df-y (df-read))
                (columns (columns-read (car df-y)))
@@ -259,16 +260,16 @@ plot_data.fig_config(%s)" swint-python-plot-exec-path args-string))))
     (interactive)
     (let (data-string files-list files-string columns-string file-x-string column-x-string style-string shell-command-args send-string-args)
       (cl-flet ((plot-file-setup (data-file &optional is-x-p)
-                                 (let* ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' '%s' | awk 'NR==1{print}'" data-file)))
-                                        (header-line-list (if (equal (ignore-errors (downcase (file-name-extension data-file))) "csv")
-                                                              (split-string header-line-string "," t "[ \t\n]+")
-                                                            (if (string-match "\"" header-line-string) ;非csv文件的首行用("x" "y" "z")
-                                                                (split-string header-line-string "\"" t "[ \t\n]+")
-                                                              (mapcar 'number-to-string (number-sequence 0 (1- (length (split-string header-line-string "[ \t]+" t "[ \t\n]+"))))))))
-                                        (columns-list (helm-comp-read (if is-x-p "Column as x: " "Columns to plot: ") (cons (if is-x-p "None" "") header-line-list)
-                                                                      :marked-candidates t
-                                                                      :buffer "*helm python plot data-swint*")))
-                                   (mapconcat 'identity columns-list ","))))
+                  (let* ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' '%s' | awk 'NR==1{print}'" data-file)))
+                         (header-line-list (if (equal (ignore-errors (downcase (file-name-extension data-file))) "csv")
+                                               (split-string header-line-string "," t "[ \t\n]+")
+                                             (if (string-match "\"" header-line-string) ;非csv文件的首行用("x" "y" "z")
+                                                 (split-string header-line-string "\"" t "[ \t\n]+")
+                                               (mapcar 'number-to-string (number-sequence 0 (1- (length (split-string header-line-string "[ \t]+" t "[ \t\n]+"))))))))
+                         (columns-list (helm-comp-read (if is-x-p "Column as x: " "Columns to plot: ") (cons (if is-x-p "None" "") header-line-list)
+                                                       :marked-candidates t
+                                                       :buffer "*helm python plot data-swint*")))
+                    (mapconcat 'identity columns-list ","))))
         (setq style-string (helm-comp-read "Style: " (list "plot" "stackplot" "step" "scatter" "bar" "barh" "stackbar" "stackbarh" "pie" "polar" "boxplot" "boxploth" "contourf")
                                            :buffer "*helm python plot data-swint*"))
         (if (memq major-mode '(inferior-python-mode jupyter-repl-mode))

@@ -119,15 +119,15 @@ When INITIAL-INPUT is non-nil, use it in the minibuffer during completion."
               :matcher #'counsel--find-file-matcher
               :initial-input initial-input
               :action #'(lambda (x) (with-ivy-window
-                                      (if (and counsel-find-file-speedup-remote
-                                               (file-remote-p ivy--directory))
-                                          (let ((find-file-hook nil))
-                                            (setf (symbol-value files)
-                                                  (append (symbol-value files)
-                                                          (last (split-string (expand-file-name x ivy--directory) ":")))))
-                                        (setf (symbol-value files)
-                                              (append (symbol-value files)
-                                                      (last (split-string (expand-file-name x ivy--directory) ":")))))))
+                                     (if (and counsel-find-file-speedup-remote
+                                              (file-remote-p ivy--directory))
+                                         (let ((find-file-hook nil))
+                                           (setf (symbol-value files)
+                                                 (append (symbol-value files)
+                                                         (last (split-string (expand-file-name x ivy--directory) ":")))))
+                                       (setf (symbol-value files)
+                                             (append (symbol-value files)
+                                                     (last (split-string (expand-file-name x ivy--directory) ":")))))))
               :preselect (counsel--preselect-file)
               :require-match 'confirm-after-completion
               :history 'file-name-history
