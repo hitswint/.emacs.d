@@ -772,7 +772,8 @@
 (use-package org-appear
   :hook (org-mode . org-appear-mode)
   :config
-  (setq org-appear-delay 1)
+  (setq org-appear-trigger 'on-change)
+  (setq org-appear-delay 1.0)
   (setq org-appear-autoemphasis t)
   (setq org-appear-autolinks t)
   (setq org-appear-autosubmarkers t)

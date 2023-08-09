@@ -82,8 +82,6 @@
 (global-set-key (kbd "M-c") 'toggle-letter-case)
 (global-set-key (kbd "M-Q") 'compact-uncompact-block)
 (global-set-key (kbd "C-w") 'kill-line-or-region)
-(global-set-key [(meta n)] 'window-move-up)
-(global-set-key [(meta p)] 'window-move-down)
 (global-set-key (kbd "C-x C-i") 'cleanup-buffer)
 (global-set-key (kbd "M-g g") 'display-line-numbers-mode)
 (global-set-key [remap goto-line] 'goto-line-with-feedback)

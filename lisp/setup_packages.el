@@ -948,4 +948,27 @@
       (when hostentry
         (funcall (plist-get (car hostentry) :secret))))))
 ;; =================auth-source====================
+;;; pixel-scroll
+;; ================pixel-scroll====================
+(use-package pixel-scroll
+  :config
+  (pixel-scroll-precision-mode 1)
+  (setq pixel-scroll-precision-interpolate-page t)
+  (defun +pixel-scroll-interpolate-down (&optional lines)
+    (interactive)
+    (if lines
+        (pixel-scroll-precision-interpolate (* -1 lines (pixel-line-height)))
+      (pixel-scroll-interpolate-down)))
+  (defun +pixel-scroll-interpolate-up (&optional lines)
+    (interactive)
+    (if lines
+        (pixel-scroll-precision-interpolate (* lines (pixel-line-height))))
+    (pixel-scroll-interpolate-up))
+  (defalias 'scroll-up-command '+pixel-scroll-interpolate-down)
+  (defalias 'scroll-down-command '+pixel-scroll-interpolate-up)
+  ;; (bind-key "M-n" 'window-move-up)
+  ;; (bind-key "M-p" 'window-move-down)
+  (bind-key "M-n" #'(lambda () (interactive) (pixel-scroll-precision-scroll-down 30)))
+  (bind-key "M-p" #'(lambda () (interactive) (pixel-scroll-precision-scroll-up 30))))
+;; ================pixel-scroll====================
 (provide 'setup_packages)

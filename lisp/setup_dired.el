@@ -17,6 +17,7 @@
                     '(diredp-ignored-file-name ((t (:foreground "#aaaaaa"))) t))
 ;;;; setup-and-keybindings
   ;; ==========setup-and-keybindings===========
+  (setq dired-mouse-drag-files t)
   (setq dired-auto-revert-buffer t) ;使用dired/dired-other-window/dired-other-frame时更新，与auto-revert-mode不同
   (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才启用auto-revert-mode更新
                                                 (when (get-buffer-window (current-buffer)) (apply fn args))))
