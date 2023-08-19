@@ -259,7 +259,9 @@ Missing packages are installed automatically."
       ("c" . capitalize-word)
       ("q" . fill-paragraph)
       ("h" . mark-paragraph)
-      ("k" . kill-sentence))))
+      ("k" . kill-sentence)))
+  (smartrep-define-key global-map "C-x"
+    '(("d" . duplicate-dwim))))
 ;; ===================smartrep======================
 ;; =====================misc========================
 (require 'subr-x)

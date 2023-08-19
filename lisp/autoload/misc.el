@@ -63,14 +63,21 @@
 (defun swint-get-words-at-point ()
   "Get words at point, use pyim-get-words-list-at-point to deal with chinese."
   (interactive)
-  (if mark-active
-      (buffer-substring-no-properties (region-beginning) (region-end))
-    (let ((words-at-point (if (equal (point) (point-at-eol))
-                              (pyim-cstring-words-at-point)
-                            (pyim-cstring-words-at-point t))))
-      (if (<= (length words-at-point) 1)
-          (read-string "Get Words: " (car (car words-at-point)))
-        (ivy-read "Get Words:" (cl-remove-duplicates (mapcar 'car words-at-point)))))))
+  (if (pdf-view-active-region-p)
+      (let ((words-at-point (replace-regexp-in-string
+                             "\n" " " (mapconcat 'identity (pdf-view-active-region-text) " "))))
+        (pdf-view-deactivate-region)
+        words-at-point)
+    (if mark-active
+        (let ((words-at-point (buffer-substring-no-properties (region-beginning) (region-end))))
+          (deactivate-mark)
+          words-at-point)
+      (let ((words-at-point (if (equal (point) (point-at-eol))
+                                (pyim-cstring-words-at-point)
+                              (pyim-cstring-words-at-point t))))
+        (if (<= (length words-at-point) 1)
+            (read-string "Get Words: " (car (car words-at-point)))
+          (ivy-read "Get Words:" (cl-remove-duplicates (mapcar 'car words-at-point))))))))
 ;; ===============get-words-at-point===============
 ;;; show-some-last-messages
 ;; ============show-some-last-messages=============

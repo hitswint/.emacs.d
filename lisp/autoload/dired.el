@@ -156,8 +156,7 @@
    (concat "wine "
            "~/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T z:"
            (replace-regexp-in-string " " "\\\\ " (expand-file-name default-directory))))
-  (let ((default-directory
-          "~/.wine/drive_c/Program Files/viatc/"))
+  (let ((default-directory "~/.wine/drive_c/Program Files/viatc/"))
     (start-process-shell-command
      "viatc" "*viatc*"
      "wine viatc.exe")))
@@ -166,8 +165,8 @@
   (interactive)
   (let ((string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)"))
     (cl-flet ((escape-local (x)
-                            (replace-regexp-in-string string-to-escape
-                                                      "\\\\\\1" x)))
+                (replace-regexp-in-string string-to-escape
+                                          "\\\\\\1" x)))
       (start-process-shell-command
        "tc" "*tc*"
        (concat "wine "
@@ -205,8 +204,9 @@
 ;;;###autoload
 (defun urxvt-default-directory (&optional arg)
   (interactive "P")
-  (let* ((curr-dired (dired-get-filename nil t))
-         (curr-dir (if curr-dired (file-name-directory curr-dired) default-directory)))
+  (let ((curr-dir (if-let ((curr-line (dired-get-filename nil t)))
+                      (file-name-directory curr-line)
+                    default-directory)))
     (start-process "Urxvt" nil shell-file-name shell-command-switch
                    (concat "$(tabbed -c -d > /tmp/tabbed.xid);urxvt -pe default,-tabbed -embed $(</tmp/tabbed.xid) -cd "
                            "\"" (expand-file-name curr-dir) "\""
@@ -234,8 +234,8 @@
                                 :buffer "*helm dired converter-swint*"))
         (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)"))
     (cl-flet ((escape-local (x)
-                            (replace-regexp-in-string string-to-escape
-                                                      "\\\\\\1" x)))
+                (replace-regexp-in-string string-to-escape
+                                          "\\\\\\1" x)))
       (cond ((string= engine "pandoc")
              (let ((output-format (read-string "Output format: ")))
                (cl-loop for x in file-list
@@ -339,7 +339,7 @@
 (defun txm-format-file-size (size)
   "Return string with formatted file size."
   (cl-flet ((float-to-string (x)
-                             (format "%.2f" x)))
+              (format "%.2f" x)))
     (cond ((< size +kilobyte+)
            (concat (number-to-string size) " bytes"))
           ((< size +megabyte+)
@@ -396,11 +396,11 @@ Assuming .. and . is a current directory (like in FAR)"
         rsync/unison-command)
     ;; 对于rsync，escape本地路径用\，远程路径用\\\
     (cl-flet ((escape-local (x)
-                            (replace-regexp-in-string string-to-escape
-                                                      "\\\\\\1" x))
+                (replace-regexp-in-string string-to-escape
+                                          "\\\\\\1" x))
               (escape-remote (x)
-                             (replace-regexp-in-string string-to-escape
-                                                       "\\\\\\\\\\\\\\1" x)))
+                (replace-regexp-in-string string-to-escape
+                                          "\\\\\\\\\\\\\\1" x)))
       (if is-sync
           (let ((unison-path (escape-local (file-truename path))))
             (setq rsync/unison-command (concat "unison -batch -confirmbigdel=false " unison-path

@@ -489,7 +489,7 @@
       ;; xclip复制大图片时卡住
       ;; (shell-command (format "xclip -i -selection clipboard -t \"$(file -b --mime-type %s)\" %s" filename filename))
       (when (file-exists-p filename)
-        (shell-command (format "copyq copy \"$(file -b --mime-type %s)\" - < \"%s\"" filename filename)))))
+        (shell-command (format "copyq copy \"$(file -b --mime-type \"%s\")\" - < \"%s\"" filename filename)))))
   (defun swint-dired-clipboard-paste (&optional filetopaste) ;只可粘贴图片
     (interactive)
     (let ((filename (or filetopaste

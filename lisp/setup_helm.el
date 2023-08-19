@@ -585,6 +585,8 @@
   :bind (("M-s M-s" . helm-swoop)
          ("M-s M-S" . helm-multi-swoop-all))
   :config
+  (setq helm-swoop-split-direction 'split-window-vertically
+        helm-swoop-split-with-multiple-windows t)
   ;; helm-swoop 中使用C-c C-e编辑，C-x C-s保存
   (define-key isearch-mode-map (kbd "M-s M-s") 'helm-swoop-from-isearch)
   (define-key helm-swoop-map (kbd "M-S") 'helm-multi-swoop-all-from-helm-swoop))

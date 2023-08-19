@@ -57,11 +57,26 @@
              youdao-dictionary--request
              youdao-dictionary-to-tip)
   :config
+  (defvar youdao-dictionary-config "~/.ydcv")
+  (setq youdao-dictionary-secret-key (dict-load-config youdao-dictionary-config "YDAPPSEC"))
+  (setq youdao-dictionary-app-key (dict-load-config youdao-dictionary-config "YDAPPID"))
   (defun youdao-dictionary-to-tip (&optional _word)
     (interactive)
-    (let ((word (or _word (swint-get-words-at-point))))
-      (youdao-dictionary--posframe-tip (youdao-dictionary--format-result
-                                        (youdao-dictionary--request word))))))
+    (let* ((word (or _word (swint-get-words-at-point)))
+           (ydcv-result (youdao-dictionary--format-result
+                         (youdao-dictionary--request word))))
+      (with-current-buffer (get-buffer-create "*ydcv*")
+        (let ((inhibit-read-only t))
+          (buffer-disable-undo)
+          (erase-buffer)
+          (sdcv-mode)
+          (insert ydcv-result)))
+      (posframe-show "*ydcv*"
+                     :left-fringe 8
+                     :right-fringe 8
+                     :internal-border-color (face-foreground 'default)
+                     :internal-border-width 1)
+      (posframe-scroll-or-switch "*ydcv*"))))
 ;; ===============youdao-dictionary==============
 ;;; baidu-translate
 ;; ================baidu-translate===============
@@ -69,8 +84,9 @@
   :commands baidu-translate-at-point
   :config
   (use-package unicode-escape :after baidu-translate)
-  (setq baidu-translate-appid "20200329000407785")
-  (setq baidu-translate-security "oPVKtlEmfo4Q9KYHpjfy")
+  (defvar baidu-translate-config "~/.bdcv")
+  (setq baidu-translate-security (dict-load-config baidu-translate-config "BDAPPSEC"))
+  (setq baidu-translate-appid (dict-load-config baidu-translate-config "BDAPPID"))
   (defun baidu-translate-at-point (&optional _word)
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
@@ -83,6 +99,7 @@
 (use-package lingva
   :commands lingva-translate-at-point
   :config
+  (setq lingva-instance "https://translate.dr460nf1r3.org/")
   (defun lingva-translate-at-point (&optional _word)
     (interactive)
     (let* ((word (or _word (swint-get-words-at-point)))

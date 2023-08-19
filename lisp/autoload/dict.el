@@ -7,7 +7,8 @@
     (fcitx--sdcv-maybe-deactivate))
   (local-set-key (kbd "q") #'(lambda () (interactive)
                                (swint-kill-buffer)
-                               (jump-to-register :sdcv)
+                               (when (get-register :sdcv)
+                                 (jump-to-register :sdcv))
                                (when swint-fcitx-setup-done
                                  (fcitx--sdcv-maybe-activate)))))
 (defvar sdcv-dictionary-list '("懒虫简明英汉词典"
@@ -30,8 +31,7 @@
   (goto-char (point-min))
   (while (re-search-forward "Found\\ .*\\ items,\\ similar\\ to\\ \\(.*\\)\\.\n-->\\(.*\\)\n-->\\(.*\\)" nil t)
     ;; (replace-match "*** \\2-(\\1) \n**** \\3")
-    (replace-match "*** \\2-(\\1)")
-    )
+    (replace-match "*** \\2-(\\1)"))
   ;; sdcv使用-e选项，只有精确匹配，删除标题行
   ;; (goto-char (point-min))
   ;; (while (re-search-forward "-->\\(.*\\)\n-->\\(.*\\)" nil t)
@@ -206,4 +206,10 @@ FORCE-OTHER-WINDOW is ignored."
     (cl-loop for b in '("*baidu-translate*" "*lingva*")
              do (when (get-buffer b)
                   (kill-buffer b)))))
+;;;###autoload
+(defun dict-load-config (file key)
+  (with-temp-buffer
+    (insert-file-contents (expand-file-name file))
+    (when (string-match (concat key "=\\(.*\\)") (buffer-string))
+      (match-string 1 (buffer-string)))))
 ;; =================online===================
