@@ -71,12 +71,18 @@
           (erase-buffer)
           (sdcv-mode)
           (insert ydcv-result)))
-      (posframe-show "*ydcv*"
-                     :left-fringe 8
-                     :right-fringe 8
-                     :internal-border-color (face-foreground 'default)
-                     :internal-border-width 1)
-      (posframe-scroll-or-switch "*ydcv*"))))
+      (if (posframe-workable-p)
+          (progn (posframe-show "*ydcv*"
+                                :left-fringe 8
+                                :right-fringe 8
+                                :internal-border-color (face-foreground 'default)
+                                :internal-border-width 1)
+                 (posframe-scroll-or-switch "*ydcv*"))
+        (unless (member (buffer-name) '("*sdcv*" "*ydcv*" "*online*"))
+          (window-configuration-to-register :sdcv))
+        (delete-other-windows)
+        (switch-to-buffer "*ydcv*")
+        (set-buffer "*ydcv*")))))
 ;; ===============youdao-dictionary==============
 ;;; baidu-translate
 ;; ================baidu-translate===============
