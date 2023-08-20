@@ -65,24 +65,7 @@
     (let* ((word (or _word (swint-get-words-at-point)))
            (ydcv-result (youdao-dictionary--format-result
                          (youdao-dictionary--request word))))
-      (with-current-buffer (get-buffer-create "*ydcv*")
-        (let ((inhibit-read-only t))
-          (buffer-disable-undo)
-          (erase-buffer)
-          (sdcv-mode)
-          (insert ydcv-result)))
-      (if (posframe-workable-p)
-          (progn (posframe-show "*ydcv*"
-                                :left-fringe 8
-                                :right-fringe 8
-                                :internal-border-color (face-foreground 'default)
-                                :internal-border-width 1)
-                 (posframe-scroll-or-switch "*ydcv*"))
-        (unless (member (buffer-name) '("*sdcv*" "*ydcv*" "*online*"))
-          (window-configuration-to-register :sdcv))
-        (delete-other-windows)
-        (switch-to-buffer "*ydcv*")
-        (set-buffer "*ydcv*")))))
+      (swint-display-dict "*ydcv*" ydcv-result))))
 ;; ===============youdao-dictionary==============
 ;;; baidu-translate
 ;; ================baidu-translate===============

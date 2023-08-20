@@ -73,7 +73,9 @@ FORCE-OTHER-WINDOW is ignored."
           (set-window-buffer new-win buffer)
           new-win))))
 (add-to-list 'display-buffer-alist '("\\`\\*sdcv\\*\\'" display-new-buffer))
-(add-to-list 'display-buffer-alist '("\\`\\*bing-google\\*\\'" display-new-buffer))
+(add-to-list 'display-buffer-alist '("\\`\\*ydcv\\*\\'" display-new-buffer))
+;; 需设置为t，switch-to-buffer才会遵从display-buffer-alist设定
+(setq switch-to-buffer-obey-display-actions nil)
 ;; ============优先纵向分割窗口==============
 (defun posframe-scroll-or-switch (buffer)
   (let (switch-to-posframe-buffer)
@@ -90,15 +92,39 @@ FORCE-OTHER-WINDOW is ignored."
                                               (setq curr-event (read-event)))))
           (unless switch-to-posframe-buffer
             (push curr-event unread-command-events)))
-      (progn
-        (if switch-to-posframe-buffer
-            (progn (posframe-delete-frame buffer)
-                   (other-frame 0)
-                   (switch-to-buffer buffer)
-                   (setq-local cursor-type t)
-                   (setq-local cursor-in-non-selected-windows t))
-          (posframe-delete buffer)
-          (other-frame 0))))))
+      (if switch-to-posframe-buffer
+          (progn (posframe-delete-frame buffer)
+                 (other-frame 0)
+                 (unless (member (buffer-name) '("*sdcv*" "*ydcv*" "*online*"))
+                   (window-configuration-to-register :sdcv))
+                 (delete-other-windows)
+                 (switch-to-buffer buffer)
+                 (set-buffer buffer)
+                 (setq-local cursor-type t)
+                 (setq-local cursor-in-non-selected-windows t))
+        (posframe-delete buffer)
+        (other-frame 0)))))
+;;;###autoload
+(defun swint-display-dict (buffer result &optional cleaner to-buffer)
+  (with-current-buffer (get-buffer-create buffer)
+    (let ((inhibit-read-only t))
+      (buffer-disable-undo)
+      (erase-buffer)
+      (sdcv-mode)
+      (insert result)
+      (when cleaner (funcall cleaner))))
+  (if (and (posframe-workable-p) (not to-buffer))
+      (progn (posframe-show buffer
+                            :left-fringe 8
+                            :right-fringe 8
+                            :internal-border-color (face-foreground 'default)
+                            :internal-border-width 1)
+             (posframe-scroll-or-switch buffer))
+    (unless (member (buffer-name) '("*sdcv*" "*ydcv*" "*online*"))
+      (window-configuration-to-register :sdcv))
+    (delete-other-windows)
+    (switch-to-buffer buffer)
+    (set-buffer buffer)))
 ;;;###autoload
 (defun swint-sdcv-to-tip (&optional _word)
   "Search WORD simple translate result."
@@ -107,31 +133,13 @@ FORCE-OTHER-WINDOW is ignored."
          (sdcv-result (sdcv-search-with-dictionary word sdcv-dictionary-list t)))
     (if (string-match-p  "\\`[ \t\n\r]*\\'" sdcv-result)
         (message "Nothing")
-      (with-current-buffer (get-buffer-create "*sdcv*")
-        (let ((inhibit-read-only t))
-          (buffer-disable-undo)
-          (erase-buffer)
-          (sdcv-mode)
-          (insert sdcv-result)
-          (sdcv-output-cleaner)))
-      (if (posframe-workable-p)
-          ;; (pos-tip-show
-          ;;  (replace-regexp-in-string "-->\\(.*\\)\n-->\\(.*\\)\n" "\\1：\\2"
-          ;;                            (replace-regexp-in-string
-          ;;                             "\\(^Found\\ [[:digit:]]+\\ items,\\ similar\\ to \\(.*\\)\\.\n\\)" ""
-          ;;                             (sdcv-search-with-dictionary word sdcv-dictionary-list)))
-          ;;  nil nil nil 0)
-          (progn (posframe-show "*sdcv*"
-                                :left-fringe 8
-                                :right-fringe 8
-                                :internal-border-color (face-foreground 'default)
-                                :internal-border-width 1)
-                 (posframe-scroll-or-switch "*sdcv*"))
-        (unless (member (buffer-name) '("*sdcv*" "*ydcv*" "*online*"))
-          (window-configuration-to-register :sdcv))
-        (delete-other-windows)
-        (switch-to-buffer "*sdcv*")
-        (set-buffer "*sdcv*")))))
+      ;; (pos-tip-show
+      ;;  (replace-regexp-in-string "-->\\(.*\\)\n-->\\(.*\\)\n" "\\1：\\2"
+      ;;                            (replace-regexp-in-string
+      ;;                             "\\(^Found\\ [[:digit:]]+\\ items,\\ similar\\ to \\(.*\\)\\.\n\\)" ""
+      ;;                             (sdcv-search-with-dictionary word sdcv-dictionary-list)))
+      ;;  nil nil nil 0)
+      (swint-display-dict "*sdcv*" sdcv-result 'sdcv-output-cleaner))))
 ;;;###autoload
 (defun swint-sdcv-to-buffer (&optional _word)
   (interactive)
@@ -139,16 +147,7 @@ FORCE-OTHER-WINDOW is ignored."
          (sdcv-result (sdcv-search-with-dictionary word sdcv-dictionary-list t)))
     (if (string-match-p  "\\`[ \t\n\r]*\\'" sdcv-result)
         (message "Nothing")
-      (unless (member (buffer-name) '("*sdcv*" "*online*"))
-        (window-configuration-to-register :sdcv))
-      (delete-other-windows)
-      (switch-to-buffer "*sdcv*")
-      (set-buffer "*sdcv*")
-      (buffer-disable-undo)
-      (erase-buffer)
-      (sdcv-mode)
-      (insert sdcv-result)
-      (sdcv-output-cleaner))))
+      (swint-display-dict "*sdcv*" sdcv-result 'sdcv-output-cleaner t))))
 ;; ==================sdcv====================
 ;;; online
 ;; =================online===================
@@ -176,38 +175,29 @@ FORCE-OTHER-WINDOW is ignored."
 ;;;###autoload
 (defun swint-online-to-buffer (&optional _word)
   (interactive)
-  (unless (member (buffer-name) '("*sdcv*" "*online*"))
-    (window-configuration-to-register :sdcv))
-  (let ((word (or _word (swint-get-words-at-point)))
-        (dict-list (helm-comp-read "Select files with order: " '("Google" "Bing" "Youdao" "Baidu" "Lingva")
-                                   :marked-candidates t
-                                   :buffer (concat "*helm dired converter-swint*"))))
-    (delete-other-windows)
-    (switch-to-buffer "*online*")
-    (set-buffer "*online*")
-    (buffer-disable-undo)
-    (erase-buffer)
-    (sdcv-mode)
-    (cl-loop for dict in dict-list do
-             (let ((result (ignore-errors (save-excursion
-                                            (cond ((equal dict "Google")
-                                                   (google-translate-translate_chieng word 'kill-ring)
-                                                   (current-kill 0))
-                                                  ((equal dict "Bing")
-                                                   (bing-dict-brief word t))
-                                                  ((equal dict "Youdao")
-                                                   (youdao-dictionary--format-result (youdao-dictionary--request word)))
-                                                  ((equal dict "Baidu")
-                                                   (baidu-translate-at-point word)
-                                                   (buffer-substring-no-properties (point-min) (point-max)))
-                                                  ((equal dict "Lingva")
-                                                   (lingva-translate-at-point word)
-                                                   (while (not (get-buffer "*lingva*"))
-                                                     (sit-for 1))
-                                                   (current-kill 0)))))))
-               (insert (format "\n\n*** %s\n" dict))
-               (insert (or result "Nothing"))))
-    (online-output-cleaner)
+  (let* ((word (or _word (swint-get-words-at-point)))
+         (dict-list (helm-comp-read "Select files with order: " '("Google" "Bing" "Youdao" "Baidu" "Lingva")
+                                    :marked-candidates t
+                                    :buffer (concat "*helm dired converter-swint*")))
+         (online-result (cl-loop for dict in dict-list
+                                 concat (let ((result (ignore-errors (save-excursion
+                                                                       (cond ((equal dict "Google")
+                                                                              (google-translate-translate_chieng word 'kill-ring)
+                                                                              (current-kill 0))
+                                                                             ((equal dict "Bing")
+                                                                              (bing-dict-brief word t))
+                                                                             ((equal dict "Youdao")
+                                                                              (youdao-dictionary--format-result (youdao-dictionary--request word)))
+                                                                             ((equal dict "Baidu")
+                                                                              (baidu-translate-at-point word)
+                                                                              (buffer-substring-no-properties (point-min) (point-max)))
+                                                                             ((equal dict "Lingva")
+                                                                              (lingva-translate-at-point word)
+                                                                              (while (not (get-buffer "*lingva*"))
+                                                                                (sit-for 1))
+                                                                              (current-kill 0)))))))
+                                          (format "\n\n*** %s\n%s" dict (or result "Nothing"))))))
+    (swint-display-dict "*online*" online-result 'online-output-cleaner t)
     (cl-loop for b in '("*baidu-translate*" "*lingva*")
              do (when (get-buffer b)
                   (kill-buffer b)))))
