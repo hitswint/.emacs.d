@@ -240,6 +240,7 @@
   :load-path "repos/company-english-helper/"
   :bind ("M-U" . swint-company-english-helper-search)
   :config
+  (setq company-english-helper-fuzz-search-p nil)
   (defun swint-company-english-helper-search (&optional arg)
     (interactive)
     (cond

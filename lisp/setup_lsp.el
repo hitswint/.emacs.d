@@ -16,12 +16,11 @@
   (yas-global-mode 1)
   (setq lsp-bridge-c-lsp-server "clangd")
   (setq lsp-bridge-python-lsp-server "pyright")
-  (setq lsp-bridge-python-multi-lsp-server "pyright_ruff")
+  (setq lsp-bridge-python-multi-lsp-server "pyright-background-analysis_ruff")
   (setq lsp-bridge-complete-manually nil) ;lsp-bridge-popup-complete-menu
   (setq acm-enable-quick-access nil)
   (setq acm-quick-access-use-number-select nil)
-  (setq acm-quick-access-modifier 'control) ;acm-complete-quick-access
-  (acm-keymap--bind-quick-access acm-mode-map)
+  (setq acm-quick-access-modifier 'control)
   (defun swint-toggle-lsp-bridge ()
     (interactive)
     (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")

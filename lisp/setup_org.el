@@ -126,6 +126,7 @@
                                                            (insert (swint-cursor-localtion))))
                 (define-key org-mode-map (kbd "C-c w") 'org-clipboard-copy)
                 (define-key org-mode-map (kbd "C-c y") 'org-clipboard-paste)
+                (define-key org-mode-map (kbd "C-c C-x C-\\") 'org-toggle-link-display)
                 (define-key org-mode-map (kbd "C-j") nil)
                 (define-key org-mode-map (kbd "RET") nil)
                 (define-key org-mode-map [(control \,)] nil)
@@ -772,10 +773,10 @@
 (use-package org-appear
   :hook (org-mode . org-appear-mode)
   :config
-  (setq org-appear-trigger 'on-change)
-  (setq org-appear-delay 1.0)
+  (setq org-appear-trigger 'always)
+  (setq org-appear-delay 0.5)
+  (setq org-appear-autolinks nil)
   (setq org-appear-autoemphasis t)
-  (setq org-appear-autolinks t)
   (setq org-appear-autosubmarkers t)
   (setq org-appear-autoentities t)
   (setq org-appear-autokeywords t))
