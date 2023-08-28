@@ -230,7 +230,7 @@
   (let ((file-list (if (eq major-mode 'dired-mode)
                        (dired-get-marked-files)
                      (list (buffer-file-name))))
-        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "ODAFileConverter" "xlsx2csv" "convert" "pdftoppm" "caj2pdf")
+        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "ODAFileConverter" "xlsx2csv" "convert" "pdftoppm" "caj2pdf" "img2pdf")
                                 :buffer "*helm dired converter-swint*"))
         (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)"))
     (cl-flet ((escape-local (x)
@@ -321,14 +321,17 @@
             ((string= engine "pdftoppm")
              (let ((output-format (read-string "Output image format(png/jpeg/tiff/mono): ")))
                (cl-loop for x in file-list
-                        do (let* ((filename (escape-local (file-name-nondirectory x))))
+                        do (let ((filename (escape-local (file-name-nondirectory x))))
                              (shell-command (concat "pdftoppm -" output-format " -r 500 " filename " " filename))))))
             ((string= engine "caj2pdf")
              (let ((cmd-path (expand-file-name "repos/caj2pdf/caj2pdf" user-emacs-directory))
                    (default-directory (expand-file-name "repos/caj2pdf" user-emacs-directory)))
                (cl-loop for x in file-list
-                        do (let* ((filename (escape-local x)))
-                             (shell-command (concat cmd-path " convert " filename " -o " filename ".pdf"))))))))))
+                        do (let ((filename (escape-local x)))
+                             (shell-command (concat cmd-path " convert " filename " -o " filename ".pdf"))))))
+            ((string= engine "img2pdf")
+             (let ((input-string (mapconcat (lambda (arg) (escape-local (file-name-nondirectory arg))) file-list " ")))
+               (shell-command (read-string "Commands: " (concat "img2pdf -o " (make-temp-name (concat (escape-local (file-name-base (car file-list))) "_")) ".pdf " input-string )))))))))
 ;; ============swint-dired-converter=========
 ;;; dired-view-file-or-dir
 ;; ==========dired-view-file-or-dir==========
