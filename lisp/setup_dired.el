@@ -339,9 +339,6 @@
           (file-extension (ignore-errors (downcase (file-name-extension file-name)))))
       (cond
        ((member file-extension image-extensions)
-        ;; image-dired-dired-display-image使用dired-get-filename，非dired无法调用
-        (image-dired-create-display-image-buffer)
-        (display-buffer image-dired-display-image-buffer)
         (image-dired-display-image file-name)
         image-dired-display-image-buffer)
        ((member file-extension (append video-extensions cad-extensions))
@@ -350,8 +347,6 @@
                                      ((member file-extension cad-extensions)
                                       "openscad -o %1$speep-dired.png <(echo \"import(\\\"%2$s\\\");\")"))
                                image-dired-dir (expand-file-name file-name)))
-        (image-dired-create-display-image-buffer)
-        (display-buffer image-dired-display-image-buffer)
         (image-dired-display-image (expand-file-name "peep-dired.png" image-dired-dir))
         image-dired-display-image-buffer)
        (t (let ((peep-preview-buffer (get-buffer-create "*peep-preview*")))
