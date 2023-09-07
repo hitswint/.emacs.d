@@ -94,7 +94,7 @@
 ;;; semantic
 ;; ===================semantic==================
 (use-package semantic
-  :after (:any function-args helm)
+  :after function-args
   :config
   (semantic-mode 1)
   (setq semantic-idle-scheduler-idle-time 5)

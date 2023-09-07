@@ -190,8 +190,7 @@
 ;;;; org输出doc
   ;; =================org输出doc================
   ;; 先生成odt文件(需要zip支持)，然后使用libreoffice转化成doc文件
-  ;; 在win上转doc格式路径名中不能有中文
-  (setq org-odt-preferred-output-format "doc")
+  (setq org-odt-preferred-output-format "docx")
   (define-key org-mode-map (kbd "C-c C-S-e") 'org-odt-export-to-odt)
   ;; =================org输出doc================
 ;;;; org-latex-preview
@@ -791,9 +790,11 @@
 ;; ============org-extra-emphasis===============
 (use-package org-extra-emphasis
   :load-path "repos/org-extra-emphasis/"
-  :after org
+  :commands helm-insert-org-extra-emphasis
+  :init
+  (add-hook 'org-mode-hook (lambda ()
+                             (bind-key "M-O '" 'helm-insert-org-extra-emphasis org-mode-map)))
   :config
-  (bind-key "M-O '" 'helm-insert-org-extra-emphasis org-mode-map)
   ;; org-extra-emphasis-zws-display-char定义导致加载文件错误，可byte-compile-file解决：
   ;; File mode specification error: (invalid-read-syntax \N{SPACING UNDERSCORE} 1 0)
   (custom-set-faces

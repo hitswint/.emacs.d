@@ -3,9 +3,7 @@
 (use-package abbrev
   :diminish abbrev-mode
   :config
-  ;; Turn on abbrev mode globally.
   (setq-default abbrev-mode t)
-  ;; Stop asking whether to save newly added abbrev when quitting emacs.
   (setq save-abbrevs t)
   ;; 编辑abbrev-table：
   ;; C-x a g 将当前位置之前词语，全局加入abbrev
@@ -37,7 +35,6 @@
 ;;; multiple-cursors
 ;; ================multiple-cursors================
 (use-package multiple-cursors
-  ;; mc/xxx函数都不在mc包中
   :defer 2
   :config
   (setq mc/always-run-for-all t

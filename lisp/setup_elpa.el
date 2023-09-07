@@ -44,6 +44,7 @@
                            avy-zap
                            backup-walker
                            baidu-translate
+                           benchmark-init
                            bibtex-completion
                            bing-dict
                            bm
@@ -229,7 +230,10 @@ Missing packages are installed automatically."
 ;; Run package installation.
 (prelude-install-packages)
 ;; ====================package======================
-;; ====================package======================
+;;; benchmark-init
+;; ================benchmark-init===================
+;; (require 'benchmark-init)
+;; ================benchmark-init===================
 ;;; use-package
 ;; =================use-package=====================
 ;; :bind或:commands中需使用package或:config中的函数

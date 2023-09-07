@@ -1,15 +1,13 @@
 ;;; Projectile
 ;; ==================Projectile=================
 (use-package projectile
-  ;; :bind-keymap ("M-\"" . projectile-command-map)
-  ;; 需先于multiple-cursors启动，否则会覆盖后者M-"快捷键
-  :defer 1
+  :bind-keymap ("M-\"" . projectile-command-map)
   :init
   (setq projectile-mode-line-prefix " ")
   :config
   (require 'vc-git)
   (projectile-mode t)
-  (define-key projectile-mode-map (kbd "M-\"") 'projectile-command-map)
+  ;; (bind-key "M-\"" 'projectile-command-map projectile-mode-map)
   (setq projectile-enable-caching t)
   (setq projectile-completion-system 'helm)
   (setq projectile-mode-line-function 'swint-projectile-default-mode-line)
