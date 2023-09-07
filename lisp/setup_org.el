@@ -375,17 +375,6 @@
   ;; C-u M-O # current buffer.
   ;; M-# outorg-copy-edits-and-exit.
   :after outshine)
-(use-package navi-mode
-  :commands (navi-search-and-switch
-             navi-switch-to-twin-buffer)
-  :init
-  (add-hook 'outline-mode-hook (lambda ()
-                                 (bind-key "i" 'navi-search-and-switch outline-mode-prefix-map)
-                                 (bind-key "o" 'navi-switch-to-twin-buffer outline-mode-prefix-map)))
-  :config
-  (global-set-key (kbd "M-s n") nil)
-  (global-set-key (kbd "M-s s") 'swint-swiper)
-  (global-set-key (kbd "M-s M-s") 'helm-swoop))
 ;; ==================outshine===================
 ;;; interleave
 ;; =================interleave==================

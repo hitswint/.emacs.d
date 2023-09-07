@@ -137,7 +137,6 @@
                            multifiles
                            multiple-cursors
                            names
-                           navi-mode
                            neotree
                            nyan-mode
                            operate-on-number
