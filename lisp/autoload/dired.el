@@ -146,8 +146,17 @@
            (message "OneDrive-sync done.")
            (setcdr pos (remove "OneDrive-sync " (cdr pos)))))))))
 ;; ===============OneDrive===================
-;;; totalcmd
-;; ===============totalcmd===================
+;;; thunar/totalcmd
+;; ============thunar/totalcmd===============
+;;;###autoload
+(defun thunar-open-default-directory ()
+  (interactive)
+  (let ((curr-dir (if-let ((curr-line (dired-get-filename nil t)))
+                      (file-name-directory curr-line)
+                    default-directory)))
+    (start-process-shell-command
+     "thunar" "*thunar*"
+     (concat "thunar " curr-dir))))
 ;;;###autoload
 (defun tc-open-default-directory ()
   (interactive)
@@ -172,7 +181,7 @@
        (concat "wine "
                "~/.wine/drive_c/totalcmd/TOTALCMD.EXE /O /T /S=L z:"
                (escape-local (expand-file-name (dired-get-filename))))))))
-;; ===============totalcmd===================
+;; ============thunar/totalcmd===============
 ;;; 默认程序打开文件
 ;; =============默认程序打开文件=============
 ;;;###autoload
