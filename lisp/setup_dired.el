@@ -22,15 +22,15 @@
   (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才启用auto-revert-mode更新
                                                 (when (get-buffer-window (current-buffer)) (apply fn args))))
   (put 'dired-find-alternate-file 'disabled nil)
-  (setq dired-listing-switches "--group-directories-first -alhG1v")
+  (setq dired-listing-switches "--group-directories-first -alhG1")
   (setq dired-subdir-switches dired-listing-switches)
   (setq dired-dwim-target t)
   (setq wdired-allow-to-change-permissions t)
   (add-hook 'dired-after-readin-hook #'(lambda () (setq truncate-lines t)))
   (setq file-extension-app-alist
         '(("pdf" . "pdfviewer.sh") ("djvu" . "llpp") ("chm" . "xchm")
-          ("rmvb" . "mpv") ("rm" . "mpv") ("mp4" . "mpv") ("avi" . "mpv") ("flv" . "mpv") ("f4v" . "mpv") ("mpg" . "mpv") ("mkv" . "mpv") ("3gp" . "mpv") ("wmv" . "mpv") ("mov" . "mpv") ("dat" . "mpv") ("asf" . "mpv") ("mpeg" . "mpv") ("wma" . "mpv") ("webm" . "mpv")
-          ("mp3" . "mpg321") ("ape" . "mpv")
+          ("rmvb" . "mpv.sh") ("rm" . "mpv.sh") ("mp4" . "mpv.sh") ("avi" . "mpv.sh") ("flv" . "mpv.sh") ("f4v" . "mpv.sh") ("mpg" . "mpv.sh") ("mkv" . "mpv.sh") ("3gp" . "mpv.sh") ("wmv" . "mpv.sh") ("mov" . "mpv.sh") ("dat" . "mpv.sh") ("asf" . "mpv.sh") ("mpeg" . "mpv.sh") ("wma" . "mpv.sh") ("webm" . "mpv.sh")
+          ("mp3" . "mpg321") ("ape" . "mpv.sh")
           ("xoj" . "xournal")
           ("jpg" . "feh.sh") ("png" . "feh.sh") ("bmp" . "feh.sh") ("jpeg" . "feh.sh") ("gif" . "animate")
           ("xcf" . "gimp")

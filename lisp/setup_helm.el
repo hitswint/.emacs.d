@@ -66,7 +66,10 @@
                                                  "\\`\\*plot-data\\*\\'"
                                                  "\\`\\*Async\\ Shell\\ Command\\*\\'"
                                                  "\\`\\*Shell\\ Command\\ Output\\*\\'"
-                                                 "\\`\\*Ebib-.*\\*\\'")))
+                                                 "\\`\\*Ebib-.*\\*\\'"
+                                                 "\\`\\*thunar\\*\\'"
+                                                 "\\`\\*tc\\*\\'"
+                                                 "\\`\\*viatc\\*\\'")))
   ;; (setq helm-mounted-network-directories '("/mnt/share" "/mnt/sshfs"))
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))
