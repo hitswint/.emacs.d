@@ -196,7 +196,11 @@
   (interactive)
   (let ((file-exten (downcase (or (file-name-extension file) "None"))))
     (let* ((wine-p (member file-exten '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "dwg" "dxf" "caj" "nh" "kdh")))
-           (command (cdr (assoc file-exten file-extension-app-alist)))
+           (command (concat (cdr (assoc file-exten file-extension-app-alist))
+                            (when (and (or (member file-exten file_video_exts)
+                                           (member file-exten file_image_exts))
+                                       (not (equal dired-listing-switches dired-actual-switches)))
+                              (concat " -" (substring dired-actual-switches 32)))))
            (default-directory (or (if wine-p (ignore-errors (expand-file-name (file-name-directory file))))
                                   default-directory)))
       (if command
