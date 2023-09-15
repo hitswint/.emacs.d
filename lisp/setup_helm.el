@@ -37,10 +37,12 @@
                                    (ffap-machine-p-unknown 'reject))
                                (run-hook-with-args-until-success 'file-name-at-point-functions)))))
   (setq helm-buffer-details-flag nil)
+  (setq helm-ff--RET-disabled t)
   (setq helm-ff-newfile-prompt-p nil)
   ;; (add-to-list 'display-buffer-alist '("^\\*helm .*" (display-buffer-at-bottom))) ;在底部打开helm
   (setq helm-split-window-default-side 'same)
   (setq helm-external-programs-associations file-extension-app-alist)
+  (setq helm-default-external-file-browser "thunar")
   (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
   (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list
                                                '("\\`Enjoy\\ Music\\'"

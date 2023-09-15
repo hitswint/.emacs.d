@@ -35,9 +35,9 @@
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
   (setq org-use-sub-superscripts "{}")
   ;; 使用org-toggle-pretty-entities (C-c C-x \) 启闭
-  (setq org-pretty-entities t)
-  (setq org-pretty-entities-include-sub-superscripts t)
-  (setq org-adapt-indentation t)
+  (setq org-pretty-entities t
+        org-pretty-entities-include-sub-superscripts t
+        org-adapt-indentation t)
   ;; =================Appearance================
 ;;;; Capture
   ;; =================Capture===================
@@ -73,10 +73,13 @@
                 (setq org-special-ctrl-o t)
                 (setq org-special-ctrl-k t)
                 (setq org-capture-bookmark nil)
-                (setq org-file-apps (cl-loop for file-extension-pair in file-extension-app-alist
-                                             collect (cons
-                                                      (concat "\\." (car file-extension-pair) "\\'")
-                                                      (concat (cdr file-extension-pair) " %s"))))
+                (setq org-file-apps (append
+                                     '((auto-mode . emacs)
+                                       (directory . "thunar"))
+                                     (cl-loop for file-extension-pair in file-extension-app-alist
+                                              collect (cons
+                                                       (concat "\\." (car file-extension-pair) "\\'")
+                                                       (concat (cdr file-extension-pair) " %s")))))
                 (turn-on-font-lock)
                 (iimage-mode 1)
                 ;; 如果有#+ATTR_ORG: :width 100则设置为图片宽度为100，否则显示原尺寸
@@ -736,10 +739,10 @@
   ;; 对headline，取:CUSTOM_ID:或BEAMER_opt属性，可使用C-c C-x p设置
   ;; 对figure/table，取#+NAME的值
   ;; 若查找不到，则仍采用自动生成机制
-  (setq org-latex-prefer-user-labels t) ;使生成tex文件使用org文件中的label
-  (setq org-export-time-stamp-file nil) ;导出时间戳会使每次导出文件都不相同
-  (setq org-beamer-outline-frame-title "Outline")
-  (setq org-beamer-frame-default-options "label=") ;; 设置\begin{frame}后[]选项
+  (setq org-latex-prefer-user-labels t ;使生成tex文件使用org文件中的label
+        setq org-export-time-stamp-file nil ;导出时间戳会使每次导出文件都不相同
+        setq org-beamer-outline-frame-title "Outline"
+        setq org-beamer-frame-default-options "label=") ;设置\begin{frame}后[]选项
   (add-to-list 'org-beamer-environments-extra
                '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
   (add-to-list 'org-beamer-environments-extra
@@ -750,10 +753,10 @@
 (use-package ox-pandoc
   :after ox
   :config
-  (setq org-pandoc-options '((standalone . t)))
-  (setq org-pandoc-options-for-docx '((standalone . nil)))
-  (setq org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex")))
-  (setq org-pandoc-options-for-latex-pdf '((pdf-engine . "xelatex")))
+  (setq org-pandoc-options '((standalone . t))
+        org-pandoc-options-for-docx '((standalone . nil))
+        org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex"))
+        org-pandoc-options-for-latex-pdf '((pdf-engine . "xelatex")))
   (add-to-list 'org-pandoc-valid-options 'citeproc))
 ;; =================ox-pandoc===================
 ;;; org-appear
@@ -761,13 +764,20 @@
 (use-package org-appear
   :hook (org-mode . org-appear-mode)
   :config
-  (setq org-appear-trigger 'always)
-  (setq org-appear-delay 0.5)
-  (setq org-appear-autolinks nil)
-  (setq org-appear-autoemphasis t)
-  (setq org-appear-autosubmarkers t)
-  (setq org-appear-autoentities t)
-  (setq org-appear-autokeywords t))
+  (setq org-appear-trigger 'always
+        org-appear-delay 0.5
+        org-appear-autolinks t
+        org-appear-autoemphasis t
+        org-appear-autosubmarkers t
+        org-appear-autoentities t
+        org-appear-autokeywords t)
+  ;; 当命令导致buffer切换时，org-appear--post-cmd在新buffer中执行，导致org-appear--current-elem执行错误
+  (defvar-local org-appear-current-buffer nil)
+  (advice-add 'org-appear--pre-cmd :after #'(lambda () (unless org-appear-current-buffer
+                                                         (setq org-appear-current-buffer (current-buffer)))))
+  (advice-add 'org-appear--current-elem :around #'(lambda (fn) (when (and org-appear-current-buffer
+                                                                          (equal org-appear-current-buffer (current-buffer)))
+                                                                 (funcall fn)))))
 ;; ================org-appear===================
 ;;; oc
 ;; ====================oc=======================

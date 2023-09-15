@@ -194,23 +194,24 @@
 ;;;###autoload
 (defun dired-async-shell-command (file)
   (interactive)
-  (let ((file-exten (downcase (or (file-name-extension file) "None"))))
-    (let* ((wine-p (member file-exten '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "dwg" "dxf" "caj" "nh" "kdh")))
-           (command (concat (cdr (assoc file-exten file-extension-app-alist))
+  (let* ((file-exten (ignore-errors (downcase (file-name-extension file))))
+         (wine-p (member file-exten '("doc" "docx" "xls" "xlsx" "ppt" "pptx" "dwg" "dxf" "caj" "nh" "kdh")))
+         (command (if (file-directory-p file) "thunar"
+                    (concat (assoc-default file-exten file-extension-app-alist)
                             (when (and (or (member file-exten file_video_exts)
                                            (member file-exten file_image_exts))
                                        (not (equal dired-listing-switches dired-actual-switches)))
-                              (concat " -" (substring dired-actual-switches 32)))))
-           (default-directory (or (if wine-p (ignore-errors (expand-file-name (file-name-directory file))))
-                                  default-directory)))
-      (if command
-          (start-process "Shell" nil shell-file-name shell-command-switch
-                         (concat command " " "\""
-                                 (if wine-p
-                                     (file-name-nondirectory file)
-                                   file)
-                                 "\""))
-        (message "No command for \"%s\"" (file-name-nondirectory file))))))
+                              (concat " -" (substring dired-actual-switches 32))))))
+         (default-directory (or (if wine-p (ignore-errors (expand-file-name (file-name-directory file))))
+                                default-directory)))
+    (if (string-empty-p command)
+        (message "No command for \"%s\"" (file-name-nondirectory file))
+      (start-process "Shell" nil shell-file-name shell-command-switch
+                     (concat command " " "\""
+                             (if wine-p
+                                 (file-name-nondirectory file)
+                               file)
+                             "\"")))))
 ;; =============默认程序打开文件=============
 ;;; 在当前目录下打开urxvt
 ;; =========在当前目录下打开urxvt============

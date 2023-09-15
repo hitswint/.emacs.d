@@ -63,7 +63,7 @@
 (defun swint-get-words-at-point ()
   "Get words at point, use pyim-get-words-list-at-point to deal with chinese."
   (interactive)
-  (if (pdf-view-active-region-p)
+  (if (and (derived-mode-p 'pdf-view-mode) (pdf-view-active-region-p))
       (let ((words-at-point (replace-regexp-in-string
                              "\n" " " (mapconcat 'identity (pdf-view-active-region-text) " "))))
         (pdf-view-deactivate-region)

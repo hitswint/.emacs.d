@@ -8,9 +8,11 @@
   (require 'vc-git)
   (projectile-mode t)
   ;; (bind-key "M-\"" 'projectile-command-map projectile-mode-map)
-  (setq projectile-enable-caching t)
-  (setq projectile-completion-system 'helm)
-  (setq projectile-mode-line-function 'swint-projectile-default-mode-line)
+  (setq projectile-indexing-method 'alien
+        projectile-enable-caching nil
+        projectile-auto-update-cache nil
+        projectile-completion-system 'helm
+        projectile-mode-line-function 'swint-projectile-default-mode-line)
   (defun swint-projectile-default-mode-line ()
     "Report project name and type in the modeline."
     (let ((project-name (projectile-project-name))
