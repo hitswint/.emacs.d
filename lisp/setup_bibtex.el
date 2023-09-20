@@ -120,7 +120,7 @@
       (setq bibtex-completion-bibliography/curr
             (helm-comp-read "Bibtex completion bibliography: "
                             (append (directory-files (expand-file-name "~/.bib/") t "\\.bib$")
-                                    (directory-files default-directory t "\\.bib$"))
+                                    (directory-files (helm-current-directory) t "\\.bib$"))
                             :marked-candidates t
                             :buffer "*helm bibtex-swint*")))
     (if (and (buffer-live-p (get-buffer "*helm bibtex*")) (not arg))

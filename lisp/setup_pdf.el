@@ -57,11 +57,12 @@
                              "\""))))
   (defun pdfgrep-dired (&optional arg)
     (interactive "P")
-    (let ((string-to-grep (read-string "Dired pdfgrep: "))
-          (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\|'\\|&\\)")
-          (pdf-files (if arg
-                         (directory-files-recursively default-directory "\\.pdf$")
-                       (directory-files default-directory t "\\.pdf$"))))
+    (let* ((string-to-grep (read-string "Dired pdfgrep: "))
+           (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\|'\\|&\\)")
+           (default-directory (helm-current-directory))
+           (pdf-files (if arg
+                          (directory-files-recursively default-directory "\\.pdf$")
+                        (directory-files default-directory t "\\.pdf$"))))
       (cl-flet ((escape-local (x)
                   (replace-regexp-in-string string-to-escape
                                             "\\\\\\1" x)))

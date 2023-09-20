@@ -132,7 +132,8 @@
     (add-to-list 'helm-fd-switches "--absolute-path")
     (defun swint-helm-fdfind ()
       (interactive)
-      (require 'helm-fd) (helm-fd-1 default-directory)))
+      (require 'helm-fd)
+      (helm-fd-1 (helm-current-directory))))
   ;; =================helm-fd===================
 ;;;; helm-pinyin
   ;; ================helm-pinyin================
@@ -610,7 +611,7 @@
   :init
   (bind-key "C-x g" #'(lambda () (interactive) (let ((helm-truncate-lines t)) (if current-prefix-arg
                                                                                   (call-interactively 'helm-do-ag)
-                                                                                (helm-do-ag default-directory)))))
+                                                                                (helm-do-ag (helm-current-directory))))))
   (bind-key "C-x G" #'(lambda () (interactive) (let ((helm-truncate-lines t)) (call-interactively 'helm-do-ag-buffers))))
   :config
   (setq helm-ag-base-command "ag --nocolor --nogroup --hidden")

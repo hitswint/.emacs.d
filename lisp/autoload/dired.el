@@ -19,9 +19,10 @@
                                       (expand-file-name default-directory))))
     (if (file-directory-p swint-dired-current-file)
         (helm-find-files-1 (file-name-as-directory swint-dired-current-file))
-      (helm-find-files-1 (expand-file-name default-directory)
+      (helm-find-files-1 (file-name-directory swint-dired-current-file)
                          (if helm-ff-transformer-show-only-basename
-                             (helm-basename swint-dired-current-file) swint-dired-current-file)))))
+                             (helm-basename swint-dired-current-file)
+                           swint-dired-current-file)))))
 ;; ==========helm-dired-current-file=========
 ;;; 跳转至dired顶部和尾部
 ;; ========跳转至dired顶部和尾部=============
@@ -405,7 +406,7 @@ Assuming .. and . is a current directory (like in FAR)"
                                  (split-string
                                   (shell-command-to-string
                                    "cat ~/.ssh/config | grep \"^Host \" | awk '{print $2}'"))))
-        (path (abbreviate-file-name default-directory))
+        (path (abbreviate-file-name (helm-current-directory)))
         (is-sync (equal action "sync"))
         (is-push (equal action "push"))
         (is-pull (equal action "pull"))

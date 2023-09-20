@@ -537,10 +537,10 @@
                    (current-buffer))
               (neotree-hide)
             (neo-global--select-window))
-        (progn (neotree-show)
-               (neotree-dir (or project-dir current-dir))
-               (when find-file-name
-                 (neotree-find find-file-name))))))
+        (neotree-show)
+        (neotree-dir (or project-dir current-dir))
+        (when find-file-name
+          (neotree-find find-file-name)))))
   (defun neotree-shell-command ()
     "Open file with external app."
     (interactive)
