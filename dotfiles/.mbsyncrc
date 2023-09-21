@@ -8,16 +8,18 @@ SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore default-remote
+UseUTF8Mailboxes yes
 Account Default
 
 MaildirStore default-local
 Path ~/Maildir/Default/
-Inbox ~/Maildir/Default/INBOX
+Inbox ~/Maildir/Default/Inbox
 
 Channel default
-Master :default-remote:
-Slave :default-local:
-Patterns * !垃圾邮件 !已删除 !已发送 !广告邮件 !病毒邮件 !草稿箱 !订阅邮件
+Far :default-remote:
+Near :default-local:
+Patterns *
+# Patterns * !垃圾邮件 !已删除 !已发送 !广告邮件 !病毒邮件 !草稿箱 !订阅邮件
 Create Both
 Expunge Both
 SyncState *
@@ -32,16 +34,18 @@ SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore netease-remote
+UseUTF8Mailboxes yes
 Account Netease
 
 MaildirStore netease-local
 Path ~/Maildir/Netease/
-Inbox ~/Maildir/Netease/INBOX
+Inbox ~/Maildir/Netease/Inbox
 
 Channel netease
-Master :netease-remote:
-Slave :netease-local:
-Patterns * !垃圾邮件 !已删除 !已发送 !广告邮件 !草稿箱 !订阅邮件
+Far :netease-remote:
+Near :netease-local:
+Patterns *
+# Patterns * !垃圾邮件 !已删除 !已发送 !广告邮件 !草稿箱 !订阅邮件
 Create Both
 Expunge Both
 SyncState *
@@ -56,16 +60,18 @@ SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore sjzu-remote
+UseUTF8Mailboxes yes
 Account SJZU
 
 MaildirStore sjzu-local
 Path ~/Maildir/SJZU/
-Inbox ~/Maildir/SJZU/INBOX
+Inbox ~/Maildir/SJZU/Inbox
 
 Channel sjzu
-Master :sjzu-remote:
-Slave :sjzu-local:
-Patterns * !垃圾邮件 !已删除 !已发送 !广告邮件 !草稿箱
+Far :sjzu-remote:
+Near :sjzu-local:
+Patterns *
+# Patterns * !垃圾邮件 !已删除 !已发送 !广告邮件 !草稿箱
 Create Both
 Expunge Both
 SyncState *
@@ -86,11 +92,11 @@ Account Hotmail
 
 MaildirStore hotmail-local
 Path ~/Maildir/Hotmail/
-Inbox ~/Maildir/Hotmail/INBOX
+Inbox ~/Maildir/Hotmail/Inbox
 
 Channel hotmail
-Master :hotmail-remote:
-Slave :hotmail-local:
+Far :hotmail-remote:
+Near :hotmail-local:
 Patterns *
 Create Both
 Expunge Both
@@ -101,22 +107,22 @@ IMAPAccount QQ
 Host imap.qq.com
 Port 993
 User 278064399
-# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==\"imap.qq.com\" {print $NF}'"
 PassCmd "emacsclient --eval '(get-auth-pass \"imap.qq.com\")' | tr -d \\\""
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore qq-remote
+UseUTF8Mailboxes yes
 Account QQ
 
 MaildirStore qq-local
 Subfolders Verbatim
 Path ~/Maildir/QQ/
-Inbox ~/Maildir/QQ/INBOX
+Inbox ~/Maildir/QQ/Inbox
 
 Channel qq
-Master :qq-remote:
-Slave :qq-local:
+Far :qq-remote:
+Near :qq-local:
 Patterns *
 Create Both
 Expunge Both

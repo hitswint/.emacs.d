@@ -71,7 +71,9 @@
                                                  "\\`\\*Ebib-.*\\*\\'"
                                                  "\\`\\*thunar\\*\\'"
                                                  "\\`\\*tc\\*\\'"
-                                                 "\\`\\*viatc\\*\\'")))
+                                                 "\\`\\*viatc\\*\\'"
+                                                 "\\`\\*Article\\*\\'"
+                                                 "\\`\\*xwidget-webkit:.*\\*\\'")))
   ;; (setq helm-mounted-network-directories '("/mnt/share" "/mnt/sshfs"))
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))
@@ -154,6 +156,9 @@
           (dired-op (if (null is-dired) 'or 'and))
           (persp-curr-op (if (eq is-dired is-persp-curr) 'or 'not))
           (type (if (null is-dired) "file" "dired")))
+      (cl-loop for x in (persp-buffers (persp-curr))
+               do (unless (buffer-name x)
+                    (delete x (persp-buffers (persp-curr)))))
       `(or (,cl-remove-op (lambda (x) (,dired-op (equal (buffer-mode x) 'dired-mode)
                                                  (,persp-curr-op (and (bound-and-true-p persp-mode)
                                                                       (member x (remq nil (mapcar 'buffer-name (persp-buffers (persp-curr)))))))))

@@ -135,6 +135,7 @@
                            matlab-mode
                            meghanada
                            mu4e-alert
+                           mu4e-views
                            multifiles
                            multiple-cursors
                            names
