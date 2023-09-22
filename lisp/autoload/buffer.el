@@ -114,11 +114,14 @@ If buffer-or-name is nil return current buffer's mode."
   (interactive)
   (let ((curr-buf (if BUFFER-OR-NAME
                       (get-buffer BUFFER-OR-NAME)
-                    (current-buffer)))
-        (prev-buf (car (or (swint-filter-buffer-list (cl-loop for x in (window-prev-buffers)
-                                                              collect (car x)))
-                           (swint-filter-buffer-list (buffer-list (selected-frame)) t)))))
-    (switch-to-buffer prev-buf)
+                    (current-buffer))))
+    (cl-loop for w in (window-list)
+             when (eq (window-buffer w) curr-buf)
+             do (with-selected-window w
+                  (let ((prev-buf (car (or (swint-filter-buffer-list (cl-loop for x in (window-prev-buffers w)
+                                                                              collect (car x)))
+                                           (swint-filter-buffer-list (buffer-list (selected-frame)) t)))))
+                    (switch-to-buffer prev-buf))))
     (kill-buffer curr-buf)))
 ;;;###autoload
 (defun swint-filter-buffer-list (buffers &optional include-current)

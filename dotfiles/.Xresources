@@ -19,6 +19,9 @@ URxvt*iso14755_52: False
 URxvt.searchable-scrollback: CM-s
 ! URxvt.keysym.CM-s: searchable-scrollback:start
 
+! URxvt.iconFile:/usr/share/icons/Adwaita/scalable/legacy/utilities-terminal-symbolic.svg
+URxvt.iconFile:/usr/share/icons/gnome/256x256/apps/utilities-terminal.png
+
 ! perl-ext-common.
 ! https://github.com/muennich/urxvt-perls
 ! 下载keyboard-select置于~/.urxvt/ext/(/usr/lib/urxvt/perl/失效)，其他自带。
