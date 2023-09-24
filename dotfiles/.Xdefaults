@@ -20,7 +20,7 @@ URxvt.searchable-scrollback: CM-s
 ! URxvt.keysym.CM-s: searchable-scrollback:start
 
 ! URxvt.iconFile:/usr/share/icons/Adwaita/scalable/legacy/utilities-terminal-symbolic.svg
-URxvt.iconFile:/usr/share/icons/gnome/256x256/apps/utilities-terminal.png
+URxvt.iconFile:/usr/share/icons/Adwaita/48x48/legacy/utilities-terminal.png
 
 ! perl-ext-common.
 ! https://github.com/muennich/urxvt-perls

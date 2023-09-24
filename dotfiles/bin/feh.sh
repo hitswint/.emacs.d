@@ -23,20 +23,25 @@ shift
 cd -- "$dir"
 
 if [ x$ls_arg == x ]; then
-    for i in *.{png,jpg,jpeg,bmp}; do
+    for i in *.{png,jpg,jpeg,bmp,svg}; do
         # file_ext=$(echo $file |awk -F . '{if (NF>1) {print $NF}}')
         [[ -f $i ]] || continue
         arr+=("$i")
         [[ $i == $file ]] && c=$((${#arr[@]} - 1))
     done
 else
-    # file_list=$(ls $ls_arg *.{png,jpg,jpeg,bmp})
+    # file_list=$(ls $ls_arg *.{png,jpg,jpeg,bmp,svg})
     while read line; do
         [[ -f "$line" ]] || continue
         arr+=("$line")
         [[ $line == $file ]] && c=$((${#arr[@]} - 1))
         # done <<<$(printf '%s\n' "$file_list")
-    done <<<$(ls $ls_arg *.{png,jpg,jpeg,bmp})
+    done <<<$(ls $ls_arg *.{png,jpg,jpeg,bmp,svg})
 fi
 
-exec feh -Z -. -q "$@" -- "${arr[@]:c}" "${arr[@]:0:c}"
+# 图片打开很快，如果在xdotool执行前关闭feh的话，--sync选项会导致xdotool一直等待
+exec feh -Z -. -q "$@" -- "${arr[@]:c}" "${arr[@]:0:c}" & PID=$! ; win_id=$(timeout 10 xdotool search --sync --onlyvisible --pid $PID) && xseticon -id $win_id /usr/share/icons/Adwaita/48x48/mimetypes/image-x-generic.png
+# /usr/share/icons/hicolor/scalable/apps/feh.svg
+
+# 上述命令执行完后会直接退出，需根据feh进程判断退出时机
+while ps -p $PID > /dev/null; do sleep 0.5; done

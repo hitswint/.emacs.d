@@ -28,7 +28,7 @@
   (setq wdired-allow-to-change-permissions t)
   (add-hook 'dired-after-readin-hook #'(lambda () (setq truncate-lines t)))
   (defvar file_video_exts '("rmvb" "rm" "mp4" "avi" "flv" "f4v" "mpg" "mkv" "3gp" "wmv" "mov" "dat" "asf" "mpeg" "wma" "webm"))
-  (defvar file_image_exts '("jpg" "png" "bmp" "jpeg"))
+  (defvar file_image_exts '("jpg" "png" "bmp" "jpeg" "svg"))
   (defvar file-extension-app-alist (append '(("pdf" . "pdfviewer.sh") ("djvu" . "llpp") ("chm" . "xchm")
                                              ("mp3" . "mpg321") ("ape" . "mpv")
                                              ("xoj" . "xournal")

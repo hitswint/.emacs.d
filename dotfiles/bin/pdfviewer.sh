@@ -25,5 +25,6 @@ elif [[ $Windx_llpp && ($llpp_num -ge 2) ]]; then # 当llpp实例数量>=2时
     done
     qpdfview --unique "${llpp_file_list[@]}" "$1"
 else
-    llpp "$1";
+    llpp "$1" & PID=$! ; xseticon -id $(xdotool search --sync --onlyvisible --pid $PID) /usr/share/icons/hicolor/96x96/mimetypes/wps-office-pdf.png;
+    while ps -p $PID > /dev/null; do sleep 0.5; done
 fi
