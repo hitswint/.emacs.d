@@ -475,11 +475,10 @@
 ;;; clipmon
 ;; ====================clipmon=====================
 (use-package clipmon
-  :after easy-kill
+  :bind (("M-g M-w" . clipmon-mode)
+         ("M-g M-W" . clipmon-autoinsert-toggle))
   :config
-  (bind-key "M-g M-w" 'clipmon-mode)
-  (bind-key "M-g M-W" 'clipmon-autoinsert-toggle)
-  (clipmon-mode 1)
+  ;; (clipmon-mode 1)
   (advice-add 'clipmon-mode-start :after #'(lambda () (xclipmon-mode 0)))
   (advice-add 'clipmon-mode-stop :after #'(lambda () (xclipmon-mode 1)))
   ;; 原clipmon--get-selection中文乱码，另有时yank内容不更新。修改后clipmon-autoinsert失效

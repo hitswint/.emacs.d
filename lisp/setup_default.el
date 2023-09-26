@@ -53,7 +53,7 @@
         initial-major-mode 'fundamental-mode
         initial-scratch-message nil))
 (setq native-comp-jit-compilation nil)
-(setq frame-title-format "%b")
+(setq frame-title-format "emacs@%b")
 ;; ===================Setup=====================
 ;;; Keybindings
 ;; ================Keybindings==================

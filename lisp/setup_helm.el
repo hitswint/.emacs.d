@@ -132,10 +132,15 @@
     ;; helm-find-files下C-/启用
     (setq helm-fd-executable "fdfind")
     (add-to-list 'helm-fd-switches "--absolute-path")
+    (add-to-list 'helm-fd-switches "--follow")
     (defun swint-helm-fdfind ()
       (interactive)
-      (require 'helm-fd)
-      (helm-fd-1 (helm-current-directory))))
+      (let ((helm-truncate-lines t)
+            ;; 生成局部变量，保证setenv不影响其他进程
+            (process-environment (copy-sequence process-environment)))
+        ;; ls颜色由$LS_COLORS决定，export LS_COLORS=$LS_COLORS:'di=0;33:'
+        (setenv "LS_COLORS" (concat (getenv "LS_COLORS") "di=0;33:"))
+        (helm-fd-1 (helm-current-directory)))))
   ;; =================helm-fd===================
 ;;;; helm-pinyin
   ;; ================helm-pinyin================
