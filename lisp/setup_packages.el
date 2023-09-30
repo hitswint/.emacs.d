@@ -639,9 +639,7 @@
 ;; =============highlight-indentation==============
 (use-package highlight-indentation
   :diminish (highlight-indentation-mode
-             highlight-indentation-current-column-mode)
-  :init
-  (add-hook 'prog-mode-hook 'highlight-indentation-current-column-mode))
+             highlight-indentation-current-column-mode))
 ;; =============highlight-indentation==============
 ;;; rainbow-mode
 ;; =================rainbow-mode===================
@@ -848,15 +846,15 @@
   :load-path "repos/awesome-tab/"
   :after (:all helm perspective)
   :config
-  (setq awesome-tab-display-line 'header-line)
-  (setq awesome-tab-display-icon t)
-  (setq awesome-tab-height 120)
-  (setq awesome-tab-active-bar-height 20)
-  (setq awesome-tab-dark-selected-foreground-color "white")
-  (setq awesome-tab-dark-active-bar-color "white")
-  (setq awesome-tab-cycle-scope 'tabs)
-  (setq awesome-tab-auto-scroll-flag t)
-  (setq awesome-tab-label-max-length 30)
+  (setq awesome-tab-display-line 'header-line
+        awesome-tab-display-icon (display-graphic-p)
+        awesome-tab-height 120
+        awesome-tab-active-bar-height 20
+        awesome-tab-dark-selected-foreground-color "white"
+        awesome-tab-dark-active-bar-color "white"
+        awesome-tab-cycle-scope 'tabs
+        awesome-tab-auto-scroll-flag t
+        awesome-tab-label-max-length 30)
   (defun awesome-tab-buffer-groups ()
     (list
      (cond

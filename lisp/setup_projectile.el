@@ -17,11 +17,14 @@
     "Report project name and type in the modeline."
     (let ((project-name (projectile-project-name))
           (current-branch (car (vc-git-branches))))
-      (format "%s[%s%s]"
-              projectile-mode-line-prefix
-              (or (truncate-string-to-width project-name 32) "-")
+      (format "%s%s"
+              (if-let ((project-root (projectile-project-root)))
+                  (concat projectile-mode-line-prefix
+                          "["
+                          (truncate-string-to-width (funcall projectile-project-name-function project-root) 32))
+                "")
               (if current-branch
-                  (format ":%s" (substring current-branch 0 (min 3 (length current-branch))))
+                  (format ":%s]" (substring current-branch 0 (min 3 (length current-branch))))
                 ""))))
   (add-hook 'dired-after-readin-hook 'projectile-update-mode-line)
   (dolist (buf (buffer-list))

@@ -6,7 +6,7 @@
   (use-package dired-x
     :config
     (bind-key ")" 'dired-omit-mode dired-mode-map)
-    (add-hook 'dired-mode-hook 'dired-omit-mode)
+    (add-hook 'dired-mode-hook #'(lambda () (dired-omit-mode 1) (diminish 'dired-omit-mode)))
     (setq dired-omit-verbose nil)
     (setq dired-omit-size-limit nil))
   (use-package dired-filetype-face)

@@ -52,7 +52,6 @@
   (require 'setup_latex)
   (require 'setup_lsp)
   (require 'setup_magit)
-  (require 'setup_modeline)
   (require 'setup_matlab)
   (require 'setup_org)
   (require 'setup_pdf)

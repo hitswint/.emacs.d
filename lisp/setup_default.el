@@ -44,7 +44,6 @@
 (setq tramp-ssh-controlmaster-options   ;默认设置导致helm启动慢
       "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 ;; (setq debug-on-error t)
-(set-face-attribute 'highlight nil :background "black")
 (unless noninteractive
   (advice-add #'display-startup-echo-area-message :override #'ignore)
   (setq inhibit-startup-screen t
@@ -145,5 +144,6 @@
 (define-key emacs-lisp-mode-map "\e\C-q" nil)
 (define-key lisp-interaction-mode-map "\e\C-q" nil)
 (define-key prog-mode-map "\e\C-q" nil)
+(global-set-key [f11] 'my-fullscreen)
 ;; ================Keybindings==================
 (provide 'setup_default)

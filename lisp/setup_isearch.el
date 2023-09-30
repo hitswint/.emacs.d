@@ -19,6 +19,8 @@
   :bind (("C-s" . isearch-forward-pinyin)
          ("C-r" . isearch-backward-pinyin))
   :config
+  (use-package isearch
+    :diminish isearch-mode)
   (require 'anzu)
   (defun symbol-name-at-point ()
     (let ((symbol (symbol-at-point)))

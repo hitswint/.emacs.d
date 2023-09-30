@@ -81,7 +81,6 @@
                                                        (concat "\\." (car file-extension-pair) "\\'")
                                                        (concat (cdr file-extension-pair) " %s")))))
                 (turn-on-font-lock)
-                (iimage-mode 1)
                 ;; 如果有#+ATTR_ORG: :width 100则设置为图片宽度为100，否则显示原尺寸
                 (setq org-image-actual-width nil)
                 ;; org-redisplay-inline-images (C-c C-x C-M-v) 更新图片
@@ -176,6 +175,19 @@
   (advice-add 'org-babel-execute-src-block :before #'(lambda (&optional arg info params)
                                                        (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)))
   ;; ===========使用ditaa输出ascii图片==========
+;;;; org-table
+  ;; =================orgtbl====================
+  (use-package org-table
+    :diminish orgtbl-mode)
+  ;; =================orgtbl====================
+;;;; iimage
+  ;; =================iimage====================
+  (use-package iimage
+    :diminish iimage-mode
+    :commands iimage-mode
+    :init
+    (add-hook 'org-mode-hook 'iimage-mode))
+  ;; =================iimage====================
 ;;;; cdlatex
   ;; ================cdlatex====================
   (use-package cdlatex

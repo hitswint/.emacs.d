@@ -52,3 +52,22 @@
              (set-window-start w2 s1)
              (setq i (1+ i)))))))
 ;; ===================循环窗口=====================
+;;; 全屏
+;; ======================全屏======================
+(defun my-fullscreen ()
+  (interactive)
+  (x-send-client-message
+   nil 0 nil "_NET_WM_STATE" 32
+   '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
+(defun my-maximized ()
+  (interactive)
+  (x-send-client-message
+   nil 0 nil "_NET_WM_STATE" 32
+   '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
+  (x-send-client-message
+   nil 0 nil "_NET_WM_STATE" 32
+   '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0)))
+;; (my-maximized)
+;; (setq default-frame-alist
+;;    '((height . 30) (width . 75) (menu-bar-lines . 20) (tool-bar-lines . 0)))
+;; ======================全屏======================

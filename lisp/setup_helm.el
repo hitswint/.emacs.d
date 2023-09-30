@@ -1,6 +1,7 @@
 ;;; helm
 ;; ====================helm=====================
 (use-package helm
+  :diminish (helm-mode eldoc-mode)
   :commands (helm-find-files-1
              helm-insert-latex-math
              helm-completing-read-default-1)
@@ -162,7 +163,7 @@
           (persp-curr-op (if (eq is-dired is-persp-curr) 'or 'not))
           (type (if (null is-dired) "file" "dired")))
       (when (bound-and-true-p persp-mode)
-        (cl-loop for x in (persp-buffers (persp-curr))
+        (cl-loop for x in (persp-buffers (persp-curr)) ;去除#<killed buffer>
                  do (unless (buffer-name x)
                       (delete x (persp-buffers (persp-curr))))))
       `(or (,cl-remove-op (lambda (x) (,dired-op (equal (buffer-mode x) 'dired-mode)
@@ -253,13 +254,11 @@
      (help-message :initform 'helm-buffer-help-message)))
   (defclass helm-recentf-file-source (helm-source-sync)
     ((init :initform (lambda () (recentf-mode 1)))
-     (candidates :initform (lambda () (let ((files-opened (mapcar 'buffer-file-name (buffer-list))))
-                                        (cl-remove-if (lambda (x)
-                                                        (or (directory-name-p x)
-                                                            ;; 调用tramp，速度较慢
-                                                            ;; (file-directory-p x)
-                                                            (member (expand-file-name x) files-opened)))
-                                                      recentf-list))))
+     (candidates :initform (lambda () (cl-remove-if (lambda (x)
+                                                      ;; (file-directory-p x) ;调用tramp，速度较慢
+                                                      (or (directory-name-p x)
+                                                          (get-file-buffer x)))
+                                                    recentf-list)))
      (pattern-transformer :initform 'helm-recentf-pattern-transformer)
      (match-part :initform (lambda (candidate)
                              (if (or helm-ff-transformer-show-only-basename
@@ -381,13 +380,10 @@
      (help-message :initform 'helm-buffer-help-message)))
   (defclass helm-recentf-directory-source (helm-source-sync)
     ((init :initform (lambda () (recentf-mode 1)))
-     (candidates :initform (lambda () (let ((directorys-opened (cl-loop for x in (buffer-list)
-                                                                        when (equal (buffer-mode x) 'dired-mode)
-                                                                        collect (expand-file-name (buffer-local-value 'default-directory x)))))
-                                        (cl-remove-if (lambda (x)
-                                                        (or (not (directory-name-p x))
-                                                            (member (expand-file-name x) directorys-opened)))
-                                                      recentf-list))))
+     (candidates :initform (lambda () (cl-remove-if (lambda (x)
+                                                      (or (not (directory-name-p x))
+                                                          (buffer-live-p (cdr (assoc (expand-file-name x) dired-buffers)))))
+                                                    recentf-list)))
      (pattern-transformer :initform 'helm-recentf-pattern-transformer)
      (match-part :initform (lambda (candidate)
                              (if (or helm-ff-transformer-show-only-basename
@@ -618,6 +614,9 @@
 (use-package helm-ag
   ;; helm-do-ag 互动式搜索，但只能搜索一个词
   ;; helm-ag 先输入词，可以在结果中搜索第二个词
+  ;; 默认忽略大小写，两种方式考虑大小写：
+  ;; 1. 搜索-s pattern
+  ;; 2. C--前缀并输入-s
   :commands (helm-do-ag helm-do-ag-buffers)
   :init
   (bind-key "C-x g" #'(lambda () (interactive) (let ((helm-truncate-lines t)) (if current-prefix-arg

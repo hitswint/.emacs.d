@@ -187,25 +187,10 @@
 ;;; highlight-parentheses
 ;; ============highlight-parentheses============
 (use-package highlight-parentheses
+  :diminish highlight-parentheses-mode
   :config
   (set-face-attribute 'highlight-parentheses-highlight nil :weight 'bold :strike-through t)
-  (defun hl-paren-create-overlays ()
-    (let ((fg highlight-parentheses-colors)
-          (bg highlight-parentheses-background-colors)
-          attributes)
-      (while (or fg bg)
-        (setq attributes (face-attr-construct 'hl-paren-face))
-        ;; 取消改变括号前景颜色
-        ;; (when (car fg)
-        ;;   (setq attributes (plist-put attributes :foreground (car fg))))
-        (pop fg)
-        (when (car bg)
-          (setq attributes (plist-put attributes :background (car bg))))
-        (pop bg)
-        (dotimes (i 2) ;; Front and back.
-          (push (make-overlay 0 0 nil t) hl-paren-overlays)
-          (overlay-put (car hl-paren-overlays) 'font-lock-face attributes)))
-      (setq hl-paren-overlays hl-paren-overlays)))
+  (setq highlight-parentheses-colors nil)
   (global-highlight-parentheses-mode))
 ;; ============highlight-parentheses============
 (provide 'setup_parenthesis)

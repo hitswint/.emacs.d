@@ -140,7 +140,6 @@
                            multiple-cursors
                            names
                            neotree
-                           nyan-mode
                            operate-on-number
                            org-appear
                            org-brain
@@ -178,10 +177,8 @@
                            recentf-ext
                            restclient
                            rg
-                           rich-minority
                            s
                            skewer-mode
-                           smart-mode-line
                            smartrep
                            sudo-edit
                            swiper
@@ -239,9 +236,9 @@ Missing packages are installed automatically."
 ;; =================use-package=====================
 ;; :bind或:commands中需使用package或:config中的函数
 (require 'use-package)
-(require 'diminish)
 (require 'delight)
 (require 'bind-key)
+(require 'diminish)
 ;; =================use-package=====================
 ;;; exec-path-from-shell
 ;; =============exec-path-from-shell================
@@ -255,7 +252,8 @@ Missing packages are installed automatically."
 ;; ===================smartrep======================
 (use-package smartrep
   :config
-  (setq smartrep-mode-line-string-activated nil)
+  (setq smartrep-mode-line-string-activated nil
+        smartrep-mode-line-active-bg "black")
   (smartrep-define-key global-map "<escape>"
     '(("i" . tab-to-tab-stop)
       ("u" . upcase-word)

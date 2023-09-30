@@ -338,9 +338,11 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
                                 (bind-key "C-c e" 'toggle-elpy-mode-all-buffers python-mode-map)))
   (setq elpy-remove-modeline-lighter nil)
   :config
-  (setq elpy-rpc-timeout nil)
-  (setq elpy-get-info-from-shell t)
-  (setq elpy-shell-starting-directory 'current-directory)
+  ;; elpy-config：查看运行环境，elpy-rpc--get-package-list：查看需要的包
+  (setq elpy-rpc-timeout nil
+        elpy-rpc-virtualenv-path 'current ;采用py3虚拟环境，而不是默认~/.emacs.d/elpy/rpc-venv
+        elpy-get-info-from-shell t
+        elpy-shell-starting-directory 'current-directory)
   ;; 使用ipython作为交互环境
   (setq python-shell-interpreter "ipython"
         python-shell-interpreter-args "-i --simple-prompt --pylab")

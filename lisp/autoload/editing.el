@@ -85,26 +85,21 @@ When there is a text selection, act on the region."
       (scroll-down arg)
     (scroll-down 3)))
 ;; ========光标不动，窗口上下移动两三行============
-;;; 移除行尾的空格并indent
-;; ============移除行尾的空格并indent==============
-(defun cleanup-buffer-safe ()
-  "Perform a bunch of safe operations on the whitespace content of a buffer.
-Does not indent buffer, because it is used for a before-save-hook, and that
-might be bad."
-  (interactive)
-  (untabify (point-min) (point-max))
-  (delete-trailing-whitespace)
-  (set-buffer-file-coding-system 'utf-8))
-;; Various superfluous white-space. Just say no.
-;; (add-hook 'before-save-hook 'cleanup-buffer-safe) ;会导致mew发送附件时，保存失败，进而发送失败
+;;; cleanup-buffer
+;; =================cleanup-buffer=================
 ;;;###autoload
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
 Including indent-buffer, which should not be called automatically on save."
   (interactive)
-  (indent-region (point-min) (point-max))
-  (cleanup-buffer-safe))
-;; ============移除行尾的空格并indent==============
+  (let ((start (if (region-active-p) (region-beginning) (point-min)))
+        (end (if (region-active-p) (region-end) (point-max))))
+    (indent-region start end)
+    (untabify start end)
+    (delete-trailing-whitespace start end)
+    (set-buffer-file-coding-system 'utf-8)))
+;; (add-hook 'before-save-hook 'cleanup-buffer)
+;; =================cleanup-buffer=================
 ;;; 跳转到某行时行号暂时可见
 ;; ============跳转到某行时行号暂时可见============
 ;;;###autoload
