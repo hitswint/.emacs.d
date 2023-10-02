@@ -80,7 +80,6 @@
                                               collect (cons
                                                        (concat "\\." (car file-extension-pair) "\\'")
                                                        (concat (cdr file-extension-pair) " %s")))))
-                (turn-on-font-lock)
                 ;; 如果有#+ATTR_ORG: :width 100则设置为图片宽度为100，否则显示原尺寸
                 (setq org-image-actual-width nil)
                 ;; org-redisplay-inline-images (C-c C-x C-M-v) 更新图片

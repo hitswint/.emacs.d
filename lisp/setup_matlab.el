@@ -3,10 +3,6 @@
 (use-package octave
   :mode ("\\.m$" . octave-mode)
   :config
-  ;; ac-octave/auto-complete-octave编译配置都有问题
-  (add-hook 'octave-mode-hook #'(lambda () (when (eq window-system 'x)
-                                             (font-lock-mode 1))))
-  (add-hook 'inferior-octave-mode-hook 'turn-on-font-lock)
   (add-hook 'inferior-octave-mode-hook 'kill-shell-buffer-after-exit t)
   (define-key octave-mode-map (kbd "C-c C-,") 'octave-find-definition)
   (define-key octave-mode-map (kbd "C-c C-.") 'pop-tag-mark)

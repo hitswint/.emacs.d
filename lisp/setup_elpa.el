@@ -89,6 +89,7 @@
                            arduino-mode
                            flycheck-pos-tip
                            function-args
+                           gcmh
                            git-commit
                            git-timemachine
                            gnuplot-mode
@@ -265,6 +266,14 @@ Missing packages are installed automatically."
   (smartrep-define-key global-map "C-x"
     '(("d" . duplicate-dwim))))
 ;; ===================smartrep======================
+;;; gcmh
+;; =====================gcmh========================
+(use-package gcmh
+  :diminish gcmh-mode
+  :config
+  (gcmh-mode 1))
+;; =====================gcmh========================
+;;; misc
 ;; =====================misc========================
 (require 'subr-x)
 (require 'bookmark)

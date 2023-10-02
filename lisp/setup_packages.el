@@ -844,8 +844,21 @@
 ;; ===============awesome-tab======================
 (use-package awesome-tab
   :load-path "repos/awesome-tab/"
-  :after (:all helm perspective)
+  :bind (("C-M-`" . awesome-tab-backward-tab)
+         ("C-M-<tab>" . awesome-tab-forward-tab)
+         ("C-M-S-<iso-lefttab>" . awesome-tab-move-current-tab-to-right)
+         ("C-M-~" . awesome-tab-move-current-tab-to-left))
   :config
+  (require 'helm)
+  (require 'perspective)
+  (bind-key "C-M-1" 'my-select-window)
+  (bind-key "C-M-2" 'my-select-window)
+  (bind-key "C-M-3" 'my-select-window)
+  (bind-key "C-M-4" 'my-select-window)
+  (bind-key "C-M-5" 'my-select-window)
+  (bind-key "C-M-6" 'my-select-window)
+  (bind-key "C-M-7" 'my-select-window)
+  (define-key key-translation-map (kbd "C-M-^") (kbd "C-M-6"))
   (setq awesome-tab-display-line 'header-line
         awesome-tab-display-icon (display-graphic-p)
         awesome-tab-height 120
@@ -894,18 +907,6 @@
                              (t
                               (car (nreverse (split-string key-desc "-"))))))))
       (awesome-tab-select-visible-nth-tab tab-index)))
-  (global-set-key (kbd "C-M-`") 'awesome-tab-backward-tab)
-  (global-set-key (kbd "C-M-<tab>") 'awesome-tab-forward-tab)
-  (global-set-key (kbd "C-M-S-<iso-lefttab>") 'awesome-tab-move-current-tab-to-right)
-  (global-set-key (kbd "C-M-~") 'awesome-tab-move-current-tab-to-left)
-  (global-set-key (kbd "C-M-1") 'my-select-window)
-  (global-set-key (kbd "C-M-2") 'my-select-window)
-  (global-set-key (kbd "C-M-3") 'my-select-window)
-  (global-set-key (kbd "C-M-4") 'my-select-window)
-  (global-set-key (kbd "C-M-5") 'my-select-window)
-  (global-set-key (kbd "C-M-6") 'my-select-window)
-  (define-key key-translation-map (kbd "C-M-^") (kbd "C-M-6"))
-  (global-set-key (kbd "C-M-7") 'my-select-window)
   (awesome-tab-mode t))
 ;; ===============awesome-tab======================
 ;;; modelica-mode
@@ -967,4 +968,18 @@
                                                  (pixel-scroll-precision-scroll-down 30)
                                                (window-move-up)))))
 ;; ================pixel-scroll====================
+;;; font-lock
+;; ==================font-lock=====================
+(use-package font-core
+  :config
+  (global-font-lock-mode t))
+(use-package font-lock
+  :config
+  (setq font-lock-maximum-decoration t))
+(use-package jit-lock
+  :custom
+  (jit-lock-chunk-size 4096)
+  (jit-lock-stealth-time 2)
+  (jit-lock-defer-time 0))
+;; ==================font-lock=====================
 (provide 'setup_packages)

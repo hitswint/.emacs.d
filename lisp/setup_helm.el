@@ -30,13 +30,6 @@
                                               (swint-org-annotate-file)
                                               (dired-do-copy)
                                               (dired-create-directory)))
-  ;; https://www.n16f.net/blog/investigating-a-ffap-issue-in-emacs/
-  (advice-add 'helm-guess-filename-at-point :override
-              #'(lambda () (with-helm-current-buffer
-                             (let ((ffap-machine-p-known 'accept)
-                                   (ffap-machine-p-local 'accept)
-                                   (ffap-machine-p-unknown 'reject))
-                               (run-hook-with-args-until-success 'file-name-at-point-functions)))))
   (setq helm-buffer-details-flag nil)
   (setq helm-ff--RET-disabled t)
   (setq helm-ff-newfile-prompt-p nil)

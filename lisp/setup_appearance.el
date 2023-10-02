@@ -27,7 +27,7 @@
 (line-number-mode t)
 (column-number-mode t)
 (defcustom ml/name-width 64
-  "Minimum and maximum size of the file name in the mode-line."
+  "Maximum size of the file name in the mode-line."
   :type 'integer)
 (defcustom ml/directory-truncation-string (if (char-displayable-p ?…) "…/" ".../")
   "String used when truncating part of the file path."
@@ -65,7 +65,12 @@
                                                                            (all-the-icons-dired--icon file))
                                                                          " "
                                                                          (ml/do-shorten-directory (abbreviate-file-name default-directory)
-                                                                                                  (min (- (window-width) 8) ml/name-width))))
+                                                                                                  ;; (min (- (window-width) 8) ml/name-width)
+                                                                                                  (- (window-width)
+                                                                                                     24
+                                                                                                     (length mode-line-modes)
+                                                                                                     (length (and projectile-mode projectile--mode-line))
+                                                                                                     (length (and (frame-parameter nil 'swint-persp-loadp) (persp-name (persp-curr))))))))
                                                                ,orig)
                                                               (cdr mode-line-buffer-identification)))))
 (add-hook 'dired-mode-hook #'(lambda () (setq-local mode-line-buffer-identification
@@ -75,7 +80,12 @@
                                                                             " "
                                                                             (ml/do-shorten-directory (abbreviate-file-name
                                                                                                       (file-name-parent-directory default-directory))
-                                                                                                     (min (- (window-width) 8) ml/name-width))
+                                                                                                     ;; (min (- (window-width) 8) ml/name-width)
+                                                                                                     (- (window-width)
+                                                                                                        24
+                                                                                                        (length mode-line-modes)
+                                                                                                        (length (and projectile-mode projectile--mode-line))
+                                                                                                        (length (and (frame-parameter nil 'swint-persp-loadp) (persp-name (persp-curr))))))
                                                                             (propertize ,orig 'face 'dired-directory))
                                                                     (cdr mode-line-buffer-identification)))))))
 ;; ================Mode Line==================

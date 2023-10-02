@@ -1,27 +1,24 @@
 ;;; Setup
 ;; ===================Setup=====================
-(setq use-short-answers t)
-(global-font-lock-mode t)               ;语法高亮显示
-(auto-image-file-mode t)                ;打开图片显示
-(transient-mark-mode t)                 ;高亮选中区域
-(show-paren-mode t)                     ;显示括号匹配
+(transient-mark-mode t)
+(show-paren-mode t)
+(auto-image-file-mode t)
 (global-hl-line-mode t)
 (fringe-mode)
 (menu-bar-mode -1)
 (delete-selection-mode t)
-(when (fboundp 'tool-bar-mode)
-  (tool-bar-mode -1))
-(when (fboundp 'scroll-bar-mode)
-  (scroll-bar-mode -1))
-(when (fboundp 'horizontal-scroll-bar-mode)
-  (horizontal-scroll-bar-mode -1))
-(mouse-avoidance-mode 'animate)         ;光标靠近鼠标时，自动移开鼠标
-(setq fill-column 80)                   ;默认显示80列换行
-(setq visible-bell t)                   ;关闭错误提示声
-(setq mouse-yank-at-point t)            ;支持中键粘贴
-(setq kill-ring-max 200)                ;设置kill ring长度
-(setq next-line-add-newlines t)         ;最后行时自动打开新行
-(setq make-pointer-invisible t)         ;打字时光标不可见
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(horizontal-scroll-bar-mode -1)
+(mouse-avoidance-mode 'animate)
+(global-display-line-numbers-mode -1)
+(setq use-short-answers t)
+(setq fill-column 80)
+(setq visible-bell t)
+(setq mouse-yank-at-point t)
+(setq kill-ring-max 200)
+(setq next-line-add-newlines t)
+(setq make-pointer-invisible t)
 (setq diary-file "~/org/journal.org.gpg")
 (setq disabled-command-function nil)
 (setq undo-no-redo t)
@@ -37,12 +34,27 @@
 (setq history-delete-duplicates t)
 (setq delete-by-moving-to-trash t)
 (setq confirm-kill-processes nil)
-(global-display-line-numbers-mode -1)
 (setq display-line-numbers-type t)
 (setq trash-directory "~/.Trash")
 (setq tramp-default-method "ssh")
 (setq tramp-ssh-controlmaster-options   ;默认设置导致helm启动慢
       "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+(setq native-comp-jit-compilation nil)
+(setq frame-title-format "emacs@%b")
+(setq frame-inhibit-implied-resize t)
+(setq idle-update-delay 1.0)
+(setq fast-but-imprecise-scrolling t)
+(setq redisplay-skip-fontification-on-input t)
+(setq inhibit-compacting-font-caches t)
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+(setq read-process-output-max (* 64 1024))
+(setq bidi-inhibit-bpa t)
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq auto-mode-case-fold nil)
+(setq command-line-x-option-alist nil)
+(setq ffap-machine-p-known 'reject)
 ;; (setq debug-on-error t)
 (unless noninteractive
   (advice-add #'display-startup-echo-area-message :override #'ignore)
@@ -51,8 +63,6 @@
         inhibit-default-init t
         initial-major-mode 'fundamental-mode
         initial-scratch-message nil))
-(setq native-comp-jit-compilation nil)
-(setq frame-title-format "emacs@%b")
 ;; ===================Setup=====================
 ;;; Keybindings
 ;; ================Keybindings==================
