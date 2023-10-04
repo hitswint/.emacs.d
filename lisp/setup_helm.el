@@ -117,24 +117,64 @@
   (define-key helm-grep-map (kbd "C-o") 'helm-grep-run-other-window-action)
   (define-key helm-command-map (kbd "u") 'helm-unicode)
   (bind-key "C-x M-f" #'(lambda () (interactive) (helm-find-files-1 "/ssh:")))
+  (bind-key "C-x g" #'(lambda () (interactive)
+                        (with-helm-alive-p
+                          (helm-run-after-exit 'swint-helm-ag helm-ff-default-directory)))
+            helm-find-files-map)
+  (bind-key "C-x g" #'(lambda () (interactive)
+                        (with-helm-alive-p
+                          (helm-exit-and-execute-action
+                           (lambda (_candidate)
+                             (swint-helm-ag (buffer-local-value 'default-directory _candidate))))))
+            helm-buffer-map)
+  (bind-key "C-x g" #'(lambda () (interactive)
+                        (with-helm-alive-p
+                          (helm-exit-and-execute-action
+                           (lambda (_candidate)
+                             (when-let ((bf (bookmark-get-filename _candidate)))
+                               (swint-helm-ag (if (directory-name-p bf)
+                                                  bf
+                                                (file-name-directory bf))))))))
+            helm-bookmark-map)
   ;; ===============keybindings=================
 ;;;; helm-fd
   ;; =================helm-fd===================
   (use-package helm-fd
     :bind ("C-x f" . swint-helm-fdfind)
+    :init
+    (bind-key "C-/" nil helm-find-files-map)
+    (bind-key "C-x f" #'(lambda () (interactive)
+                          (with-helm-alive-p
+                            (helm-run-after-exit 'swint-helm-fdfind helm-ff-default-directory)))
+              helm-find-files-map)
+    (bind-key "C-x f" #'(lambda () (interactive)
+                          (with-helm-alive-p
+                            (helm-exit-and-execute-action
+                             (lambda (_candidate)
+                               (swint-helm-fdfind (buffer-local-value 'default-directory _candidate))))))
+              helm-buffer-map)
+    (bind-key "C-x f" #'(lambda () (interactive)
+                          (with-helm-alive-p
+                            (helm-exit-and-execute-action
+                             (lambda (_candidate)
+                               (when-let ((bf (bookmark-get-filename _candidate)))
+                                 (swint-helm-fdfind (if (directory-name-p bf)
+                                                        bf
+                                                      (file-name-directory bf))))))))
+              helm-bookmark-map)
     :config
     ;; helm-find-files下C-/启用
     (setq helm-fd-executable "fdfind")
     (add-to-list 'helm-fd-switches "--absolute-path")
     (add-to-list 'helm-fd-switches "--follow")
-    (defun swint-helm-fdfind ()
+    (defun swint-helm-fdfind (&optional dir)
       (interactive)
       (let ((helm-truncate-lines t)
             ;; 生成局部变量，保证setenv不影响其他进程
             (process-environment (copy-sequence process-environment)))
         ;; ls颜色由$LS_COLORS决定，export LS_COLORS=$LS_COLORS:'di=0;33:'
         (setenv "LS_COLORS" (concat (getenv "LS_COLORS") "di=0;33:"))
-        (helm-fd-1 (helm-current-directory)))))
+        (helm-fd-1 (or dir (helm-current-directory))))))
   ;; =================helm-fd===================
 ;;;; helm-pinyin
   ;; ================helm-pinyin================
@@ -477,18 +517,18 @@
     (interactive)
     (if (equal helm-buffer "*helm file buffers*")
         (call-interactively 'helm-maybe-exit-minibuffer)
-      (helm-run-after-exit #'(lambda () (swint-helm-file-buffers-list)))))
+      (helm-run-after-exit 'swint-helm-file-buffers-list)))
   (defun swint-helm-dired-buffers-after-quit ()
     (interactive)
     (if (equal helm-buffer "*helm dired buffers*")
         (call-interactively 'helm-maybe-exit-minibuffer)
-      (helm-run-after-exit #'(lambda () (swint-helm-dired-buffers-list)))))
+      (helm-run-after-exit 'swint-helm-dired-buffers-list)))
   (defun swint-helm-bookmarks-after-quit ()
     (interactive)
-    (helm-run-after-exit #'(lambda () (helm-bookmarks))))
+    (helm-run-after-exit 'helm-bookmarks))
   (defun swint-helm-projectile-after-quit ()
     (interactive)
-    (helm-run-after-exit #'(lambda () (helm-projectile))))
+    (helm-run-after-exit 'helm-projectile))
   ;; ======在其他helm-buffer中运行helm命令======
 ;;;; helm-open-file-with-lister
   ;; ========helm-open-file-with-lister=========
@@ -610,13 +650,17 @@
   ;; 默认忽略大小写，两种方式考虑大小写：
   ;; 1. 搜索-s pattern
   ;; 2. C--前缀并输入-s
-  :commands (helm-do-ag helm-do-ag-buffers)
+  :commands (helm-do-ag helm-do-ag-buffers swint-helm-ag)
   :init
-  (bind-key "C-x g" #'(lambda () (interactive) (let ((helm-truncate-lines t)) (if current-prefix-arg
-                                                                                  (call-interactively 'helm-do-ag)
-                                                                                (helm-do-ag (helm-current-directory))))))
+  (bind-key "C-x g" 'swint-helm-ag)
   (bind-key "C-x G" #'(lambda () (interactive) (let ((helm-truncate-lines t)) (call-interactively 'helm-do-ag-buffers))))
   :config
+  (defun swint-helm-ag (&optional dir)
+    (interactive)
+    (let ((helm-truncate-lines t))
+      (if (or current-prefix-arg helm-current-prefix-arg)
+          (call-interactively 'helm-do-ag)
+        (helm-do-ag (or dir (helm-current-directory))))))
   (setq helm-ag-base-command "ag --nocolor --nogroup --hidden")
   (setq helm-ag-command-option "--follow") ;Follow symlinks.
   ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果

@@ -232,6 +232,8 @@ Missing packages are installed automatically."
 ;;; benchmark-init
 ;; ================benchmark-init===================
 ;; (require 'benchmark-init)
+;; (benchmark-init/show-durations-tree)
+;; (benchmark-init/show-durations-tabulated)
 ;; ================benchmark-init===================
 ;;; use-package
 ;; =================use-package=====================

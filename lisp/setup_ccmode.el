@@ -34,40 +34,40 @@
 ;;; gdb
 ;; =====================gdb=====================
 (use-package gdb-mi
-  :commands gdb-or-gud-go
+  :bind (("M-o M-g" . gdb-or-gud-go)
+         ("M-o g" . gdb-restore-windows)
+         ("M-o G" . gdb-many-windows))
   :init
-  (dolist (hook '(c-mode-hook c++-mode-hook))
-    (add-hook hook (lambda ()
-                     (local-set-key (kbd "C-c g") 'gdb-or-gud-go))))
+  (setq gud-key-prefix "\C-x\C-a")
   :config
-  (define-key gud-mode-map (kbd "C-c G") 'gud-quit)
-  ;; 直接使用gdb-or-gud-go弹出gud-comint-buffer未定义，先gdb，然后gdb-or-gud-go
-  (defun gdb-or-gud-go (&optional arg)
+  (setq gdb-show-main t)
+  (setq gdb-many-windows t)
+  (defun gdb-or-gud-go ()
     "If gdb isn't running; run gdb, else call gud-go."
-    (interactive "P")
-    (if arg
-        (gdb-many-windows 1)
-      (gdb-many-windows 0))
+    (interactive)
     (if (and gud-comint-buffer
              (buffer-name gud-comint-buffer)
              (get-buffer-process gud-comint-buffer)
-             (with-current-buffer gud-comint-buffer (eq gud-minor-mode 'gdb)))
-        (gud-call (if gdb-active-process "continue" "run") "")
+             (with-current-buffer gud-comint-buffer (memq gud-minor-mode '(gdbmi gdb))))
+        (gud-go nil)
       (gdb (gud-query-cmdline 'gdb))))
-  (defun gud-quit ()
-    "Kill gdb process."
-    (interactive)
-    (when gdb-many-windows
-      (kill-buffer (gdb-locals-buffer-name))
-      (kill-buffer (gdb-stack-buffer-name))
-      (kill-buffer (gdb-breakpoints-buffer-name))
-      (kill-buffer (gdb-inferior-io-name))
-      (kill-buffer "*Buffer List*"))
-    (with-current-buffer gud-comint-buffer
-      (comint-skip-input)
-      (kill-process (get-buffer-process gud-comint-buffer))
-      (delete-other-windows)))
   (add-hook 'gdb-mode-hook 'kill-shell-buffer-after-exit t))
+(use-package gud
+  :after gdb-mi
+  :config
+  (defun gud-quit ()
+    "Kill gdb buffers."
+    (if-let ((io (get-process "gdb-inferior")))
+        (delete-process io)) ;gud-kill-buffer-hook后仍残留gdb-inferior
+    (when gdb-many-windows
+      (cl-loop for bn in (list (gdb-locals-buffer-name)
+                               (gdb-stack-buffer-name)
+                               (gdb-breakpoints-buffer-name)
+                               (gdb-inferior-io-name))
+               do (if-let ((b (get-buffer bn)))
+                      (when (buffer-live-p b)
+                        (kill-buffer b))))))
+  (advice-add 'gud-kill-buffer-hook :after #'gud-quit))
 ;; =====================gdb=====================
 ;;; function-args
 ;; ==================function-args==============

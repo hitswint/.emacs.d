@@ -980,6 +980,6 @@
   :custom
   (jit-lock-chunk-size 4096)
   (jit-lock-stealth-time 2)
-  (jit-lock-defer-time 0))
+  (jit-lock-defer-time 0.1))
 ;; ==================font-lock=====================
 (provide 'setup_packages)

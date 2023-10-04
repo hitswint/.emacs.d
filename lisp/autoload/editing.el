@@ -96,7 +96,7 @@ Including indent-buffer, which should not be called automatically on save."
         (end (if (region-active-p) (region-end) (point-max))))
     (indent-region start end)
     (untabify start end)
-    (delete-trailing-whitespace start end)
+    (call-interactively 'delete-trailing-whitespace)
     (set-buffer-file-coding-system 'utf-8)))
 ;; (add-hook 'before-save-hook 'cleanup-buffer)
 ;; =================cleanup-buffer=================
