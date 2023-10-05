@@ -183,8 +183,7 @@ If buffer-or-name is nil return current buffer's mode."
 (defun swint-add-to-killed-list ()
   "Add to the `swint-killed-file-list' when killing the buffer."
   (let ((file-or-dired (or buffer-file-name
-                           (and (equal major-mode 'dired-mode)
-                                default-directory))))
+                           dired-directory)))
     (when file-or-dired
       (push file-or-dired swint-killed-file-list))))
 ;;;###autoload

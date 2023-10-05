@@ -26,6 +26,21 @@
 ;; ================Mode Line==================
 (line-number-mode t)
 (column-number-mode t)
+(setq-default mode-line-format (delete '(vc-mode vc-mode) mode-line-format) ;去除vc-mode显示
+              mode-line-percent-position '(-3 "%p")
+              mode-line-modes (seq-remove (lambda (x) (member x '("(" ")"))) mode-line-modes)
+              ;; 升级29之后buffer名字前有额外空格
+              ;; 设置mode-line-buffer-identification为默认值"%b"时无空格，而其他值都有空格
+              ;; 采用compact模式，使用单个空格代替连续空格
+              mode-line-compact 'long
+              mode-line-modified `(:eval (ml/generate-modified-status))
+              mode-line-buffer-identification (let ((orig (car mode-line-buffer-identification)))
+                                                `(:eval (ml/generate-buffer-identification ,orig))))
+(add-hook 'dired-mode-hook #'(lambda () (setq-local mode-line-buffer-identification
+                                                    (let ((orig (car mode-line-buffer-identification)))
+                                                      `(:eval (ml/generate-buffer-identification ,orig))))))
+;;;; mode-line-buffer-identification
+;; ======mode-line-buffer-identification======
 (defcustom ml/name-width 64
   "Maximum size of the file name in the mode-line."
   :type 'integer)
@@ -51,42 +66,50 @@
         (when path
           (setq output (concat ml/directory-truncation-string output)))
         output))))
-(setq-default mode-line-format (delete '(vc-mode vc-mode) mode-line-format) ;去除vc-mode显示
-              mode-line-percent-position '(-3 "%p")
-              mode-line-modes (seq-remove (lambda (x) (member x '("(" ")"))) mode-line-modes)
-              ;; 升级29之后buffer名字前有额外空格
-              ;; 设置mode-line-buffer-identification为默认值"%b"时无空格，而其他值都有空格
-              ;; 采用compact模式，使用单个空格代替连续空格
-              mode-line-compact 'long
-              mode-line-buffer-identification (let ((orig (car mode-line-buffer-identification)))
-                                                `(:eval (cons (concat
-                                                               (when-let ((file (buffer-file-name)))
-                                                                 (concat (when (display-graphic-p)
-                                                                           (all-the-icons-dired--icon file))
-                                                                         " "
-                                                                         (ml/do-shorten-directory (abbreviate-file-name default-directory)
-                                                                                                  ;; (min (- (window-width) 8) ml/name-width)
-                                                                                                  (- (window-width)
-                                                                                                     24
-                                                                                                     (length mode-line-modes)
-                                                                                                     (length (and projectile-mode projectile--mode-line))
-                                                                                                     (length (and (frame-parameter nil 'swint-persp-loadp) (persp-name (persp-curr))))))))
-                                                               ,orig)
-                                                              (cdr mode-line-buffer-identification)))))
-(add-hook 'dired-mode-hook #'(lambda () (setq-local mode-line-buffer-identification
-                                                    (let ((orig (car mode-line-buffer-identification)))
-                                                      `(:eval (cons (concat (when (display-graphic-p)
-                                                                              (all-the-icons-dired--icon default-directory))
-                                                                            " "
-                                                                            (ml/do-shorten-directory (abbreviate-file-name
-                                                                                                      (file-name-parent-directory default-directory))
-                                                                                                     ;; (min (- (window-width) 8) ml/name-width)
-                                                                                                     (- (window-width)
-                                                                                                        24
-                                                                                                        (length mode-line-modes)
-                                                                                                        (length (and projectile-mode projectile--mode-line))
-                                                                                                        (length (and (frame-parameter nil 'swint-persp-loadp) (persp-name (persp-curr))))))
-                                                                            (propertize ,orig 'face 'dired-directory))
-                                                                    (cdr mode-line-buffer-identification)))))))
+(defun ml/generate-buffer-identification (orig)
+  (cons (concat (when-let ((curr (or dired-directory (buffer-file-name))))
+                  (concat (when (display-graphic-p)
+                            (all-the-icons-dired--icon curr))
+                          " "
+                          (ml/do-shorten-directory (abbreviate-file-name
+                                                    (file-name-parent-directory curr))
+                                                   ;; (min (- (window-width) 8) ml/name-width)
+                                                   (- (window-width)
+                                                      24
+                                                      (length mode-line-modes)
+                                                      (length (and projectile-mode projectile--mode-line))
+                                                      (length (and (frame-parameter nil 'swint-persp-loadp) (persp-name (persp-curr))))))))
+                (propertize orig 'face 'dired-directory))
+        (cdr mode-line-buffer-identification)))
+;; ======mode-line-buffer-identification======
+;;;; mode-line-modified
+;; ===========mode-line-modified==============
+(defcustom ml/outside-modified-char "M"
+  "Char to display if buffer needs to be reverted."
+  :type 'string)
+(defcustom ml/read-only-char "R"
+  "Displayed when buffer is readonly."
+  :type 'string)
+(defcustom ml/modified-char (char-to-string (if (char-displayable-p ?×) ?× ?*))
+  "String that indicates if buffer is modified. Should be one SINGLE char."
+  :type 'string)
+(defcustom ml/not-modified-char " "
+  "String that indicates if buffer is un-modified. Should be one SINGLE char."
+  :type 'string)
+(defface ml/not-modified '((t :inverse-video nil)) "")
+(defface ml/read-only '((t :inherit ml/not-modified)) "")
+(defface ml/modified '((t :inherit ml/not-modified :foreground "Red" :weight bold)) "")
+(defface ml/outside-modified '((t :inherit ml/not-modified :foreground "#ffffff" :background "#c82829")) "")
+(defun ml/generate-modified-status ()
+  (cond
+   ((not (or (and (buffer-file-name) (file-remote-p buffer-file-name))
+             (verify-visited-file-modtime (current-buffer))))
+    (propertize ml/outside-modified-char 'face 'ml/outside-modified))
+   ((buffer-modified-p)
+    (propertize (if buffer-read-only ml/read-only-char ml/modified-char)
+                'face 'ml/modified))
+   (buffer-read-only (propertize ml/read-only-char 'face 'ml/read-only))
+   (t (propertize ml/not-modified-char 'face 'ml/not-modified))))
+;; ===========mode-line-modified==============
 ;; ================Mode Line==================
 (provide 'setup_appearance)
