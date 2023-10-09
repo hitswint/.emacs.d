@@ -4,6 +4,7 @@
   :commands posframe-show)
 (use-package lsp-bridge
   :load-path "repos/lsp-bridge/"
+  :delight '(:eval (propertize " L" 'face 'font-lock-function-name-face))
   :bind ("M-g l" . swint-toggle-lsp-bridge)
   :init
   (bind-key "C-x C-," 'xref-find-definitions)
@@ -14,7 +15,7 @@
   :config
   (require 'yasnippet)
   (yas-global-mode 1)
-  (setq lsp-bridge-c-lsp-server "clangd")
+  (setq lsp-bridge-c-lsp-server "ccls") ;clangd
   (setq lsp-bridge-python-lsp-server "pyright")
   (setq lsp-bridge-python-multi-lsp-server "pyright-background-analysis_ruff")
   (setq lsp-bridge-complete-manually nil) ;lsp-bridge-popup-complete-menu
@@ -58,12 +59,17 @@
   (define-key lsp-bridge-mode-map (kbd "C-c M-/") #'lsp-bridge-workspace-list-symbols)
   (define-key lsp-bridge-mode-map (kbd "C-c C-/") #'(lambda () (interactive)
                                                       (lsp-bridge-popup-documentation)
-                                                      (trainsient-scroll-popup-lsp-document)))
-  ;; (define-key lsp-bridge-mode-map (kbd "M-p") #'lsp-bridge-popup-documentation-scroll-down)
-  ;; (define-key lsp-bridge-mode-map (kbd "M-n") #'lsp-bridge-popup-documentation-scroll-up)
+                                                      ;; (trainsient-scroll-popup-lsp-document)
+                                                      (smartrep-read-event-loop
+                                                       '(("M-p" . lsp-bridge-popup-documentation-scroll-down)
+                                                         ("M-n" . lsp-bridge-popup-documentation-scroll-up)))))
+  ;; (define-key lsp-bridge-mode-map (kbd "M-p/n") #'(lambda (&optional arg) (interactive "P")
+  ;;                                                   (if (acm-frame-visible-p lsp-bridge-popup-documentation-frame)
+  ;;                                                       (call-interactively 'lsp-bridge-popup-documentation-scroll-down/up)
+  ;;                                                     (call-interactively 'pixel-scroll-window-move-down/up))))
   (define-key lsp-bridge-mode-map (kbd "C-c M-r") #'lsp-bridge-rename)
-  (define-key lsp-bridge-mode-map (kbd "C-c M-p") #'lsp-bridge-diagnostic-jump-prev)
-  (define-key lsp-bridge-mode-map (kbd "C-c M-n") #'lsp-bridge-diagnostic-jump-next)
+  (smartrep-define-key lsp-bridge-mode-map "C-c" '(("M-p" . lsp-bridge-diagnostic-jump-prev)
+                                                   ("M-n" . lsp-bridge-diagnostic-jump-next)))
   (define-key lsp-bridge-mode-map (kbd "C-c M-d") #'lsp-bridge-diagnostic-list)
   (define-key lsp-bridge-mode-map (kbd "C-c M-w") #'lsp-bridge-diagnostic-copy)
   (define-key lsp-bridge-mode-map (kbd "C-c M-i") #'lsp-bridge-diagnostic-ignore)

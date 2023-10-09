@@ -1,6 +1,7 @@
 ;;; Projectile
 ;; ==================Projectile=================
 (use-package projectile
+  :delight '(:eval (propertize (swint-projectile-default-mode-line) 'face 'font-lock-keyword-face))
   :bind-keymap ("M-\"" . projectile-command-map)
   :init
   (setq projectile-mode-line-prefix " ")
@@ -15,17 +16,15 @@
         projectile-mode-line-function 'swint-projectile-default-mode-line)
   (defun swint-projectile-default-mode-line ()
     "Report project name and type in the modeline."
-    (let ((project-name (projectile-project-name))
-          (current-branch (car (vc-git-branches))))
-      (format "%s%s"
-              (if-let ((project-root (projectile-project-root)))
-                  (concat projectile-mode-line-prefix
-                          "["
-                          (truncate-string-to-width (funcall projectile-project-name-function project-root) 32))
-                "")
-              (if current-branch
-                  (format ":%s]" (substring current-branch 0 (min 3 (length current-branch))))
-                ""))))
+    (if-let ((project-root (projectile-project-root)))
+        (concat projectile-mode-line-prefix
+                "["
+                (truncate-string-to-width (funcall projectile-project-name-function project-root) 16)
+                (when-let* ((current-branch (car (vc-git-branches)))
+                            (branch-p (not (equal current-branch "master"))))
+                  (format ":%s" (substring current-branch 0 (min 3 (length current-branch)))))
+                "]")
+      ""))
   (add-hook 'dired-after-readin-hook 'projectile-update-mode-line)
   (dolist (buf (buffer-list))
     (with-current-buffer buf

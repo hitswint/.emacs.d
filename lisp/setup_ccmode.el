@@ -1,6 +1,9 @@
 ;;; ccmode
 ;; ===================ccmode====================
 (use-package cc-mode
+  :delight
+  (c++-mode "CC")
+  (c-mode "C")
   :mode (("\\.\\(cc\\|hh\\)\\'" . c++-mode)
          ("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode)
          ("\\.\\(CC?\\|HH?\\)\\'" . c++-mode)
@@ -11,6 +14,7 @@
          ("\\.ii\\'" . c++-mode))
   :config
   (setq c-default-style "linux")
+  (advice-add 'c-update-modeline :override #'ignore)
   (defun c-compile-current-file ()
     (interactive)
     (unless (file-exists-p "Makefile")
@@ -72,7 +76,7 @@
 ;;; function-args
 ;; ==================function-args==============
 (use-package function-args
-  :diminish function-args-mode
+  :delight '(:eval (propertize " F" 'face 'font-lock-function-name-face))
   :commands (moo-complete moo-jump-local moo-jump-directory fa-jump-maybe swint-fa-show)
   :init
   (dolist (hook '(c-mode-hook c++-mode-hook asm-mode-hook))
@@ -170,7 +174,7 @@
 ;;; meghanada
 ;; =================meghanada===================
 (use-package meghanada
-  :diminish meghanada-mode
+  :delight '(:eval (propertize " M" 'face 'font-lock-function-name-face))
   :commands (meghanada-jump-declaration
              meghanada-back-jump
              meghanada-reference)

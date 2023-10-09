@@ -1,6 +1,7 @@
 ;;; python-mode
 ;; =================python-mode================
 (use-package python
+  :delight "Py"
   :mode ("\\.py\\'" . python-mode)
   :config
   (bind-key "M-o M-P" 'run-python)
@@ -330,13 +331,13 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
 ;;; elpy
 ;; ====================elpy====================
 (use-package elpy
-  :diminish elpy-mode
+  :delight '(:eval (propertize " E" 'face 'font-lock-function-name-face))
   :commands (elpy-shell-switch-to-shell toggle-elpy-mode-all-buffers)
   :init
   (bind-key "M-o M-p" 'elpy-shell-switch-to-shell)
   (add-hook 'python-mode-hook (lambda ()
                                 (bind-key "C-c e" 'toggle-elpy-mode-all-buffers python-mode-map)))
-  (setq elpy-remove-modeline-lighter nil)
+  (setq elpy-remove-modeline-lighter t)
   :config
   ;; elpy-config：查看运行环境，elpy-rpc--get-package-list：查看需要的包
   (setq elpy-rpc-timeout nil
@@ -357,9 +358,9 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
   (define-key elpy-mode-map (kbd "C-c C-/") 'elpy-doc)
   (define-key elpy-mode-map (kbd "M-TAB") 'elpy-company-backend)
   (define-key elpy-mode-map (kbd "C-c C-f") 'elpy-find-file)
-  (define-key elpy-mode-map (kbd "C-c C-n") 'elpy-flymake-next-error)
   (define-key elpy-mode-map (kbd "C-c C-o") 'elpy-occur-definitions)
-  (define-key elpy-mode-map (kbd "C-c C-p") 'elpy-flymake-previous-error)
+  (smartrep-define-key elpy-mode-map "C-c" '(("C-p" . elpy-flymake-previous-error)
+                                             ("C-n" . elpy-flymake-next-error)))
   (define-key elpy-mode-map (kbd "C-c M-f") 'elpy-format-code)
   (define-key elpy-mode-map (kbd "C-c C-s") 'elpy-rgrep-symbol)
   (define-key elpy-mode-map (kbd "C-c C-r") elpy-refactor-map)
@@ -391,7 +392,8 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
                (pyvenv-mode 1))
       (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
         (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
-      (elpy-enable))))
+      (elpy-enable)
+      (elpy-modules-remove-modeline-lighter 'flymake-mode))))
 ;; ====================elpy====================
 ;;; jupyter
 ;; ==================jupyter===================

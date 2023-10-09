@@ -319,6 +319,7 @@
 ;;; peep-dired
 ;; ================peep-dired==================
 (use-package peep-dired
+  :delight (peep-dired (:eval (propertize " P" 'face 'font-lock-function-name-face)))
   :commands (global-peep-dired peep-dired-find-file)
   :init
   (add-hook 'dired-mode-hook (lambda ()

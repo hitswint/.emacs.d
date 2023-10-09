@@ -106,13 +106,14 @@ Including indent-buffer, which should not be called automatically on save."
 (defun goto-line-with-feedback ()
   "Show line numbers temporarily, while prompting for the line number input"
   (interactive)
-  (unwind-protect
-      (progn
-        (display-line-numbers-mode 1)
-        (let ((line-num (read-number "Goto line: ")))
-          (goto-char (point-min))
-          (forward-line (1- line-num))))
-    (display-line-numbers-mode -1)))
+  (let ((orig-state display-line-numbers-mode))
+    (unwind-protect
+        (progn
+          (unless orig-state (display-line-numbers-mode 1))
+          (let ((line-num (read-number "Goto line: ")))
+            (goto-char (point-min))
+            (forward-line (1- line-num))))
+      (display-line-numbers-mode (or orig-state -1)))))
 ;; ============跳转到某行时行号暂时可见============
 ;;; 注释/反注释-行或区域
 ;; ==============注释/反注释-行或区域==============

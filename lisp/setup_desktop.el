@@ -102,6 +102,7 @@
                                            (emmet-mode nil)
                                            (skewer-html-mode nil)
                                            (elpy-mode nil)
+                                           (jedi-mode nil)
                                            (flymake-mode nil)
                                            (xclipmon-mode nil)
                                            (dired-async-mode nil)

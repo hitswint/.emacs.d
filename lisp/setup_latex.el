@@ -24,6 +24,7 @@
                     TeX-show-compilation t) ; Display compilation windows.
               (TeX-global-PDF-mode t)   ; PDF mode enable, not plain.
               (setq TeX-save-query nil)
+              (setq-local TeX-base-mode-name "TeX")
               (imenu-add-menubar-index)
               (define-key LaTeX-mode-map (kbd "C-c f") 'TeX-font)
               (define-key LaTeX-mode-map (kbd "C-q") #'(lambda () (interactive)

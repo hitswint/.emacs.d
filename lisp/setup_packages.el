@@ -94,7 +94,10 @@
   :config
   ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end
   (setq expand-region-contract-fast-key "C-:")
-  (setq expand-region-reset-fast-key "C-;"))
+  (setq expand-region-reset-fast-key "C-;")
+  ;; 默认把er/save-mode-excursion设置为er/save-org-mode-excursion，导致org-mode中使用卡顿
+  (er/enable-mode-expansions 'org-mode #'(lambda ()
+                                           (setq-local er/save-mode-excursion nil))))
 ;; =================expand-region==================
 ;;; auto-mark
 ;; ==================auto-mark=====================
@@ -348,6 +351,7 @@
 ;;; easy-kill
 ;; =====================easy-kill==================
 (use-package easy-kill
+  :commands gui-select-text-with-copyq
   :bind ("M-w" . kill-ring-save)
   :init
   (global-set-key [remap kill-ring-save] 'easy-kill)
@@ -615,6 +619,7 @@
 ;;; markdown-mode
 ;; =================markdown-mode==================
 (use-package markdown-mode
+  :delight "Md"
   :commands (markdown-mode
              gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
@@ -680,6 +685,7 @@
 ;;; gnuplot
 ;; ====================gnuplot=====================
 (use-package gnuplot-mode
+  :delight "Gp"
   :mode ("\\.\\(gp\\|gnuplot\\)$" . gnuplot-mode)
   :config
   (define-key gnuplot-mode-map (kbd "C-c C-v") 'swint-open-output-file))
@@ -687,6 +693,7 @@
 ;;; graphviz-dot-mode
 ;; ================graphviz-dot-mode===============
 (use-package graphviz-dot-mode
+  :delight "Gv"
   :mode ("\\.dot\\'" . graphviz-dot-mode)
   :config
   (define-key graphviz-dot-mode-map (kbd "C-c C-c") 'compile)
@@ -787,6 +794,7 @@
 ;; ==================idf-mode======================
 (use-package idf-mode
   :load-path "site-lisp/idf-mode/"
+  :delight "Idf"
   :mode ("\\.[iI][dD][fF]\\'" . idf-mode)
   :config
   (smartrep-define-key idf-mode-map "C-c"
@@ -912,6 +920,7 @@
 ;;; modelica-mode
 ;; ==============modelica-mode=====================
 (use-package modelica-mode
+  :delight "Mo"
   :mode ("\\.mo\\'" . modelica-mode)
   :config
   (define-key modelica-mode-map (kbd "C-M-{") 'modelica-backward-block)
@@ -949,24 +958,22 @@
   :config
   (pixel-scroll-precision-mode 1)
   (setq pixel-scroll-precision-interpolate-page t)
-  (defun +pixel-scroll-interpolate-down (&optional lines)
-    (interactive)
-    (if lines
-        (pixel-scroll-precision-interpolate (* -1 lines (pixel-line-height)))
-      (pixel-scroll-interpolate-down)))
-  (defun +pixel-scroll-interpolate-up (&optional lines)
-    (interactive)
-    (if lines
-        (pixel-scroll-precision-interpolate (* lines (pixel-line-height))))
-    (pixel-scroll-interpolate-up))
-  (defalias 'scroll-up-command '+pixel-scroll-interpolate-down)
-  (defalias 'scroll-down-command '+pixel-scroll-interpolate-up)
-  (bind-key "M-p" #'(lambda () (interactive) (if (display-graphic-p)
-                                                 (pixel-scroll-precision-scroll-up 30)
-                                               (window-move-down))))
-  (bind-key "M-n" #'(lambda () (interactive) (if (display-graphic-p)
-                                                 (pixel-scroll-precision-scroll-down 30)
-                                               (window-move-up)))))
+  ;; (defalias 'scroll-up-command 'pixel-scroll-interpolate-down)
+  ;; (defalias 'scroll-down-command 'pixel-scroll-interpolate-up)
+  (bind-key "M-v" 'pixel-scroll-interpolate-up)
+  (bind-key "C-v" 'pixel-scroll-interpolate-down)
+  (defun pixel-scroll-window-move-up (&optional arg)
+    (interactive "p")
+    (if (display-graphic-p)
+        (pixel-scroll-precision-scroll-down (* 30 (or arg 1)))
+      (call-interactively 'window-move-up)))
+  (defun pixel-scroll-window-move-down (&optional arg)
+    (interactive "p")
+    (if (display-graphic-p)
+        (pixel-scroll-precision-scroll-up (* 30 (or arg 1)))
+      (call-interactively 'window-move-down)))
+  (bind-key "M-p" 'pixel-scroll-window-move-down)
+  (bind-key "M-n" 'pixel-scroll-window-move-up))
 ;; ================pixel-scroll====================
 ;;; font-lock
 ;; ==================font-lock=====================

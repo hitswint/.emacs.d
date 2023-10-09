@@ -1,6 +1,7 @@
 ;;; octave
 ;; ======================octave====================
 (use-package octave
+  :delight "Oct"
   :mode ("\\.m$" . octave-mode)
   :config
   (add-hook 'inferior-octave-mode-hook 'kill-shell-buffer-after-exit t)
@@ -28,6 +29,7 @@
 ;;; matlab
 ;; ======================matlab====================
 (use-package matlab
+  :delight "Mat"
   :commands (matlab-mode
              matlab-shell)
   :init

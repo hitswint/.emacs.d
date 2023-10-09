@@ -27,7 +27,6 @@
 (line-number-mode t)
 (column-number-mode t)
 (setq-default mode-line-format (delete '(vc-mode vc-mode) mode-line-format) ;去除vc-mode显示
-              mode-line-percent-position '(-3 "%p")
               mode-line-modes (seq-remove (lambda (x) (member x '("(" ")"))) mode-line-modes)
               ;; 升级29之后buffer名字前有额外空格
               ;; 设置mode-line-buffer-identification为默认值"%b"时无空格，而其他值都有空格
@@ -79,7 +78,9 @@
                                                       (length mode-line-modes)
                                                       (length (and projectile-mode projectile--mode-line))
                                                       (length (and (frame-parameter nil 'swint-persp-loadp) (persp-name (persp-curr))))))))
-                (propertize orig 'face 'dired-directory))
+                (propertize orig 'face (if dired-directory
+                                           'dired-directory
+                                         'mode-line-buffer-id)))
         (cdr mode-line-buffer-identification)))
 ;; ======mode-line-buffer-identification======
 ;;;; mode-line-modified

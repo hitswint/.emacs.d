@@ -22,7 +22,7 @@
 (setq diary-file "~/org/journal.org.gpg")
 (setq disabled-command-function nil)
 (setq undo-no-redo t)
-(setq uniquify-buffer-name-style 'forward)
+(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 (setq-default indent-tabs-mode nil)
 (setq auto-window-vscroll nil)          ;解决C-n卡顿
 (setq save-interprogram-paste-before-kill t)
@@ -55,6 +55,9 @@
 (setq auto-mode-case-fold nil)
 (setq command-line-x-option-alist nil)
 (setq ffap-machine-p-known 'reject)
+(setq find-file-visit-truename nil)
+(setq vc-follow-symlinks t)
+;; (setq vc-handled-backends nil)
 ;; (setq debug-on-error t)
 (unless noninteractive
   (advice-add #'display-startup-echo-area-message :override #'ignore)
