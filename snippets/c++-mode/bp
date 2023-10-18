@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# key: bp
+# name: bp
+# group: of
+# expand-env: ((yas-indent-line 'fixed))
+# --
+type  	${1:$$(yas-choose-value '("fixedFluxPressure" "fixedValue" "calculated" "prghPressure" "totalPressure" "prghTotalPressure" "zeroGradient" "empty" "wedge" "cyclic" "symmetryPlane"))};${2:$$(cond ((equal (yas-field-value 1) "prghPressure") "\n\tp  	$internalField;") ((member (yas-field-value 1) '("totalPressure" "prghTotalPressure")) "\n\tp0  	$internalField;"))}${3:$$(unless (member (yas-field-value 1) '("zeroGradient" "empty" "wedge" "cyclic" "symmetryPlane")) "\n\tvalue  	$internalField;")}$0

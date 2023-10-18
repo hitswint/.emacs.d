@@ -58,7 +58,8 @@ Emacs buffers are those whose name starts with *."
         (buffer (current-buffer))
         (name (buffer-name)))
     (when (and filename (file-exists-p filename)
-               (yes-or-no-p "Are you sure you want to remove this file? "))
+               (yes-or-no-p (format "Are you sure you want to remove %s?"
+                                    (propertize filename 'face 'font-lock-variable-name-face))))
       (delete-file filename)
       (swint-kill-buffer buffer)
       (message "File '%s' successfully removed" filename))))

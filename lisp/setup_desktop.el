@@ -37,7 +37,7 @@
         desktop-load-locked-desktop t
         desktop-save t
         desktop-auto-save-timeout 5
-        desktop-files-not-to-save "\\(\\`/[^/:]*:\\|(ftp)\\|/mnt/share/.*\\|/mnt/sshfs/.*\\'\\)")
+        desktop-files-not-to-save "\\(\\`/[^/:]*:\\|(ftp)\\|/mnt/share/.*\\|/mnt/sshfs/.*\\|/mnt/usb/.*\\'\\)")
   (desktop-save-mode t)
   ;; Minor modes not to be saved.
   (setq desktop-minor-mode-table (append desktop-minor-mode-table

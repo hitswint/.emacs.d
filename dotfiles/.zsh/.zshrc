@@ -55,12 +55,6 @@ then
     set --
 fi
 
-if [ ! -f ${ZDOTDIR}/src/pinyin-completion/shell/pinyin-comp.zsh ];then
-    git clone https://github.com/hitswint/pinyin-completion.git ${ZDOTDIR}/src/pinyin-completion
-else
-    source-if-exists "${ZDOTDIR}/src/pinyin-completion/shell/pinyin-comp.zsh"
-fi
-
 if [ ! -f ${ZDOTDIR}/src/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh ];then
     git clone https://github.com/hitswint/zsh-interactive-cd ${ZDOTDIR}/src/zsh-interactive-cd
 else
@@ -69,4 +63,41 @@ fi
 
 if [[ -n $SSH_CONNECTION ]]; then
     PROMPT="%{$fg_bold[yellow]%}%m%{$reset_color%} ${PROMPT}"
+fi
+
+# OpenFOAM
+if [[ -n $WM_PROJECT ]]; then
+    # 添加$PROMPT中OpenFOAM相关信息
+    # export PROMPT_ORIG=$PROMPT
+    # precmd () {
+    #     PROMPT="%{$fg_bold[yellow]%}$HOSTNAME%{$fg_bold[magenta]%} $WM_COMPILER/$WM_COMPILE_OPTION%{$reset_color%} ${PROMPT_ORIG}"
+    # }
+
+    function of_prompt_info () {
+        if [[ $WM_PROJECT_DIR =~ "/opt/openfoam.*" ]]; then
+            echo Native
+        else
+            echo Custom
+        fi
+    }
+
+    setopt prompt_subst
+    PROMPT='%{$fg_bold[yellow]%}$HOSTNAME%{$fg_bold[magenta]%} $WM_COMPILER/$WM_COMPILE_OPTION%{$fg_bold[green]%} $(of_prompt_info)'"%{$reset_color%} ${PROMPT}"
+
+    # 添加OpenFOAM提供的补全
+    export BASH=/bin/bash
+    autoload bashcompinit
+    bashcompinit
+
+    # 使用add-zsh-hook机制，在precmd之前
+    function _openfoam_compinit () {
+        # 直接source无效，需打开zsh后手动执行
+        # 原因：~/.antigen/init.zsh中将_antigen_compinit加入add-zsh-hook/precmd，使bash_completion被覆盖
+        # 使用zsh -x 2>&1 | grep bash_completion查看zsh启动进程
+        source $WM_PROJECT_DIR/etc/config.sh/bash_completion
+        # source只需运行一次，不需要重复运行
+        # add-zsh-hook -D precmd _openfoam_compinit
+    }
+    autoload -U add-zsh-hook
+    add-zsh-hook precmd _openfoam_compinit
 fi

@@ -38,7 +38,7 @@ if [ -f ${ZDOTDIR}/src/antigen/antigen.zsh ];then
     zstyle ':fzf-tab:*' fzf-bindings 'alt-m:toggle' 'alt-t:toggle-all'
     zstyle ':fzf-tab:*' switch-group 'alt-p' 'alt-n'
     zstyle ':fzf-tab:*' fzf-flags --color=bg+:8
-    export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'--bind ctrl-v:page-down,alt-v:page-up'
+    # export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'--bind ctrl-v:page-down,alt-v:page-up'
 
     antigen bundle zsh-users/zsh-autosuggestions
     antigen bundle zsh-users/zsh-completions

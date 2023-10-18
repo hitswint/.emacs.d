@@ -35,3 +35,9 @@ alias qpdfview="qpdfview --unique"
 alias emacs="env LC_CTYPE=zh_CN.UTF-8 XMODIFIERS=@im=fcitx emacs"
 alias e="emacs -q --eval=\"(setq make-backup-files nil)\""
 alias sudo='sudo '
+
+# OpenFOAM
+if [[ -n $WM_PROJECT ]]; then
+    gdbe () { emacs --eval "(gdb \"gdb -i=mi $*\")";}
+    alias switchenv="echo \"Gcc Opt\nGcc Debug\nClang Opt\" | percol | awk '{print \$1,\$2}' | while read a b; do source $HOME/OpenFOAM/OpenFOAM-10/etc/bashrc WM_PROJECT_USER_DIR=$HOME/$WM_PROJECT/$user-$WM_PROJECT_VERSION WM_COMPILER=\$a WM_COMPILE_OPTION=\$b; done"
+fi

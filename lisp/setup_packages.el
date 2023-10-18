@@ -296,7 +296,15 @@
 ;;; ztree
 ;; =====================ztree======================
 (use-package ztree-diff
-  :bind ("M-g =" . ztree-diff))
+  :commands ztree-diff
+  :init
+  (bind-key "M-g =" #'(lambda () (interactive)
+                        (let* ((left (read-directory-name "Left: " (helm-current-directory)))
+                               (right (read-directory-name "Right: " (or (dired-dwim-target-directory) left))))
+                          (ztree-diff left right))))
+  :config
+  ;; Space/RET：diff/Ediff，C/D：拷贝/删除文件，v/r：查看/更新，h/H：显示隐藏文件(相同/指定)
+  (setq-default ztree-diff-filter-list (list "^\\.git")))
 ;; =====================ztree======================
 ;;; which-key
 ;; ====================which-key===================
@@ -638,7 +646,9 @@
       ("f" . markdown-outline-next-same-level)))
   (define-key markdown-mode-map (kbd "C-c C-x C-M-v") 'markdown-display-inline-images)
   (define-key markdown-mode-map (kbd "C-c C-x C-v") 'markdown-toggle-inline-images)
-  (define-key markdown-mode-map (kbd "C-c j") 'markdown-follow-thing-at-point))
+  (define-key markdown-mode-map (kbd "C-c j") 'markdown-follow-thing-at-point)
+  (define-key markdown-mode-map (kbd "M-p") nil)
+  (define-key markdown-mode-map (kbd "M-n") nil))
 ;; =================markdown-mode==================
 ;;; highlight-indentation
 ;; =============highlight-indentation==============
@@ -958,10 +968,8 @@
   :config
   (pixel-scroll-precision-mode 1)
   (setq pixel-scroll-precision-interpolate-page t)
-  ;; (defalias 'scroll-up-command 'pixel-scroll-interpolate-down)
-  ;; (defalias 'scroll-down-command 'pixel-scroll-interpolate-up)
-  (bind-key "M-v" 'pixel-scroll-interpolate-up)
-  (bind-key "C-v" 'pixel-scroll-interpolate-down)
+  (defalias 'scroll-up-command 'pixel-scroll-interpolate-down)
+  (defalias 'scroll-down-command 'pixel-scroll-interpolate-up)
   (defun pixel-scroll-window-move-up (&optional arg)
     (interactive "p")
     (if (display-graphic-p)

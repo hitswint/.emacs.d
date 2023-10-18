@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# key: pimple
+# name: pimple
+# group: of
+# --
+PIMPLE
+{
+  nOuterCorrectors 	${1:1};
+  nCorrectors     	${2:2};
+  nNonOrthogonalCorrectors ${3:1};
+  pRefCell        	${4:cell};
+  pRefValue       	${0:value for $4};
+}

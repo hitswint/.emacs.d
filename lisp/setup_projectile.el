@@ -13,7 +13,13 @@
         projectile-enable-caching nil
         projectile-auto-update-cache nil
         projectile-completion-system 'helm
-        projectile-mode-line-function 'swint-projectile-default-mode-line)
+        projectile-mode-line-function 'swint-projectile-default-mode-line
+        projectile-ignored-project-function (lambda (root)
+                                              (or (file-remote-p root)
+                                                  (string-prefix-p (expand-file-name trash-directory) root)
+                                                  (string-prefix-p "/mnt/share" root)
+                                                  (string-prefix-p "/mnt/sshfs" root)
+                                                  (string-prefix-p "/mnt/usb" root))))
   (defun swint-projectile-default-mode-line ()
     "Report project name and type in the modeline."
     (if-let ((project-root (projectile-project-root)))

@@ -252,26 +252,22 @@
                 (replace-regexp-in-string string-to-escape
                                           "\\\\\\1" x)))
       (cond ((string= engine "pandoc")
-             (let ((output-format (read-string "Output format: ")))
+             (let ((output-format (ivy-read "Output format: " '(docx pdf))))
                (cl-loop for x in file-list
-                        do (let ((filename (escape-local (file-name-nondirectory x))))
-                             (shell-command (concat "pandoc " (cond
-                                                               ((string= (file-name-extension filename) "docx")
-                                                                (read-string "Options: "
-                                                                             "--extract-media ./pic"))
-                                                               ((equal output-format "docx")
-                                                                (read-string "Options: "
-                                                                             (format "--reference-doc=%s --toc --toc-depth=3 --citeproc --bibliography=%s --csl=%s --metadata reference-section-title:\"%s\" --metadata=figureTitle:图 --metadata=figPrefix:图 --metadata=tableTitle:表 --metadata=tblPrefix:表 --metadata=eqnPrefix:式 --metadata=autoEqnLabels:true --metadata=titleDelim: --metadata=chapters:false --metadata=chapDelim:- --filter=pandoc-crossref"
-                                                                                     (expand-file-name "~/.pandoc/reference.docx")
-                                                                                     (expand-file-name "~/.bib/Zotero.bib")
-                                                                                     (expand-file-name "~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl")
-                                                                                     "参考文献")))
-                                                               ((equal output-format "pdf")
-                                                                (read-string "Options: "
-                                                                             "--pdf-engine=xelatex --template=eisvogel.latex --toc -V toc-title=\"目录\" --number-sections --include-in-header ~/.pandoc/templates/chapter_break.tex -V geometry:a4paper -V geometry:margin=2cm -V CJKmainfont=\"SimSun\" -V mainfont=\"Times New Roman\" -V monofont=\"SimSun\"")
-                                                                ))
-                                                    " -o " (file-name-base filename)
-                                                    "." output-format " " filename))))))
+                        do (let* ((filename (escape-local (file-name-nondirectory x)))
+                                  (options (cond
+                                            ((string= (file-name-extension filename) "docx")
+                                             "--extract-media ./pic")
+                                            ((equal output-format "docx")
+                                             (format "--reference-doc=%s --toc --toc-depth=3 --citeproc --bibliography=%s --csl=%s --metadata reference-section-title:\"%s\" --metadata=figureTitle:图 --metadata=figPrefix:图 --metadata=tableTitle:表 --metadata=tblPrefix:表 --metadata=eqnPrefix:式 --metadata=autoEqnLabels:true --metadata=titleDelim: --metadata=chapters:false --metadata=chapDelim:- --filter=pandoc-crossref"
+                                                     (expand-file-name "~/.pandoc/reference.docx")
+                                                     (expand-file-name "~/.bib/Zotero.bib")
+                                                     (expand-file-name "~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl")
+                                                     "参考文献"))
+                                            ((equal output-format "pdf")
+                                             "--pdf-engine=xelatex --template=eisvogel.latex --toc -V toc-title=\"目录\" --number-sections --include-in-header ~/.pandoc/templates/chapter_break.tex -V geometry:a4paper -V geometry:margin=2cm -V CJKmainfont=\"SimSun\" -V mainfont=\"Times New Roman\" -V monofont=\"SimSun\""))))
+                             (message "%s" options)
+                             (shell-command (concat "pandoc " options " -o " (file-name-base filename) "." output-format " " filename))))))
             ((string= engine "libreoffice")
              (let ((output-format (read-string "Output format: ")))
                (cl-loop for x in file-list
@@ -424,7 +420,7 @@ Assuming .. and . is a current directory (like in FAR)"
             (setq rsync/unison-command (concat "unison -batch -confirmbigdel=false " unison-path
                                                " ssh://" remote "//" unison-path)))
         (let ((files (cond (is-push
-                            (cl-loop for f in (dired-get-marked-files)
+                            (cl-loop for f in (or (dired-get-marked-files) (list (buffer-file-name)))
                                      collect (escape-local f)))
                            (is-pull
                             (let (remote-files)

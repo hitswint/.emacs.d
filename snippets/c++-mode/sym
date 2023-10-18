@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# key: sym
+# name: sym
+# group: of
+# --
+type  	symmetryPlane;

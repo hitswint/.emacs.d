@@ -530,8 +530,10 @@
                                                                  (insert (format "[[%s]] " candidate))))))))
       ;; 将插入引用定义为keymap中的命令的话，存在类似helm-insert-or-copy的Quit警告问题
       (when (sequencep label-names)
+        ;; 根据#+NAME/#+LABEL的前缀是latex/office选择不同的引用方式
         (if (string-prefix-p "office" (cadr (split-string (car label-names) ":")))
             (insert (bibtex-completion-format-citation-org-cite label-names))
+          ;; 若引用时无章节编号的需要，仍可采用latex格式；若采取office格式，则需外部调用pandoc
           (insert (s-join " " (--map (format "[[%s]]" it) label-names))))))))
 ;; ==================org-ref====================
 ;;; org-pdftools
@@ -750,10 +752,10 @@
   ;; 对headline，取:CUSTOM_ID:或BEAMER_opt属性，可使用C-c C-x p设置
   ;; 对figure/table，取#+NAME的值
   ;; 若查找不到，则仍采用自动生成机制
-  (setq org-latex-prefer-user-labels t ;使生成tex文件使用org文件中的label
-        setq org-export-time-stamp-file nil ;导出时间戳会使每次导出文件都不相同
-        setq org-beamer-outline-frame-title "Outline"
-        setq org-beamer-frame-default-options "label=") ;设置\begin{frame}后[]选项
+  (setq org-latex-prefer-user-labels t  ;使生成tex文件使用org文件中的label
+        org-export-time-stamp-file nil  ;导出时间戳会使每次导出文件都不相同
+        org-beamer-outline-frame-title "Outline"
+        org-beamer-frame-default-options "label=")  ;设置\begin{frame}后[]选项
   (add-to-list 'org-beamer-environments-extra
                '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
   (add-to-list 'org-beamer-environments-extra

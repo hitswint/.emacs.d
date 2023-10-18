@@ -14,6 +14,75 @@
          ("\\.ii\\'" . c++-mode))
   :config
   (setq c-default-style "linux")
+  (defconst OpenFOAM-style '((c-basic-offset . 4)
+                             (c-tab-always-indent . t)
+                             (c-comment-only-line-offset . (0 . 0))
+                             (c-indent-comments-syntactically-p . t)
+                             (c-block-comments-indent-p . nil)
+                             ;;(comment-style . 'multi-line)
+                             (comment-start . "// ")
+                             (comment-end . "")
+                             (c-cleanup-list . '((defun-close-semi) (list-close-comma) (scope-operator)))
+                             (c-backslash-column . 79)
+                             (c-backslash-max-column . 79)
+                             (c-auto-align-backslashes . t)
+                             (c-toggle-auto-state . 1)
+                             (c-toggle-auto-hungry-state . 1)
+                             (c-offsets-alist
+                              ;;(c . +)                     ;; inside a multi-line C style block comment
+                              (defun-open . 0)            ;; brace that opens a function definition
+                              (defun-close . 0)           ;; brace that closes a function definition
+                              (defun-block-intro . +)     ;; the first line in a top-level defun
+                              (class-open . 0)            ;; brace that opens a class definition
+                              (class-close . 0)           ;; brace that closes a class definition
+                              (inline-open . 0)           ;; brace that opens an in-class inline method
+                              (inline-close . 0)          ;; brace that closes an in-class inline method
+                              (topmost-intro . 0)         ;; the first line in a topmost construct
+                              ;; definition
+                              (topmost-intro-cont . 0)    ;; topmost definition continuation lines
+                              (member-init-intro . +)     ;; first line in a member initialization list
+                              (member-init-cont . 0)      ;; subsequent member initialization list lines
+                              (inher-intro . 0)           ;; first line of a multiple inheritance list
+                              (inher-cont . +)            ;; subsequent multiple inheritance lines
+                              (block-open . 0)            ;; statement block open brace
+                              (block-close . 0)           ;; statement block close brace
+                              (brace-list-open . 0)       ;; open brace of an enum or static array list
+                              (brace-list-close . 0)      ;; open brace of an enum or static array list
+                              (brace-list-intro . +)      ;; first line in an enum or static array list
+                              (brace-list-entry . 0)      ;; subsequent lines in an enum or static array
+                              ;; list
+                              (statement . 0)             ;; a C/C++/ObjC statement
+                              (statement-cont . 0)        ;; a continuation of a C/C++/ObjC statement
+                              (statement-block-intro . +) ;; the first line in a new statement block
+                              (statement-case-intro . +)  ;; the first line in a case `block'
+                              (statement-case-open . +)   ;; the first line in a case `block'
+                              ;; starting with brace
+                              (substatement . +)          ;; the first line after an if/while/for/do/else
+                              (substatement-open . 0)     ;; the brace that opens a substatement block
+                              (case-label . +)            ;; a case or default label
+                              (access-label . -)          ;; C++ private/protected/public access label
+                              (label . -)                 ;; any non-special C/C++/ObjC label
+                              (do-while-closure . 0)      ;; the `while' that ends a do/while construct
+                              (else-clause . 0)           ;; the `else' of an if/else construct
+                              (comment-intro . 0)         ;; line containing only a comment introduction
+                              (arglist-intro . +)         ;; the first line in an argument list
+                              (arglist-cont . 0)          ;; subsequent argument list lines when no
+                              ;; subsequent argument list lines when no the
+                              ;; arglist opening paren
+                              (arglist-cont-nonempty . 0) ;; subsequent argument list lines when at
+                              ;; subsequent argument list lines when at line
+                              ;; as the arglist opening paren
+                              (arglist-close . 0)         ;; line as the arglist opening paren
+                              (stream-op . +)             ;; lines continuing a stream operator construct
+                              (inclass . +)               ;; the construct is nested inside a class
+                              ;; definition
+                              (cpp-macro . 0)             ;; the construct is nested inside a class
+                              ;; definition
+                              (friend . 0)                ;; a C++ friend declaration
+                              ))
+    "OpenFOAM C++ Programming Style"
+    )
+  (c-add-style "OpenFOAM" OpenFOAM-style)
   (advice-add 'c-update-modeline :override #'ignore)
   (defun c-compile-current-file ()
     (interactive)

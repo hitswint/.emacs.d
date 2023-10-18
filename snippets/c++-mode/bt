@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# key: bt
+# name: bt
+# group: of
+# expand-env: ((yas-indent-line 'fixed))
+# --
+type  	${1:$$(yas-choose-value '("fixedValue" "inletOutlet" "externalCoupledTemperature" "externalWallHeatFluxTemperature" "compressible::turbulentTemperatureCoupledBaffleMixed" "zeroGradient" "empty" "wedge" "cyclic" "symmetryPlane"))};${2:$$(cond ((equal (yas-field-value 1) "compressible::turbulentTemperatureCoupledBaffleMixed") "\n\tTnbr  	T;") ((equal (yas-field-value 1) "externalWallHeatFluxTemperature") "\n\th  	uniform 1e3;\n\tTa  	273;") ((equal (yas-field-value 1) "inletOutlet") "\n\tinletValue  	$internalField;"))}${3:$$(unless (member (yas-field-value 1) '("zeroGradient" "empty" "wedge" "cyclic" "symmetryPlane")) "\n\tvalue  	$internalField;")}$0

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# key: bk
+# name: bk
+# group: of
+# expand-env: ((yas-indent-line 'fixed))
+# --
+type  	${1:$$(yas-choose-value '("kqRWallFunction" "turbulentIntensityKineticEnergyInlet" "inletOutlet" "fixedValue" "zeroGradient" "empty" "wedge" "cyclic" "symmetryPlane"))};${2:$$(cond ((equal (yas-field-value 1) "turbulentIntensityKineticEnergyInlet") "\n\tintensity  	0;") ((equal (yas-field-value 1) "inletOutlet") "\n\tinletValue  	$internalField;"))}${3:$$(unless (member (yas-field-value 1) '("zeroGradient" "empty" "wedge" "cyclic" "symmetryPlane")) "\n\tvalue  	$internalField;")}$0

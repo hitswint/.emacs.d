@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# key: pbicg
+# name: pbicg
+# group: of
+# --
+${1:U}
+{
+  solver          PBiCGStab;
+  preconditioner  DILU;
+  tolerance       1e-${2:6};
+  relTol          ${0:0.0};
+}

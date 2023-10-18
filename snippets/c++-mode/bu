@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# key: bu
+# name: bu
+# group: of
+# expand-env: ((yas-indent-line 'fixed))
+# --
+type  	${1:$$(yas-choose-value '("fixedValue" "inletOutlet" "movingWallVelocity" "flowRateInletVelocity" "pressureInletOutletVelocity" "noSlip" "slip" "zeroGradient" "empty" "wedge" "cyclic" "symmetryPlane"))};${2:$$(cond ((member (yas-field-value 1) '("inletOutlet" "pressureInletOutletVelocity")) "\n\tinletValue  	$internalField;") ((equal (yas-field-value 1) "flowRateInletVelocity") "\n\tmassFlowRate  	constant 0.1;\n\tprofile  	turbulentBL;"))}${3:$$(unless (member (yas-field-value 1) '("noSlip" "slip" "zeroGradient" "empty" "wedge" "cyclic" "symmetryPlane")) "\n\tvalue  	$internalField;")}$0

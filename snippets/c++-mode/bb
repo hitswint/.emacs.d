@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# key: bb
+# name: bb
+# group: of
+# expand-env: ((yas-triggers-in-field t) (yas-indent-line 'fixed))
+# --
+${0:$$(let ((fn (file-name-base (buffer-file-name)))) (yas-expand-snippet (yas-lookup-snippet (cond ((equal fn "alphat") "ba") ((equal fn "epsilon") "be") ((equal fn "k") "bk") ((equal fn "nut") "bn") ((equal fn "p") "bp") ((equal fn "p_rgh") "bp") ((equal fn "T") "bt") ((equal fn "U") "bu")))))}

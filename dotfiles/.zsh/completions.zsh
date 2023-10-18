@@ -105,8 +105,11 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin \
   /bin            \
   /usr/X11R6/bin
 
+# 显示隐藏文件(夹)
+setopt globdots
 # Provide .. as a completion.
-zstyle ':completion:*' special-dirs ..
+# zstyle ':completion:*' special-dirs ..
+zstyle ':completion:*' special-dirs false
 
 # Run rehash on completion so new installed program are found automatically:.
 function _force_rehash () {

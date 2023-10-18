@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# key: be
+# name: be
+# group: of
+# expand-env: ((yas-indent-line 'fixed))
+# --
+type  	${1:$$(yas-choose-value '("epsilonWallFunction" "turbulentMixingLengthDissipationRateInlet" "inletOutlet" "fixedValue" "zeroGradient" "empty" "wedge" "cyclic" "symmetryPlane"))};${2:$$(cond ((equal (yas-field-value 1) "turbulentMixingLengthDissipationRateInlet") "\n\tmixingLength  	0.005;") ((equal (yas-field-value 1) "inletOutlet") "\n\tinletValue  	$internalField;"))}${3:$$(unless (member (yas-field-value 1) '("zeroGradient" "empty" "wedge" "cyclic" "symmetryPlane")) "\n\tvalue  	$internalField;")}$0

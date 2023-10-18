@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# key: ba
+# name: ba
+# group: of
+# expand-env: ((yas-indent-line 'fixed))
+# --
+type  	${1:$$(yas-choose-value '("compressible::alphatWallFunction" "compressible::alphatJayatillekeWallFunction" "calculated" "fixedValue" "zeroGradient" "empty" "wedge" "cyclic" "symmetryPlane"))};${2:$$(unless (member (yas-field-value 1) '("zeroGradient" "empty" "wedge" "cyclic" "symmetryPlane")) "\n\tvalue  	$internalField;")}$0

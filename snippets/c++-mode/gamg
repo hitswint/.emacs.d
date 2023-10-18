@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# key: gamg
+# name: gamg
+# group: of
+# --
+${1:p}
+{
+  solver          GAMG;
+  tolerance       1e-${2:6};
+  relTol          ${0:0.0};
+  smoother        GaussSeidel;
+  nCellsInCoarsestLevel 20;
+}
