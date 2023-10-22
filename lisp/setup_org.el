@@ -212,7 +212,7 @@
   ;; 默认 -> 预览当前位置或当前节 / C-u -> 清除当前节预览 / C-u C-u -> 预览当前buffer / C-u C-u C-u 清除全部预览
   (define-key org-mode-map (kbd "C-c v") 'org-latex-preview)
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-  (setf org-highlight-latex-and-related '(latex)) ;高亮显示公式环境
+  ;; (setq org-highlight-latex-and-related '(latex))  ;高亮显示公式环境，会造成卡顿
   ;; =============org-latex-preview=============
 ;;;; org-clipboard-copy/paste
   ;; =========org-clipboard-copy/paste==========

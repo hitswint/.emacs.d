@@ -66,7 +66,7 @@
           (setq output (concat ml/directory-truncation-string output)))
         output))))
 (defun ml/generate-buffer-identification (orig)
-  (cons (concat (when-let ((curr (or dired-directory (buffer-file-name))))
+  (cons (concat (when-let ((curr (or (car-safe dired-directory) dired-directory (buffer-file-name))))
                   (concat (when (display-graphic-p)
                             (all-the-icons-dired--icon curr))
                           " "

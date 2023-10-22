@@ -9,7 +9,9 @@
       ("g" . google-translate-translate_chieng)
       ("y" . youdao-dictionary-to-tip)
       ("d" . baidu-translate-at-point)
-      ("l" . lingva-translate-at-point)))
+      ("l" . lingva-translate-at-point)
+      ("i" . insert-translated-name-insert)
+      ("I" . insert-translated-name-replace)))
   :config
   (defun bing-dict-brief-cb-at-point (&optional _word)
     "Search word at point."

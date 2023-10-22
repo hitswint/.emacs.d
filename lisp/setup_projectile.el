@@ -26,7 +26,7 @@
         (concat projectile-mode-line-prefix
                 "["
                 (truncate-string-to-width (funcall projectile-project-name-function project-root) 16)
-                (when-let* ((current-branch (car (vc-git-branches)))
+                (when-let* ((current-branch  (car (vc-git-branches))) ;git branch --show-current
                             (branch-p (not (equal current-branch "master"))))
                   (format ":%s" (substring current-branch 0 (min 3 (length current-branch)))))
                 "]")

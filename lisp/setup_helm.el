@@ -163,6 +163,16 @@
                                                       (file-name-directory bf))))))))
               helm-bookmark-map)
     :config
+    (bind-key "C-c C-e" #'(lambda () (interactive)
+                            (with-helm-alive-p
+                              (helm-run-after-exit
+                               (lambda (_candidates)
+                                 (let ((default-directory (helm-current-directory))
+                                       (dirs (append '("*helm-fd-edit*") _candidates)))
+                                   (dired dirs)))
+                               (progn (helm-mark-all)
+                                      (helm-marked-candidates)))))
+              helm-fd-map)
     ;; helm-find-files下C-/启用
     (setq helm-fd-executable "fdfind")
     (add-to-list 'helm-fd-switches "--absolute-path")
@@ -193,8 +203,7 @@
   (defmacro swint-buffer-dired/persp-boolean (is-dired is-persp-curr)
     (let ((cl-remove-op (if (null is-dired) 'cl-remove-if 'cl-remove-if-not))
           (dired-op (if (null is-dired) 'or 'and))
-          (persp-curr-op (if (eq is-dired is-persp-curr) 'or 'not))
-          (type (if (null is-dired) "file" "dired")))
+          (persp-curr-op (if (eq is-dired is-persp-curr) 'or 'not)))
       (when (bound-and-true-p persp-mode)
         (cl-loop for x in (persp-buffers (persp-curr)) ;去除#<killed buffer>
                  do (unless (buffer-name x)
@@ -203,7 +212,7 @@
                                                  (,persp-curr-op (and (bound-and-true-p persp-mode)
                                                                       (member x (remq nil (mapcar 'buffer-name (persp-buffers (persp-curr)))))))))
                           (cl-remove-duplicates (helm-buffer-list)))
-           (list (buffer-name (get-buffer-create (format "*helm virtual %s buffers*" ,type)))))))
+           (list (buffer-name (messages-buffer))))))
   (defvar helm-source-file-buffers-list/curr-persp nil)
   (defvar helm-source-file-buffers-list/other-persps nil)
   (defvar helm-source-recentf-file nil)

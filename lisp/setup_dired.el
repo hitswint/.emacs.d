@@ -48,7 +48,7 @@
                                              ("dia" . "env GTK_IM_MODULE=xim dia")
                                              ("drawio" . "env GTK_IM_MODULE=xim drawio")
                                              ("blend" . "blender")
-                                             ("foam" . "paraview")
+                                             ("foam" . "paraview") ("vtk" . "paraview") ("openfoam" . "paraview")
                                              ("eso" . "w.xEsoView.sh") ("mtr" . "w.xEsoView.sh")
                                              ("idf" . "urxvt -e zsh -is eval ep.sh")
                                              ("osm" . "OpenStudioApp"))
@@ -124,7 +124,7 @@
               (define-key dired-mode-map (vector 'remap 'end-of-buffer) 'dired-end-of-buffer)
               (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch) ;对mark的多个文件内容进行查找
               (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
-              (smartrep-define-key dired-mode-map "C-c" '(("d" . dired-duplicate-file)))
+              (smartrep-define-key dired-mode-map "M-s" '(("m" . dired-duplicate-file)))
               (make-local-variable 'dired-sort-map)
               (setq dired-sort-map (make-sparse-keymap))
               (define-key dired-mode-map "s" dired-sort-map)
@@ -154,26 +154,6 @@
     (set-buffer-modified-p nil))
   ;; (add-hook 'dired-after-readin-hook 'sof/dired-sort)
   ;; =============sof/dired-sort===============
-;;;; dired-next/previous-line
-  ;; ========dired-next/previous-line==========
-  (defadvice dired-next-line (around dired-next-line+ activate)
-    "Replace current buffer if file is a directory."
-    ad-do-it
-    (while (and (not (eobp)) (not ad-return-value))
-      (forward-line)
-      (setq ad-return-value(dired-move-to-filename)))
-    (when (eobp)
-      (forward-line -1)
-      (setq ad-return-value(dired-move-to-filename))))
-  (defadvice dired-previous-line (around dired-previous-line+ activate)
-    "Replace current buffer if file is a directory."
-    ad-do-it
-    (while (and (not (bobp)) (not ad-return-value))
-      (forward-line -1)
-      (setq ad-return-value(dired-move-to-filename)))
-    (when (bobp)
-      (call-interactively 'dired-next-line)))
-  ;; ========dired-next/previous-line==========
 ;;;; dired-duplicate-file
   ;; ==========dired-duplicate-file============
   (defun dired-duplicate-file ()
@@ -654,4 +634,44 @@
   (advice-add 'all-the-icons-dired--put-icon :override #'all-the-icons-dired--put-icon/override)
   (advice-add 'all-the-icons-dired--setup :before #'(lambda () (setq-local tab-width 1))))
 ;; ==========all-the-icons-dired===============
+;;; find-dired
+;; ===============find-dired===================
+(use-package find-dired
+  :commands (find-dired-fd find-dired-rg)
+  :init
+  (bind-key "C-x d" nil)
+  (bind-key "C-x d d" 'dired)
+  (bind-key "C-x d f" 'find-dired-fd)
+  (bind-key "C-x d g" 'find-dired-rg)
+  :config
+  (setq find-ls-option find-ls-option-default-ls)
+  (defvar find-dired-fd-args nil)
+  (defvar find-dired-fd-args-history nil)
+  (defconst find-dired-fd-pre-args " --color never ")
+  (defconst find-dired-rg-pre-args " --color never --files-with-matches -0 --regexp ")
+  (defun find-dired-fd (dir args)
+    "Run `fd' and go into Dired mode on a buffer of the output.
+The default command run is fd ARGS -l."
+    (interactive (list
+                  (if current-prefix-arg
+                      (read-directory-name "Run fd in directory: " nil "" t)
+                    (helm-current-directory))
+                  (read-string "Run fd (with args): " find-dired-fd-args
+                               (if find-dired-fd-args
+                                   '(find-dired-fd-args-history . 1)
+                                 'find-dired-fd-args-history))))
+    (setq find-dired-fd-args args
+          args (concat "fdfind" find-dired-fd-pre-args args " -l"))
+    (find-dired-with-command dir args))
+  (defun find-dired-rg (dir regexp)
+    "Find files in DIR that contain matches for REGEXP and Dired on output.
+The default command run is fd -X rg -l0 --regexp REGEXP | xargs -0 ls."
+    (interactive "DFd-rg (directory): \nsFd-rg (rg regexp): ")
+    (find-dired-with-command dir
+                             (concat "fdfind" find-dired-fd-pre-args
+                                     "-X rg" find-dired-rg-pre-args
+                                     (shell-quote-argument regexp)
+                                     " | xargs -0 ls "
+                                     (cdr find-ls-option)))))
+;; ===============find-dired===================
 (provide 'setup_dired)

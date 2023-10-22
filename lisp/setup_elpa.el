@@ -265,8 +265,8 @@ Missing packages are installed automatically."
       ("q" . fill-paragraph)
       ("h" . mark-paragraph)
       ("k" . kill-sentence)))
-  (smartrep-define-key global-map "C-x"
-    '(("d" . duplicate-dwim))))
+  (smartrep-define-key global-map "M-s"
+    '(("m" . duplicate-dwim))))
 ;; ===================smartrep======================
 ;;; gcmh
 ;; =====================gcmh========================

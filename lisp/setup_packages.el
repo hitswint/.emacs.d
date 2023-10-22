@@ -795,8 +795,7 @@
 ;; ============insert-translated-name==============
 (use-package insert-translated-name
   :load-path "repos/insert-translated-name/"
-  :bind (("M-g d" . insert-translated-name-replace)
-         ("M-g D" . insert-translated-name-insert))
+  :commands (insert-translated-name-replace insert-translated-name-insert)
   :config
   (setq insert-translated-name-default-style "origin"))
 ;; ============insert-translated-name==============
@@ -995,6 +994,6 @@
   :custom
   (jit-lock-chunk-size 4096)
   (jit-lock-stealth-time 2)
-  (jit-lock-defer-time 0.1))
+  (jit-lock-defer-time nil))
 ;; ==================font-lock=====================
 (provide 'setup_packages)
