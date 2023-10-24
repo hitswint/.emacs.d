@@ -343,18 +343,42 @@
 ;;; vlf
 ;; =======================vlf======================
 (use-package vlf
-  :bind (:map dired-mode-map
-              ("C-c v" . dired-vlf))
+  :commands vlf
   :init
+  (bind-key "C-c C-v" #'(lambda () (interactive) (vlf (dired-get-file-for-visit))) dired-mode-map)
   ;; Enable vlf when opening files bigger than 100MB.
   (setq large-file-warning-threshold 100000000)
   :config
-  (use-package vlf-setup)
+  ;; (use-package vlf-setup)
   (smartrep-define-key vlf-mode-map ""
     '(("n" . vlf-next-batch)
       ("p" . vlf-prev-batch)))
-  (setq vlf-application 'dont-ask)
-  (add-to-list 'vlf-forbidden-modes-list 'pdf-view-mode))
+  (bind-key "C-v" 'swint-vlf-scroll-up vlf-prefix-map)
+  (bind-key "M-v" 'swint-vlf-scroll-down vlf-prefix-map)
+  (bind-key "M-<" 'swint-vlf-beginning-of-file vlf-prefix-map)
+  (bind-key "M->" 'swint-vlf-end-of-file vlf-prefix-map)
+  (defun swint-vlf-scroll-up ()
+    (interactive)
+    (if (pos-visible-in-window-p (point-max))
+        (progn (vlf-next-batch 1)
+               (goto-char (point-min)))
+      (scroll-up-command)))
+  (defun swint-vlf-scroll-down ()
+    (interactive)
+    (if (pos-visible-in-window-p (point-min))
+        (progn (vlf-prev-batch 1)
+               (goto-char (point-max)))
+      (scroll-down-command)))
+  (defun swint-vlf-beginning-of-file ()
+    (interactive)
+    (when (pos-visible-in-window-p (point-min))
+      (vlf-beginning-of-file))
+    (beginning-of-buffer))
+  (defun swint-vlf-end-of-file ()
+    (interactive)
+    (when (pos-visible-in-window-p (point-max))
+      (vlf-end-of-file))
+    (end-of-buffer)))
 ;; =======================vlf======================
 ;;; easy-kill
 ;; =====================easy-kill==================
@@ -967,8 +991,18 @@
   :config
   (pixel-scroll-precision-mode 1)
   (setq pixel-scroll-precision-interpolate-page t)
-  (defalias 'scroll-up-command 'pixel-scroll-interpolate-down)
-  (defalias 'scroll-down-command 'pixel-scroll-interpolate-up)
+  (defalias 'scroll-up-command '+pixel-scroll-interpolate-down)
+  (defalias 'scroll-down-command '+pixel-scroll-interpolate-up)
+  (defun +pixel-scroll-interpolate-down (&optional lines)
+    (interactive "^P")
+    (if lines
+        (pixel-scroll-precision-interpolate (* -1 lines (pixel-line-height)))
+      (pixel-scroll-interpolate-down)))
+  (defun +pixel-scroll-interpolate-up (&optional lines)
+    (interactive "^P")
+    (if lines
+        (pixel-scroll-precision-interpolate (* lines (pixel-line-height))))
+    (pixel-scroll-interpolate-up))
   (defun pixel-scroll-window-move-up (&optional arg)
     (interactive "p")
     (if (display-graphic-p)
