@@ -1,7 +1,6 @@
 ;;; Setup
 ;; ===================Setup=====================
 (transient-mark-mode t)
-(show-paren-mode t)
 (auto-image-file-mode t)
 (global-hl-line-mode t)
 (fringe-mode)
@@ -49,9 +48,11 @@
 (setq-default cursor-in-non-selected-windows nil)
 (setq highlight-nonselected-windows nil)
 (setq read-process-output-max (* 64 1024))
-(setq bidi-inhibit-bpa t)
-(setq-default bidi-display-reordering 'left-to-right
-              bidi-paragraph-direction 'left-to-right)
+(setq-default bidi-display-reordering nil)
+(setq bidi-inhibit-bpa t
+      long-line-threshold 1000
+      large-hscroll-threshold 1000
+      syntax-wholeline-max 1000)
 (setq auto-mode-case-fold nil)
 (setq command-line-x-option-alist nil)
 (setq ffap-machine-p-known 'reject)

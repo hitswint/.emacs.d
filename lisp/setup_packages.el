@@ -347,7 +347,7 @@
   :init
   (bind-key "C-c C-v" #'(lambda () (interactive) (vlf (dired-get-file-for-visit))) dired-mode-map)
   ;; Enable vlf when opening files bigger than 100MB.
-  (setq large-file-warning-threshold 100000000)
+  (setq large-file-warning-threshold 1000000000)
   :config
   ;; (use-package vlf-setup)
   (smartrep-define-key vlf-mode-map ""
@@ -567,6 +567,9 @@
 ;;; auto-highlight-symbol
 ;; =============auto-highlight-symbol==============
 (use-package auto-highlight-symbol
+  ;; https://github.com/elp-revive/auto-highlight-symbol
+  ;; https://github.com/mhayashi1120/auto-highlight-symbol-mode
+  :load-path "repos/auto-highlight-symbol-mode/"
   :diminish auto-highlight-symbol-mode
   :defer 2
   :config

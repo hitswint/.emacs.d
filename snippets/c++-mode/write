@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# key: wr
+# name: wr
+# group: of
+# expand-env: ((yas-indent-line 'fixed))
+# --
+${1:$$(yas-choose-value '("timeStep" "runTime" "adjustableRunTime" "cpuTime" "clockTime"))}$0

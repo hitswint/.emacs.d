@@ -188,9 +188,23 @@
 ;; ============highlight-parentheses============
 (use-package highlight-parentheses
   :diminish highlight-parentheses-mode
+  :commands highlight-parentheses-mode
+  :init
+  (add-hook 'prog-mode-hook 'highlight-parentheses-mode)
+  (add-hook 'text-mode-hook 'highlight-parentheses-mode)
   :config
+  ;; (global-highlight-parentheses-mode)
   (set-face-attribute 'highlight-parentheses-highlight nil :weight 'bold :strike-through t)
-  (setq highlight-parentheses-colors nil)
-  (global-highlight-parentheses-mode))
+  (setq highlight-parentheses-colors nil))
+;; ============highlight-parentheses============
+;;; paren
+;; ============highlight-parentheses============
+(use-package paren
+  :commands show-paren-local-mode
+  :init
+  (add-hook 'prog-mode-hook 'show-paren-local-mode)
+  (add-hook 'text-mode-hook 'show-paren-local-mode)
+  :config
+  (show-paren-mode -1))
 ;; ============highlight-parentheses============
 (provide 'setup_parenthesis)

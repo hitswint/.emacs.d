@@ -20,8 +20,13 @@
          ("C-r" . isearch-backward-pinyin))
   :config
   (use-package isearch
-    :diminish isearch-mode)
+    :diminish isearch-mode
+    :custom
+    (search-upper-case t))
   (require 'anzu)
+  (bind-key "C-t" 'isearch-thing isearch-mode-map)
+  (bind-key "C-M-;" 'isearch-mark-current isearch-mode-map)
+  (add-hook 'isearch-mode-end-hook (lambda () (setq pinyin-search-activated nil)))
   (defun symbol-name-at-point ()
     (let ((symbol (symbol-at-point)))
       (if symbol
@@ -36,7 +41,6 @@
              (symbol-name-at-point))))
       (deactivate-mark)
       (isearch-yank-string swint-isearch-current-thing)))
-  (define-key isearch-mode-map (kbd "C-t") 'isearch-thing)
   (defun isearch-mark-current ()
     (interactive)
     ;; (let ((start (overlay-start isearch-overlay))
@@ -45,7 +49,6 @@
     ;;   (goto-char end))
     (push-mark isearch-other-end t t)
     (isearch-exit))
-  (define-key isearch-mode-map (kbd "C-M-;") 'isearch-mark-current)
   ;; 转换后的regexp可能超过长度限制，导致re-search-forward产生"Regular expression too big"错误
   (defun pinyin-search--pinyin-to-regexp/override (pinyin)
     "Wrap for Pinyin searching."
@@ -53,7 +56,6 @@
       (condition-case nil
           (progn (save-excursion (re-search-forward string-converted nil t)) string-converted)
         (error pinyin))))
-  (advice-add 'pinyin-search--pinyin-to-regexp :override #'pinyin-search--pinyin-to-regexp/override)
-  (add-hook 'isearch-mode-end-hook (lambda () (setq pinyin-search-activated nil))))
+  (advice-add 'pinyin-search--pinyin-to-regexp :override #'pinyin-search--pinyin-to-regexp/override))
 ;; ==================pinyin-search=================
 (provide 'setup_isearch)
