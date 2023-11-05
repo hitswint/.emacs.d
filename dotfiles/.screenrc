@@ -4,6 +4,9 @@ defflow off
 altscreen on
 term screen-256color
 
+# 使用-R新建时的等待时间，默认5秒，也可按任意键跳过等待
+msgwait 1
+
 hardstatus off
 hardstatus alwayslastline
 hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %m-%d %{W} %c %{g}]'

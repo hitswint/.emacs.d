@@ -45,7 +45,6 @@
 (setq fast-but-imprecise-scrolling t)
 (setq redisplay-skip-fontification-on-input t)
 (setq inhibit-compacting-font-caches t)
-(setq-default cursor-in-non-selected-windows nil)
 (setq highlight-nonselected-windows nil)
 (setq read-process-output-max (* 64 1024))
 (setq-default bidi-display-reordering nil)
@@ -57,9 +56,8 @@
 (setq command-line-x-option-alist nil)
 (setq ffap-machine-p-known 'reject)
 (setq find-file-visit-truename nil)
-(setq vc-follow-symlinks t)
-;; (setq vc-handled-backends nil)
 ;; (setq debug-on-error t)
+;; (setq-default cursor-in-non-selected-windows nil)
 (unless noninteractive
   (advice-add #'display-startup-echo-area-message :override #'ignore)
   (setq inhibit-startup-screen t

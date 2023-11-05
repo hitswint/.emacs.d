@@ -204,7 +204,7 @@
                                        (not (equal dired-listing-switches dired-actual-switches)))
                               (concat " -" (substring dired-actual-switches 32))))))
          (default-directory (or (if wine-p (ignore-errors (expand-file-name (file-name-directory file))))
-                                default-directory)))
+                                (helm-current-directory))))
     (if (string-empty-p command)
         (message "No command for \"%s\"" (file-name-nondirectory file))
       (start-process "Shell" nil shell-file-name shell-command-switch
@@ -391,7 +391,7 @@ Assuming .. and . is a current directory (like in FAR)"
         (message (concat (mapconcat 'file-name-nondirectory file-list "\n")
                          "\n" (number-to-string (length file-list)) " files, "
                          (txm-format-file-size total-size) " in total.\n"))
-      (message (concat "Cannot determine size of " filename)))))
+      (message "Cannot determine size."))))
 ;; ==========dired-view-file-or-dir==========
 ;;; swint-dired-rsync/unison
 ;; =========swint-dired-rsync/unison=========

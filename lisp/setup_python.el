@@ -126,6 +126,8 @@ for x in ['Month', 'Day']:
 # 处理24:00:00时间转换错误：ParserError: hour must be in 0..23
 names['df_'+re.sub('\\W','_','%1$s')]['Time'] = pd.to_datetime(names['df_'+re.sub('\\W','_','%1$s')]['Time']) + pd.to_timedelta(names['df_'+re.sub('\\W','_','%1$s')]['Hour'].map(str) + ':' + names['df_'+re.sub('\\W','_','%1$s')]['Minute'].map(str) + ':00')
 " file-base-name (expand-file-name file-name))))
+             ((member (ignore-errors (downcase (file-name-extension file-name))) '("py" "pyc"))
+              (python-shell-send-file file-name))
              ;; 导入csv和其他文件
              (t (let ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' '%s' | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
                   (python-shell-send-string

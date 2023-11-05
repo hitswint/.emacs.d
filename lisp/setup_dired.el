@@ -21,6 +21,9 @@
   (setq dired-auto-revert-buffer t) ;使用dired/dired-other-window/dired-other-frame时更新，与auto-revert-mode不同
   (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才启用auto-revert-mode更新
                                                 (when (get-buffer-window (current-buffer)) (apply fn args))))
+  (advice-add 'dired-goto-file :around #'(lambda (fn &rest args)
+                                           (let ((default-directory (dired-current-directory)))
+                                             (apply fn args))))
   (put 'dired-find-alternate-file 'disabled nil)
   (setq dired-listing-switches "--group-directories-first -alhG1")
   (setq dired-subdir-switches dired-listing-switches)
@@ -135,10 +138,18 @@
   ;; ==========setup-and-keybindings===========
 ;;;; dired-sort-switch
   ;; ============dired-sort-switch=============
+  (defvar dired-subdir-actual-switches nil)
+  (put 'dired-subdir-actual-switches 'safe-local-variable 'dired-safe-switches-p)
+  (setq dired-switches-in-mode-line (lambda (arg) (string-remove-prefix dired-listing-switches arg)))
   (defun dired-sort-switch (switch-arg)
-    (dired-sort-other
-     (concat dired-listing-switches switch-arg
-             (when (string-suffix-p switch-arg dired-actual-switches) "r"))))
+    (if (dired-subtree-in-subtree-p)
+        (let ((dired-listing-switches (concat dired-subdir-switches "A" switch-arg
+                                              (when (string-suffix-p switch-arg dired-subdir-actual-switches) "r"))))
+          (setq-local dired-subdir-actual-switches dired-listing-switches)
+          (dired-subtree-revert))
+      (dired-sort-other
+       (concat dired-listing-switches switch-arg
+               (when (string-suffix-p switch-arg dired-actual-switches) "r")))))
   ;; ============dired-sort-switch=============
 ;;;; sof/dired-sort
   ;; =============sof/dired-sort===============
@@ -215,7 +226,9 @@
   (defun image-dired-refresh-thumbnail-buffer (&optional arg)
     (when (string-match-p image-dired-file-regexp-all (dired-get-filename))
       (if (and (get-buffer image-dired-thumbnail-buffer)
-               (equal default-directory (buffer-local-value 'default-directory (get-buffer image-dired-thumbnail-buffer))))
+               (equal (dired-current-directory)
+                      (buffer-local-value 'default-directory
+                                          (get-buffer image-dired-thumbnail-buffer))))
           (if (image-dired-track-thumbnail)
               (display-buffer image-dired-thumbnail-buffer)
             (image-dired-display-thumbs t t t)
@@ -226,17 +239,18 @@
   (defun image-dired-display-thumbs-all ()
     (when (get-buffer image-dired-thumbnail-buffer)
       (kill-buffer image-dired-thumbnail-buffer))
-    (let* ((file-num (length (directory-files default-directory nil image-dired-file-regexp-all)))
-           ;; 当文件数量>100时，预览前100张文件
-           (mark-num (if (> file-num 100)
-                         (dired-mark-if (and (not (looking-at-p dired-re-dot))
-                                             (not (eolp))
-                                             (let ((fn (dired-get-filename t t)))
-                                               (and fn (string-match-p image-dired-file-regexp-all fn)))
-                                             ;; count为宏dired-mark-if内部变量
-                                             (< count 100))
-                                        "matching file")
-                       (dired-mark-files-regexp image-dired-file-regexp-all))))
+    (let* ((default-directory (dired-current-directory))
+           (file-num (length (directory-files default-directory nil image-dired-file-regexp-all)))
+           (mark-num (dired-mark-if (and (not (looking-at-p dired-re-dot))
+                                         (not (eolp))
+                                         (let ((fn (dired-get-filename t t)))
+                                           (and fn (string-match-p image-dired-file-regexp-all fn)))
+                                         ;; 只mark当前subdir的文件
+                                         (equal default-directory (dired-current-directory))
+                                         ;; 当文件数量>100时，预览前100张文件
+                                         ;; count为宏dired-mark-if内部变量
+                                         (not (and (> file-num 100) (> count 100))))
+                                    "matching file")))
       (when (and mark-num (> mark-num 0))
         (image-dired-display-thumbs nil nil t)
         (dired-unmark-all-files ?*)
@@ -542,6 +556,7 @@
 ;;; dired-subtree
 ;; =============dired-subtree==================
 (use-package dired-subtree
+  :commands dired-subtree-in-subtree-p
   :bind (:map dired-mode-map
               ("TAB" . dired-subtree-toggle)
               ("<backtab>" . dired-subtree-cycle))
