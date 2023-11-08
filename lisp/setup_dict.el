@@ -48,7 +48,7 @@
     (let ((word (or _word (swint-get-words-at-point)))
           (dest (or _dest 'popup)))
       ;; \\cc匹配中文字符，包括全角标点，\\cC匹配汉字
-      (if (pyim-string-match-p "\\cC" word)
+      (if (string-match-p "\\cC" word)
           (google-translate-translate "zh-CN" "en" word dest)
         (google-translate-translate "en" "zh-CN" word dest)))))
 ;; ===============google-translate===============
@@ -81,7 +81,7 @@
   (defun baidu-translate-at-point (&optional _word)
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
-      (if (pyim-string-match-p "\\cC" word)
+      (if (string-match-p "\\cC" word)
           (baidu-translate-string word "auto" "en")
         (baidu-translate-string word "auto" "zh")))))
 ;; ================baidu-translate===============
@@ -94,7 +94,7 @@
   (defun lingva-translate-at-point (&optional _word)
     (interactive)
     (let* ((word (or _word (swint-get-words-at-point)))
-           (chinese-p (pyim-string-match-p "\\cC" word))
+           (chinese-p (string-match-p "\\cC" word))
            (lingva-source (if chinese-p "zh" "en"))
            (lingva-target (if chinese-p "en" "zh")))
       (lingva-translate nil word))))

@@ -157,5 +157,6 @@
 (define-key lisp-interaction-mode-map "\e\C-q" nil)
 (define-key prog-mode-map "\e\C-q" nil)
 (global-set-key [f11] 'my-fullscreen)
+(global-set-key (kbd "C-z") #'(lambda () (interactive) (unless (display-graphic-p) (suspend-frame))))
 ;; ================Keybindings==================
 (provide 'setup_default)

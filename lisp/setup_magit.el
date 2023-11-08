@@ -10,7 +10,7 @@
   (setq magit-auto-revert-mode nil)
   (bind-key "C-x M-g" #'(lambda () (interactive)
                           (let ((default-directory (helm-current-directory)))
-                            (magit-status))))
+                            (call-interactively 'magit-status))))
   :config
   (dolist (hook '(magit-diff-mode-hook magit-status-mode-hook))
     (add-hook hook #'(lambda ()

@@ -17,8 +17,7 @@
 ;;; pyim
 ;; ==================pyim==================
 (use-package pyim
-  :commands (pyim-string-match-p
-             pyim-hanzi2pinyin-capitalize)
+  :commands pyim-hanzi2pinyin-capitalize
   :bind (("C-x SPC" . pyim-convert-string-at-point)
          ("C-x S-SPC" . pyim-punctuation-translate-at-point))
   :init

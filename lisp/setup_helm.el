@@ -189,15 +189,50 @@
   ;; =================helm-fd===================
 ;;;; helm-pinyin
   ;; ================helm-pinyin================
-  (require 'iswitchb-pinyin)
-  ;; 支持中文拼音首字母匹配，会使helm-find-files匹配过多
-  (cl-defun helm-mm-3-match/around (orig-fn str &rest args)
-    (apply orig-fn (concat str "|" (str-unicode-to-pinyin-initial str)) args))
-  (advice-add 'helm-mm-3-match :around #'helm-mm-3-match/around)
-  ;; 默认在输入前面加空格解决匹配问题
-  (defun helm-find-files-1/around (orig-fn fname &rest args)
-    (apply orig-fn (concat fname " ") args))
-  (advice-add 'helm-find-files-1 :around #'helm-find-files-1/around)
+  (use-package helm-pinyin
+    :load-path "repos/helm-pinyin/"
+    :config
+    ;; 支持helm-find-files
+    (turn-on-helm-pinyin)
+    ;; 支持buffer切换
+    (defun zjy/pinyin-match (pattern candidate)
+      (let ((case-fold-search t))
+        (string-match (pinyinlib-build-regexp-string pattern) candidate)))
+    (defun zjy/helm-buffer--match-pattern (pattern candidate &optional nofuzzy)
+      (let ((bfn (if (and helm-buffers-fuzzy-matching
+                          (not nofuzzy)
+                          (not helm-migemo-mode)
+                          (not (string-match "\\`\\^" pattern)))
+                     #'helm-buffer--memo-pattern
+                   #'identity))
+            (mfn (if helm-migemo-mode
+                     #'helm-mm-migemo-string-match #'zjy/pinyin-match)))
+        (if (string-match "\\`!" pattern)
+            (not (funcall mfn (funcall bfn (substring pattern 1))
+                          candidate))
+          (funcall mfn (funcall bfn pattern) candidate))))
+    (advice-add #'helm-buffer--match-pattern :override #'zjy/helm-buffer--match-pattern)
+    ;; 支持中文拼音首字母匹配
+    ;; (require 'iswitchb-pinyin)
+    ;; (cl-defun helm-mm-3-match/around (orig-fn str &rest args)
+    ;;   (apply orig-fn (if (string-match-p "\\cC" str)
+    ;;                      (concat str "|" (str-unicode-to-pinyin-initial str))
+    ;;                    str)
+    ;;          args))
+    ;; (advice-add 'helm-mm-3-match :around #'helm-mm-3-match/around)
+    ;; 使helm-find-files匹配过多，默认在输入前面加空格解决匹配问题
+    ;; (defun helm-find-files-1/around (orig-fn fname &rest args)
+    ;;   (apply orig-fn (concat fname " ") args))
+    ;; (advice-add 'helm-find-files-1 :around #'helm-find-files-1/around)
+    ;; 支持其他切换
+    (advice-add 'helm-mm-3-get-patterns :around #'helm-mm-3-get-patterns/around)
+    (defun helm-mm-3-get-patterns/around (orig-fn &rest args)
+      (let ((pat (apply orig-fn args)))
+        (cl-loop for (predicate . regexp) in pat
+                 for re = (concat "\\(" regexp "\\)\\|\\("
+                                  (pinyinlib-build-regexp-string regexp t nil t)
+                                  "\\)")
+                 collect (cons predicate re)))))
   ;; ================helm-pinyin================
 ;;;; helm-file-buffer
   ;; ============helm-file-buffer===============
@@ -245,13 +280,12 @@
       :documentation
       "  A function with no arguments to create buffer list.")
      (init :initform 'helm-file-buffers-list--init/curr-persp)
-     (matchplugin :initform nil)
-     ;; (multimatch :initform nil)
+     (multimatch :initform nil)
      (match :initform 'helm-buffers-match-function)
      (persistent-action :initform 'helm-buffers-list-persistent-action)
      (keymap :initform 'helm-buffer-map)
      (find-file-target :initform #'helm-buffers-quit-and-find-file-fn)
-     ;; (migemo :initform 'nomultimatch)
+     (migemo :initform 'nomultimatch)
      (volatile :initform t)
      (nohighlight :initform t)
      (resume :initform (lambda () (setq helm-buffers-in-project-p nil)))
@@ -284,13 +318,12 @@
       :documentation
       "  A function with no arguments to create buffer list.")
      (init :initform 'helm-file-buffers-list--init/other-persps)
-     (matchplugin :initform nil)
-     ;; (multimatch :initform nil)
+     (multimatch :initform nil)
      (match :initform 'helm-buffers-match-function)
      (persistent-action :initform 'helm-buffers-list-persistent-action)
      (keymap :initform 'helm-buffer-map)
      (find-file-target :initform #'helm-buffers-quit-and-find-file-fn)
-     ;; (migemo :initform 'nomultimatch)
+     (migemo :initform 'nomultimatch)
      (volatile :initform t)
      (nohighlight :initform t)
      (resume :initform (lambda () (setq helm-buffers-in-project-p nil)))
@@ -371,13 +404,12 @@
       :documentation
       "  A function with no arguments to create buffer list.")
      (init :initform 'helm-dired-buffers-list--init/curr-persp)
-     (matchplugin :initform nil)
-     ;; (multimatch :initform nil)
+     (multimatch :initform nil)
      (match :initform 'helm-buffers-match-function)
      (persistent-action :initform 'helm-buffers-list-persistent-action)
      (keymap :initform 'helm-buffer-map)
      (find-file-target :initform #'helm-buffers-quit-and-find-file-fn)
-     ;; (migemo :initform 'nomultimatch)
+     (migemo :initform 'nomultimatch)
      (volatile :initform t)
      (nohighlight :initform t)
      (resume :initform (lambda () (setq helm-buffers-in-project-p nil)))
@@ -410,13 +442,12 @@
       :documentation
       "  A function with no arguments to create buffer list.")
      (init :initform 'helm-dired-buffers-list--init/other-persps)
-     (matchplugin :initform nil)
-     ;; (multimatch :initform nil)
+     (multimatch :initform nil)
      (match :initform 'helm-buffers-match-function)
      (persistent-action :initform 'helm-buffers-list-persistent-action)
      (keymap :initform 'helm-buffer-map)
      (find-file-target :initform #'helm-buffers-quit-and-find-file-fn)
-     ;; (migemo :initform 'nomultimatch)
+     (migemo :initform 'nomultimatch)
      (volatile :initform t)
      (nohighlight :initform t)
      (resume :initform (lambda () (setq helm-buffers-in-project-p nil)))
