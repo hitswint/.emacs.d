@@ -19,7 +19,16 @@
   (use-package helm-for-files)
   (helm-mode 1)
   (helm-top-poll-mode 1)
-  (setq helm-completing-read-handlers-alist '((describe-function . helm-completing-read-symbols)
+  (setq helm-move-to-line-cycle-in-source nil
+        helm-buffer-details-flag nil
+        helm-ff--RET-disabled t
+        helm-ff-newfile-prompt-p nil
+        ;; (add-to-list 'display-buffer-alist '("^\\*helm .*" (display-buffer-at-bottom))) ;在底部打开helm
+        helm-split-window-default-side 'same
+        helm-external-programs-associations file-extension-app-alist
+        helm-default-external-file-browser "thunar"
+        helm-pdfgrep-default-read-command "llpp -page %p \"%f\""
+        helm-completing-read-handlers-alist '((describe-function . helm-completing-read-symbols)
                                               (describe-variable . helm-completing-read-symbols)
                                               (debug-on-entry . helm-completing-read-symbols)
                                               (find-function . helm-completing-read-symbols)
@@ -30,16 +39,8 @@
                                               (org-annotate-file)
                                               (swint-org-annotate-file)
                                               (dired-do-copy)
-                                              (dired-create-directory)))
-  (setq helm-buffer-details-flag nil)
-  (setq helm-ff--RET-disabled t)
-  (setq helm-ff-newfile-prompt-p nil)
-  ;; (add-to-list 'display-buffer-alist '("^\\*helm .*" (display-buffer-at-bottom))) ;在底部打开helm
-  (setq helm-split-window-default-side 'same)
-  (setq helm-external-programs-associations file-extension-app-alist)
-  (setq helm-default-external-file-browser "thunar")
-  (setq helm-pdfgrep-default-read-command "llpp -page %p \"%f\"")
-  (setq helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list
+                                              (dired-create-directory))
+        helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list
                                                '("\\`Enjoy\\ Music\\'"
                                                  "\\`\\*Ibuffer\\*\\'"
                                                  "\\`\\*calculator\\*\\'"
@@ -187,55 +188,6 @@
         (setenv "LS_COLORS" (concat (getenv "LS_COLORS") "di=0;33:"))
         (helm-fd-1 (or dir (helm-current-directory))))))
   ;; =================helm-fd===================
-;;;; helm-pinyin
-  ;; ================helm-pinyin================
-  (use-package helm-pinyin
-    :load-path "repos/helm-pinyin/"
-    :config
-    ;; 支持helm-find-files
-    (turn-on-helm-pinyin)
-    ;; 支持buffer切换
-    (defun zjy/pinyin-match (pattern candidate)
-      (let ((case-fold-search t))
-        (string-match (pinyinlib-build-regexp-string pattern) candidate)))
-    (defun zjy/helm-buffer--match-pattern (pattern candidate &optional nofuzzy)
-      (let ((bfn (if (and helm-buffers-fuzzy-matching
-                          (not nofuzzy)
-                          (not helm-migemo-mode)
-                          (not (string-match "\\`\\^" pattern)))
-                     #'helm-buffer--memo-pattern
-                   #'identity))
-            (mfn (if helm-migemo-mode
-                     #'helm-mm-migemo-string-match #'zjy/pinyin-match)))
-        (if (string-match "\\`!" pattern)
-            (not (funcall mfn (funcall bfn (substring pattern 1))
-                          candidate))
-          (funcall mfn (funcall bfn pattern) candidate))))
-    (advice-add #'helm-buffer--match-pattern :override #'zjy/helm-buffer--match-pattern)
-    ;; 支持其他切换
-    ;; 使用pinyinlib-build-regexp-string
-    ;; (advice-add 'helm-mm-3-get-patterns :around #'helm-mm-3-get-patterns/around)
-    ;; (defun helm-mm-3-get-patterns/around (orig-fn &rest args)
-    ;;   (let ((pat (apply orig-fn args)))
-    ;;     (cl-loop for (predicate . regexp) in pat
-    ;;              for re = (concat "\\(" regexp "\\)\\|\\("
-    ;;                               (pinyinlib-build-regexp-string regexp t nil t)
-    ;;                               "\\)")
-    ;;              collect (cons predicate re))))
-    ;; 使用iswitchb-pinyin
-    (require 'iswitchb-pinyin)
-    (advice-add 'helm-mm-3-match :around #'helm-mm-3-match/around)
-    (cl-defun helm-mm-3-match/around (orig-fn str &rest args)
-      (apply orig-fn (if (string-match-p "\\cC" str)
-                         (concat str "|" (str-unicode-to-pinyin-initial str))
-                       str)
-             args))
-    ;; 使helm-find-files匹配过多，默认在输入前面加空格解决匹配问题
-    ;; (advice-add 'helm-find-files-1 :around #'helm-find-files-1/around)
-    ;; (defun helm-find-files-1/around (orig-fn fname &rest args)
-    ;;   (apply orig-fn (concat fname " ") args))
-    )
-  ;; ================helm-pinyin================
 ;;;; helm-file-buffer
   ;; ============helm-file-buffer===============
   (defmacro swint-buffer-dired/persp-boolean (is-dired is-persp-curr)
@@ -622,6 +574,56 @@
   ;; ======helm-peep-preview-persistent=========
   )
 ;; ====================helm=====================
+;;; helm-pinyin
+;; ================helm-pinyin==================
+(use-package helm-pinyin
+  :load-path "repos/helm-pinyin/"
+  :after helm
+  :config
+  ;; 支持helm-find-files
+  (turn-on-helm-pinyin)
+  ;; 支持buffer切换
+  (defun zjy/pinyin-match (pattern candidate)
+    (let ((case-fold-search t))
+      (string-match (pinyinlib-build-regexp-string pattern) candidate)))
+  (defun zjy/helm-buffer--match-pattern (pattern candidate &optional nofuzzy)
+    (let ((bfn (if (and helm-buffers-fuzzy-matching
+                        (not nofuzzy)
+                        (not helm-migemo-mode)
+                        (not (string-match "\\`\\^" pattern)))
+                   #'helm-buffer--memo-pattern
+                 #'identity))
+          (mfn (if helm-migemo-mode
+                   #'helm-mm-migemo-string-match #'zjy/pinyin-match)))
+      (if (string-match "\\`!" pattern)
+          (not (funcall mfn (funcall bfn (substring pattern 1))
+                        candidate))
+        (funcall mfn (funcall bfn pattern) candidate))))
+  (advice-add #'helm-buffer--match-pattern :override #'zjy/helm-buffer--match-pattern)
+  ;; 支持其他切换
+  ;; 使用pinyinlib-build-regexp-string
+  ;; (advice-add 'helm-mm-3-get-patterns :around #'helm-mm-3-get-patterns/around)
+  ;; (defun helm-mm-3-get-patterns/around (orig-fn &rest args)
+  ;;   (let ((pat (apply orig-fn args)))
+  ;;     (cl-loop for (predicate . regexp) in pat
+  ;;              for re = (concat "\\(" regexp "\\)\\|\\("
+  ;;                               (pinyinlib-build-regexp-string regexp t nil t)
+  ;;                               "\\)")
+  ;;              collect (cons predicate re))))
+  ;; 使用iswitchb-pinyin
+  (require 'iswitchb-pinyin)
+  (advice-add 'helm-mm-3-match :around #'helm-mm-3-match/around)
+  (cl-defun helm-mm-3-match/around (orig-fn str &rest args)
+    (apply orig-fn (if (string-match-p "\\cC" str)
+                       (concat str "|" (str-unicode-to-pinyin-initial str))
+                     str)
+           args))
+  ;; 使helm-find-files匹配过多，默认在输入前面加空格解决匹配问题
+  ;; (advice-add 'helm-find-files-1 :around #'helm-find-files-1/around)
+  ;; (defun helm-find-files-1/around (orig-fn fname &rest args)
+  ;;   (apply orig-fn (concat fname " ") args))
+  )
+;; ================helm-pinyin==================
 ;;; helm-ring
 ;; ==================helm-ring==================
 (use-package helm-ring
