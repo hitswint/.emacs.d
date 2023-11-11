@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# key: adj
+# name: adj
+# group: of
+# expand-env: ((yas-indent-line 'fixed))
+# --
+maxCo           1.0;
+
+maxDi           10.0;
+
+adjustTimeStep  yes;

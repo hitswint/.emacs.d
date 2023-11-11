@@ -212,27 +212,29 @@
                           candidate))
           (funcall mfn (funcall bfn pattern) candidate))))
     (advice-add #'helm-buffer--match-pattern :override #'zjy/helm-buffer--match-pattern)
-    ;; 支持中文拼音首字母匹配
-    ;; (require 'iswitchb-pinyin)
-    ;; (cl-defun helm-mm-3-match/around (orig-fn str &rest args)
-    ;;   (apply orig-fn (if (string-match-p "\\cC" str)
-    ;;                      (concat str "|" (str-unicode-to-pinyin-initial str))
-    ;;                    str)
-    ;;          args))
-    ;; (advice-add 'helm-mm-3-match :around #'helm-mm-3-match/around)
+    ;; 支持其他切换
+    ;; 使用pinyinlib-build-regexp-string
+    ;; (advice-add 'helm-mm-3-get-patterns :around #'helm-mm-3-get-patterns/around)
+    ;; (defun helm-mm-3-get-patterns/around (orig-fn &rest args)
+    ;;   (let ((pat (apply orig-fn args)))
+    ;;     (cl-loop for (predicate . regexp) in pat
+    ;;              for re = (concat "\\(" regexp "\\)\\|\\("
+    ;;                               (pinyinlib-build-regexp-string regexp t nil t)
+    ;;                               "\\)")
+    ;;              collect (cons predicate re))))
+    ;; 使用iswitchb-pinyin
+    (require 'iswitchb-pinyin)
+    (advice-add 'helm-mm-3-match :around #'helm-mm-3-match/around)
+    (cl-defun helm-mm-3-match/around (orig-fn str &rest args)
+      (apply orig-fn (if (string-match-p "\\cC" str)
+                         (concat str "|" (str-unicode-to-pinyin-initial str))
+                       str)
+             args))
     ;; 使helm-find-files匹配过多，默认在输入前面加空格解决匹配问题
+    ;; (advice-add 'helm-find-files-1 :around #'helm-find-files-1/around)
     ;; (defun helm-find-files-1/around (orig-fn fname &rest args)
     ;;   (apply orig-fn (concat fname " ") args))
-    ;; (advice-add 'helm-find-files-1 :around #'helm-find-files-1/around)
-    ;; 支持其他切换
-    (advice-add 'helm-mm-3-get-patterns :around #'helm-mm-3-get-patterns/around)
-    (defun helm-mm-3-get-patterns/around (orig-fn &rest args)
-      (let ((pat (apply orig-fn args)))
-        (cl-loop for (predicate . regexp) in pat
-                 for re = (concat "\\(" regexp "\\)\\|\\("
-                                  (pinyinlib-build-regexp-string regexp t nil t)
-                                  "\\)")
-                 collect (cons predicate re)))))
+    )
   ;; ================helm-pinyin================
 ;;;; helm-file-buffer
   ;; ============helm-file-buffer===============
