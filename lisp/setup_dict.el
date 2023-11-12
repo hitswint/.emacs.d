@@ -55,7 +55,6 @@
 ;;; youdao-dictionary
 ;; ===============youdao-dictionary==============
 (use-package youdao-dictionary
-  :load-path "repos/youdao-dictionary.el/"
   :commands (youdao-dictionary--format-result
              youdao-dictionary--request
              youdao-dictionary-to-tip)
