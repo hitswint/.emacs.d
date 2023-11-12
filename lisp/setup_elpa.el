@@ -201,7 +201,6 @@
                            yaml-mode
                            yasnippet
                            yasnippet-snippets
-                           youdao-dictionary
                            ztree)
   "A list of packages to ensure are installed at launch.")
 (defun prelude-packages-installed-p ()

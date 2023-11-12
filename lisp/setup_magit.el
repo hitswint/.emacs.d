@@ -12,6 +12,7 @@
                           (let ((default-directory (helm-current-directory)))
                             (call-interactively 'magit-status))))
   :config
+  (setq magit-show-long-lines-warning nil)
   (dolist (hook '(magit-diff-mode-hook magit-status-mode-hook))
     (add-hook hook #'(lambda ()
                        (highlight-parentheses-mode -1)
