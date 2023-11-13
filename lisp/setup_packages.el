@@ -627,7 +627,8 @@
                  (get-buffer-process diff-hl-dired-process-buffer))
       (apply orig-fn args)))
   (advice-add 'diff-hl-dired-update :around #'diff-hl-dired-update/around)
-  (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+  ;; (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+  (add-hook 'dired-mode-hook 'diff-hl-dired-mode-unless-remote)
   ;; 在已有dired-mode中开启diff-hl-dired-mode
   (dolist (buf (cl-remove-if-not (lambda (x)
                                    (equal (buffer-mode x) 'dired-mode))

@@ -38,6 +38,8 @@
 (setq tramp-default-method "ssh")
 (setq tramp-ssh-controlmaster-options   ;默认设置导致helm启动慢
       "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+(setq remote-file-name-inhibit-locks t)
+(setq remote-file-name-inhibit-cache nil)
 (setq native-comp-jit-compilation nil)
 (setq frame-title-format "emacs@%b")
 (setq frame-inhibit-implied-resize t)

@@ -118,7 +118,14 @@
   (define-key helm-read-file-map (kbd "C-h") 'helm-find-files-up-one-level)
   (define-key helm-grep-map (kbd "C-o") 'helm-grep-run-other-window-action)
   (define-key helm-command-map (kbd "u") 'helm-unicode)
-  (bind-key "C-x M-f" #'(lambda () (interactive) (helm-find-files-1 "/ssh:")))
+  (bind-key "C-x M-f" #'(lambda () (interactive) (let ((tramp-completion-use-auth-sources nil)) (helm-find-files-1 "/ssh:"))))
+  (bind-key "C-x C-M-f" #'(lambda () (interactive) (let ((host (completing-read "Remote repo: "
+                                                                                (split-string
+                                                                                 (shell-command-to-string
+                                                                                  "cat ~/.ssh/config | grep \"^Host \" | awk '{print $2}'"))))
+                                                         (curr (abbreviate-file-name
+                                                                (or buffer-file-name dired-directory))))
+                                                     (find-file (concat "/ssh:" host ":" curr)))))
   (bind-key "C-x g" #'(lambda () (interactive)
                         (with-helm-alive-p
                           (helm-run-after-exit 'swint-helm-ag helm-ff-default-directory)))

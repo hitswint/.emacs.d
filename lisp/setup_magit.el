@@ -37,6 +37,9 @@
   :commands vc-git-branches
   :init
   (setq vc-follow-symlinks t
-        vc-handled-backends '(Git)))
+        vc-handled-backends '(Git)
+        vc-ignore-dir-regexp (format "\\(%s\\)\\|\\(%s\\)"
+                                     vc-ignore-dir-regexp
+                                     tramp-file-name-regexp)))
 ;; ======================vc========================
 (provide 'setup_magit)

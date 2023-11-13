@@ -1,7 +1,7 @@
 ;;; Projectile
 ;; ==================Projectile=================
 (use-package projectile
-  :delight '(:eval (propertize (swint-projectile-default-mode-line) 'face 'font-lock-keyword-face))
+  :delight '(:eval (propertize (funcall projectile-mode-line-function) 'face 'font-lock-keyword-face))
   :bind-keymap ("M-\"" . projectile-command-map)
   :init
   (setq projectile-mode-line-prefix " ")
@@ -24,15 +24,20 @@
     (or (unless (string= projectile--mode-line
                          projectile-mode-line-prefix)
           projectile--mode-line)
-        (if-let ((project-root (projectile-project-root)))
-            (concat projectile-mode-line-prefix
-                    "["
-                    (truncate-string-to-width (funcall projectile-project-name-function project-root) 16)
-                    (when-let* ((current-branch  (car (vc-git-branches)))  ;git branch --show-current
-                                (branch-p (not (equal current-branch "master"))))
-                      (format ":%s" (substring current-branch 0 (min 3 (length current-branch)))))
-                    "]")
-          "")))
+        (let ((mode-line (if-let ((project-root (unless (funcall projectile-ignored-project-function default-directory)
+                                                  (projectile-project-root))))
+                             (concat projectile-mode-line-prefix
+                                     "["
+                                     (truncate-string-to-width (funcall projectile-project-name-function project-root) 16)
+                                     (when-let* ((current-branch  (car (vc-git-branches)))  ;git branch --show-current
+                                                 (branch-p (not (equal current-branch "master"))))
+                                       (format ":%s" (substring current-branch 0 (min 3 (length current-branch)))))
+                                     "]")
+                           "")))
+          (when (file-remote-p default-directory)
+            (setq projectile--mode-line mode-line)
+            (force-mode-line-update))
+          mode-line)))
   (add-hook 'dired-after-readin-hook 'projectile-update-mode-line)
   (dolist (buf (buffer-list))
     (with-current-buffer buf
