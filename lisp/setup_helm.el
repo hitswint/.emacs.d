@@ -5,7 +5,8 @@
   :commands (helm-find-files-1
              helm-insert-latex-math
              helm-completing-read-default-1
-             helm-current-directory)
+             helm-current-directory
+             helm-select-host)
   :bind-keymap ("C-x c" . helm-command-map)
   :bind (("C-'" . helm-bookmarks)
          ("C-," . swint-helm-file-buffers-list)
@@ -119,13 +120,11 @@
   (define-key helm-grep-map (kbd "C-o") 'helm-grep-run-other-window-action)
   (define-key helm-command-map (kbd "u") 'helm-unicode)
   (bind-key "C-x M-f" #'(lambda () (interactive) (let ((tramp-completion-use-auth-sources nil)) (helm-find-files-1 "/ssh:"))))
-  (bind-key "C-x C-M-f" #'(lambda () (interactive) (let ((host (completing-read "Remote repo: "
-                                                                                (split-string
-                                                                                 (shell-command-to-string
-                                                                                  "cat ~/.ssh/config | grep \"^Host \" | awk '{print $2}'"))))
-                                                         (curr (abbreviate-file-name
-                                                                (or buffer-file-name dired-directory))))
-                                                     (find-file (concat "/ssh:" host ":" curr)))))
+  (bind-key "C-x C-M-f" #'(lambda (&optional arg) (interactive "P") (let ((host (helm-select-host))
+                                                                          (curr (or buffer-file-name dired-directory)))
+                                                                      (find-file (if arg
+                                                                                     (concat "/mnt/sshfs/" host (expand-file-name curr))
+                                                                                   (concat "/ssh:" host ":" (abbreviate-file-name curr)))))))
   (bind-key "C-x g" #'(lambda () (interactive)
                         (with-helm-alive-p
                           (helm-run-after-exit 'swint-helm-ag helm-ff-default-directory)))
@@ -146,6 +145,15 @@
                                                 (file-name-directory bf))))))))
             helm-bookmark-map)
   ;; ===============keybindings=================
+;;;; helm-select-host
+  ;; ============helm-select-host===============
+  (defun helm-select-host ()
+    (helm-comp-read "Remote repo: "
+                    (split-string
+                     (shell-command-to-string
+                      "cat ~/.ssh/config | grep \"^Host \" | awk '{print $2}'"))
+                    :buffer "*helm select host*"))
+  ;; ============helm-select-host===============
 ;;;; helm-fd
   ;; =================helm-fd===================
   (use-package helm-fd

@@ -398,10 +398,7 @@ Assuming .. and . is a current directory (like in FAR)"
 ;;;###autoload
 (defun swint-dired-rsync/unison (action)
   (interactive)
-  (let ((remote (completing-read "Remote repo: "
-                                 (split-string
-                                  (shell-command-to-string
-                                   "cat ~/.ssh/config | grep \"^Host \" | awk '{print $2}'"))))
+  (let ((remote (helm-select-host))
         (path (abbreviate-file-name (helm-current-directory)))
         (is-sync (equal action "sync"))
         (is-push (equal action "push"))
