@@ -38,7 +38,7 @@
   (defvar swint-python-plot-hash (ht ("data" "")
                                      ("rows" "::")
                                      ("labels" "x,y")
-                                     ("fonts" "t,t,t")
+                                     ("fonts" "st,st,st")
                                      ("sizes" "48,56,48")
                                      ;; 可直接输入用逗号分割的colors/lines/markers
                                      ("colors" (nconc (list "r" "g" "b" "y" "c" "m" "k" "C0" "C1" "C2" "C3" "C4" "C5" "C6" "C7" "C8" "C9")
@@ -336,7 +336,11 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
   :delight '(:eval (propertize " E" 'face 'font-lock-function-name-face))
   :commands (elpy-shell-switch-to-shell toggle-elpy-mode-all-buffers)
   :init
-  (bind-key "M-o M-p" 'elpy-shell-switch-to-shell)
+  (bind-key "M-o M-p" #'(lambda (&optional arg) (interactive "P") (let* ((dir (helm-current-directory))
+                                                                         (default-directory dir))
+                                                                    (elpy-shell-switch-to-shell)
+                                                                    (when arg
+                                                                      (python-shell-send-string (format "import os; os.chdir('%s')" dir))))))
   (add-hook 'python-mode-hook (lambda ()
                                 (bind-key "C-c e" 'toggle-elpy-mode-all-buffers python-mode-map)))
   (setq elpy-remove-modeline-lighter t)

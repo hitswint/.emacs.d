@@ -242,6 +242,7 @@ Missing packages are installed automatically."
 (require 'delight)
 (require 'bind-key)
 (require 'diminish)
+(delight 'fundamental-mode "Fund")
 ;; =================use-package=====================
 ;;; exec-path-from-shell
 ;; =============exec-path-from-shell================

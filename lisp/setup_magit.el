@@ -7,7 +7,8 @@
   :commands magit-status
   :bind ("C-x C-M-g" . magit-dispatch)
   :init
-  (setq magit-auto-revert-mode nil)
+  (setq magit-auto-revert-mode nil
+        magit-define-global-key-bindings nil)
   (bind-key "C-x M-g" #'(lambda () (interactive)
                           (let ((default-directory (helm-current-directory)))
                             (call-interactively 'magit-status))))

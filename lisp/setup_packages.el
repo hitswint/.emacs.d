@@ -93,8 +93,9 @@
          ("C-M-:" . er/contract-region))
   :config
   ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end
-  (setq expand-region-contract-fast-key "C-:")
-  (setq expand-region-reset-fast-key "C-;")
+  (setq expand-region-contract-fast-key ":"
+        expand-region-reset-fast-key ";"
+        expand-region-show-usage-message nil)
   ;; 默认把er/save-mode-excursion设置为er/save-org-mode-excursion，导致org-mode中使用卡顿
   (er/enable-mode-expansions 'org-mode #'(lambda ()
                                            (setq-local er/save-mode-excursion nil))))
@@ -1034,4 +1035,44 @@
   (jit-lock-stealth-time 2)
   (jit-lock-defer-time nil))
 ;; ==================font-lock=====================
+;;; macrursors
+;; ==================macrursors====================
+(use-package macrursors
+  :load-path "repos/macrursors/"
+  :init
+  (define-prefix-command 'macrursors-mark-map)
+  (setq macrursors-apply-keys "C-:")
+  :config
+  (use-package macrursors-select
+    :load-path "repos/macrursors/")
+  (global-set-key (kbd "C->") #'macrursors-mark-next-instance-of)
+  (global-set-key (kbd "C-<") #'macrursors-mark-previous-instance-of)
+  (global-set-key (kbd "C-x C-:") #'macrursors-mark-all-lines-or-instances)
+  (global-set-key (kbd "C-:") #'macrursors-mark-map)
+  (define-key macrursors-mark-map (kbd "C-:") #'macrursors-select)
+  (define-key macrursors-mark-map (kbd "C-g") #'macrursors-select-clear)
+  (define-key macrursors-mark-map (kbd "w") #'macrursors-mark-all-words)
+  (define-key macrursors-mark-map (kbd "s") #'macrursors-mark-all-symbols)
+  (define-key macrursors-mark-map (kbd "l") #'macrursors-mark-all-lists)
+  (define-key macrursors-mark-map (kbd "e") #'macrursors-mark-all-sexps)
+  (define-key macrursors-mark-map (kbd "f") #'macrursors-mark-all-defuns)
+  (define-key macrursors-mark-map (kbd "n") #'macrursors-mark-all-numbers)
+  (define-key macrursors-mark-map (kbd ".") #'macrursors-mark-all-sentences)
+  (define-key macrursors-mark-map (kbd "r") #'macrursors-mark-all-lines)
+  (bind-key "C-:" 'macrursors-mark-from-isearch isearch-mode-map)
+  (bind-key "C-<" 'macrursors-mark-previous-from-isearch isearch-mode-map)
+  (bind-key "C->" 'macrursors-mark-next-from-isearch isearch-mode-map))
+;; ==================macrursors====================
+;;; csv-mode
+;; ===================csv-mode=====================
+(use-package csv-mode
+  ;; csv-kill-fields/csv-yank-fields时，使用7,8,9,10或7-10指定列
+  :mode ("\\.[cC][sS][vV]\\'" . csv-mode)
+  :init
+  (add-hook 'csv-mode-hook #'(lambda () (font-lock-mode -1)))
+  :config
+  (defun csv-kill-fields/after (fields beg end)
+    (kill-new (string-join csv-killed-fields "\n")))
+  (advice-add 'csv-kill-fields :after #'csv-kill-fields/after))
+;; ===================csv-mode=====================
 (provide 'setup_packages)

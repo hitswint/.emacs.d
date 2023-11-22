@@ -185,7 +185,7 @@
                               (helm-run-after-exit
                                (lambda (_candidates)
                                  (let ((default-directory (helm-current-directory))
-                                       (dirs (append '("*helm-fd-edit*") _candidates)))
+                                       (dirs (append '("helm-fd-edit") _candidates)))
                                    (dired dirs)))
                                (progn (helm-mark-all)
                                       (helm-marked-candidates)))))

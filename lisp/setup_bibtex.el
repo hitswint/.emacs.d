@@ -71,8 +71,11 @@
               #'(lambda (candidates)
                   (if (assoc "timestamp" (car candidates))
                       (sort candidates
-                            (lambda (a b) (> (float-time (parse-iso8601-time-string (cdr (assoc "timestamp" a))))
-                                             (float-time (parse-iso8601-time-string (cdr (assoc "timestamp" b)))))))
+                            (lambda (a b)
+                              (when-let ((a-timestamp (assoc "timestamp" a))
+                                         (b-timestamp (assoc "timestamp" b)))
+                                (> (float-time (parse-iso8601-time-string (cdr a-timestamp)))
+                                   (float-time (parse-iso8601-time-string (cdr b-timestamp)))))))
                     candidates))))
 ;; ==============bibtex-completion=================
 ;;; helm-bibtex
@@ -106,11 +109,12 @@
   ;; 改变helm-bibtex中Insert citation格式
   (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
         'org-cite-format-citation)
-  ;; 当存在#+BIBLIOGRAPHY时，使用org-cite格式，否则使用citeproc格式
   (defun org-cite-format-citation (keys)
-    (if (org-cite-list-bibliography-files)
-        (bibtex-completion-format-citation-org-cite keys)
-      (concat "cite:" (s-join ","
+    ;; 使用BIBLIOGRAPHY关键词判断引用格式：(org-cite-list-bibliography-files)
+    ;; 然而，BIBLIOGRAPHY也用于判断是否存在local bib文件，改用CITE_EXPORT关键词
+    (if (org-collect-keywords '("CITE_EXPORT"))
+        (bibtex-completion-format-citation-org-cite keys)  ;使用org-cite格式
+      (concat "cite:" (s-join ","       ;使用citeproc格式
                               (--map (format "%s" it) keys))
               " ")))
   (defun swint-helm-bibtex (&optional arg)
