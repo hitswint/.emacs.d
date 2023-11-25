@@ -24,7 +24,7 @@
 (eval-and-compile
   (defvar doom--file-name-handler-alist file-name-handler-alist)
   (unless (or after-init-time noninteractive)
-    (setq gc-cons-threshold 402653184
+    (setq gc-cons-threshold most-positive-fixnum
           gc-cons-percentage 0.6
           file-name-handler-alist nil))
   ;; cl-lib(introduced in 24.3) provides cl-xxx while cl provides xxx, some packages still use xxx.
@@ -76,7 +76,7 @@
             (car ex) (error-message-string ex))))
   (add-hook 'emacs-startup-hook
             (lambda ()
-              (setq gc-cons-threshold 16777216
+              (setq gc-cons-threshold 33554432
                     gc-cons-percentage 0.1
                     file-name-handler-alist doom--file-name-handler-alist))))
 ;; =================SETUP==================

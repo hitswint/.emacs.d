@@ -6,6 +6,8 @@
          ("M-s M-R" . anzu-query-replace-regexp))
   :config
   (global-anzu-mode 1)
+  (bind-key "M-s M-r" 'anzu-isearch-query-replace isearch-mode-map)
+  (bind-key "M-s M-R" 'anzu-isearch-query-replace-regexp isearch-mode-map)
   (setq anzu-deactivate-region t
         anzu-replace-to-string-separator " => "
         anzu-search-threshold 1000)

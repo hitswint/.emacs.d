@@ -58,6 +58,7 @@
                            company-try-hard
                            company-web
                            counsel
+                           csv-mode
                            dash
                            delight
                            diff-hl
@@ -273,6 +274,8 @@ Missing packages are installed automatically."
 ;; =====================gcmh========================
 (use-package gcmh
   :diminish gcmh-mode
+  :init
+  (setq gcmh-high-cons-threshold 33554432)
   :config
   (gcmh-mode 1))
 ;; =====================gcmh========================

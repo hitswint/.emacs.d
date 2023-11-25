@@ -1045,10 +1045,41 @@
   :config
   (use-package macrursors-select
     :load-path "repos/macrursors/")
-  (global-set-key (kbd "C->") #'macrursors-mark-next-instance-of)
-  (global-set-key (kbd "C-<") #'macrursors-mark-previous-instance-of)
+  ;; 将临时禁用的mode加入macrursors-pre-finish-hook/macrursors-post-finish-hook，会自动关闭/开启
+  ;; (add-hook 'macrursors-pre-finish-hook 'electric-indent-mode)
+  ;; (add-hook 'macrursors-post-finish-hook 'electric-indent-mode)
+  ;; 给execute-kbd-macro增加advice
+  (defun sanityinc/disable-features-during-macro-call (orig &rest args)
+    "When running a macro, disable features that might be expensive.
+ORIG is the advised function, which is called with its ARGS."
+    (let (post-command-hook
+          font-lock-mode
+          (tab-always-indent (or (eq 'complete tab-always-indent) tab-always-indent)))
+      (apply orig args)))
+  (advice-add 'execute-kbd-macro :around 'sanityinc/disable-features-during-macro-call)
+  (global-set-key (kbd "C-<") #'(lambda () (interactive)
+                                  (if (and mark-active (not (eq (mark) (point))))
+                                      (call-interactively 'macrursors-mark-previous-instance-of)
+                                    (call-interactively 'macrursors-mark-previous-line))))
+  (global-set-key (kbd "C->") #'(lambda () (interactive)
+                                  (if (and mark-active (not (eq (mark) (point))))
+                                      (call-interactively 'macrursors-mark-next-instance-of)
+                                    (call-interactively 'macrursors-mark-next-line))))
+  (global-set-key (kbd "C-x C-<") #'(lambda () (interactive) (macrursors-mark-all-lines-or-instances-template (point-min))))
+  (global-set-key (kbd "C-x C->") #'(lambda () (interactive) (macrursors-mark-all-lines-or-instances-template (point-max))))
   (global-set-key (kbd "C-x C-:") #'macrursors-mark-all-lines-or-instances)
   (global-set-key (kbd "C-:") #'macrursors-mark-map)
+  (defun macrursors-mark-all-lines-or-instances-template (point)
+    (let ((curr-mark (when mark-active (mark))))
+      (save-excursion
+        (set-mark point))
+      (macrursors-select)
+      (if (not curr-mark)
+          (macrursors-mark-all-lines)
+        (save-excursion
+          (set-mark curr-mark))
+        (macrursors-mark-all-instances-of))
+      (macrursors-select-clear)))
   (define-key macrursors-mark-map (kbd "C-:") #'macrursors-select)
   (define-key macrursors-mark-map (kbd "C-g") #'macrursors-select-clear)
   (define-key macrursors-mark-map (kbd "w") #'macrursors-mark-all-words)
