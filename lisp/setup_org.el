@@ -818,8 +818,10 @@
   (add-hook 'org-mode-hook (lambda ()
                              (bind-key "M-O '" 'helm-insert-org-extra-emphasis org-mode-map)))
   :config
+  ;; 弹出org-odt-extra-styles未找到，若需odt支持：https://github.com/kjambunathan/org-mode-ox-odt
   ;; org-extra-emphasis-zws-display-char定义导致加载文件错误，可byte-compile-file解决：
   ;; File mode specification error: (invalid-read-syntax \N{SPACING UNDERSCORE} 1 0)
+  (diminish 'org-extra-emphasis-intraword-emphasis-mode)
   (custom-set-faces
    '(org-extra-emphasis-01 ((t (:foreground "red" :underline t :inherit org-extra-emphasis))))
    '(org-extra-emphasis-02 ((t (:foreground "orange" :underline t :inherit org-extra-emphasis))))

@@ -428,21 +428,23 @@ Assuming .. and . is a current directory (like in FAR)"
                                                       (split-string (shell-command-to-string
                                                                      ;; 连接remote列出path下文件绝对路径，并不显示错误信息
                                                                      (format "ssh %s '(cd %s && ls -A | sed \"s:^:`pwd`/:\") 2>/dev/null'"
-                                                                             remote (escape-local path))) "\n")
+                                                                             remote (escape-local path)))
+                                                                    "\n")
                                                       :marked-candidates t
                                                       :buffer (format "*helm rsync/unison %s*" remote))))
                               (cl-loop for f in remote-files
-                                       collect (concat remote ":" (escape-remote (if (directory-name-p f)
-                                                                                     (directory-file-name f)
-                                                                                   f))))))))
+                                       collect (concat remote ":" (escape-local (if (directory-name-p f)
+                                                                                    (directory-file-name f)
+                                                                                  f))))))))
               (dest (cond (is-pull (escape-local path))
                           (is-push
                            (let (remote-files)
-                             (escape-remote (if current-prefix-arg
-                                                (directory-file-name
-                                                 (car (split-string (counsel-read-file-for-rsync
-                                                                     'remote-files (format "/ssh:%s:~/" remote)) "/ssh:" t)))
-                                              (concat remote ":" path))))))))
+                             (escape-local (if current-prefix-arg
+                                               (directory-file-name
+                                                (car (split-string (counsel-read-file-for-rsync
+                                                                    'remote-files (format "/ssh:%s:~/" remote))
+                                                                   "/ssh:" t)))
+                                             (concat remote ":" path))))))))
           (setq rsync/unison-command "rsync -arv --progress ")
           (dolist (file files)
             (setq rsync/unison-command
