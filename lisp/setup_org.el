@@ -50,11 +50,6 @@
           ("c" "Computer" entry (file+headline "~/org/notes-computer.org" "Computer") "* %? %U %^g")
           ("j" "Journal" entry (file+olp+datetree "~/org/journal.org.gpg") "* %? %U")))
   ;; =================Capture===================
-;;;; ox
-  ;; ====================ox=====================
-  (put 'org-beamer-outline-frame-title 'safe-local-variable 'stringp)
-  (setq org-export-preserve-breaks t)
-  ;; ====================ox=====================
 ;;;; Keybindings
   ;; ===============Keybindings=================
   ;; %^{Description}
@@ -674,8 +669,8 @@
 \\usetikzlibrary{arrows,arrows.meta,shapes,chains,calc,positioning,decorations.markings}
 \\usepackage{thumbpdf}
 \\usepackage{wasysym}
-\\usepackage{ucs}
-% \\usepackage[utf8]{inputenc}
+% \\usepackage{ucs}
+\\usepackage[utf8]{inputenc}
 \\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
 \\usepackage{verbatim}
 \\usepackage[BoldFont,SlantFont,CJKnumber,CJKchecksingle]{xeCJK}
@@ -756,6 +751,16 @@
         org-export-time-stamp-file nil  ;导出时间戳会使每次导出文件都不相同
         org-beamer-outline-frame-title "Outline"
         org-beamer-frame-default-options "label=")  ;设置\begin{frame}后[]选项
+  ;; 当org-export-preserve-breaks设为nil时，会自动在行尾加\\[0pt]，导致center环境出错
+  ;; 此时，可设置org-latex-line-break-safe为空字符串
+  (setq org-export-preserve-breaks nil
+        org-latex-line-break-safe "\\\\[0pt]")
+  ;; 局部变量设置方法1：
+  ;; # -*- org-beamer-outline-frame-title: "目录"; -*-
+  ;; (put 'org-beamer-outline-frame-title 'safe-local-variable 'stringp)  ;避免弹出提醒
+  ;; 局部变量设置方法2：
+  ;; #+BIND: org-beamer-outline-frame-title "目录"
+  (setq org-export-allow-bind-keywords t)  ;允许#+BIND设置局部变量
   (add-to-list 'org-beamer-environments-extra
                '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
   (add-to-list 'org-beamer-environments-extra

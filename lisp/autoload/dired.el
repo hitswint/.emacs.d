@@ -247,7 +247,8 @@
                      (list (buffer-file-name))))
         (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "ODAFileConverter" "xlsx2csv" "convert" "pdftoppm" "caj2pdf" "img2pdf")
                                 :buffer "*helm dired converter-swint*"))
-        (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)"))
+        (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)")
+        (default-directory (helm-current-directory)))
     (cl-flet ((escape-local (x)
                 (replace-regexp-in-string string-to-escape
                                           "\\\\\\1" x)))
@@ -281,20 +282,21 @@
              (let* ((file-list-ordered (if (> (length file-list) 1)
                                            (helm-comp-read "Select files with order: " file-list
                                                            :marked-candidates t
-                                                           :buffer (concat "*helm dired converter-swint*"))
+                                                           :buffer "*helm dired converter-swint*")
                                          file-list))
-                    (file-args (cl-loop for x in file-list-ordered
+                    (filename-list (cl-loop for x in file-list-ordered
+                                            collect (file-name-nondirectory x)))
+                    (file-args (cl-loop for x in filename-list
                                         for y from ?A to ?Z
-                                        collect (let ((filename (escape-local (file-name-nondirectory x))))
-                                                  (concat (char-to-string y) "=" filename))))
-                    (page-args (cl-loop for x in file-list-ordered
+                                        collect (concat (char-to-string y) "=" (escape-local x))))
+                    (page-args (cl-loop for x in filename-list
                                         for y from ?A to ?Z
                                         collect (mapconcat (lambda (arg) (concat (char-to-string y) arg))
-                                                           (split-string (read-string (concat (file-name-nondirectory x) " (1-2west 4 5-end): ") nil nil "1-end") " " t)
+                                                           (split-string (read-string (concat x " (1-2west 4 5-end): ") nil nil "1-end") " " t)
                                                            " ")))
-                    (output-file (cl-loop for x in file-list-ordered
+                    (output-file (cl-loop for x in filename-list
                                           for y in page-args
-                                          concat (concat (s-left 10 (file-name-base (file-name-nondirectory x))) ":" y "+"))))
+                                          concat (concat (file-name-base x) ":" y "+"))))
                (shell-command (concat "pdftk " (mapconcat 'identity file-args " ") " cat " (mapconcat 'identity page-args " ") " output \""
                                       ;; 输出文件可能过长，Linux中文件名最长允许255个字符(Byte)，UTF-8编码中每个汉字为3个字符
                                       (if (> (string-bytes output-file) 250)

@@ -2,7 +2,6 @@
 # key : beamer
 # name : beamer
 # --
-# -*- org-beamer-outline-frame-title: "$7"; -*-
 #+LATEX_CLASS: cn-beamer
 #+LATEX_CLASS_OPTIONS: [presentation]
 #+TITLE: ${1:$$(unless yas-modified-p (file-name-base (buffer-name)))}
@@ -13,4 +12,6 @@
 #+OPTIONS: H:2 toc:t num:t
 #+COLUMNS: %40ITEM %8BEAMER_act(Act) %4BEAMER_col(Col) %8BEAMER_opt(Opt) %8BEAMER_env(Env) %8BEAMER_envargs(EnvArgs) %8BEAMER_extra(Extra)
 #+LATEX_HEADER: \institute[$6]{${6:HIT}} \setbeamercovered{dynamic} \setmainfont{Times New Roman} \setsansfont{Arial} \setCJKmainfont{SimHei} \setCJKsansfont{SimHei} \AtBeginSection[]{\frame<handout:0>{\frametitle{${7:Outline}}\tableofcontents[current,currentsubsection]}}
+#+BIND: org-latex-image-default-width ".8\\\\linewidth"
+#+BIND: org-beamer-outline-frame-title "$7"
 $0
