@@ -71,7 +71,7 @@
                           ;; 需在qpdfview设定中将Save database interval设置为0min，否则数据库无法及时更新
                           (shell-command-to-string
                            (format "sqlite3 %s \"select currentPage from tabs_v5 where filePath=\\\"%s\\\"\"" "~/.local/share/qpdfview/qpdfview/database" (expand-file-name annotated-file))))))
-    (if (string-empty-p qpdfview-page)
+    (if (or (string-empty-p qpdfview-page) (null qpdfview-page))
         (message "No file annotated or not opened in qpdfview.")
       (org-entry-put nil (cond ((file-in-directory-p (buffer-file-name) "~/org/annotated") "annotated_page")
                                ((file-equal-p (buffer-file-name) bibtex-completion-notes-path) "NOTER_PAGE")

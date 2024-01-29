@@ -76,8 +76,10 @@
                                 (pyim-cstring-words-at-point)
                               (pyim-cstring-words-at-point t))))
         (if (<= (length words-at-point) 1)
-            (read-string "Get Words: " (or (car (car words-at-point))
-                                           (thing-at-point 'word t)))
+            (let ((default-word (or (car (car words-at-point))
+                                    (thing-at-point 'word t))))
+              ;; M-n可调出并修改default-word
+              (read-string (format "Get Words(default %s): " default-word) nil nil default-word))
           (ivy-read "Get Words:" (cl-remove-duplicates (mapcar 'car words-at-point))))))))
 ;; ===============get-words-at-point===============
 ;;; show-some-last-messages
