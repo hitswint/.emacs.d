@@ -73,10 +73,13 @@
        (lambda (process signal)
          (when (memq (process-status process) '(exit signal))
            (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
-                                               (buffer-substring-no-properties (- (point-max) 6) (point-max)))))
-             (if (string-equal webdav_sync-process-output "Done.\n")
-                 (message "webdav-sync %s done." arg)
-               (message "webdav-sync %s failed." arg))
+                                               (goto-char (1- (point-max)))
+                                               (let ((last-line-end (point))
+                                                     (last-line-beg (line-beginning-position)))
+                                                 (if (re-search-backward "Done\\." nil t 2)
+                                                     (buffer-substring-no-properties (1+ (match-end 0)) last-line-end)
+                                                   (buffer-substring-no-properties last-line-beg last-line-end))))))
+             (message "%s" webdav_sync-process-output)
              (setcdr pos (remove (concat "webdav-sync " arg " ") (cdr pos))))))))))
 ;; =========webdav_sync同步文件==============
 ;;; unison

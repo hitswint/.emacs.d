@@ -61,8 +61,7 @@
         (cl-loop for p in projects do
                  (persp-kill (file-basename p))
                  (remhash p persp-projectile-hash)))))
-  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-s") #'(lambda (project) (let ((helm-truncate-lines t))
-                                                                                             (helm-do-ag project))))
+  (helm-projectile-define-key helm-projectile-projects-map (kbd "C-s") #'(lambda (project) (helm-do-ag project)))
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-j") #'(lambda (project) (let ((projectile-completion-system 'helm))
                                                                                              (projectile-switch-project-by-name project))))
   (helm-projectile-define-key helm-projectile-projects-map (kbd "C-x j") #'(lambda (project) (neotree-dir project)))

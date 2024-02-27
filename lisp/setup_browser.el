@@ -19,7 +19,7 @@
         w3m-default-display-inline-image t
         w3m-default-toggle-inline-images t
         w3m-home-page "about:blank"
-        browse-url-browser-function 'w3m-browse-url
+        ;; browse-url-browser-function 'w3m-browse-url
         w3m-view-this-url-new-session-in-background t
         w3m-command-arguments '("-cookie" "-F"))
   (set-face-attribute 'w3m-bold nil :foreground "red" :weight 'bold)

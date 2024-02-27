@@ -22,6 +22,7 @@
   (helm-top-poll-mode 1)
   (setq helm-move-to-line-cycle-in-source nil
         helm-buffer-details-flag nil
+        helm-truncate-lines t
         helm-ff--RET-disabled t
         helm-ff-newfile-prompt-p nil
         ;; (add-to-list 'display-buffer-alist '("^\\*helm .*" (display-buffer-at-bottom))) ;在底部打开helm
@@ -98,6 +99,7 @@
   (define-key helm-map (kbd "C-{") 'helm-narrow-window)
   (define-key helm-map (kbd "C-}") 'helm-enlarge-window)
   (define-key helm-map (kbd "M-,") 'helm-toggle-full-frame)
+  (define-key helm-map (kbd "M-.") 'helm-toggle-truncate-line)
   (define-key helm-map (kbd "C-x y") 'helm-resume-list-buffers-after-quit)
   (define-key helm-map (kbd "C-c C-k") 'helm-kill-selection-and-quit)
   (define-key helm-map (kbd "C-c C-i") 'helm-insert-or-copy)
@@ -196,9 +198,8 @@
     (add-to-list 'helm-fd-switches "--follow")
     (defun swint-helm-fdfind (&optional dir)
       (interactive)
-      (let ((helm-truncate-lines t)
-            ;; 生成局部变量，保证setenv不影响其他进程
-            (process-environment (copy-sequence process-environment)))
+      ;; 生成局部变量，保证setenv不影响其他进程
+      (let ((process-environment (copy-sequence process-environment)))
         ;; ls颜色由$LS_COLORS决定，export LS_COLORS=$LS_COLORS:'di=0;33:'
         (setenv "LS_COLORS" (concat (getenv "LS_COLORS") "di=0;33:"))
         (helm-fd-1 (or dir (helm-current-directory))))))
@@ -713,14 +714,13 @@
   :commands (helm-do-ag helm-do-ag-buffers swint-helm-ag)
   :init
   (bind-key "C-x g" 'swint-helm-ag)
-  (bind-key "C-x G" #'(lambda () (interactive) (let ((helm-truncate-lines t)) (call-interactively 'helm-do-ag-buffers))))
+  (bind-key "C-x G" 'helm-do-ag-buffers)
   :config
   (defun swint-helm-ag (&optional dir)
     (interactive)
-    (let ((helm-truncate-lines t))
-      (if (or current-prefix-arg helm-current-prefix-arg)
-          (call-interactively 'helm-do-ag)
-        (helm-do-ag (or dir (helm-current-directory))))))
+    (if (or current-prefix-arg helm-current-prefix-arg)
+        (call-interactively 'helm-do-ag)
+      (helm-do-ag (or dir (helm-current-directory)))))
   (setq helm-ag-base-command "ag --nocolor --nogroup --hidden")
   (setq helm-ag-command-option "--follow") ;Follow symlinks.
   ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果

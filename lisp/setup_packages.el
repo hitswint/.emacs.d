@@ -676,6 +676,10 @@
   (define-key markdown-mode-map (kbd "C-c C-x C-M-v") 'markdown-display-inline-images)
   (define-key markdown-mode-map (kbd "C-c C-x C-v") 'markdown-toggle-inline-images)
   (define-key markdown-mode-map (kbd "C-c j") 'markdown-follow-thing-at-point)
+  (define-key markdown-mode-map (kbd "M-<left>") 'markdown-promote)
+  (define-key markdown-mode-map (kbd "M-<right>") 'markdown-demote)
+  (define-key markdown-mode-map (kbd "M-<return>") 'markdown-insert-list-item)
+  (define-key markdown-mode-map (kbd "C-<return>") 'markdown-insert-header-dwim)
   (define-key markdown-mode-map (kbd "M-p") nil)
   (define-key markdown-mode-map (kbd "M-n") nil))
 ;; =================markdown-mode==================
