@@ -46,6 +46,15 @@
                                     "\"#" annotate-page)))
             (t
              (org-open-at-point in-emacs))))))
+;;;###autoload
+(defun swint-org-open-dired-at-point ()
+  "Open Dired for directory of file link at point."
+  (interactive)
+  (let ((el (org-element-lineage (org-element-context) '(link) t)))
+    (unless (and el (equal (org-element-property :type el) "file"))
+      (user-error "Not on file link"))
+    (dired-jump 'other-window
+                (expand-file-name (org-element-property :path el)))))
 ;; ===========swint-org-open-at-point=========
 ;;; mobileorg
 ;; =================mobileorg=================

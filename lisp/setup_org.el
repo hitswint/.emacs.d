@@ -100,6 +100,7 @@
                 (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
                 (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point)
                 (define-key org-mode-map (kbd "C-c o") #'(lambda () (interactive) (swint-org-open-at-point t)))
+                (define-key org-mode-map (kbd "C-c d") 'swint-org-open-dired-at-point)
                 (define-key org-mode-map (kbd "C-c :") 'swint-qpdfview-annotated-new)
                 (define-key org-mode-map (kbd "C-c M-,") #'(lambda () (interactive) (swint-org-mobile-sync "down")))
                 (define-key org-mode-map (kbd "C-c M-.") #'(lambda () (interactive) (swint-org-mobile-sync "up")))
@@ -181,7 +182,11 @@
     :diminish iimage-mode
     :commands iimage-mode
     :init
-    (add-hook 'org-mode-hook 'iimage-mode))
+    (add-hook 'org-mode-hook 'iimage-mode)
+    (advice-add 'org-toggle-inline-images :after #'(lambda (&optional include-linked beg end)
+                                                     (if org-inline-image-overlays
+                                                         (iimage-mode 1)
+                                                       (iimage-mode -1)))))
   ;; =================iimage====================
 ;;;; cdlatex
   ;; ================cdlatex====================
