@@ -78,7 +78,6 @@
                            elpy
                            emmet-mode
                            emms
-                           epl
                            eshell-prompt-extras
                            evil-nerd-commenter
                            exec-path-from-shell
@@ -163,7 +162,6 @@
                            peep-dired
                            pinyin-search
                            pinyinlib
-                           pkg-info
                            popup
                            popup-kill-ring
                            pos-tip

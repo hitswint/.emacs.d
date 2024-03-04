@@ -7,7 +7,7 @@
   (defun w3m-youdao-sample-sentences (&optional _word)
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
-      (browse-url
+      (w3m-browse-url
        (concat "http://dict.youdao.com/search?le=eng&q=lj%3A"
                word "&keyfrom=dict.top"))))
   (setq w3m-use-form t

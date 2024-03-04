@@ -32,8 +32,6 @@
   (let ((move 1)
         (oldpos (point)))
     (goto-char (point-min))
-    (unless dired-hide-details-mode
-      (setq move (+ move 1)))
     (unless dired-omit-mode
       (setq move (+ move 2)))
     (dired-next-line move)
@@ -248,7 +246,7 @@
   (let ((file-list (if (eq major-mode 'dired-mode)
                        (dired-get-marked-files)
                      (list (buffer-file-name))))
-        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "ODAFileConverter" "xlsx2csv" "convert" "pdftoppm" "caj2pdf" "img2pdf")
+        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "convert" "pdftoppm" "ODAFileConverter" "xlsx2csv" "caj2pdf" "img2pdf" "pptx2md")
                                 :buffer "*helm dired converter-swint*"))
         (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)")
         (default-directory (helm-current-directory)))
@@ -309,7 +307,16 @@
                                             (s-left 250 output-file))
                                         output-file)
                                       ".pdf\""))))
-            ((string= engine "ODAFileConverter")
+            ((string= engine "convert")
+             (let ((output-format (read-string "Output format: "))
+                   (input-string (mapconcat (lambda (arg) (escape-local (file-name-nondirectory arg))) file-list " ")))
+               (shell-command (read-string "Commands: " (concat "convert " input-string " " (make-temp-name (concat (escape-local (file-name-base (car file-list))) "_")) "." output-format)))))
+            ((string= engine "pdftoppm")
+             (let ((output-format (read-string "Output image format(png/jpeg/tiff/mono): ")))
+               (cl-loop for x in file-list
+                        do (let ((filename (escape-local (file-name-nondirectory x))))
+                             (shell-command (concat "pdftoppm -" output-format " -r 500 " filename " " filename))))))
+            ((string= engine "ODAFileConverter")  ;https://www.opendesign.com/guestfiles/oda_file_converter
              (let ((output-version (helm-comp-read "Output version: "
                                                    (list "ACAD9" "ACAD10" "ACAD12" "ACAD13" "ACAD14" "ACAD2000" "ACAD2004" "ACAD2007" "ACAD2010")
                                                    :buffer "*helm dired converter-swint*"))
@@ -321,7 +328,7 @@
                         do (let ((filename (escape-local (file-name-nondirectory x))))
                              (shell-command (concat (format "ODAFileConverter ./ ./%s-%s %s %s 0 1 " output-type output-version output-version output-type)
                                                     (unless all-files filename)))))))
-            ((string= engine "xlsx2csv")
+            ((string= engine "xlsx2csv")  ;https://github.com/dilshod/xlsx2csv
              (cl-loop for x in file-list
                       do (let* ((filename (escape-local (file-name-nondirectory x)))
                                 (file-extension (ignore-errors (downcase (file-name-extension filename)))))
@@ -330,24 +337,20 @@
                                  ((equal file-extension "xls")
                                   ;; 存在中文乱码问题，需设置charset，自带charset位于/usr/share/catdoc/下，但无中文支持
                                   (shell-command (concat "xls2csv " filename " > " (file-name-sans-extension filename) ".csv")))))))
-            ((string= engine "convert")
-             (let ((output-format (read-string "Output format: "))
-                   (input-string (mapconcat (lambda (arg) (escape-local (file-name-nondirectory arg))) file-list " ")))
-               (shell-command (read-string "Commands: " (concat "convert " input-string " " (make-temp-name (concat (escape-local (file-name-base (car file-list))) "_")) "." output-format)))))
-            ((string= engine "pdftoppm")
-             (let ((output-format (read-string "Output image format(png/jpeg/tiff/mono): ")))
-               (cl-loop for x in file-list
-                        do (let ((filename (escape-local (file-name-nondirectory x))))
-                             (shell-command (concat "pdftoppm -" output-format " -r 500 " filename " " filename))))))
-            ((string= engine "caj2pdf")
+            ((string= engine "caj2pdf")  ;https://github.com/caj2pdf/caj2pdf
              (let ((cmd-path (expand-file-name "repos/caj2pdf/caj2pdf" user-emacs-directory))
                    (default-directory (expand-file-name "repos/caj2pdf" user-emacs-directory)))
                (cl-loop for x in file-list
                         do (let ((filename (escape-local x)))
                              (shell-command (concat cmd-path " convert " filename " -o " filename ".pdf"))))))
-            ((string= engine "img2pdf")
+            ((string= engine "img2pdf")  ;https://gitlab.mister-muffin.de/josch/img2pdf
              (let ((input-string (mapconcat (lambda (arg) (escape-local (file-name-nondirectory arg))) file-list " ")))
-               (shell-command (read-string "Commands: " (concat "img2pdf -o " (make-temp-name (concat (escape-local (file-name-base (car file-list))) "_")) ".pdf " input-string )))))))))
+               (shell-command (read-string "Commands: " (concat "img2pdf -o " (make-temp-name (concat (escape-local (file-name-base (car file-list))) "_")) ".pdf " input-string )))))
+            ((string= engine "pptx2md")  ;https://github.com/ssine/pptx2md
+             (let ((options (read-string "Options: " "--disable-color --disable-escaping --disable-image")))
+               (cl-loop for x in file-list
+                        do (let ((filename (escape-local (file-name-nondirectory x))))
+                             (shell-command (concat "pptx2md -o " (file-name-sans-extension filename) ".md " options " " filename))))))))))
 ;; ============swint-dired-converter=========
 ;;; dired-view-file-or-dir
 ;; ==========dired-view-file-or-dir==========

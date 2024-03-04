@@ -23,6 +23,7 @@
                                        (or (member last-command org-outline-cmd-list) (push-mark)))))))
 ;;;; Appearance
   ;; =================Appearance================
+  (set-face-attribute 'org-level-1 nil :height 1.2)
   (set-face-attribute 'org-level-5 nil :weight 'normal :foreground "cyan" :height 1.0)
   (set-face-attribute 'org-level-6 nil :weight 'normal :foreground "violet" :height 1.0)
   (set-face-attribute 'org-level-7 nil :weight 'normal :foreground "orange" :height 1.0)

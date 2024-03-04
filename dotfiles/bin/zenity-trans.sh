@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 Wind_id=`xdotool getactivewindow`;
 sleep 0.5
@@ -22,8 +22,9 @@ fi
 export transHistory=$HOME/.zenity_trans
 
 selectText=$(echo $selectText | sed 's/[\"]/\\&/g' | tr -d '\n')
-echo "$selectText" > $transHistory
-selectText=$(zenity --width=800 --height=500 --text-info --title "Enter text:" --editable --filename=$transHistory)
+# 对待翻译内容进一步编辑
+# echo "$selectText" > $transHistory
+# selectText=$(zenity --width=800 --height=500 --text-info --title "Enter text:" --editable --filename=$transHistory)
 # 使用--entry时，selectText会分成多行
 # selectText=$(echo $selectText | sed 's/[\"]/\\&/g' | tr -d '\n' | xargs zenity --entry --text "Enter text:" --entry-text)
 
@@ -35,11 +36,16 @@ if [ $? -eq 0 ]; then
         transResult=$(ydcv "$selectText")
     fi
 
+    if [[ $transResult == *'Translation'* ]]; then
+        transResult=$(echo $transResult | sed -n '/Translation:/ { :a; n; p; ba; }' | awk '{$1=$1;print}')
+    fi
+
     echo "$transResult" > $transHistory
 
     zenity --width=800 --height=500 --text-info --title=$transmode --filename=$transHistory
 
-    if [[ ($? -eq 0) && ($transmode==ydcv) && ($transResult == *'Translation'*)]]; then
-        cat $transHistory | sed -n '/Translation:/ { :a; n; p; ba; }' | awk '{$1=$1;print}' | xclip -selection clipboard
+    # 使用C-RET退出时保存翻译结果到剪贴板
+    if [[ $? -eq 0 ]]; then
+        echo $transResult | xclip -selection clipboard
     fi
 fi

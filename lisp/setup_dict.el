@@ -25,12 +25,6 @@
   :commands (google-translate-translate
              google-translate-translate_chieng)
   :init
-  (setq google-translate-base-url
-        "http://translate.google.cn/translate_a/single")
-  (setq google-translate-listen-url
-        "http://translate.google.cn/translate_tts")
-  (setq google-translate--tkk-url
-        "http://translate.google.cn/")
   (setq google-translate-translation-directions-alist
         '(("en" . "zh-CN") ("zh-CN" . "en")))
   :config
@@ -90,7 +84,7 @@
 (use-package lingva
   :commands lingva-translate-at-point
   :config
-  (setq lingva-instance "https://translate.dr460nf1r3.org/")
+  (setq lingva-instance "https://translate.plausibility.cloud")  ;默认https://lingva.ml
   (defun lingva-translate-at-point (&optional _word)
     (interactive)
     (let* ((word (or _word (swint-get-words-at-point)))
