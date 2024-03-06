@@ -6,7 +6,7 @@
 # tty命令：tty -s && echo "This shell is interactive" || echo "This shell is not interactive" ;;
 # test命令：if [ -t 0 ]; then
 
-if [[ -t 0 ]]; then
+if [[ (-t 0) && ($1 != ROFI)]]; then
     if [[ x$1 == x ]]; then
         echo "Choose:"
         echo "p) Poweroff"

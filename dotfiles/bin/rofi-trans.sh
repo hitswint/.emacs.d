@@ -19,7 +19,7 @@ else
     selectText=$(xclip -selection clipboard -o)
 fi
 
-selectText=$(echo $selectText | sed 's/[\"]/\\&/g' | tr -d '\n')
+selectText=$(echo "$selectText" | sed 's/[\"]/\\&/g' | tr -d '\n')
 
 # * dict.sh
 # https://gist.github.com/Amooti73/9dac66ffee26f93baf211ab8c05949cd
@@ -76,6 +76,7 @@ else
 fi
 
 # https://github.com/garyparrot/rofi-translate
+# RET以高亮行作为输入，C-RET以当前文本框作为输入，C-SPACE以高亮行填充文本框
 rofi.sh -width 80 -lines 32 -sidebar-mode -modi "sdcv:rofi_trans_sdcv,ydcv:rofi_trans_ydcv" -show $transmode
 
 ydcv_curr=$(cat $transHistory_ydcv)

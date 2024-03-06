@@ -353,6 +353,7 @@ if point is at end of line , new-line-and-indent"
 ;; ===================parenthesis==================
 ;;; insert
 ;; ======================insert====================
+;;;###autoload
 (defun insert-date (prefix)
   "Insert the current date. With prefix-argument, use ISO format. With
    two prefix arguments, write out the day and month name."
@@ -364,6 +365,7 @@ if point is at end of line , new-line-and-indent"
         ;; 可设置为"zh_CN.UTF-8"，输入中文格式
         (system-time-locale "zh_CN.UTF-8"))
     (insert (format-time-string format))))
+;;;###autoload
 (defun insert-time (prefix)
   (interactive "P")
   (let ((format (cond
