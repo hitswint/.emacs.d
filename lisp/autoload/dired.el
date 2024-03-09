@@ -49,6 +49,9 @@
 (defun swint-webdav-sync (arg)
   "Synchronization of webdav-sync."
   (interactive)
+  (with-current-buffer (get-buffer-create "*webdav_sync*")
+    (goto-char (point-max))
+    (insert (format "=====%s=====\n" arg)))
   (let* (;; Nutstore用户名为邮箱，需替代@
          ;; (user (replace-regexp-in-string "@" "%40" (get-auth-user "Nutstore-sync")))
          (user_orig (split-string (get-auth-user "webdav-sync") "@"))
@@ -72,11 +75,8 @@
          (when (memq (process-status process) '(exit signal))
            (let ((webdav_sync-process-output (with-current-buffer "*webdav_sync*"
                                                (goto-char (1- (point-max)))
-                                               (let ((last-line-end (point))
-                                                     (last-line-beg (line-beginning-position)))
-                                                 (if (re-search-backward "Done\\." nil t 2)
-                                                     (buffer-substring-no-properties (1+ (match-end 0)) last-line-end)
-                                                   (buffer-substring-no-properties last-line-beg last-line-end))))))
+                                               (save-excursion (re-search-backward (format "=====%s=====" arg) nil t 1)
+                                                               (buffer-substring-no-properties (1+ (match-end 0)) (1- (point-max)))))))
              (message "%s" webdav_sync-process-output)
              (setcdr pos (remove (concat "webdav-sync " arg " ") (cdr pos))))))))))
 ;; =========webdav_sync同步文件==============

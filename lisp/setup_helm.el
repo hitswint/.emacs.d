@@ -644,6 +644,7 @@
 ;; ==================helm-ring==================
 (use-package helm-ring
   :bind ("C-M-y" . helm-show-kill-ring)
+  :commands helm-show-copqy
   :config
   (bind-key "C-j" 'helm-kill-ring-action-save helm-kill-ring-map)
   (setq helm-kill-ring-threshold 1)
@@ -660,7 +661,22 @@
                             (substring-no-properties
                              (cl-loop for c in (butlast marked)
                                       concat (concat c sep) into str
-                                      finally return (concat str (car (last marked))))))))))))
+                                      finally return (concat str (car (last marked)))))))))))
+  (defun helm-show-copqy ()
+    (interactive)
+    (let ((copyq-history (with-temp-buffer
+                           ;; (split-string (shell-command-to-string
+                           ;;                "copyq 'tab(config(\"clipboard_tab\")); for (var i = 0; i < size(); ++i) { print(read(i)); print(\"\\\\n\"); }'")
+                           ;;               "\\n" t)
+                           (when (= 0 (call-process
+                                       "copyq" nil (current-buffer) nil "eval"
+                                       (format "'[' + [...Array(%d).keys()].map(i => JSON.stringify(str(read(%d + i)))).join(' ') + ']'"
+                                               200 0)))  ;实际copyq最多保存199条数据
+                             (append (car (read-from-string (buffer-string))) nil)))))
+      (helm-comp-read "Copyq: " copyq-history
+                      :marked-candidates t
+                      :keymap helm-kill-ring-map
+                      :buffer "*helm copyq-swint*"))))
 ;; ==================helm-ring==================
 ;;; helm_lacarte
 ;; ================helm_lacarte=================
