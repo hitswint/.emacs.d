@@ -51,6 +51,7 @@
                            buttercup
                            cdlatex
                            clean-aindent-mode
+                           clipetty
                            clipmon
                            company
                            company-c-headers

@@ -35,6 +35,9 @@ URxvt.keysym.S-Escape: perl:keyboard-select:activate
 URxvt.keysym.C-M-s: perl:keyboard-select:search
 URxvt.keyboard-select.clipboard: True
 
+! Add OSC52 functionality.
+URxvt.perl-ext-common: 52-osc
+
 ! Generates control sequence \036(C-~) by pressing mod4-a.
 ! URxvt.keysym.Mod4-a: \036
 

@@ -1110,4 +1110,11 @@ ORIG is the advised function, which is called with its ARGS."
     (kill-new (string-join csv-killed-fields "\n")))
   (advice-add 'csv-kill-fields :after #'csv-kill-fields/after))
 ;; ===================csv-mode=====================
+;;; clipetty
+;; ===================clipetty=====================
+(use-package clipetty
+  :after easy-kill
+  :config
+  (global-clipetty-mode))
+;; ===================clipetty=====================
 (provide 'setup_packages)
