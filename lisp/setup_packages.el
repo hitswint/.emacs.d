@@ -1113,6 +1113,7 @@ ORIG is the advised function, which is called with its ARGS."
 ;;; clipetty
 ;; ===================clipetty=====================
 (use-package clipetty
+  :diminish clipetty-mode
   :after easy-kill
   :config
   (global-clipetty-mode))

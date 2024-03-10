@@ -119,6 +119,7 @@
                                            (dired-hide-details-mode nil)
                                            (org-appear-mode nil)
                                            (semantic-idle-scheduler-mode nil)
-                                           (font-lock-mode nil)))))
+                                           (font-lock-mode nil)
+                                           (clipetty-mode nil)))))
 ;; ===================desktop====================
 (provide 'setup_desktop)
