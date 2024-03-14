@@ -95,7 +95,6 @@
                 ;; ;/0/1/2/3 org-priority/A/B/C
                 ;; v org-agenda
                 ;; : org-set-tags-command
-                (define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-heading)
                 (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
                 (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
                 (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point)

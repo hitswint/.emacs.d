@@ -178,14 +178,14 @@ define_keymap(
     "pdfviewer")
 
 # * Keybindings for URxvt
-define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("URxvt") and rofi_not_running(),
-    {
-        K("C-Super-enter"): K("Shift-down"),
-        K("C-Super-TAB"): K("Shift-right"),
-        K("C-Super-grave"): K("Shift-left"),
-    },
-    "URxvt")
+# define_keymap(
+#     lambda wm_class: wm_class and wm_class[-1] in ("URxvt") and rofi_not_running(),
+#     {
+#         K("C-M-enter"): K("Shift-down"),
+#         K("C-M-TAB"): K("Shift-right"),
+#         K("C-M-grave"): K("Shift-left"),
+#     },
+#     "URxvt")
 
 # * Keybindings for Tab switch
 define_keymap(
