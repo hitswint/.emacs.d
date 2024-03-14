@@ -214,6 +214,16 @@
                                  (file-name-nondirectory file)
                                file)
                              "\"")))))
+;;;###autoload
+(defun dired-xdg-open ()
+  (interactive)
+  (let ((marked-files (dired-get-marked-files)))
+    (let ((inhibit-message t))
+      (dired-unmark-all-files ?*))
+    (mapc #'(lambda (file)
+              (start-process "dired-xdg-open" nil "xdg-open"
+                             (file-truename file)))
+          marked-files)))
 ;; =============默认程序打开文件=============
 ;;; 在当前目录下打开urxvt
 ;; =========在当前目录下打开urxvt============
@@ -237,6 +247,14 @@
                                                                   nil t nil 'pyvenv-workon-history nil nil))))))
                                (concat " -e zsh" " -is eval \"source "
                                        pyvenv-virtual-env-for-urxvt "bin/activate;\"")))))))
+;;;###autoload
+(defun openincd-directory ()
+  (with-selected-frame (selected-frame)
+    (with-current-buffer (car (buffer-list))
+      (let ((curr-dir (if-let ((curr-line (dired-get-filename nil t)))
+                          (file-name-directory curr-line)
+                        default-directory)))
+        (expand-file-name curr-dir)))))
 ;; =========在当前目录下打开urxvt============
 ;;; swint-dired-converter
 ;; ============swint-dired-converter=========

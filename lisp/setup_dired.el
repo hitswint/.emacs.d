@@ -123,7 +123,7 @@
               (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-on-files)
               (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
               (define-key dired-mode-map (kbd "M-RET") 'helm-dired-current-file)
-              (define-key dired-mode-map (kbd "C-M-j") 'tc-lister-open-file)
+              (define-key dired-mode-map (kbd "C-M-j") 'dired-xdg-open)
               (define-key dired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-beginning-of-buffer)
               (define-key dired-mode-map (vector 'remap 'end-of-buffer) 'dired-end-of-buffer)
               (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch) ;对mark的多个文件内容进行查找
