@@ -27,6 +27,7 @@
         helm-ff-newfile-prompt-p nil
         ;; (add-to-list 'display-buffer-alist '("^\\*helm .*" (display-buffer-at-bottom))) ;在底部打开helm
         helm-split-window-default-side 'same
+        helm-show-action-window-other-window nil
         helm-external-programs-associations file-extension-app-alist
         helm-default-external-file-browser "thunar"
         helm-pdfgrep-default-read-command "llpp -page %p \"%f\""

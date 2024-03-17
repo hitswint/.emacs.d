@@ -30,6 +30,15 @@ define_modmap({Key.CAPSLOCK: Key.LEFT_CTRL,
 #     # To use this example, you can't remap capslock with define_modmap.
 # )
 
+# * Keybindings for dwm
+define_keymap(
+    lambda wm_class: wm_class and rofi_not_running(),
+    {
+        K("RM-SPACE"): K("M-Super-SPACE"),
+        K("RM-Shift-SPACE"): K("M-Super-Shift-SPACE")
+    },
+    "dwm")
+
 # * Keybindings for Firefox/Chromium
 firefox_dict = {
     # Ctrl+Alt+j/k to switch next/previous tab
@@ -112,7 +121,7 @@ emacs_dict = {
     # Escape
     K("C-q"): escape_next_key,
     # Menu
-    K("Super-Shift-o"): K("Compose"),
+    K("Super-Shift-n"): K("Compose"),
     # C-x YYY
     K("C-x"): {
         # C-x h (select all)

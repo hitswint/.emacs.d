@@ -72,6 +72,8 @@ configuration {
 /*	display-keys: ;*/
 	kb-primary-paste: "Control+Alt+y,Shift+Insert";
 	kb-secondary-paste: "Control+y,Insert";
+        kb-secondary-copy: "Control+c,Alt+w";
+        kb-mode-complete: "Alt+i";
 /*	kb-clear-line: "Control+w";*/
 /*	kb-move-front: "Control+a";*/
 /*	kb-move-end: "Control+e";*/
@@ -100,7 +102,7 @@ configuration {
 	kb-page-next: "Page_Down,Control+v";
 	kb-row-first: "Home,KP_Home,Alt+less";
 	kb-row-last: "End,KP_End,Alt+greater";
-/*	kb-row-select: "Control+space";*/
+	kb-row-select: "Control+l";
 /*	kb-screenshot: "Alt+S";*/
 /*	kb-ellipsize: "Alt+period";*/
 /*	kb-toggle-case-sensitivity: "grave,dead_grave";*/

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# * 方法1：获取当前屏幕并启动rofi，但仍存在问题，注释掉
+# * 方法1：获取当前屏幕并启动rofi
 # xwin_id=`xdpyinfo | sed -ne 's/^focus:.*\(0x[^,]\+\).*/\1/p'`
 # if xwininfo -id $xwin_id | grep "(has no name)"
 # then
@@ -40,12 +40,16 @@
 #     fi
 # }
 
-# # 在当前窗口所在的屏幕开启rofi
+# 在当前窗口所在的屏幕开启rofi
 # rofi -monitor $(rofi_get_focus_monitor) "$@"
-# # rofi会切换到鼠标所在的屏幕，切换回到之前的窗口
+# rofi会切换到鼠标所在的屏幕，切换回到之前的窗口
 # wmctrl -ia $xwin_id
 
-# * 方法2：直接将鼠标移动到当前窗口
+# * 方法2：使用rofi自带指定屏幕方法
+# 默认为-5，切换至鼠标所在屏幕；-4为切换至当前窗口所在屏幕，存在跟方法1相同的问题
+# rofi -monitor -4 "$@"
+
+# * 方法3：将鼠标移动到当前窗口
 # ** 使用xrandr速度较慢
 # XRANDR=$(which xrandr)
 # MONITORS=( $( ${XRANDR} | awk '( $2 == "connected" ){ print $1 }' ) )

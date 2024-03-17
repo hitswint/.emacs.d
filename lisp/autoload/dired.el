@@ -255,6 +255,12 @@
                           (file-name-directory curr-line)
                         default-directory)))
         (expand-file-name curr-dir)))))
+;;;###autoload
+(defun openincd-file ()
+  (with-selected-frame (selected-frame)
+    (with-current-buffer (car (buffer-list))
+      (expand-file-name (or (dired-get-filename nil t)
+                            (buffer-file-name))))))
 ;; =========在当前目录下打开urxvt============
 ;;; swint-dired-converter
 ;; ============swint-dired-converter=========

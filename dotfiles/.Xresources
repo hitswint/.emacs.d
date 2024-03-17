@@ -33,6 +33,7 @@ URxvt.perl-ext-common: default,tabbedalt,keyboard-select,selection-to-clipboard
 
 ! tabbedalt
 URxvt.tabbedalt.new-button: false
+URxvt.tabbedalt.stop-flickering: true
 URxvt.tabbedalt.autohide: true
 URxvt.tabbedalt.disable-default-keys: true
 URxvt.tabbedalt.zero-jump-last: true
