@@ -21,7 +21,7 @@ else
 fi
 
 if [[ $1 == "other" ]]; then
-    [[ $curr_file ]] && curr_dir=$(dirname -- "$curr_file") || curr_dir=$HOME
+    [[ $curr_file ]] && curr_dir=$(dirname -- "$curr_file") || curr_dir=$(xcwd)
     curr_file=$(rofi.sh -modi filebrowser -show filebrowser -filebrowser-directory "$curr_dir" -run-command "echo {cmd}" | sed 's/xdg-open //g')
 fi
 
