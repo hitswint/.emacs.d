@@ -14,7 +14,7 @@ else
     # PID=$(xprop -id `xdotool getwindowfocus` | grep '_NET_WM_PID' | grep -oE '[[:digit:]]*$')
     PID=$(xdotool getactivewindow getwindowpid)
     # curr_file=$(lsof -u $USER -a -b -p $PID | grep REG | grep -E "$HOME|/mnt" | grep -vE "$HOME/(.local|.config)")
-    curr_file=$(ls /proc/$PID/fd/* | xargs -L 1 readlink | grep -E "$HOME|/mnt" | grep -vE "$HOME/(.local|.config)" | grep -v "$HOME/\.\+.*" | rofi.sh -no-custom -auto-select -dmenu -i -p "Open:")
+    curr_file=$(ls /proc/$PID/fd/* | xargs -L 1 readlink | grep -E "$HOME|/mnt" | grep -vE "$HOME/(.local|.config)" | grep -v "$HOME/\.\+.*" | rofi -no-custom -auto-select -dmenu -i -p "Open:")
     if [[ $? -eq 1 ]]; then     # C-g取消时返回1，否则返回0
         exit
     fi
@@ -22,11 +22,11 @@ fi
 
 if [[ $1 == "other" ]]; then
     [[ $curr_file ]] && curr_dir=$(dirname -- "$curr_file") || curr_dir=$(xcwd)
-    curr_file=$(rofi.sh -modi filebrowser -show filebrowser -filebrowser-directory "$curr_dir" -run-command "echo {cmd}" | sed 's/xdg-open //g')
+    curr_file=$(rofi -modi filebrowser -show filebrowser -filebrowser-directory "$curr_dir" -run-command "echo {cmd}" | sed 's/xdg-open //g')
 fi
 
 if [[ $curr_file ]]; then
-    select_command=$(rofi.sh -show run -run-command "echo {cmd}")
+    select_command=$(rofi -show run -run-command "echo {cmd}")
     if [[ $select_command ]]; then
         eval $select_command \"$curr_file\"
     fi

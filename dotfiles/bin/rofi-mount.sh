@@ -2,7 +2,7 @@
 
 export SUDO_ASKPASS=$HOME/bin/askpass.sh
 
-LAUNCHER="rofi.sh -width 30 -dmenu -i -p Mount:"
+LAUNCHER="rofi -width 30 -dmenu -i -p Mount:"
 REMOTES=$(cat ~/.ssh/config | grep "^Host " | awk '{print $2}' | sed "1 i local" | xargs | sed -e 's/ /\\n/g')
 remote=`echo -e $REMOTES | $LAUNCHER | tr -d '\r\n'`
 

@@ -74,4 +74,7 @@ if [ $NUM_MONITORS -gt 1 ]; then
     fi
 fi
 
-rofi "$@"
+if [[ "$@" ]]; then
+    # rofi "$@"
+    eval $@
+fi

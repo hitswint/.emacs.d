@@ -15,7 +15,7 @@ elif [[ $(xdotool search --onlyvisible --class "qpdfview" | grep -i $Wind_id) ]]
     curr_dir=$(dirname -- "$curr_file")
 elif [[ $(xdotool search --onlyvisible --class "Wps|Et|Wpp|Wpspdf|Wpsoffice" | grep -i $Wind_id) || $curr_dir == $HOME ]]; then
     PID=$(xdotool getactivewindow getwindowpid)
-    curr_file=$(ls /proc/$PID/fd/* | xargs -L 1 readlink | grep -E "$HOME|/mnt" | grep -vE "$HOME/(.local|.config)" | grep -v "$HOME/\.\+.*" | rofi.sh -no-custom -auto-select -dmenu -i -p "Open:")
+    curr_file=$(ls /proc/$PID/fd/* | xargs -L 1 readlink | grep -E "$HOME|/mnt" | grep -vE "$HOME/(.local|.config)" | grep -v "$HOME/\.\+.*" | rofi -no-custom -auto-select -dmenu -i -p "Open:")
     if [[ $? -eq 1 ]]; then     # C-g取消时返回1，否则返回0
         exit
     fi

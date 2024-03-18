@@ -11,7 +11,7 @@ OPTIONS="Reboot\nPower-off\nSuspend\nHibernate"
 if [ -f $HOME/.config/rofi-power/config ]; then
   source $HOME/.config/rofi-power/config
 else
-  LAUNCHER="rofi.sh -width 30 -dmenu -i -p rofi-power"
+  LAUNCHER="rofi -width 30 -dmenu -i -p rofi-power"
   USE_LOCKER="false"
   LOCKER="slock"
 fi

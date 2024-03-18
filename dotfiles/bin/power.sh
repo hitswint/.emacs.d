@@ -44,7 +44,7 @@ if [[ (-t 0) && ($1 != ROFI)]]; then
     fi
 else
     COMMANDS="Poweroff\nReboot\nSuspend\nHibernate"
-    LAUNCHER="rofi.sh -width 30 -dmenu -i -p Power:"
+    LAUNCHER="rofi -width 30 -dmenu -i -p Power:"
     power_command=`echo -e $COMMANDS | $LAUNCHER | awk '{print $1}' | tr -d '\r\n'`
 
     REMOTES=$(cat ~/.ssh/config | grep "^Host " | awk '{print $2}' | xargs | sed -e 's/ /\\n/g') # xargs合并多行

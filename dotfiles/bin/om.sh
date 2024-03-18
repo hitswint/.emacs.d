@@ -1,7 +1,7 @@
 #!/bin/bash
 
 VERSIONS=$(docker images | awk '($1~/^openmodelica\/openmodelica/) {print $2}')
-LAUNCHER="rofi.sh -width 30 -dmenu -i -p OpenModelica"
+LAUNCHER="rofi -width 30 -dmenu -i -p OpenModelica"
 
 if [[ -t 0 ]]; then
     om_version=$(echo -e $VERSIONS | percol)

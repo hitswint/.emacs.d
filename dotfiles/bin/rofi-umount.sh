@@ -2,7 +2,7 @@
 
 export SUDO_ASKPASS=$HOME/bin/askpass.sh
 
-LAUNCHER="rofi.sh -width 30 -dmenu -i -p Umount:"
+LAUNCHER="rofi -width 30 -dmenu -i -p Umount:"
 mount_entry=$(df -h | grep '/mnt\|/media/iso' | $LAUNCHER | tr -d '\r\n')
 network_style='^.*/mnt/(sshfs|share)/.*$'
 device_style='^/dev/.*$'

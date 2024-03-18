@@ -23,7 +23,7 @@ selectText=$(echo "$selectText" | sed 's/[\"]/\\&/g' | tr -d '\n')
 
 # * dict.sh
 # https://gist.github.com/Amooti73/9dac66ffee26f93baf211ab8c05949cd
-# LAUNCHER="rofi.sh -width 80 -l 32 -dmenu -i -p Word:"
+# LAUNCHER="rofi -width 80 -l 32 -dmenu -i -p Word:"
 
 # pag() {
 #     # sed -e 1d -e 's; _\([A-Z]\); \1;p' -e '/^$/d' -e '/^-->/d' | eval "$LAUNCHER" -l 20 -p 'Done'
@@ -77,7 +77,7 @@ fi
 
 # https://github.com/garyparrot/rofi-translate
 # RET以高亮行作为输入，C-RET以当前文本框作为输入，C-SPACE以高亮行填充文本框
-rofi.sh -width 80 -lines 32 -sidebar-mode -modi "sdcv:rofi_trans_sdcv,ydcv:rofi_trans_ydcv" -show $transmode
+rofi -width 80 -lines 32 -sidebar-mode -modi "sdcv:rofi_trans_sdcv,ydcv:rofi_trans_ydcv" -show $transmode
 
 ydcv_curr=$(cat $transHistory_ydcv)
 
@@ -101,7 +101,7 @@ fi
 # (kb-custom-1 to kb-custom-19) -> (10 to 28)
 # If you issue 'kb-custom-1' command, rofi will return the output of the selected row(s) and the exit code 10 which corresponds to custom command 1.
 # 似乎跟dwm冲突，kb-custom-1定义无效
-# content=$(rofi.sh -width 80 -l 32 -sidebar-mode -kb-custom-1 Control-c -modi "sdcv:rofi_trans_sdcv $2,ydcv:rofi_trans_ydcv $2" -show "$default")
+# content=$(rofi -width 80 -l 32 -sidebar-mode -kb-custom-1 Control-c -modi "sdcv:rofi_trans_sdcv $2,ydcv:rofi_trans_ydcv $2" -show "$default")
 # exit_code=$?
 # case $exit_code in
 #     10) echo $content | xclip -selection clipboard ;;
