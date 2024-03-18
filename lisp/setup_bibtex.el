@@ -163,6 +163,7 @@
   (smartrep-define-key ebib-index-mode-map "C-c"
     '(("n" . ebib-next-collection)
       ("p" . ebib-prev-collection)))
+  (define-key ebib-filters-map "F" 'ebib-filter-collection)
   (define-key ebib-strings-mode-map (kbd "C-x b") nil)
   (define-key ebib-entry-mode-map (kbd "C-x b") nil)
   (define-key ebib-entry-mode-map (kbd "C-p") nil)
@@ -273,6 +274,21 @@
                                              "collection" (ebib--get-key-at-point) ebib--cur-db))
                   (not (equal current-position (point))))
         (setq current-position (point))
-        (ebib-prev-entry)))))
+        (ebib-prev-entry))))
+  (defun ebib-filter-collection ()
+    (interactive)
+    (let* ((collection-key "collection")
+           (collection-list (cl-remove-duplicates (cl-loop for entry in (hash-table-values (ebib-db-val 'entries ebib--cur-db))
+                                                           collect (substring (assoc-default collection-key entry) 1 -1))
+                                                  :test 'string=))
+           (regexp (helm-comp-read "Collection: " collection-list
+                                   :buffer "*helm ebib collection-swint*")))
+      (ebib--execute-when
+        (entries
+         (ebib-db-set-current-entry-key (ebib--get-key-at-point) ebib--cur-db)
+         (ebib-db-set-filter `(contains collection-key regexp) ebib--cur-db)
+         (ebib--update-buffers))
+        (default
+         (beep))))))
 ;; =====================ebib=======================
 (provide 'setup_bibtex)
