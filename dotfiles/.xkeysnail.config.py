@@ -60,6 +60,7 @@ define_keymap(
     {
         K("q"): [K("q"), K("C-f"), K("esc")],
         K("C-comma"): [K("M-Shift-m"), K("M-t")],
+        K("C-dot"): [K("M-Shift-m"), K("M-f"), K("u")],
         K("C-j"): [K("enter"), K("M-Shift-m")],
         K("C-apostrophe"): [K("M-Shift-m"), K("F6"), K("M-Shift-m")],
     },

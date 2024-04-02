@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+function widget-tmux-reptyr () {
+    exec </dev/tty
+    exec <&1
+    if [[ -z "$(jobs -l)" || "$(jobs -p | wc -l)" -gt 1 ]]; then
+        tmux new -A
+    else
+        PPIDBG=$(jobs -l | awk '{ print $3 }')
+        bg >/dev/null 2>&1
+        disown %1
+        if tmux ls &> /dev/null; then
+            tmux new-window "$SHELL -c 'reptyr $PPIDBG'"
+        else
+            tmux new -d
+            tmux send-keys "reptyr $PPIDBG" ENTER
+        fi
+        tmux attach
+    fi
+}
+widget-tmux-reptyr "$@"

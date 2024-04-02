@@ -124,3 +124,4 @@ bind-maps emacs -- '^[^_Db^_' widget-shell-bookmark-cd-to
 bind-maps emacs -- '^x,' widget-percol-rsync-pull
 bind-maps emacs -- '^x.' widget-percol-rsync-push
 bind-maps emacs -- "\e^i" expand-or-complete
+bind-maps emacs -- "\ez" widget-tmux-reptyr

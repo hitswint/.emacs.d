@@ -31,18 +31,6 @@
         helm-external-programs-associations file-extension-app-alist
         helm-default-external-file-browser "thunar"
         helm-pdfgrep-default-read-command "llpp -page %p \"%f\""
-        helm-completing-read-handlers-alist '((describe-function . helm-completing-read-symbols)
-                                              (describe-variable . helm-completing-read-symbols)
-                                              (debug-on-entry . helm-completing-read-symbols)
-                                              (find-function . helm-completing-read-symbols)
-                                              (find-tag . helm-completing-read-with-cands-in-buffer)
-                                              (ffap-alternate-file)
-                                              (tmm-menubar)
-                                              (find-file)
-                                              (org-annotate-file)
-                                              (swint-org-annotate-file)
-                                              (dired-do-copy)
-                                              (dired-create-directory))
         helm-boring-buffer-regexp-list (append helm-boring-buffer-regexp-list
                                                '("\\`Enjoy\\ Music\\'"
                                                  "\\`\\*Ibuffer\\*\\'"
@@ -73,6 +61,14 @@
                                                  "\\`\\*viatc\\*\\'"
                                                  "\\`\\*Article\\*\\'"
                                                  "\\`\\*xwidget-webkit:.*\\*\\'")))
+  (setq helm-completing-read-handlers-alist (append helm-completing-read-handlers-alist
+                                                    '((describe-function . helm-completing-read-symbols)
+                                                      (describe-variable . helm-completing-read-symbols)
+                                                      (debug-on-entry . helm-completing-read-symbols)
+                                                      (find-function . helm-completing-read-symbols)
+                                                      (org-annotate-file . nil)
+                                                      (swint-org-annotate-file . nil)
+                                                      (dired-create-directory . helm-read-file-name-handler-1))))
   ;; (setq helm-mounted-network-directories '("/mnt/share" "/mnt/sshfs"))
   (custom-set-faces '(helm-buffer-directory ((t (:foreground "yellow" :weight bold))))
                     '(helm-buffer-file ((t (:inherit font-lock-type-face))))

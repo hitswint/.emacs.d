@@ -43,6 +43,11 @@
 ;;;; Capture
   ;; =================Capture===================
   (global-set-key (kbd "M-O l") 'org-store-link)
+  (global-set-key (kbd "M-O L") #'(lambda () (interactive)
+                                    (cl-letf (((symbol-value 'org-create-file-search-functions)
+                                               (lambda ()
+                                                 (number-to-string (org-current-line)))))
+                                      (call-interactively 'org-store-link))))
   (global-set-key (kbd "M-O c") 'org-capture)
   (global-set-key (kbd "M-O a") 'org-agenda)
   (setq org-capture-templates
@@ -170,6 +175,21 @@
   (advice-add 'org-babel-execute-src-block :before #'(lambda (&optional arg info params)
                                                        (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)))
   ;; ===========使用ditaa输出ascii图片==========
+;;;; org-persist
+  ;; ================org-persist================
+  (setq org-persist-remote-files nil)   ;不保存远程文件的缓存数据
+  (advice-add 'org-persist-gc :around #'(lambda (fn) (let ((file-name-handler-alist (cons file-remote-handler-alist file-name-handler-alist)))
+                                                       (funcall fn))))
+  (defvar file-remote-handler-alist (cons "\\`\\(/mnt/share/\\|/mnt/sshfs/\\).*\\'" 'file-remote-handler))
+  (defun file-remote-handler (operation &rest args)
+    (cond ((eq operation 'file-remote-p) t)
+          (t (let ((inhibit-file-name-handlers
+                    (cons 'file-remote-handler
+                          (and (eq inhibit-file-name-operation operation)
+                               inhibit-file-name-handlers)))
+                   (inhibit-file-name-operation operation))
+               (apply operation args)))))
+  ;; ================org-persist================
 ;;;; org-table
   ;; =================orgtbl====================
   (use-package org-table
