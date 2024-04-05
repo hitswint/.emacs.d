@@ -156,7 +156,7 @@
      ("=" "=" nil org-mode)
      ("+" "+" nil org-mode)
      ("_" "_" nil org-mode)
-     ("$" "$" nil (org-mode latex-mode))
+     ("$" "$" nil (org-mode LaTeX-mode))
      ("!!" "!!" "!" org-mode)
      ("@@" "@@" "@" org-mode)
      ("%%" "%%" "%" org-mode)

@@ -4,7 +4,7 @@
   :bind ("M-g C" . swint-toggle-flycheck-mode)
   :config
   ;; https://github.com/emacs-grammarly/flycheck-grammarly 支持grammarly，但连网速度慢
-  ;; 默认支持proselint，但在latex-mode中不开启
+  ;; 默认支持proselint，但在LaTeX-mode中不开启
   (define-key flycheck-mode-map flycheck-keymap-prefix nil)
   (setq flycheck-keymap-prefix (kbd "M-g c"))
   (define-key flycheck-mode-map flycheck-keymap-prefix flycheck-command-map)

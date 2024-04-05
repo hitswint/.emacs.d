@@ -45,7 +45,7 @@
   :after auto-complete
   :config
   ;; ============ac-modes============
-  (add-to-list 'ac-modes 'latex-mode)
+  (add-to-list 'ac-modes 'LaTeX-mode)
   (add-to-list 'ac-modes 'org-mode)
   (add-to-list 'ac-modes 'octave-mode)
   (add-to-list 'ac-modes 'shell-mode)
@@ -141,7 +141,7 @@
   :config
   (add-hook 'LaTeX-mode-hook 'ac-auctex-setup)
   (add-hook 'auto-complete-mode-hook #'(lambda ()
-                                         (if (eq major-mode 'latex-mode)
+                                         (if (eq major-mode 'LaTeX-mode)
                                              (ac-auctex-setup)))))
 ;; ================ac-auctex===================
 ;;; ac-math

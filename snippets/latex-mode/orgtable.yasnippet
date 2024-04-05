@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# key: orgtable
+# name: orgtable
+# --
+% BEGIN RECEIVE ORGTBL ${1:$$(unless yas-modified-p (make-temp-name "table_"))}
+% END RECEIVE ORGTBL $1
+\begin{comment}
+#+ORGTBL: SEND $1 ${2:$$(yas-choose-value '("orgtbl-to-latex" "orgtbl-to-latex-booktabs"))} :splice nil :skip 0
+| $0 |   |
+|---+---|
+|   |   |
+\end{comment}

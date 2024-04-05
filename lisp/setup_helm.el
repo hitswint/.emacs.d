@@ -688,7 +688,7 @@
       (init . (lambda()
                 (setq helm-lacarte-major-mode major-mode)))
       (candidates
-       . (lambda () (if (eq helm-lacarte-major-mode 'latex-mode)
+       . (lambda () (if (eq helm-lacarte-major-mode 'LaTeX-mode)
                         (delete '(nil) (lacarte-get-a-menu-item-alist LaTeX-math-mode-map)))))
       (action . (("Open" . (lambda (candidate)
                              (call-interactively candidate)))))))

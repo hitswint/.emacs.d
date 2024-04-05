@@ -329,7 +329,7 @@
   :commands outline-minor-mode
   :init
   (add-hook 'prog-mode-hook 'outline-minor-mode)
-  (add-hook 'TeX-mode-hook 'outline-minor-mode)
+  (add-hook 'LaTeX-mode-hook 'outline-minor-mode)
   (add-hook 'message-mode-hook 'outline-minor-mode)
   (defvar outline-minor-mode-prefix "\M-O")
   :config
@@ -344,7 +344,7 @@
       ("b" . outline-backward-same-level)
       ("f" . outline-forward-same-level)))
   (define-key outline-minor-mode-map (kbd "C-M-i") nil)
-  (add-hook 'TeX-mode-hook
+  (add-hook 'LaTeX-mode-hook
             (lambda ()
               (define-key outline-minor-mode-map (kbd "\C-i") '(menu-item "maybe-latex/hide-show" nil :filter
                                                                           (lambda (&rest _)
@@ -388,7 +388,7 @@
   ;; Heading格式随mode不同，通常是M-;加*加空格
   (add-hook 'outline-minor-mode-hook
             (lambda ()            ;latex-mode/org-mode中不开启outshine
-              (unless (derived-mode-p 'latex-mode 'org-mode)
+              (unless (derived-mode-p 'LaTeX-mode 'org-mode)
                 (outshine-mode))))
   :config
   ;; 与lsp-bridge冲突，acm-filter依赖self-insert-command，但outshine对其重新绑定
@@ -809,11 +809,12 @@
   :config
   (setq org-appear-trigger 'always
         org-appear-delay 0.5
-        org-appear-autolinks t
         org-appear-autoemphasis t
         org-appear-autosubmarkers t
         org-appear-autoentities t
-        org-appear-autokeywords t)
+        org-appear-autolinks nil
+        org-appear-autokeywords nil
+        org-appear-inside-latex t)
   ;; 当命令导致buffer切换时，org-appear--post-cmd在新buffer中执行，导致org-appear--current-elem执行错误
   (defvar-local org-appear-current-buffer nil)
   (advice-add 'org-appear--pre-cmd :after #'(lambda () (unless org-appear-current-buffer

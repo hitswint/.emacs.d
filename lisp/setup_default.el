@@ -123,6 +123,8 @@
 (global-set-key (kbd "M-s M-D") 'swint-sdcv-to-buffer)
 (global-set-key (kbd "M-s D") 'swint-online-to-buffer)
 (global-set-key (kbd "M-s O") 'occur)
+(global-set-key (kbd "M-s M-m") 'eval-math-with-calc)
+(global-set-key (kbd "M-s m") #'(lambda () (interactive) (eval-math-with-calc t)))
 (global-set-key (kbd "M-o RET") 'urxvt-default-directory)
 (global-set-key (kbd "M-o t") 'thunar-open-default-directory)
 (global-set-key (kbd "C-S-s") 'swint-pinyin-search-forward)

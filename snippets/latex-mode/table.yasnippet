@@ -3,15 +3,11 @@
 # key: table
 # group: environments
 # name : \begin{table} ... \end{table}
+# expand-env: ((yas-triggers-in-field t))
 # --
 \begin{table}[htbp]
 \centering
-\begin{tabular}{${3:format}}
-\toprule
-$0 & \\\
-\midrule
-\bottomrule
-\end{tabular}
+${0:$$(progn (deactivate-mark) (yas-expand-snippet (yas-lookup-snippet (yas-choose-value '("orgtable" "tabular")))))}
 \caption{${1:caption}}
 \label{tbl:${2:$$(unless yas-modified-p (make-temp-name (concat (replace-regexp-in-string " " "_" (yas-field-value 1)) ":")))}}
 \end{table}

@@ -2,7 +2,7 @@
 ;; =====================auctex=====================
 (use-package tex
   :commands LaTeX-math-mode
-  :mode ("\\.[tT][eE][xX]\\'" . latex-mode)
+  :mode ("\\.[tT][eE][xX]\\'" . LaTeX-mode)
   :config
 ;;;; setup-and-keybindings
   ;; ============setup-and-keybindings=============
@@ -12,7 +12,7 @@
   (setq LaTeX-electric-left-right-brace t)
   (setq LaTeX-math-abbrev-prefix "M-s `") ;LaTeX-math-mode与cdlatex的prefix冲突
   (mapc (lambda (mode)
-          (add-hook 'TeX-mode-hook mode))
+          (add-hook 'LaTeX-mode-hook mode))
         (list 'LaTeX-math-mode
               'turn-on-orgtbl
               'TeX-fold-mode ; C-c C-o C-b打开fold，C-c C-o b关闭fold
@@ -26,7 +26,6 @@
               (setq TeX-save-query nil)
               (setq-local TeX-base-mode-name "TeX")
               (imenu-add-menubar-index)
-              (define-key LaTeX-mode-map (kbd "C-c f") 'TeX-font)
               (define-key LaTeX-mode-map (kbd "C-q") #'(lambda () (interactive)
                                                          (ignore-errors (kill-process (TeX-active-process)))
                                                          (swint-kill-buffer)))
@@ -53,8 +52,7 @@
                                  (bind-key "C-c V" 'preview-clearout-buffer LaTeX-mode-map)))
     :config
     (setq preview-auto-cache-preamble t)
-    (setq preview-gs-options '("-q" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4"))
-    (set-face-attribute 'preview-reference-face nil :background "white"))
+    (set-face-attribute 'preview-reference-face nil :background "grey" :height 1.5))
   ;; ==================preview=====================
   )
 ;; =====================auctex=====================
@@ -73,26 +71,8 @@
   :diminish magic-latex-buffer
   :commands magic-latex-buffer
   :init
-  (add-hook 'TeX-mode-hook 'magic-latex-buffer)
+  (add-hook 'LaTeX-mode-hook 'magic-latex-buffer)
   :config
-  ;; Bug：Error running timer `font-latex-jit-lock-force-redisplay': (wrong-number-of-arguments (2 . 2) 3) [N times]
-  ;; Redefine font-latex-jit-lock-force-redisplay to fix aboved bug.
-  (defun font-latex-jit-lock-force-redisplay (buf start end)
-    "Compatibility for Emacsen not offering `jit-lock-force-redisplay'."
-    ;; The following block is an expansion of `jit-lock-force-redisplay'
-    ;; and involved macros taken from CVS Emacs on 2007-04-28.
-    (with-current-buffer buf
-      (let ((modified (buffer-modified-p)))
-        (unwind-protect
-            (let ((buffer-undo-list t)
-                  (inhibit-read-only t)
-                  (inhibit-point-motion-hooks t)
-                  (inhibit-modification-hooks t)
-                  deactivate-mark
-                  buffer-file-name
-                  buffer-file-truename)
-              (put-text-property start end 'fontified t))
-          (unless modified
-            (restore-buffer-modified-p nil)))))))
+  (setq magic-latex-enable-block-align nil))
 ;; ==============magic-latex-buffer================
 (provide 'setup_latex)

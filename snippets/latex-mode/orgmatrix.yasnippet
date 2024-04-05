@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# key: orgmatrix
+# name: orgmatrix
+# --
+% BEGIN RECEIVE ORGTBL ${1:$$(unless yas-modified-p (make-temp-name "matrix_"))}
+% END RECEIVE ORGTBL $1
+\begin{comment}
+#+ORGTBL: SEND $1 orgtbl-to-latex :splice nil :skip 0 :tstart "\\\\begin{${2:$$(yas-choose-value '("pmatrix" "bmatrix" "Bmatrix" "vmatrix" "Vmatrix" "smallmatrix"))}}" :tend "\\\\end{$2}"
+| $0 |   |
+\end{comment}
