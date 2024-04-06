@@ -7,4 +7,4 @@
 #+CAPTION: ${2:$$(unless yas-modified-p (replace-regexp-in-string "_" " " (file-name-base (yas-field-value 1))))}
 #+NAME: fig:${3:$$(unless yas-modified-p (make-temp-name (concat (ivy-read "Export to: " '(latex office)) ":" (replace-regexp-in-string " " "_" (yas-field-value 2)) ":")))}
 #+LABEL: fig:$3
-[[${1:$$(unless yas-modified-p (or (yas-choose-value (directory-files-recursively "./" (image-file-name-regexp))) (swint-screenshot)))}]]$0
+[[${1:$$(unless yas-modified-p (or (if-let ((image-files (directory-files-recursively "./" (image-file-name-regexp)))) (yas-choose-value image-files)) (swint-screenshot)))}]]$0
