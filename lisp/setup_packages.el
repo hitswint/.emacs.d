@@ -1106,9 +1106,38 @@ ORIG is the advised function, which is called with its ARGS."
   :init
   (add-hook 'csv-mode-hook #'(lambda () (font-lock-mode -1)))
   :config
+  (setq csv-confirm-region nil)
   (defun csv-kill-fields/after (fields beg end)
     (kill-new (string-join csv-killed-fields "\n")))
-  (advice-add 'csv-kill-fields :after #'csv-kill-fields/after))
+  (advice-add 'csv-kill-fields :after #'csv-kill-fields/after)
+  (defun csv-kill-selected-fields ()
+    (interactive)
+    (let* ((beg (if (region-active-p) (region-beginning) (point-min)))
+           (end (if (region-active-p) (region-end) (point-max)))
+           (columns-list (save-excursion
+                           (goto-char (point-min))
+                           (csv--collect-fields (line-end-position))))
+           (fields-list (number-sequence 1 (length columns-list)))
+           (fields (helm-comp-read "Columns: " (-zip columns-list fields-list)
+                                   :marked-candidates t
+                                   :buffer "*helm csv select columns-swint*")))
+      (csv-kill-fields fields beg end)))
+  (defun csv-yank-selected-fields ()
+    (interactive)
+    (let* ((csv-separator (car csv-separators))
+           (columns-list (split-string (car csv-killed-fields) csv-separator))
+           (fields-list (number-sequence 1 (length columns-list)))
+           (selected-fields (helm-comp-read "Columns: " (-zip columns-list fields-list)
+                                            :marked-candidates t
+                                            :buffer "*helm csv select columns-swint*"))
+           (csv-killed-fields (cl-loop for row in csv-killed-fields
+                                       collect (let ((row-columns (split-string row csv-separator)))
+                                                 (mapconcat (lambda (field) (nth (1- field) row-columns))
+                                                            selected-fields csv-separator)))))
+      (call-interactively 'csv-yank-fields)))
+  (define-key csv-mode-map (kbd "C-c k") #'csv-kill-selected-fields)
+  (define-key csv-mode-map (kbd "C-c y") #'csv-yank-selected-fields)
+  (define-key csv-mode-map (kbd "C-c s") #'csv-set-separator))
 ;; ===================csv-mode=====================
 ;;; clipetty
 ;; ===================clipetty=====================

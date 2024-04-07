@@ -11,12 +11,8 @@
               (TeX-PDF-mode 1)
               (turn-on-orgtbl)
               (setq-local TeX-base-mode-name "TeX")
-              (define-key LaTeX-mode-map (kbd "C-q") #'(lambda () (interactive)
-                                                         (ignore-errors (kill-process (TeX-active-process)))
-                                                         (swint-kill-buffer)))
               (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)
-              (define-key LaTeX-mode-map (kbd "C-c l") #'(lambda () (interactive)
-                                                           (insert (swint-cursor-localtion))))))
+              (define-key LaTeX-mode-map (kbd "C-c l") #'(lambda () (interactive) (insert (swint-cursor-localtion))))))
   :config
   (setq TeX-auto-save t
         TeX-parse-self t

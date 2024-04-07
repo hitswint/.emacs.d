@@ -4,7 +4,6 @@
   :diminish (helm-mode eldoc-mode)
   :commands (helm-find-files-1
              helm-insert-latex-math
-             helm-completing-read-default-1
              helm-current-directory
              helm-select-host)
   :bind-keymap ("C-x c" . helm-command-map)

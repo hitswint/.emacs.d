@@ -612,9 +612,7 @@
 (use-package ox-latex
   :after ox
   :config
-  (setq org-latex-pdf-process
-        '("xelatex -interaction nonstopmode %f"
-          "xelatex -interaction nonstopmode %f"))
+  (setq org-latex-compiler "xelatex")
   ;; 定义org markup(*_+/=~)等的转换
   (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
                                       (code . verb)
