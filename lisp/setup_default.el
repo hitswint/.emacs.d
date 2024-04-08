@@ -21,6 +21,9 @@
 (setq diary-file "~/org/journal.org.gpg")
 (setq disabled-command-function nil)
 (setq undo-no-redo t)
+(setq undo-limit 1600000
+      undo-strong-limit 24000000
+      undo-outer-limit 240000000)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 (setq-default indent-tabs-mode nil)
 (setq auto-window-vscroll nil)          ;解决C-n卡顿
