@@ -320,7 +320,7 @@
                                                            (split-string (read-string (concat x " (1-2west 4 5-end): ") nil nil "1-end") " " t)
                                                            " ")))
                     (output-file (mapconcat (lambda (arg) (concat (file-name-base (car arg)) "_" (cdr arg)))
-                                            (-zip filename-list page-args) ".")))
+                                            (-zip-pair filename-list page-args) ".")))
                (shell-command (concat "pdftk " (mapconcat 'identity file-args " ") " cat " (mapconcat 'identity page-args " ") " output \""
                                       ;; 输出文件可能过长，Linux中文件名最长允许255个字符(Byte)，UTF-8编码中每个汉字为3个字符
                                       (if (> (string-bytes output-file) 250)

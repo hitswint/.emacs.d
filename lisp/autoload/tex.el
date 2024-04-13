@@ -27,7 +27,9 @@ To solve equation, solve([x+y=3, x-y=1], [x,y])."
                   (region-end)
                 (line-end-position)))
          (expr (buffer-substring-no-properties beg end))
-         (result (if (eq major-mode 'LaTeX-mode)
+         (result (if (or (eq major-mode 'LaTeX-mode)
+                         (and (eq major-mode 'org-mode)
+                              (memq (car (org-element-context)) '(latex-fragment latex-environment))))
                      (calc-eval `(,expr
                                   calc-language latex
                                   calc-prefer-frac t

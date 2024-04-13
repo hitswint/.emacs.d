@@ -690,4 +690,11 @@ The default command run is fd -X rg -l0 --regexp REGEXP | xargs -0 ls."
                                      " | xargs -0 ls "
                                      (cdr find-ls-option)))))
 ;; ===============find-dired===================
+;;; dired-duplicates
+;; ============dired-duplicates================
+(use-package dired-duplicates
+  ;; M-RET确认选择文件夹，加C-u列出不重复文件
+  :bind (:map dired-mode-map
+              ("C-c d" . dired-duplicates)))
+;; ============dired-duplicates================
 (provide 'setup_dired)

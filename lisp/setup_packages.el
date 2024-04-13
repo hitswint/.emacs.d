@@ -1118,7 +1118,7 @@ ORIG is the advised function, which is called with its ARGS."
                            (goto-char (point-min))
                            (csv--collect-fields (line-end-position))))
            (fields-list (number-sequence 1 (length columns-list)))
-           (fields (helm-comp-read "Columns: " (-zip columns-list fields-list)
+           (fields (helm-comp-read "Columns: " (-zip-pair columns-list fields-list)
                                    :marked-candidates t
                                    :buffer "*helm csv select columns-swint*")))
       (csv-kill-fields fields beg end)))
@@ -1127,7 +1127,7 @@ ORIG is the advised function, which is called with its ARGS."
     (let* ((csv-separator (car csv-separators))
            (columns-list (split-string (car csv-killed-fields) csv-separator))
            (fields-list (number-sequence 1 (length columns-list)))
-           (selected-fields (helm-comp-read "Columns: " (-zip columns-list fields-list)
+           (selected-fields (helm-comp-read "Columns: " (-zip-pair columns-list fields-list)
                                             :marked-candidates t
                                             :buffer "*helm csv select columns-swint*"))
            (csv-killed-fields (cl-loop for row in csv-killed-fields

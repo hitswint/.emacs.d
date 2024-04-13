@@ -65,6 +65,7 @@
                            diff-hl
                            diminish
                            dired-du
+                           dired-duplicates
                            dired-filetype-face
                            dired-narrow
                            dired-ranger
