@@ -91,14 +91,16 @@
 (use-package expand-region
   :bind (("C-M-;" . er/expand-region)
          ("C-M-:" . er/contract-region))
+  :init
+  ;; 默认把er/save-mode-excursion设置为er/save-org-mode-excursion，导致org-mode中使用卡顿
+  ;; (er/enable-mode-expansions 'org-mode #'(lambda ()
+  ;;                                          (setq-local er/save-mode-excursion nil)))
+  (advice-add 'er/add-org-mode-expansions :after #'(lambda () (setq-local er/save-mode-excursion nil)))
   :config
   ;; 在octave中使用会导致emacs假死，原因是octave的function中必须带有end
   (setq expand-region-contract-fast-key ":"
         expand-region-reset-fast-key ";"
-        expand-region-show-usage-message nil)
-  ;; 默认把er/save-mode-excursion设置为er/save-org-mode-excursion，导致org-mode中使用卡顿
-  (er/enable-mode-expansions 'org-mode #'(lambda ()
-                                           (setq-local er/save-mode-excursion nil))))
+        expand-region-show-usage-message nil))
 ;; =================expand-region==================
 ;;; auto-mark
 ;; ==================auto-mark=====================
@@ -808,9 +810,14 @@
 ;; =====================annot======================
 (use-package annot
   :load-path "repos/annot/src/"
+  :commands (annot-goto-previous annot-goto-next)
   :bind (("M-g a a" . annot-edit/add)
          ("M-g a r" . annot-remove)
          ("M-g a i" . annot-add-image))
+  :init
+  (smartrep-define-key global-map "M-g a"
+    '(("p" . annot-goto-previous)
+      ("n" . annot-goto-next)))
   :config
   (setq annot-directory "~/org/.annot")
   ;; 与volatile-highlights-mode有冲突

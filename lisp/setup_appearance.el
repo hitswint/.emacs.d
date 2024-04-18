@@ -71,7 +71,7 @@
                             (all-the-icons-dired--icon curr))
                           " "
                           (ml/do-shorten-directory (abbreviate-file-name
-                                                    (file-name-parent-directory curr))
+                                                    (or (file-name-parent-directory curr) ""))
                                                    ;; (min (- (window-width) 8) ml/name-width)
                                                    (- (window-width)
                                                       24

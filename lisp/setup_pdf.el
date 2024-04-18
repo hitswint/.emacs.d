@@ -41,7 +41,7 @@
 (use-package pdfgrep
   :bind (("M-s v v" . pdfgrep-opened)
          ("M-s v d" . pdfgrep-dired)
-         ("M-s V" . pdfgrep-zotero))
+         ("M-s v z" . pdfgrep-zotero))
   :config
   ;; 三种方式pdfgrep/rg/helm-ag，速度从慢到快，文件数量小于5时用pdfgrep，小于100时用rg，其他用helm-ag
   ;; pdfgrep-opened/pdfgrep-dired/pdfgrep-zotero分别针对已打开文件/当前文件夹/Zotero仓库
@@ -49,6 +49,19 @@
   (pdfgrep-mode)
   (define-key grep-mode-map (kbd "C-j") 'compile-goto-error-externally)
   (add-hook 'grep-mode-hook #'(lambda () (setq truncate-lines t)))
+  ;; 当pdfgrep-mode开启时，修改compilation-goto-locus使RET跳转到当前页，但这对rg无效
+  (defun pdfgrep-current-page-and-match/around (fn buffer)
+    (let ((buf (buffer-name buffer)))
+      (cond ((equal buf pdfgrep-buffer-name)
+             (funcall fn buffer))
+            ((equal buf (rg-buffer-name))
+             (with-current-buffer buffer
+               (cons (save-excursion
+                       (goto-char (line-beginning-position))
+                       (re-search-forward "Page\\ \\([[:digit:]]+\\):" nil t)
+                       (string-to-number (match-string-no-properties 1)))
+                     (rg-search-pattern rg-cur-search)))))))
+  (advice-add 'pdfgrep-current-page-and-match :around #'pdfgrep-current-page-and-match/around)
   (defun compile-goto-error-externally ()
     (interactive)
     (let* ((loc (compilation--message->loc (get-text-property (line-beginning-position) 'compilation-message)))

@@ -21,7 +21,11 @@
   (setq dired-mouse-drag-files t)
   (setq dired-auto-revert-buffer t) ;使用dired/dired-other-window/dired-other-frame时更新，与auto-revert-mode不同
   (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才启用auto-revert-mode更新
-                                                (when (get-buffer-window (current-buffer)) (apply fn args))))
+                                                (when (get-buffer-window (current-buffer))
+                                                  (let ((dired-directory (if (bound-and-true-p dired-subtree-overlays)
+                                                                             (dired-current-directory)
+                                                                           dired-directory)))
+                                                    (apply fn args)))))
   (advice-add 'dired-goto-file :around #'(lambda (fn &rest args)
                                            (let ((default-directory (dired-current-directory)))
                                              (apply fn args))))
@@ -139,7 +143,7 @@
   ;; ==========setup-and-keybindings===========
 ;;;; dired-sort-switch
   ;; ============dired-sort-switch=============
-  (defvar dired-subdir-actual-switches nil)
+  (defvar dired-subdir-actual-switches dired-listing-switches)
   (put 'dired-subdir-actual-switches 'safe-local-variable 'dired-safe-switches-p)
   (setq dired-switches-in-mode-line (lambda (arg) (string-remove-prefix dired-listing-switches arg)))
   (defun dired-sort-switch (switch-arg)
@@ -151,6 +155,8 @@
       (dired-sort-other
        (concat dired-listing-switches switch-arg
                (when (string-suffix-p switch-arg dired-actual-switches) "r")))))
+  (advice-add 'dired-subtree--readin :around #'(lambda (fn &rest args) (let ((dired-listing-switches dired-subdir-actual-switches))
+                                                                         (apply fn args))))
   ;; ============dired-sort-switch=============
 ;;;; sof/dired-sort
   ;; =============sof/dired-sort===============
