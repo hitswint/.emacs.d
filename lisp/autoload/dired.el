@@ -444,8 +444,12 @@ Assuming .. and . is a current directory (like in FAR)"
                 (replace-regexp-in-string string-to-escape
                                           "\\\\\\\\\\\\\\1" x)))
       (if is-sync
-          (let ((unison-path (escape-local (file-truename path))))
-            (setq rsync/unison-command (concat "unison -batch -confirmbigdel=false " unison-path
+          (let* ((proj (projectile-project-root))
+                 (unison-path (escape-local (or proj (file-truename path))))
+                 (unison-cmd (if (and proj (file-exists-p (expand-file-name ".gitignore" proj)))
+                                 "unison-gitignore"
+                               "unison -batch -confirmbigdel=false -ignorearchives")))
+            (setq rsync/unison-command (concat unison-cmd " " unison-path
                                                " ssh://" remote "//" unison-path)))
         (let ((files (cond (is-push
                             (cl-loop for f in (or (dired-get-marked-files) (list (buffer-file-name)))

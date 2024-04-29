@@ -386,17 +386,31 @@
 ;;; easy-kill
 ;; =====================easy-kill==================
 (use-package easy-kill
+  ;; Append:
+  ;; 1. C-M-w 下个命令为kill
+  ;; 2. C-w/C-k 连续调用
+  ;; 3. @ easy-kill模式下
   :commands gui-select-text-with-copyq
   :bind ("M-w" . kill-ring-save)
   :init
   (global-set-key [remap kill-ring-save] 'easy-kill)
   (global-set-key [remap mark-sexp] 'easy-mark)
   (global-set-key (kbd "M-W") #'(lambda () (interactive)
-                                  (let ((interprogram-cut-function 'gui-select-text-with-copyq))
+                                  (let ((interprogram-cut-function 'gui-select-text-with-copyq)
+                                        kill-ring)
                                     (call-interactively 'easy-kill))))
   (global-set-key (kbd "C-S-w") #'(lambda () (interactive)
-                                    (let ((interprogram-cut-function 'gui-select-text-with-copyq))
+                                    (let ((interprogram-cut-function 'gui-select-text-with-copyq)
+                                          kill-ring)
                                       (call-interactively 'kill-line-or-region))))
+  (global-set-key (kbd "C-S-d") #'(lambda () (interactive)
+                                    (cl-flet ((kill-region (begin end)
+                                                (delete-region begin end)))
+                                      (call-interactively 'kill-line-or-region))))
+  (global-set-key (kbd "C-S-k") #'(lambda () (interactive)
+                                    (cl-flet ((kill-region (begin end)
+                                                (delete-region begin end)))
+                                      (call-interactively 'kill-line))))
   :config
   (defun gui-select-text-with-copyq (text)
     (if (string-empty-p (shell-command-to-string "pgrep -x copyq"))

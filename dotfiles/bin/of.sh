@@ -23,15 +23,16 @@ if [[ ( x$flavour != x ) && ( x$version != x ) ]]; then
     case $flavour in
         com)
             # https://hub.docker.com/r/opencfd/openfoam-default
-            openfoam-docker -$version -default -dir=$HOME/OpenFOAM/${USER}-com/
+            of_cmd="openfoam-docker -$version -default -dir=$HOME/OpenFOAM/${USER}-com/"
             ;;
         org)
             # https://hub.docker.com/u/openfoam
-            xhost +
-            openfoam$version-linux -d $HOME/OpenFOAM/${USER}-$version -x # -u
+            of_cmd="xhost +; openfoam$version-linux -d $HOME/OpenFOAM/${USER}-$version -x"  # -u
             ;;
         q)
             break
             ;;
     esac
 fi
+
+screen -R $flavour-$version /bin/sh -c "$of_cmd"

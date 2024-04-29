@@ -22,6 +22,13 @@
          ("C-r" . isearch-backward-pinyin))
   :config
   (use-package isearch
+    ;; C-w/C-M-w isearch-yank-word-or-char/isearch-yank-symbol-or-char
+    ;; C-y/M-y isearch-yank-kill/isearch-yank-pop-only
+    ;; C-M-y/C-M-d/C-M-z/C-M-i isearch-yank-char/isearch-del-char/isearch-yank-until-char/isearch-complete
+    ;; M-e isearch-edit-string，编辑模式下C-f/backspace等同于C-M-y/C-M-d
+    ;; M-n/M-p isearch-ring-advance/isearch-ring-retreat
+    ;; M-c/M-r isearch-toggle-case-fold/isearch-toggle-regexp
+    ;; (M-s) M-</M->/C-e isearch-beginning-of-buffer/isearch-end-of-buffer/isearch-yank-line
     :diminish isearch-mode
     :custom
     (search-upper-case t))

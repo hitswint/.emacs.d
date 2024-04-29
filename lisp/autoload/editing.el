@@ -231,55 +231,52 @@ if point is at end of line , new-line-and-indent"
 ;;;###autoload
 (defun diff-region-tag-selected-as-a ()
   "Select a region to compare"
-  (interactive)
   (setq swint-diff-region-tag t)
-  (when (region-active-p)
-    (let (tmp buf)
-      ;; select lines
-      (setq tmp (diff-region-format-region-boundary (region-beginning) (region-end)))
-      (setq buf (get-buffer-create "*Diff-regionA*"))
-      (save-current-buffer
-        (set-buffer buf)
-        (erase-buffer))
-      (append-to-buffer buf (car tmp) (cadr tmp))))
-  (message "Now select other region to compare and run `diff-region-compare-with-b`"))
+  (let (tmp buf)
+    ;; select lines
+    (setq tmp (diff-region-format-region-boundary (region-beginning) (region-end)))
+    (setq buf (get-buffer-create "*Diff-regionA*"))
+    (save-current-buffer
+      (set-buffer buf)
+      (erase-buffer))
+    (append-to-buffer buf (car tmp) (cadr tmp)))
+  (deactivate-mark)
+  (message "Now select other region to compare"))
 ;;;###autoload
 (defun diff-region-compare-with-b ()
   "Compare current region with region selected by `diff-region-tag-selected-as-a' "
-  (interactive)
   (setq swint-diff-region-tag nil)
-  (if (region-active-p)
-      (let (rlt-buf
-            diff-output
-            (fa (make-temp-file (expand-file-name "scor"
-                                                  (or small-temporary-file-directory
-                                                      temporary-file-directory))))
-            (fb (make-temp-file (expand-file-name "scor"
-                                                  (or small-temporary-file-directory
-                                                      temporary-file-directory)))))
-        (when fb
-          (setq tmp (diff-region-format-region-boundary (region-beginning) (region-end)))
-          (write-region (car tmp) (cadr tmp) fb))
-        (setq rlt-buf (get-buffer-create "*Diff-region-output*"))
-        (when (and fa (file-exists-p fa) fb (file-exists-p fb))
-          (save-current-buffer
-            (set-buffer (get-buffer-create "*Diff-regionA*"))
-            (write-region (point-min) (point-max) fa))
-          (setq diff-output (shell-command-to-string (format "diff -Nabur %s %s" fa fb)))
-          ;; show the diff output
-          (if (string= diff-output "")
-              (message "Two regions are SAME!")
-            (save-current-buffer
-              (switch-to-buffer-other-window rlt-buf)
-              (set-buffer rlt-buf)
-              (erase-buffer)
-              (insert diff-output)
-              (diff-mode))))
-        (if (and fa (file-exists-p fa))
-            (delete-file fa))
-        (if (and fb (file-exists-p fb))
-            (delete-file fb)))
-    (message "Please select region at first!")))
+  (let (rlt-buf
+        diff-output
+        (fa (make-temp-file (expand-file-name "scor"
+                                              (or small-temporary-file-directory
+                                                  temporary-file-directory))))
+        (fb (make-temp-file (expand-file-name "scor"
+                                              (or small-temporary-file-directory
+                                                  temporary-file-directory)))))
+    (when fb
+      (setq tmp (diff-region-format-region-boundary (region-beginning) (region-end)))
+      (write-region (car tmp) (cadr tmp) fb))
+    (setq rlt-buf (get-buffer-create "*Diff-region-output*"))
+    (when (and fa (file-exists-p fa) fb (file-exists-p fb))
+      (save-current-buffer
+        (set-buffer (get-buffer-create "*Diff-regionA*"))
+        (write-region (point-min) (point-max) fa))
+      (setq diff-output (shell-command-to-string (format "diff -Nabur %s %s" fa fb)))
+      ;; show the diff output
+      (if (string= diff-output "")
+          (message "Two regions are SAME!")
+        (save-current-buffer
+          (switch-to-buffer-other-window rlt-buf)
+          (set-buffer rlt-buf)
+          (erase-buffer)
+          (insert diff-output)
+          (diff-mode))))
+    (if (and fa (file-exists-p fa))
+        (delete-file fa))
+    (if (and fb (file-exists-p fb))
+        (delete-file fb)))
+  (deactivate-mark))
 ;; ================diff two regions================
 ;;; parenthesis
 ;; ===================parenthesis==================

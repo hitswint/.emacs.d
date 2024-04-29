@@ -74,10 +74,10 @@ if [[ -n $WM_PROJECT ]]; then
     # }
 
     function of_prompt_info () {
-        if [[ $WM_PROJECT_DIR =~ "/opt/openfoam.*" ]]; then
-            echo Native
-        else
+        if [[ $WM_PROJECT_DIR =~ $HOME ]]; then
             echo Custom
+        else
+            echo Native
         fi
     }
 
@@ -100,4 +100,9 @@ if [[ -n $WM_PROJECT ]]; then
     }
     autoload -U add-zsh-hook
     add-zsh-hook precmd _openfoam_compinit
+
+    if [[ -z $TMUX ]] # && [[ -n $SSH_TTY ]]
+       ; then
+        exec tmux new-session -A -s of
+    fi
 fi

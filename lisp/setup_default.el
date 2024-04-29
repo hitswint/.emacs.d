@@ -110,9 +110,11 @@
 (global-set-key (kbd "M-m") 'pop-to-mark-command)
 (global-set-key (kbd "M-M") 'swint-unpop-to-mark-command)
 (global-set-key (kbd "M-s =") #'(lambda () (interactive)
-                                  (if swint-diff-region-tag
-                                      (diff-region-compare-with-b)
-                                    (diff-region-tag-selected-as-a))))
+                                  (if (region-active-p)
+                                      (if swint-diff-region-tag
+                                          (diff-region-compare-with-b)
+                                        (diff-region-tag-selected-as-a))
+                                    (call-interactively 'diff-buffers))))
 (global-set-key (kbd "C-x RET RET") #'(lambda () (interactive)
                                         (revert-buffer-with-coding-system 'utf-8)))
 (global-set-key (kbd "C-x M-s") 'save-buffer-with-dos2unix)

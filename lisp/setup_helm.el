@@ -117,6 +117,7 @@
   (define-key helm-read-file-map (kbd "C-h") 'helm-find-files-up-one-level)
   (define-key helm-grep-map (kbd "C-o") 'helm-grep-run-other-window-action)
   (define-key helm-command-map (kbd "u") 'helm-unicode)
+  (define-key helm-bookmark-map (kbd "C-o") 'helm-bookmark-run-jump-other-window)
   (bind-key "C-x M-f" #'(lambda () (interactive) (let ((tramp-completion-use-auth-sources nil)) (helm-find-files-1 "/ssh:"))))
   (bind-key "C-x C-M-f" #'(lambda (&optional arg) (interactive "P") (let ((host (helm-select-host))
                                                                           (curr (or buffer-file-name dired-directory)))
