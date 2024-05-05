@@ -1,5 +1,13 @@
 #!/bin/zsh
 
+while getopts "oc:" arg
+do
+    case $arg in
+        o) other=1;;
+        c) command=${OPTARG};;
+    esac
+done
+
 win_id=`xdotool getactivewindow`;
 sleep 0.2
 
@@ -20,14 +28,21 @@ else
     fi
 fi
 
-if [[ $1 == "other" ]]; then
+if [[ -z $curr_file || $other == 1 ]]; then
     [[ $curr_file ]] && curr_dir=$(dirname -- "$curr_file") || curr_dir=$(xcwd)
     curr_file=$(rofi -modi filebrowser -show filebrowser -filebrowser-directory "$curr_dir" -run-command "echo {cmd}" | sed 's/xdg-open //g')
 fi
 
 if [[ $curr_file ]]; then
-    select_command=$(rofi -show run -run-command "echo {cmd}")
-    if [[ $select_command ]]; then
-        eval $select_command \"$curr_file\"
+    if [[ $command == "open" ]]; then
+        select_command=$(rofi -show run -run-command "echo {cmd}")
+        if [[ $select_command ]]; then
+            eval $select_command \"$curr_file\"
+        fi
+    elif [[ $command == "delete" ]]; then
+        zenity --question --text="Delete $curr_file?" --width 300 --height 100
+        if [[ $? -eq 0 ]]; then
+            eval rm \"$curr_file\"
+        fi
     fi
 fi

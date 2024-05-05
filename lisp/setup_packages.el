@@ -881,9 +881,9 @@
 ;; ===================rg===========================
 (use-package rg
   :commands rg-run
-  :bind ("M-s g" . rg-menu)
+  :bind ("M-s M-g" . rg-menu)
   :config
-  (rg-enable-default-bindings (kbd "M-s g"))
+  (rg-enable-default-bindings (kbd "M-s M-g"))
   (setq rg-executable (executable-find "rga"))
   (setq rg-default-alias-fallback "everything")
   (define-key rg-mode-map (kbd "C-p") 'compilation-previous-error)

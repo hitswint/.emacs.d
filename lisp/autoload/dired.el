@@ -270,7 +270,7 @@
   (let ((file-list (if (eq major-mode 'dired-mode)
                        (dired-get-marked-files)
                      (list (buffer-file-name))))
-        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "convert" "pdftoppm" "ODAFileConverter" "xlsx2csv" "caj2pdf" "img2pdf" "pptx2md")
+        (engine (helm-comp-read "Engine: " (list "pandoc" "libreoffice" "pdftk" "convert" "pdftoppm" "ODAFileConverter" "xlsx2csv" "caj2pdf" "img2pdf" "pptx2md" "numpy-stl")
                                 :buffer "*helm dired converter-swint*"))
         (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\)")
         (default-directory (helm-current-directory)))
@@ -373,7 +373,12 @@
              (let ((options (read-string "Options: " "--disable-color --disable-escaping --disable-image")))
                (cl-loop for x in file-list
                         do (let ((filename (escape-local (file-name-nondirectory x))))
-                             (shell-command (concat "pptx2md -o " (file-name-sans-extension filename) ".md " options " " filename))))))))))
+                             (shell-command (concat "pptx2md -o " (file-name-sans-extension filename) ".md " options " " filename))))))
+            ((string= engine "numpy-stl")
+             (if (> (length file-list) 1)
+                 (shell-command (concat "cat " (mapconcat (lambda (arg) (concat "\"" (file-name-nondirectory arg) "\"")) file-list " ")
+                                        " >> combined.stl"))
+               (shell-command (format "stl_split.sh %s" (car file-list)))))))))
 ;; ============swint-dired-converter=========
 ;;; dired-view-file-or-dir
 ;; ==========dired-view-file-or-dir==========

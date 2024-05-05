@@ -226,7 +226,7 @@
   ;; =================org输出doc================
   ;; 先生成odt文件(需要zip支持)，然后使用libreoffice转化成doc文件
   (setq org-odt-preferred-output-format "docx")
-  (define-key org-mode-map (kbd "C-c C-S-e") 'org-odt-export-to-odt)
+  (define-key org-mode-map (kbd "C-c C-M-e") 'org-odt-export-to-odt)
   ;; =================org输出doc================
 ;;;; org-latex-preview
   ;; =============org-latex-preview=============

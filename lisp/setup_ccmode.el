@@ -97,7 +97,7 @@
   (dolist (hook '(c-mode-hook c++-mode-hook asm-mode-hook))
     (add-hook hook (lambda ()
                      (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
-                     (define-key c-mode-base-map (kbd "C-c C-S-c") (lambda () (interactive)
+                     (define-key c-mode-base-map (kbd "C-c C-M-c") (lambda () (interactive)
                                                                      (setq-local compilation-read-command nil)
                                                                      (call-interactively 'compile)))
                      (define-key c-mode-base-map (kbd "C-M-q") nil)

@@ -724,18 +724,38 @@
   ;; 默认忽略大小写，两种方式考虑大小写：
   ;; 1. 搜索-s pattern
   ;; 2. C--前缀并输入-s
-  :commands (helm-do-ag helm-do-ag-buffers swint-helm-ag)
+  :commands (swint-helm-ag
+             helm-do-ag
+             helm-do-ag-this-file
+             helm-do-ag-buffers)
   :init
   (bind-key "C-x g" 'swint-helm-ag)
-  (bind-key "C-x G" 'helm-do-ag-buffers)
+  (bind-key "C-x G" #'(lambda () (interactive)
+                        (let ((helm-ag-base-command "rg --color never --no-heading --search-zip"))
+                          (call-interactively 'swint-helm-ag))))
+  (bind-key "M-s g" #'(lambda () (interactive) (helm-do-ag-this-file (swint-get-current-thing))))
+  (bind-key "M-s G" #'(lambda () (interactive) (helm-do-ag-buffers (swint-get-current-thing))))
+  (add-hook 'isearch-mode-hook (lambda ()
+                                 (bind-key "M-s g" #'(lambda () (interactive) (helm-do-ag-this-file (isearch-current-thing)))
+                                           isearch-mode-map)
+                                 (bind-key "M-s G" #'(lambda () (interactive) (helm-do-ag-buffers (isearch-current-thing)))
+                                           isearch-mode-map)))
   :config
   (defun swint-helm-ag (&optional dir)
     (interactive)
-    (if (or current-prefix-arg helm-current-prefix-arg)
-        (call-interactively 'helm-do-ag)
-      (helm-do-ag (or dir (helm-current-directory)))))
-  (setq helm-ag-base-command "ag --nocolor --nogroup --hidden")
-  (setq helm-ag-command-option "--follow") ;Follow symlinks.
+    (let ((default-directory (or dir (helm-current-directory))))
+      (if (or current-prefix-arg helm-current-prefix-arg)
+          (let ((helm-ag-command-option (concat helm-ag-command-option " "
+                                                (if (string-prefix-p "ag" helm-ag-base-command)
+                                                    "-u"
+                                                  "--no-ignore"))))
+            (call-interactively 'helm-do-ag))
+        (helm-do-ag default-directory))))
+  ;; 搜索压缩文件需加--all-types/--search-zip，支持gz/xz两种格式
+  ;; bug：只显示部分结果，最后一行显示ag: truncated file: Success
+  ;; https://github.com/ggreer/the_silver_searcher/issues/1243
+  (setq helm-ag-base-command "ag --nocolor --nogroup")
+  (setq helm-ag-command-option "--hidden --follow")
   ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果
   (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)
   (define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)

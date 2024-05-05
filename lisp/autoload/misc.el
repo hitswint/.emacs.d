@@ -81,6 +81,17 @@
               ;; M-n可调出并修改default-word
               (read-string (format "Get Words(default %s): " default-word) nil nil default-word))
           (ivy-read "Get Words:" (cl-remove-duplicates (mapcar 'car words-at-point))))))))
+;;;###autoload
+(defun swint-get-current-thing ()
+  (if (region-active-p)
+      (prog1 (buffer-substring (region-beginning) (region-end))
+        (deactivate-mark))
+    (symbol-name-at-point)))
+(defun symbol-name-at-point ()
+  (let ((symbol (symbol-at-point)))
+    (if symbol
+        (symbol-name symbol)
+      "")))
 ;; ===============get-words-at-point===============
 ;;; show-some-last-messages
 ;; ============show-some-last-messages=============

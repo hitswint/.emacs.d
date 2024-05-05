@@ -16,7 +16,7 @@
 ;;; pinyin-search
 ;; ==================pinyin-search=================
 (use-package pinyin-search
-  :commands symbol-name-at-point
+  :commands isearch-current-thing
   ;; 搜索时M-s p(isearch-toggle-pinyin)切换拼音搜索
   :bind (("C-s" . isearch-forward-pinyin)
          ("C-r" . isearch-backward-pinyin))
@@ -33,23 +33,15 @@
     :custom
     (search-upper-case t))
   (require 'anzu)
-  (bind-key "C-t" 'isearch-thing isearch-mode-map)
+  (bind-key "C-t" #'(lambda () (interactive) (isearch-yank-string (swint-get-current-thing))) isearch-mode-map)
   (bind-key "C-M-;" 'isearch-mark-current isearch-mode-map)
   (add-hook 'isearch-mode-end-hook (lambda () (setq pinyin-search-activated nil)))
-  (defun symbol-name-at-point ()
-    (let ((symbol (symbol-at-point)))
-      (if symbol
-          (symbol-name symbol)
-        "")))
-  (defun isearch-thing ()
-    "Search for the current thing."
-    (interactive)
-    (let ((swint-isearch-current-thing
-           (if (region-active-p)
-               (buffer-substring (region-beginning) (region-end))
-             (symbol-name-at-point))))
-      (deactivate-mark)
-      (isearch-yank-string swint-isearch-current-thing)))
+  (defun isearch-current-thing ()
+    (prog1 (if isearch-regexp
+               isearch-string
+             (regexp-quote isearch-string))
+      (let ((search-nonincremental-instead nil))
+        (isearch-exit))))
   (defun isearch-mark-current ()
     (interactive)
     ;; (let ((start (overlay-start isearch-overlay))

@@ -39,26 +39,17 @@
 ;;; swiper
 ;; ===================swiper=======================
 (use-package swiper
-  :commands swiper-from-isearch
-  :bind (("M-s s" . swint-swiper)
-         ("M-s S" . swiper-all))
+  :commands (swiper swiper-all swiper-from-isearch)
   :init
+  (bind-key "M-s s" #'(lambda () (interactive) (swiper (swint-get-current-thing))))
+  (bind-key "M-s S" #'(lambda () (interactive) (swiper-all (swint-get-current-thing))))
   (add-hook 'isearch-mode-hook (lambda ()
-                                 (bind-key "M-s s" 'swiper-from-isearch isearch-mode-map)))
-  :config
-  (defun swint-swiper ()
-    (interactive)
-    (let ((swint-swiper-current-thing
-           (if (region-active-p)
-               (buffer-substring (region-beginning) (region-end))
-             (symbol-name-at-point))))
-      (deactivate-mark)
-      (swiper swint-swiper-current-thing))))
+                                 (bind-key "M-s s" 'swiper-from-isearch isearch-mode-map))))
 ;; ===================swiper=======================
 ;;; counsel
 ;; ===================counsel======================
 (use-package counsel
-  ;; 按键逻辑：helm(C-x c x)/counsel(M-s c x)
+  ;; 按键逻辑：helm(C-x c)/counsel(M-s c)
   :commands counsel-read-file-for-rsync
   :bind (("M-X" . counsel-M-x)
          ("C-x C-r" . swint-counsel-history)
@@ -70,6 +61,7 @@
          ("M-s c o" . counsel-outline)
          ("M-s c d" . counsel-dpkg)
          ("M-s c g" . counsel-ag)
+         ("M-s c G" . counsel-rg)
          ("M-s c p" . counsel-list-processes)
          ("M-s c f" . counsel-fonts)
          ("M-s c M-y" . counsel-yank-pop))
@@ -119,15 +111,15 @@ When INITIAL-INPUT is non-nil, use it in the minibuffer during completion."
               :matcher #'counsel--find-file-matcher
               :initial-input initial-input
               :action #'(lambda (x) (with-ivy-window
-                                     (if (and counsel-find-file-speedup-remote
-                                              (file-remote-p ivy--directory))
-                                         (let ((find-file-hook nil))
-                                           (setf (symbol-value files)
-                                                 (append (symbol-value files)
-                                                         (last (split-string (expand-file-name x ivy--directory) ":")))))
-                                       (setf (symbol-value files)
-                                             (append (symbol-value files)
-                                                     (last (split-string (expand-file-name x ivy--directory) ":")))))))
+                                      (if (and counsel-find-file-speedup-remote
+                                               (file-remote-p ivy--directory))
+                                          (let ((find-file-hook nil))
+                                            (setf (symbol-value files)
+                                                  (append (symbol-value files)
+                                                          (last (split-string (expand-file-name x ivy--directory) ":")))))
+                                        (setf (symbol-value files)
+                                              (append (symbol-value files)
+                                                      (last (split-string (expand-file-name x ivy--directory) ":")))))))
               :preselect (counsel--preselect-file)
               :require-match 'confirm-after-completion
               :history 'file-name-history

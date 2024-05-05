@@ -42,13 +42,13 @@
                                      (dired-create-directory "./pic"))
                                    "./pic/")))
         screen-file)
-    (setq screen-file (concat (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
-                                      "_" (format-time-string "%Y%m%d_%H%M%S")) ".png"))
-    ;; (suspend-frame)
-    (call-process-shell-command
-     ;; (concat "scrot" " -s " "\"" screen-file "\"" )
-     (concat "import " "\"" screen-file "\"" ))
-    screen-file))
+    (prog1 (setq screen-file (concat (concat screen-file-path (file-name-base (or (buffer-file-name) (buffer-name)))
+                                             "_" (format-time-string "%Y%m%d_%H%M%S"))
+                                     ".png"))
+      ;; (suspend-frame)
+      (call-process-shell-command
+       ;; (concat "scrot" " -s " "\"" screen-file "\"" )
+       (concat "import " "\"" screen-file "\"" )))))
 ;; ===================截图====================
 ;;; 插入截图
 ;; =================插入截图==================

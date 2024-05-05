@@ -44,47 +44,6 @@
       (ignore-errors
         (funcall fn)))))
 ;; ==============ignore-error-wrapper==============
-;;; 拼音首字母搜索
-;; =================拼音首字母搜索=================
-;;;###autoload
-(defun swint-pinyin-search-forward (&optional bound noerror count)
-  (interactive)
-  (let ((swint-current-buffer (str-unicode-to-pinyin-initial (buffer-substring-no-properties (point-min) (point-max))))
-        (current-point (point))
-        (string (car minibuffer-history)))
-    (setq string (read-string (format  "Pinyin search(default %s): " string)
-                              nil nil string))
-    (with-temp-buffer
-      (insert swint-current-buffer)
-      (goto-char current-point)
-      (if (string-match-p string (buffer-substring-no-properties current-point (point-max)))
-          (re-search-forward string bound noerror count)
-        (progn
-          (goto-char (point-min))
-          (re-search-forward string bound noerror count)))
-      (setq swint-match-end (match-end 0)))
-    (goto-char swint-match-end)))
-;;;###autoload
-(defun swint-pinyin-search-backward (&optional bound noerror count)
-  (interactive)
-  (let ((swint-current-buffer (str-unicode-to-pinyin-initial (buffer-substring-no-properties (point-min) (point-max))))
-        (current-point (point))
-        (string (car minibuffer-history)))
-    (setq string (read-string (format  "Pinyin search(default %s): " string)
-                              nil nil string))
-    (with-temp-buffer
-      (insert swint-current-buffer)
-      (goto-char current-point)
-      (if (string-match-p string (buffer-substring-no-properties (point-min) current-point))
-          (re-search-backward string bound noerror count)
-        (progn
-          (goto-char (point-max))
-          (re-search-backward string bound noerror count)))
-      (setq swint-match-beginning (match-beginning 0)))
-    (goto-char swint-match-beginning)))
-(define-key minibuffer-local-map (kbd "C-S-s") 'exit-minibuffer)
-(define-key minibuffer-local-map (kbd "C-S-r") 'exit-minibuffer)
-;; =================拼音首字母搜索=================
 ;;; shutdown-emacs-server
 ;; =============shutdown-emacs-server==============
 ;;;###autoload

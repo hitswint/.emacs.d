@@ -13,7 +13,7 @@
   :config
   (savehist-mode t)
   (setq enable-recursive-minibuffers t
-        history-length 200
+        history-length 100
         savehist-additional-variables '(mark-ring
                                         global-mark-ring
                                         kill-ring

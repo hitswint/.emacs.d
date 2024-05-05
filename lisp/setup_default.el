@@ -15,7 +15,7 @@
 (setq fill-column 80)
 (setq visible-bell t)
 (setq mouse-yank-at-point t)
-(setq kill-ring-max 200)
+(setq kill-ring-max 120)
 (setq next-line-add-newlines t)
 (setq make-pointer-invisible t)
 (setq diary-file "~/org/journal.org.gpg")
@@ -73,7 +73,7 @@
 ;; ===================Setup=====================
 ;;; Keybindings
 ;; ================Keybindings==================
-(global-set-key (kbd "C-x C-M-j") 'speedbar-get-focus)
+(global-set-key (kbd "C-x J") 'speedbar-get-focus)
 (global-set-key (kbd "M-,") 'delete-other-windows)
 (global-set-key (kbd "M-.") 'delete-window)
 (global-set-key (kbd "M-s M-,") 'split-window-vertically)
@@ -132,8 +132,6 @@
 (global-set-key (kbd "M-s m") #'(lambda () (interactive) (eval-math-with-calc t)))
 (global-set-key (kbd "M-o RET") 'urxvt-default-directory)
 (global-set-key (kbd "M-o t") 'thunar-open-default-directory)
-(global-set-key (kbd "C-S-s") 'swint-pinyin-search-forward)
-(global-set-key (kbd "C-S-r") 'swint-pinyin-search-backward)
 (global-set-key (kbd "C-x C-<tab>") #'(lambda () (interactive) (if (active-minibuffer-window) (switch-to-minibuffer)
                                                                  (call-interactively 'switch-to-buffer))))
 (global-set-key (kbd "C-\\") 'toggle-window-split)
