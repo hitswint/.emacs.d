@@ -122,7 +122,7 @@
               (define-key dired-mode-map (kbd "M-=") nil)
               (define-key dired-mode-map (kbd "Q") 'dired-do-query-replace-regexp)
               (define-key dired-mode-map (kbd "e") (lambda () (interactive) (find-file-literally (dired-get-file-for-visit))))
-              (define-key dired-mode-map (kbd "f") (lambda () (interactive) (swint-find-file-literally (dired-get-file-for-visit))))
+              (define-key dired-mode-map (kbd "v") (lambda () (interactive) (swint-find-file-literally (dired-get-file-for-visit))))
               (define-key dired-mode-map (kbd "r") (lambda ()
                                                      (interactive)
                                                      (let ((current-directory default-directory))
@@ -142,7 +142,9 @@
                                                                   (lambda (fn) nil)))
                                                          (call-interactively 'dired-diff))))
               (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-on-files)
-              (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
+              (define-key dired-mode-map (kbd "z") 'dired-do-compress-to)
+              (define-key dired-mode-map (kbd "c") 'dired-do-byte-compile)
+              (define-key dired-mode-map (kbd "b") 'txm-dired-view-file-or-dir)
               (define-key dired-mode-map (kbd "M-RET") 'helm-dired-current-file)
               (define-key dired-mode-map (kbd "C-M-j") 'dired-xdg-open)
               (define-key dired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-beginning-of-buffer)
@@ -488,33 +490,51 @@
         (easy-kill)
       (dired-copy-filename-as-kill 0)
       (call-interactively 'dired-ranger-copy)))
+  (defvar helm-dired-ranger-map
+    (let ((map (make-sparse-keymap)))
+      (set-keymap-parent map helm-map)
+      (define-key map (kbd "C-y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-paste)))
+      (define-key map (kbd "M-y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-move)))
+      (define-key map (kbd "M-Y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-relsymlink)))
+      (define-key map (kbd "C-S-y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-symlink)))
+      map)
+    "Keymap for `swint-dired-ranger'.")
   ;; 由于dired-async对dired-create-files增加advice，导致复制多个文件时加C-u只保留第1个
-  (defun swint-dired-ranger-paste ()
+  (defun swint-dired-ranger ()
     (interactive)
-    (cl-flet ((get-files () (mapcar #'(lambda (x)
-                                        (mapconcat 'identity (cdr x) " "))
-                                    (ring-elements dired-ranger-copy-ring))))
-      (let ((selected-files (helm-comp-read "Paste: " (get-files)
-                                            :marked-candidates t
-                                            :buffer "*helm dired ranger paste-swint*")))
-        (cl-loop for f in selected-files do
-                 (let ((index (cl-position f (get-files) :test 'equal)))
-                   (dired-ranger-paste index)
-                   (unless helm-current-prefix-arg
-                     (ring-remove dired-ranger-copy-ring index)))))))
-  (defun swint-dired-ranger-move ()
+    (helm-comp-read "Ranger: " (dired-ranger-get-files)
+                    :marked-candidates t
+                    :buffer "*helm dired ranger-swint*"
+                    :keymap helm-dired-ranger-map))
+  (defun dired-ranger-get-files ()
+    (mapcar #'(lambda (x)
+                (mapconcat 'identity (cdr x) " "))
+            (ring-elements dired-ranger-copy-ring)))
+  (defun dired-ranger-operation (operation)
     (interactive)
-    (cl-flet ((get-files () (mapcar #'(lambda (x)
-                                        (mapconcat 'identity (cdr x) " "))
-                                    (ring-elements dired-ranger-copy-ring))))
-      (let ((selected-files (helm-comp-read "Move: " (get-files)
-                                            :marked-candidates t
-                                            :buffer "*helm dired ranger move-swint*")))
-        (cl-loop for f in selected-files do
-                 (let ((index (cl-position f (get-files) :test 'equal)))
-                   (dired-ranger-move index)
-                   (unless helm-current-prefix-arg
-                     (ring-remove dired-ranger-copy-ring index)))))))
+    (helm-run-after-exit #'(lambda (_candidates operation)
+                             (cl-loop for f in _candidates do
+                                      (let ((index (cl-position f (dired-ranger-get-files) :test 'equal)))
+                                        (funcall operation index)
+                                        (unless helm-current-prefix-arg
+                                          (ring-remove dired-ranger-copy-ring index)))))
+                         (helm-marked-candidates) operation))
+  (defun dired-ranger-symlink (arg)
+    (interactive "P")
+    (let* ((index (if (numberp arg) arg 0))
+           (data (ring-ref dired-ranger-copy-ring index))
+           (files (cdr data)))
+      (dired-create-files #'make-symbolic-link "Symlink" files
+                          #'dired-ranger--name-constructor ?C)
+      (unless arg (ring-remove dired-ranger-copy-ring 0))))
+  (defun dired-ranger-relsymlink (arg)
+    (interactive "P")
+    (let* ((index (if (numberp arg) arg 0))
+           (data (ring-ref dired-ranger-copy-ring index))
+           (files (cdr data)))
+      (dired-create-files #'dired-make-relative-symlink "RelSymLink" files
+                          #'dired-ranger--name-constructor ?C)
+      (unless arg (ring-remove dired-ranger-copy-ring 0))))
   (defun swint-dired-clipboard-copy (&optional filetocopy) ;导致界面卡死，可粘贴图片；C-g杀死xclip进程，无法复制
     (interactive)
     (let ((filename (or filetocopy
@@ -532,8 +552,9 @@
   ;; 加C-u不清除clipboards
   (bind-key "C-y" 'dired-ranger-paste dired-mode-map)
   (bind-key "M-y" 'dired-ranger-move dired-mode-map)
-  (bind-key "C-M-y" 'swint-dired-ranger-paste dired-mode-map)
-  (bind-key "M-Y" 'swint-dired-ranger-move dired-mode-map))
+  (bind-key "M-Y" 'dired-ranger-relsymlink dired-mode-map)
+  (bind-key "C-S-y" 'dired-ranger-symlink dired-mode-map)
+  (bind-key "C-M-y" 'swint-dired-ranger dired-mode-map))
 ;; ===============dired-ranger=================
 ;;; neotree
 ;; =================neotree====================
@@ -583,7 +604,7 @@
 ;; ================dired-du====================
 (use-package dired-du
   :bind (:map dired-mode-map
-              ("V" . dired-du-mode))
+              ("B" . dired-du-mode))
   :config
   (setq dired-du-bind-mode nil
         dired-du-bind-human-toggle nil

@@ -348,7 +348,7 @@
 (use-package vlf
   :commands vlf
   :init
-  (bind-key "C-c C-v" #'(lambda () (interactive) (vlf (dired-get-file-for-visit))) dired-mode-map)
+  (bind-key "V" #'(lambda () (interactive) (vlf (dired-get-file-for-visit))) dired-mode-map)
   ;; Enable vlf when opening files bigger than 100MB.
   (setq large-file-warning-threshold 1000000000)
   :config
