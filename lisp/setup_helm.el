@@ -81,7 +81,6 @@
   ;; ===============keybindings=================
   (define-key helm-map (kbd "C-;") 'helm-toggle-visible-mark)
   (define-key helm-map (kbd "C-l") 'helm-execute-persistent-action)
-  (define-key helm-map (kbd "M-o") 'helm-peep-preview-persistent)
   (define-key helm-map (kbd "C-M-p") 'helm-previous-source)
   (define-key helm-map (kbd "C-M-n") 'helm-next-source)
   (define-key helm-map (kbd "C-,") 'swint-helm-file-buffers-after-quit)
@@ -102,11 +101,21 @@
   (helm-define-key-with-subkeys helm-map (kbd "C-x Y") ?Y 'helm-run-cycle-resume)
   (helm-define-key-with-subkeys global-map (kbd "C-x Y") ?Y 'helm-cycle-resume)
   (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)
-  (define-key helm-find-files-map (kbd "M-o") 'helm-peep-preview-persistent)
+  (define-key helm-find-files-map (kbd "C-S-l") 'helm-peep-preview-persistent)
   (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
   (define-key helm-find-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
   (define-key helm-find-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
   (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
+  (define-key helm-find-files-map (kbd "S-RET") #'(lambda () (interactive) (with-helm-alive-p
+                                                                             (helm-exit-and-execute-action
+                                                                              (lambda (_candidate)
+                                                                                (cl-letf (((symbol-function 'find-file) 'find-file-literally))
+                                                                                  (helm-find-file-or-marked _candidate)))))))
+  (define-key helm-find-files-map (kbd "M-RET") #'(lambda () (interactive) (with-helm-alive-p
+                                                                             (helm-exit-and-execute-action
+                                                                              (lambda (_candidate)
+                                                                                (cl-letf (((symbol-function 'find-file) 'swint-find-file-literally))
+                                                                                  (helm-find-file-or-marked _candidate)))))))
   (define-key helm-generic-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
   (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
   (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)

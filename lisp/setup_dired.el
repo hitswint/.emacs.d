@@ -121,9 +121,8 @@
             (lambda ()
               (define-key dired-mode-map (kbd "M-=") nil)
               (define-key dired-mode-map (kbd "Q") 'dired-do-query-replace-regexp)
-              (define-key dired-mode-map (kbd "e") (lambda ()
-                                                     (interactive)
-                                                     (find-file-literally (dired-get-file-for-visit))))
+              (define-key dired-mode-map (kbd "e") (lambda () (interactive) (find-file-literally (dired-get-file-for-visit))))
+              (define-key dired-mode-map (kbd "f") (lambda () (interactive) (swint-find-file-literally (dired-get-file-for-visit))))
               (define-key dired-mode-map (kbd "r") (lambda ()
                                                      (interactive)
                                                      (let ((current-directory default-directory))
@@ -159,6 +158,19 @@
               (define-key dired-sort-map "t" #'(lambda () (interactive) (dired-sort-switch "t"))) ;sort by Time
               (define-key dired-sort-map "n" #'(lambda () (interactive) (dired-sort-switch "v"))))) ;sort by Name
   ;; ==========setup-and-keybindings===========
+;;;; swint-find-file-literally
+  ;; ========swint-find-file-literally=========
+  (defun swint-find-file-literally (filename)
+    (let ((orig-fun (symbol-function 'insert-file-contents)))
+      (cl-letf (((symbol-function 'insert-file-contents)
+                 (lambda (fn &rest args)
+                   (let ((inhibit-file-name-handlers
+                          (remove 'jka-compr-handler inhibit-file-name-handlers))
+                         (coding-system-for-read (auto-coding-alist-lookup fn)))
+                     (apply orig-fun fn args)))))
+        (with-current-buffer (find-file-literally filename)
+          (set-buffer-multibyte t)))))
+  ;; ========swint-find-file-literally=========
 ;;;; dired-sort-switch
   ;; ============dired-sort-switch=============
   (defvar dired-subdir-actual-switches dired-listing-switches)
