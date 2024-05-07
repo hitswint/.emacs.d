@@ -122,29 +122,24 @@
               (define-key dired-mode-map (kbd "M-=") nil)
               (define-key dired-mode-map (kbd "Q") 'dired-do-query-replace-regexp)
               (define-key dired-mode-map (kbd "e") (lambda () (interactive) (find-file-literally (dired-get-file-for-visit))))
-              (define-key dired-mode-map (kbd "v") (lambda () (interactive) (swint-find-file-literally (dired-get-file-for-visit))))
+              (define-key dired-mode-map (kbd "f") (lambda () (interactive) (swint-find-file-literally (dired-get-file-for-visit))))
               (define-key dired-mode-map (kbd "r") (lambda ()
                                                      (interactive)
                                                      (let ((current-directory default-directory))
                                                        (find-alternate-file "..")
                                                        (dired-goto-file (expand-file-name current-directory)))))
-              (define-key dired-mode-map (kbd "i") #'(lambda ()
-                                                       (interactive)
+              (define-key dired-mode-map (kbd "i") #'(lambda () (interactive)
                                                        (call-interactively 'dired-maybe-insert-subdir)
                                                        (revert-buffer)))
-              (define-key dired-mode-map (kbd "I") #'(lambda ()
-                                                       (interactive)
+              (define-key dired-mode-map (kbd "I") #'(lambda () (interactive)
                                                        (dired-kill-and-next-subdir)
                                                        (revert-buffer)))
-              (define-key dired-mode-map (kbd "=") #'(lambda ()
-                                                       (interactive)
+              (define-key dired-mode-map (kbd "=") #'(lambda () (interactive)
                                                        (cl-letf (((symbol-function 'diff-latest-backup-file)
                                                                   (lambda (fn) nil)))
                                                          (call-interactively 'dired-diff))))
               (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-on-files)
-              (define-key dired-mode-map (kbd "z") 'dired-do-compress-to)
-              (define-key dired-mode-map (kbd "c") 'dired-do-byte-compile)
-              (define-key dired-mode-map (kbd "b") 'txm-dired-view-file-or-dir)
+              (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
               (define-key dired-mode-map (kbd "M-RET") 'helm-dired-current-file)
               (define-key dired-mode-map (kbd "C-M-j") 'dired-xdg-open)
               (define-key dired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-beginning-of-buffer)
@@ -495,8 +490,8 @@
       (set-keymap-parent map helm-map)
       (define-key map (kbd "C-y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-paste)))
       (define-key map (kbd "M-y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-move)))
-      (define-key map (kbd "M-Y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-relsymlink)))
       (define-key map (kbd "C-S-y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-symlink)))
+      (define-key map (kbd "M-Y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-relsymlink)))
       map)
     "Keymap for `swint-dired-ranger'.")
   ;; 由于dired-async对dired-create-files增加advice，导致复制多个文件时加C-u只保留第1个
@@ -552,8 +547,8 @@
   ;; 加C-u不清除clipboards
   (bind-key "C-y" 'dired-ranger-paste dired-mode-map)
   (bind-key "M-y" 'dired-ranger-move dired-mode-map)
-  (bind-key "M-Y" 'dired-ranger-relsymlink dired-mode-map)
   (bind-key "C-S-y" 'dired-ranger-symlink dired-mode-map)
+  (bind-key "M-Y" 'dired-ranger-relsymlink dired-mode-map)
   (bind-key "C-M-y" 'swint-dired-ranger dired-mode-map))
 ;; ===============dired-ranger=================
 ;;; neotree
@@ -604,7 +599,7 @@
 ;; ================dired-du====================
 (use-package dired-du
   :bind (:map dired-mode-map
-              ("B" . dired-du-mode))
+              ("V" . dired-du-mode))
   :config
   (setq dired-du-bind-mode nil
         dired-du-bind-human-toggle nil

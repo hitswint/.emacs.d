@@ -104,8 +104,8 @@
   (define-key helm-find-files-map (kbd "C-S-l") 'helm-peep-preview-persistent)
   (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
   (define-key helm-find-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
-  (define-key helm-find-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
   (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
+  (define-key helm-find-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-default-tool)
   (define-key helm-find-files-map (kbd "S-RET") #'(lambda () (interactive) (with-helm-alive-p
                                                                              (helm-exit-and-execute-action
                                                                               (lambda (_candidate)
@@ -117,8 +117,8 @@
                                                                                 (cl-letf (((symbol-function 'find-file) 'swint-find-file-literally))
                                                                                   (helm-find-file-or-marked _candidate)))))))
   (define-key helm-generic-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
-  (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-lister)
   (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
+  (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-default-tool)
   (define-key helm-buffer-map (kbd "C-M-j") 'swint-helm-buffer-persp-add-buffers)
   (define-key helm-buffer-map (kbd "C-M-k") 'swint-helm-buffer-persp-remove-buffers)
   (define-key helm-buffer-map (kbd "C-o") 'swint-helm-buffer-switch-persp/other-window)
