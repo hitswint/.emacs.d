@@ -31,13 +31,15 @@
                                                                                      (changed-p (file-has-changed-p fi)))
                                                                                  (and cached-p changed-p)))))))))
   (advice-add 'dired-revert :around #'(lambda (fn &rest args)
-                                        (let ((subtree-mark-alist (cl-loop for ov in (dired-subtree--get-all-ovs)
-                                                                           append (dired-remember-marks (overlay-start ov) (overlay-end ov)))))
-                                          (apply fn args)
-                                          (let ((inhibit-read-only t))
-                                            (cl-loop for ov in (dired-subtree--get-all-ovs)
-                                                     do (save-excursion (goto-char (overlay-start ov))
-                                                                        (dired-mark-remembered subtree-mark-alist)))))))
+                                        ;; dired-async-mode会刷新所有dired，包括不可见buffer，导致persp-switch切换时光标回到起始位置
+                                        (unless (ignore-errors (not (memq (current-buffer) (persp-buffers (persp-curr)))))
+                                          (let ((subtree-mark-alist (cl-loop for ov in (dired-subtree--get-all-ovs)
+                                                                             append (dired-remember-marks (overlay-start ov) (overlay-end ov)))))
+                                            (apply fn args)
+                                            (let ((inhibit-read-only t))
+                                              (cl-loop for ov in (dired-subtree--get-all-ovs)
+                                                       do (save-excursion (goto-char (overlay-start ov))
+                                                                          (dired-mark-remembered subtree-mark-alist))))))))
   (advice-add 'dired-goto-file :around #'(lambda (fn &rest args)
                                            (let ((default-directory (dired-current-directory)))
                                              (apply fn args))))
@@ -46,6 +48,7 @@
   (setq dired-subdir-switches dired-listing-switches)
   (setq dired-dwim-target t)
   (setq wdired-allow-to-change-permissions t)
+  (setq dired-vc-rename-file t)
   (add-hook 'dired-after-readin-hook #'(lambda () (setq truncate-lines t)))
   (defvar file_video_exts '("rmvb" "rm" "mp4" "avi" "flv" "f4v" "mpg" "mkv" "3gp" "wmv" "mov" "dat" "asf" "mpeg" "wma" "webm"))
   (defvar file_image_exts '("jpg" "png" "bmp" "jpeg" "svg" "tif"))
@@ -68,11 +71,10 @@
                                              ("dia" . "env GTK_IM_MODULE=xim dia")
                                              ("drawio" . "env GTK_IM_MODULE=xim drawio")
                                              ("blend" . "blender")
-                                             ("foam" . "paraview") ("vtk" . "paraview") ("openfoam" . "paraview")
                                              ("eso" . "w.xEsoView.sh") ("mtr" . "w.xEsoView.sh")
                                              ("idf" . "urxvt -e zsh -is eval ep.sh")
                                              ("osm" . "OpenStudioApp")
-                                             ("stl" . "paraview"))
+                                             ("foam" . "paraview") ("openfoam" . "paraview") ("stl" . "paraview") ("vtk" . "paraview") ("vtp" . "paraview"))
                                            (mapcar (lambda (x)
                                                      (cons x "mpv.sh"))
                                                    file_video_exts)
@@ -116,7 +118,12 @@
          (list "\\.c$" "gcc -Wall * >/dev/null 2>&1 &")
          (list "\\.ipynb$" "jupyter nbconvert --to python * >/dev/null 2>&1 &")
          (list "\\.eso$" "ReadVarsESO.sh * >/dev/null 2>&1 &")
-         (list "\\.mtr$" "ReadVarsESO.sh * >/dev/null 2>&1 &")))
+         (list "\\.mtr$" "ReadVarsESO.sh * >/dev/null 2>&1 &")
+         (list "\\.foam$" "paraview -s localhost * >/dev/null 2>&1 &")
+         (list "\\.openfoam$" "paraview -s localhost * >/dev/null 2>&1 &")
+         (list "\\.stl$" "paraview -s localhost * >/dev/null 2>&1 &")
+         (list "\\.vtk$" "paraview -s localhost * >/dev/null 2>&1 &")
+         (list "\\.vtp$" "paraview -s localhost * >/dev/null 2>&1 &")))
   (add-hook 'dired-mode-hook
             (lambda ()
               (define-key dired-mode-map (kbd "M-=") nil)
@@ -476,8 +483,8 @@
   :bind (:map dired-mode-map
               ;; w: dired-copy-filename-as-kill 复制文件名，加0复制绝对路径
               ("M-w" . swint-dired-ranger-copy)
-              ("C-c w" . swint-dired-clipboard-copy)
-              ("C-c y" . swint-dired-clipboard-paste))
+              ("M-W" . swint-dired-clipboard-copy)
+              ("C-S-y" . swint-dired-clipboard-paste))
   :config
   (defun swint-dired-ranger-copy ()
     (interactive)
@@ -490,8 +497,8 @@
       (set-keymap-parent map helm-map)
       (define-key map (kbd "C-y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-paste)))
       (define-key map (kbd "M-y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-move)))
-      (define-key map (kbd "C-S-y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-symlink)))
       (define-key map (kbd "M-Y") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-relsymlink)))
+      (define-key map (kbd "M-S") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-symlink)))
       map)
     "Keymap for `swint-dired-ranger'.")
   ;; 由于dired-async对dired-create-files增加advice，导致复制多个文件时加C-u只保留第1个
@@ -514,20 +521,20 @@
                                         (unless helm-current-prefix-arg
                                           (ring-remove dired-ranger-copy-ring index)))))
                          (helm-marked-candidates) operation))
-  (defun dired-ranger-symlink (arg)
-    (interactive "P")
-    (let* ((index (if (numberp arg) arg 0))
-           (data (ring-ref dired-ranger-copy-ring index))
-           (files (cdr data)))
-      (dired-create-files #'make-symbolic-link "Symlink" files
-                          #'dired-ranger--name-constructor ?C)
-      (unless arg (ring-remove dired-ranger-copy-ring 0))))
   (defun dired-ranger-relsymlink (arg)
     (interactive "P")
     (let* ((index (if (numberp arg) arg 0))
            (data (ring-ref dired-ranger-copy-ring index))
            (files (cdr data)))
       (dired-create-files #'dired-make-relative-symlink "RelSymLink" files
+                          #'dired-ranger--name-constructor ?C)
+      (unless arg (ring-remove dired-ranger-copy-ring 0))))
+  (defun dired-ranger-symlink (arg)
+    (interactive "P")
+    (let* ((index (if (numberp arg) arg 0))
+           (data (ring-ref dired-ranger-copy-ring index))
+           (files (cdr data)))
+      (dired-create-files #'make-symbolic-link "Symlink" files
                           #'dired-ranger--name-constructor ?C)
       (unless arg (ring-remove dired-ranger-copy-ring 0))))
   (defun swint-dired-clipboard-copy (&optional filetocopy) ;导致界面卡死，可粘贴图片；C-g杀死xclip进程，无法复制
@@ -547,8 +554,8 @@
   ;; 加C-u不清除clipboards
   (bind-key "C-y" 'dired-ranger-paste dired-mode-map)
   (bind-key "M-y" 'dired-ranger-move dired-mode-map)
-  (bind-key "C-S-y" 'dired-ranger-symlink dired-mode-map)
   (bind-key "M-Y" 'dired-ranger-relsymlink dired-mode-map)
+  (bind-key "M-S" 'dired-ranger-symlink dired-mode-map)
   (bind-key "C-M-y" 'swint-dired-ranger dired-mode-map))
 ;; ===============dired-ranger=================
 ;;; neotree
@@ -685,13 +692,11 @@
           (progn (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
                  (dolist (buf dired-buffer-list)
                    (with-current-buffer buf
-                     (all-the-icons-dired-mode 1)
-                     (revert-buffer))))
+                     (all-the-icons-dired-mode 1))))
         (progn (remove-hook 'dired-mode-hook 'all-the-icons-dired-mode)
                (dolist (buf dired-buffer-list)
                  (with-current-buffer buf
-                   (all-the-icons-dired-mode -1)
-                   (revert-buffer)))))))
+                   (all-the-icons-dired-mode -1)))))))
   (defun all-the-icons-dired--put-icon/override (pos)
     "Propertize POS with icon."
     (let* ((file (dired-get-filename 'relative 'noerror))

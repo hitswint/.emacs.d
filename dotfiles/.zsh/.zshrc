@@ -61,6 +61,7 @@ else
     source-if-exists "${ZDOTDIR}/src/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh"
 fi
 
+PROMPT_ORIG=$PROMPT
 if [[ -n $SSH_CONNECTION ]]; then
     PROMPT="%{$fg_bold[yellow]%}%m%{$reset_color%} ${PROMPT}"
 fi
@@ -82,7 +83,7 @@ if [[ -n $WM_PROJECT ]]; then
     }
 
     setopt prompt_subst
-    PROMPT='%{$fg_bold[yellow]%}$HOSTNAME%{$fg_bold[magenta]%} $WM_COMPILER/$WM_COMPILE_OPTION%{$fg_bold[green]%} $(of_prompt_info)'"%{$reset_color%} ${PROMPT}"
+    PROMPT='%{$fg_bold[yellow]%}$HOSTNAME%{$fg_bold[magenta]%} $WM_COMPILER/$WM_COMPILE_OPTION%{$fg_bold[green]%} $(of_prompt_info)'"%{$reset_color%} ${PROMPT_ORIG}"
 
     # 添加OpenFOAM提供的补全
     export BASH=/bin/bash
@@ -94,7 +95,13 @@ if [[ -n $WM_PROJECT ]]; then
         # 直接source无效，需打开zsh后手动执行
         # 原因：~/.antigen/init.zsh中将_antigen_compinit加入add-zsh-hook/precmd，使bash_completion被覆盖
         # 使用zsh -x 2>&1 | grep bash_completion查看zsh启动进程
-        source $WM_PROJECT_DIR/etc/config.sh/bash_completion
+        if [[ $WM_PROJECT_VERSION =~ '^v[0-9]{4}$' ]]; then
+            # 自带/usr/lib/openfoam/openfoam2306/etc/config.sh/bash_completion无效
+            # 借鉴org版本foamGenerateBashCompletion工具生成bash_completion
+            source $FOAM_USER_APPBIN/bash_completion
+        else
+            source $WM_PROJECT_DIR/etc/config.sh/bash_completion
+        fi
         # source只需运行一次，不需要重复运行
         # add-zsh-hook -D precmd _openfoam_compinit
     }

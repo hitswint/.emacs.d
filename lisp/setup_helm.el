@@ -100,6 +100,7 @@
   (define-key helm-map (kbd "C-c C-i") 'helm-insert-or-copy)
   (helm-define-key-with-subkeys helm-map (kbd "C-x Y") ?Y 'helm-run-cycle-resume)
   (helm-define-key-with-subkeys global-map (kbd "C-x Y") ?Y 'helm-cycle-resume)
+  (define-key helm-find-files-map (kbd "M-.") 'helm-toggle-truncate-line)
   (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)
   (define-key helm-find-files-map (kbd "C-S-l") 'helm-peep-preview-persistent)
   (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
@@ -757,7 +758,10 @@
           (let ((helm-ag-command-option (concat helm-ag-command-option " "
                                                 (if (string-prefix-p "ag" helm-ag-base-command)
                                                     "-u"
-                                                  "--no-ignore"))))
+                                                  "--no-ignore")
+                                                (let ((lines (read-string "Print N lines before and after matches: ")))
+                                                  (unless (string-empty-p lines)
+                                                    (format " --context=%s" lines))))))
             (call-interactively 'helm-do-ag))
         (helm-do-ag default-directory))))
   ;; 搜索压缩文件需加--all-types/--search-zip，支持gz/xz两种格式
@@ -766,6 +770,8 @@
   (setq helm-ag-base-command "ag --nocolor --nogroup")
   (setq helm-ag-command-option "--hidden --follow")
   ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果
+  (define-key helm-ag-map (kbd "C-M-p") 'helm-ag--previous-file)
+  (define-key helm-ag-map (kbd "C-M-n") 'helm-ag--next-file)
   (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)
   (define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)
   (define-key helm-ag-map (kbd "C-l") 'helm-execute-persistent-action)

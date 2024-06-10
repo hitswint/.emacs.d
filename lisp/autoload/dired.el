@@ -338,7 +338,7 @@
              (let ((output-format (read-string "Output image format(png/jpeg/tiff/mono): ")))
                (cl-loop for x in file-list
                         do (let ((filename (escape-local (file-name-nondirectory x))))
-                             (shell-command (concat "pdftoppm -" output-format " -r 500 " filename " " filename))))))
+                             (shell-command (read-string "Commands: " (concat "pdftoppm -" output-format " -r 500 " filename " " filename)))))))
             ((string= engine "ODAFileConverter")  ;https://www.opendesign.com/guestfiles/oda_file_converter
              (let ((output-version (helm-comp-read "Output version: "
                                                    (list "ACAD9" "ACAD10" "ACAD12" "ACAD13" "ACAD14" "ACAD2000" "ACAD2004" "ACAD2007" "ACAD2010")
@@ -449,8 +449,9 @@ Assuming .. and . is a current directory (like in FAR)"
                 (replace-regexp-in-string string-to-escape
                                           "\\\\\\\\\\\\\\1" x)))
       (if is-sync
-          (let* ((proj (projectile-project-root))
-                 (unison-path (escape-local (or proj (file-truename path))))
+          (let* ((path-abs (file-truename path))
+                 (proj (projectile-project-root path-abs))
+                 (unison-path (escape-local (or proj path-abs)))
                  (unison-cmd (if (and proj (file-exists-p (expand-file-name ".gitignore" proj)))
                                  "unison-gitignore"
                                "unison -batch -confirmbigdel=false -ignorearchives")))

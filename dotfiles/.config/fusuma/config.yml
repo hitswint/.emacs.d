@@ -28,8 +28,8 @@ pinch:
       command: 'xdotool keydown Ctrl click 5 keyup Ctrl'
       threshold: 0.3
       interval: 0.2
-hold:
-  3:
-    command: 'rofi-trans.sh'
-  4:
-    command: 'screenshot.sh s'
+# hold:
+#   3:
+#     command: 'rofi-trans.sh'
+#   4:
+#     command: 'screenshot.sh s'

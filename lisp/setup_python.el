@@ -50,6 +50,10 @@
                                      ("hatchs" (list "/" "\\" "|" "-" "+" "x" "o" "O" "." "*" "//" "\\\\\\\\" "||" "--" "++" "xx" "oo" "OO" ".." "**"))
                                      ("polyfit" (list "1" "2" "3" "4" "5"))))
   (defvar swint-python-plot-exec-path (expand-file-name "~/Documents/Python/plot"))
+  (defun string-numberp (s)
+    (condition-case invalid-read-syntax
+        (numberp (read s))
+      (error nil)))
   (defun swint-python-load-file ()
     (interactive)
     (let ((file-name (if (eq major-mode 'dired-mode) (dired-get-filename) (buffer-file-name))))
@@ -76,7 +80,7 @@ for k,v in names['dict_'+re.sub('\\W','_','%s')].items():
     if not v.empty:
         # 当第1行都是数字时，将原来读入的header变为第1行数据，使用0.1.2作为columns
         # 使用re.sub('\W|^(?=\d)', '_', filename)将文件名转为合法的变量名，缺点是首字母是数字时加下划线
-        names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_',k)]=v.T.reset_index().T if builtins.all(is_number(ele) for ele in v.columns) else v
+        names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_',k)]=v.T.reset_index().T if builtins.any(is_number(ele) for ele in v.columns) else v
         # 或使用：
         # df = df.columns.to_frame().T.append(df, ignore_index=True)
         # df.columns = range(len(df.columns))
@@ -134,7 +138,7 @@ names['df_'+re.sub('\\W','_','%1$s')]['Time'] = pd.to_datetime(names['df_'+re.su
                    (format "if not set(['pd', 'builtins']) < set(dir()):import pandas as pd;import builtins;
 exec(\"def is_number(s):\\n try:  float(s)\\n except:  return False\\n return True\")
 names=locals()
-names['df_'+re.sub('\\W','_','%s')]=pd.read_csv('%s', header=None if builtins.all(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True, comment='#')"
+names['df_'+re.sub('\\W','_','%s')]=pd.read_csv('%s', header=None if builtins.any(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True, comment='#')"
                            file-base-name (expand-file-name file-name) header-line-string
                            (if (string= (ignore-errors (downcase (file-name-extension file-name))) "csv") "," "\\\\s+")))))))
         (message "No python process found!" ))))
@@ -267,8 +271,20 @@ plot_data.fig_config(%s)" swint-python-plot-exec-path args-string))))
                                                (split-string header-line-string "," t "[ \t\n]+")
                                              (if (string-match "\"" header-line-string) ;非csv文件的首行用("x" "y" "z")
                                                  (split-string header-line-string "\"" t "[ \t\n]+")
-                                               (mapcar 'number-to-string (number-sequence 0 (1- (length (split-string header-line-string "[ \t]+" t "[ \t\n]+"))))))))
-                         (columns-list (helm-comp-read (if is-x-p "Column as x: " "Columns to plot: ") (cons (if is-x-p "None" "") header-line-list)
+                                               (let ((header-list (split-string header-line-string "[ \t]+" t "[ \t\n]+")))
+                                                 (if (cl-loop for ele in header-list
+                                                              thereis (string-numberp ele))
+                                                     (mapcar 'number-to-string (number-sequence 0 (1- (length header-list))))
+                                                   header-list)))))
+                         (columns-list (helm-comp-read (if is-x-p "Column as x: " "Columns to plot: ") (cons (if is-x-p "None" "")
+                                                                                                             (let* ((current-line (when (buffer-file-name)
+                                                                                                                                    (buffer-substring-no-properties
+                                                                                                                                     (line-beginning-position) (line-end-position))))
+                                                                                                                    (current-list (when (string-prefix-p "#" current-line)
+                                                                                                                                    (split-string (string-remove-prefix "#" current-line) "[ \t]+" t "[ \t\n]+"))))
+                                                                                                               (if (= (length current-list) (length header-line-list))
+                                                                                                                   (-zip-pair current-list header-line-list)
+                                                                                                                 header-line-list)))
                                                        :marked-candidates t
                                                        :buffer "*helm python plot data-swint*")))
                     (mapconcat 'identity columns-list ","))))
@@ -282,11 +298,11 @@ plot_data.fig_config(%s)" swint-python-plot-exec-path args-string))))
           (setq file-x-string (helm-comp-read "File as x: " (cons "None" (directory-files (helm-current-directory) nil directory-files-no-dot-files-regexp))
                                               :buffer "*helm python plot data-swint*"))
           (setq column-x-string (plot-file-setup (if (string= file-x-string "None") (car files-list) file-x-string) t)))
-        (let* ((config-list (helm-comp-read "Configs: " (list "None" "rows" "labels" "fonts" "sizes" "colors" "lines" "markers" "hatchs" "polyfit" "twinx" "Save")
+        (let* ((config-list (helm-comp-read "Configs: " (list "None" "rows" "labels" "fonts" "sizes" "colors" "lines" "markers" "hatchs" "polyfit" "twinx" "save" "animate")
                                             :marked-candidates t
                                             :buffer "*helm python fig config-swint*"))
-               ;; 从列表中除去多个元素，也可以用：(cl-set-difference config-list '("twinx" "Save" "None") :test 'equal)
-               (args-alist (cl-loop for x in (seq-difference config-list '("twinx" "Save" "None"))
+               ;; 从列表中除去多个元素，也可以用：(cl-set-difference config-list '("twinx" "save" "animate" "None") :test 'equal)
+               (args-alist (cl-loop for x in (seq-difference config-list '("twinx" "save" "animate" "None"))
                                     collect (cons x (if (listp (gethash x swint-python-plot-hash))
                                                         (mapconcat 'identity (helm-comp-read (concat x ": ") (gethash x swint-python-plot-hash)
                                                                                              :marked-candidates t
@@ -297,13 +313,15 @@ plot_data.fig_config(%s)" swint-python-plot-exec-path args-string))))
                                                           (format "--%s \"%s\"" (car x) (cdr x)))
                                                       args-alist " ")
                                            (if (member "twinx" config-list) " --twinx ")
-                                           (if (member "Save" config-list) " --save ")))
+                                           (if (member "save" config-list) " --save ")
+                                           (if (member "animate" config-list) " --animate ")))
           (setq send-string-args (concat (if args-alist
                                              (concat "," (mapconcat #'(lambda (x)
                                                                         (format "%s='%s'" (car x) (cdr x)))
                                                                     args-alist ",")))
                                          (if (member "twinx" config-list) ",twinx=True")
-                                         (if (member "Save" config-list) ",save=True"))))
+                                         (if (member "save" config-list) ",save=True")
+                                         (if (member "animate" config-list) ",animate=True"))))
         (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
           (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
         (let ((python-command-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data

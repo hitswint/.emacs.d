@@ -54,7 +54,8 @@
         bibtex-completion-pdf-field "file"
         bibtex-completion-bibliography (delete (expand-file-name "~/.bib/Zotero.bib")
                                                (directory-files "~/.bib" t "\\.bib$"))
-        bibtex-completion-notes-path "~/Zotero/storage/TKM9D893/notes.org")
+        bibtex-completion-notes-path "~/Zotero/storage/TKM9D893/notes.org"
+        bibtex-completion-string-hash-table (make-hash-table :test #'equal))
   (defun bibtex-completion-get-entry-for-pdf (pdf-file)
     "Find entry for pdf-file in .bib file."
     (with-temp-buffer
