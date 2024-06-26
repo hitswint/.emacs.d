@@ -201,7 +201,7 @@
               helm-fd-map)
     ;; helm-find-files下C-/启用
     (setq helm-fd-executable "fdfind")
-    (add-to-list 'helm-fd-switches "--absolute-path")
+    ;; (add-to-list 'helm-fd-switches "--absolute-path")
     (add-to-list 'helm-fd-switches "--follow")
     (defun swint-helm-fdfind (&optional dir)
       (interactive)

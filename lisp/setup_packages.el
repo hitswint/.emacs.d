@@ -1187,4 +1187,13 @@ ORIG is the advised function, which is called with its ARGS."
   :config
   (global-clipetty-mode))
 ;; ===================clipetty=====================
+;;; disable-mouse
+;; ================disable-mouse===================
+(use-package disable-mouse
+  :diminish disable-mouse-global-mode
+  :init
+  (setq disable-mouse-wheel-events nil)
+  :config
+  (disable-mouse-global-mode 1))
+;; ================disable-mouse===================
 (provide 'setup_packages)

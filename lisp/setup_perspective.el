@@ -30,6 +30,7 @@
               (swint-load-perspectives))
             ,@body))
   (defvar swint-persp-loadp nil)
+  (defvar swint-persp-save-window-state nil)
   :config
   (setq persp-initial-frame-name "i"
         persp-modestring-dividers '("" "" "")
@@ -104,9 +105,10 @@ See also `persp-switch' and `persp-remove-buffer'."
                  (persp-reactivate-buffers
                   (remove nil (mapcar #'get-buffer
                                       (symbol-value (intern (format "buffers-in-perspectives-%s" x))))))
-                 (ignore-errors (window-state-put
-                                 (symbol-value (intern (format "window-configuration-of-persp-%s" x)))
-                                 nil t)))))
+                 (when swint-persp-save-window-state
+                   (ignore-errors (window-state-put
+                                   (symbol-value (intern (format "window-configuration-of-persp-%s" x)))
+                                   nil t))))))
     (modify-frame-parameters nil '((swint-persp-loadp . t))))
   ;; (add-hook 'desktop-after-read-hook 'swint-load-perspectives)
   ;; ========emacs开启时加载perspectives========
@@ -115,9 +117,10 @@ See also `persp-switch' and `persp-remove-buffer'."
   (defun swint-save-perspectives ()
     (when (and persp-mode (frame-parameter nil 'swint-persp-loadp))
       (let ((persps-to-save (delete "i" (persp-names))))
-        (cl-loop for x in persps-to-save do
-                 (with-perspective x
-                   (set (intern (format "window-configuration-of-persp-%s" x)) (window-state-get nil t))))
+        (when swint-persp-save-window-state
+          (cl-loop for x in persps-to-save do
+                   (with-perspective x
+                     (set (intern (format "window-configuration-of-persp-%s" x)) (window-state-get nil t)))))
         (with-temp-file swint-perspectives-saved-file
           (insert "(setq saved-persps '" (prin1-to-string persps-to-save) ")\n")
           (insert "(setq persp-projectile-hash '" (prin1-to-string persp-projectile-hash) ")\n")
@@ -133,10 +136,11 @@ See also `persp-switch' and `persp-remove-buffer'."
                                                               bn)))
                                                         (persp-buffers (gethash x (perspectives-hash))))))
                                    ")\n"
-                                   (format "(setq window-configuration-of-persp-%s '" x)
-                                   (prin1-to-string
-                                    (symbol-value (intern (format "window-configuration-of-persp-%s" x))))
-                                   ")\n")))))
+                                   (when swint-persp-save-window-state
+                                     (format "(setq window-configuration-of-persp-%s '" x)
+                                     (prin1-to-string
+                                      (symbol-value (intern (format "window-configuration-of-persp-%s" x))))
+                                     ")\n"))))))
       (persp-mode -1)))
   (if (and (fboundp 'daemonp) (daemonp))
       (add-hook 'delete-frame-functions (lambda (frame) (swint-save-perspectives)))
