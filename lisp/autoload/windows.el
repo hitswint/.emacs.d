@@ -54,11 +54,13 @@
 ;; ===================循环窗口=====================
 ;;; 全屏
 ;; ======================全屏======================
+;;;###autoload
 (defun my-fullscreen ()
   (interactive)
   (x-send-client-message
    nil 0 nil "_NET_WM_STATE" 32
    '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
+;;;###autoload
 (defun my-maximized ()
   (interactive)
   (x-send-client-message

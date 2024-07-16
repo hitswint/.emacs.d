@@ -88,7 +88,7 @@
   (interactive)
   (let ((process (start-process-shell-command
                   "unison" "*unison*"
-                  (concat "unison" " org-backups")))
+                  (concat "unison" " N5095_backup")))
         (pos (memq 'mode-line-modes mode-line-format)))
     (setcdr pos (cons "unison-sync-backups " (cdr pos)))
     (set-process-sentinel

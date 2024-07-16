@@ -715,6 +715,9 @@
   (define-key markdown-mode-map (kbd "M-<right>") 'markdown-demote)
   (define-key markdown-mode-map (kbd "M-<return>") 'markdown-insert-list-item)
   (define-key markdown-mode-map (kbd "C-<return>") 'markdown-insert-header-dwim)
+  (define-key markdown-mode-map (kbd "C-c C-v") 'markdown-preview)
+  (define-key markdown-mode-map (kbd "C-c v") 'markdown-live-preview-mode)
+  (define-key markdown-mode-map (kbd "C-c C-e") 'markdown-export)
   (define-key markdown-mode-map (kbd "M-p") nil)
   (define-key markdown-mode-map (kbd "M-n") nil))
 ;; =================markdown-mode==================
