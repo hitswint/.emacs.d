@@ -199,7 +199,7 @@ define_keymap(
 
 # * Keybindings for Tab switch
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("firefox", "Chromium", "qpdfview", "Wps", "Et", "Wpp", "Wpspdf", "Wpsoffice") and rofi_not_running(),
+    lambda wm_class: wm_class and wm_class[-1] in ("firefox", "Chromium", "qpdfview", "Wps", "Et", "Wpp", "Wpspdf", "Wpsoffice", "Zotero") and rofi_not_running(),
     {
         K("C-grave"): K("C-Shift-TAB"),
     },

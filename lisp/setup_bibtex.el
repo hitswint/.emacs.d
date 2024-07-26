@@ -47,7 +47,9 @@
   :commands (bibtex-completion-find-pdf
              bibtex-completion-get-value
              bibtex-completion-edit-notes
-             bibtex-completion-get-entry-for-pdf)
+             bibtex-completion-get-entry-for-pdf
+             bibtex-completion-pdf-viewer
+             bibtex-completion-open-pdf-externally)
   :config
   (setq bibtex-completion-cite-prompt-for-optional-arguments nil
         bibtex-completion-additional-search-fields '(keywords timestamp)
@@ -77,7 +79,20 @@
                                          (b-timestamp (assoc "timestamp" b)))
                                 (> (float-time (parse-iso8601-time-string (cdr a-timestamp)))
                                    (float-time (parse-iso8601-time-string (cdr b-timestamp)))))))
-                    candidates))))
+                    candidates)))
+  (defun bibtex-completion-pdf-viewer (fpath)
+    (let ((parent-dir (file-name-nondirectory (directory-file-name (file-name-directory fpath)))))
+      (start-process "Shell" nil shell-file-name shell-command-switch
+                     (format "pgrep zotero && (xdg-open zotero://open-pdf/library/items/%s; run-or-raise.sh Navigator) || pdfviewer.sh \"%s\""
+                             parent-dir fpath))))
+  (defun bibtex-completion-open-pdf-externally (candidates)
+    "Open the PDFs associated with the marked entries externally."
+    (--if-let
+        (-flatten
+         (-map 'bibtex-completion-find-pdf
+               (if (listp candidates) candidates (list candidates))))
+        (-each it 'bibtex-completion-pdf-viewer)
+      (message "No PDF(s) found."))))
 ;; ==============bibtex-completion=================
 ;;; helm-bibtex
 ;; ==================helm-bibtex===================
@@ -106,7 +121,7 @@
     "Keymap for `helm-bibtex'.")
   (helm-set-attr 'keymap helm-bibtex-map helm-source-bibtex)
   (helm-set-attr 'persistent-action 'helm-bibtex-insert-citation helm-source-bibtex)
-  (defvar bibtex-completion-bibliography/curr nil)
+  (helm-bibtex-helmify-action bibtex-completion-open-pdf-externally helm-bibtex-open-pdf-externally)
   ;; 改变helm-bibtex中Insert citation格式
   (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
         'org-cite-format-citation)
@@ -118,6 +133,7 @@
       (concat "cite:" (s-join ","       ;使用citeproc格式
                               (--map (format "%s" it) keys))
               " ")))
+  (defvar bibtex-completion-bibliography/curr nil)
   (defun swint-helm-bibtex (&optional arg)
     "With a prefix ARG，choose bib file and execute bibtex-completion-clear-cache."
     (interactive "P")
@@ -132,21 +148,7 @@
         (let ((helm-current-buffer (current-buffer)))
           (helm-resume "*helm bibtex*"))
       (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr))
-        (helm-bibtex arg bibtex-completion-bibliography/curr))))
-  (defcustom helm-bibtex-pdf-open-externally-function #'(lambda (fpath)
-                                                          (dired-async-shell-command fpath))
-    "The function used for opening PDF files externally."
-    :group 'bibtex-completion
-    :type 'function)
-  (defun bibtex-completion-open-pdf-externally (candidates)
-    "Open the PDFs associated with the marked entries externally."
-    (--if-let
-        (-flatten
-         (-map 'bibtex-completion-find-pdf
-               (if (listp candidates) candidates (list candidates))))
-        (-each it helm-bibtex-pdf-open-externally-function)
-      (message "No PDF(s) found.")))
-  (helm-bibtex-helmify-action bibtex-completion-open-pdf-externally helm-bibtex-open-pdf-externally))
+        (helm-bibtex arg bibtex-completion-bibliography/curr)))))
 ;; ==================helm-bibtex===================
 ;;; ebib
 ;; =====================ebib=======================
@@ -157,13 +159,13 @@
   (define-key ebib-index-mode-map (kbd ".") 'ebib-next-database)
   (define-key ebib-index-mode-map (kbd "C-q") 'ebib-quit)
   (define-key ebib-index-mode-map (kbd "C-j") 'ebib-view-file)
-  (define-key ebib-index-mode-map (kbd "<RET>") 'ebib-view-file-in-emacs)
+  (define-key ebib-index-mode-map (kbd "C-o") 'ebib-view-file-in-emacs)
+  (define-key ebib-index-mode-map (kbd "<RET>") 'ebib-select-and-popup-entry)
   (define-key ebib-index-mode-map (kbd "C-c d") 'ebib-delete-entry-from-zotero)
   (define-key ebib-index-mode-map (kbd "C-c j") 'ebib-join-bib)
+  (define-key ebib-index-mode-map (kbd "C-M-p") 'ebib-prev-collection)
+  (define-key ebib-index-mode-map (kbd "C-M-n") 'ebib-next-collection)
   (define-key ebib-index-mode-map (kbd "C-x b") nil)
-  (smartrep-define-key ebib-index-mode-map "C-c"
-    '(("n" . ebib-next-collection)
-      ("p" . ebib-prev-collection)))
   (define-key ebib-filters-map "F" 'ebib-filter-collection)
   (define-key ebib-strings-mode-map (kbd "C-x b") nil)
   (define-key ebib-entry-mode-map (kbd "C-x b") nil)
@@ -190,8 +192,9 @@
                              ("Author/Editor" 25 t)
                              ("Year" 4 t)
                              ("Title" 50 t))
+        ebib-layout 'index-only
         ebib-hide-cursor nil
-        ebib-file-associations '(("pdf" . "pdfviewer.sh") ("ps" . "gv"))
+        ebib-file-associations '(("pdf" . bibtex-completion-pdf-viewer) ("ps" . "gv"))
         ebib-truncate-file-names nil
         ebib-preload-bib-files (delete "Zotero.bib" (directory-files "~/.bib" nil "\\.bib$"))
         ebib-bib-search-dirs '("~/.bib")
@@ -209,13 +212,15 @@
   (defun ebib-view-file-in-emacs (arg)
     (interactive "P")
     (ebib--execute-when (entries
-                         (let ((file (ebib-get-field-value "file" (ebib--get-key-at-point) ebib--cur-db 'noerror 'unbraced 'xref))
-                               (num (if (numberp arg) arg nil)))
-                           (let ((file-full-path (ebib--expand-file-name (ebib--select-file file num (ebib--get-key-at-point)))))
-                             (when (file-exists-p file-full-path)
-                               (message "Opening `%s'" file-full-path)
-                               (ebib-lower)
-                               (find-file file-full-path)))))
+                         (let* ((key (ebib--get-key-at-point))
+                                (file (ebib-get-field-value "file" key ebib--cur-db 'noerror 'unbraced 'xref))
+                                (num (if (numberp arg) arg nil))
+                                (file-full-path (ebib--expand-file-name (ebib--select-file file num key))))
+                           (when (file-exists-p file-full-path)
+                             (message "Opening `%s'" file-full-path)
+                             ;; (ebib-lower)
+                             (other-window 1)
+                             (find-file file-full-path))))
       (default (beep))))
   (defun ebib-join-bib ()
     "Join to Zotero.bib."
