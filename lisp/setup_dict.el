@@ -11,7 +11,8 @@
       ("d" . baidu-translate-at-point)
       ("l" . lingva-translate-at-point)
       ("i" . insert-translated-name-insert)
-      ("I" . insert-translated-name-replace)))
+      ("I" . insert-translated-name-replace)
+      ("w" . w3m-youdao-sample-sentences)))
   :config
   (defun bing-dict-brief-cb-at-point (&optional _word)
     "Search word at point."

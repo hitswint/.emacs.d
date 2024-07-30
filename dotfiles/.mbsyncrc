@@ -77,53 +77,53 @@ Expunge Both
 SyncState *
 
 # ==========Hotmail==========
-IMAPAccount Hotmail
-Host imap-mail.outlook.com
-Port 993
-User wguiqiang@hotmail.com
-# 首次调用mbsync -a，采用gpg方式输入密码。
-# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==\"imap-mail.outlook.com\" {print $NF}'"
-PassCmd "emacsclient --eval '(get-auth-pass \"imap-mail.outlook.com\")' | tr -d \\\""
-SSLType IMAPS
-CertificateFile /etc/ssl/certs/ca-certificates.crt
+# IMAPAccount Hotmail
+# Host outlook.office365.com
+# Port 993
+# User wguiqiang@hotmail.com
+# # 首次调用mbsync -a，采用gpg方式输入密码。
+# # PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '$2==\"outlook.office365.com\" {print $NF}'"
+# PassCmd "emacsclient --eval '(get-auth-pass \"outlook.office365.com\")' | tr -d \\\""
+# SSLType IMAPS
+# CertificateFile /etc/ssl/certs/ca-certificates.crt
 
-IMAPStore hotmail-remote
-Account Hotmail
+# IMAPStore hotmail-remote
+# Account Hotmail
 
-MaildirStore hotmail-local
-Path ~/Maildir/Hotmail/
-Inbox ~/Maildir/Hotmail/Inbox
+# MaildirStore hotmail-local
+# Path ~/Maildir/Hotmail/
+# Inbox ~/Maildir/Hotmail/Inbox
 
-Channel hotmail
-Far :hotmail-remote:
-Near :hotmail-local:
-Patterns *
-Create Both
-Expunge Both
-SyncState *
+# Channel hotmail
+# Far :hotmail-remote:
+# Near :hotmail-local:
+# Patterns *
+# Create Both
+# Expunge Both
+# SyncState *
 
 # ==========QQ==========
-IMAPAccount QQ
-Host imap.qq.com
-Port 993
-User 278064399
-PassCmd "emacsclient --eval '(get-auth-pass \"imap.qq.com\")' | tr -d \\\""
-SSLType IMAPS
-CertificateFile /etc/ssl/certs/ca-certificates.crt
+# IMAPAccount QQ
+# Host imap.qq.com
+# Port 993
+# User 278064399
+# PassCmd "emacsclient --eval '(get-auth-pass \"imap.qq.com\")' | tr -d \\\""
+# SSLType IMAPS
+# CertificateFile /etc/ssl/certs/ca-certificates.crt
 
-IMAPStore qq-remote
-UseUTF8Mailboxes yes
-Account QQ
+# IMAPStore qq-remote
+# UseUTF8Mailboxes yes
+# Account QQ
 
-MaildirStore qq-local
-Subfolders Verbatim
-Path ~/Maildir/QQ/
-Inbox ~/Maildir/QQ/Inbox
+# MaildirStore qq-local
+# Subfolders Verbatim
+# Path ~/Maildir/QQ/
+# Inbox ~/Maildir/QQ/Inbox
 
-Channel qq
-Far :qq-remote:
-Near :qq-local:
-Patterns *
-Create Both
-Expunge Both
-SyncState *
+# Channel qq
+# Far :qq-remote:
+# Near :qq-local:
+# Patterns *
+# Create Both
+# Expunge Both
+# SyncState *

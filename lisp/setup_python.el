@@ -21,7 +21,7 @@
 ;;; pyvenv
 ;; ===================pyvenv===================
 (use-package pyvenv
-  :commands (pyvenv-workon-home pyvenv-activate)
+  :commands (pyvenv-workon-home pyvenv-activate-py3)
   :bind (("M-o C-M-p" . pyvenv-workon)
          ("M-o C-M-S-p" . pyvenv-deactivate)
          ("M-o p" . swint-python-plot-data)
@@ -35,6 +35,9 @@
   ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换
   (defalias 'workon 'pyvenv-workon)
   (require 'ht)
+  (defun pyvenv-activate-py3 ()
+    (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
+      (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3"))))
   (defvar swint-python-plot-hash (ht ("data" "")
                                      ("rows" "::")
                                      ("labels" "x,y")
@@ -322,8 +325,7 @@ plot_data.fig_config(%s)" swint-python-plot-exec-path args-string))))
                                          (if (member "twinx" config-list) ",twinx=True")
                                          (if (member "save" config-list) ",save=True")
                                          (if (member "animate" config-list) ",animate=True"))))
-        (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
-          (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
+        (pyvenv-activate-py3)
         (let ((python-command-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
 plot_data.cli_plot([%s],'%s' %s)" swint-python-plot-exec-path data-string style-string (or send-string-args ""))))
           (cond ((equal major-mode 'inferior-python-mode)
@@ -396,9 +398,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
   (define-key inferior-python-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key inferior-python-mode-map (kbd "C-c C-.") 'pop-tag-mark)
   (define-key inferior-python-mode-map (kbd "C-c C-/") 'elpy-doc)
-  (advice-add 'elpy-shell-switch-to-shell :before #'(lambda ()
-                                                      (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
-                                                        (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))))
+  (advice-add 'elpy-shell-switch-to-shell :before #'pyvenv-activate-py3)
   ;; 使用global-elpy-mode方式开启elpy-mode
   ;; (define-global-minor-mode global-elpy-mode elpy-mode
   ;;   (lambda () (when (eq major-mode 'python-mode) (elpy-mode 1))))
@@ -414,8 +414,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
                    (elpy-mode 'toggle)))
                (elpy-disable)
                (pyvenv-mode 1))
-      (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
-        (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
+      (pyvenv-activate-py3)
       (elpy-enable)
       (elpy-modules-remove-modeline-lighter 'flymake-mode))))
 ;; ====================elpy====================
@@ -429,8 +428,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
   (bind-key "C-c c" 'jupyter-repl-associate-buffer python-mode-map)
   (defun swint-jupyter-run-repl ()
     (interactive)
-    (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
-      (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
+    (pyvenv-activate-py3)
     (call-interactively 'jupyter-run-repl)
     (unless (featurep 'ob-jupyter)
       (add-to-list 'org-babel-load-languages '(jupyter . t) t)
@@ -467,8 +465,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
   (define-key jedi-mode-map (kbd "C-c .") nil)
   (define-key jedi-mode-map (kbd "C-c ,") nil)
   (advice-add 'jedi:get-in-function-call :before #'(lambda ()
-                                                     (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
-                                                       (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
+                                                     (pyvenv-activate-py3)
                                                      (unless jedi-mode
                                                        (dolist (buf (cl-remove-if-not (lambda (x)
                                                                                         (equal (buffer-mode x) 'python-mode))

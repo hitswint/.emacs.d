@@ -63,24 +63,30 @@
 (defun swint-get-words-at-point ()
   "Get words at point, use pyim-get-words-list-at-point to deal with chinese."
   (interactive)
-  (if (and (derived-mode-p 'pdf-view-mode) (pdf-view-active-region-p))
-      (let ((words-at-point (replace-regexp-in-string
-                             "\n" " " (mapconcat 'identity (pdf-view-active-region-text) " "))))
-        (pdf-view-deactivate-region)
-        words-at-point)
-    (if mark-active
-        (let ((words-at-point (buffer-substring-no-properties (region-beginning) (region-end))))
-          (deactivate-mark)
-          words-at-point)
-      (let ((words-at-point (if (equal (point) (point-at-eol))
-                                (pyim-cstring-words-at-point)
-                              (pyim-cstring-words-at-point t))))
-        (if (<= (length words-at-point) 1)
-            (let ((default-word (or (car (car words-at-point))
-                                    (thing-at-point 'word t))))
-              ;; M-n可调出并修改default-word
-              (read-string (format "Get Words(default %s): " default-word) nil nil default-word))
-          (ivy-read "Get Words:" (cl-remove-duplicates (mapcar 'car words-at-point))))))))
+  (cond ((and (derived-mode-p 'pdf-view-mode) (pdf-view-active-region-p))
+         (let ((words-at-point (replace-regexp-in-string
+                                "\n" " " (mapconcat 'identity (pdf-view-active-region-text) " "))))
+           (pdf-view-deactivate-region)
+           words-at-point))
+        ((eq major-mode 'eaf-mode)
+         (if (equal eaf--buffer-app-name "pdf-viewer")
+             (eaf-call-sync "execute_function" eaf--buffer-id "get_select")
+           (execute-kbd-macro (kbd "M-w"))
+           (sit-for 1)
+           (current-kill 0)))
+        (t (if mark-active
+               (let ((words-at-point (buffer-substring-no-properties (region-beginning) (region-end))))
+                 (deactivate-mark)
+                 words-at-point)
+             (let ((words-at-point (if (equal (point) (point-at-eol))
+                                       (pyim-cstring-words-at-point)
+                                     (pyim-cstring-words-at-point t))))
+               (if (<= (length words-at-point) 1)
+                   (let ((default-word (or (car (car words-at-point))
+                                           (thing-at-point 'word t))))
+                     ;; M-n可调出并修改default-word
+                     (read-string (format "Get Words(default %s): " default-word) nil nil default-word))
+                 (ivy-read "Get Words:" (cl-remove-duplicates (mapcar 'car words-at-point)))))))))
 ;;;###autoload
 (defun swint-get-current-thing ()
   (if (region-active-p)

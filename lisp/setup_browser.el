@@ -1,41 +1,43 @@
 ;;; w3m
 ;; ===================w3m=====================
 (use-package w3m
-  :bind (("M-o M-w" . w3m)
-         ("M-o w" . w3m-youdao-sample-sentences))
+  :commands w3m-youdao-sample-sentences
+  :bind ("M-o w" . w3m)
   :config
+  (use-package w3m-search
+    :config
+    (add-to-list 'w3m-search-engine-alist
+                 '("bing" "https://www.bing.com/search?q=%s" utf-8)))
   (defun w3m-youdao-sample-sentences (&optional _word)
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
       (w3m-browse-url
        (concat "http://dict.youdao.com/search?le=eng&q=lj%3A"
                word "&keyfrom=dict.top"))))
-  (add-to-list 'w3m-search-engine-alist
-               '("bing" "https://www.bing.com/search?q=%s" utf-8))
   (setq w3m-use-form t
         w3m-tab-width 8
         w3m-use-cookies t
         w3m-use-toolbar t
-        w3m-use-mule-ucs t
         w3m-fill-column 120
-        w3m-default-display-inline-image t
-        w3m-default-toggle-inline-images t
+        w3m-default-display-inline-images nil
+        w3m-toggle-inline-images-permanently nil
         w3m-home-page "about:blank"
         ;; browse-url-browser-function 'w3m-browse-url
-        w3m-view-this-url-new-session-in-background t
+        w3m-new-session-in-background nil
+        w3m-confirm-leaving-secure-page nil
         w3m-command-arguments '("-cookie" "-F")
         w3m-search-default-engine "bing")
   (set-face-attribute 'w3m-bold nil :foreground "red" :weight 'bold)
   (defun w3m-open-site-current-session (site)
     "Open site in current session with‘http://’appended."
     (interactive
-     (list (read-string "Enter website address(default: w3m-home):" nil nil "www.baidu.com" nil)))
+     (list (read-string "Enter website address(default: w3m-home):" nil nil "www.bing.com" nil)))
     (w3m-goto-url
      (concat "http://" site)))
   (defun w3m-open-site-new-session (site)
     "Open site in new w3m session with‘http://’appended."
     (interactive
-     (list (read-string "Enter website address(default: w3m-home):" nil nil "www.baidu.com" nil)))
+     (list (read-string "Enter website address(default: w3m-home):" nil nil "www.bing.com" nil)))
     (w3m-goto-url-new-session
      (concat "http://" site)))
   (defun w3m-new-tab ()
@@ -52,15 +54,23 @@
                 (define-key w3m-mode-map (kbd "o") 'w3m-open-site-current-session)
                 (define-key w3m-mode-map (kbd "O") 'w3m-open-site-new-session)
                 (define-key w3m-mode-map (kbd "` b") #'(lambda () (interactive)
-                                                         (w3m-new-tab)
-                                                         (w3m-browse-url "www.baidu.com")))
+                                                         (w3m-browse-url "https://www.bing.com/" t)))
+                (define-key w3m-mode-map (kbd "` d") #'(lambda () (interactive)
+                                                         (w3m-browse-url "http://www.baidu.com/" t)))
                 (define-key w3m-mode-map (kbd "` g") #'(lambda () (interactive)
-                                                         (w3m-new-tab)
-                                                         (w3m-browse-url "www.google.com")))
-                (define-key w3m-mode-map (kbd "` o") #'(lambda () (interactive)
-                                                         (w3m-new-tab)
-                                                         (w3m-browse-url "cn.bing.com"))))))
+                                                         (w3m-browse-url "https://www.google.com/" t))))))
 ;; ===================w3m=====================
+;;; eww
+;; ===================eww=====================
+(use-package eww
+  :bind ("M-o W" . eww)
+  :config
+  (setq eww-search-prefix "https://www.bing.com/search?q=")
+  (define-key eww-mode-map [(meta \p)] nil)
+  (define-key eww-mode-map [(meta \n)] nil)
+  (define-key eww-mode-map (kbd "P") 'eww-previous-bookmark)
+  (define-key eww-mode-map (kbd "N") 'eww-next-bookmark))
+;; ===================eww=====================
 ;;; helm-firefox
 ;; ===============helm-firefox================
 (use-package helm-firefox

@@ -41,6 +41,7 @@
   (require 'setup_chinese)
   (require 'setup_dired)
   (require 'setup_backup)
+  (require 'setup_eaf)
   (require 'setup_email)
   (require 'setup_emms)
   (require 'setup_flycheck)

@@ -14,9 +14,7 @@
         mu4e-completing-read-function 'completing-read
         mu4e-maildir-shortcuts '(("/Default/Inbox" . ?d)
                                  ("/Netease/Inbox" . ?n)
-                                 ("/SJZU/Inbox" . ?j)
-                                 ("/Hotmail/Inbox" . ?h)
-                                 ("/QQ/Inbox" . ?q))
+                                 ("/SJZU/Inbox" . ?j))
         send-mail-function 'smtpmail-send-it
         message-send-mail-function 'smtpmail-send-it)
   (setq mu4e-context-policy 'pick-first
@@ -56,31 +54,7 @@
                     (mu4e-trash-folder . "/SJZU/已删除")
                     (smtpmail-default-smtp-server . "smtphz.qiye.163.com")
                     (smtpmail-smtp-server . "smtphz.qiye.163.com")
-                    (smtpmail-smtp-service . 465)))
-          ,(make-mu4e-context
-            :name "Hotmail"
-            :enter-func (lambda () (mu4e-message "Switch to the Hotmail context"))
-            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "wguiqiang@hotmail.com")))
-            :vars '((user-mail-address . "wguiqiang@hotmail.com" )
-                    (user-full-name . "guiq.wang" )
-                    (mu4e-sent-folder . "/Hotmail/Sent")
-                    (mu4e-drafts-folder . "/Hotmail/Drafts")
-                    (mu4e-trash-folder . "/Hotmail/Deleted")
-                    (smtpmail-default-smtp-server . "smtp-mail.outlook.com")
-                    (smtpmail-smtp-server . "smtp-mail.outlook.com")
-                    (smtpmail-smtp-service . 25)))
-          ,(make-mu4e-context
-            :name "QQ"
-            :enter-func (lambda () (mu4e-message "Switch to the QQ context"))
-            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "278064399@qq.com")))
-            :vars '((user-mail-address . "278064399@qq.com")
-                    (user-full-name . "guiq.wang")
-                    (mu4e-sent-folder . "/QQ/Sent Messages")
-                    (mu4e-drafts-folder . "/QQ/Drafts")
-                    (mu4e-trash-folder . "/QQ/Deleted Messages")
-                    (smtpmail-default-smtp-server . "smtp.qq.com")
-                    (smtpmail-smtp-server . "smtp.qq.com")
-                    (smtpmail-smtp-service . 587))))))
+                    (smtpmail-smtp-service . 465))))))
 ;; =======================mu4e=========================
 ;;;; mu4e-alert
 ;; ====================mu4e-alert======================
@@ -92,11 +66,7 @@
                 " OR "
                 "flag:unread maildir:/Netease/Inbox"
                 " OR "
-                "flag:unread maildir:/SJZU/Inbox"
-                " OR "
-                "flag:unread maildir:/Hotmail/Inbox"
-                " OR "
-                "flag:unread maildir:/QQ/Inbox"))
+                "flag:unread maildir:/SJZU/Inbox"))
   ;; notifications or libnotify.
   (mu4e-alert-set-default-style 'libnotify)
   (mu4e-alert-enable-notifications)

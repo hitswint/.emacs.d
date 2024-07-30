@@ -226,8 +226,7 @@
     "Join to Zotero.bib."
     (interactive)
     (when (y-or-n-p "Join Zotero.bib?")
-      (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
-        (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
+      (pyvenv-activate-py3)
       (let* ((ebib-join-command (concat "python " (expand-file-name "~/Documents/Python/bibtex/ebib_bibtexparser.py")))
              (process (start-process-shell-command "ebib-join" "*ebib-join*" ebib-join-command)))
         (message "Ebib joining.")
@@ -245,8 +244,7 @@
                          "Title" (ebib--get-key-at-point) ebib--cur-db))))
       (when (y-or-n-p (format "Delete [%s] from zotero?"
                               (truncate-string-to-width item-title 100 nil nil t)))
-        (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
-          (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))
+        (pyvenv-activate-py3)
         (let* ((ebib-delete-command (concat "python " (expand-file-name "~/Documents/Python/bibtex/ebib_pyzotero.py")
                                             " -t " "\"" item-title "\""))
                (process (start-process-shell-command "ebib-delete" "*ebib-delete*" ebib-delete-command)))
