@@ -37,6 +37,14 @@
     (setq eaf-browser-default-search-engine "bing"
           eaf-browser-blank-page-url "https://www.bing.com"
           eaf-browser-dark-mode "follow")
+    (defun eaf-toggle-proxy/around (fn)
+      (if (not (string-empty-p eaf-proxy-host))
+          (funcall fn)
+        (setq eaf-proxy-host "127.0.0.1"
+              eaf-proxy-port "7890"
+              eaf-proxy-type "socks5")
+        (eaf-restart-process)))
+    (advice-add 'eaf-toggle-proxy :around #'eaf-toggle-proxy/around)
     (eaf-bind-key nil "M-," eaf-browser-keybinding)
     (eaf-bind-key nil "M-." eaf-browser-keybinding)
     (eaf-bind-key nil "M-s" eaf-browser-keybinding)
@@ -44,6 +52,7 @@
     (eaf-bind-key nil "M-O" eaf-browser-keybinding)
     (eaf-bind-key select_left_tab "M-p" eaf-browser-keybinding)
     (eaf-bind-key select_right_tab "M-n" eaf-browser-keybinding)
+    (eaf-bind-key eaf-toggle-proxy "M-P" eaf-browser-keybinding)
     (eaf-bind-key copy_link "M-W" eaf-browser-keybinding)
     (eaf-bind-key new_blank_page "C-t" eaf-browser-keybinding)
     (eaf-bind-key toggle_password_autofill "M-t" eaf-browser-keybinding)
