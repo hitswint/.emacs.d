@@ -11,6 +11,25 @@
   (setq eaf-webengine-default-zoom "1.5")
   (define-key eaf-mode-map* (kbd "M-'") nil)
   (define-key eaf-mode-map* (kbd "M-/") nil)
+  (define-key eaf-mode-map* (kbd "C-c d") 'eaf-duplicate-current-buffer)
+  (define-key eaf-mode-map* (kbd "C-c s") 'eaf-get-buffer-screenshot)
+  (define-key eaf-mode-map* (kbd "C-c f") 'eaf-toggle-fullscreen)
+  (define-key eaf-mode-map* (kbd "C-c g") 'eaf-get-path-or-url)
+  (define-key eaf-mode-map* (kbd "C-c a") 'eaf-share-path-or-url)
+  (defun eaf-goto-left-tab ()
+    (interactive)
+    (let ((switch-to-prev-buffer-skip
+           (lambda (_window buffer _bury-or-kill)
+             (not (equal eaf--buffer-app-name
+                         (buffer-local-value 'eaf--buffer-app-name buffer))))))
+      (call-interactively 'previous-buffer)))
+  (defun eaf-goto-right-tab ()
+    (interactive)
+    (let ((switch-to-prev-buffer-skip
+           (lambda (_window buffer _bury-or-kill)
+             (not (equal eaf--buffer-app-name
+                         (buffer-local-value 'eaf--buffer-app-name buffer))))))
+      (call-interactively 'next-buffer)))
   (defun eaf-translate-text (text)
     (baidu-translate-at-point text))
   (use-package eaf-browser
@@ -18,19 +37,25 @@
     (setq eaf-browser-default-search-engine "bing"
           eaf-browser-blank-page-url "https://www.bing.com"
           eaf-browser-dark-mode "follow")
-    (eaf-bind-key copy_link "M-W" eaf-browser-keybinding)
     (eaf-bind-key nil "M-," eaf-browser-keybinding)
     (eaf-bind-key nil "M-." eaf-browser-keybinding)
     (eaf-bind-key nil "M-s" eaf-browser-keybinding)
     (eaf-bind-key nil "M-o" eaf-browser-keybinding)
     (eaf-bind-key nil "M-O" eaf-browser-keybinding)
-    (eaf-bind-key nil "M-p" eaf-browser-keybinding))
+    (eaf-bind-key select_left_tab "M-p" eaf-browser-keybinding)
+    (eaf-bind-key select_right_tab "M-n" eaf-browser-keybinding)
+    (eaf-bind-key copy_link "M-W" eaf-browser-keybinding)
+    (eaf-bind-key new_blank_page "C-t" eaf-browser-keybinding)
+    (eaf-bind-key toggle_password_autofill "M-t" eaf-browser-keybinding)
+    (eaf-bind-key insert_or_recover_prev_close_page "X" eaf-browser-keybinding)
+    (eaf-bind-key recover_prev_close_page "C-M-q" eaf-browser-keybinding))
   (use-package eaf-pdf-viewer
     :config
     (setq eaf-pdf-dark-mode "ignore"
           eaf-pdf-show-progress-on-page t)
     (eaf-bind-key nil "M-s" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key nil "M-p" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key select_left_tab "M-p" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key select_right_tab "M-n" eaf-pdf-viewer-keybinding)
     (eaf-bind-key add_annot_highlight "M-a h" eaf-pdf-viewer-keybinding)
     (eaf-bind-key add_annot_underline "M-a u" eaf-pdf-viewer-keybinding)
     (eaf-bind-key add_annot_squiggly "M-a s" eaf-pdf-viewer-keybinding)
@@ -41,6 +66,7 @@
     (eaf-bind-key move_annot_text "M-a r" eaf-pdf-viewer-keybinding)
     (eaf-bind-key scroll_to_begin "M-<" eaf-pdf-viewer-keybinding)
     (eaf-bind-key scroll_to_end "M->" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key jump_to_page "M-g" eaf-pdf-viewer-keybinding)))
+    (eaf-bind-key jump_to_page "M-g" eaf-pdf-viewer-keybinding))
+  (use-package eaf-image-viewer))
 ;; =====================eaf=====================
 (provide 'setup_eaf)
