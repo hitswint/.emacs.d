@@ -71,7 +71,6 @@
                                                    ("M-n" . lsp-bridge-diagnostic-jump-next)))
   (define-key lsp-bridge-mode-map (kbd "C-c M-d") #'lsp-bridge-diagnostic-list)
   (define-key lsp-bridge-mode-map (kbd "C-c M-w") #'lsp-bridge-diagnostic-copy)
-  (define-key lsp-bridge-mode-map (kbd "C-c M-i") #'lsp-bridge-diagnostic-ignore)
   (define-key lsp-bridge-mode-map (kbd "C-c M-a") #'lsp-bridge-code-action)
   (define-key lsp-bridge-mode-map (kbd "C-c M-f") #'lsp-bridge-code-format)
   (define-key lsp-bridge-mode-map (kbd "C-c d") #'lsp-bridge-toggle-sdcv-helper))

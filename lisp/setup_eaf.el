@@ -50,6 +50,14 @@
     (eaf-bind-key nil "M-s" eaf-browser-keybinding)
     (eaf-bind-key nil "M-o" eaf-browser-keybinding)
     (eaf-bind-key nil "M-O" eaf-browser-keybinding)
+    (eaf-bind-key nil "g" eaf-browser-keybinding)
+    (eaf-bind-key insert_or_scroll_to_begin "g g" eaf-browser-keybinding)
+    (eaf-bind-key insert_or_open_link_background_buffer "g f" eaf-browser-keybinding)
+    (eaf-bind-key insert_or_focus_input "g i" eaf-browser-keybinding)
+    (eaf-bind-key insert_or_view_source "g s" eaf-browser-keybinding)
+    (eaf-bind-key insert_or_open_link_new_buffer "a f" eaf-browser-keybinding)
+    (eaf-bind-key insert_or_history_backward "S" eaf-browser-keybinding)
+    (eaf-bind-key insert_or_history_forward "D" eaf-browser-keybinding)
     (eaf-bind-key select_left_tab "M-p" eaf-browser-keybinding)
     (eaf-bind-key select_right_tab "M-n" eaf-browser-keybinding)
     (eaf-bind-key eaf-toggle-proxy "M-P" eaf-browser-keybinding)
@@ -57,7 +65,9 @@
     (eaf-bind-key new_blank_page "C-t" eaf-browser-keybinding)
     (eaf-bind-key toggle_password_autofill "M-t" eaf-browser-keybinding)
     (eaf-bind-key insert_or_recover_prev_close_page "X" eaf-browser-keybinding)
-    (eaf-bind-key recover_prev_close_page "C-M-q" eaf-browser-keybinding))
+    (eaf-bind-key recover_prev_close_page "C-M-q" eaf-browser-keybinding)
+    (eaf-bind-key edit_url "C-l" eaf-browser-keybinding)
+    (eaf-bind-key select_text "C-h" eaf-browser-keybinding))
   (use-package eaf-pdf-viewer
     :config
     (setq eaf-pdf-dark-mode "ignore"

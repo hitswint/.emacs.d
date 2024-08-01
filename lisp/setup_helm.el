@@ -80,6 +80,8 @@
 ;;;; keybindings
   ;; ===============keybindings=================
   (define-key helm-map (kbd "C-;") 'helm-toggle-visible-mark)
+  (define-key helm-map (kbd "M-m") 'helm-toggle-visible-mark)
+  (define-key helm-map (kbd "M-t") 'helm-toggle-all-marks)
   (define-key helm-map (kbd "C-l") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-M-p") 'helm-previous-source)
   (define-key helm-map (kbd "C-M-n") 'helm-next-source)

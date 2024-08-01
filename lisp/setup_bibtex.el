@@ -174,7 +174,7 @@
   (define-key ebib-entry-mode-map (kbd "z") 'ebib-leave-ebib-windows)
   (add-hook 'ebib-entry-mode-hook #'(lambda ()
                                       ;; (setq word-wrap t) ;中文支持不好
-                                      (setq truncate-lines t)))
+                                      (setq truncate-lines nil)))
   (defcustom ebib-file-symbol "F"
     "Symbol used to indicate the presence of a file for the current entry."
     :group 'ebib
