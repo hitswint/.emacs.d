@@ -50,12 +50,6 @@
     (eaf-bind-key nil "M-s" eaf-browser-keybinding)
     (eaf-bind-key nil "M-o" eaf-browser-keybinding)
     (eaf-bind-key nil "M-O" eaf-browser-keybinding)
-    (eaf-bind-key nil "g" eaf-browser-keybinding)
-    (eaf-bind-key insert_or_scroll_to_begin "g g" eaf-browser-keybinding)
-    (eaf-bind-key insert_or_open_link_background_buffer "g f" eaf-browser-keybinding)
-    (eaf-bind-key insert_or_focus_input "g i" eaf-browser-keybinding)
-    (eaf-bind-key insert_or_view_source "g s" eaf-browser-keybinding)
-    (eaf-bind-key insert_or_open_link_new_buffer "a f" eaf-browser-keybinding)
     (eaf-bind-key insert_or_history_backward "S" eaf-browser-keybinding)
     (eaf-bind-key insert_or_history_forward "D" eaf-browser-keybinding)
     (eaf-bind-key select_left_tab "M-p" eaf-browser-keybinding)
@@ -67,12 +61,15 @@
     (eaf-bind-key insert_or_recover_prev_close_page "X" eaf-browser-keybinding)
     (eaf-bind-key recover_prev_close_page "C-M-q" eaf-browser-keybinding)
     (eaf-bind-key edit_url "C-l" eaf-browser-keybinding)
-    (eaf-bind-key select_text "C-h" eaf-browser-keybinding))
+    (eaf-bind-key insert_or_view_source "s" eaf-browser-keybinding)
+    (eaf-bind-key insert_or_select_text "v" eaf-browser-keybinding))
   (use-package eaf-pdf-viewer
     :config
     (setq eaf-pdf-dark-mode "ignore"
           eaf-pdf-show-progress-on-page t)
     (eaf-bind-key nil "M-s" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key nil "i" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key toggle_inverted_mode "M-i" eaf-pdf-viewer-keybinding)
     (eaf-bind-key select_left_tab "M-p" eaf-pdf-viewer-keybinding)
     (eaf-bind-key select_right_tab "M-n" eaf-pdf-viewer-keybinding)
     (eaf-bind-key add_annot_highlight "M-a h" eaf-pdf-viewer-keybinding)
@@ -87,5 +84,23 @@
     (eaf-bind-key scroll_to_end "M->" eaf-pdf-viewer-keybinding)
     (eaf-bind-key jump_to_page "M-g" eaf-pdf-viewer-keybinding))
   (use-package eaf-image-viewer))
+(use-package eaf-interleave
+  :load-path "repos/emacs-application-framework/extension/"
+  :commands (eaf-interleave-mode eaf-interleave-app-mode)
+  :init
+  (add-hook 'eaf-pdf-viewer-hook 'eaf-interleave-app-mode)
+  :config
+  (setq eaf-interleave-disable-narrowing t)
+  (setq eaf-interleave-split-direction 'vertical)
+  (setq eaf-interleave-split-lines 20)
+  (define-key eaf-interleave-mode-map (kbd "C-M-p") 'eaf-interleave-sync-previous-note)
+  (define-key eaf-interleave-mode-map (kbd "C-M-o") 'eaf-interleave-sync-current-note)
+  (define-key eaf-interleave-mode-map (kbd "C-M-n") 'eaf-interleave-sync-next-note)
+  (define-key eaf-interleave-app-mode-map (kbd "C-M-p") 'eaf-interleave-sync-previous-note)
+  (define-key eaf-interleave-app-mode-map (kbd "C-M-o") 'eaf-interleave-sync-current-note)
+  (define-key eaf-interleave-app-mode-map (kbd "C-M-n") 'eaf-interleave-sync-next-note)
+  (define-key eaf-interleave-app-mode-map (kbd "i") 'eaf-interleave-add-note)
+  (define-key eaf-interleave-app-mode-map (kbd "M-;") 'eaf-interleave-open-notes-file)
+  (define-key eaf-interleave-app-mode-map (kbd "q") 'eaf-interleave-quit))
 ;; =====================eaf=====================
 (provide 'setup_eaf)
