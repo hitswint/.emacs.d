@@ -46,7 +46,7 @@
                  month))
       (message "Updating apt history: %s" PC-apt-history-file)
       (cl-loop for it in (directory-files "/var/log/apt/" t "history\\.log")
-               do (copy-file it PC-path t)))
+               do (copy-file it PC-path t t)))
 ;;;; 每月：更新file system tree文件
     (when (or (not (file-exists-p PC-tree-file))
               (> (- current (float-time (cl-sixth (file-attributes PC-tree-file))))

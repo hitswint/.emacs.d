@@ -59,7 +59,8 @@
                                                  "\\`\\*tc\\*\\'"
                                                  "\\`\\*viatc\\*\\'"
                                                  "\\`\\*Article\\*\\'"
-                                                 "\\`\\*xwidget-webkit:.*\\*\\'")))
+                                                 "\\`\\*xwidget-webkit:.*\\*\\'"
+                                                 "\\`\\*eaf.*\\*\\'")))
   (setq helm-completing-read-handlers-alist (append helm-completing-read-handlers-alist
                                                     '((describe-function . helm-completing-read-symbols)
                                                       (describe-variable . helm-completing-read-symbols)

@@ -66,12 +66,15 @@
           (setq output (concat ml/directory-truncation-string output)))
         output))))
 (defun ml/generate-buffer-identification (orig)
-  (cons (concat (when-let ((curr (or (car-safe dired-directory) dired-directory (buffer-file-name))))
+  (cons (concat (when-let ((curr (or (car-safe dired-directory) dired-directory (buffer-file-name) (bound-and-true-p eaf--buffer-url))))
                   (concat (when (display-graphic-p)
                             (all-the-icons-dired--icon curr))
                           " "
-                          (ml/do-shorten-directory (abbreviate-file-name
-                                                    (or (file-name-parent-directory curr) ""))
+                          (ml/do-shorten-directory (cond ((file-name-absolute-p curr)
+                                                          (abbreviate-file-name (file-name-parent-directory curr)))
+                                                         ((string-match helm--url-regexp curr)
+                                                          curr)
+                                                         (t ""))
                                                    ;; (min (- (window-width) 8) ml/name-width)
                                                    (- (window-width)
                                                       24

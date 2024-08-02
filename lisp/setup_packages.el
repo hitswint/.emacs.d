@@ -952,8 +952,8 @@
   (bind-key "C-M-6" 'my-select-window)
   (bind-key "C-M-7" 'my-select-window)
   (define-key key-translation-map (kbd "C-M-^") (kbd "C-M-6"))
-  (setq awesome-tab-display-line 'header-line
-        awesome-tab-display-icon (display-graphic-p)
+  (setq awesome-tab-display-icon (display-graphic-p)
+        ;; awesome-tab-display-line 'header-line
         awesome-tab-height 120
         awesome-tab-active-bar-height 20
         awesome-tab-dark-selected-foreground-color "white"
@@ -973,6 +973,8 @@
                           magit-blame-mode
                           ))
        "Magit")
+      ((derived-mode-p 'eaf-mode)
+       eaf--buffer-app-name)
       (t
        (let ((proj-name (awesome-tab-get-group-name (current-buffer))))
          (if (equal proj-name awesome-tab-common-group-name)
@@ -987,6 +989,19 @@
               (string-prefix-p "*scratch*" name)
               (string-prefix-p "*Messages*" name)))))
   (advice-add 'awesome-tab-hide-tab :around #'awesome-tab-hide-tab/around)
+  (defun awesome-tab-line ()
+    "Return the header line templates that represent the tab bar.
+Inhibit display of the tab bar in current window `awesome-tab-hide-tab-function' return nil."
+    (cond
+     ((awesome-tab-hide-tab-cached (current-buffer))
+      ;; Don't show the tab bar.
+      (if (string-match-p "\\`\\*helm" (buffer-name))
+          (set (awesome-tab-display-line-format) "")
+        (set (awesome-tab-display-line-format) nil)))
+     ((awesome-tab-current-tabset t)
+      ;; When available, use a cached tab bar value, else recompute it.
+      (or (awesome-tab-template awesome-tab-current-tabset)
+          (awesome-tab-line-format awesome-tab-current-tabset)))))
   (defun my-select-window ()
     (interactive)
     (interactive)

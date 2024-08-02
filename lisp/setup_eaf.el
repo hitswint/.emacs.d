@@ -18,20 +18,24 @@
   (define-key eaf-mode-map* (kbd "C-c a") 'eaf-share-path-or-url)
   (defun eaf-goto-left-tab ()
     (interactive)
-    (let ((switch-to-prev-buffer-skip
-           (lambda (_window buffer _bury-or-kill)
-             (not (equal eaf--buffer-app-name
-                         (buffer-local-value 'eaf--buffer-app-name buffer))))))
-      (call-interactively 'previous-buffer)))
+    (if (bound-and-true-p awesome-tab-mode)
+        (call-interactively 'awesome-tab-backward-tab)
+      (let ((switch-to-prev-buffer-skip
+             (lambda (_window buffer _bury-or-kill)
+               (not (equal eaf--buffer-app-name
+                           (buffer-local-value 'eaf--buffer-app-name buffer))))))
+        (call-interactively 'previous-buffer))))
   (defun eaf-goto-right-tab ()
     (interactive)
-    (let ((switch-to-prev-buffer-skip
-           (lambda (_window buffer _bury-or-kill)
-             (not (equal eaf--buffer-app-name
-                         (buffer-local-value 'eaf--buffer-app-name buffer))))))
-      (call-interactively 'next-buffer)))
+    (if (bound-and-true-p awesome-tab-mode)
+        (call-interactively 'awesome-tab-forward-tab)
+      (let ((switch-to-prev-buffer-skip
+             (lambda (_window buffer _bury-or-kill)
+               (not (equal eaf--buffer-app-name
+                           (buffer-local-value 'eaf--buffer-app-name buffer))))))
+        (call-interactively 'next-buffer))))
   (defun eaf-translate-text (text)
-    (baidu-translate-at-point text))
+    (swint-sdcv-to-tip text))
   (use-package eaf-browser
     :config
     (setq eaf-browser-default-search-engine "bing"
@@ -50,6 +54,7 @@
     (eaf-bind-key nil "M-s" eaf-browser-keybinding)
     (eaf-bind-key nil "M-o" eaf-browser-keybinding)
     (eaf-bind-key nil "M-O" eaf-browser-keybinding)
+    (eaf-bind-key nil "C-0" eaf-browser-keybinding)
     (eaf-bind-key insert_or_history_backward "S" eaf-browser-keybinding)
     (eaf-bind-key insert_or_history_forward "D" eaf-browser-keybinding)
     (eaf-bind-key select_left_tab "M-p" eaf-browser-keybinding)
@@ -88,6 +93,7 @@
   :load-path "repos/emacs-application-framework/extension/"
   :commands (eaf-interleave-mode eaf-interleave-app-mode)
   :init
+  ;; (add-hook 'eaf-browser-hook 'eaf-interleave-app-mode)
   (add-hook 'eaf-pdf-viewer-hook 'eaf-interleave-app-mode)
   :config
   (setq eaf-interleave-disable-narrowing t)
@@ -102,5 +108,8 @@
   (define-key eaf-interleave-app-mode-map (kbd "i") 'eaf-interleave-add-note)
   (define-key eaf-interleave-app-mode-map (kbd "M-;") 'eaf-interleave-open-notes-file)
   (define-key eaf-interleave-app-mode-map (kbd "q") 'eaf-interleave-quit))
+(use-package eaf-all-the-icons
+  :load-path "repos/emacs-application-framework/extension/"
+  :after eaf)
 ;; =====================eaf=====================
 (provide 'setup_eaf)
