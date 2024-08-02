@@ -5,7 +5,8 @@
   :bind (("M-o a" . eaf-open)
          ("M-o M-a" . eaf-open-pdf-from-history)
          ("M-o b" . eaf-open-browser)
-         ("M-o M-b" . eaf-open-browser-with-history))
+         ("M-o M-b" . eaf-open-browser-with-history)
+         ("M-o M-RET" . eaf-open-pyqterminal))
   :config
   (pyvenv-activate-py3)
   (setq eaf-webengine-default-zoom "1.5")
@@ -88,7 +89,17 @@
     (eaf-bind-key scroll_to_begin "M-<" eaf-pdf-viewer-keybinding)
     (eaf-bind-key scroll_to_end "M->" eaf-pdf-viewer-keybinding)
     (eaf-bind-key jump_to_page "M-g" eaf-pdf-viewer-keybinding))
-  (use-package eaf-image-viewer))
+  (use-package eaf-image-viewer)
+  (use-package eaf-pyqterminal
+    :config
+    (eaf-bind-key eaf-send-key-sequence "M-p" eaf-pyqterminal-keybinding)
+    (eaf-bind-key eaf-send-key-sequence "M-n" eaf-pyqterminal-keybinding)
+    (eaf-bind-key eaf-send-key-sequence "C-x" eaf-pyqterminal-keybinding)
+    (eaf-bind-key eaf-send-key-sequence "M-i" eaf-pyqterminal-keybinding)
+    (eaf-bind-key eaf-send-key-sequence "M-m" eaf-pyqterminal-keybinding)
+    (eaf-bind-key eaf-send-key-sequence "M-t" eaf-pyqterminal-keybinding)
+    (eaf-bind-key eaf-send-key-sequence "M-z" eaf-pyqterminal-keybinding)
+    (eaf-bind-key toggle_mark "C-;" eaf-pyqterminal-cursor-move-mode-keybinding)))
 (use-package eaf-interleave
   :load-path "repos/emacs-application-framework/extension/"
   :commands (eaf-interleave-mode eaf-interleave-app-mode)
