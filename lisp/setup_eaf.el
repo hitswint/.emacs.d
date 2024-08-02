@@ -99,6 +99,16 @@
     (eaf-bind-key eaf-send-key-sequence "M-m" eaf-pyqterminal-keybinding)
     (eaf-bind-key eaf-send-key-sequence "M-t" eaf-pyqterminal-keybinding)
     (eaf-bind-key eaf-send-key-sequence "M-z" eaf-pyqterminal-keybinding)
+    (eaf-bind-key eaf-send-key-sequence "C-v" eaf-pyqterminal-keybinding)
+    (eaf-bind-key eaf-send-key-sequence "M-v" eaf-pyqterminal-keybinding)
+    (eaf-bind-key eaf-send-key-sequence "M-<" eaf-pyqterminal-keybinding)
+    (eaf-bind-key eaf-send-key-sequence "M->" eaf-pyqterminal-keybinding)
+    (eaf-bind-key scroll_up_page "<prior>" eaf-pyqterminal-keybinding)
+    (eaf-bind-key scroll_down_page "<next>" eaf-pyqterminal-keybinding)
+    (eaf-bind-key scroll_down_page "C-S-v" eaf-pyqterminal-keybinding)
+    (eaf-bind-key scroll_up_page "M-V" eaf-pyqterminal-keybinding)
+    (eaf-bind-key scroll_to_begin "S-<prior>" eaf-pyqterminal-keybinding)
+    (eaf-bind-key scroll_to_bottom "S-<next>" eaf-pyqterminal-keybinding)
     (eaf-bind-key toggle_mark "C-;" eaf-pyqterminal-cursor-move-mode-keybinding)))
 (use-package eaf-interleave
   :load-path "repos/emacs-application-framework/extension/"
