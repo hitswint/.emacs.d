@@ -206,7 +206,7 @@ If buffer-or-name is nil return current buffer's mode."
                                                             (split-string (shell-command-to-string
                                                                            (format "%s '%s'" zsh-capture-completion-prog minibuffer-contents-before-point))
                                                                           "\n" t)
-                                                            :buffer (concat "*helm zsh completions-swint*"))
+                                                            :buffer "*helm zsh completions-swint*")
                                             " " t))))
     (if (string-suffix-p " " minibuffer-contents-before-point)
         (insert zsh-completion)

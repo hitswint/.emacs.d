@@ -178,7 +178,7 @@ FORCE-OTHER-WINDOW is ignored."
   (let* ((word (or _word (swint-get-words-at-point)))
          (dict-list (helm-comp-read "Select files with order: " '("Google" "Bing" "Youdao" "Baidu" "Lingva")
                                     :marked-candidates t
-                                    :buffer (concat "*helm dired converter-swint*")))
+                                    :buffer "*helm dired converter-swint*"))
          (online-result (cl-loop for dict in dict-list
                                  concat (let ((result (ignore-errors (save-excursion
                                                                        (cond ((equal dict "Google")

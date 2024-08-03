@@ -455,6 +455,7 @@
   :config
   (require 'djvu)
   (require 'nov)
+  (setq org-noter-always-create-frame nil)
   (defun swint-noter/interleave ()
     (interactive)
     (let* ((key (org-entry-get nil "Custom_ID"))
