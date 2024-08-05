@@ -21,6 +21,7 @@
   (helm-top-poll-mode 1)
   (setq helm-move-to-line-cycle-in-source nil
         helm-buffer-details-flag nil
+        helm-display-header-line nil
         helm-truncate-lines t
         helm-ff--RET-disabled t
         helm-ff-newfile-prompt-p nil
