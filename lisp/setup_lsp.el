@@ -37,7 +37,7 @@
                                       (set (make-local-variable 'company-idle-delay) nil)))
   (transient-define-prefix trainsient-scroll-popup-lsp-document ()
     ["scoll popup document"
-     ("M-p" "scrool down" lsp-bridge-popup-documentation-scroll-down :transient t)
+     ("M-p" "scroll down" lsp-bridge-popup-documentation-scroll-down :transient t)
      ("M-n" "scroll up" lsp-bridge-popup-documentation-scroll-up :transient t)
      ("q" "quit" transient-quit-all)])
   (define-key acm-mode-map (kbd "M-<") #'acm-select-first)
