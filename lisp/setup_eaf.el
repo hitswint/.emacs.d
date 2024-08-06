@@ -152,7 +152,8 @@
     (eaf-bind-key scroll_to_begin "M-<" eaf-pdf-viewer-keybinding)
     (eaf-bind-key scroll_to_end "M->" eaf-pdf-viewer-keybinding)
     (eaf-bind-key jump_to_page "M-g" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key eaf-pdf-delete-pages "M-d" eaf-pdf-viewer-keybinding))
+    (eaf-bind-key eaf-pdf-delete-pages "M-d" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key eaf-pdf-extract-page-text "M-t" eaf-pdf-viewer-keybinding))
   (use-package eaf-image-viewer)
   (use-package eaf-pyqterminal
     :config
