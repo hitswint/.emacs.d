@@ -71,6 +71,7 @@
                            dired-ranger
                            dired-subtree
                            disaster
+                           dogears
                            drag-stuff
                            dumb-jump
                            easy-kill

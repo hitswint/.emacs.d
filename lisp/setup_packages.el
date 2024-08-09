@@ -324,7 +324,7 @@
 (use-package ztree-diff
   :commands ztree-diff
   :init
-  (bind-key "M-g =" #'(lambda () (interactive)
+  (bind-key "M-s +" #'(lambda () (interactive)
                         (let* ((left (read-directory-name "Left: " (helm-current-directory)))
                                (right (read-directory-name "Right: " (or (dired-dwim-target-directory) left))))
                           (ztree-diff left right))))
@@ -464,7 +464,7 @@
                                  (bm-repository-save)))
   (add-hook 'after-save-hook 'bm-buffer-save)
   (add-hook 'after-revert-hook 'bm-buffer-restore)
-  (setq bm-cycle-all-buffers nil)
+  (setq bm-cycle-all-buffers t)
   (setq bm-highlight-style 'bm-highlight-only-fringe)
   (bm-buffer-restore-all))
 ;; =======================bm=======================
@@ -473,13 +473,9 @@
 (use-package helm-bm
   :bind ("C-M-'" . helm-bm)
   :config
-  (defun helm-bm-action-switch-to-buffer/override (candidate)
-    "Switch to buffer of CANDIDATE."
-    (helm-bm-with-candidate candidates (helm-switch-persp/buffer bufname)
-                            (goto-char (point-min))
-                            (forward-line (1- lineno))))
-  (advice-add 'helm-bm-action-switch-to-buffer :override
-              #'helm-bm-action-switch-to-buffer/override))
+  (advice-add 'helm-bm-action-switch-to-buffer :before #'(lambda (candidate)
+                                                           (let ((buf (overlay-buffer candidate)))
+                                                             (when buf (helm-switch-persp/buffer buf))))))
 ;; ====================helm-bm=====================
 ;;; operate-on-number
 ;; ================operate-on-number===============
@@ -639,9 +635,9 @@
              dumb-jump-quick-look)
   :init
   (smartrep-define-key global-map "C-x"
-    '(("," . dumb-jump-go)
-      ("." . dumb-jump-back)
-      ("/" . dumb-jump-quick-look))))
+    '(("M-," . dumb-jump-go)
+      ("M-." . dumb-jump-back)
+      ("M-/" . dumb-jump-quick-look))))
 ;; ==================dumb-jump=====================
 ;;; diff-hl
 ;; ===================diff-hl======================
@@ -1201,4 +1197,44 @@ ORIG is the advised function, which is called with its ARGS."
   :config
   (disable-mouse-global-mode 1))
 ;; ================disable-mouse===================
+;;; dogears
+;; ===================dogears======================
+(use-package dogears
+  :defer 2
+  :init
+  (setq dogears-idle 1)
+  :config
+  (dogears-mode)
+  (smartrep-define-key global-map "C-x"
+    '(("/" . dogears-go)
+      ("," . dogears-back-in-buffer)
+      ("." . dogears-forward-in-buffer)
+      ("<" . dogears-back)
+      (">" . dogears-forward)))
+  (advice-add 'dogears-go :before #'(lambda (place)
+                                      (let ((buf (get-buffer (map-elt (cdr place) 'buffer))))
+                                        (when buf (helm-switch-persp/buffer buf)))))
+  (defun dogears-back-in-buffer ()
+    (interactive)
+    (let* ((current-place (dogears--place))
+           (current-buffer (current-buffer))
+           (predicate (lambda (place)
+                        (and (not (dogears--equal place current-place))
+                             (equal (get-buffer (map-elt (cdr place) 'buffer)) current-buffer))))
+           (position (cl-position-if predicate dogears-list :start (1+ dogears-position))))
+      (when position
+        (setf dogears-position position)
+        (dogears-go (nth position dogears-list)))))
+  (defun dogears-forward-in-buffer ()
+    (interactive)
+    (let* ((current-place (dogears--place))
+           (current-buffer (current-buffer))
+           (predicate (lambda (place)
+                        (and (not (dogears--equal place current-place))
+                             (equal (get-buffer (map-elt (cdr place) 'buffer)) current-buffer))))
+           (position (cl-position-if predicate dogears-list :end dogears-position :from-end t)))
+      (when position
+        (setf dogears-position position)
+        (dogears-go (nth position dogears-list))))))
+;; ===================dogears======================
 (provide 'setup_packages)

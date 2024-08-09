@@ -133,7 +133,7 @@
   :load-path "site-lisp/persp-projectile-20180616.1944/"
   :commands projectile-persp-switch-project
   :init
-  (bind-key "M-s M-'" 'projectile-persp-switch-project)
+  (bind-key "C-M-'" 'projectile-persp-switch-project)
   (defvar persp-projectile-hash (make-hash-table :test 'equal))
   :config
   (defun projectile-persp-switch-project/after (project-to-switch)

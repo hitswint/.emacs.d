@@ -72,4 +72,22 @@
 ;; (my-maximized)
 ;; (setq default-frame-alist
 ;;    '((height . 30) (width . 75) (menu-bar-lines . 20) (tool-bar-lines . 0)))
+;;;###autoload
+(defun maximize-window-in-direction (&optional horizontally)
+  "Maximize window.
+Default vertically, unless HORIZONTALLY is non-nil."
+  (interactive)
+  (unless (seq-every-p
+           (apply-partially #'window-at-side-p nil)
+           (if horizontally '(left right) '(top bottom)))
+    (let* ((buf (window-buffer))
+           (top-size (window-size (frame-root-window) (not horizontally)))
+           (size (min (/ top-size 2) (window-size nil (not horizontally))))
+           (dir (if horizontally
+                    (if (window-at-side-p nil 'top) 'above 'below)
+                  (if (window-at-side-p nil 'right) 'right 'left))))
+      (delete-window)
+      (set-window-buffer
+       (select-window (split-window (frame-root-window) (- size) dir))
+       buf))))
 ;; ======================全屏======================
