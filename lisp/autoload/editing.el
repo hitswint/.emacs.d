@@ -149,17 +149,25 @@ region\) apply comment-or-uncomment to the current line"
   "Place hyphens between words in region."
   (interactive)
   (when (use-region-p)
-    (goto-char (region-beginning))
-    (while (re-search-forward "[ \n]+" (region-end) t)
-      (replace-match "-"))))
+    (let ((reg-beg (region-beginning))
+          (reg-end (region-end)))
+      (deactivate-mark)
+      (save-excursion
+        (goto-char reg-beg)
+        (while (re-search-forward "[ \n]+" reg-end t)
+          (replace-match "-"))))))
 ;;;###autoload
 (defun jcs-dashify-underline ()
   "Place hyphens between words in region."
   (interactive)
   (when (use-region-p)
-    (goto-char (region-beginning))
-    (while (re-search-forward "[ \n]+" (region-end) t)
-      (replace-match "_"))))
+    (let ((reg-beg (region-beginning))
+          (reg-end (region-end)))
+      (deactivate-mark)
+      (save-excursion
+        (goto-char reg-beg)
+        (while (re-search-forward "[ \n]+" reg-end t)
+          (replace-match "_"))))))
 ;; ===============添加连接线和下划线===============
 ;;; 合并C-j和C-o
 ;; ==================合并C-j和C-o==================

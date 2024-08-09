@@ -324,7 +324,7 @@
 (use-package ztree-diff
   :commands ztree-diff
   :init
-  (bind-key "M-s +" #'(lambda () (interactive)
+  (bind-key "C-x +" #'(lambda () (interactive)
                         (let* ((left (read-directory-name "Left: " (helm-current-directory)))
                                (right (read-directory-name "Right: " (or (dired-dwim-target-directory) left))))
                           (ztree-diff left right))))
@@ -450,10 +450,10 @@
              bm-previous
              bm-next)
   :init
-  (smartrep-define-key global-map "C-x"
-    '(("C-'" . bm-toggle)
-      ("'" . bm-previous)
-      ("\"" . bm-next)))
+  (smartrep-define-key global-map "M-s"
+    '((";" . bm-toggle)
+      ("," . bm-previous)
+      ("." . bm-next)))
   (setq bm-restore-repository-on-load t)
   :config
   (setq-default bm-buffer-persistence t)
@@ -471,7 +471,7 @@
 ;;; helm-bm
 ;; ====================helm-bm=====================
 (use-package helm-bm
-  :bind ("C-M-'" . helm-bm)
+  :bind ("M-s /" . helm-bm)
   :config
   (advice-add 'helm-bm-action-switch-to-buffer :before #'(lambda (candidate)
                                                            (let ((buf (overlay-buffer candidate)))
@@ -589,7 +589,7 @@
              highlight-symbol-at-point
              highlight-symbol-get-symbol)
   :init
-  (smartrep-define-key global-map "M-s"
+  (smartrep-define-key global-map "C-x"
     '(("," . highlight-symbol-prev)
       ("." . highlight-symbol-next)
       (";" . highlight-symbol-at-point)))
@@ -618,7 +618,7 @@
   (add-to-list 'ahs-modes 'graphviz-dot-mode)
   (add-to-list 'ahs-modes 'arduino-mode)
   ;; C-u for whole buffer.
-  (define-key auto-highlight-symbol-mode-map (kbd "M-s /") 'ahs-edit-mode)
+  (define-key auto-highlight-symbol-mode-map (kbd "C-x /") 'ahs-edit-mode)
   (define-key auto-highlight-symbol-mode-map (kbd "M-<left>") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "M-<right>") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "M-S-<left>") nil)
@@ -1205,7 +1205,7 @@ ORIG is the advised function, which is called with its ARGS."
   (setq dogears-idle 1)
   :config
   (dogears-mode)
-  (smartrep-define-key global-map "C-x"
+  (smartrep-define-key global-map "M-g"
     '(("/" . dogears-go)
       ("," . dogears-back-in-buffer)
       ("." . dogears-forward-in-buffer)
