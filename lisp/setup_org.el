@@ -451,7 +451,7 @@
              swint-open-notes-file-for-pdf)
   :init
   (add-hook 'org-mode-hook (lambda ()
-                             (bind-key "C-c M-;" 'swint-noter/interleave org-mode-map)))
+                             (bind-key "M-g M-;" 'swint-noter/interleave org-mode-map)))
   :config
   (require 'djvu)
   (require 'nov)

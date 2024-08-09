@@ -1207,34 +1207,56 @@ ORIG is the advised function, which is called with its ARGS."
   (dogears-mode)
   (smartrep-define-key global-map "M-g"
     '(("/" . dogears-go)
-      ("," . dogears-back-in-buffer)
+      ("," . dogears-backward-in-buffer)
       ("." . dogears-forward-in-buffer)
-      ("<" . dogears-back)
-      (">" . dogears-forward)))
+      ("<" . dogears-backward-across-buffer)
+      (">" . dogears-forward-across-buffer)))
   (advice-add 'dogears-go :before #'(lambda (place)
                                       (let ((buf (get-buffer (map-elt (cdr place) 'buffer))))
                                         (when buf (helm-switch-persp/buffer buf)))))
-  (defun dogears-back-in-buffer ()
-    (interactive)
+  (defun dogears-move-active-buffer (direction &optional in-buffer)
     (let* ((current-place (dogears--place))
            (current-buffer (current-buffer))
            (predicate (lambda (place)
-                        (and (not (dogears--equal place current-place))
-                             (equal (get-buffer (map-elt (cdr place) 'buffer)) current-buffer))))
-           (position (cl-position-if predicate dogears-list :start (1+ dogears-position))))
-      (when position
-        (setf dogears-position position)
-        (dogears-go (nth position dogears-list)))))
+                        (not (or (dogears--equal place current-place)
+                                 (let ((buf (get-buffer (map-elt (cdr place) 'buffer))))
+                                   (or (not buf)
+                                       (xor in-buffer (equal buf current-buffer))))))))
+           (position (cl-position-if predicate dogears-list
+                                     :start (pcase direction
+                                              ('backward (1+ dogears-position)))
+                                     :end (pcase direction
+                                            ('forward dogears-position))
+                                     :from-end (equal 'forward direction)))
+           place)
+      (if position
+          (progn
+            (setf dogears-position position
+                  place (nth position dogears-list))
+            (when (not (dogears--equal place current-place))
+              (dogears-go place)
+              (when dogears-message
+                (message "Dogears: %s to %s/%s"
+                         (pcase direction
+                           ('backward "Back")
+                           ('forward "Forward"))
+                         dogears-position (length dogears-list)))))
+        (dogears--update-list-buffer)
+        (user-error "At %s dogeared place"
+                    (pcase direction
+                      ('backward "oldest")
+                      ('forward "newest"))))))
+  (defun dogears-backward-in-buffer ()
+    (interactive)
+    (dogears-move-active-buffer 'backward t))
   (defun dogears-forward-in-buffer ()
     (interactive)
-    (let* ((current-place (dogears--place))
-           (current-buffer (current-buffer))
-           (predicate (lambda (place)
-                        (and (not (dogears--equal place current-place))
-                             (equal (get-buffer (map-elt (cdr place) 'buffer)) current-buffer))))
-           (position (cl-position-if predicate dogears-list :end dogears-position :from-end t)))
-      (when position
-        (setf dogears-position position)
-        (dogears-go (nth position dogears-list))))))
+    (dogears-move-active-buffer 'forward t))
+  (defun dogears-backward-across-buffer ()
+    (interactive)
+    (dogears-move-active-buffer 'backward))
+  (defun dogears-forward-across-buffer ()
+    (interactive)
+    (dogears-move-active-buffer 'forward)))
 ;; ===================dogears======================
 (provide 'setup_packages)
