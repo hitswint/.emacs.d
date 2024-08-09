@@ -1233,14 +1233,13 @@ ORIG is the advised function, which is called with its ARGS."
           (progn
             (setf dogears-position position
                   place (nth position dogears-list))
-            (when (not (dogears--equal place current-place))
-              (dogears-go place)
-              (when dogears-message
-                (message "Dogears: %s to %s/%s"
-                         (pcase direction
-                           ('backward "Back")
-                           ('forward "Forward"))
-                         dogears-position (length dogears-list)))))
+            (dogears-go place)
+            (when dogears-message
+              (message "Dogears: %s to %s/%s"
+                       (pcase direction
+                         ('backward "Back")
+                         ('forward "Forward"))
+                       dogears-position (length dogears-list))))
         (dogears--update-list-buffer)
         (user-error "At %s dogeared place"
                     (pcase direction
