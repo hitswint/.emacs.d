@@ -11,6 +11,7 @@
   :config
   (pyvenv-activate-py3)
   (setq eaf-webengine-default-zoom "1.5"
+        eaf-marker-letters "ASDFGQWERTZXCVB"
         eaf-goto-right-after-close-buffer t)
   (define-key eaf-mode-map* (kbd "M-'") nil)
   (define-key eaf-mode-map* (kbd "M-/") nil)
