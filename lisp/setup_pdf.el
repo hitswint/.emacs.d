@@ -17,7 +17,6 @@
   (define-key pdf-view-mode-map (kbd "C-v") 'pdf-view-scroll-up-or-next-page)
   (define-key pdf-view-mode-map (kbd "C-p") #'(lambda () (interactive) (pdf-view-previous-line-or-previous-page 3)))
   (define-key pdf-view-mode-map (kbd "C-n") #'(lambda () (interactive) (pdf-view-next-line-or-next-page 3)))
-  (define-key pdf-view-mode-map (kbd "M-;") 'swint-open-notes-file-for-pdf)
   (use-package pdf-sync
     :config
     (define-key pdf-sync-minor-mode-map (kbd "C-c C-v") #'(lambda () (interactive) (pdf-sync-backward-search 0 0)))))
@@ -33,8 +32,7 @@
   (define-key doc-view-mode-map (kbd "M-v") 'doc-view-scroll-down-or-previous-page)
   (define-key doc-view-mode-map (kbd "C-v") 'doc-view-scroll-up-or-next-page)
   (define-key doc-view-mode-map (kbd "C-p") #'(lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
-  (define-key doc-view-mode-map (kbd "C-n") #'(lambda () (interactive) (doc-view-next-line-or-next-page 3)))
-  (define-key doc-view-mode-map (kbd "M-;") 'swint-open-notes-file-for-pdf))
+  (define-key doc-view-mode-map (kbd "C-n") #'(lambda () (interactive) (doc-view-next-line-or-next-page 3))))
 ;; ==================doc-view-mode=================
 ;;; pdfgrep
 ;; =================pdfgrep========================

@@ -293,7 +293,6 @@
 (use-package org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands (org-annotate-file-current org-annotate-file)
-  :bind ("M-g :" . org-annotate-file-current)
   :init
   (dolist (hook '(dired-mode-hook pdf-view-mode-hook))
     (add-hook hook (lambda () ()
@@ -315,7 +314,6 @@
 (use-package swint-org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands (swint-org-annotate-file-current swint-org-annotation-storage-file)
-  :bind ("M-g ;" . swint-org-annotate-file-current)
   :init
   (dolist (hook '(dired-mode-hook pdf-view-mode-hook))
     (add-hook hook (lambda () ()
@@ -450,8 +448,12 @@
              swint-noter/interleave
              swint-open-notes-file-for-pdf)
   :init
-  (add-hook 'org-mode-hook (lambda ()
-                             (bind-key "M-g M-;" 'swint-noter/interleave org-mode-map)))
+  (bind-key "M-g M-;" #'(lambda () (interactive) (if (equal major-mode 'org-mode)
+                                                     (swint-noter/interleave)
+                                                   (swint-org-annotate-file-current))))
+  (dolist (hook '(pdf-view-mode-hook doc-view-mode-hook))
+    (add-hook hook (lambda () ()
+                     (local-set-key (kbd "M-;") 'swint-open-notes-file-for-pdf))))
   :config
   (require 'djvu)
   (require 'nov)

@@ -1202,11 +1202,13 @@ ORIG is the advised function, which is called with its ARGS."
 (use-package dogears
   :defer 2
   :init
-  (setq dogears-idle 1)
+  (setq dogears-idle 5)
   :config
   (dogears-mode)
   (smartrep-define-key global-map "M-g"
     '(("/" . dogears-go)
+      ("'" . dogears-list)
+      (";" . dogears-remember)
       ("," . dogears-backward-in-buffer)
       ("." . dogears-forward-in-buffer)
       ("<" . dogears-backward-across-buffer)
@@ -1218,22 +1220,20 @@ ORIG is the advised function, which is called with its ARGS."
     (let* ((current-place (dogears--place))
            (current-buffer (current-buffer))
            (predicate (lambda (place)
-                        (not (or (dogears--equal place current-place)
-                                 (let ((buf (get-buffer (map-elt (cdr place) 'buffer))))
-                                   (or (not buf)
-                                       (xor in-buffer (equal buf current-buffer))))))))
+                        (and (not (dogears--equal place current-place))
+                             (let ((buf (get-buffer (map-elt (cdr place) 'buffer))))
+                               (and (buffer-live-p buf)
+                                    (xor in-buffer (equal buf current-buffer)))))))
            (position (cl-position-if predicate dogears-list
                                      :start (pcase direction
                                               ('backward (1+ dogears-position)))
                                      :end (pcase direction
                                             ('forward dogears-position))
-                                     :from-end (equal 'forward direction)))
-           place)
+                                     :from-end (equal 'forward direction))))
       (if position
           (progn
-            (setf dogears-position position
-                  place (nth position dogears-list))
-            (dogears-go place)
+            (setf dogears-position position)
+            (dogears-go (nth position dogears-list))
             (when dogears-message
               (message "Dogears: %s to %s/%s"
                        (pcase direction
