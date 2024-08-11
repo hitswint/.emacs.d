@@ -7,7 +7,8 @@
          ("M-o a r" . eaf-restart-process)
          ("M-o M-a" . eaf-open-pdf-from-history)
          ("M-o M-w" . eaf-open-browser-with-history)
-         ("M-o M-RET" . eaf-open-pyqterminal))
+         ("M-o M-RET" . eaf-switch-or-open-pyqterminal)
+         ("M-o M-S-<return>" . eaf-open-pyqterminal))
   :config
   (pyvenv-activate-py3)
   (setq eaf-webengine-default-zoom "1.5"
@@ -185,6 +186,14 @@
   (use-package eaf-image-viewer)
   (use-package eaf-pyqterminal
     :config
+    (defun eaf-switch-or-open-pyqterminal ()
+      (interactive)
+      (let* ((predicate (lambda (buf) (equal "pyqterminal"
+                                             (buffer-local-value 'eaf--buffer-app-name buf))))
+             (term-buf (cl-find-if predicate (buffer-list))))
+        (if (buffer-live-p term-buf)
+            (switch-to-buffer term-buf)
+          (call-interactively 'eaf-open-pyqterminal))))
     (eaf-bind-key eaf-send-key-sequence "M-p" eaf-pyqterminal-keybinding)
     (eaf-bind-key eaf-send-key-sequence "M-n" eaf-pyqterminal-keybinding)
     (eaf-bind-key eaf-send-key-sequence "C-x" eaf-pyqterminal-keybinding)

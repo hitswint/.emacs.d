@@ -1223,7 +1223,7 @@ ORIG is the advised function, which is called with its ARGS."
                         (and (not (dogears--equal place current-place))
                              (let ((buf (get-buffer (map-elt (cdr place) 'buffer))))
                                (and (buffer-live-p buf)
-                                    (xor in-buffer (equal buf current-buffer)))))))
+                                    (not (xor in-buffer (equal buf current-buffer))))))))
            (position (cl-position-if predicate dogears-list
                                      :start (pcase direction
                                               ('backward (1+ dogears-position)))
