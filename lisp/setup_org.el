@@ -292,32 +292,13 @@
 ;; 原有org-annotate-file用于全局注释
 (use-package org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
-  :commands (org-annotate-file-current org-annotate-file)
-  :init
-  (dolist (hook '(dired-mode-hook pdf-view-mode-hook))
-    (add-hook hook (lambda () ()
-                     (local-set-key (kbd ":") 'org-annotate-file-current))))
+  :commands org-annotate-file
   :config
-  (defun org-annotate-file-current ()
-    (interactive)
-    (cond
-     ((equal major-mode 'dired-mode)
-      (org-annotate-file (abbreviate-file-name (dired-get-filename))))
-     ((equal major-mode 'pdf-view-mode)
-      (dired-jump-other-window)
-      (org-annotate-file (abbreviate-file-name (dired-get-filename))))
-     (t
-      (switch-to-buffer-other-window (current-buffer))
-      (org-annotate-file (abbreviate-file-name (buffer-file-name))))))
   (setq org-annotate-file-storage-file "~/org/annotated/annotated.org"))
 ;; 新建swint-org-annotate-file.el用于局部注释
 (use-package swint-org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
-  :commands (swint-org-annotate-file-current swint-org-annotation-storage-file)
-  :init
-  (dolist (hook '(dired-mode-hook pdf-view-mode-hook))
-    (add-hook hook (lambda () ()
-                     (local-set-key (kbd ";") 'swint-org-annotate-file-current)))))
+  :commands (swint-org-annotate-file swint-org-annotation-storage-file))
 ;; ===============org-annotate==================
 ;;; outline
 ;; ==================outline====================
@@ -412,22 +393,47 @@
 ;; =================interleave==================
 (use-package interleave
   :commands (interleave-mode
-             swint-dired-interleave
+             swint-annotate-interleave
              interleave-open-notes-file-for-pdf
              interleave--find-pdf-path)
   :bind (:map dired-mode-map
-              ("M-;" . swint-dired-interleave))
+              ("M-;" . swint-annotate-interleave))
   :config
   (setq interleave-disable-narrowing t
         interleave-insert-relative-name nil)
-  (defun swint-dired-interleave ()
+  (defun swint-annotate-interleave ()
     (interactive)
-    (let* ((pdf-file (dired-get-file-for-visit))
-           (note-file (concat "~/org/interleave_notes/" (file-name-base pdf-file) ".org")))
-      (if (file-exists-p note-file)
-          (find-file note-file)
-        (find-file pdf-file)
-        (interleave-open-notes-file-for-pdf))))
+    (let* ((pdf-file (or (dired-get-filename nil t)
+                         (buffer-file-name)
+                         eaf--buffer-url))
+           (files-status (dired-k--parse-status))
+           (existed-note (when files-status (gethash (file-name-nondirectory pdf-file) files-status)))
+           (new-note (unless existed-note
+                       (message (format "[%s]ocally or [%s]lobally or [%s]nterleave or [%s]af-interleave"
+                                        (propertize "l" 'face 'font-lock-warning-face)
+                                        (propertize "g" 'face 'font-lock-warning-face)
+                                        (propertize "i" 'face 'font-lock-warning-face)
+                                        (propertize "e" 'face 'font-lock-warning-face)))
+                       (downcase (read-char-exclusive)))))
+      (cond ((or (equal existed-note 'annotated-locally) (equal new-note ?l))
+             (swint-org-annotate-file pdf-file))
+            ((or (equal existed-note 'annotated-globally) (equal new-note ?g))
+             (org-annotate-file (abbreviate-file-name pdf-file)))
+            ((equal existed-note 'interleaved)
+             (find-file (concat "~/org/interleave_notes/" (file-name-base pdf-file) ".org")))
+            ((equal new-note ?i)
+             (with-current-buffer (find-file-noselect pdf-file)
+               (interleave-open-notes-file-for-pdf)))
+            ((equal new-note ?e)
+             (eaf-open pdf-file)
+             (while (not (eaf--get-eaf-buffers))
+               (sit-for 0.1))
+             (with-current-buffer (car (eaf--get-eaf-buffers))
+               (eaf-interleave-open-notes-file)))
+            (t (user-error "Quit")))))
+  (advice-add 'interleave--open-file :around #'(lambda (fn split-window) (cl-letf (((symbol-function 'find-file)
+                                                                                    (advice--cd*r (symbol-function #'find-file))))
+                                                                           (funcall fn split-window))))
   (define-key interleave-mode-map (kbd "M-.") nil)
   (define-key interleave-mode-map (kbd "M-p") nil)
   (define-key interleave-mode-map (kbd "M-n") nil)
@@ -450,14 +456,16 @@
   :init
   (bind-key "M-g M-;" #'(lambda () (interactive) (if (equal major-mode 'org-mode)
                                                      (swint-noter/interleave)
-                                                   (swint-org-annotate-file-current))))
+                                                   (swint-annotate-interleave))))
   (dolist (hook '(pdf-view-mode-hook doc-view-mode-hook))
     (add-hook hook (lambda () ()
                      (local-set-key (kbd "M-;") 'swint-open-notes-file-for-pdf))))
   :config
   (require 'djvu)
   (require 'nov)
-  (setq org-noter-always-create-frame nil)
+  (setq org-noter-always-create-frame nil
+        org-noter-disable-narrowing t
+        org-noter-use-indirect-buffer nil)
   (defun swint-noter/interleave ()
     (interactive)
     (let* ((key (org-entry-get nil "Custom_ID"))
