@@ -22,6 +22,7 @@
   (define-key eaf-mode-map* (kbd "C-c g") 'eaf-get-path-or-url)
   (define-key eaf-mode-map* (kbd "C-c a") 'eaf-share-path-or-url)
   (define-key eaf-mode-map* (kbd "C-c p") 'eaf-toggle-proxy)
+  (define-key eaf-mode-map* (kbd "C-c o") 'eaf-open-internal)
   (define-key eaf-mode-map* (kbd "M-P") 'eaf-goto-previous-app)
   (define-key eaf-mode-map* (kbd "M-N") 'eaf-goto-next-app)
   (defun eaf-goto-previous-app ()
@@ -95,6 +96,10 @@
             eaf-proxy-port "7890"
             eaf-proxy-type "socks5")
       (eaf-restart-process)))
+  (defun eaf-open-internal ()
+    (interactive)
+    (let ((path-or-url (eaf-get-path-or-url)))
+      (find-file-other-window path-or-url)))
   (advice-add 'eaf-toggle-proxy :around #'eaf-toggle-proxy/around)
   (use-package eaf-browser
     :config
