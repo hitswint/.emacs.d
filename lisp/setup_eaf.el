@@ -22,6 +22,7 @@
   (define-key eaf-mode-map* (kbd "C-c g") 'eaf-get-path-or-url)
   (define-key eaf-mode-map* (kbd "C-c a") 'eaf-share-path-or-url)
   (define-key eaf-mode-map* (kbd "C-c p") 'eaf-toggle-proxy)
+  (define-key eaf-mode-map* (kbd "C-c j") 'eaf-open-external)
   (define-key eaf-mode-map* (kbd "C-c o") 'eaf-open-internal)
   (define-key eaf-mode-map* (kbd "M-P") 'eaf-goto-previous-app)
   (define-key eaf-mode-map* (kbd "M-N") 'eaf-goto-next-app)
