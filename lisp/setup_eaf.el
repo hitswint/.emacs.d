@@ -189,7 +189,13 @@
     (eaf-bind-key eaf-pdf-extract-page-text "M-t" eaf-pdf-viewer-keybinding)
     (eaf-bind-key undo_annot_action "C-/" eaf-pdf-viewer-keybinding)
     (eaf-bind-key redo_annot_action "C-M-/" eaf-pdf-viewer-keybinding))
-  (use-package eaf-image-viewer)
+  (use-package eaf-image-viewer
+    :config
+    (eaf-bind-key load_prev_image "S-SPC" eaf-image-viewer-keybinding)
+    (eaf-bind-key load_prev_image "<backspace>" eaf-image-viewer-keybinding)
+    (eaf-bind-key load_prev_image "C-p" eaf-image-viewer-keybinding)
+    (eaf-bind-key load_next_image "SPC" eaf-image-viewer-keybinding)
+    (eaf-bind-key load_next_image "C-n" eaf-image-viewer-keybinding))
   (use-package eaf-pyqterminal
     :config
     (defun eaf-switch-or-open-pyqterminal ()
