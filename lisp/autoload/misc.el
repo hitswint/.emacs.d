@@ -73,9 +73,10 @@
              (eaf-call-sync "execute_function" eaf--buffer-id "get_select")
            (execute-kbd-macro (kbd "M-w"))
            (sit-for 1)
-           (current-kill 0)))
+           (replace-regexp-in-string "\n" " " (current-kill 0))))
         (t (if mark-active
-               (let ((words-at-point (buffer-substring-no-properties (region-beginning) (region-end))))
+               (let ((words-at-point (replace-regexp-in-string
+                                      "\n" " " (buffer-substring-no-properties (region-beginning) (region-end)))))
                  (deactivate-mark)
                  words-at-point)
              (let ((words-at-point (if (equal (point) (point-at-eol))
