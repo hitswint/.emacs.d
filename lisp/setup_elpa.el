@@ -269,7 +269,10 @@ Missing packages are installed automatically."
       ("h" . mark-paragraph)
       ("k" . kill-sentence)))
   (smartrep-define-key global-map "M-g"
-    '(("d" . duplicate-dwim))))
+    '(("d" . duplicate-dwim)))
+  (smartrep-define-key global-map "M-g"
+    '(("p" . previous-error)
+      ("n" . next-error))))
 ;; ===================smartrep======================
 ;;; gcmh
 ;; =====================gcmh========================

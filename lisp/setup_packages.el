@@ -916,18 +916,19 @@
                            (when (re-search-forward "File:\\ \\(.*\\)" (line-end-position) t)
                              (match-string-no-properties 1)))
                          (save-excursion (when (re-search-backward "File:\\ \\(.*\\)" nil t)
-                                           (match-string-no-properties 1))))))
+                                           (match-string-no-properties 1)))))
+          (page (save-excursion
+                  (goto-char (line-beginning-position))
+                  (re-search-forward "Page\\ \\([[:digit:]]+\\):" nil t)
+                  (match-string-no-properties 1))))
       (if (string= (ignore-errors (downcase (file-name-extension file-name))) "pdf")
-          (start-process "Shell" nil shell-file-name shell-command-switch
-                         (concat "qpdfview --unique --search \"" (rg-search-pattern rg-cur-search)
-                                 "\" \""
-                                 file-name "#" (save-excursion
-                                                 (goto-char (line-beginning-position))
-                                                 (re-search-forward "Page\\ \\([[:digit:]]+\\):" nil t)
-                                                 (match-string-no-properties 1))
-                                 "\""))
-        (dired-async-shell-command
-         (expand-file-name file-name))))))
+          (if (string= (shell-command-to-string "pgrep -x qpdfview") "")
+              (eaf-open-pdf-with-page (expand-file-name file-name) page)
+            (start-process "Shell" nil shell-file-name shell-command-switch
+                           (concat "qpdfview --unique --search \"" (rg-search-pattern rg-cur-search)
+                                   "\" \"" file-name "#" page
+                                   "\"")))
+        (dired-async-shell-command (expand-file-name file-name))))))
 ;; ===================rg===========================
 ;;; awesome-tab
 ;; ===============awesome-tab======================

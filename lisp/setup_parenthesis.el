@@ -111,23 +111,22 @@
 ;; ==============paredit-everything=============
 ;;; Keybindings
 ;; =================Keybindings=================
-(global-set-key (kbd "(") 'insert-pair-paren)
-(global-set-key (kbd "[") 'insert-pair-bracket)
-(global-set-key (kbd "{") 'insert-pair-brace)
-(global-set-key (kbd "<") 'insert-pair-angle-bracket)
-(global-set-key (kbd "《") 'insert-pair-double-angle-bracket)
-(global-set-key (kbd "\"") 'insert-pair-double-straight-quote)
-(global-set-key (kbd "'") 'insert-pair-single-straight-quote)
-(global-set-key (kbd "“") 'insert-pair-double-curly-quote)
-(global-set-key (kbd "”") 'insert-pair-double-curly-quote)
-(global-set-key (kbd "‘") 'insert-pair-single-curly-quote)
-(global-set-key (kbd "’") 'insert-pair-single-curly-quote)
-(add-hook 'LaTeX-mode-hook
-          #'(lambda ()
-              (define-key LaTeX-mode-map (kbd "$") 'insert-pair-math-bracket)))
-(add-hook 'org-mode-hook
-          #'(lambda ()
-              (define-key org-mode-map (kbd "$") 'insert-pair-math-bracket)))
+(dolist (hook '(prog-mode-hook text-mode-hook))
+  (add-hook hook (lambda ()
+                   (local-set-key (kbd "(") 'insert-pair-paren)
+                   (local-set-key (kbd "[") 'insert-pair-bracket)
+                   (local-set-key (kbd "{") 'insert-pair-brace)
+                   (local-set-key (kbd "<") 'insert-pair-angle-bracket)
+                   (local-set-key (kbd "《") 'insert-pair-double-angle-bracket)
+                   (local-set-key (kbd "\"") 'insert-pair-double-straight-quote)
+                   (local-set-key (kbd "'") 'insert-pair-single-straight-quote)
+                   (local-set-key (kbd "“") 'insert-pair-double-curly-quote)
+                   (local-set-key (kbd "”") 'insert-pair-double-curly-quote)
+                   (local-set-key (kbd "‘") 'insert-pair-single-curly-quote)
+                   (local-set-key (kbd "’") 'insert-pair-single-curly-quote))))
+(dolist (hook '(LaTeX-mode-hook org-mode-hook))
+  (add-hook hook (lambda ()
+                   (local-set-key (kbd "$") 'insert-pair-math-bracket))))
 ;; =================Keybindings=================
 ;;; wrap-region
 ;; ================wrap-region==================
