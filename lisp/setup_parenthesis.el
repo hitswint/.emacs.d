@@ -82,6 +82,7 @@
   :init
   (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
   (add-hook 'text-mode-hook 'paredit-everywhere-mode)
+  (add-hook 'comint-mode-hook 'paredit-everywhere-mode)
   :config
   (define-key paredit-everywhere-mode-map (kbd "M-s") nil)
   (define-key paredit-everywhere-mode-map (kbd "M-r") nil)
@@ -111,7 +112,7 @@
 ;; ==============paredit-everything=============
 ;;; Keybindings
 ;; =================Keybindings=================
-(dolist (hook '(prog-mode-hook text-mode-hook))
+(dolist (hook '(prog-mode-hook text-mode-hook comint-mode-hook))
   (add-hook hook (lambda ()
                    (local-set-key (kbd "(") 'insert-pair-paren)
                    (local-set-key (kbd "[") 'insert-pair-bracket)
@@ -168,6 +169,7 @@
   :init
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'text-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'comint-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'dired-mode-hook 'rainbow-delimiters-mode)
   ;; 在org-mode中打开rainbow会让org本身的highlight失效
   (add-hook 'org-mode-hook 'rainbow-delimiters-mode-disable)
@@ -191,6 +193,7 @@
   :init
   (add-hook 'prog-mode-hook 'highlight-parentheses-mode)
   (add-hook 'text-mode-hook 'highlight-parentheses-mode)
+  (add-hook 'comint-mode-hook 'highlight-parentheses-mode)
   :config
   ;; (global-highlight-parentheses-mode)
   (set-face-attribute 'highlight-parentheses-highlight nil :weight 'bold :strike-through t)
@@ -203,6 +206,7 @@
   :init
   (add-hook 'prog-mode-hook 'show-paren-local-mode)
   (add-hook 'text-mode-hook 'show-paren-local-mode)
+  (add-hook 'comint-mode-hook 'show-paren-local-mode)
   :config
   (show-paren-mode -1))
 ;; ============highlight-parentheses============
