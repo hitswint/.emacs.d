@@ -921,14 +921,7 @@
                   (goto-char (line-beginning-position))
                   (re-search-forward "Page\\ \\([[:digit:]]+\\):" nil t)
                   (match-string-no-properties 1))))
-      (if (string= (ignore-errors (downcase (file-name-extension file-name))) "pdf")
-          (if (string= (shell-command-to-string "pgrep -x qpdfview") "")
-              (eaf-open-pdf-with-page (expand-file-name file-name) page)
-            (start-process "Shell" nil shell-file-name shell-command-switch
-                           (concat "qpdfview --unique --search \"" (rg-search-pattern rg-cur-search)
-                                   "\" \"" file-name "#" page
-                                   "\"")))
-        (dired-async-shell-command (expand-file-name file-name))))))
+      (helm-ag-open-file-action file-name page (rg-search-pattern rg-cur-search)))))
 ;; ===================rg===========================
 ;;; awesome-tab
 ;; ===============awesome-tab======================

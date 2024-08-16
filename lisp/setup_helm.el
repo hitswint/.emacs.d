@@ -743,20 +743,95 @@
   :commands (swint-helm-ag
              helm-do-ag
              helm-do-ag-this-file
-             helm-do-ag-buffers)
+             helm-do-ag-buffers
+             swint-helm-do-ag-this-file
+             swint-helm-do-ag-buffers
+             helm-ag-open-file-action)
   :init
   (bind-key "C-x g" 'swint-helm-ag)
-  (bind-key "C-x G" #'(lambda () (interactive)
-                        (let ((helm-ag-base-command "rg --color never --no-heading --search-zip"))
+  (bind-key "C-x G" #'(lambda () (interactive) ;; rg --color never --no-heading --search-zip
+                        (let ((helm-ag-base-command "rga --color never --no-heading --line-number"))
                           (call-interactively 'swint-helm-ag))))
-  (bind-key "M-s g" #'(lambda () (interactive) (helm-do-ag-this-file (swint-get-current-thing))))
-  (bind-key "M-s G" #'(lambda () (interactive) (helm-do-ag-buffers (swint-get-current-thing))))
+  (bind-key "M-s g" 'swint-helm-do-ag-this-file)
+  (bind-key "M-s G" 'swint-helm-do-ag-buffers)
   (add-hook 'isearch-mode-hook (lambda ()
                                  (bind-key "M-s g" #'(lambda () (interactive) (helm-do-ag-this-file (isearch-current-thing)))
                                            isearch-mode-map)
                                  (bind-key "M-s G" #'(lambda () (interactive) (helm-do-ag-buffers (isearch-current-thing)))
                                            isearch-mode-map)))
   :config
+  (defun swint-helm-do-ag-this-file ()
+    (interactive)
+    (let ((current-file (or (buffer-file-name)
+                            (bound-and-true-p eaf--buffer-url)))
+          (helm-ag-base-command "rga --color never --no-heading --line-number"))
+      (helm-aif current-file
+          (helm-do-ag default-directory (list current-file) (swint-get-current-thing))
+        (error "Error: This buffer is not visited file"))))
+  (defun swint-helm-do-ag-buffers ()
+    (interactive)
+    (let ((helm-ag-base-command "rga --color never --no-heading --line-number"))
+      (if (and (eq major-mode 'eaf-mode)
+               (let ((eaf-pdf-bufs (cl-remove-if-not (lambda (buf)
+                                                       (equal (buffer-local-value 'eaf--buffer-app-name buf) "pdf-viewer"))
+                                                     (eaf--get-eaf-buffers))))
+                 (= (length eaf-pdf-bufs) 1)))
+          (swint-helm-do-ag-this-file)
+        (helm-do-ag-buffers (swint-get-current-thing)))))
+  (defun eaf-open-pdf-with-page (file-name page)
+    (if (buffer-live-p (get-buffer "*eaf*"))
+        (let ((buffer-existed (eaf-pdf--find-buffer file-name)))
+          (unless (eq helm-current-buffer buffer-existed)
+            (switch-to-buffer-other-window nil))
+          (eaf-open file-name)
+          (with-current-buffer (eaf-pdf--find-buffer file-name)
+            (unless buffer-existed
+              (sit-for 1))
+            (eaf-call-sync "execute_function_with_args" eaf--buffer-id "jump_to_page_with_num" (format "%s" page))))
+      (message "eaf process is not alive.")))
+  (defun helm-ag-open-file-action (file-name page &optional search-string)
+    (if (string= (ignore-errors (downcase (file-name-extension file-name))) "pdf")
+        (if (string= (shell-command-to-string "pgrep -x qpdfview") "")
+            (eaf-open-pdf-with-page (expand-file-name file-name) page)
+          (start-process "Shell" nil shell-file-name shell-command-switch
+                         (concat "qpdfview --unique" (when search-string
+                                                       (concat " --search \"" search-string "\""))
+                                 " \"" file-name "#" page "\"")))
+      (dired-async-shell-command (expand-file-name file-name))))
+  (defun helm-ag-open-file-externally (candidates)
+    (interactive)
+    (let* ((candidate (car candidates))
+           (this-file (unless (memq 'pt helm-ag--command-features)
+                        (helm-ag--search-this-file-p)))
+           (file-line (helm-grep-split-line candidate))
+           (filename (or this-file (cl-first file-line) candidate))
+           (line (cond ((string= (ignore-errors (downcase (file-name-extension filename))) "pdf")
+                        (let ((page-string (split-string candidate ":")))
+                          (cadr (split-string (if this-file
+                                                  (cl-second page-string)
+                                                (cl-third page-string))))))
+                       (this-file
+                        (cl-first (split-string candidate ":")))
+                       (t
+                        (cl-second file-line))))
+           (default-directory (or helm-ag--default-directory
+                                  helm-ag--last-default-directory
+                                  default-directory)))
+      (setq helm-ag--last-default-directory default-directory)
+      (helm-ag-open-file-action filename line helm-ag--last-query)))
+  (defun helm-ag--file-visited-buffers ()
+    (let* ((current-mode (buffer-mode helm-current-buffer))
+           (bufs (cl-loop for buf in (buffer-list)
+                          when (if (eq current-mode 'eaf-mode)
+                                   (when (equal (buffer-local-value 'eaf--buffer-app-name buf) "pdf-viewer")
+                                     (buffer-local-value 'eaf--buffer-url buf))
+                                 (buffer-file-name buf))
+                          collect it)))
+      (if (not helm-ag-ignore-buffer-patterns)
+          bufs
+        (cl-loop for buf in bufs
+                 when (helm-ag--search-buffer-p buf)
+                 collect buf))))
   (defun swint-helm-ag (&optional dir)
     (interactive)
     (let ((default-directory (or dir (helm-current-directory))))
@@ -779,6 +854,8 @@
   (define-key helm-ag-map (kbd "C-M-p") 'helm-ag--previous-file)
   (define-key helm-ag-map (kbd "C-M-n") 'helm-ag--next-file)
   (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)
+  (define-key helm-ag-map (kbd "C-j") #'(lambda () (interactive) (with-helm-alive-p
+                                                                   (helm-run-after-exit 'helm-ag-open-file-externally (helm-marked-candidates)))))
   (define-key helm-ag-map (kbd "C-h") 'helm-ag--up-one-level)
   (define-key helm-ag-map (kbd "C-l") 'helm-execute-persistent-action)
   (define-key helm-do-ag-map (kbd "C-h") 'helm-ag--do-ag-up-one-level)
