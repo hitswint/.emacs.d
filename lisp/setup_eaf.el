@@ -124,7 +124,14 @@
     (eaf-bind-key recover_prev_close_page "C-M-q" eaf-browser-keybinding)
     (eaf-bind-key edit_url "C-l" eaf-browser-keybinding)
     (eaf-bind-key insert_or_view_source "s" eaf-browser-keybinding)
-    (eaf-bind-key insert_or_select_text "v" eaf-browser-keybinding))
+    (eaf-bind-key insert_or_select_text "v" eaf-browser-keybinding)
+    (add-hook 'eaf-browser-hook (lambda ()
+                                  (let ((map (current-local-map)))
+                                    (define-key map (kbd "g") nil)
+                                    ;; 命令必须已使用eaf-bind-key绑定，即使用eaf--make-py-proxy-function定义
+                                    (key-chord-define map "gg" 'eaf-py-proxy-scroll_to_begin)
+                                    (key-chord-define map "gf" 'eaf-py-proxy-open_link_background_buffer)
+                                    (key-chord-define map "af" 'eaf-py-proxy-open_link_new_buffer)))))
   (use-package eaf-pdf-viewer
     :config
     (setq eaf-pdf-dark-mode "ignore"
