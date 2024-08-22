@@ -15,9 +15,9 @@
   :config
   (require 'yasnippet)
   (yas-global-mode 1)
-  (setq lsp-bridge-c-lsp-server "ccls") ;clangd
-  (setq lsp-bridge-python-lsp-server "pyright")
-  (setq lsp-bridge-python-multi-lsp-server "pyright-background-analysis_ruff")
+  (setq lsp-bridge-c-lsp-server "ccls")              ;clangd
+  (setq lsp-bridge-python-lsp-server "basedpyright")  ;pyright
+  (setq lsp-bridge-python-multi-lsp-server "basedpyright_ruff")
   (setq lsp-bridge-complete-manually nil) ;lsp-bridge-popup-complete-menu
   (setq acm-enable-quick-access nil)
   (setq acm-quick-access-use-number-select nil)

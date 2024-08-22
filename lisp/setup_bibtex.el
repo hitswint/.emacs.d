@@ -27,15 +27,11 @@
             (completing-read "Choose: " str-list)))
       (funcall 'upcase-initials str)))
   (defun bibtex-autokey-get-title/around (orig-fun &rest args)
-    (let ((case-fold-search t)
-          (titlestring
-           (bibtex-autokey-get-field "title"
-                                     bibtex-autokey-titleword-change-strings)))
-      (if (string-match-p "\\cC" titlestring)
-          (setq bibtex-autokey-titleword-ignore nil)
-        (setq bibtex-autokey-titleword-ignore
-              '("A" "An" "On" "The" "Eine?" "Der" "Die" "Das"
-                "[^[:upper:]].*" ".*[^[:upper:][:lower:]0-9].*")))
+    (let* ((case-fold-search t)
+           (titlestring (bibtex-autokey-get-field "title"
+                                                  bibtex-autokey-titleword-change-strings))
+           (bibtex-autokey-titleword-ignore (unless (string-match-p "\\cC" titlestring)
+                                              bibtex-autokey-titleword-ignore)))
       (apply orig-fun args)))
   (defun bibtex-autokey-add_pages (key)
     (concat key "_" (bibtex-autokey-get-field "pages")))
