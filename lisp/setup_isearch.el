@@ -33,9 +33,27 @@
     :custom
     (search-upper-case t))
   (require 'anzu)
-  (bind-key "C-t" #'(lambda () (interactive) (isearch-yank-string (swint-get-current-thing))) isearch-mode-map)
+  (bind-key "C-t" 'isearch-yank-current isearch-mode-map)
   (bind-key "C-M-;" 'isearch-mark-current isearch-mode-map)
   (add-hook 'isearch-mode-end-hook (lambda () (setq pinyin-search-activated nil)))
+  (defun isearch-yank-current ()
+    (interactive)
+    (let* ((current-match (if isearch-other-end
+                              (if (< isearch-other-end (point))
+                                  (buffer-substring-no-properties isearch-other-end (point))
+                                (buffer-substring-no-properties (point) isearch-other-end))
+                            ""))
+           (current-thing (swint-get-current-thing))
+           (isearch-string-new (if (string= current-match isearch-string)
+                                   (if (string-match-p (regexp-quote isearch-string) current-thing)
+                                       current-thing
+                                     (if isearch-forward
+                                         (concat isearch-string current-thing)
+                                       (concat current-thing isearch-string)))
+                                 current-match)))
+      (unless (string-empty-p isearch-string)
+        (isearch-del-char (length isearch-string)))
+      (isearch-yank-string isearch-string-new)))
   (defun isearch-current-thing ()
     (prog1 (if isearch-regexp
                isearch-string
