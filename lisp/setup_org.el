@@ -403,8 +403,6 @@
              swint-annotate-interleave
              interleave-open-notes-file-for-pdf
              interleave--find-pdf-path)
-  :bind (:map dired-mode-map
-              ("M-;" . swint-annotate-interleave))
   :config
   (setq interleave-disable-narrowing t
         interleave-insert-relative-name nil)
@@ -461,12 +459,12 @@
              swint-noter/interleave
              swint-open-notes-file-for-pdf)
   :init
-  (bind-key "M-g M-;" #'(lambda () (interactive) (if (equal major-mode 'org-mode)
-                                                     (swint-noter/interleave)
-                                                   (swint-annotate-interleave))))
+  (bind-key "C-M-'" #'(lambda () (interactive) (if (equal major-mode 'org-mode)
+                                                   (swint-noter/interleave)
+                                                 (swint-annotate-interleave))))
   (dolist (hook '(pdf-view-mode-hook doc-view-mode-hook))
     (add-hook hook (lambda () ()
-                     (local-set-key (kbd "M-;") 'swint-open-notes-file-for-pdf))))
+                     (local-set-key (kbd "C-M-'") 'swint-open-notes-file-for-pdf))))
   :config
   (require 'djvu)
   (require 'nov)

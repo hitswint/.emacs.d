@@ -109,8 +109,8 @@
                                                                (helm-run-after-exit 'helm-bibtex-open-pdf-externally (helm-marked-candidates)))))
       (define-key map (kbd "C-o") #'(lambda () (interactive) (with-helm-alive-p
                                                                (helm-run-after-exit 'helm-bibtex-open-pdf (helm-marked-candidates)))))
-      (define-key map (kbd "M-;") #'(lambda () (interactive) (with-helm-alive-p
-                                                               (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
+      (define-key map (kbd "C-M-'") #'(lambda () (interactive) (with-helm-alive-p
+                                                                 (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
       (define-key map (kbd "RET") #'(lambda () (interactive) (with-helm-alive-p
                                                                (helm-run-after-exit 'helm-bibtex-insert-citation (helm-marked-candidates)))))
       map)

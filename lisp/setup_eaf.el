@@ -248,7 +248,7 @@
   (define-key eaf-interleave-app-mode-map (kbd "C-M-o") 'eaf-interleave-sync-current-note)
   (define-key eaf-interleave-app-mode-map (kbd "C-M-n") 'eaf-interleave-sync-next-note)
   (define-key eaf-interleave-app-mode-map (kbd "i") 'eaf-interleave-add-note)
-  (define-key eaf-interleave-app-mode-map (kbd "M-;") 'eaf-interleave-open-notes-file)
+  (define-key eaf-interleave-app-mode-map (kbd "C-M-'") 'eaf-interleave-open-notes-file)
   (define-key eaf-interleave-app-mode-map (kbd "q") 'eaf-interleave-quit))
 (use-package eaf-all-the-icons
   :load-path "repos/emacs-application-framework/extension/"

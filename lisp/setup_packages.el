@@ -447,16 +447,28 @@
 ;; =======================bm=======================
 (use-package bm
   :commands (bm-toggle
+             bm-remove-all-current-buffer
              bm-previous
-             bm-next)
+             bm-next
+             bm-last-in-previous-buffer
+             bm-first-in-next-buffer
+             bm-show
+             bm-show-all)
   :init
-  (smartrep-define-key global-map "M-s"
-    '((";" . bm-toggle)
-      ("," . bm-previous)
-      ("." . bm-next)))
+  (smartrep-define-key global-map "M-g"
+    '(("M-;" . bm-toggle)
+      ("M-:" . bm-remove-all-current-buffer)
+      ("M-," . bm-previous)
+      ("M-." . bm-next)
+      ("M-<" . bm-last-in-previous-buffer)
+      ("M->" . bm-first-in-next-buffer)
+      ("M-/" . bm-show)
+      ("M-?" . bm-show-all)))
   (setq bm-restore-repository-on-load t)
   :config
   (setq-default bm-buffer-persistence t)
+  (setq bm-cycle-all-buffers nil
+        bm-highlight-style 'bm-highlight-only-fringe)
   (add-hook 'find-file-hook 'bm-buffer-restore)
   (add-hook 'kill-buffer-hook 'bm-buffer-save)
   (add-hook 'kill-emacs-hook #'(lambda ()
@@ -464,14 +476,15 @@
                                  (bm-repository-save)))
   (add-hook 'after-save-hook 'bm-buffer-save)
   (add-hook 'after-revert-hook 'bm-buffer-restore)
-  (setq bm-cycle-all-buffers t)
-  (setq bm-highlight-style 'bm-highlight-only-fringe)
   (bm-buffer-restore-all))
 ;; =======================bm=======================
 ;;; helm-bm
 ;; ====================helm-bm=====================
 (use-package helm-bm
-  :bind ("M-s /" . helm-bm)
+  :commands helm-bm
+  :init
+  (bind-key "M-g M-'" 'helm-bm)
+  (bind-key "M-g M-\"" #'(lambda () (interactive) (let ((bm-cycle-all-buffers t)) (call-interactively 'helm-bm))))
   :config
   (advice-add 'helm-bm-action-switch-to-buffer :before #'(lambda (candidate)
                                                            (let ((buf (overlay-buffer candidate)))
@@ -589,10 +602,11 @@
              highlight-symbol-at-point
              highlight-symbol-get-symbol)
   :init
-  (smartrep-define-key global-map "C-x"
+  (smartrep-define-key global-map "M-s"
     '(("," . highlight-symbol-prev)
       ("." . highlight-symbol-next)
-      (";" . highlight-symbol-at-point)))
+      (";" . highlight-symbol-at-point)
+      (":" . highlight-symbol-remove-all)))
   :config
   (setq highlight-symbol-foreground-color "gray30"))
 ;; ================highlight-symbol================
@@ -618,7 +632,7 @@
   (add-to-list 'ahs-modes 'graphviz-dot-mode)
   (add-to-list 'ahs-modes 'arduino-mode)
   ;; C-u for whole buffer.
-  (define-key auto-highlight-symbol-mode-map (kbd "C-x /") 'ahs-edit-mode)
+  (define-key auto-highlight-symbol-mode-map (kbd "M-s /") 'ahs-edit-mode)
   (define-key auto-highlight-symbol-mode-map (kbd "M-<left>") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "M-<right>") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "M-S-<left>") nil)
@@ -635,9 +649,9 @@
              dumb-jump-quick-look)
   :init
   (smartrep-define-key global-map "C-x"
-    '(("M-," . dumb-jump-go)
-      ("M-." . dumb-jump-back)
-      ("M-/" . dumb-jump-quick-look))))
+    '(("," . dumb-jump-go)
+      ("." . dumb-jump-back)
+      ("/" . dumb-jump-quick-look))))
 ;; ==================dumb-jump=====================
 ;;; diff-hl
 ;; ===================diff-hl======================
@@ -1200,8 +1214,8 @@ ORIG is the advised function, which is called with its ARGS."
   :config
   (dogears-mode)
   (smartrep-define-key global-map "M-g"
-    '(("/" . dogears-go)
-      ("'" . dogears-list)
+    '(("'" . dogears-go)
+      ("/" . dogears-list)
       (";" . dogears-remember)
       ("," . dogears-backward-in-buffer)
       ("." . dogears-forward-in-buffer)
