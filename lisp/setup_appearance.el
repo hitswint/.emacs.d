@@ -46,6 +46,8 @@
 (defcustom ml/directory-truncation-string (if (char-displayable-p ?…) "…/" ".../")
   "String used when truncating part of the file path."
   :type 'string)
+(defface ml/inactive-foreground-bold '((t :foreground "#bbbbbc" :weight bold)) "")
+(defface ml/inactive-foreground-normal '((t :foreground "#bbbbbc" :weight normal)) "")
 (defun ml/do-shorten-directory (dir total-max-length)
   "Show up to TOTAL-MAX-LENGTH characters of a directory name DIR."
   (let ((buffer-name-length (string-width (buffer-name))))
@@ -86,7 +88,7 @@
                                              (if dired-directory
                                                  'dired-directory
                                                'mode-line-buffer-id)
-                                           '(:inherit mode-line-inactive :foreground "white" :weight bold))))
+                                           '(:inherit ml/inactive-foreground-bold :foreground "white"))))
           (cdr mode-line-buffer-identification))))
 (defun ml/all-the-icons-dired--icon (file current-window-p)
   (if (file-directory-p file)
@@ -95,12 +97,12 @@
               `(:v-adjust ,all-the-icons-dired-v-adjust)
               `(:face ,(if current-window-p
                            'all-the-icons-dired-dir-face
-                         'mode-line-inactive))))
+                         'ml/inactive-foreground-normal))))
     (apply 'all-the-icons-icon-for-file file
            (append
             `(:v-adjust ,all-the-icons-dired-v-adjust)
             (unless current-window-p
-              `(:face mode-line-inactive))))))
+              `(:face ml/inactive-foreground-normal))))))
 ;; ======mode-line-buffer-identification======
 ;;;; mode-line-modified
 ;; ===========mode-line-modified==============

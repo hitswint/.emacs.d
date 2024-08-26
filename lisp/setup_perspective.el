@@ -48,7 +48,7 @@
       (if (mode-line-window-selected-p)
           persp-curr-string
         (mapcar (lambda (persp) (if (and (stringp persp) (not (string-empty-p persp)))
-                                    (propertize persp 'face '(:inherit mode-line-inactive :weight bold))
+                                    (propertize persp 'face 'ml/inactive-foreground-bold)
                                   persp))
                 persp-curr-string))))
   (defun persp-activate (persp)
