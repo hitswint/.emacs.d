@@ -749,8 +749,10 @@
              helm-ag-open-file-action)
   :init
   (bind-key "C-x g" 'swint-helm-ag)
-  (bind-key "C-x G" #'(lambda () (interactive) ;; rg --color never --no-heading --search-zip
-                        (let ((helm-ag-base-command "rga --color never --no-heading --line-number"))
+  (bind-key "C-x G" #'(lambda () (interactive)
+                        (let ((helm-ag-base-command (if (directory-files-recursively (helm-current-directory) "\\.gz$")
+                                                        "rg --color never --no-heading --search-zip"
+                                                      "rga --color never --no-heading --line-number")))
                           (call-interactively 'swint-helm-ag))))
   (bind-key "M-s g" 'swint-helm-do-ag-this-file)
   (bind-key "M-s G" 'swint-helm-do-ag-buffers)

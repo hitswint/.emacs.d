@@ -1,7 +1,7 @@
 ;;; Projectile
 ;; ==================Projectile=================
 (use-package projectile
-  :delight '(:eval (propertize (funcall projectile-mode-line-function) 'face 'font-lock-keyword-face))
+  :delight '(:eval (propertize (funcall projectile-mode-line-function) 'face (if (mode-line-window-selected-p) 'font-lock-keyword-face 'mode-line-inactive)))
   :bind-keymap ("M-\"" . projectile-command-map)
   :init
   (setq projectile-mode-line-prefix " ")

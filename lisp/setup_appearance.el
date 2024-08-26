@@ -66,25 +66,41 @@
           (setq output (concat ml/directory-truncation-string output)))
         output))))
 (defun ml/generate-buffer-identification (orig)
-  (cons (concat (when-let ((curr (or (car-safe dired-directory) dired-directory (buffer-file-name) (bound-and-true-p eaf--buffer-url))))
-                  (concat (when (display-graphic-p)
-                            (all-the-icons-dired--icon curr))
-                          " "
-                          (ml/do-shorten-directory (cond ((file-name-absolute-p curr)
-                                                          (abbreviate-file-name (file-name-parent-directory curr)))
-                                                         ((string-match helm--url-regexp curr)
-                                                          curr)
-                                                         (t ""))
-                                                   ;; (min (- (window-width) 8) ml/name-width)
-                                                   (- (window-width)
-                                                      24
-                                                      (length mode-line-modes)
-                                                      (length (and projectile-mode projectile--mode-line))
-                                                      (length (and (frame-parameter nil 'swint-persp-loadp) (persp-name (persp-curr))))))))
-                (propertize orig 'face (if dired-directory
-                                           'dired-directory
-                                         'mode-line-buffer-id)))
-        (cdr mode-line-buffer-identification)))
+  (let ((current-window-p (mode-line-window-selected-p)))
+    (cons (concat (when-let ((curr (or (car-safe dired-directory) dired-directory (buffer-file-name) (bound-and-true-p eaf--buffer-url))))
+                    (concat (when (display-graphic-p)
+                              (ml/all-the-icons-dired--icon curr current-window-p))
+                            " "
+                            (ml/do-shorten-directory (cond ((file-name-absolute-p curr)
+                                                            (abbreviate-file-name (file-name-parent-directory curr)))
+                                                           ((string-match helm--url-regexp curr)
+                                                            curr)
+                                                           (t ""))
+                                                     ;; (min (- (window-width) 8) ml/name-width)
+                                                     (- (window-width)
+                                                        24
+                                                        (length mode-line-modes)
+                                                        (length (and projectile-mode projectile--mode-line))
+                                                        (length (and (frame-parameter nil 'swint-persp-loadp) (persp-name (persp-curr))))))))
+                  (propertize orig 'face (if current-window-p
+                                             (if dired-directory
+                                                 'dired-directory
+                                               'mode-line-buffer-id)
+                                           '(:inherit mode-line-inactive :weight bold))))
+          (cdr mode-line-buffer-identification))))
+(defun ml/all-the-icons-dired--icon (file current-window-p)
+  (if (file-directory-p file)
+      (apply 'all-the-icons-icon-for-dir file
+             (append
+              `(:v-adjust ,all-the-icons-dired-v-adjust)
+              `(:face ,(if current-window-p
+                           'all-the-icons-dired-dir-face
+                         'mode-line-inactive))))
+    (apply 'all-the-icons-icon-for-file file
+           (append
+            `(:v-adjust ,all-the-icons-dired-v-adjust)
+            (unless current-window-p
+              `(:face mode-line-inactive))))))
 ;; ======mode-line-buffer-identification======
 ;;;; mode-line-modified
 ;; ===========mode-line-modified==============

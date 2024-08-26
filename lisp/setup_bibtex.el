@@ -178,7 +178,7 @@
   (defun ebib-display-file-symbol (field key db)
     (if (ebib-get-field-value field key db 'noerror 'unbraced 'xref)
         (propertize ebib-file-symbol
-                    'face '(:height 0.8 :inherit ebib-link-face))
+                    'face '(:inherit ebib-link-face :height 0.8))
       (propertize (make-string (string-width ebib-file-symbol) ?\s)
                   'face '(:height 0.8))))
   (add-to-list 'ebib-field-transformation-functions '("file" . ebib-display-file-symbol))

@@ -42,6 +42,15 @@
     (let ((string-name (format "%s" name)))
       (if (equal name (persp-name (persp-curr)))
           (propertize string-name 'face 'persp-selected-face))))
+  (defun persp-mode-line ()
+    "Return the string displayed in the modeline representing the perspectives."
+    (let ((persp-curr-string (frame-parameter nil 'persp--modestring)))
+      (if (mode-line-window-selected-p)
+          persp-curr-string
+        (mapcar (lambda (persp) (if (and (stringp persp) (not (string-empty-p persp)))
+                                    (propertize persp 'face '(:inherit mode-line-inactive :weight bold))
+                                  persp))
+                persp-curr-string))))
   (defun persp-activate (persp)
     "Activate the perspective given by the persp struct PERSP."
     (check-persp persp)
