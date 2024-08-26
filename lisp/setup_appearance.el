@@ -86,7 +86,7 @@
                                              (if dired-directory
                                                  'dired-directory
                                                'mode-line-buffer-id)
-                                           '(:inherit mode-line-inactive :weight bold))))
+                                           '(:inherit mode-line-inactive :foreground "white" :weight bold))))
           (cdr mode-line-buffer-identification))))
 (defun ml/all-the-icons-dired--icon (file current-window-p)
   (if (file-directory-p file)
