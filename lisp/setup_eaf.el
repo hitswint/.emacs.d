@@ -9,6 +9,8 @@
          ("M-o M-w" . eaf-open-browser-with-history)
          ("M-o M-RET" . eaf-switch-or-open-pyqterminal)
          ("M-o M-S-<return>" . eaf-open-pyqterminal))
+  :init
+  (setq eaf-dired-advisor-enable nil)
   :config
   (pyvenv-activate-py3)
   (setq eaf-webengine-default-zoom "1.5"
@@ -224,7 +226,9 @@
     (eaf-bind-key scroll_up_page "M-V" eaf-pyqterminal-keybinding)
     (eaf-bind-key scroll_to_begin "S-<prior>" eaf-pyqterminal-keybinding)
     (eaf-bind-key scroll_to_bottom "S-<next>" eaf-pyqterminal-keybinding)
-    (eaf-bind-key toggle_mark "C-;" eaf-pyqterminal-cursor-move-mode-keybinding)))
+    (eaf-bind-key toggle_mark "C-;" eaf-pyqterminal-cursor-move-mode-keybinding)
+    (eaf-bind-key scroll_to_begin "M-<" eaf-pyqterminal-cursor-move-mode-keybinding)
+    (eaf-bind-key scroll_to_bottom "M->" eaf-pyqterminal-cursor-move-mode-keybinding)))
 (use-package eaf-interleave
   :load-path "repos/emacs-application-framework/extension/"
   :commands (eaf-interleave-mode eaf-interleave-app-mode)
