@@ -153,6 +153,9 @@
 (use-package visible-mark
   :config
   (global-visible-mark-mode 1)
+  (advice-add 'visible-mark-move-overlays :around #'(lambda (fn) (unless (memq this-command '(pixel-scroll-window-move-up
+                                                                                              pixel-scroll-window-move-down))
+                                                                   (funcall fn))))
   (setq visible-mark-max 2)
   (defface swint-visible-mark-face-1
     '((t (:background "#666666" :foreground "white")))

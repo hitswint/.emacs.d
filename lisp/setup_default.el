@@ -53,10 +53,13 @@
 (setq highlight-nonselected-windows nil)
 (setq read-process-output-max (* 64 1024))
 (setq-default bidi-display-reordering nil)
+(setq-default bidi-paragraph-direction 'left-to-right)
 (setq bidi-inhibit-bpa t
       long-line-threshold 1000
       large-hscroll-threshold 1000
       syntax-wholeline-max 1000)
+(setq scroll-step 1
+      scroll-conservatively 10000)
 (setq auto-mode-case-fold nil)
 (setq command-line-x-option-alist nil)
 (setq ffap-machine-p-known 'reject)
