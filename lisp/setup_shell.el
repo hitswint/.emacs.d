@@ -27,8 +27,7 @@
   :bind ("M-o M-s" . eshell)
   :config
   (add-hook 'eshell-mode-hook #'(lambda()
-                                  (setq scroll-margin 0
-                                        eshell-scroll-to-bottom-on-output t
+                                  (setq eshell-scroll-to-bottom-on-output t
                                         eshell-scroll-show-maximum-output t)
                                   (add-to-list 'eshell-output-filter-functions
                                                'eshell-postoutput-scroll-to-bottom)

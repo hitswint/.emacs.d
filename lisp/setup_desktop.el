@@ -36,7 +36,7 @@
         desktop-restore-frames nil
         desktop-load-locked-desktop t
         desktop-save t
-        desktop-auto-save-timeout 5
+        desktop-auto-save-timeout 0
         desktop-files-not-to-save "\\(\\`/[^/:]*:\\|(ftp)\\|/mnt/share/.*\\|/mnt/sshfs/.*\\|/mnt/usb/.*\\'\\)")
   (desktop-save-mode t)
   (advice-add 'desktop-buffer-info :around #'(lambda (fn buffer)
