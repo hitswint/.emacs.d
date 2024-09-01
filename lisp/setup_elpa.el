@@ -93,7 +93,6 @@
                            flycheck-pos-tip
                            function-args
                            gcmh
-                           git-commit
                            git-timemachine
                            gnuplot-mode
                            gnu-elpa-keyring-update
