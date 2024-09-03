@@ -28,7 +28,7 @@
   :config
   (use-package recentf-ext)
   (recentf-mode 1)
-  (setq recentf-max-saved-items 100)
+  (setq recentf-max-saved-items 200)
   (setq recentf-exclude
         (list "^/tmp/" "^/ssh:" "\\.?ido\\.last$" "\\.revive$" "/TAGS$" "^/var/folders/.+$" "^/mnt.+")))
 ;; ====================recentf=====================
