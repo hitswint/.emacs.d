@@ -715,6 +715,13 @@
   :config
   (setq markdown-open-image-command "feh.sh"
         markdown-max-image-size '(640 . 480))
+  (custom-set-faces
+   '(markdown-header-face-1 ((t (:inherit org-level-1))))
+   '(markdown-header-face-2 ((t (:inherit org-level-2))))
+   '(markdown-header-face-3 ((t (:inherit org-level-3))))
+   '(markdown-header-face-4 ((t (:inherit org-level-4))))
+   '(markdown-header-face-5 ((t (:inherit org-level-5))))
+   '(markdown-header-face-6 ((t (:inherit org-level-6)))))
   (smartrep-define-key markdown-mode-map "M-s"
     '(("p" . markdown-outline-previous)
       ("n" . markdown-outline-next)
