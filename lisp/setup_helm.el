@@ -917,18 +917,26 @@
   (defun helm-imenu-outshine ()
     "Preconfigured `helm' for `imenu'."
     (interactive)
-    (unless helm-source-imenu-outshine
-      (setq helm-source-imenu-outshine
-            (helm-make-source "Imenu outshine" 'helm-imenu-outshine-source
-              :fuzzy-match helm-imenu-fuzzy-match)))
-    (let ((imenu-auto-rescan t)
-          (str (thing-at-point 'symbol))
-          (helm-execute-action-at-once-if-one
-           helm-imenu-execute-action-at-once-if-one))
-      (helm :sources 'helm-source-imenu-outshine
-            :default (list (concat "\\_<" str "\\_>") str)
-            :preselect str
-            :buffer "*helm imenu outshine*"))))
+    (if (not outshine-mode)
+        (let ((outline-regexp (cond ((eq major-mode 'org-mode)
+                                     org-outline-regexp-bol)
+                                    ((eq major-mode 'LaTeX-mode)
+                                     (LaTeX-outline-regexp t))
+                                    (t outline-regexp)))
+              helm-candidate-number-limit)
+          (call-interactively 'helm-outline))
+      (unless helm-source-imenu-outshine
+        (setq helm-source-imenu-outshine
+              (helm-make-source "Imenu outshine" 'helm-imenu-outshine-source
+                :fuzzy-match helm-imenu-fuzzy-match)))
+      (let ((imenu-auto-rescan t)
+            (str (thing-at-point 'symbol))
+            (helm-execute-action-at-once-if-one
+             helm-imenu-execute-action-at-once-if-one))
+        (helm :sources 'helm-source-imenu-outshine
+              :default (list (concat "\\_<" str "\\_>") str)
+              :preselect str
+              :buffer "*helm imenu outshine*")))))
 ;; ================helm-imenu===================
 ;;; ace-jump-helm-line
 ;; ============ace-jump-helm-line===============

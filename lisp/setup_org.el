@@ -106,7 +106,7 @@
                 (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point)
                 (define-key org-mode-map (kbd "C-c o") #'(lambda () (interactive) (swint-org-open-at-point t)))
                 (define-key org-mode-map (kbd "C-c d") 'swint-org-open-dired-at-point)
-                (define-key org-mode-map (kbd "C-c :") 'swint-qpdfview-annotated-new)
+                (define-key org-mode-map (kbd "C-c i") 'swint-annotate-add-note)
                 (define-key org-mode-map (kbd "C-c M-,") #'(lambda () (interactive) (swint-org-mobile-sync "down")))
                 (define-key org-mode-map (kbd "C-c M-.") #'(lambda () (interactive) (swint-org-mobile-sync "up")))
                 (smartrep-define-key org-mode-map "M-s"
@@ -456,6 +456,7 @@
 ;; =================org-noter===================
 (use-package org-noter
   :commands (org-noter
+             swint-annotate-add-note
              swint-noter/interleave
              swint-open-notes-file-for-pdf)
   :init
@@ -471,6 +472,21 @@
   (setq org-noter-always-create-frame nil
         org-noter-disable-narrowing t
         org-noter-use-indirect-buffer nil)
+  (defun swint-annotate-add-note ()
+    (interactive)
+    (cond ((and (bound-and-true-p org-noter-notes-mode) org-noter--session
+                (buffer-live-p (org-noter--session-doc-buffer org-noter--session)))
+           (org-noter-insert-note))
+          ((and (bound-and-true-p interleave-mode) interleave-pdf-buffer
+                (get-buffer interleave-pdf-buffer))
+           (interleave--switch-to-pdf-buffer)
+           (interleave-add-note))
+          ((bound-and-true-p eaf-interleave-mode)
+           (when-let ((pdf-buffer (eaf-interleave--find-buffer
+                                   (org-entry-get-with-inheritance eaf-interleave--url-prop))))
+             (switch-to-buffer-other-window pdf-buffer)
+             (eaf-interleave-add-note)))
+          (t (swint-qpdfview-annotated-new))))
   (defun swint-noter/interleave ()
     (interactive)
     (let* ((key (org-entry-get nil "Custom_ID"))
