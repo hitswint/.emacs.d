@@ -227,7 +227,11 @@
     ;; ` `` ``` 插入符号，如` d输入\delta，`` d输入\partial
     ;; ' 修改其后字符的字体
     (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
-    (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex))
+    (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
+    (setq cdlatex-takeover-parenthesis nil)
+    :config
+    (define-key cdlatex-mode-map (kbd "<tab>") #'cdlatex-tab)
+    (define-key cdlatex-mode-map (kbd "TAB") nil))
   ;; ================cdlatex====================
 ;;;; org输出doc
   ;; =================org输出doc================

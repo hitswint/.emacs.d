@@ -131,7 +131,6 @@
                            lacarte
                            let-alist
                            lingva
-                           magic-latex-buffer
                            magit
                            markdown-mode
                            math-symbol-lists

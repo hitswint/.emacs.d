@@ -315,7 +315,34 @@
     (unless auto-complete-mode
       (auto-complete-mode t))
     (unless (auto-complete '(ac-source-yasnippet))
-      (call-interactively 'company-yasnippet))))
+      (call-interactively 'company-yasnippet)))
+  (add-hook 'cdlatex-tab-hook 'yas-expand)
+  (add-hook 'cdlatex-tab-hook 'cdlatex-in-yas-field)
+  (defun cdlatex-in-yas-field ()
+    ;; Check if we're at the end of the Yas field
+    (when-let* ((_ (overlayp yas--active-field-overlay))
+                (end (overlay-end yas--active-field-overlay)))
+      (if (>= (point) end)
+          ;; Call yas-next-field if cdlatex can't expand here
+          (let ((s (thing-at-point 'sexp)))
+            (unless (and s (assoc (substring-no-properties s)
+                                  cdlatex-command-alist-comb))
+              (yas-next-field-or-maybe-expand)
+              t))
+        ;; otherwise expand and jump to the correct location
+        (let (cdlatex-tab-hook minp)
+          (setq minp
+                (min (save-excursion (cdlatex-tab)
+                                     (point))
+                     (overlay-end yas--active-field-overlay)))
+          (goto-char minp) t))))
+  (bind-key "<tab>" 'yas-next-field-or-cdlatex yas-keymap)
+  (defun yas-next-field-or-cdlatex ()
+    (interactive)
+    (if (or (bound-and-true-p cdlatex-mode)
+            (bound-and-true-p org-cdlatex-mode))
+        (cdlatex-tab)
+      (yas-next-field-or-maybe-expand))))
 (use-package yasnippet-snippets
   ;; 错误：byte-code: Recursive load
   ;; 删除snippets/bibtex-mode/.yas-setup.el中(require 'yasnippet-snippets)

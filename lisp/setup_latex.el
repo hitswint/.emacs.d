@@ -6,11 +6,14 @@
   :init
   (add-hook 'LaTeX-mode-hook
             (lambda ()
+              (setq TeX-base-mode-name "TeX"
+                    TeX-engine 'xetex) ;对英文使用TeX-engine-set设置为default
               (LaTeX-math-mode 1)
               (TeX-fold-mode 1) ;C-c C-o C-b打开fold，C-c C-o b关闭fold
               (TeX-PDF-mode 1)
+              (prettify-symbols-mode 1)
               (turn-on-orgtbl)
-              (setq-local TeX-base-mode-name "TeX")
+              (define-key LaTeX-mode-map (kbd "C-c C-x \\") 'prettify-symbols-mode)
               (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)
               (define-key LaTeX-mode-map (kbd "C-c l") #'(lambda () (interactive) (insert (swint-cursor-localtion))))))
   (setq LaTeX-math-abbrev-prefix "M-s `") ;LaTeX-math-mode与cdlatex的prefix冲突
@@ -18,7 +21,6 @@
   (setq TeX-auto-save t
         TeX-parse-self t
         TeX-auto-untabify t
-        TeX-engine 'xetex
         TeX-save-query nil
         TeX-show-compilation t
         TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o"))
@@ -45,8 +47,10 @@
                                (bind-key "C-c v" 'preview-at-point LaTeX-mode-map)
                                (bind-key "C-c V" 'preview-clearout-buffer LaTeX-mode-map)))
   :config
-  (setq preview-auto-cache-preamble t)
-  (set-face-attribute 'preview-reference-face nil :background "grey" :height 1.5))
+  (setq preview-auto-cache-preamble t
+        preview-scale-function 1.5
+        ;; TeX-engine设置为xetex时，无法准确设置颜色
+        preview-pdf-color-adjust-method nil))
 ;; ====================preview=====================
 ;;; auctex-latexmk
 ;; =================auctex-latexmk=================
@@ -57,14 +61,4 @@
   (auctex-latexmk-setup)
   (advice-add 'TeX-engine-set :after #'(lambda (type) (auctex-latexmk-setup))))
 ;; =================auctex-latexmk=================
-;;; magic-latex-buffer
-;; ==============magic-latex-buffer================
-(use-package magic-latex-buffer
-  :diminish magic-latex-buffer
-  :commands magic-latex-buffer
-  :init
-  (add-hook 'LaTeX-mode-hook 'magic-latex-buffer)
-  :config
-  (setq magic-latex-enable-block-align nil))
-;; ==============magic-latex-buffer================
 (provide 'setup_latex)
