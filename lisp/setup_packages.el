@@ -715,13 +715,12 @@
   :config
   (setq markdown-open-image-command "feh.sh"
         markdown-max-image-size '(640 . 480))
-  (custom-set-faces
-   '(markdown-header-face-1 ((t (:inherit org-level-1))))
-   '(markdown-header-face-2 ((t (:inherit org-level-2))))
-   '(markdown-header-face-3 ((t (:inherit org-level-3))))
-   '(markdown-header-face-4 ((t (:inherit org-level-4))))
-   '(markdown-header-face-5 ((t (:inherit org-level-5))))
-   '(markdown-header-face-6 ((t (:inherit org-level-6)))))
+  (set-face-attribute 'markdown-header-face-1 nil :inherit 'org-level-1)
+  (set-face-attribute 'markdown-header-face-2 nil :inherit 'org-level-2)
+  (set-face-attribute 'markdown-header-face-3 nil :inherit 'org-level-3)
+  (set-face-attribute 'markdown-header-face-4 nil :inherit 'org-level-4)
+  (set-face-attribute 'markdown-header-face-5 nil :inherit 'org-level-5)
+  (set-face-attribute 'markdown-header-face-6 nil :inherit 'org-level-6)
   (smartrep-define-key markdown-mode-map "M-s"
     '(("p" . markdown-outline-previous)
       ("n" . markdown-outline-next)
@@ -811,9 +810,9 @@
         ido-enable-flex-matching t
         ido-file-extensions-order nil
         ido-use-virtual-buffers nil)
-  (custom-set-faces '(ido-first-match ((t (:foreground "yellow" :weight bold))))
-                    '(ido-only-match ((((class color)) (:foreground "DeepSkyBlue1" :weight bold))))
-                    '(ido-subdir ((t (:foreground "green")))))
+  (set-face-attribute 'ido-first-match nil :foreground "yellow" :weight 'bold)
+  (set-face-attribute 'ido-only-match nil :foreground "DeepSkyBlue1" :weight 'bold)
+  (set-face-attribute 'ido-subdir nil :foreground "green")
   (setq ido-ignore-buffers '("\\`Enjoy\\ Music\\'" "\\`\\*Inferior\\ Octave\\*\\'" "\\`\\*Ibuffer\\*\\'" "\\`\\*MATLAB\\*\\'" "\\`\\*shell\\*\\'" "\\`\\*calculator\\*\\'" "\\`\\*Calendar\\*\\'" "\\`\\*Compile\\=Log\\*\\'" "\\`\\*Completions\\*\\'" "\\`\\*sdcv\\*\\'" "\\`\\*scratch\\*\\'" "\\`\\*Process\\ List\\*\\'" "\\`\\*toc\\*\\'" "\\`\\*helm.*\\*\\'" "\\`\\*Helm.*\\*\\'" "\\`\\*buffer-selection\\*\\'" "\\`\\*Disabled\\ Command\\*\\'" "\\`\\*Mingus\\*\\'" "\\`\\*compilation\\*\\'" "\\`\\*Ido\\ Completions\\*\\'" "\\` " "\\`.english-words\\'")))
 ;; ======================ido=======================
 ;;; term-keys

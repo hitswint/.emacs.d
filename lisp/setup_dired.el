@@ -14,8 +14,6 @@
   (add-hook 'dired-mode-hook 'dired-hide-details-mode)
   (setq dired-recursive-copies 'top)
   (setq dired-recursive-deletes 'always)
-  (custom-set-faces '(diredp-compressed-file-suffix ((t (:foreground "#7b68ee"))) t)
-                    '(diredp-ignored-file-name ((t (:foreground "#aaaaaa"))) t))
 ;;;; setup-and-keybindings
   ;; ==========setup-and-keybindings===========
   (setq dired-mouse-drag-files t)
