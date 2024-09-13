@@ -77,6 +77,7 @@
                            easy-kill
                            ebib
                            elisp-slime-nav
+                           ellama
                            elmacro
                            elpy
                            emmet-mode

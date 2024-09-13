@@ -892,7 +892,9 @@
   :load-path "repos/insert-translated-name/"
   :commands (insert-translated-name-replace insert-translated-name-insert)
   :config
-  (setq insert-translated-name-default-style "origin"))
+  (setq insert-translated-name-default-style "origin"
+        insert-translated-name-program "ollama"
+        insert-translated-name-ollama-model-name "qwen2"))
 ;; ============insert-translated-name==============
 ;;; idf-mode
 ;; ==================idf-mode======================
@@ -1275,4 +1277,29 @@ ORIG is the advised function, which is called with its ARGS."
     (interactive)
     (dogears-move-active-buffer 'forward)))
 ;; ===================dogears======================
+;;; ellama
+;; ====================ellama======================
+(use-package ellama
+  :commands ellama-translate-at-point
+  :bind-keymap ("M-E" . ellama-command-map)
+  :config
+  (setopt ellama-enable-keymap nil)
+  (setopt ellama-language "English")
+  (require 'llm-ollama)
+  (setopt ellama-provider
+          (make-llm-ollama
+           :chat-model "llama3.1:latest" :embedding-model "llama3.1:latest"))
+  (defun ellama-translate-at-point (&optional _word)
+    (interactive)
+    (let* ((word (or _word (swint-get-words-at-point)))
+           (ellama-language (if (string-match-p "\\cC" word) "English" "Chinese"))
+           (ellama-translation-template "Translation to %s: %s")
+           (ellama-translation-provider
+            (make-llm-ollama
+             :chat-model "qwen2:latest" :embedding-model "qwen2:latest")))
+      (ellama-instant
+       (format ellama-translation-template
+               ellama-language word ellama-language)
+       :provider ellama-translation-provider))))
+;; ====================ellama======================
 (provide 'setup_packages)

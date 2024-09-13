@@ -12,7 +12,8 @@
       ("l" . lingva-translate-at-point)
       ("i" . insert-translated-name-insert)
       ("I" . insert-translated-name-replace)
-      ("w" . w3m-youdao-sample-sentences)))
+      ("w" . w3m-youdao-sample-sentences)
+      ("e" . ellama-translate-at-point)))
   :config
   (defun bing-dict-brief-cb-at-point (&optional _word)
     "Search word at point."

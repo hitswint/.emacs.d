@@ -37,7 +37,7 @@
         desktop-load-locked-desktop t
         desktop-save t
         desktop-auto-save-timeout 0
-        desktop-files-not-to-save "\\(\\`/[^/:]*:\\|(ftp)\\|/mnt/share/.*\\|/mnt/sshfs/.*\\|/mnt/usb/.*\\'\\)")
+        desktop-files-not-to-save "\\(\\`/[^/:]*:\\|(ftp)\\|/mnt/share/.*\\|/mnt/sshfs/.*\\|/mnt/usb/.*\\|/\\.emacs\\.d/ellama-sessions/.*\\'\\)")
   (desktop-save-mode t)
   (advice-add 'desktop-buffer-info :around #'(lambda (fn buffer)
                                                (let ((desktop-minor-mode-table
