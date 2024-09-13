@@ -74,14 +74,14 @@
                                                       (swint-org-annotate-file . nil)
                                                       (dired-create-directory . helm-read-file-name-handler-1))))
   ;; (setq helm-mounted-network-directories '("/mnt/share" "/mnt/sshfs"))
-  (set-face-attribute 'helm-buffer-directory nil :foreground "yellow" :background nil :weight 'bold)
+  (set-face-attribute 'helm-buffer-directory nil :foreground "yellow" :background 'unspecified :weight 'bold)
   (set-face-attribute 'helm-buffer-file nil :inherit 'font-lock-type-face)
-  (set-face-attribute 'helm-ff-directory nil :foreground "yellow" :background nil :weight 'bold)
-  (set-face-attribute 'helm-ff-dotted-directory nil :foreground "yellow" :background nil :weight 'bold)
+  (set-face-attribute 'helm-ff-directory nil :foreground "yellow" :background 'unspecified :weight 'bold)
+  (set-face-attribute 'helm-ff-dotted-directory nil :foreground "yellow" :background 'unspecified :weight 'bold)
   (set-face-attribute 'helm-ff-file nil :foreground "white")
   (set-face-attribute 'helm-grep-file nil :foreground "cyan")
   (set-face-attribute 'helm-selection nil :background "black" :underline t)
-  (set-face-attribute 'helm-visible-mark nil :foreground "DeepSkyBlue1" :background nil)
+  (set-face-attribute 'helm-visible-mark nil :foreground "DeepSkyBlue1" :background 'unspecified)
 ;;;; keybindings
   ;; ===============keybindings=================
   (define-key helm-map (kbd "C-;") 'helm-toggle-visible-mark)
