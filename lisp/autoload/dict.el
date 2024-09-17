@@ -3,14 +3,11 @@
 ;;;###autoload
 (define-derived-mode sdcv-mode org-mode nil
   "Major mode for sdcv."
-  (when swint-fcitx-setup-done
-    (fcitx--sdcv-maybe-deactivate))
+  (read-only-mode 1)
   (local-set-key (kbd "q") #'(lambda () (interactive)
                                (swint-kill-buffer)
                                (when (get-register :sdcv)
-                                 (jump-to-register :sdcv))
-                               (when swint-fcitx-setup-done
-                                 (fcitx--sdcv-maybe-activate)))))
+                                 (jump-to-register :sdcv)))))
 (defvar sdcv-dictionary-list '("懒虫简明英汉词典"
                                "懒虫简明汉英词典"
                                "新世纪英汉科技大词典"
@@ -101,7 +98,13 @@ FORCE-OTHER-WINDOW is ignored."
                  (switch-to-buffer buffer)
                  (set-buffer buffer)
                  (setq-local cursor-type t)
-                 (setq-local cursor-in-non-selected-windows t))
+                 (setq-local cursor-in-non-selected-windows t)
+                 ;; 前面posframe-delete-frame关闭posframe，但仍在winner-modified-list内
+                 ;; 导致post-command-hook中调用winner-save-old-configurations时出错：
+                 ;; (wrong-type-argument frame-live-p #<dead frame>)
+                 (setq winner-modified-list
+                       (cl-loop for frame in winner-modified-list
+                                if (frame-live-p frame) collect frame)))
         (posframe-delete buffer)
         (other-frame 0)))))
 ;;;###autoload

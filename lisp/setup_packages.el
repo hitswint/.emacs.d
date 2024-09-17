@@ -279,13 +279,34 @@
     (add-hook 'after-init-hook 'swint-fcitx-setup))
   :config
   ;; 需设置XMODIFIERS=@im=fcitx才能使用fcitx
+  (defun fcitx--prefix-keys-polling-function ()
+    (let ((key-seq (this-single-command-keys)))
+      (cond
+       ((member key-seq fcitx--prefix-keys-sequence)
+        (fcitx--prefix-keys-maybe-deactivate))
+       ((and (equal (this-command-keys-vector) [])
+             (not (fcitx--evil-adviced-commands-p last-command))
+             (not (and fcitx--aggressive-p
+                       (window-minibuffer-p)))
+             (not (and
+                   (boundp 'which-key--paging-functions)
+                   (member this-command which-key--paging-functions)))
+             (not (or buffer-read-only transient--showp
+                      (derived-mode-p 'eaf-mode 'image-mode))))
+        (fcitx--prefix-keys-maybe-activate)))
+      (set-cursor-color (if (fcitx--active-p) "#f57900" "#fce94f"))))
+  (add-hook 'window-configuration-change-hook #'(lambda () (cond ((or buffer-read-only transient--showp
+                                                                      (derived-mode-p 'eaf-mode 'image-mode))
+                                                                  (fcitx--read-only-maybe-deactivate))
+                                                                 ((not (window-minibuffer-p))
+                                                                  (fcitx--read-only-maybe-activate)))))
   (defvar swint-fcitx-setup-done nil)
   (defun swint-fcitx-setup (&optional frame)
     (when (and (display-graphic-p frame) (not swint-fcitx-setup-done))
-      (fcitx-prefix-keys-add "M-s" "M-g" "M-o" "M-O")
+      (fcitx-prefix-keys-add "M-s" "M-g" "M-o" "M-O" "M-E")
       (fcitx-aggressive-setup)
       (fcitx-isearch-turn-on)
-      (fcitx--defun-maybe "sdcv")
+      (fcitx-read-only-turn-on)
       (setq swint-fcitx-setup-done t))))
 ;; ======================fcitx=====================
 ;;; aggressive-indent
