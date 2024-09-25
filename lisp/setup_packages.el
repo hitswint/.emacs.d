@@ -913,9 +913,15 @@
   :load-path "repos/insert-translated-name/"
   :commands (insert-translated-name-replace insert-translated-name-insert)
   :config
-  (setq insert-translated-name-default-style "origin"
-        insert-translated-name-program "ollama"
-        insert-translated-name-ollama-model-name "qwen2"))
+  (setq insert-translated-name-default-style "origin")
+  ;; (setq insert-translated-name-program "ollama"
+  ;;       insert-translated-name-ollama-model-name "qwen2")
+  (require 'llm-openai)
+  (setq insert-translated-name-program "llm"
+        insert-translated-name-llm-provider (make-llm-openai-compatible
+                                             :key (get-auth-pass "qwen")
+                                             :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
+                                             :chat-model "qwen-max-latest")))
 ;; ============insert-translated-name==============
 ;;; idf-mode
 ;; ==================idf-mode======================
@@ -1303,21 +1309,29 @@ ORIG is the advised function, which is called with its ARGS."
 (use-package ellama
   :commands ellama-translate-at-point
   :bind-keymap ("M-E" . ellama-command-map)
+  :init
+  (setopt llm-warn-on-nonfree nil)
   :config
   (setopt ellama-enable-keymap nil)
   (setopt ellama-language "English")
   (require 'llm-ollama)
+  (require 'llm-openai)
   (setopt ellama-provider
-          (make-llm-ollama
-           :chat-model "llama3.1:latest" :embedding-model "llama3.1:latest"))
+          ;; (make-llm-ollama
+          ;;  :chat-model "llama3.1:latest" :embedding-model "llama3.1:latest")
+          (make-llm-openai-compatible
+           :key (get-auth-pass "qwen")
+           :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
+           :chat-model "qwen-max-latest"))
   (defun ellama-translate-at-point (&optional _word)
     (interactive)
     (let* ((word (or _word (swint-get-words-at-point)))
            (ellama-language (if (string-match-p "\\cC" word) "English" "Chinese"))
            (ellama-translation-template "Translation to %s: %s")
-           (ellama-translation-provider
-            (make-llm-ollama
-             :chat-model "qwen2:latest" :embedding-model "qwen2:latest")))
+           ;; (ellama-translation-provider
+           ;;  (make-llm-ollama
+           ;;   :chat-model "qwen2:latest" :embedding-model "qwen2:latest"))
+           )
       (ellama-instant
        (format ellama-translation-template
                ellama-language word ellama-language)
