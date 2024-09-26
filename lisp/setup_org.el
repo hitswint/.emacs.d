@@ -199,7 +199,22 @@
 ;;;; org-table
   ;; =================orgtbl====================
   (use-package org-table
-    :diminish orgtbl-mode)
+    :diminish orgtbl-mode
+    :config
+    ;; S-<return> 拷贝当前列之上的行，并递增数字
+    (defun org-table-copy-down/around (fn n)
+      (condition-case ex
+          (funcall fn n)
+        (error (cond ((org-at-table-p)
+                      (message (error-message-string ex)))
+                     ((or (org-at-heading-p)
+                          (save-excursion
+                            (back-to-indentation)
+                            (equal (point) (line-beginning-position))))
+                      (org-toggle-heading))
+                     (t
+                      (org-toggle-item nil))))))
+    (advice-add 'org-table-copy-down :around #'org-table-copy-down/around))
   ;; =================orgtbl====================
 ;;;; iimage
   ;; =================iimage====================

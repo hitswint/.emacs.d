@@ -72,7 +72,7 @@
                                                       (find-function . helm-completing-read-symbols)
                                                       (org-annotate-file . nil)
                                                       (swint-org-annotate-file . nil)
-                                                      (dired-create-directory . helm-read-file-name-handler-1))))
+                                                      (dired-create-directory . nil))))
   ;; (setq helm-mounted-network-directories '("/mnt/share" "/mnt/sshfs"))
   (set-face-attribute 'helm-buffer-directory nil :foreground "yellow" :background 'unspecified :weight 'bold)
   (set-face-attribute 'helm-buffer-file nil :inherit 'font-lock-type-face)
