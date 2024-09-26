@@ -98,15 +98,16 @@ FORCE-OTHER-WINDOW is ignored."
                  (switch-to-buffer buffer)
                  (set-buffer buffer)
                  (setq-local cursor-type t)
-                 (setq-local cursor-in-non-selected-windows t)
-                 ;; 前面posframe-delete-frame关闭posframe，但仍在winner-modified-list内
-                 ;; 导致post-command-hook中调用winner-save-old-configurations时出错：
-                 ;; (wrong-type-argument frame-live-p #<dead frame>)
-                 (setq winner-modified-list
-                       (cl-loop for frame in winner-modified-list
-                                if (frame-live-p frame) collect frame)))
+                 (setq-local cursor-in-non-selected-windows t))
         (posframe-delete buffer)
-        (other-frame 0)))))
+        (other-frame 0))
+      ;; 前面posframe-delete-frame关闭posframe，但仍在winner-modified-list内
+      ;; 导致post-command-hook中调用winner-save-old-configurations时出错：
+      ;; (wrong-type-argument frame-live-p #<dead frame>)
+      (when (bound-and-true-p winner-modified-list)
+        (setq winner-modified-list
+              (cl-loop for frame in winner-modified-list
+                       if (frame-live-p frame) collect frame))))))
 ;;;###autoload
 (defun swint-display-dict (buffer result &optional cleaner to-buffer)
   (with-current-buffer (get-buffer-create buffer)
