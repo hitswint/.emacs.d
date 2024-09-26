@@ -1320,14 +1320,9 @@ ORIG is the advised function, which is called with its ARGS."
                                              :key (get-auth-pass "DeepSeek")
                                              :url "https://api.deepseek.com/v1"
                                              :chat-model "deepseek-chat"))))
-  (setopt ellama-provider (if (remove-if (lambda (i)
-                                           (or (string-match-p "\\(vboxnet\\|docker\\|br\\).*" i)
-                                               (member 'loopback (nth 4 (network-interface-info i)))))
-                                         (mapcar 'car (network-interface-list)))
-                              (cdar ellama-providers)
-                            (make-llm-ollama
-                             :chat-model "llama3.1:latest"
-                             :embedding-model "llama3.1:latest")))
+  (setopt ellama-provider (cdar ellama-providers))
+  (define-key ellama-command-map (kbd "p") #'ellama-provider-select)
+  (define-key ellama-command-map (kbd "d") #'ellama-define-word)
   (defun ellama-translate-at-point (&optional _word)
     (interactive)
     (let* ((word (or _word (swint-get-words-at-point)))
