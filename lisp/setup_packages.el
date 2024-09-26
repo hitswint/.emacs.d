@@ -915,10 +915,12 @@
   :config
   (require 'ellama)
   (setq insert-translated-name-default-style "origin")
-  ;; (setq insert-translated-name-program "ollama"
-  ;;       insert-translated-name-ollama-model-name "qwen2")
-  (setq insert-translated-name-program "llm"
-        insert-translated-name-llm-provider ellama-provider))
+  (defun insert-translated-name-setup ()
+    (setq insert-translated-name-program (if (llm-openai-p ellama-provider) "llm" "ollama")
+          insert-translated-name-ollama-model-name (llm-name ellama-provider)
+          insert-translated-name-llm-provider ellama-provider))
+  (insert-translated-name-setup)
+  (advice-add 'ellama-provider-select :after 'insert-translated-name-setup))
 ;; ============insert-translated-name==============
 ;;; idf-mode
 ;; ==================idf-mode======================
@@ -1307,6 +1309,8 @@ ORIG is the advised function, which is called with its ARGS."
   :commands ellama-translate-at-point
   :bind-keymap ("M-E" . ellama-command-map)
   :config
+  (define-key ellama-command-map (kbd "p") #'ellama-provider-select)
+  (define-key ellama-command-map (kbd "d") #'ellama-define-word)
   (setopt ellama-enable-keymap nil)
   (setopt ellama-language "English")
   (require 'llm-ollama)
@@ -1321,8 +1325,11 @@ ORIG is the advised function, which is called with its ARGS."
                                          :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
                                          :chat-model "qwen-max-latest"))))
   (setopt ellama-provider (cdar ellama-providers))
-  (define-key ellama-command-map (kbd "p") #'ellama-provider-select)
-  (define-key ellama-command-map (kbd "d") #'ellama-define-word)
+  (defun ellama-generate-name-by-words/around (orig-fn provider action prompt)
+    (concat (funcall orig-fn provider action prompt)
+            (when (llm-openai-p provider)
+              (llm-openai-chat-model provider))))
+  (advice-add 'ellama-generate-name-by-words :around 'ellama-generate-name-by-words/around)
   (defun ellama-translate-at-point (&optional _word)
     (interactive)
     (let* ((word (or _word (swint-get-words-at-point)))
