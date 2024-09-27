@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# key: jupyter-src
+# name: jupyter-src
+# expand-env: ((yas-triggers-in-field t) (yas-indent-line 'fixed))
+# --
+#+begin_src jupyter-python :async yes ${0:$$(progn (deactivate-mark) (yas-expand-snippet (yas-lookup-snippet "babel-src")))}
+  %matplotlib inline
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import pandas as pd
+
+#+end_src

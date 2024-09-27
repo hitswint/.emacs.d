@@ -2,6 +2,8 @@
 ;; =================org-mode====================
 (use-package org
   :mode ("\\.[oO][rR][gG]\\'" . org-mode)
+  :init
+  (setq org-babel-key-prefix (kbd "C-c C-'"))
   :config
   (setq org-modules nil)                ;随org启动的ol模块
   (defvar org-outline-cmd-list '(org-previous-visible-heading
@@ -162,7 +164,7 @@
   ;; |后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔
   ;; ===================GTD=====================
 ;;;; org-babel
-  ;; ===========使用ditaa输出ascii图片==========
+  ;; ================org-babel==================
   (setq org-confirm-babel-evaluate nil)
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
   (setq org-babel-load-languages '((emacs-lisp . t)
@@ -180,7 +182,17 @@
   ;; 自动加载过慢，改为手动加载
   (advice-add 'org-babel-execute-src-block :before #'(lambda (&optional arg info params)
                                                        (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)))
-  ;; ===========使用ditaa输出ascii图片==========
+  (defun org-ref-label-list ()
+    (org-with-point-at 1
+      (let ((case-fold-search t)
+            (regexp (org-make-options-regexp '("NAME")))
+            label-list)
+        (while (re-search-forward regexp nil t)
+          (let* ((element (org-element-at-point))
+                 (value (org-element-property :name element)))
+            (push value label-list)))
+        (nreverse label-list))))
+  ;; ================org-babel==================
 ;;;; org-persist
   ;; ================org-persist================
   (setq org-persist-remote-files nil)   ;不保存远程文件的缓存数据
@@ -201,6 +213,8 @@
   (use-package org-table
     :diminish orgtbl-mode
     :config
+    (define-key org-mode-map (kbd "C-c t e") 'org-table-export)
+    (define-key org-mode-map (kbd "C-c t i") 'org-table-import)
     ;; S-<return> 拷贝当前列之上的行，并递增数字
     (defun org-table-copy-down/around (fn n)
       (condition-case ex
@@ -587,15 +601,7 @@
     (setq helm-last-buffer helm-org-ref-link-buffer)
     (let* ((helm-split-window-default-side 'below)
            (helm-always-two-windows t)
-           (label-names (helm-comp-read "Label: " (org-with-point-at 1
-                                                    (let ((case-fold-search t)
-                                                          (regexp (org-make-options-regexp '("NAME")))
-                                                          label-list)
-                                                      (while (re-search-forward regexp nil t)
-                                                        (let* ((element (org-element-at-point))
-                                                               (value (org-element-property :name element)))
-                                                          (push value label-list)))
-                                                      (nreverse label-list)))
+           (label-names (helm-comp-read "Label: " (org-ref-label-list)
                                         :marked-candidates t
                                         :buffer helm-org-ref-link-buffer
                                         :keymap helm-org-ref-link-map

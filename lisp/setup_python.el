@@ -422,17 +422,20 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
 ;; ==================jupyter===================
 (use-package jupyter
   ;; 依赖emacs-zmq，自动安装失败时，可手动下载emacs-zmq.so并置于zmq.el同文件夹下
+  ;; 开启jupyter后，需重新打开org文件，才能让ob-jupyter生效
   :bind (("M-o j" . swint-jupyter-run-repl)
          ("M-o J" . jupyter-connect-repl))
+  :init
+  (add-hook 'python-mode-hook (lambda ()
+                                (bind-key "C-c c" 'jupyter-repl-associate-buffer python-mode-map)))
   :config
-  (bind-key "C-c c" 'jupyter-repl-associate-buffer python-mode-map)
   (defun swint-jupyter-run-repl ()
     (interactive)
-    (pyvenv-activate-py3)
-    (call-interactively 'jupyter-run-repl)
     (unless (featurep 'ob-jupyter)
       (add-to-list 'org-babel-load-languages '(jupyter . t) t)
-      (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)))
+      (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
+    (pyvenv-activate-py3)
+    (call-interactively 'jupyter-run-repl))
   (define-key jupyter-repl-interaction-mode-map (kbd "M-i") nil)
   (define-key jupyter-repl-interaction-mode-map (kbd "C-x C-e") nil)
   (define-key jupyter-repl-interaction-mode-map (kbd "C-c C-/") #'jupyter-inspect-at-point)
