@@ -492,14 +492,24 @@ Assuming .. and . is a current directory (like in FAR)"
             (setq rsync/unison-command
                   (concat rsync/unison-command file " ")))
           (setq rsync/unison-command (concat rsync/unison-command dest)))))
+    (with-current-buffer (get-buffer-create "*rsync/unison*")
+      (let (org-fontify-emphasized-text)
+        (org-mode)
+        (goto-char (point-max))
+        (insert "* " rsync/unison-command "\n")))
     (let ((process (start-process-shell-command "rsync/unison" "*rsync/unison*" rsync/unison-command)))
       (lexical-let ((pos (memq 'mode-line-modes mode-line-format))
-                    (mode-string action))
+                    (mode-string action)
+                    (rsync/unison-command rsync/unison-command)
+                    (remote remote))
         (setcdr pos (cons (concat "Rsync/Unison " mode-string " ") (cdr pos)))
         (set-process-sentinel
          process
          (lambda (process signal)
            (when (memq (process-status process) '(exit signal))
-             (message "Rsync/Unison %s done." mode-string)
+             (message "Rsync/Unison %s %s done.\nCommand: %s"
+                      (propertize remote 'face 'font-lock-function-name-face)
+                      (propertize mode-string 'face 'font-lock-type-face)
+                      rsync/unison-command)
              (setcdr pos (remove (concat "Rsync/Unison " mode-string " ") (cdr pos))))))))))
 ;; =========swint-dired-rsync/unison=========
