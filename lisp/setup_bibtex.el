@@ -79,7 +79,7 @@
   (defun bibtex-completion-pdf-viewer (fpath)
     (let ((parent-dir (file-name-nondirectory (directory-file-name (file-name-directory fpath)))))
       (start-process "Shell" nil shell-file-name shell-command-switch
-                     (format "pgrep zotero && (xdg-open zotero://open-pdf/library/items/%s; run-or-raise.sh Navigator) || pdfviewer.sh \"%s\""
+                     (format "[[ $(pgrep zotero) && ! $(pgrep qpdfview) ]] && (xdg-open zotero://open-pdf/library/items/%s; run-or-raise.sh Navigator) || pdfviewer.sh \"%s\""
                              parent-dir fpath))))
   (defun bibtex-completion-open-pdf-externally (candidates)
     "Open the PDFs associated with the marked entries externally."

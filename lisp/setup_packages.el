@@ -363,7 +363,6 @@
   :defer 2
   :config
   (which-key-mode)
-  (which-key-setup-side-window-right-bottom)
   (setq which-key-sort-order 'which-key-description-order)
   (bind-key "M-s x" 'which-key-show-major-mode)
   (bind-key "M-s X" 'which-key-show-minor-mode-keymap)
