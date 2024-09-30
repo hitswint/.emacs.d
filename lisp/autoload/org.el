@@ -13,6 +13,32 @@
             (replace-regexp-in-string
              "_" "/" (substring-no-properties (file-name-nondirectory (buffer-file-name)) 11 -5))
             (car (last (split-string (substring-no-properties (org-get-heading t) nil -2) "\\[file:") 1)))))
+(defun org-get-annotate-page (&optional operator)
+  (cl-flet ((find-page () (or (org-entry-get nil "NOTER_PAGE")
+                              (org-entry-get nil "interleave_page_note")
+                              (org-entry-get nil "annotated_page"))))
+    (let ((page (find-page))
+          point)
+      (save-excursion
+        (org-back-to-heading)
+        (while (and (null page) (org-up-heading-safe))
+          (setq page (find-page)))
+        (setq point (point)))
+      (cond ((eq operator 'prev)
+             (goto-char point)
+             (org-backward-heading-same-level nil)
+             (find-page))
+            ((eq operator 'next)
+             (goto-char point)
+             (org-forward-heading-same-level nil)
+             (find-page))
+            (t page)))))
+(defun org-get-annotate-file ()
+  (save-excursion
+    (while (org-up-heading-safe))
+    (or (swint-get-annotated-file)
+        (car (bibtex-completion-find-pdf (org-entry-get nil "Custom_ID")))
+        (org-entry-get nil "interleave_url"))))
 ;;;###autoload
 (defun swint-org-open-at-point (&optional in-emacs)
   "Open annotated file if annotation storage file exists."
@@ -22,41 +48,49 @@
       (progn (unless (org-link-get-parameter "pdfview" :follow)
                (org-pdftools-setup-link))
              (org-open-at-point in-emacs))
-    (cl-flet* ((find-page () (or (org-entry-get nil "NOTER_PAGE")
-                                 (org-entry-get nil "interleave_page_note")
-                                 (org-entry-get nil "annotated_page")))
-               (get-annotate-page () (save-excursion
-                                       (org-back-to-heading)
-                                       (let ((page (find-page)))
-                                         (while (and (org-up-heading-safe) (null page))
-                                           (setq page (find-page)))
-                                         page)))
-               (get-annotate-file (global-p) (save-excursion
-                                               (when global-p
-                                                 (while (org-up-heading-safe)))
-                                               (or (swint-get-annotated-file)
-                                                   (car (bibtex-completion-find-pdf (org-entry-get nil "Custom_ID")))
-                                                   (org-entry-get nil "interleave_url")))))
-      (let ((annotate-file (when (or (ignore-errors (org-at-top-heading-p)) (org-at-keyword-p)) (get-annotate-file nil)))
-            (annotate-page (unless (org-in-regexp org-link-any-re) (get-annotate-page)))
-            (org-link-frame-setup (cl-acons 'file (lambda (filename)
-                                                    (if (and (buffer-live-p (get-buffer "*eaf*"))
-                                                             (member (ignore-errors (downcase (file-name-extension filename)))
-                                                                     (cl-loop for extensions-pair in eaf-app-extensions-alist
-                                                                              append (symbol-value (cdr extensions-pair)))))
-                                                        (progn
-                                                          (switch-to-buffer-other-window nil)
-                                                          (find-file filename))
-                                                      (find-file-other-window filename)))
-                                            org-link-frame-setup)))
-        (cond (annotate-page
-               (start-process "Shell" nil shell-file-name shell-command-switch
-                              (concat "qpdfview --unique \"" (expand-file-name (get-annotate-file t))
-                                      "\"#" annotate-page)))
-              ((and annotate-file (file-exists-p annotate-file))
-               (org-open-file annotate-file in-emacs))
-              (t
-               (org-open-at-point in-emacs)))))))
+    (let ((annotate-file (when (or (ignore-errors (org-at-top-heading-p)) (org-at-keyword-p)) (org-get-annotate-file)))
+          (annotate-page (unless (org-in-regexp org-link-any-re) (org-get-annotate-page)))
+          (org-link-frame-setup (cl-acons 'file (lambda (filename)
+                                                  (if (and (buffer-live-p (get-buffer "*eaf*"))
+                                                           (member (ignore-errors (downcase (file-name-extension filename)))
+                                                                   (cl-loop for extensions-pair in eaf-app-extensions-alist
+                                                                            append (symbol-value (cdr extensions-pair)))))
+                                                      (progn
+                                                        (switch-to-buffer-other-window nil)
+                                                        (find-file filename))
+                                                    (find-file-other-window filename)))
+                                          org-link-frame-setup)))
+      (cond (annotate-page
+             (start-process "Shell" nil shell-file-name shell-command-switch
+                            (concat "qpdfview --unique \"" (expand-file-name (org-get-annotate-file))
+                                    "\"#" annotate-page)))
+            ((and annotate-file (file-exists-p annotate-file))
+             (org-open-file annotate-file in-emacs))
+            (t
+             (org-open-at-point in-emacs))))))
+;;;###autoload
+(defun org-eaf-pdf-sync-note (&optional operator)
+  (interactive)
+  (let* ((annotate-page (org-get-annotate-page operator))
+         (annotate-file (expand-file-name (org-get-annotate-file)))
+         (annotate-file-buffer (eaf-interleave--find-buffer annotate-file)))
+    (delete-other-windows)
+    (split-window-right)
+    (if (not annotate-file-buffer)
+        (eaf-open annotate-file)
+      (switch-to-buffer annotate-file-buffer)
+      (if annotate-page
+          (eaf-call-sync "execute_function_with_args" eaf--buffer-id "jump_to_page_with_num" (format "%s" annotate-page))
+        (message "No %s page found" operator)))
+    (other-window 1)))
+;;;###autoload
+(defun org-eaf-pdf-sync-prev-note ()
+  (interactive)
+  (org-eaf-pdf-sync-note 'prev))
+;;;###autoload
+(defun org-eaf-pdf-sync-next-note ()
+  (interactive)
+  (org-eaf-pdf-sync-note 'next))
 ;;;###autoload
 (defun swint-org-open-dired-at-point ()
   "Open Dired for directory of file link at point."

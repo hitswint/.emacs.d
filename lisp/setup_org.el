@@ -120,6 +120,10 @@
                     ("n" . org-next-item)
                     ("P" . org-beginning-of-item-list)
                     ("N" . org-end-of-item-list)))
+                (smartrep-define-key org-mode-map "M-s"
+                  '(("M-p" . org-eaf-pdf-sync-prev-note)
+                    ("M-n" . org-eaf-pdf-sync-next-note)
+                    ("M-o" . org-eaf-pdf-sync-note)))
                 (define-key org-mode-map (kbd "C-a") #'(lambda () (interactive)
                                                          (if (or (org-at-heading-p) (org-at-item-p))
                                                              (call-interactively 'org-beginning-of-line)

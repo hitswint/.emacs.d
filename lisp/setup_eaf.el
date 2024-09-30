@@ -233,7 +233,9 @@
     (eaf-bind-key scroll_to_bottom "M->" eaf-pyqterminal-cursor-move-mode-keybinding)))
 (use-package eaf-interleave
   :load-path "repos/emacs-application-framework/extension/"
-  :commands (eaf-interleave-mode eaf-interleave-app-mode)
+  :commands (eaf-interleave-mode
+             eaf-interleave-app-mode
+             eaf-interleave--find-buffer)
   :init
   ;; (add-hook 'eaf-browser-hook 'eaf-interleave-app-mode)
   (add-hook 'eaf-pdf-viewer-hook 'eaf-interleave-app-mode)
