@@ -36,7 +36,6 @@
                                                  (while (org-up-heading-safe)))
                                                (or (swint-get-annotated-file)
                                                    (car (bibtex-completion-find-pdf (org-entry-get nil "Custom_ID")))
-                                                   (interleave--find-pdf-path (current-buffer))
                                                    (org-entry-get nil "interleave_url")))))
       (let ((annotate-file (when (or (ignore-errors (org-at-top-heading-p)) (org-at-keyword-p)) (get-annotate-file nil)))
             (annotate-page (unless (org-in-regexp org-link-any-re) (get-annotate-page)))
@@ -50,12 +49,12 @@
                                                           (find-file filename))
                                                       (find-file-other-window filename)))
                                             org-link-frame-setup)))
-        (cond ((and annotate-file (file-exists-p annotate-file))
-               (org-open-file annotate-file in-emacs))
-              (annotate-page
+        (cond (annotate-page
                (start-process "Shell" nil shell-file-name shell-command-switch
                               (concat "qpdfview --unique \"" (expand-file-name (get-annotate-file t))
                                       "\"#" annotate-page)))
+              ((and annotate-file (file-exists-p annotate-file))
+               (org-open-file annotate-file in-emacs))
               (t
                (org-open-at-point in-emacs)))))))
 ;;;###autoload
@@ -86,7 +85,7 @@
                            (while (org-up-heading-safe))
                            (or (swint-get-annotated-file)
                                (car (bibtex-completion-find-pdf (org-entry-get nil "Custom_ID")))
-                               (interleave--find-pdf-path (current-buffer)))))
+                               (org-entry-get nil "interleave_url"))))
          (qpdfview-database (expand-file-name "~/.local/share/qpdfview/qpdfview/database"))
          (qpdfview-page (when (and (not (string-empty-p (shell-command-to-string "pgrep -x qpdfview"))) annotated-file)
                           ;; 需在qpdfview设定中将Save database interval设置为0min，否则数据库无法及时更新
@@ -94,10 +93,19 @@
                            (format "sqlite3 %s \"select currentPage from tabs_v5 where filePath=\\\"%s\\\"\"" "~/.local/share/qpdfview/qpdfview/database" (expand-file-name annotated-file))))))
     (if (or (string-empty-p qpdfview-page) (null qpdfview-page))
         (message "No file annotated or not opened in qpdfview.")
-      (org-entry-put nil (cond ((file-in-directory-p (buffer-file-name) "~/org/annotated") "annotated_page")
-                               ((file-equal-p (buffer-file-name) bibtex-completion-notes-path) "NOTER_PAGE")
-                               ((file-in-directory-p (buffer-file-name) "~/org/interleave_notes") "interleave_page_note"))
-                     (string-trim qpdfview-page)))))
+      (let ((page (string-trim qpdfview-page)))
+        (cond ((file-in-directory-p (buffer-file-name) "~/org/annotated")
+               (org-insert-heading-after-current)
+               (org-entry-put nil "annotated_page" page))
+              ((file-equal-p (buffer-file-name) bibtex-completion-notes-path)
+               (while (and (> (org-current-level) 2) (org-up-heading-safe)))
+               (org-insert-heading-after-current)
+               (org-entry-put nil "NOTER_PAGE" page))
+              ((file-in-directory-p (buffer-file-name) "~/org/interleave_notes")
+               (while (and (> (org-current-level) 1) (org-up-heading-safe)))
+               (org-insert-heading-after-current)
+               (org-entry-put nil "interleave_url" annotated-file)
+               (org-entry-put nil "interleave_page_note" page)))))))
 ;; ========swint-qpdfview-annotated-new=======
 ;;; swint-cursor-localtion
 ;; ===========swint-cursor-localtion==========

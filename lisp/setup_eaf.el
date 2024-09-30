@@ -102,8 +102,10 @@
       (eaf-restart-process)))
   (defun eaf-open-internal ()
     (interactive)
-    (let ((path-or-url (eaf-get-path-or-url)))
-      (find-file-other-window path-or-url)))
+    (cl-letf (((symbol-function 'find-file)
+               (advice--cd*r (symbol-function #'find-file)))
+              (path-or-url (eaf-get-path-or-url)))
+      (find-file path-or-url)))
   (advice-add 'eaf-toggle-proxy :around #'eaf-toggle-proxy/around)
   (use-package eaf-browser
     :config
@@ -246,7 +248,6 @@
   (define-key eaf-interleave-app-mode-map (kbd "C-M-o") 'eaf-interleave-sync-current-note)
   (define-key eaf-interleave-app-mode-map (kbd "C-M-n") 'eaf-interleave-sync-next-note)
   (define-key eaf-interleave-app-mode-map (kbd "i") 'eaf-interleave-add-note)
-  (define-key eaf-interleave-app-mode-map (kbd "C-M-'") 'eaf-interleave-open-notes-file)
   (define-key eaf-interleave-app-mode-map (kbd "q") 'eaf-interleave-quit))
 (use-package eaf-all-the-icons
   :load-path "repos/emacs-application-framework/extension/"

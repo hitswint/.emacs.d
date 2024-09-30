@@ -122,7 +122,6 @@
                            hungry-delete
                            hydra
                            imenu-anywhere
-                           interleave
                            ivy
                            ivy-hydra
                            jedi
