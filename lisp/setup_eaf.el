@@ -230,7 +230,11 @@
     (eaf-bind-key scroll_to_bottom "S-<next>" eaf-pyqterminal-keybinding)
     (eaf-bind-key toggle_mark "C-;" eaf-pyqterminal-cursor-move-mode-keybinding)
     (eaf-bind-key scroll_to_begin "M-<" eaf-pyqterminal-cursor-move-mode-keybinding)
-    (eaf-bind-key scroll_to_bottom "M->" eaf-pyqterminal-cursor-move-mode-keybinding)))
+    (eaf-bind-key scroll_to_bottom "M->" eaf-pyqterminal-cursor-move-mode-keybinding)
+    (eaf-bind-key org-eaf-noter-sync-prev "P" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key org-eaf-noter-sync-next "N" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key org-eaf-noter-sync "O" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key org-eaf-noter-new "I" eaf-pdf-viewer-keybinding)))
 (use-package eaf-interleave
   :load-path "repos/emacs-application-framework/extension/"
   :commands (eaf-interleave-mode

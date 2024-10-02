@@ -69,7 +69,19 @@
             (t
              (org-open-at-point in-emacs))))))
 ;;;###autoload
-(defun org-eaf-pdf-sync-note (&optional operator)
+(defun swint-org-open-dired-at-point ()
+  "Open Dired for directory of file link at point."
+  (interactive)
+  (let ((el (org-element-lineage (org-element-context) '(link) t)))
+    (unless (and el (equal (org-element-property :type el) "file"))
+      (user-error "Not on file link"))
+    (dired-jump 'other-window
+                (expand-file-name (org-element-property :path el)))))
+;; ===========swint-org-open-at-point=========
+;;; org-eaf-pdf-sync
+;; ==============org-eaf-pdf-sync=============
+;;;###autoload
+(defun org-eaf-pdf-sync (&optional operator)
   (interactive)
   (let* ((annotate-page (org-get-annotate-page operator))
          (annotate-file (expand-file-name (org-get-annotate-file)))
@@ -81,53 +93,86 @@
       (switch-to-buffer annotate-file-buffer)
       (if annotate-page
           (eaf-call-sync "execute_function_with_args" eaf--buffer-id "jump_to_page_with_num" (format "%s" annotate-page))
-        (message "No %s page found" operator)))
+        (message "No %s page found" (or operator 'current))))
     (other-window 1)))
 ;;;###autoload
-(defun org-eaf-pdf-sync-prev-note ()
+(defun org-eaf-pdf-sync-prev ()
   (interactive)
-  (org-eaf-pdf-sync-note 'prev))
+  (org-eaf-pdf-sync 'prev))
 ;;;###autoload
-(defun org-eaf-pdf-sync-next-note ()
+(defun org-eaf-pdf-sync-next ()
   (interactive)
-  (org-eaf-pdf-sync-note 'next))
+  (org-eaf-pdf-sync 'next))
 ;;;###autoload
-(defun swint-org-open-dired-at-point ()
-  "Open Dired for directory of file link at point."
+(defun org-eaf-noter-sync (&optional operator fixed-pos)
   (interactive)
-  (let ((el (org-element-lineage (org-element-context) '(link) t)))
-    (unless (and el (equal (org-element-property :type el) "file"))
-      (user-error "Not on file link"))
-    (dired-jump 'other-window
-                (expand-file-name (org-element-property :path el)))))
-;; ===========swint-org-open-at-point=========
+  (let ((current-page (string-to-number (eaf-call-sync "execute_function" eaf--buffer-id "current_page")))
+        (key-for-pdf (bibtex-completion-get-value "=key=" (when (file-in-directory-p eaf--buffer-url "~/Zotero")
+                                                            (bibtex-completion-get-entry-for-pdf eaf--buffer-url))))
+        (compare-operator (cond ((eq operator 'prev) #'<)
+                                ((eq operator 'next) #'>)
+                                (t #'=))))
+    (find-file-other-window bibtex-completion-notes-path)
+    (let ((point (point)))
+      (goto-char (point-min))
+      (when (re-search-forward (format bibtex-completion-notes-key-pattern (regexp-quote key-for-pdf)) nil t)
+        (org-narrow-to-subtree)
+        (if (eq operator 'prev)
+            (goto-char (point-max))
+          (goto-char (point-min)))
+        (while (and (funcall (if (eq operator 'prev) #'re-search-backward #'re-search-forward)
+                             (format "^\[ \t\r\]*\:%s\: \\([0-9]+\\)$" "NOTER_PAGE") nil t)
+                    (not (funcall compare-operator
+                                  (string-to-number (buffer-substring (match-beginning 1) (match-end 1)))
+                                  current-page)))
+          (org-cycle-hide-drawers t))
+        (widen)
+        (org-back-to-heading t)
+        (org-cycle-hide-drawers t))
+      (if (funcall compare-operator
+                   (string-to-number (org-entry-get-with-inheritance "NOTER_PAGE"))
+                   current-page)
+          (unless fixed-pos
+            (org-eaf-pdf-sync))
+        (message "No %s page found" (or operator 'current))
+        (goto-char point)))))
+;;;###autoload
+(defun org-eaf-noter-sync-prev ()
+  (interactive)
+  (org-eaf-noter-sync 'prev))
+;;;###autoload
+(defun org-eaf-noter-sync-next ()
+  (interactive)
+  (org-eaf-noter-sync 'next))
+;;;###autoload
+(defun org-eaf-noter-new ()
+  (interactive)
+  (org-eaf-noter-sync 'prev t)
+  (swint-annotate-generic-new))
+;; ==============org-eaf-pdf-sync=============
 ;;; mobileorg
 ;; =================mobileorg=================
-(setq org-directory "~/org")
-(setq org-mobile-inbox-for-pull "~/org/task-from-mobile.org")
-(setq org-mobile-directory "~/webdav-sync/mobileorg")
-(setq org-mobile-encryption-tempfile "~/org/orgtmpcrypt")
-(setq org-mobile-files (list "~/webdav-sync/orgzly/task.org"))
+
 ;; =================mobileorg=================
-;;; swint-qpdfview-annotated-new
-;; ========swint-qpdfview-annotated-new=======
+;;; swint-annotate-generic-new
+;; ==========swint-annotate-generic-new=======
 ;;;###autoload
-(defun swint-qpdfview-annotated-new ()
+(defun swint-annotate-generic-new ()
   "Open annotated file if annotation storage file exists."
   (interactive)
-  (let* ((annotated-file (save-excursion
-                           (while (org-up-heading-safe))
-                           (or (swint-get-annotated-file)
-                               (car (bibtex-completion-find-pdf (org-entry-get nil "Custom_ID")))
-                               (org-entry-get nil "interleave_url"))))
+  (let* ((annotate-file (org-get-annotate-file))
          (qpdfview-database (expand-file-name "~/.local/share/qpdfview/qpdfview/database"))
-         (qpdfview-page (when (and (not (string-empty-p (shell-command-to-string "pgrep -x qpdfview"))) annotated-file)
+         (qpdfview-page (when (and (not (string-empty-p (shell-command-to-string "pgrep -x qpdfview"))) annotate-file)
                           ;; 需在qpdfview设定中将Save database interval设置为0min，否则数据库无法及时更新
                           (shell-command-to-string
-                           (format "sqlite3 %s \"select currentPage from tabs_v5 where filePath=\\\"%s\\\"\"" "~/.local/share/qpdfview/qpdfview/database" (expand-file-name annotated-file))))))
-    (if (or (string-empty-p qpdfview-page) (null qpdfview-page))
+                           (format "sqlite3 %s \"select currentPage from tabs_v5 where filePath=\\\"%s\\\"\"" "~/.local/share/qpdfview/qpdfview/database" (expand-file-name annotate-file)))))
+         (eaf-pdf-page (when-let ((annotate-buffer (eaf-interleave--find-buffer annotate-file)))
+                         (with-current-buffer annotate-buffer
+                           (eaf-call-sync "execute_function" eaf--buffer-id "current_page"))))
+         (current-page (or (s-presence qpdfview-page) (s-presence eaf-pdf-page))))
+    (if (or (string-empty-p current-page) (null current-page))
         (message "No file annotated or not opened in qpdfview.")
-      (let ((page (string-trim qpdfview-page)))
+      (let ((page (string-trim current-page)))
         (cond ((file-in-directory-p (buffer-file-name) "~/org/annotated")
                (org-insert-heading-after-current)
                (org-entry-put nil "annotated_page" page))
@@ -138,9 +183,9 @@
               ((file-in-directory-p (buffer-file-name) "~/org/interleave_notes")
                (while (and (> (org-current-level) 1) (org-up-heading-safe)))
                (org-insert-heading-after-current)
-               (org-entry-put nil "interleave_url" annotated-file)
+               (org-entry-put nil "interleave_url" annotate-file)
                (org-entry-put nil "interleave_page_note" page)))))))
-;; ========swint-qpdfview-annotated-new=======
+;; ==========swint-annotate-generic-new=======
 ;;; swint-cursor-localtion
 ;; ===========swint-cursor-localtion==========
 ;;;###autoload

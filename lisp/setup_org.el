@@ -101,29 +101,30 @@
                 ;; ;/0/1/2/3 org-priority/A/B/C
                 ;; v org-agenda
                 ;; : org-set-tags-command
+                (add-to-list 'org-speed-commands '("P" . org-eaf-pdf-sync-prev))
+                (add-to-list 'org-speed-commands '("N" . org-eaf-pdf-sync-next))
+                (add-to-list 'org-speed-commands '("O" . org-eaf-pdf-sync))
+                (add-to-list 'org-speed-commands '("I" . swint-annotate-new))
                 (define-key org-mode-map (kbd "C-c e") 'org-beamer-select-environment)
                 (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
                 (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point)
                 (define-key org-mode-map (kbd "C-c o") #'(lambda () (interactive) (swint-org-open-at-point t)))
                 (define-key org-mode-map (kbd "C-c d") 'swint-org-open-dired-at-point)
-                (define-key org-mode-map (kbd "C-c i") 'swint-annotate-add-note)
-                (define-key org-mode-map (kbd "C-c M-,") #'(lambda () (interactive) (swint-org-mobile-sync "down")))
-                (define-key org-mode-map (kbd "C-c M-.") #'(lambda () (interactive) (swint-org-mobile-sync "up")))
                 (smartrep-define-key org-mode-map "M-s"
                   '(("p" . org-previous-visible-heading)
                     ("n" . org-next-visible-heading)
                     ("u" . outline-up-heading)
                     ("b" . org-backward-heading-same-level)
-                    ("f" . org-forward-heading-same-level)))
+                    ("f" . org-forward-heading-same-level)
+                    ("P" . org-eaf-pdf-sync-prev)
+                    ("N" . org-eaf-pdf-sync-next)
+                    ("O" . org-eaf-pdf-sync)
+                    ("I" . swint-annotate-new)))
                 (smartrep-define-key org-mode-map "C-c"
                   '(("p" . org-previous-item)
                     ("n" . org-next-item)
                     ("P" . org-beginning-of-item-list)
                     ("N" . org-end-of-item-list)))
-                (smartrep-define-key org-mode-map "M-s"
-                  '(("M-p" . org-eaf-pdf-sync-prev-note)
-                    ("M-n" . org-eaf-pdf-sync-next-note)
-                    ("M-o" . org-eaf-pdf-sync-note)))
                 (define-key org-mode-map (kbd "C-a") #'(lambda () (interactive)
                                                          (if (or (org-at-heading-p) (org-at-item-p))
                                                              (call-interactively 'org-beginning-of-line)
@@ -151,6 +152,7 @@
   ;; ===============Keybindings=================
 ;;;; GTD
   ;; ===================GTD=====================
+  ;; C-c C-x C-i org-clock-in / C-c C-x C-o org-clock-out
   (setq org-agenda-files (directory-files "~/webdav-sync/orgzly/" t ".+\\.org"))
   ;; Do not show title of task in mode-line when using org-clock.
   (setq org-clock-heading-function
@@ -435,7 +437,7 @@
 ;; =================org-noter===================
 (use-package org-noter
   :commands (org-noter
-             swint-annotate-add-note)
+             swint-annotate-new)
   :bind ("C-M-'" . swint-annotate)
   :config
   (require 'djvu)
@@ -443,7 +445,7 @@
   (setq org-noter-always-create-frame nil
         org-noter-disable-narrowing t
         org-noter-use-indirect-buffer nil)
-  (defun swint-annotate-add-note ()
+  (defun swint-annotate-new ()
     (interactive)
     (cond ((and (bound-and-true-p org-noter-notes-mode) org-noter--session
                 (buffer-live-p (org-noter--session-doc-buffer org-noter--session)))
@@ -454,7 +456,7 @@
                (progn (switch-to-buffer-other-window pdf-buffer)
                       (eaf-interleave-add-note))
              (message "You need to add the first note from pdf side.")))
-          (t (swint-qpdfview-annotated-new))))
+          (t (swint-annotate-generic-new))))
   (defun swint-annotate ()
     (interactive)
     (if (derived-mode-p 'org-mode)
@@ -496,17 +498,19 @@
                (with-current-buffer (car (eaf--get-eaf-buffers))
                  (eaf-interleave-open-notes-file)))
               (t (user-error "Quit"))))))
-  (define-key org-noter-doc-mode-map (kbd "I") 'org-noter-insert-precise-note)
+  (define-key org-noter-doc-mode-map (kbd "C-i") nil)
+  (define-key org-noter-doc-mode-map (kbd "M-i") nil)
+  (define-key org-noter-doc-mode-map (kbd "C-M-i") nil)
   (define-key org-noter-doc-mode-map (kbd "M-p") nil)
-  (define-key org-noter-doc-mode-map (kbd "M-.") nil)
   (define-key org-noter-doc-mode-map (kbd "M-n") nil)
+  (define-key org-noter-doc-mode-map (kbd "M-.") nil)
   (define-key org-noter-doc-mode-map (kbd "C-M-.") nil)
   (define-key org-noter-doc-mode-map (kbd "C-M-p") 'org-noter-sync-prev-page-or-chapter)
   (define-key org-noter-doc-mode-map (kbd "C-M-o") 'org-noter-sync-current-page-or-chapter)
   (define-key org-noter-doc-mode-map (kbd "C-M-n") 'org-noter-sync-next-page-or-chapter)
   (define-key org-noter-notes-mode-map (kbd "M-p") nil)
-  (define-key org-noter-notes-mode-map (kbd "M-.") nil)
   (define-key org-noter-notes-mode-map (kbd "M-n") nil)
+  (define-key org-noter-notes-mode-map (kbd "M-.") nil)
   (define-key org-noter-notes-mode-map (kbd "C-M-.") nil)
   (define-key org-noter-notes-mode-map (kbd "C-M-p") 'org-noter-sync-prev-note)
   (define-key org-noter-notes-mode-map (kbd "C-M-o") 'org-noter-sync-current-note)

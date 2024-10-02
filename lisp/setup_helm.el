@@ -871,15 +871,14 @@
 ;; ==============helm-descbinds=================
 ;;; helm-imenu
 ;; ================helm-imenu===================
-(use-package imenu
-  :commands imenu-choose-buffer-index)
 (use-package imenu-anywhere
   :bind ("M-s I" . helm-imenu-anywhere)
   :config
   (setq imenu-anywhere-delimiter " | "))
 (use-package helm-imenu
   :bind (("M-s i" . helm-semantic-or-imenu)
-         ("M-s o" . helm-imenu-outshine))
+         ("M-s o" . helm-imenu-outshine)
+         ("M-s O" . helm-imenu-outshine-in-all-buffers))
   :config
   (setq helm-imenu-delimiter " | ")
   ;; helm-imenu-outshine.
@@ -907,6 +906,21 @@
                          (helm-imenu--candidates-1
                           (delete (assoc "*Rescan*" index) index))))
             (setq helm-cached-imenu-outshine-tick tick))))))
+  (defun helm-imenu-outshine-candidates-in-all-buffers ()
+    (let ((lst (buffer-list)))
+      (cl-loop with cur-buf = (current-buffer)
+               for b in lst
+               when (with-current-buffer b
+                      (and (or (member major-mode helm-imenu-extra-modes)
+                               (derived-mode-p 'prog-mode))
+                           (helm-same-major-mode-p
+                            cur-buf helm-imenu-all-buffer-assoc)))
+               collect (helm-make-source
+                           (format "Imenu outshine in %s" (buffer-name b))
+                           'helm-imenu-outshine-source
+                         :candidates (with-current-buffer b
+                                       (helm-imenu-outshine-candidates b))
+                         :fuzzy-match helm-imenu-fuzzy-match))))
   (defclass helm-imenu-outshine-source (helm-source-sync)
     ((candidates :initform 'helm-imenu-outshine-candidates)
      (candidate-transformer :initform 'helm-imenu-transformer)
@@ -916,7 +930,6 @@
      (help-message :initform 'helm-imenu-help-message)
      (action :initform 'helm-imenu-action)))
   (defun helm-imenu-outshine ()
-    "Preconfigured `helm' for `imenu'."
     (interactive)
     (if (not outshine-mode)
         (let ((outline-regexp (cond ((eq major-mode 'org-mode)
@@ -931,13 +944,25 @@
               (helm-make-source "Imenu outshine" 'helm-imenu-outshine-source
                 :fuzzy-match helm-imenu-fuzzy-match)))
       (let ((imenu-auto-rescan t)
+            (helm-highlight-matches-around-point-max-lines 'never)
             (str (thing-at-point 'symbol))
             (helm-execute-action-at-once-if-one
              helm-imenu-execute-action-at-once-if-one))
         (helm :sources 'helm-source-imenu-outshine
               :default (list (concat "\\_<" str "\\_>") str)
               :preselect str
-              :buffer "*helm imenu outshine*")))))
+              :buffer "*helm imenu outshine*"))))
+  (defun helm-imenu-outshine-in-all-buffers ()
+    (interactive)
+    (let ((imenu-auto-rescan t)
+          (helm-highlight-matches-around-point-max-lines 'never)
+          (str (thing-at-point 'symbol))
+          (helm-execute-action-at-once-if-one
+           helm-imenu-execute-action-at-once-if-one))
+      (helm :sources (helm-imenu-outshine-candidates-in-all-buffers)
+            :default (list (concat "\\_<" str "\\_>") str)
+            :preselect str
+            :buffer "*helm imenu outshine all*"))))
 ;; ================helm-imenu===================
 ;;; ace-jump-helm-line
 ;; ============ace-jump-helm-line===============
