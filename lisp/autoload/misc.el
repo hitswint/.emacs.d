@@ -92,6 +92,10 @@
                               (read-string (format "Get Words(default %s): " (propertize default-word 'face 'font-lock-variable-name-face))
                                            nil nil default-word))
                           (ivy-read "Get Words:" selected-text)))))
+    ;; 当read-string使eaf窗口改变大小时，posframe窗口闪现即消失
+    ;; 使用sit-for等待一段时间，使eaf窗口恢复大小
+    (when (eq major-mode 'eaf-mode)
+      (sit-for 0.2))
     (replace-regexp-in-string "\n" " " (string-trim target-text))))
 ;;;###autoload
 (defun swint-get-current-thing ()
