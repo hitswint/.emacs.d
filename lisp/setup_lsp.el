@@ -1,7 +1,40 @@
 ;;; lsp-bridge
 ;; =====================lsp-bridge=====================
 (use-package posframe
-  :commands posframe-show)
+  :commands (posframe-show posframe-scroll-or-switch)
+  :config
+  (defun posframe-scroll-or-switch (buffer)
+    (let (switch-to-posframe-buffer)
+      (unwind-protect
+          (let ((curr-event (read-event)))
+            ;; 当鼠标位于posframe上时，M-p/M-n/M-e失效
+            (setq switch-to-posframe-buffer (catch 'break
+                                              (while (member curr-event '(134217840 134217838 134217829))
+                                                (cond ((eq curr-event 134217838) ;M-n
+                                                       (posframe-funcall buffer #'(lambda () (ignore-errors (scroll-up-command)))))
+                                                      ((eq curr-event 134217840) ;M-p
+                                                       (posframe-funcall buffer #'(lambda () (ignore-errors (scroll-down-command)))))
+                                                      ((eq curr-event 134217829) ;M-e
+                                                       (throw 'break t)))
+                                                (setq curr-event (read-event)))))
+            (unless switch-to-posframe-buffer
+              (push curr-event unread-command-events)))
+        (if switch-to-posframe-buffer
+            (progn (posframe-delete-frame buffer)
+                   (other-frame 0)
+                   (unless (member (buffer-name) '("*sdcv*" "*ydcv*" "*online*"))
+                     (window-configuration-to-register :sdcv))
+                   (delete-other-windows)
+                   (switch-to-buffer buffer)
+                   (set-buffer buffer)
+                   (setq-local cursor-type t)
+                   (setq-local cursor-in-non-selected-windows t)
+                   (local-set-key (kbd "q") #'(lambda () (interactive)
+                                                (swint-kill-buffer)
+                                                (when (get-register :sdcv)
+                                                  (jump-to-register :sdcv)))))
+          (posframe-delete buffer)
+          (other-frame 0))))))
 (use-package lsp-bridge
   :load-path "repos/lsp-bridge/"
   :delight '(:eval (propertize " L" 'face 'font-lock-function-name-face))

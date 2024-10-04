@@ -1334,10 +1334,35 @@ ORIG is the advised function, which is called with its ARGS."
     (let* ((word (or _word (swint-get-words-at-point)))
            (ellama-language (if (string-match-p "\\cC" word) "English" "Chinese"))
            (ellama-translation-template "Translation to %s: %s"))
-      (ellama-instant
+      (ellama-instant-to-posframe
        (format ellama-translation-template
                ellama-language word ellama-language)
        :provider ellama-translation-provider)))
+  (defun ellama-instant-to-posframe (prompt &rest args)
+    (let* ((provider (or (plist-get args :provider)
+                         ellama-provider))
+           (buffer-name (ellama-generate-name provider real-this-command prompt))
+           (buffer (get-buffer-create (if (get-buffer buffer-name)
+                                          (make-temp-name (concat buffer-name " "))
+                                        buffer-name)))
+           filter)
+      (with-current-buffer buffer
+        (funcall ellama-major-mode)
+        (when (derived-mode-p 'org-mode)
+          (setq filter 'ellama--translate-markdown-to-org-filter)))
+      (ellama-stream prompt
+                     :buffer buffer
+                     :filter filter
+                     :provider provider)
+      (if (not (posframe-workable-p))
+          (display-buffer buffer)
+        (posframe-show buffer
+                       :border-color "red"
+                       :border-width 2
+                       :background-color "black"
+                       :width (window-width)
+                       :height (/ (window-height) 2))
+        (posframe-scroll-or-switch buffer))))
   (defun ellama-get-pdf-text ()
     (shell-command-to-string (format "pdftotext -l %s -nopgbrk -q -- \"%s\" - | fmt -w %s"
                                      (if (derived-mode-p 'pdf-view-mode)

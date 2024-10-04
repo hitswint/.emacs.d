@@ -3,11 +3,7 @@
 ;;;###autoload
 (define-derived-mode sdcv-mode org-mode nil
   "Major mode for sdcv."
-  (read-only-mode 1)
-  (local-set-key (kbd "q") #'(lambda () (interactive)
-                               (swint-kill-buffer)
-                               (when (get-register :sdcv)
-                                 (jump-to-register :sdcv)))))
+  (read-only-mode 1))
 (defvar sdcv-dictionary-list '("懒虫简明英汉词典"
                                "懒虫简明汉英词典"
                                "新世纪英汉科技大词典"
@@ -74,40 +70,6 @@ FORCE-OTHER-WINDOW is ignored."
 ;; 需设置为t，switch-to-buffer才会遵从display-buffer-alist设定
 (setq switch-to-buffer-obey-display-actions nil)
 ;; ============优先纵向分割窗口==============
-(defun posframe-scroll-or-switch (buffer)
-  (let (switch-to-posframe-buffer)
-    (unwind-protect
-        (let ((curr-event (read-event)))
-          (setq switch-to-posframe-buffer (catch 'break
-                                            (while (member curr-event '(134217840 134217838 134217829))
-                                              (cond ((eq curr-event 134217838) ;M-n
-                                                     (posframe-funcall buffer #'(lambda () (ignore-errors (scroll-up-command)))))
-                                                    ((eq curr-event 134217840) ;M-p
-                                                     (posframe-funcall buffer #'(lambda () (ignore-errors (scroll-down-command)))))
-                                                    ((eq curr-event 134217829) ;M-e
-                                                     (throw 'break t)))
-                                              (setq curr-event (read-event)))))
-          (unless switch-to-posframe-buffer
-            (push curr-event unread-command-events)))
-      (if switch-to-posframe-buffer
-          (progn (posframe-delete-frame buffer)
-                 (other-frame 0)
-                 (unless (member (buffer-name) '("*sdcv*" "*ydcv*" "*online*"))
-                   (window-configuration-to-register :sdcv))
-                 (delete-other-windows)
-                 (switch-to-buffer buffer)
-                 (set-buffer buffer)
-                 (setq-local cursor-type t)
-                 (setq-local cursor-in-non-selected-windows t))
-        (posframe-delete buffer)
-        (other-frame 0))
-      ;; 前面posframe-delete-frame关闭posframe，但仍在winner-modified-list内
-      ;; 导致post-command-hook中调用winner-save-old-configurations时出错：
-      ;; (wrong-type-argument frame-live-p #<dead frame>)
-      (when (bound-and-true-p winner-modified-list)
-        (setq winner-modified-list
-              (cl-loop for frame in winner-modified-list
-                       if (frame-live-p frame) collect frame))))))
 ;;;###autoload
 (defun swint-display-dict (buffer result &optional cleaner to-buffer)
   (with-current-buffer (get-buffer-create buffer)
@@ -119,16 +81,20 @@ FORCE-OTHER-WINDOW is ignored."
       (when cleaner (funcall cleaner))))
   (if (and (posframe-workable-p) (not to-buffer))
       (progn (posframe-show buffer
-                            :left-fringe 8
-                            :right-fringe 8
-                            :internal-border-color (face-foreground 'default)
-                            :internal-border-width 1)
+                            :border-color "red"
+                            :border-width 2
+                            :background-color "black"
+                            :max-width (window-width))
              (posframe-scroll-or-switch buffer))
     (unless (member (buffer-name) '("*sdcv*" "*ydcv*" "*online*"))
       (window-configuration-to-register :sdcv))
     (delete-other-windows)
     (switch-to-buffer buffer)
-    (set-buffer buffer)))
+    (set-buffer buffer)
+    (local-set-key (kbd "q") #'(lambda () (interactive)
+                                 (swint-kill-buffer)
+                                 (when (get-register :sdcv)
+                                   (jump-to-register :sdcv))))))
 ;;;###autoload
 (defun swint-sdcv-to-tip (&optional _word)
   "Search WORD simple translate result."
@@ -136,7 +102,7 @@ FORCE-OTHER-WINDOW is ignored."
   (let* ((word (or _word (swint-get-words-at-point)))
          (sdcv-result (sdcv-search-with-dictionary word sdcv-dictionary-list t)))
     (if (string-match-p  "\\`[ \t\n\r]*\\'" sdcv-result)
-        (message "Nothing")
+        (bing-dict-brief-cb-at-point word)
       ;; (pos-tip-show
       ;;  (replace-regexp-in-string "-->\\(.*\\)\n-->\\(.*\\)\n" "\\1：\\2"
       ;;                            (replace-regexp-in-string
@@ -150,7 +116,7 @@ FORCE-OTHER-WINDOW is ignored."
   (let* ((word (or _word (swint-get-words-at-point)))
          (sdcv-result (sdcv-search-with-dictionary word sdcv-dictionary-list t)))
     (if (string-match-p  "\\`[ \t\n\r]*\\'" sdcv-result)
-        (message "Nothing")
+        (bing-dict-brief-cb-at-point word)
       (swint-display-dict "*sdcv*" sdcv-result 'sdcv-output-cleaner t))))
 ;; ==================sdcv====================
 ;;; online

@@ -4,7 +4,14 @@
   :bind (("M-/" . winner-undo)
          ("M-s M-/" . winner-redo))
   :config
-  (winner-mode 1))
+  (winner-mode 1)
+  ;; 使用posframe-delete-frame关闭posframe，但其仍在winner-modified-list内
+  ;; 导致post-command-hook中调用winner-save-old-configurations时出错：
+  ;; (wrong-type-argument frame-live-p #<dead frame>)
+  (advice-add 'winner-save-old-configurations :before #'(lambda () (when (bound-and-true-p winner-modified-list)
+                                                                     (setq winner-modified-list
+                                                                           (cl-loop for frame in winner-modified-list
+                                                                                    if (frame-live-p frame) collect frame))))))
 ;; =================winner-mode=================
 ;;; window-numbering
 ;; ==============window-numbering===============
