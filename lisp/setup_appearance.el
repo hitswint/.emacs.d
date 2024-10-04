@@ -26,7 +26,8 @@
 ;; ================Mode Line==================
 (line-number-mode t)
 (column-number-mode t)
-(setq-default mode-line-default-help-echo nil
+(setq-default show-help-function nil
+              mode-line-default-help-echo nil
               mode-line-format (delete '(vc-mode vc-mode) mode-line-format) ;去除vc-mode显示
               mode-line-modes (seq-remove (lambda (x) (member x '("(" ")"))) mode-line-modes)
               ;; 升级29之后buffer名字前有额外空格
