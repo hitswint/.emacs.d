@@ -116,6 +116,8 @@
     (let ((point (point)))
       (goto-char (point-min))
       (when (re-search-forward (format bibtex-completion-notes-key-pattern (regexp-quote key-for-pdf)) nil t)
+        (org-back-to-heading t)
+        (setq point (point))
         (org-narrow-to-subtree)
         (if (eq operator 'prev)
             (goto-char (point-max))
@@ -129,13 +131,14 @@
         (widen)
         (org-back-to-heading t)
         (org-cycle-hide-drawers t))
-      (if (funcall compare-operator
-                   (string-to-number (org-entry-get-with-inheritance "NOTER_PAGE"))
-                   current-page)
-          (unless fixed-pos
-            (org-eaf-pdf-sync))
-        (message "No %s page found" (or operator 'current))
-        (goto-char point)))))
+      (let ((note-page (org-entry-get-with-inheritance "NOTER_PAGE")))
+        (if (and note-page (funcall compare-operator
+                                    (string-to-number note-page)
+                                    current-page))
+            (unless fixed-pos
+              (org-eaf-pdf-sync))
+          (message "No %s page found" (or operator 'current))
+          (goto-char point))))))
 ;;;###autoload
 (defun org-eaf-noter-sync-prev ()
   (interactive)
