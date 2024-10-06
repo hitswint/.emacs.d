@@ -86,7 +86,7 @@
            (qpdfview-database (expand-file-name "~/.local/share/qpdfview/qpdfview/database"))
            (pdf-file-list (if (string= (shell-command-to-string "pgrep -x qpdfview") "")
                               (cl-loop for buffer in (buffer-list)
-                                       when (and (eq major-mode 'eaf-mode)
+                                       when (and (equal (buffer-mode buffer) 'eaf-mode)
                                                  (equal (buffer-local-value 'eaf--buffer-app-name buffer) "pdf-viewer"))
                                        collect (buffer-local-value 'eaf--buffer-url buffer))
                             (split-string (shell-command-to-string

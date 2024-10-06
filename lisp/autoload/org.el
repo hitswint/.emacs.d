@@ -84,16 +84,10 @@
 (defun org-eaf-pdf-sync (&optional operator)
   (interactive)
   (let* ((annotate-page (org-get-annotate-page operator))
-         (annotate-file (expand-file-name (org-get-annotate-file)))
-         (annotate-file-buffer (eaf-interleave--find-buffer annotate-file)))
+         (annotate-file (expand-file-name (org-get-annotate-file))))
     (delete-other-windows)
     (split-window-right)
-    (if (not annotate-file-buffer)
-        (eaf-open annotate-file)
-      (switch-to-buffer annotate-file-buffer)
-      (if annotate-page
-          (eaf-call-sync "execute_function_with_args" eaf--buffer-id "jump_to_page_with_num" (format "%s" annotate-page))
-        (message "No %s page found" (or operator 'current))))
+    (eaf-open-pdf-with-page annotate-file annotate-page)
     (other-window 1)))
 ;;;###autoload
 (defun org-eaf-pdf-sync-prev ()

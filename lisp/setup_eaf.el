@@ -93,6 +93,12 @@
         (call-interactively 'swint-kill-buffer))))
   (defun eaf-translate-text (text)
     (swint-sdcv-to-tip text))
+  (defun eaf-open-internal ()
+    (interactive)
+    (cl-letf (((symbol-function 'find-file)
+               (advice--cd*r (symbol-function #'find-file)))
+              (path-or-url (eaf-get-path-or-url)))
+      (find-file path-or-url)))
   (defun eaf-toggle-proxy/around (fn)
     (if (not (string-empty-p eaf-proxy-host))
         (funcall fn)
@@ -100,12 +106,6 @@
             eaf-proxy-port "7890"
             eaf-proxy-type "socks5")
       (eaf-restart-process)))
-  (defun eaf-open-internal ()
-    (interactive)
-    (cl-letf (((symbol-function 'find-file)
-               (advice--cd*r (symbol-function #'find-file)))
-              (path-or-url (eaf-get-path-or-url)))
-      (find-file path-or-url)))
   (advice-add 'eaf-toggle-proxy :around #'eaf-toggle-proxy/around)
   (use-package eaf-browser
     :config
@@ -239,11 +239,33 @@
   :load-path "repos/emacs-application-framework/extension/"
   :commands (eaf-interleave-mode
              eaf-interleave-app-mode
-             eaf-interleave--find-buffer)
+             eaf-interleave--find-buffer
+             eaf-open-pdf-with-page)
   :init
   ;; (add-hook 'eaf-browser-hook 'eaf-interleave-app-mode)
   (add-hook 'eaf-pdf-viewer-hook 'eaf-interleave-app-mode)
   :config
+  (defun eaf-open-pdf-with-page (file-name page)
+    (let ((buffer-existed (eaf-interleave--find-buffer file-name)))
+      (if buffer-existed
+          (switch-to-buffer buffer-existed)
+        (eaf-open file-name)
+        (while (not (eaf-interleave--find-buffer file-name))
+          (sit-for 0.2)))
+      (when page
+        (with-current-buffer (eaf-interleave--find-buffer file-name)
+          (let ((n 0)
+                orig-page
+                current-page)
+            (while (and (not (equal current-page page))
+                        (equal orig-page current-page)
+                        (< n 10))
+              ;; 某些页面即使跳转过去，current_page与page仍不相等
+              (setq orig-page current-page)
+              (eaf-call-sync "execute_function_with_args" eaf--buffer-id "jump_to_page_with_num" (format "%s" page))
+              (setq current-page (eaf-call-sync "execute_function" eaf--buffer-id "current_page"))
+              (sit-for 0.2)
+              (setq n (1+ n))))))))
   (setq eaf-interleave-disable-narrowing t)
   (setq eaf-interleave-split-direction 'vertical)
   (setq eaf-interleave-split-lines 20)
