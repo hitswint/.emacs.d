@@ -104,7 +104,7 @@
   (interactive)
   (org-eaf-pdf-sync 'next))
 ;;;###autoload
-(defun org-eaf-noter-sync (&optional operator fixed-pos)
+(defun org-eaf-noter-sync (&optional operator new-note)
   (interactive)
   (let ((current-page (string-to-number (eaf-call-sync "execute_function" eaf--buffer-id "current_page")))
         (key-for-pdf (when (file-in-directory-p eaf--buffer-url "~/Zotero")
@@ -123,31 +123,34 @@
                      (goto-char (point-min))
                      (when (re-search-forward (format bibtex-completion-notes-key-pattern (regexp-quote key-for-pdf)) nil t)
                        (org-back-to-heading t)))))
-        (if point
-            (let (note-page)
-              (org-narrow-to-subtree)
-              (if (eq operator 'prev)
-                  (goto-char (point-max))
-                (goto-char (point-min)))
-              (while (and (funcall (if (eq operator 'prev) #'re-search-backward #'re-search-forward)
-                                   (format "^\[ \t\r\]*\:%s\: \\([0-9]+\\)$" "NOTER_PAGE") nil t)
-                          (not (funcall compare-operator
-                                        (string-to-number (buffer-substring (match-beginning 1) (match-end 1)))
-                                        current-page)))
-                (org-cycle-hide-drawers t))
-              (widen)
-              (org-back-to-heading t)
-              (org-cycle-hide-drawers t)
-              (setq note-page (org-entry-get-with-inheritance "NOTER_PAGE"))
-              (if (and note-page (funcall compare-operator
-                                          (string-to-number note-page)
-                                          current-page))
-                  (unless fixed-pos
-                    (org-eaf-pdf-sync))
-                (message "No %s page found" (or operator 'current))
-                (goto-char point)))
-          (goto-char orig-point)
-          (message "Cannot find any note entry for current pdf"))))))
+        (cond (point (let (note-page)
+                       (org-narrow-to-subtree)
+                       (if (eq operator 'prev)
+                           (goto-char (point-max))
+                         (goto-char (point-min)))
+                       (while (and (funcall (if (eq operator 'prev) #'re-search-backward #'re-search-forward)
+                                            (format "^\[ \t\r\]*\:%s\: \\([0-9]+\\)$" "NOTER_PAGE") nil t)
+                                   (not (funcall compare-operator
+                                                 (string-to-number (buffer-substring (match-beginning 1) (match-end 1)))
+                                                 current-page)))
+                         (org-cycle-hide-drawers t))
+                       (widen)
+                       (org-back-to-heading t)
+                       (org-cycle-hide-drawers t)
+                       (setq note-page (org-entry-get-with-inheritance "NOTER_PAGE"))
+                       (if (and note-page (funcall compare-operator
+                                                   (string-to-number note-page)
+                                                   current-page))
+                           (unless new-note
+                             (org-eaf-pdf-sync))
+                         (message "No %s page found" (or operator 'current))
+                         (goto-char point))))
+              (new-note (bibtex-completion-edit-notes (list key-for-pdf))
+                        (bibtex-completion-notes-mode -1)
+                        (widen)
+                        (setq-local header-line-format nil))
+              (t (goto-char orig-point)
+                 (message "Cannot find any note entry for current pdf")))))))
 ;;;###autoload
 (defun org-eaf-noter-sync-prev ()
   (interactive)
@@ -170,7 +173,7 @@
 ;; ==========swint-annotate-generic-new=======
 ;;;###autoload
 (defun swint-annotate-generic-new ()
-  "Open annotated file if annotation storage file exists."
+  "Add annotate for current file using generic way."
   (interactive)
   (let* ((annotate-file (org-get-annotate-file))
          (qpdfview-database (expand-file-name "~/.local/share/qpdfview/qpdfview/database"))
