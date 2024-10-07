@@ -1,9 +1,6 @@
 ;;; sdcv
 ;; ==================sdcv====================
 ;;;###autoload
-(define-derived-mode sdcv-mode org-mode nil
-  "Major mode for sdcv."
-  (read-only-mode 1))
 (defvar sdcv-dictionary-list '("懒虫简明英汉词典"
                                "懒虫简明汉英词典"
                                "新世纪英汉科技大词典"
@@ -76,25 +73,17 @@ FORCE-OTHER-WINDOW is ignored."
     (let ((inhibit-read-only t))
       (buffer-disable-undo)
       (erase-buffer)
-      (sdcv-mode)
+      (org-mode)
       (insert result)
       (when cleaner (funcall cleaner))))
-  (if (and (posframe-workable-p) (not to-buffer))
-      (progn (posframe-show buffer
-                            :border-color "red"
-                            :border-width 2
-                            :background-color "black"
-                            :max-width (window-width))
-             (posframe-scroll-or-switch buffer))
-    (unless (member (buffer-name) '("*sdcv*" "*ydcv*" "*online*"))
-      (window-configuration-to-register :sdcv))
-    (delete-other-windows)
-    (switch-to-buffer buffer)
-    (set-buffer buffer)
-    (local-set-key (kbd "q") #'(lambda () (interactive)
-                                 (swint-kill-buffer)
-                                 (when (get-register :sdcv)
-                                   (jump-to-register :sdcv))))))
+  (if (or to-buffer (not (posframe-workable-p)))
+      (posframe-setup-buffer buffer)
+    (posframe-show buffer
+                   :border-color "red"
+                   :border-width 2
+                   :background-color "black"
+                   :max-width (window-width))
+    (posframe-scroll-or-switch buffer)))
 ;;;###autoload
 (defun swint-sdcv-to-tip (&optional _word)
   "Search WORD simple translate result."
