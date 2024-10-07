@@ -795,7 +795,7 @@
             (eaf-open-pdf-with-page pdf-file page)
             (when search-string
               (with-current-buffer (eaf-interleave--find-buffer pdf-file)
-                (eaf-call-sync "execute_function_with_args" eaf--buffer-id "send_input_message" "Search Text: " "search_text" "search" search-string)))))
+                (eaf-pdf-search-with-text search-string)))))
       (dired-async-shell-command (expand-file-name file-name))))
   (defun helm-ag-open-file-externally (candidates)
     (interactive)
