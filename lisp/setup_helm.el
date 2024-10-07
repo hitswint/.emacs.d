@@ -783,16 +783,19 @@
         (helm-do-ag-buffers (swint-get-current-thing)))))
   (defun helm-ag-open-file-action (file-name page &optional search-string)
     (if (string= (ignore-errors (downcase (file-name-extension file-name))) "pdf")
-        (if (string= (shell-command-to-string "pgrep -x qpdfview") "")
-            (let* ((pdf-file (expand-file-name file-name))
-                   (pdf-buffer (eaf-interleave--find-buffer pdf-file)))
-              (unless (eq (current-buffer) pdf-buffer)
-                (switch-to-buffer-other-window nil))
-              (eaf-open-pdf-with-page pdf-file page))
-          (start-process "Shell" nil shell-file-name shell-command-switch
-                         (concat "qpdfview --unique" (when search-string
-                                                       (concat " --search \"" search-string "\""))
-                                 " \"" file-name "#" page "\"")))
+        (let* ((pdf-file (expand-file-name file-name))
+               (pdf-buffer (eaf-interleave--find-buffer pdf-file)))
+          (if (not (or pdf-buffer (string= (shell-command-to-string "pgrep -x qpdfview") "")))
+              (start-process "Shell" nil shell-file-name shell-command-switch
+                             (concat "qpdfview --unique" (when search-string
+                                                           (concat " --search \"" search-string "\""))
+                                     " \"" file-name "#" page "\""))
+            (unless (eq (current-buffer) pdf-buffer)
+              (switch-to-buffer-other-window nil))
+            (eaf-open-pdf-with-page pdf-file page)
+            (when search-string
+              (with-current-buffer (eaf-interleave--find-buffer pdf-file)
+                (eaf-call-sync "execute_function_with_args" eaf--buffer-id "send_input_message" "Search Text: " "search_text" "search" search-string)))))
       (dired-async-shell-command (expand-file-name file-name))))
   (defun helm-ag-open-file-externally (candidates)
     (interactive)
@@ -872,6 +875,7 @@
          ("M-s o" . helm-imenu-outshine)
          ("M-s O" . helm-imenu-outshine-in-all-buffers))
   :config
+  (setq imenu-max-item-length nil)
   (setq helm-imenu-delimiter " | ")
   ;; helm-imenu-outshine.
   (defvar helm-source-imenu-outshine nil)

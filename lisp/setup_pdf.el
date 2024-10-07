@@ -84,14 +84,14 @@
     (let* ((string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\|'\\|&\\)")
            (zotero-storage "~/Zotero/storage")
            (qpdfview-database (expand-file-name "~/.local/share/qpdfview/qpdfview/database"))
-           (pdf-file-list (if (string= (shell-command-to-string "pgrep -x qpdfview") "")
-                              (cl-loop for buffer in (buffer-list)
-                                       when (and (equal (buffer-mode buffer) 'eaf-mode)
-                                                 (equal (buffer-local-value 'eaf--buffer-app-name buffer) "pdf-viewer"))
-                                       collect (buffer-local-value 'eaf--buffer-url buffer))
-                            (split-string (shell-command-to-string
-                                           (format "sqlite3 %s \"select filePath from tabs_v5\"" qpdfview-database))
-                                          "\n" t))))
+           (pdf-file-list (append (cl-loop for buffer in (buffer-list)
+                                           when (and (equal (buffer-mode buffer) 'eaf-mode)
+                                                     (equal (buffer-local-value 'eaf--buffer-app-name buffer) "pdf-viewer"))
+                                           collect (buffer-local-value 'eaf--buffer-url buffer))
+                                  (unless (string= (shell-command-to-string "pgrep -x qpdfview") "")
+                                    (split-string (shell-command-to-string
+                                                   (format "sqlite3 %s \"select filePath from tabs_v5\"" qpdfview-database))
+                                                  "\n" t)))))
       (cl-flet ((escape-local (x)
                   (replace-regexp-in-string string-to-escape
                                             "\\\\\\1" x)))
@@ -140,7 +140,7 @@ WHERE items.itemID = itemAttachments.itemID AND items.itemID in" "("
                                                  "\n" t))
                  (zotero-dir-list (cl-loop for x in match-cache-list
                                            collect (substring x 27 35))))
-            (if (<= (length match-cache-list) 100)
+            (if (<= (length match-cache-list) 1000)
                 (rg-run string-to-grep "pdf" (expand-file-name zotero-storage) t nil zotero-dir-list)
               (let ((helm-ag-command-option "--hidden -G .zotero-ft-cache"))
                 (cl-letf (((symbol-function 'helm-ag--marked-input)

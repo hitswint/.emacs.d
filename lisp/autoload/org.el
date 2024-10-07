@@ -178,7 +178,7 @@
          (eaf-pdf-page (when-let ((annotate-buffer (eaf-interleave--find-buffer annotate-file)))
                          (with-current-buffer annotate-buffer
                            (eaf-call-sync "execute_function" eaf--buffer-id "current_page"))))
-         (current-page (or (s-presence qpdfview-page) (s-presence eaf-pdf-page))))
+         (current-page (or (s-presence eaf-pdf-page) (s-presence qpdfview-page))))
     (if (or (string-empty-p current-page) (null current-page))
         (message "No file annotated or not opened in qpdfview.")
       (let ((page (string-trim current-page)))
