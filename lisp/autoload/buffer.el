@@ -184,7 +184,8 @@ If buffer-or-name is nil return current buffer's mode."
 (defun swint-add-to-killed-list ()
   "Add to the `swint-killed-file-list' when killing the buffer."
   (let ((file-or-dired (or buffer-file-name
-                           dired-directory)))
+                           dired-directory
+                           (bound-and-true-p eaf--buffer-url))))
     (when file-or-dired
       (push file-or-dired swint-killed-file-list))))
 ;;;###autoload

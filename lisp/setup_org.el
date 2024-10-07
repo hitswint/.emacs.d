@@ -472,7 +472,7 @@
                 (t (message "No note system was applied!"))))
       (let* ((target-file (or (dired-get-filename nil t)
                               (buffer-file-name)
-                              eaf--buffer-url))
+                              (bound-and-true-p eaf--buffer-url)))
              (files-status (dired-k--parse-status))
              (existed-note (when files-status (gethash (file-name-nondirectory target-file) files-status)))
              (entry-for-pdf (when (file-in-directory-p target-file "~/Zotero")
