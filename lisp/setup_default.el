@@ -161,6 +161,8 @@
 (global-set-key (kbd "C-M-q") 'swint-undo-kill-buffer)
 (global-set-key (kbd "C-/") 'undo)
 (global-set-key (kbd "C-M-/") 'undo-redo)
+(global-set-key (kbd "M-s M-r") 'query-replace)
+(global-set-key (kbd "M-s M-R") 'query-replace-regexp)
 (define-key emacs-lisp-mode-map "\e\C-q" nil)
 (define-key lisp-interaction-mode-map "\e\C-q" nil)
 (define-key prog-mode-map "\e\C-q" nil)

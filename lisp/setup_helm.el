@@ -657,8 +657,8 @@
 ;;; helm-ring
 ;; ==================helm-ring==================
 (use-package helm-ring
-  :bind ("C-M-y" . helm-show-kill-ring)
-  :commands helm-show-copqy
+  :bind (("C-M-y" . helm-show-kill-ring)
+         ("M-Y" . helm-show-copyq))
   :config
   (bind-key "C-j" 'helm-kill-ring-action-save helm-kill-ring-map)
   (setq helm-kill-ring-threshold 1)
@@ -676,7 +676,12 @@
                              (cl-loop for c in (butlast marked)
                                       concat (concat c sep) into str
                                       finally return (concat str (car (last marked)))))))))))
-  (defun helm-show-copqy ()
+  (define-key helm-kill-ring-map (kbd "RET") #'(lambda () (interactive)
+                                                 (with-helm-alive-p
+                                                   (helm-exit-and-execute-action
+                                                    (lambda (_candidate)
+                                                      (helm-kill-ring-action-yank _candidate))))))
+  (defun helm-show-copyq ()
     (interactive)
     (let ((copyq-history (with-temp-buffer
                            ;; (split-string (shell-command-to-string

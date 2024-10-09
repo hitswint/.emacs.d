@@ -22,9 +22,9 @@ fi
 transResult_sdcv=$(sdcv -n -e --utf8-input --utf8-output "$word")
 
 if [[ $transResult_sdcv == *'Nothing similar to'* ]]; then
-    emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(progn (defun swint-copy-to-clipboard (frame) (remove-hook 'delete-frame-functions 'swint-copy-to-clipboard) (write-region (current-kill 0) nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (kill-this-buffer)) (add-hook 'delete-frame-functions 'swint-copy-to-clipboard) (swint-online-to-buffer (substring-no-properties \"$word\")) (local-set-key (kbd \"q\") 'delete-frame))"
+    emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(progn (defun swint-copy-to-clipboard (frame) (remove-hook 'delete-frame-functions 'swint-copy-to-clipboard) (write-region (current-kill 0) nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (kill-this-buffer)) (add-hook 'delete-frame-functions 'swint-copy-to-clipboard) (swint-online-to-buffer (substring-no-properties \"$word\")) (use-local-map (copy-keymap org-mode-map)) (local-set-key (kbd \"q\") 'delete-frame))"
 else
-    emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(progn (defun swint-copy-to-clipboard (frame) (remove-hook 'delete-frame-functions 'swint-copy-to-clipboard) (write-region (current-kill 0) nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (kill-this-buffer)) (add-hook 'delete-frame-functions 'swint-copy-to-clipboard) (swint-sdcv-to-buffer (substring-no-properties \"$word\")) (local-set-key (kbd \"q\") 'delete-frame))"
+    emacsclient -a '' -c -F "((name . \"ec_float\")(top . -1))" -e "(progn (defun swint-copy-to-clipboard (frame) (remove-hook 'delete-frame-functions 'swint-copy-to-clipboard) (write-region (current-kill 0) nil \"/tmp/eaclipboard\") (shell-command \"xclip -selection clipboard /tmp/eaclipboard &> /dev/null\") (kill-this-buffer)) (add-hook 'delete-frame-functions 'swint-copy-to-clipboard) (swint-sdcv-to-buffer (substring-no-properties \"$word\")) (use-local-map (copy-keymap org-mode-map)) (local-set-key (kbd \"q\") 'delete-frame))"
 fi
 
 # wmctrl -ia $xwin_id

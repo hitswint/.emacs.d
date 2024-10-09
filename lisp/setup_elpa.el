@@ -164,7 +164,6 @@
                            pinyin-search
                            pinyinlib
                            popup
-                           popup-kill-ring
                            pos-tip
                            posframe
                            projectile

@@ -242,17 +242,6 @@
     (define-key drag-stuff-mode-map (drag-stuff--kbd 'right) nil))
   (advice-add 'drag-stuff-define-keys :override #'drag-stuff-define-keys/override))
 ;; ===================drag stuff===================
-;;; popup-kill-ring
-;; ================popup-kill-ring=================
-(use-package popup-kill-ring
-  :bind ("M-Y" . popup-kill-ring)
-  :config
-  (setq popup-kill-ring-interactive-insert nil)
-  (setq popup-kill-ring-popup-width 30)
-  (setq popup-kill-ring-popup-margin-left 0)
-  (setq popup-kill-ring-popup-margin-right 0)
-  (setq popup-kill-ring-timeout 0.5))
-;; ================popup-kill-ring=================
 ;;; pos-tip
 ;; ===================pos-tip======================
 (use-package pos-tip
