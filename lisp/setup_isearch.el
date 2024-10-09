@@ -12,10 +12,13 @@
   :custom
   (search-upper-case t)
   (search-whitespace-regexp ".*?")
-  (isearch-lazy-count t)
-  (isearch-lazy-highlight t)
   (isearch-lax-whitespace t)
-  (isearch-regexp-lax-whitespace nil))
+  (isearch-regexp-lax-whitespace nil)
+  (isearch-lazy-highlight t)
+  (isearch-lazy-count t)
+  (lazy-count-invisible-format " [%s]")
+  (lazy-count-prefix-format nil)
+  (lazy-count-suffix-format "   %s/%s"))
 ;; =====================isearch====================
 ;;; pinyin-search
 ;; ==================pinyin-search=================
@@ -25,7 +28,7 @@
   :bind (("C-s" . isearch-forward-pinyin)
          ("C-r" . isearch-backward-pinyin))
   :config
-  (setq pinyin-search-message-prefix (propertize "P " 'face 'font-lock-warning-face))
+  (setq pinyin-search-message-prefix (propertize "[P] " 'face 'font-lock-keyword-face))
   (bind-key "C-t" 'isearch-yank-current isearch-mode-map)
   (bind-key "C-M-;" 'isearch-mark-current isearch-mode-map)
   (add-hook 'isearch-mode-end-hook (lambda () (setq pinyin-search-activated nil)))
