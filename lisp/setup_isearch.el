@@ -1,18 +1,22 @@
-;;; Anzu
-;; =====================Anzu=======================
-(use-package anzu
-  :diminish anzu-mode
-  :bind (("M-s M-r" . anzu-query-replace)
-         ("M-s M-R" . anzu-query-replace-regexp))
-  :config
-  (global-anzu-mode 1)
-  (bind-key "M-s M-r" 'anzu-isearch-query-replace isearch-mode-map)
-  (bind-key "M-s M-R" 'anzu-isearch-query-replace-regexp isearch-mode-map)
-  (setq anzu-deactivate-region t
-        anzu-replace-to-string-separator " => "
-        anzu-search-threshold 1000)
-  (set-face-attribute 'anzu-mode-line nil :foreground "green" :weight 'bold))
-;; =====================Anzu=======================
+;;; isearch
+;; =====================isearch====================
+(use-package isearch
+  ;; C-w/C-M-w isearch-yank-word-or-char/isearch-yank-symbol-or-char
+  ;; C-y/M-y isearch-yank-kill/isearch-yank-pop-only
+  ;; C-M-y/C-M-d/C-M-z/C-M-i isearch-yank-char/isearch-del-char/isearch-yank-until-char/isearch-complete
+  ;; M-e isearch-edit-string，编辑模式下C-f/backspace等同于C-M-y/C-M-d
+  ;; M-n/M-p isearch-ring-advance/isearch-ring-retreat
+  ;; M-c/M-r isearch-toggle-case-fold/isearch-toggle-regexp
+  ;; (M-s) M-</M->/C-e isearch-beginning-of-buffer/isearch-end-of-buffer/isearch-yank-line
+  :diminish isearch-mode
+  :custom
+  (search-upper-case t)
+  (search-whitespace-regexp ".*?")
+  (isearch-lazy-count t)
+  (isearch-lazy-highlight t)
+  (isearch-lax-whitespace t)
+  (isearch-regexp-lax-whitespace nil))
+;; =====================isearch====================
 ;;; pinyin-search
 ;; ==================pinyin-search=================
 (use-package pinyin-search
@@ -21,18 +25,7 @@
   :bind (("C-s" . isearch-forward-pinyin)
          ("C-r" . isearch-backward-pinyin))
   :config
-  (use-package isearch
-    ;; C-w/C-M-w isearch-yank-word-or-char/isearch-yank-symbol-or-char
-    ;; C-y/M-y isearch-yank-kill/isearch-yank-pop-only
-    ;; C-M-y/C-M-d/C-M-z/C-M-i isearch-yank-char/isearch-del-char/isearch-yank-until-char/isearch-complete
-    ;; M-e isearch-edit-string，编辑模式下C-f/backspace等同于C-M-y/C-M-d
-    ;; M-n/M-p isearch-ring-advance/isearch-ring-retreat
-    ;; M-c/M-r isearch-toggle-case-fold/isearch-toggle-regexp
-    ;; (M-s) M-</M->/C-e isearch-beginning-of-buffer/isearch-end-of-buffer/isearch-yank-line
-    :diminish isearch-mode
-    :custom
-    (search-upper-case t))
-  (require 'anzu)
+  (setq pinyin-search-message-prefix (propertize "P " 'face 'font-lock-warning-face))
   (bind-key "C-t" 'isearch-yank-current isearch-mode-map)
   (bind-key "C-M-;" 'isearch-mark-current isearch-mode-map)
   (add-hook 'isearch-mode-end-hook (lambda () (setq pinyin-search-activated nil)))

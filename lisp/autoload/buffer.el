@@ -201,6 +201,7 @@ If buffer-or-name is nil return current buffer's mode."
 (defun swint-insert-zsh-completions ()
   (interactive)
   (let* ((enable-recursive-minibuffers t)
+         (search-whitespace-regexp (purecopy "[ \t]+"))
          (zsh-capture-completion-prog (expand-file-name "repos/zsh-capture-completion/capture.zsh" user-emacs-directory))
          (minibuffer-contents-before-point (minibuffer-completion-contents))
          (zsh-completion (car (split-string (helm-comp-read "Select options: "
@@ -213,5 +214,5 @@ If buffer-or-name is nil return current buffer's mode."
         (insert zsh-completion)
       (when (re-search-backward (concat search-whitespace-regexp ".*"))
         (replace-match (concat " " zsh-completion))))))
-(define-key minibuffer-local-map (kbd "C-x m") 'swint-insert-zsh-completions)
+(define-key minibuffer-local-map (kbd "M-i") 'swint-insert-zsh-completions)
 ;; =========swint-insert-zsh-completions========

@@ -30,7 +30,6 @@
                            aggressive-indent
                            all-the-icons
                            all-the-icons-dired
-                           anzu
                            async
                            auctex
                            auctex-latexmk

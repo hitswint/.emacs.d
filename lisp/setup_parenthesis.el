@@ -167,7 +167,6 @@
   :init
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'text-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'comint-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'dired-mode-hook 'rainbow-delimiters-mode)
   ;; 在org-mode中打开rainbow会让org本身的highlight失效
   (add-hook 'org-mode-hook 'rainbow-delimiters-mode-disable)

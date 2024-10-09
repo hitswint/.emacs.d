@@ -33,7 +33,7 @@
               ;; 升级29之后buffer名字前有额外空格
               ;; 设置mode-line-buffer-identification为默认值"%b"时无空格，而其他值都有空格
               ;; 采用compact模式，使用单个空格代替连续空格
-              mode-line-compact 'long
+              mode-line-compact t
               mode-line-modified `(:eval (ml/generate-modified-status))
               mode-line-buffer-identification (let ((orig (car mode-line-buffer-identification)))
                                                 `(:eval (ml/generate-buffer-identification ,orig))))
@@ -82,8 +82,7 @@
                                                            (t ""))
                                                      ;; (min (- (window-width) 8) ml/name-width)
                                                      (- (window-width)
-                                                        24
-                                                        (length mode-line-modes)
+                                                        32
                                                         (length (and projectile-mode projectile--mode-line))
                                                         (length (and (frame-parameter nil 'swint-persp-loadp) (persp-name (persp-curr))))))))
                   (propertize orig 'face (if current-window-p
