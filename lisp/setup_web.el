@@ -42,8 +42,9 @@
 ;; =================js2-mode===================
 (use-package js2-mode
   :mode ("\\.js\\'" . js2-mode)
-  :config
+  :init
   (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+  :config
   (define-key js2-mode-map (kbd "M-.") nil)
   (define-key js2-mode-map (kbd "C-c C-,") 'js2-jump-to-definition)
   ;; 在js2-mode下，run-skewer打开空白网页，eval实时展现

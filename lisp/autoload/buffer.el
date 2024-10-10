@@ -1,10 +1,10 @@
 ;;; 退出shell时关闭buffer
 ;; ==============退出shell时关闭buffer=============
-(defun kill-shell-buffer(process event)
+(defun kill-shell-buffer (process event)
   "The one actually kill shell buffer when exit. "
   (swint-kill-buffer (process-buffer process)))
 ;;;###autoload
-(defun kill-shell-buffer-after-exit()
+(defun kill-shell-buffer-after-exit ()
   "kill shell buffer when exit."
   (set-process-sentinel (get-buffer-process (current-buffer))
                         #'kill-shell-buffer))
