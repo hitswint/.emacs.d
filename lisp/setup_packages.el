@@ -956,6 +956,7 @@
   (define-key rg-mode-map (kbd "M-p") 'rg-prev-file)
   (define-key rg-mode-map (kbd "M-n") 'rg-next-file)
   (define-key rg-mode-map (kbd "C-j") 'rg-result-open-externally)
+  (define-key rg-mode-map (kbd "SPC") 'compilation-display-error)
   (defun rg-result-open-externally ()
     (interactive)
     (let ((file-name (or (save-excursion

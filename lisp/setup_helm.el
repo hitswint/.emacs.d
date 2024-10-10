@@ -845,7 +845,9 @@
                                                   (unless (string-empty-p lines)
                                                     (format " --context=%s" lines))))))
             (call-interactively 'helm-do-ag))
-        (helm-do-ag default-directory))))
+        (helm-do-ag default-directory (when-let* ((marked-files (dired-get-marked-files nil nil nil t))
+                                                  (mark-existp (cdr marked-files)))
+                                        (remove t marked-files))))))
   ;; 搜索压缩文件需加--all-types/--search-zip，支持gz/xz两种格式
   ;; bug：只显示部分结果，最后一行显示ag: truncated file: Success
   ;; https://github.com/ggreer/the_silver_searcher/issues/1243
