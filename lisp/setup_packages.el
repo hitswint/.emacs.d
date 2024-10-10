@@ -403,6 +403,13 @@
   (bind-key "M-v" 'swint-vlf-scroll-down vlf-prefix-map)
   (bind-key "M-<" 'swint-vlf-beginning-of-file vlf-prefix-map)
   (bind-key "M->" 'swint-vlf-end-of-file vlf-prefix-map)
+  (add-hook 'vlf-mode-hook #'(lambda () (setq-local isearch-wrap-function #'+vlf-isearch-wrap
+                                                    isearch-wrap-pause 'no-ding
+                                                    isearch-repeat-on-direction-change t)))
+  (defun +vlf-isearch-wrap ()
+    (if isearch-forward
+        (vlf-re-search-forward isearch-string 1)
+      (vlf-re-search-backward isearch-string 1)))
   (defun swint-vlf-scroll-up ()
     (interactive)
     (if (pos-visible-in-window-p (point-max))
