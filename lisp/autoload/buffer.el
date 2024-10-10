@@ -210,7 +210,8 @@ If buffer-or-name is nil return current buffer's mode."
                                                                           "\n" t)
                                                             :buffer "*helm zsh completions-swint*")
                                             " " t))))
-    (if (string-suffix-p " " minibuffer-contents-before-point)
+    (if (or (string-empty-p minibuffer-contents-before-point)
+            (string-suffix-p " " minibuffer-contents-before-point))
         (insert zsh-completion)
       (when (re-search-backward (concat search-whitespace-regexp ".*"))
         (replace-match (concat " " zsh-completion))))))
