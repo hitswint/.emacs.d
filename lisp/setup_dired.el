@@ -746,7 +746,12 @@ The default command run is fd ARGS -l."
   (defun find-dired-rg (dir regexp)
     "Find files in DIR that contain matches for REGEXP and Dired on output.
 The default command run is fd -X rg -l0 --regexp REGEXP | xargs -0 ls."
-    (interactive "DFd-rg (directory): \nsFd-rg (rg regexp): ")
+    ;; (interactive "DFd-rg (directory): \nsFd-rg (rg regexp): ")
+    (interactive (list
+                  (if current-prefix-arg
+                      (read-directory-name "Fd-rg (directory): " nil "" t)
+                    (helm-current-directory))
+                  (read-string "Fd-rg (regexp): ")))
     (find-dired-with-command dir
                              (concat "fdfind" find-dired-fd-pre-args
                                      "-X rg" find-dired-rg-pre-args
