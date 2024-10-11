@@ -215,5 +215,5 @@ If buffer-or-name is nil return current buffer's mode."
         (insert zsh-completion)
       (when (re-search-backward (concat search-whitespace-regexp ".*"))
         (replace-match (concat " " zsh-completion))))))
-(define-key minibuffer-local-map (kbd "M-i") 'swint-insert-zsh-completions)
+(define-key minibuffer-local-map (kbd "M-I") 'swint-insert-zsh-completions)
 ;; =========swint-insert-zsh-completions========

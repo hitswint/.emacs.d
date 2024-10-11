@@ -15,6 +15,8 @@
          ("M-x" . helm-M-x)
          ("C-x l" . swint-helm-locate)
          ("C-x y" . helm-resume))
+  :init
+  (setq helm-minibuffer-history-key "M-i")
   :config
   (use-package helm-for-files)
   (helm-mode 1)
@@ -106,8 +108,9 @@
   (helm-define-key-with-subkeys helm-map (kbd "C-x Y") ?Y 'helm-run-cycle-resume)
   (helm-define-key-with-subkeys global-map (kbd "C-x Y") ?Y 'helm-cycle-resume)
   (define-key helm-find-files-map (kbd "M-.") 'helm-toggle-truncate-line)
+  (define-key helm-find-files-map (kbd "M-i") 'helm-peep-preview-persistent)
+  (define-key helm-find-files-map (kbd "M-o") 'helm-ff-properties-persistent)
   (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)
-  (define-key helm-find-files-map (kbd "C-S-l") 'helm-peep-preview-persistent)
   (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
   (define-key helm-find-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
   (define-key helm-find-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)

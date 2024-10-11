@@ -29,8 +29,8 @@
          ("M-o C-p" . swint-python-load-file)
          ("M-o C-S-p" . swint-python-load-mysql))
   :config
-  (define-key minibuffer-local-map (kbd "C-c m") 'swint-python-insert-data)
-  (define-key minibuffer-local-map (kbd "C-c M") 'swint-python-insert-variables)
+  (define-key minibuffer-local-map (kbd "C-c i") 'swint-python-insert-data)
+  (define-key minibuffer-local-map (kbd "C-c I") 'swint-python-insert-variables)
   (pyvenv-mode 1)
   ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换
   (defalias 'workon 'pyvenv-workon)
