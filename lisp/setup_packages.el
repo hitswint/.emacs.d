@@ -396,6 +396,7 @@
   (setq large-file-warning-threshold 1000000000)
   :config
   ;; (use-package vlf-setup)
+  (setq vlf-save-in-place nil)
   (smartrep-define-key vlf-mode-map ""
     '(("n" . vlf-next-batch)
       ("p" . vlf-prev-batch)))
@@ -405,11 +406,27 @@
   (bind-key "M->" 'swint-vlf-end-of-file vlf-prefix-map)
   (add-hook 'vlf-mode-hook #'(lambda () (setq-local isearch-wrap-function #'+vlf-isearch-wrap
                                                     isearch-wrap-pause 'no-ding
-                                                    isearch-repeat-on-direction-change t)))
+                                                    isearch-repeat-on-direction-change nil)))
+  (defun vlf-query-replace/around (fn &rest args)
+    (let ((orig-fn (symbol-function 'vlf-re-search)))
+      (cl-letf (((symbol-function 'vlf-re-search)
+                 (lambda (regexp count backward &rest args)
+                   (let (success)
+                     (unwind-protect
+                         (setq success (apply orig-fn regexp count backward args))
+                       (when success
+                         (goto-char (if backward
+                                        (match-end 0)
+                                      (match-beginning 0)))))))))
+        (apply fn args))))
+  (advice-add 'vlf-query-replace :around #'vlf-query-replace/around)
   (defun +vlf-isearch-wrap ()
-    (if isearch-forward
-        (vlf-re-search-forward isearch-string 1)
-      (vlf-re-search-backward isearch-string 1)))
+    (let ((dir (if isearch-forward 'forward 'backward))
+          (other-end (if isearch-forward 'beginning 'end)))
+      (if (funcall (intern (format "vlf-re-search-%s" dir)) isearch-string 1)
+          (goto-char (funcall (intern (format "match-%s" other-end)) 0))
+        (message "No more match found")
+        (sit-for 0.5))))
   (defun swint-vlf-scroll-up ()
     (interactive)
     (if (pos-visible-in-window-p (point-max))
