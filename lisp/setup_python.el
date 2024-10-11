@@ -109,6 +109,8 @@ names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', 
              ((member (ignore-errors (downcase (file-name-extension file-name))) '("eso" "mtr"))
               (python-shell-send-string
                (format "
+if 'pd' not in dir():
+    import pandas as pd
 if 'esoreader' not in dir():
     import esoreader
 esofile=esoreader.read_from_path('%s')
@@ -117,9 +119,12 @@ for freq in ['TimeStep', 'Hourly', 'Daily', 'Monthly', 'Annual', 'RunPeriod']:
     if esofile.find_variable('', frequency=freq):
         names['df_'+re.sub('\\W','_','%s_')+freq] = esofile.to_frame('', frequency=freq)
 " (expand-file-name file-name) file-base-name)))
+             ;; 导入epw文件
              ((member (ignore-errors (downcase (file-name-extension file-name))) '("epw"))
               (python-shell-send-string
                (format "
+if 'pd' not in dir():
+    import pandas as pd
 if 'epw' not in dir():
     from epw import epw
 names=locals()
@@ -133,17 +138,28 @@ for x in ['Month', 'Day']:
 # 处理24:00:00时间转换错误：ParserError: hour must be in 0..23
 names['df_'+re.sub('\\W','_','%1$s')]['Time'] = pd.to_datetime(names['df_'+re.sub('\\W','_','%1$s')]['Time']) + pd.to_timedelta(names['df_'+re.sub('\\W','_','%1$s')]['Hour'].map(str) + ':' + names['df_'+re.sub('\\W','_','%1$s')]['Minute'].map(str) + ':00')
 " file-base-name (expand-file-name file-name))))
+             ;; 导入py文件
              ((member (ignore-errors (downcase (file-name-extension file-name))) '("py" "pyc"))
               (python-shell-send-file file-name))
-             ;; 导入csv和其他文件
+             ;; 导入csv文件
+             ((member (ignore-errors (downcase (file-name-extension file-name))) '("csv"))
+              (python-shell-send-string
+               (format "
+if 'pd' not in dir():
+    import pandas as pd
+names=locals()
+names['df_'+re.sub('\\W','_','%s')]=pd.read_csv('%s', skipinitialspace=True, comment='#')
+names['df_'+re.sub('\\W','_','%s')].columns = names['df_'+re.sub('\\W','_','%s')].columns.str.strip()
+" file-base-name (expand-file-name file-name) file-base-name file-base-name)))
+             ;; 导入其他文件
              (t (let ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' '%s' | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
                   (python-shell-send-string
-                   (format "if not set(['pd', 'builtins']) < set(dir()):import pandas as pd;import builtins;
+                   (format "
+if not set(['pd', 'builtins']) < set(dir()):import pandas as pd;import builtins;
 exec(\"def is_number(s):\\n try:  float(s)\\n except:  return False\\n return True\")
 names=locals()
-names['df_'+re.sub('\\W','_','%s')]=pd.read_csv('%s', header=None if builtins.any(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True, comment='#')"
-                           file-base-name (expand-file-name file-name) header-line-string
-                           (if (string= (ignore-errors (downcase (file-name-extension file-name))) "csv") "," "\\\\s+")))))))
+names['df_'+re.sub('\\W','_','%s')]=pd.read_csv('%s', header=None if builtins.any(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True, comment='#')
+" file-base-name (expand-file-name file-name) header-line-string "\\\\s+"))))))
         (message "No python process found!" ))))
   (defun swint-python-load-mysql ()
     (interactive)
