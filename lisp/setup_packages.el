@@ -397,13 +397,11 @@
   :config
   ;; (use-package vlf-setup)
   (setq vlf-save-in-place nil)
-  (smartrep-define-key vlf-mode-map ""
-    '(("n" . vlf-next-batch)
-      ("p" . vlf-prev-batch)))
   (bind-key "C-v" 'swint-vlf-scroll-up vlf-prefix-map)
   (bind-key "M-v" 'swint-vlf-scroll-down vlf-prefix-map)
   (bind-key "M-<" 'swint-vlf-beginning-of-file vlf-prefix-map)
   (bind-key "M->" 'swint-vlf-end-of-file vlf-prefix-map)
+  (bind-key [remap query-replace] 'vlf-query-replace vlf-prefix-map)
   (add-hook 'vlf-mode-hook #'(lambda () (setq-local isearch-wrap-function #'+vlf-isearch-wrap
                                                     isearch-wrap-pause 'no-ding
                                                     isearch-repeat-on-direction-change nil)))
@@ -422,9 +420,9 @@
   (advice-add 'vlf-query-replace :around #'vlf-query-replace/around)
   (defun +vlf-isearch-wrap ()
     (let ((dir (if isearch-forward 'forward 'backward))
-          (other-end (if isearch-forward 'beginning 'end)))
+          (point (if isearch-forward 'min 'max)))
       (if (funcall (intern (format "vlf-re-search-%s" dir)) isearch-string 1)
-          (goto-char (funcall (intern (format "match-%s" other-end)) 0))
+          (goto-char (funcall (intern (format "point-%s" point))))
         (message "No more match found")
         (sit-for 0.5))))
   (defun swint-vlf-scroll-up ()
