@@ -16,7 +16,7 @@
 (setq visible-bell t)
 (setq mouse-yank-at-point t)
 (setq kill-ring-max 120)
-(setq next-line-add-newlines nil)
+(setq next-line-add-newlines t)
 (setq make-pointer-invisible t)
 (setq diary-file "~/org/journal.org.gpg")
 (setq disabled-command-function nil)

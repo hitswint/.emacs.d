@@ -20,20 +20,20 @@
   (setq dired-auto-revert-buffer t) ;使用dired/dired-other-window/dired-other-frame时更新，与auto-revert-mode不同
   (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才启用auto-revert-mode更新
                                                 (when (get-buffer-window (current-buffer))
-                                                  (or (apply fn args)
-                                                      (and buffer-read-only
-                                                           (not (cl-loop for ov in (dired-subtree--get-all-ovs)
-                                                                         for fi = (save-excursion (goto-char (1- (overlay-start ov)))
-                                                                                                  (dired-get-filename nil t))
-                                                                         never (let ((cached-p (gethash (concat "nil@" fi) file-has-changed-p--hash-table))
-                                                                                     (changed-p (file-has-changed-p fi)))
-                                                                                 (and cached-p changed-p)))))))))
+                                                  (if-let ((current-ov (dired-subtree--get-ov)))
+                                                      (dired-subtree-check-change (list current-ov))
+                                                    (or (apply fn args)
+                                                        (and buffer-read-only
+                                                             (dired-subtree-check-change (dired-subtree--get-all-ovs))))))))
   (advice-add 'dired-revert :around #'(lambda (fn &rest args)
                                         ;; dired-async-mode会刷新所有dired，包括不可见buffer，导致persp-switch切换时光标回到起始位置
                                         (unless (ignore-errors (not (memq (current-buffer) (persp-buffers (persp-curr)))))
                                           (let ((subtree-mark-alist (cl-loop for ov in (dired-subtree--get-all-ovs)
                                                                              append (dired-remember-marks (overlay-start ov) (overlay-end ov)))))
-                                            (apply fn args)
+                                            (if (and (not (eq last-command 'revert-buffer))
+                                                     (dired-subtree-in-subtree-p))
+                                                (dired-subtree-revert)
+                                              (apply fn args))
                                             (let ((inhibit-read-only t))
                                               (cl-loop for ov in (dired-subtree--get-all-ovs)
                                                        do (save-excursion (goto-char (overlay-start ov))
@@ -143,6 +143,11 @@
                                                        (cl-letf (((symbol-function 'diff-latest-backup-file)
                                                                   (lambda (fn) nil)))
                                                          (call-interactively 'dired-diff))))
+              (define-key dired-mode-map (kbd "b") #'(lambda () (interactive)
+                                                       (cl-loop for f in (dired-get-marked-files)
+                                                                do (let ((trash-directory (concat (file-name-directory f)
+                                                                                                  "orig")))
+                                                                     (move-file-to-trash f)))))
               (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-on-files)
               (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
               (define-key dired-mode-map (kbd "M-RET") 'helm-dired-current-file)
@@ -614,7 +619,9 @@
 ;;; dired-subtree
 ;; =============dired-subtree==================
 (use-package dired-subtree
-  :commands (dired-subtree-in-subtree-p dired-subtree--get-all-ovs)
+  :commands (dired-subtree-in-subtree-p
+             dired-subtree--get-ov
+             dired-subtree--get-all-ovs)
   :bind (:map dired-mode-map
               ("TAB" . dired-subtree-toggle)
               ("S-TAB" . dired-subtree-remove)
@@ -627,8 +634,8 @@
   (defface dired-subtree-depth-11-face '((t :inherit dired-subtree-depth-5-face)) "" :group 'dired-subtree-faces)
   (defface dired-subtree-depth-12-face '((t :inherit dired-subtree-depth-6-face)) "" :group 'dired-subtree-faces)
   (define-key dired-mode-map (kbd "<backtab>") 'dired-subtree-remove-all)
-  (advice-add 'dired-subtree-insert :around #'(lambda (fn) (when (and (dired-subtree--dired-line-is-directory-or-link-p)
-                                                                      (not (directory-empty-p (dired-utils-get-filename))))
+  (advice-add 'dired-subtree-insert :around #'(lambda (fn) (when (dired-subtree--dired-line-is-directory-or-link-p)
+                                                             ;; (not (directory-empty-p (dired-utils-get-filename)))
                                                              (funcall fn))))
   (advice-add 'dired-subtree-next-sibling :around #'(lambda (fn &rest args) (let ((current-point (point))
                                                                                   (current-ov (dired-subtree--get-ov))
@@ -644,6 +651,9 @@
                                                                                             (dired-subtree--get-depth (dired-subtree--get-ov)))
                                                                                     (dired-subtree-up))
                                                                                   (not (equal current-point (point))))))
+  (advice-add 'dired-subtree-revert :around #'(lambda (fn) (let ((current-point (point)))
+                                                             (unless (funcall fn)
+                                                               (goto-char current-point)))))
   (defun dired-subtree-in-subtree-p ()
     "Return non-nil if current file is in subtree."
     (save-excursion
@@ -659,11 +669,19 @@
         (while-let ((ov (car (dired-subtree--get-all-ovs))))
           (delete-region (overlay-start ov) (overlay-end ov))
           (dired-subtree--remove-overlay ov)))))
+  (defun dired-subtree-check-change (ovs)
+    (not (cl-loop for ov in ovs
+                  for fi = (save-excursion (goto-char (1- (overlay-start ov)))
+                                           (dired-get-filename nil t))
+                  never (let ((cached-p (gethash (concat "nil@" fi) file-has-changed-p--hash-table))
+                              (changed-p (file-has-changed-p fi)))
+                          (and cached-p changed-p)))))
   ;; C-M-p/n/u/d
   (cl-loop for (key . value) in '((dired-prev-subdir . dired-subtree-previous-sibling)
                                   (dired-next-subdir . dired-subtree-next-sibling)
                                   (dired-tree-up . dired-subtree-up)
-                                  (dired-tree-down . dired-subtree-down))
+                                  (dired-tree-down . dired-subtree-down)
+                                  (narrow-to-region . dired-subtree-narrow))
            do (lexical-let ((value value))
                 (advice-add key :around #'(lambda (fn &rest args) (if dired-subtree-overlays
                                                                       (call-interactively value)
