@@ -56,14 +56,19 @@
                                                                    (cl-loop for extensions-pair in eaf-app-extensions-alist
                                                                             append (symbol-value (cdr extensions-pair)))))
                                                       (progn
-                                                        (switch-to-buffer-other-window nil)
+                                                        (switch-to-buffer-other-window (current-buffer))
                                                         (find-file filename))
                                                     (find-file-other-window filename)))
                                           org-link-frame-setup)))
       (cond (annotate-page
-             (start-process "Shell" nil shell-file-name shell-command-switch
-                            (concat "qpdfview --unique \"" (expand-file-name (org-get-annotate-file))
-                                    "\"#" annotate-page)))
+             (let ((file (expand-file-name (org-get-annotate-file))))
+               (if (not in-emacs)
+                   (start-process "Shell" nil shell-file-name shell-command-switch
+                                  (concat "qpdfview --unique \"" file "\"#" annotate-page))
+                 (if-let ((eaf-pdf-win (eaf-find-pdf-window)))
+                     (select-window eaf-pdf-win)
+                   (switch-to-buffer-other-window (current-buffer)))
+                 (eaf-open-pdf-with-page file annotate-page))))
             ((and annotate-file (file-exists-p annotate-file))
              (org-open-file annotate-file in-emacs))
             (t
@@ -84,16 +89,14 @@
 (defun org-eaf-pdf-sync (&optional operator)
   (interactive)
   (let* ((annotate-page (org-get-annotate-page operator))
-         (annotate-file (expand-file-name (org-get-annotate-file))))
-    (if-let ((eaf-win (cl-loop for w in (window-list)
-                               when (eq (buffer-mode (window-buffer w))
-                                        'eaf-mode)
-                               return w)))
-        (select-window eaf-win)
+         (annotate-file (expand-file-name (org-get-annotate-file)))
+         (note-win (selected-window)))
+    (if-let ((eaf-pdf-win (eaf-find-pdf-window)))
+        (select-window eaf-pdf-win)
       (delete-other-windows)
-      (split-window-right))
+      (setq note-win (split-window-right)))
     (eaf-open-pdf-with-page annotate-file annotate-page)
-    (other-window 1)))
+    (select-window note-win)))
 ;;;###autoload
 (defun org-eaf-pdf-sync-prev ()
   (interactive)

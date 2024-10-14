@@ -797,7 +797,9 @@
                                                            (concat " --search \"" search-string "\""))
                                      " \"" file-name "#" page "\""))
             (unless (eq (current-buffer) pdf-buffer)
-              (switch-to-buffer-other-window nil))
+              (if-let ((eaf-pdf-win (eaf-find-pdf-window)))
+                  (select-window eaf-pdf-win)
+                (switch-to-buffer-other-window (current-buffer))))
             (eaf-open-pdf-with-page pdf-file page)
             (when search-string
               (with-current-buffer (eaf-interleave--find-buffer pdf-file)

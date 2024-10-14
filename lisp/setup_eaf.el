@@ -253,7 +253,8 @@
   :commands (eaf-interleave-mode
              eaf-interleave-app-mode
              eaf-interleave--find-buffer
-             eaf-open-pdf-with-page)
+             eaf-open-pdf-with-page
+             eaf-find-pdf-window)
   :init
   ;; (add-hook 'eaf-browser-hook 'eaf-interleave-app-mode)
   (add-hook 'eaf-pdf-viewer-hook 'eaf-interleave-app-mode)
@@ -279,6 +280,12 @@
               (setq current-page (eaf-call-sync "execute_function" eaf--buffer-id "current_page"))
               (sit-for 0.2)
               (setq n (1+ n))))))))
+  (defun eaf-find-pdf-window ()
+    (cl-loop for w in (window-list)
+             for b = (window-buffer w)
+             when (and (equal (buffer-mode b) 'eaf-mode)
+                       (equal (buffer-local-value 'eaf--buffer-app-name b) "pdf-viewer"))
+             return w))
   (setq eaf-interleave-disable-narrowing t)
   (setq eaf-interleave-split-direction 'vertical)
   (setq eaf-interleave-split-lines 20)

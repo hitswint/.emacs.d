@@ -65,7 +65,7 @@
     (let* ((loc (compilation--message->loc (get-text-property (line-beginning-position) 'compilation-message)))
            (file-name (caar (compilation--loc->file-struct loc)))
            (meta (pdfgrep-current-page-and-match (current-buffer))))
-      (helm-ag-open-file-action file-name (number-to-string (car meta)) (cdr meta))))
+      (helm-ag-open-file-action file-name (number-to-string (car meta)) (substring-no-properties (cdr meta)))))
   (defun pdfgrep-dired (&optional arg)
     (interactive "P")
     (let* ((string-to-grep (read-string "Dired pdfgrep: "))
