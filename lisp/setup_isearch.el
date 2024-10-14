@@ -23,10 +23,12 @@
 ;;; pinyin-search
 ;; ==================pinyin-search=================
 (use-package pinyin-search
-  :commands isearch-current-thing
+  :commands (isearch-current-thing isearch-function-with-pinyin)
   ;; 搜索时M-s p(isearch-toggle-pinyin)切换拼音搜索
   :bind (("C-s" . isearch-forward-pinyin)
          ("C-r" . isearch-backward-pinyin))
+  :init
+  (setq isearch-search-fun-function 'isearch-function-with-pinyin)
   :config
   (setq pinyin-search-message-prefix (propertize "[P] " 'face 'font-lock-keyword-face))
   (bind-key "C-t" 'isearch-yank-current isearch-mode-map)
