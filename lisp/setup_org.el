@@ -219,8 +219,17 @@
   (use-package org-table
     :diminish orgtbl-mode
     :config
-    (define-key org-mode-map (kbd "C-c t e") 'org-table-export)
     (define-key org-mode-map (kbd "C-c t i") 'org-table-import)
+    (define-key org-mode-map (kbd "C-c t e") 'org-table-export)
+    (define-key org-mode-map (kbd "M-o p") #'(lambda () (interactive)
+                                               (swint-python-plot-data (org-table-make-csv))))
+    (define-key org-mode-map (kbd "M-o C-p") #'(lambda () (interactive)
+                                                 (swint-python-load-file (org-table-make-csv))))
+    (defun org-table-make-csv ()
+      (when (org-at-table-p)
+        (let ((export-file (expand-file-name "org_table.csv" temporary-file-directory)))
+          (org-table-export export-file "orgtbl-to-csv")
+          export-file)))
     ;; S-<return> 拷贝当前列之上的行，并递增数字
     (defun org-table-copy-down/around (fn n)
       (condition-case ex
