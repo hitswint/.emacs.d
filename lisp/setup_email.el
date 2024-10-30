@@ -1,13 +1,13 @@
 ;;; mu4e
 ;; =======================mu4e=========================
 (use-package mu4e
-  :load-path "/usr/share/emacs/site-lisp/elpa-src/mu4e-1.8.14"
+  :load-path "/usr/local/share/emacs/site-lisp/mu4e"
   :bind (("M-o m" . mu4e)
          ("M-o M" . mu4e-compose-new))
   :config
   (setq mu4e-change-filenames-when-moving t
         mu4e-get-mail-command "mbsync -a" ; offlineimap
-        mu4e-confirm-quit nil
+        mu4e-confirm-quit t
         mu4e-update-interval 600
         message-kill-buffer-on-exit t
         mu4e-attachment-dir "~/Downloads"
@@ -54,7 +54,8 @@
                     (mu4e-trash-folder . "/SJZU/已删除")
                     (smtpmail-default-smtp-server . "smtphz.qiye.163.com")
                     (smtpmail-smtp-server . "smtphz.qiye.163.com")
-                    (smtpmail-smtp-service . 465))))))
+                    (smtpmail-smtp-service . 465)))))
+  (define-key mu4e-thread-mode-map (kbd "<C-tab>") nil))
 ;; =======================mu4e=========================
 ;;;; mu4e-alert
 ;; ====================mu4e-alert======================
@@ -77,18 +78,25 @@
 (use-package mu4e-views
   :after mu4e
   :bind (:map mu4e-headers-mode-map
-              ("v" . mu4e-views-mu4e-view-as-nonblocked-html)
-              ("c" . mu4e-views-mu4e-select-view-msg-method))
+              ("v" . swint-mu4e-views-mu4e-view)
+              ("V" . mu4e-views-unload-function))
   :config
   ;; 默认html方法使用过滤器屏蔽外部内容，可临时查看(v)或选择html-nonblock(c)
   (bind-key "M-n" 'mu4e-views-cursor-msg-view-window-down mu4e-headers-mode-map)
   (bind-key "M-p" 'mu4e-views-cursor-msg-view-window-up mu4e-headers-mode-map)
   (bind-key "f" 'mu4e-views-toggle-auto-view-selected-message mu4e-headers-mode-map)
   (setq mu4e-views-completion-method 'ivy)
-  (setq mu4e-views-default-view-method "gnus")
-  (mu4e-views-mu4e-use-view-msg-method "gnus")
+  (setq mu4e-views-default-view-method "html")
+  (mu4e-views-mu4e-use-view-msg-method "html")
   (setq mu4e-views-next-previous-message-behaviour 'stick-to-current-window)
-  (setq mu4e-views-auto-view-selected-message t))
+  (setq mu4e-views-auto-view-selected-message t)
+  (defun swint-mu4e-views-mu4e-view (&optional arg)
+    (interactive "P")
+    (unless mu4e-views--advice-installed
+      (mu4e-views-advice-mu4e))
+    (if arg
+        (mu4e-views-mu4e-select-view-msg-method)
+      (mu4e-views-mu4e-view-as-nonblocked-html))))
 ;; ====================mu4e-views======================
 ;;; helm-mu
 ;; ======================helm-mu=======================

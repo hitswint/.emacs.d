@@ -51,7 +51,7 @@
   (global-set-key (kbd "M-O c") 'org-capture)
   (global-set-key (kbd "M-O a") 'org-agenda)
   (setq org-capture-templates
-        '(("i" "Idea" entry (file+headline "~/webdav-sync/orgzly/task.org" "Idea List") "* TODO %? %^g")
+        '(("i" "Idea" entry (file+headline "~/webdav-sync/orgzly/task.org" "Idea") "* TODO %? %^g")
           ("w" "Work" entry (file+headline "~/org/notes-work.org" "Work") "* %? %U %^g")
           ("c" "Computer" entry (file+headline "~/org/notes-computer.org" "Computer") "* %? %U %^g")
           ("j" "Journal" entry (file+olp+datetree "~/org/journal.org.gpg") "* %? %U")))
@@ -150,25 +150,37 @@
                 (define-key org-mode-map [(control tab)] nil)
                 (define-key org-mode-map [(control \')] nil)))
   ;; ===============Keybindings=================
-;;;; GTD
-  ;; ===================GTD=====================
-  ;; C-c C-x C-i org-clock-in / C-c C-x C-o org-clock-out
-  (setq org-agenda-files (directory-files "~/webdav-sync/orgzly/" t ".+\\.org"))
-  ;; Do not show title of task in mode-line when using org-clock.
-  (setq org-clock-heading-function
-        (lambda ()
-          (substring (nth 4 (org-heading-components)) 0 0)))
-  ;; 显示两周的agenda
-  (setq org-agenda-span 'month)
+;;;; org-agenda
+  ;; ===============org-agenda==================
+  (setq org-agenda-files (directory-files "~/webdav-sync/orgzly/" t ".+\\.org")
+        org-agenda-span 'month)
   ;; 设定todo的子项完成后主项自动完成
   (add-hook 'org-after-todo-statistics-hook #'(lambda (n-done n-not-done)
                                                 (let (org-log-done org-log-states)
                                                   (org-todo (if (= n-not-done 0) "DONE" "TODO")))))
-  ;; 设定todo关键词
+  ;; 设置todo关键词。|后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "Waiting(w)" "Started(s)" "|" "DONE(d)" "Aborted(a)")))
-  ;; |后面的项以绿颜色的字出现，(a!/@)：()中出现!和@分别代表记录状态改变的时间以及需要输入备注，多个状态时使用/分隔
-  ;; ===================GTD=====================
+        '((sequence "TODO(t)" "WAITING(w)" "STARTED(s)" "|" "DONE(d)" "ABORTED(a)")))
+  (add-hook 'org-agenda-finalize-hook #'(lambda () (save-some-buffers t 'org-agenda-file-p)))
+  (add-hook 'org-agenda-mode-hook
+            #'(lambda ()
+                (define-key org-agenda-mode-map (kbd "C-c C-x C-q") 'org-agenda-clock-cancel)
+                (define-key org-agenda-mode-map (kbd "C-c C-x C-x") 'org-clock-in-last)
+                (define-key org-agenda-mode-map (kbd "Q") 'org-agenda-clock-cancel)
+                (define-key org-agenda-mode-map (kbd "X") 'org-clock-in-last)))
+  (setq org-clock-clocked-in-display 'frame-title
+        org-clock-frame-title-format (append '((t org-mode-line-string)) '(" ") frame-title-format)
+        org-clock-in-switch-to-state "STARTED"
+        org-clock-mode-line-total 'current
+        org-clock-idle-time 5  ;k 保留idle时间，s 丢弃idle时间；S(加/不加)，clock(out/in)
+        org-clock-auto-clockout-timer 3600  ;需先调用org-clock-toggle-auto-clockout或org-clock-auto-clockout-insinuate
+        org-timer-display nil
+        org-timer-default-timer 25)
+  (add-hook 'org-clock-in-hook (lambda () (unless (bound-and-true-p org-timer-countdown-timer) (org-timer-set-timer '(16)))))
+  (add-hook 'org-clock-out-hook (lambda () (when (bound-and-true-p org-timer-countdown-timer) (org-timer-stop))))
+  (add-hook 'org-clock-cancel-hook (lambda () (when (bound-and-true-p org-timer-countdown-timer) (org-timer-stop))))
+  (add-hook 'org-timer-done-hook (lambda () (shell-command "notify-send \"Time for break\"")))
+  ;; ===============org-agenda==================
 ;;;; org-babel
   ;; ================org-babel==================
   (setq org-confirm-babel-evaluate nil)
@@ -816,7 +828,7 @@
   ;; # -*- org-beamer-outline-frame-title: "目录"; -*-
   ;; (put 'org-beamer-outline-frame-title 'safe-local-variable 'stringp)  ;避免弹出提醒
   ;; 局部变量设置方法2：
-  ;; #+BIND: org-beamer-outline-frame-title "目录"
+  ;; #+BIND: org-beamer-outline-frame-title "目录"  ;只用于导出
   (setq org-export-allow-bind-keywords t)  ;允许#+BIND设置局部变量
   (add-to-list 'org-beamer-environments-extra
                '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
@@ -848,12 +860,19 @@
         org-appear-autokeywords nil
         org-appear-inside-latex t)
   ;; 当命令导致buffer切换时，org-appear--post-cmd在新buffer中执行，导致org-appear--current-elem执行错误
-  (defvar-local org-appear-current-buffer nil)
-  (advice-add 'org-appear--pre-cmd :after #'(lambda () (unless org-appear-current-buffer
-                                                         (setq org-appear-current-buffer (current-buffer)))))
-  (advice-add 'org-appear--current-elem :around #'(lambda (fn) (when (and org-appear-current-buffer
-                                                                          (equal org-appear-current-buffer (current-buffer)))
-                                                                 (funcall fn)))))
+  (defvar-local org-appear-command-timer nil)
+  (advice-add 'org-appear--post-cmd :around #'(lambda (fn) (unless org-appear-command-timer
+                                                             (setq org-appear-command-timer
+                                                                   (run-with-idle-timer
+                                                                    0.5 nil (lambda (func buf)
+                                                                              (when (equal (current-buffer) buf)
+                                                                                (funcall func))
+                                                                              (when (buffer-live-p buf)
+                                                                                (with-current-buffer buf
+                                                                                  (when (timerp org-appear-command-timer)
+                                                                                    (cancel-timer org-appear-command-timer)
+                                                                                    (setq org-appear-command-timer nil)))))
+                                                                    fn (current-buffer)))))))
 ;; ================org-appear===================
 ;;; oc
 ;; ====================oc=======================

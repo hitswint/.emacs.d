@@ -22,23 +22,23 @@
   :config
   (window-numbering-mode 1)
   (set-face-attribute 'window-numbering-face nil :background "dark red" :foreground "white")
+  (defun window-numbering-get-number-string (&optional window)
+    (let ((s (int-to-string (or (window-numbering-get-number window) 9))))
+      (propertize s 'face 'window-numbering-face)))
   ;; 当按键大于现有窗口数目时，选中最后一个窗口
   (defvar previously-selected-window nil
     "Previously-selected-window.")
   (defun select-window-by-number (i &optional arg)
-    "Select window given number I by `window-numbering-mode'.
-If prefix ARG is given, delete the window instead of selecting it."
     (interactive "P")
-    (let ((windows (car (gethash (selected-frame) window-numbering-table)))
-          window)
-      (if (and (>= i 0) (< i 10)
-               (setq window (aref windows i)))
-          ()
-        (setq window (aref windows (- (car window-numbering-left) 1))))
-      (setq previously-selected-window (selected-window))
-      (if arg
-          (delete-window window)
-        (select-window window))))
+    (let* ((windows (car (gethash (selected-frame) window-numbering-table)))
+           (window (when (and (>= i 0) (< i 10))
+                     (or (aref windows i)
+                         (aref windows (- (car window-numbering-left) 1))))))
+      (when window
+        (setq previously-selected-window (selected-window))
+        (if arg
+            (delete-window window)
+          (select-window window)))))
   (define-key window-numbering-keymap (kbd "C-1") 'select-window-1)
   (define-key window-numbering-keymap (kbd "C-2") 'select-window-2)
   (define-key window-numbering-keymap (kbd "C-3") 'select-window-3)
@@ -46,18 +46,16 @@ If prefix ARG is given, delete the window instead of selecting it."
   (define-key window-numbering-keymap (kbd "C-5") 'select-window-5)
   (define-key window-numbering-keymap (kbd "C-6") 'select-window-0)
   (defun transpose-window-by-number (i &optional arg)
-    "Transpose the buffers shown in two windows."
     (interactive "p")
-    (let ((windows (car (gethash (selected-frame) window-numbering-table)))
-          (this-win (window-buffer))
-          window)
-      (if (and (>= i 0) (< i 10)
-               (setq window (aref windows i)))
-          ()
-        (setq window (aref windows (- (car window-numbering-left) 1))))
-      (set-window-buffer (selected-window) (window-buffer window))
-      (set-window-buffer window this-win)
-      (select-window window)))
+    (let* ((windows (car (gethash (selected-frame) window-numbering-table)))
+           (this-win (window-buffer))
+           (window (when (and (>= i 0) (< i 10))
+                     (or (aref windows i)
+                         (aref windows (- (car window-numbering-left) 1))))))
+      (when window
+        (set-window-buffer (selected-window) (window-buffer window))
+        (set-window-buffer window this-win)
+        (select-window window))))
   (dotimes (i 10)
     (eval `(defun ,(intern (format "transpose-window-%s" i)) (&optional arg)
              ,(format "Transpose the window with number %i." i)

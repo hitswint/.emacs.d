@@ -201,7 +201,8 @@
         ebib-timestamp-format "%Y-%m-%dT%TZ" ;same as zotero export
         ebib-index-default-sort '("timestamp" . descend)
         ebib-index-window-size 30
-        ebib-expand-strings t)
+        ebib-expand-strings t
+        ebib-filename-separator ";")
   (defun ebib-create-org-identifier/override (key _)
     (format ":Custom_ID: %s" key))
   (advice-add 'ebib-create-org-identifier :override #'ebib-create-org-identifier/override)
@@ -212,11 +213,12 @@
                                 (file (ebib-get-field-value "file" key ebib--cur-db 'noerror 'unbraced 'xref))
                                 (num (if (numberp arg) arg nil))
                                 (file-full-path (ebib--expand-file-name (ebib--select-file file num key))))
-                           (when (file-exists-p file-full-path)
-                             (message "Opening `%s'" file-full-path)
+                           (if (not (file-exists-p file-full-path))
+                               (error "[Ebib] File not found: `%s'" (funcall ebib-file-name-mod-function file-full-path nil))
                              ;; (ebib-lower)
                              (other-window 1)
-                             (find-file file-full-path))))
+                             (find-file file-full-path)
+                             (message "Opening `%s'" file-full-path))))
       (default (beep))))
   (defun ebib-join-bib ()
     "Join to Zotero.bib."

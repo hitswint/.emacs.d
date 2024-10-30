@@ -7,8 +7,7 @@
          ("M-o a r" . eaf-restart-process)
          ("M-o M-a" . eaf-open-pdf-from-history)
          ("M-o M-w" . eaf-open-browser-with-history)
-         ("M-o M-RET" . eaf-switch-or-open-pyqterminal)
-         ("M-o M-S-<return>" . eaf-open-pyqterminal))
+         ("M-o M-RET" . eaf-open-pyqterminal))
   :init
   (setq eaf-dired-advisor-enable nil)
   :config
@@ -229,14 +228,6 @@
     (eaf-bind-key load_next_image "C-n" eaf-image-viewer-keybinding))
   (use-package eaf-pyqterminal
     :config
-    (defun eaf-switch-or-open-pyqterminal ()
-      (interactive)
-      (let* ((predicate (lambda (buf) (equal "pyqterminal"
-                                             (buffer-local-value 'eaf--buffer-app-name buf))))
-             (term-buf (cl-find-if predicate (buffer-list))))
-        (if (buffer-live-p term-buf)
-            (switch-to-buffer term-buf)
-          (call-interactively 'eaf-open-pyqterminal))))
     (cl-loop for key in '("M-p" "M-n" "C-x" "M-i" "M-m" "M-t" "M-z" "C-v" "M-v" "M-<" "M->")
              do (eaf-bind-key eaf-send-key-sequence key eaf-pyqterminal-keybinding))
     (cl-loop for key in '("(" "[" "{" "<" "《" "\"" "'" "“" "”" "‘" "’")

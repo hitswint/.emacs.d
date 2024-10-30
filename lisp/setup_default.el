@@ -44,7 +44,7 @@
 (setq remote-file-name-inhibit-locks t)
 (setq remote-file-name-inhibit-cache nil)
 (setq native-comp-jit-compilation nil)
-(setq frame-title-format "emacs@%b")
+(setq frame-title-format '("emacs@%b"))
 (setq frame-inhibit-implied-resize t)
 (setq idle-update-delay 1.0)
 (setq fast-but-imprecise-scrolling t)

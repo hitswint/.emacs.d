@@ -23,8 +23,7 @@
                                                   (if-let ((current-ov (dired-subtree--get-ov)))
                                                       (dired-subtree-check-change (list current-ov))
                                                     (or (apply fn args)
-                                                        (and buffer-read-only
-                                                             (dired-subtree-check-change (dired-subtree--get-all-ovs))))))))
+                                                        (dired-subtree-check-change (dired-subtree--get-all-ovs)))))))
   (advice-add 'dired-revert :around #'(lambda (fn &rest args)
                                         ;; dired-async-mode会刷新所有dired，包括不可见buffer，导致persp-switch切换时光标回到起始位置
                                         (unless (ignore-errors (not (memq (current-buffer) (persp-buffers (persp-curr)))))
@@ -670,12 +669,13 @@
           (delete-region (overlay-start ov) (overlay-end ov))
           (dired-subtree--remove-overlay ov)))))
   (defun dired-subtree-check-change (ovs)
-    (not (cl-loop for ov in ovs
-                  for fi = (save-excursion (goto-char (1- (overlay-start ov)))
-                                           (dired-get-filename nil t))
-                  never (let ((cached-p (gethash (concat "nil@" fi) file-has-changed-p--hash-table))
-                              (changed-p (file-has-changed-p fi)))
-                          (and cached-p changed-p)))))
+    (and buffer-read-only
+         (not (cl-loop for ov in ovs
+                       for fi = (save-excursion (goto-char (1- (overlay-start ov)))
+                                                (dired-get-filename nil t))
+                       never (let ((cached-p (gethash (concat "nil@" fi) file-has-changed-p--hash-table))
+                                   (changed-p (file-has-changed-p fi)))
+                               (and cached-p changed-p))))))
   ;; C-M-p/n/u/d
   (cl-loop for (key . value) in '((dired-prev-subdir . dired-subtree-previous-sibling)
                                   (dired-next-subdir . dired-subtree-next-sibling)
@@ -706,6 +706,14 @@
   (if (and (fboundp 'daemonp) (daemonp))
       (add-hook 'after-make-frame-functions 'swint-init-all-the-icons-dired)
     (add-hook 'window-setup-hook 'swint-init-all-the-icons-dired))
+  (defcustom all-the-icons-dired-v-adjust 0.01
+    "The default vertical adjustment of the icon in the Dired buffer."
+    :group 'all-the-icons
+    :type 'number)
+  (defface all-the-icons-dired-dir-face
+    '((t (:inherit dired-directory)))
+    "Face for the directory icon."
+    :group 'all-the-icons-faces)
   :config
   (setq all-the-icons-dired-monochrome nil)
   (defun swint-init-all-the-icons-dired (&optional frame)
