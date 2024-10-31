@@ -303,7 +303,8 @@
       (fcitx-prefix-keys-add "M-s" "M-g" "M-o" "M-O" "M-E")
       (fcitx-aggressive-setup)
       (fcitx-isearch-turn-on)
-      (fcitx-read-only-turn-on)
+      ;; dired-subtree更新时会启闭read-only-mode
+      ;; (fcitx-read-only-turn-on)
       (setq swint-fcitx-setup-done t))))
 ;; ======================fcitx=====================
 ;;; aggressive-indent
@@ -1335,14 +1336,14 @@ ORIG is the advised function, which is called with its ARGS."
   (require 'llm-ollama)
   (require 'llm-openai)
   (setopt llm-warn-on-nonfree nil)
-  (setopt ellama-providers `(("DeepSeek" . ,(make-llm-openai-compatible
-                                             :key (get-auth-pass "DeepSeek")
-                                             :url "https://api.deepseek.com/v1"
-                                             :chat-model "deepseek-chat"))
-                             ("Qwen" . ,(make-llm-openai-compatible
+  (setopt ellama-providers `(("Qwen" . ,(make-llm-openai-compatible
                                          :key (get-auth-pass "Qwen")
                                          :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
-                                         :chat-model "qwen-max-latest"))))
+                                         :chat-model "qwen-max-latest"))
+                             ("DeepSeek" . ,(make-llm-openai-compatible
+                                             :key (get-auth-pass "DeepSeek")
+                                             :url "https://api.deepseek.com/v1"
+                                             :chat-model "deepseek-chat"))))
   (setopt ellama-provider (cdar ellama-providers))
   (defun ellama-generate-name-by-words/around (orig-fn provider action prompt)
     (concat (funcall orig-fn provider action prompt)

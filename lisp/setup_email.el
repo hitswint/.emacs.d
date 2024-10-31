@@ -9,6 +9,7 @@
         mu4e-get-mail-command "mbsync -a" ; offlineimap
         mu4e-confirm-quit t
         mu4e-update-interval 600
+        mu4e-modeline-support nil
         message-kill-buffer-on-exit t
         mu4e-attachment-dir "~/Downloads"
         mu4e-completing-read-function 'completing-read
