@@ -361,7 +361,8 @@
   :defer 2
   :config
   (which-key-mode)
-  (setq which-key-sort-order 'which-key-description-order)
+  (setq which-key-sort-order 'which-key-description-order
+        which-key-max-description-length nil)
   (bind-key "M-s x" 'which-key-show-major-mode)
   (bind-key "M-s X" 'which-key-show-minor-mode-keymap)
   ;; 默认C-h启用describe-prefix-bindings
