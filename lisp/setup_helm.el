@@ -127,6 +127,7 @@
                                                                               (lambda (_candidate)
                                                                                 (cl-letf (((symbol-function 'find-file) 'swint-find-file-literally))
                                                                                   (helm-find-file-or-marked _candidate)))))))
+  (define-key helm-find-files-map (kbd "M-S-<return>") 'helm-ff-run-touch-files)
   (define-key helm-generic-files-map (kbd "C-o") 'helm-ff-run-switch-other-window)
   (define-key helm-generic-files-map (kbd "C-j") 'helm-ff-run-open-file-externally)
   (define-key helm-generic-files-map (kbd "C-M-j") 'helm-ff-run-open-file-with-default-tool)

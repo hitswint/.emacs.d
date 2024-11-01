@@ -147,6 +147,7 @@
                                                                 do (let ((trash-directory (concat (file-name-directory f)
                                                                                                   "orig")))
                                                                      (move-file-to-trash f)))))
+              (define-key dired-mode-map (kbd "_") #'(lambda () (interactive) (dired-create-empty-file (read-from-minibuffer "Create file: "))))
               (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-on-files)
               (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
               (define-key dired-mode-map (kbd "M-RET") 'helm-dired-current-file)
