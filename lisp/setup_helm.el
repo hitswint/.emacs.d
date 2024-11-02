@@ -13,6 +13,7 @@
          ("C-x C-f" . helm-find-files)
          ("C-x F" . helm-find)
          ("M-x" . helm-M-x)
+         ("M-X" . helm-M-x-major-mode)
          ("C-x l" . swint-helm-locate)
          ("C-x y" . helm-resume))
   :init
@@ -606,6 +607,36 @@
       (helm-execute-persistent-action 'peep-preview-action)))
   (put 'helm-peep-preview-persistent 'helm-only t)
   ;; ======helm-peep-preview-persistent=========
+;;;; helm-M-x-major-mode
+  ;; ===========helm-M-x-major-mode=============
+  ;; https://github.com/DarwinAwardWinner/amx
+  (defun amx-extract-commands-from-features (mode)
+    (let ((library-path (symbol-file mode))
+          (mode-name (symbol-name mode))
+          commands)
+      (string-match "\\(.+?\\)\\(-mode\\)?$" mode-name)
+      (setq mode-name (match-string 1 mode-name))
+      (if (string= mode-name "c") (setq mode-name "cc"))
+      (setq mode-name (regexp-quote mode-name))
+      (dolist (feature load-history)
+        (let ((feature-path (car feature)))
+          (when (and feature-path (or (equal feature-path library-path)
+                                      (string-match mode-name (file-name-nondirectory
+                                                               feature-path))))
+            (dolist (item (cdr feature))
+              (if (and (listp item) (eq 'defun (car item)))
+                  (let ((function (cdr item)))
+                    (when (commandp function)
+                      (setq commands (append commands (list function))))))))))
+      commands))
+  (defun helm-M-x-major-mode ()
+    (interactive)
+    (let ((command (helm-comp-read "M-x: "
+                                   (amx-extract-commands-from-features major-mode)
+                                   :keymap helm-M-x-map
+                                   :buffer "*helm M-x for major-mode*")))
+      (execute-extended-command (or current-prefix-arg helm-current-prefix-arg) command)))
+  ;; ===========helm-M-x-major-mode=============
   )
 ;; ====================helm=====================
 ;;; helm-pinyin

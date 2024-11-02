@@ -51,8 +51,8 @@
 (use-package counsel
   ;; 按键逻辑：helm(C-x c)/counsel(M-s c)
   :commands counsel-read-file-for-rsync
-  :bind (("M-X" . counsel-M-x)
-         ("C-x C-r" . swint-counsel-history)
+  :bind (("C-x C-r" . swint-counsel-history)
+         ("M-s c x" . counsel-M-x)
          ("M-s c b" . counsel-switch-buffer)
          ("M-s c u" . counsel-unicode-char)
          ("M-s c l" . counsel-locate)
