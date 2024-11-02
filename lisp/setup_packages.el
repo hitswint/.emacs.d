@@ -364,15 +364,7 @@
   (setq which-key-sort-order 'which-key-description-order
         which-key-max-description-length nil)
   (bind-key "M-s x" 'which-key-show-major-mode)
-  (bind-key "M-s X" 'which-key-show-minor-mode-keymap)
-  ;; 默认C-h启用describe-prefix-bindings
-  (defun which-key-show-standard-help/override (&optional _)
-    (interactive)
-    (let ((which-key-inhibit t))
-      (which-key--hide-popup-ignore-command)
-      (helm-descbinds (kbd (which-key--current-key-string)))))
-  (advice-add 'which-key-show-standard-help :override
-              #'which-key-show-standard-help/override))
+  (bind-key "M-s X" 'which-key-show-minor-mode-keymap))
 ;; ====================which-key===================
 ;;; backup
 ;; ======================backup====================

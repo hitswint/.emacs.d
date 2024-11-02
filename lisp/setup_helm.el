@@ -875,7 +875,10 @@
 ;;; helm-descbinds
 ;; ==============helm-descbinds=================
 (use-package helm-descbinds
-  :commands helm-descbinds)
+  :after helm
+  :config
+  (setq helm-descbinds-disable-which-key nil)
+  (helm-descbinds-mode 1))
 ;; ==============helm-descbinds=================
 ;;; helm-imenu
 ;; ================helm-imenu===================
