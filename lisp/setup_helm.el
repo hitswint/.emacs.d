@@ -13,7 +13,8 @@
          ("C-x C-f" . helm-find-files)
          ("C-x F" . helm-find)
          ("M-x" . helm-M-x)
-         ("M-X" . helm-M-x-major-mode)
+         ("M-s M-x" . helm-M-x-major-mode)
+         ("M-s M-X" . helm-M-x-minor-mode)
          ("C-x l" . swint-helm-locate)
          ("C-x y" . helm-resume))
   :init
@@ -610,19 +611,21 @@
 ;;;; helm-M-x-major-mode
   ;; ===========helm-M-x-major-mode=============
   ;; https://github.com/DarwinAwardWinner/amx
-  (defun amx-extract-commands-from-features (mode)
+  (defun amx-extract-commands-from-features (mode &optional match-by-name)
     (let ((library-path (symbol-file mode))
-          (mode-name (symbol-name mode))
-          commands)
-      (string-match "\\(.+?\\)\\(-mode\\)?$" mode-name)
-      (setq mode-name (match-string 1 mode-name))
-      (if (string= mode-name "c") (setq mode-name "cc"))
-      (setq mode-name (regexp-quote mode-name))
+          mode-name commands)
+      (when match-by-name
+        (setq mode-name (symbol-name mode))
+        (string-match "\\(.+?\\)\\(-mode\\)?$" mode-name)
+        (setq mode-name (match-string 1 mode-name))
+        (if (string= mode-name "c") (setq mode-name "cc"))
+        (setq mode-name (regexp-quote mode-name)))
       (dolist (feature load-history)
         (let ((feature-path (car feature)))
           (when (and feature-path (or (equal feature-path library-path)
-                                      (string-match mode-name (file-name-nondirectory
-                                                               feature-path))))
+                                      (and mode-name
+                                           (string-match mode-name (file-name-nondirectory
+                                                                    feature-path)))))
             (dolist (item (cdr feature))
               (if (and (listp item) (eq 'defun (car item)))
                   (let ((function (cdr item)))
@@ -633,8 +636,16 @@
     (interactive)
     (let ((command (helm-comp-read "M-x: "
                                    (amx-extract-commands-from-features major-mode)
-                                   :keymap helm-M-x-map
                                    :buffer "*helm M-x for major-mode*")))
+      (execute-extended-command (or current-prefix-arg helm-current-prefix-arg) command)))
+  (defun helm-M-x-minor-mode ()
+    (interactive)
+    (let* ((mode-sym (intern (completing-read
+                              "Minor Mode: "
+                              local-minor-modes nil t)))
+           (command (helm-comp-read "M-x: "
+                                    (amx-extract-commands-from-features mode-sym)
+                                    :buffer "*helm M-x for major-mode*")))
       (execute-extended-command (or current-prefix-arg helm-current-prefix-arg) command)))
   ;; ===========helm-M-x-major-mode=============
   )
