@@ -12,9 +12,6 @@
          ("C-." . swint-helm-dired-buffers-list)
          ("C-x C-f" . helm-find-files)
          ("C-x F" . helm-find)
-         ("M-x" . helm-M-x)
-         ("M-s M-x" . helm-M-x-major-mode)
-         ("M-s M-X" . helm-M-x-minor-mode)
          ("C-x l" . swint-helm-locate)
          ("C-x y" . helm-resume))
   :init
@@ -608,8 +605,15 @@
       (helm-execute-persistent-action 'peep-preview-action)))
   (put 'helm-peep-preview-persistent 'helm-only t)
   ;; ======helm-peep-preview-persistent=========
-;;;; helm-M-x-major-mode
-  ;; ===========helm-M-x-major-mode=============
+  )
+;; ====================helm=====================
+;;; helm-command
+;; ===============helm-command==================
+(use-package helm-command
+  :bind (("M-x" . helm-M-x)
+         ("M-s M-x" . helm-M-x-major-mode)
+         ("M-s M-X" . helm-M-x-minor-mode))
+  :config
   ;; https://github.com/DarwinAwardWinner/amx
   (defun amx-extract-commands-from-features (mode &optional match-by-name)
     (let ((library-path (symbol-file mode))
@@ -632,24 +636,41 @@
                     (when (commandp function)
                       (setq commands (append commands (list function))))))))))
       commands))
+  (defun helm-M-x-transformer-major/minor (condidates &optional mode-map-alist)
+    (cl-loop with local-map = (or mode-map-alist (helm-M-x-current-mode-map-alist))
+             for cmd in condidates
+             for local-key = (car (rassq cmd local-map))
+             for key = (substitute-command-keys (format "\\[%s]" cmd))
+             collect (cons (propertize
+                            (format "%s%s" cmd
+                                    (cond (local-key
+                                           (concat " " (propertize " " 'display
+                                                                   (propertize local-key 'face 'helm-M-x-key))))
+                                          ((not (string-match "^M-x" key))
+                                           (concat " " (propertize " " 'display
+                                                                   (propertize key 'face 'helm-M-x-key))))
+                                          (t ""))))
+                           cmd)))
   (defun helm-M-x-major-mode ()
     (interactive)
-    (let ((command (helm-comp-read "M-x: "
-                                   (amx-extract-commands-from-features major-mode)
-                                   :buffer "*helm M-x for major-mode*")))
-      (execute-extended-command (or current-prefix-arg helm-current-prefix-arg) command)))
+    (let* ((commands (remove nil (delete-dups (append (map-values (helm-M-x-current-mode-map-alist))
+                                                      (amx-extract-commands-from-features major-mode)))))
+           (command (helm-comp-read "M-x: " (helm-M-x-transformer-major/minor commands)
+                                    :buffer "*helm M-x for major-mode*")))
+      (execute-extended-command (or current-prefix-arg helm-current-prefix-arg) (symbol-name command))))
   (defun helm-M-x-minor-mode ()
     (interactive)
-    (let* ((mode-sym (intern (completing-read
-                              "Minor Mode: "
-                              local-minor-modes nil t)))
-           (command (helm-comp-read "M-x: "
-                                    (amx-extract-commands-from-features mode-sym)
-                                    :buffer "*helm M-x for major-mode*")))
-      (execute-extended-command (or current-prefix-arg helm-current-prefix-arg) command)))
-  ;; ===========helm-M-x-major-mode=============
-  )
-;; ====================helm=====================
+    (let* ((minor-mode (intern (completing-read
+                                "Minor Mode: "
+                                local-minor-modes nil t)))
+           (minor-mode-map-alist (let ((map-sym (helm-get-mode-map-from-mode minor-mode)))
+                                   (when (and map-sym (boundp map-sym))
+                                     (helm-M-x-get-major-mode-command-alist (symbol-value map-sym)))))
+           (commands (amx-extract-commands-from-features minor-mode t))
+           (command (helm-comp-read "M-x: " (helm-M-x-transformer-major/minor commands minor-mode-map-alist)
+                                    :buffer "*helm M-x for minor-mode*")))
+      (execute-extended-command (or current-prefix-arg helm-current-prefix-arg) (symbol-name command)))))
+;; ===============helm-command==================
 ;;; helm-pinyin
 ;; ================helm-pinyin==================
 (use-package helm-pinyin
