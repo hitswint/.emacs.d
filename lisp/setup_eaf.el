@@ -10,6 +10,7 @@
          ("M-o M-RET" . eaf-open-pyqterminal))
   :init
   (setq eaf-dired-advisor-enable nil)
+  (add-hook 'eaf-mode-hook #'(lambda () (kill-local-variable 'frame-title-format)))
   :config
   (pyvenv-activate-py3)
   (setq eaf-webengine-default-zoom "1.5"
