@@ -17,11 +17,11 @@
     (emms-all)
     (emms-default-players))
   (add-hook 'emms-player-started-hook 'emms-show)
-  (setq emms-source-file-default-directory "~/Music/")
-  (setq emms-playlist-buffer-name "Enjoy Music")
-  (setq emms-show-format "%s")
-  (setq emms-mode-line-mode-line-function nil)
-  (setq emms-mode-line-format ""
+  (setq emms-source-file-default-directory "~/Music/"
+        emms-playlist-buffer-name "Enjoy Music"
+        emms-show-format "%s"
+        emms-mode-line-mode-line-function nil
+        emms-mode-line-format ""
         emms-lyrics-display-format ""
         emms-lyrics-display-on-modeline nil
         emms-playing-time-display-format "")
@@ -32,12 +32,12 @@
     (define-key emms-playlist-mode-map (kbd "C-c c") 'emms-player-mpd-connect)
     (advice-add 'emms-playlist-mode-go :before #'emms-player-mpd-connect)
     (advice-add 'emms-play-file :before #'(lambda (file) (emms-player-mpd-update-all)))
-    (setq emms-player-mpd-server-name "localhost")
-    (setq emms-player-mpd-server-port "6600")
-    (setq emms-player-mpd-music-directory "~/Music")
+    (setq emms-player-mpd-server-name "localhost"
+          emms-player-mpd-server-port "6600"
+          emms-player-mpd-music-directory "~/Music")
     (add-to-list 'emms-info-functions 'emms-info-mpd)
-    ;; 播放时遍历emms-player-list，使用可播放的最后一个player
-    (add-to-list 'emms-player-list 'emms-player-mpd t))
+    ;; 播放时遍历emms-player-list，使用第1个可播放的player
+    (add-to-list 'emms-player-list 'emms-player-mpd))
   ;; ==============emms-mpd================
   )
 ;; ================emms==================
