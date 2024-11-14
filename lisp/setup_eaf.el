@@ -215,6 +215,9 @@
     (eaf-bind-key move_annot_text "M-a m" eaf-pdf-viewer-keybinding)
     (eaf-bind-key scroll_to_begin "M-<" eaf-pdf-viewer-keybinding)
     (eaf-bind-key scroll_to_end "M->" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key scroll_up_page "<next>" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key scroll_down_page "<prior>" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key scroll_down_page "S-SPC" eaf-pdf-viewer-keybinding)
     (eaf-bind-key jump_to_page "M-g M-g" eaf-pdf-viewer-keybinding)
     (eaf-bind-key eaf-pdf-delete-pages "M-d" eaf-pdf-viewer-keybinding)
     (eaf-bind-key eaf-pdf-extract-page-text "M-t" eaf-pdf-viewer-keybinding)
@@ -223,7 +226,9 @@
     (eaf-bind-key org-eaf-noter-sync-prev "P" eaf-pdf-viewer-keybinding)
     (eaf-bind-key org-eaf-noter-sync-next "N" eaf-pdf-viewer-keybinding)
     (eaf-bind-key org-eaf-noter-sync "O" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key org-eaf-noter-new "I" eaf-pdf-viewer-keybinding))
+    (eaf-bind-key org-eaf-noter-new "I" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key jump_to_previous_saved_pos "<backspace>" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key jump_to_next_saved_pos "S-<backspace>" eaf-pdf-viewer-keybinding))
   (use-package eaf-image-viewer
     :config
     (eaf-bind-key load_prev_image "S-SPC" eaf-image-viewer-keybinding)
