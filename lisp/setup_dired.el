@@ -14,12 +14,11 @@
   (add-hook 'dired-mode-hook 'dired-hide-details-mode)
   (setq dired-recursive-copies 'top)
   (setq dired-recursive-deletes 'always)
-;;;; setup-and-keybindings
-  ;; ==========setup-and-keybindings===========
   (setq dired-mouse-drag-files t)
   (setq dired-auto-revert-buffer t) ;使用dired/dired-other-window/dired-other-frame时更新，与auto-revert-mode不同
   (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才启用auto-revert-mode更新
-                                                (when (get-buffer-window (current-buffer))
+                                                (when (and (get-buffer-window (current-buffer))
+                                                           (not (region-active-p)))
                                                   (if-let ((current-ov (dired-subtree--get-ov)))
                                                       (dired-subtree-check-change (list current-ov))
                                                     (or (apply fn args)
@@ -121,12 +120,23 @@
          (list "\\.stl$" "paraview -s localhost * >/dev/null 2>&1 &")
          (list "\\.vtk$" "paraview -s localhost * >/dev/null 2>&1 &")
          (list "\\.vtp$" "paraview -s localhost * >/dev/null 2>&1 &")))
+;;;; keybindings
+  ;; ===============keybindings================
   (add-hook 'dired-mode-hook
             (lambda ()
               (define-key dired-mode-map (kbd "M-=") nil)
               (define-key dired-mode-map (kbd "Q") 'dired-do-query-replace-regexp)
               (define-key dired-mode-map (kbd "e") (lambda () (interactive) (find-file-literally (dired-get-file-for-visit))))
               (define-key dired-mode-map (kbd "f") (lambda () (interactive) (swint-find-file-literally (dired-get-file-for-visit))))
+              (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-on-files)
+              (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
+              (define-key dired-mode-map (kbd "M-RET") 'helm-dired-current-file)
+              (define-key dired-mode-map (kbd "C-M-j") 'dired-xdg-open)
+              (define-key dired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-beginning-of-buffer)
+              (define-key dired-mode-map (vector 'remap 'end-of-buffer) 'dired-end-of-buffer)
+              (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch) ;对mark的多个文件内容进行查找
+              (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
+              (smartrep-define-key dired-mode-map "M-g" '(("d" . dired-duplicate-file)))
               (define-key dired-mode-map (kbd "r") (lambda ()
                                                      (interactive)
                                                      (let ((current-directory default-directory))
@@ -147,24 +157,17 @@
                                                                 do (let ((trash-directory (concat (file-name-directory f)
                                                                                                   "orig")))
                                                                      (move-file-to-trash f)))))
-              (define-key dired-mode-map (kbd "_") #'(lambda () (interactive) (dired-create-empty-file (read-from-minibuffer "Create file: "))))
-              (define-key dired-mode-map (kbd "C-j") 'dired-async-shell-command-on-files)
-              (define-key dired-mode-map (kbd "v") 'txm-dired-view-file-or-dir)
-              (define-key dired-mode-map (kbd "M-RET") 'helm-dired-current-file)
-              (define-key dired-mode-map (kbd "C-M-j") 'dired-xdg-open)
-              (define-key dired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-beginning-of-buffer)
-              (define-key dired-mode-map (vector 'remap 'end-of-buffer) 'dired-end-of-buffer)
-              (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch) ;对mark的多个文件内容进行查找
-              (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
-              (smartrep-define-key dired-mode-map "M-g" '(("d" . dired-duplicate-file)))
+              (define-key dired-mode-map (kbd "_") #'(lambda () (interactive)
+                                                       (let ((default-directory (dired-current-directory)))
+                                                         (dired-create-empty-file (read-from-minibuffer "Create file: ")))))
               (make-local-variable 'dired-sort-map)
               (setq dired-sort-map (make-sparse-keymap))
               (define-key dired-mode-map "s" dired-sort-map)
-              (define-key dired-sort-map "s" #'(lambda () (interactive) (dired-sort-switch "S"))) ;sort by Size
-              (define-key dired-sort-map "x" #'(lambda () (interactive) (dired-sort-switch "X"))) ;sort by eXtension
-              (define-key dired-sort-map "t" #'(lambda () (interactive) (dired-sort-switch "t"))) ;sort by Time
-              (define-key dired-sort-map "n" #'(lambda () (interactive) (dired-sort-switch "v"))))) ;sort by Name
-  ;; ==========setup-and-keybindings===========
+              (define-key dired-sort-map "s" #'(lambda () (interactive) (dired-sort-switch "S")))  ;Size
+              (define-key dired-sort-map "x" #'(lambda () (interactive) (dired-sort-switch "X")))  ;eXtension
+              (define-key dired-sort-map "t" #'(lambda () (interactive) (dired-sort-switch "t")))  ;Time
+              (define-key dired-sort-map "n" #'(lambda () (interactive) (dired-sort-switch "v")))))  ;Name
+  ;; ===============keybindings================
 ;;;; swint-find-file-literally
   ;; ========swint-find-file-literally=========
   (defun swint-find-file-literally (filename)

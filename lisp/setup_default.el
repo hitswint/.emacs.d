@@ -95,6 +95,7 @@
 (global-set-key (kbd "S-SPC") 'just-one-space)
 (global-set-key (kbd "<S-return>") 'join-line)
 (global-set-key (kbd "M-s SPC") 'delete-horizontal-space)
+(global-set-key (kbd "M-s S-SPC") #'(lambda () (interactive) (save-excursion (flush-lines "^$" (point-min) (point-max)))))
 (global-set-key (kbd "C-SPC") nil)
 (global-set-key (kbd "<C-M-backspace>") 'backward-kill-sexp)
 (define-key lisp-interaction-mode-map (kbd "C-j") nil)

@@ -25,20 +25,23 @@
 ;; ====================recentf=====================
 (use-package recentf
   :commands recentf-mode
+  :init
+  (setq recentf-exclude (list "^/tmp/"
+                              "^/ssh:"
+                              "\\.?ido\\.last$"
+                              "\\.revive$"
+                              "/TAGS$"
+                              "^/var/folders/.+$"
+                              "^/mnt.+"
+                              "\\.[pP][dD][fF]\\'"
+                              "\\.emacs\\.d/ellama-sessions/.+")
+        recentf-max-saved-items 200)
   :config
   (use-package recentf-ext)
   (recentf-mode 1)
-  (setq recentf-max-saved-items 200)
-  (setq recentf-exclude
-        (list "^/tmp/"
-              "^/ssh:"
-              "\\.?ido\\.last$"
-              "\\.revive$"
-              "/TAGS$"
-              "^/var/folders/.+$"
-              "^/mnt.+"
-              "\\.[pP][dD][fF]\\'"
-              "\\.emacs\\.d/ellama-sessions/.+")))
+  (advice-add 'recentf-add-file :around #'(lambda (fn &rest args) (let ((recentf-exclude nil))
+                                                                    (apply fn args))))
+  (advice-add 'recentf-save-list :before #'recentf-auto-cleanup))
 ;; ====================recentf=====================
 ;;; multiple-cursors
 ;; ================multiple-cursors================

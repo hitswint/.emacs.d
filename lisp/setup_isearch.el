@@ -8,10 +8,11 @@
   ;; M-n/M-p isearch-ring-advance/isearch-ring-retreat
   ;; M-c/M-r isearch-toggle-case-fold/isearch-toggle-regexp
   ;; (M-s) M-</M->/C-e isearch-beginning-of-buffer/isearch-end-of-buffer/isearch-yank-line
+  ;; M-s SPC isearch-toggle-lax-whitespace
   :diminish isearch-mode
   :custom
   (search-upper-case t)
-  (search-whitespace-regexp ".*?")
+  (search-whitespace-regexp ".+?")
   (isearch-lax-whitespace t)
   (isearch-regexp-lax-whitespace nil)
   (isearch-lazy-highlight t)
@@ -69,7 +70,13 @@
   ;; 转换后的regexp可能超过长度限制，导致re-search-forward产生"Regular expression too big"错误
   (defun pinyin-search--pinyin-to-regexp/override (pinyin)
     "Wrap for Pinyin searching."
-    (let ((string-converted (pinyinlib-build-regexp-string pinyin nil nil nil)))
+    (let ((string-converted (if isearch-lax-whitespace
+                                (mapconcat (lambda (s)
+                                             (replace-regexp-in-string " " search-whitespace-regexp
+                                                                       (pinyinlib-build-regexp-string s nil nil nil)))
+                                           ;; "\ "代表实际空格
+                                           (split-string pinyin "\\\\ ") " ")
+                              (pinyinlib-build-regexp-string pinyin nil nil nil))))
       (condition-case nil
           (progn (save-excursion (re-search-forward string-converted nil t)) string-converted)
         (error pinyin))))
