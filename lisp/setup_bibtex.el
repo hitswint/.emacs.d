@@ -63,9 +63,9 @@
       (when (re-search-forward pdf-file nil t)
         (re-search-backward (concat "^@\\(" parsebib--bibtex-identifier
                                     "\\)[[:space:]]*[\(\{][[:space:]]*"
-                                    parsebib--key-regexp "[[:space:]]*,"))
+                                    parsebib--bibtex-key-regexp "[[:space:]]*,"))
         (let ((entry-type (match-string 1)))
-          (reverse (bibtex-completion-prepare-entry (parsebib-read-entry entry-type) nil nil))))))
+          (reverse (bibtex-completion-prepare-entry (parsebib-read-entry) nil nil))))))
   (advice-add 'bibtex-completion-candidates :filter-return
               #'(lambda (candidates)
                   (if (assoc "timestamp" (car candidates))
