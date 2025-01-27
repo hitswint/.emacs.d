@@ -68,6 +68,7 @@ fi
 
 # OpenFOAM
 if [[ -n $WM_PROJECT ]]; then
+    gdbe () { emacs --eval "(gdb \"gdb -i=mi $*\")";}
     # 添加$PROMPT中OpenFOAM相关信息
     # export PROMPT_ORIG=$PROMPT
     # precmd () {
@@ -99,8 +100,11 @@ if [[ -n $WM_PROJECT ]]; then
             # 自带/usr/lib/openfoam/openfoam2306/etc/config.sh/bash_completion无效
             # 借鉴org版本foamGenerateBashCompletion工具生成bash_completion
             source $FOAM_USER_APPBIN/bash_completion
+            configFile=$HOME/git-repo/OpenFOAM/OpenFOAM-v2306/etc/bashrc
+            alias switchenv="echo \"Gcc Opt\nGcc Debug\nClang Opt\" | percol | awk '{print \$1,\$2}' | while read a b; do sed -i \"s/^export WM_COMPILER=.*$/export WM_COMPILER=\$a/g\" $configFile; sed -i \"s/^export WM_COMPILE_OPTION=.*$/export WM_COMPILE_OPTION=\$b/g\" $configFile; source $configFile; done"
         else
             source $WM_PROJECT_DIR/etc/config.sh/bash_completion
+            alias switchenv="echo \"Gcc Opt\nGcc Debug\nClang Opt\" | percol | awk '{print \$1,\$2}' | while read a b; do source $HOME/OpenFOAM/OpenFOAM-10/etc/bashrc WM_PROJECT_USER_DIR=$HOME/$WM_PROJECT/$user-$WM_PROJECT_VERSION WM_COMPILER=\$a WM_COMPILE_OPTION=\$b; done"
         fi
         # source只需运行一次，不需要重复运行
         # add-zsh-hook -D precmd _openfoam_compinit
