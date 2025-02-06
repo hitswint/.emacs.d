@@ -141,7 +141,6 @@
                            names
                            neotree
                            operate-on-number
-                           org
                            org-appear
                            org-brain
                            org-noter
