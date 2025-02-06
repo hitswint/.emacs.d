@@ -12,8 +12,7 @@
 ;;                          ))
 ;;;; emacs-china
 (setq package-archives '(("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-                         ("gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                         ("cselpa" . "https://elpa.thecybershadow.net/packages/")))
+                         ("gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
 ;; Optimization, no need to activate all the packages so early.
 (setq package-enable-at-startup nil
       package--init-file-ensured t
