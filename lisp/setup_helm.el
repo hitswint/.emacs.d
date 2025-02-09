@@ -26,6 +26,7 @@
         helm-truncate-lines t
         helm-ff--RET-disabled t
         helm-ff-newfile-prompt-p nil
+        helm-ff-show-dot-file-path t
         ;; (add-to-list 'display-buffer-alist '("^\\*helm .*" (display-buffer-at-bottom))) ;在底部打开helm
         helm-split-window-default-side 'same
         helm-show-action-window-other-window nil
