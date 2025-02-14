@@ -12,6 +12,8 @@
                                  org-forward-heading-same-level
                                  org-previous-item
                                  org-next-item
+                                 swint-org-previous-item
+                                 swint-org-next-item
                                  org-beginning-of-item-list
                                  org-end-of-item-list
                                  outline-previous-visible-heading
@@ -109,7 +111,7 @@
                 (define-key org-mode-map (kbd "C-c C-v") 'swint-open-output-file)
                 (define-key org-mode-map (kbd "C-c j") 'swint-org-open-at-point)
                 (define-key org-mode-map (kbd "C-c o") #'(lambda () (interactive) (swint-org-open-at-point t)))
-                (define-key org-mode-map (kbd "C-c d") 'swint-org-open-dired-at-point)
+                (define-key org-mode-map (kbd "C-c O") 'swint-org-open-dired-at-point)
                 (smartrep-define-key org-mode-map "M-s"
                   '(("p" . org-previous-visible-heading)
                     ("n" . org-next-visible-heading)
@@ -121,10 +123,12 @@
                     ("O" . org-eaf-pdf-sync)
                     ("I" . swint-annotate-new)))
                 (smartrep-define-key org-mode-map "C-c"
-                  '(("p" . org-previous-item)
-                    ("n" . org-next-item)
+                  '(("p" . swint-org-previous-item)
+                    ("n" . swint-org-next-item)
                     ("P" . org-beginning-of-item-list)
-                    ("N" . org-end-of-item-list)))
+                    ("N" . org-end-of-item-list)
+                    ("d" . org-down-element)
+                    ("u" . org-up-element)))
                 (define-key org-mode-map (kbd "C-a") #'(lambda () (interactive)
                                                          (if (or (org-at-heading-p) (org-at-item-p))
                                                              (call-interactively 'org-beginning-of-line)
@@ -318,6 +322,21 @@
       (swint-dired-clipboard-paste filename)
       (insert "[[" filename "]]")))
   ;; =========org-clipboard-copy/paste==========
+;;;; swint-org-previous/next-item
+  ;; =======swint-org-previous/next-item========
+  (defun swint-org-next-item ()
+    (interactive)
+    (condition-case _
+        (org-next-item)
+      (error
+       (org-forward-element))))
+  (defun swint-org-previous-item ()
+    (interactive)
+    (condition-case _
+        (org-previous-item)
+      (error
+       (org-backward-element))))
+  ;; =======swint-org-previous/next-item========
   )
 ;; =================org-mode====================
 ;;; outline
