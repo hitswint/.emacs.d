@@ -146,10 +146,10 @@ See also `persp-switch' and `persp-remove-buffer'."
                                                         (persp-buffers (gethash x (perspectives-hash))))))
                                    ")\n"
                                    (when swint-persp-save-window-state
-                                     (format "(setq window-configuration-of-persp-%s '" x)
-                                     (prin1-to-string
-                                      (symbol-value (intern (format "window-configuration-of-persp-%s" x))))
-                                     ")\n"))))))
+                                     (concat (format "(setq window-configuration-of-persp-%s '" x)
+                                             (prin1-to-string
+                                              (symbol-value (intern (format "window-configuration-of-persp-%s" x))))
+                                             ")\n")))))))
       (persp-mode -1)))
   (if (and (fboundp 'daemonp) (daemonp))
       (add-hook 'delete-frame-functions (lambda (frame) (swint-save-perspectives)))

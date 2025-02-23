@@ -967,6 +967,11 @@
   :commands rg-run
   :bind ("M-s M-g" . rg-menu)
   :config
+  ;; rerun:
+  ;; r Regexp模式 / t Literal模式
+  ;; d 改变文件夹 / f 改变文件
+  ;; c 改变大小写 / i 启闭忽略文件
+  (add-to-list 'display-buffer-alist '("\\*rg\\*" display-buffer-same-window))
   (rg-enable-default-bindings (kbd "M-s M-g"))
   (setq rg-executable (executable-find "rga"))
   (setq rg-default-alias-fallback "everything")
@@ -976,6 +981,15 @@
   (define-key rg-mode-map (kbd "M-n") 'rg-next-file)
   (define-key rg-mode-map (kbd "C-j") 'rg-result-open-externally)
   (define-key rg-mode-map (kbd "SPC") 'compilation-display-error)
+  (defun rg-current-search ()
+    (if (rg-search-literal rg-cur-search)
+        (rg-search-pattern rg-cur-search)
+      (let* ((cur-match (-first (lambda (x)
+                                  (> (marker-position (car x)) (line-beginning-position)))
+                                rg-match-positions))
+             (beg (marker-position (car cur-match)))
+             (end (+ beg (cdr cur-match))))
+        (buffer-substring-no-properties beg end))))
   (defun rg-result-open-externally ()
     (interactive)
     (let ((file-name (or (save-excursion
@@ -988,7 +1002,7 @@
                   (goto-char (line-beginning-position))
                   (re-search-forward "Page\\ \\([[:digit:]]+\\):" nil t)
                   (match-string-no-properties 1))))
-      (helm-ag-open-file-action file-name page (rg-search-pattern rg-cur-search)))))
+      (helm-ag-open-file-action file-name page (rg-current-search)))))
 ;; ===================rg===========================
 ;;; awesome-tab
 ;; ===============awesome-tab======================
