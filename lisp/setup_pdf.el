@@ -37,12 +37,12 @@
 ;;; pdfgrep
 ;; =================pdfgrep========================
 (use-package pdfgrep
-  :bind (("M-s v v" . pdfgrep-opened)
-         ("M-s v d" . pdfgrep-dired)
+  :bind (("M-s v v" . pdfgrep-default)
+         ("M-s v o" . pdfgrep-opened)
          ("M-s v z" . pdfgrep-zotero))
   :config
   ;; 三种方式pdfgrep/rg/helm-ag，速度从慢到快，文件数量小于5时用pdfgrep，小于100时用rg，其他用helm-ag
-  ;; pdfgrep-opened/pdfgrep-dired/pdfgrep-zotero分别针对已打开文件/当前文件夹/Zotero仓库
+  ;; pdfgrep-opened/pdfgrep-default/pdfgrep-zotero分别针对已打开文件/当前文件夹/Zotero仓库
   (require 'helm-ag)
   (pdfgrep-mode)
   (define-key grep-mode-map (kbd "C-j") 'compile-goto-error-externally)
@@ -66,21 +66,22 @@
            (file-name (caar (compilation--loc->file-struct loc)))
            (meta (pdfgrep-current-page-and-match (current-buffer))))
       (helm-ag-open-file-action file-name (number-to-string (car meta)) (substring-no-properties (cdr meta)))))
-  (defun pdfgrep-dired (&optional arg)
+  (defun pdfgrep-default (&optional arg)
     (interactive "P")
-    (let* ((string-to-grep (read-string "Dired pdfgrep: "))
+    (let* ((string-to-grep (read-string "Default pdfgrep: "))
            (string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\|'\\|&\\)")
            (default-directory (helm-current-directory))
-           (pdf-files (if arg
-                          (directory-files-recursively default-directory "\\.pdf$")
-                        (directory-files default-directory t "\\.pdf$"))))
+           (pdf-files (if (eq major-mode 'dired-mode)
+                          (dired-get-marked-files)
+                        (directory-files-recursively default-directory "\\.pdf$"))))
       (cl-flet ((escape-local (x)
                   (replace-regexp-in-string string-to-escape "\\\\\\1" x)))
-        (if (or arg (>= (length pdf-files) 5))
-            (rg-run string-to-grep "pdf" default-directory nil nil (mapcar #'escape-local pdf-files))
-          (pdfgrep (concat (pdfgrep-default-command) (escape-local string-to-grep) " *.pdf"))))))
-  (defun pdfgrep-opened ()
-    (interactive)
+        (if arg
+            (pdfgrep (concat (pdfgrep-default-command) (escape-local string-to-grep) " "
+                             (mapconcat (lambda (x) (escape-local x)) pdf-files " ")))
+          (rg-run string-to-grep "pdf" default-directory nil nil (mapcar #'escape-local pdf-files))))))
+  (defun pdfgrep-opened (&optional arg)
+    (interactive "P")
     (let* ((string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\|'\\|&\\)")
            (zotero-storage "~/Zotero/storage")
            (qpdfview-database (expand-file-name "~/.local/share/qpdfview/qpdfview/database"))
@@ -93,11 +94,10 @@
                                                    (format "sqlite3 %s \"select filePath from tabs_v5\"" qpdfview-database))
                                                   "\n" t)))))
       (cl-flet ((escape-local (x)
-                  (replace-regexp-in-string string-to-escape
-                                            "\\\\\\1" x)))
+                  (replace-regexp-in-string string-to-escape "\\\\\\1" x)))
         (if pdf-file-list
             (let ((string-to-grep (read-string "Opened pdfgrep: ")))
-              (if (<= (length pdf-file-list) 5)
+              (if arg
                   (pdfgrep (concat (pdfgrep-default-command) (escape-local string-to-grep)
                                    (cl-loop for x in pdf-file-list
                                             concat (concat " " (escape-local x)))
@@ -108,21 +108,17 @@
                                             concat (concat " " (escape-local (buffer-file-name x))))))
                 (rg-run string-to-grep "pdf" (expand-file-name zotero-storage) nil nil (mapcar #'escape-local pdf-file-list))))
           (message "No pdf is opened.")))))
-  (defun pdfgrep-zotero ()
-    (interactive)
-    (cl-flet ((escape-local (x)
-                (replace-regexp-in-string string-to-escape
-                                          "\\\\\\1" x)))
-      (let* ((string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\|'\\|&\\)")
-             (zotero-database (expand-file-name "~/Zotero/zotero.sqlite"))
-             (zotero-storage "~/Zotero/storage")
-             (string-to-grep (read-string "Zotero pdfgrep: "))
-             (str-list (split-string string-to-grep (if (string-match-p "\\cC" string-to-grep) "" " ")
-                                     t "[ \t\n]+"))
-             (zotero-file-list-orig (split-string
-                                     (replace-regexp-in-string "|storage:" "/"
-                                                               (shell-command-to-string
-                                                                (concat "sqlite3 " zotero-database " \"
+  (defun pdfgrep-zotero (&optional arg)
+    (interactive "P")
+    (let ((zotero-storage "~/Zotero/storage")
+          (string-to-grep (read-string "Zotero pdfgrep: ")))
+      (if arg
+          (cl-flet ((escape-local (x)
+                      (replace-regexp-in-string string-to-escape "\\\\\\1" x)))
+            (let* ((string-to-escape "\\( \\|(\\|)\\|\\[\\|\\]\\|{\\|}\\|'\\|&\\)")
+                   (zotero-database (expand-file-name "~/Zotero/zotero.sqlite"))
+                   (str-list (split-string string-to-grep (if (string-match-p "\\cC" string-to-grep) "" " ") t "[ \t\n]+"))
+                   (zotero-file-list-orig (split-string (replace-regexp-in-string "|storage:" "/" (shell-command-to-string (concat "sqlite3 " zotero-database " \"
 SELECT items.key, itemAttachments.path
 FROM items, itemAttachments
 WHERE items.itemID = itemAttachments.itemID AND items.itemID in" "("
@@ -130,23 +126,23 @@ WHERE items.itemID = itemAttachments.itemID AND items.itemID in" "("
                       collect (format "SELECT itemID FROM fulltextItemWords where wordID in (SELECT wordID FROM fulltextWords WHERE word LIKE '%s')" x))
              " INTERSECT ")
 ") ORDER BY items.itemID
-\""))) "\n" t))
-             (zotero-file-list (mapcar #'(lambda (x) (escape-local (expand-file-name x zotero-storage))) zotero-file-list-orig)))
-        (if (and (> (length zotero-file-list) 1) (<= (length zotero-file-list) 5))
-            (pdfgrep (concat (pdfgrep-default-command) (escape-local string-to-grep) " "
-                             (string-join zotero-file-list " ")))
-          (let* ((match-cache-list (split-string (shell-command-to-string
-                                                  (format "%s --hidden -l -G .zotero-ft-cache \"%s\" %s" helm-ag-base-command string-to-grep zotero-storage))
-                                                 "\n" t))
-                 (zotero-dir-list (cl-loop for x in match-cache-list
-                                           collect (substring x 27 35))))
-            (if (<= (length match-cache-list) 1000)
-                (rg-run string-to-grep "pdf" (expand-file-name zotero-storage) nil nil zotero-dir-list)
-              (let ((helm-ag-command-option "--hidden -G .zotero-ft-cache"))
-                (cl-letf (((symbol-function 'helm-ag--marked-input)
-                           (lambda (escape)
-                             (replace-regexp-in-string " " "\\\\ " string-to-grep))))
-                  (helm-do-ag (expand-file-name zotero-storage) zotero-dir-list)))))))))
+\""))) "\n" t))             ;直接查询zotero.sqlite数据库，得到数据不全
+                   (zotero-file-list (mapcar #'(lambda (x) (escape-local (expand-file-name x zotero-storage))) zotero-file-list-orig)))
+              (pdfgrep (concat (pdfgrep-default-command) (escape-local string-to-grep) " "
+                               (string-join zotero-file-list " ")))))
+        (let* ((match-cache-list (split-string (shell-command-to-string
+                                                (format "%s --hidden -l -G .zotero-ft-cache \"%s\" %s"
+                                                        helm-ag-base-command string-to-grep zotero-storage))
+                                               "\n" t))
+               (zotero-dir-list (cl-loop for x in match-cache-list
+                                         collect (substring x 27 35))))
+          (if (<= (length match-cache-list) 1000)
+              (rg-run string-to-grep "pdf" (expand-file-name zotero-storage) nil nil zotero-dir-list)
+            (let ((helm-ag-command-option "--hidden -G .zotero-ft-cache"))
+              (cl-letf (((symbol-function 'helm-ag--marked-input)
+                         (lambda (escape)
+                           (replace-regexp-in-string " " "\\\\ " string-to-grep))))
+                (helm-do-ag (expand-file-name zotero-storage) zotero-dir-list))))))))
   (defun helm-ag-zotero-open-pdf (candidates &optional arg)
     (--if-let
         (-flatten

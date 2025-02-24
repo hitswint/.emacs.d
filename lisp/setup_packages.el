@@ -979,8 +979,13 @@
   (define-key rg-mode-map (kbd "C-n") 'compilation-next-error)
   (define-key rg-mode-map (kbd "M-p") 'rg-prev-file)
   (define-key rg-mode-map (kbd "M-n") 'rg-next-file)
+  (define-key rg-mode-map (kbd "M-P") 'rg-back-history)
+  (define-key rg-mode-map (kbd "M-N") 'rg-forward-history)
   (define-key rg-mode-map (kbd "C-j") 'rg-result-open-externally)
   (define-key rg-mode-map (kbd "SPC") 'compilation-display-error)
+  (define-key rg-mode-map (kbd "v") 'pdfgrep-default)
+  (define-key rg-mode-map (kbd "o") 'pdfgrep-opened)
+  (define-key rg-mode-map (kbd "z") 'pdfgrep-zotero)
   (defun rg-current-search ()
     (if (rg-search-literal rg-cur-search)
         (rg-search-pattern rg-cur-search)
@@ -1041,8 +1046,7 @@
                           magit-log-mode
                           magit-file-mode
                           magit-blob-mode
-                          magit-blame-mode
-                          ))
+                          magit-blame-mode))
        "Magit")
       ((derived-mode-p 'eaf-mode)
        eaf--buffer-app-name)

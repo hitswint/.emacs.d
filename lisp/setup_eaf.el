@@ -17,6 +17,7 @@
         eaf-marker-letters "ASDFGQWERTZXCVB"
         eaf-goto-right-after-close-buffer t
         eaf-is-member-of-focus-fix-wms t)
+  (advice-remove #'org-open-file #'eaf--find-file-advisor)
   (define-key eaf-mode-map* (kbd "M-'") nil)
   (define-key eaf-mode-map* (kbd "M-/") nil)
   (define-key eaf-mode-map* (kbd "C-c d") 'eaf-duplicate-current-buffer)
