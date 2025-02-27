@@ -24,7 +24,7 @@
         TeX-auto-untabify t
         TeX-save-query nil
         TeX-show-compilation t
-        TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o"))
+        TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o") ("eaf" eaf-pdf-synctex-forward-view))
         TeX-source-correlate-mode t
         TeX-source-correlate-method 'synctex
         TeX-source-correlate-start-server nil
@@ -36,7 +36,13 @@
   ;; 指定--run 2是因为只编译一次时会出现临时页：Temporary page! LATEX was unable to guess the total number of pages
   ;; 在导出模板cn-beamer中禁用animate包之后不生成临时页
   (add-to-list 'TeX-command-list '("beamer-preview" "python ~/.emacs.d/repos/beamer-preview/beamer-preview.py --compiler xelatex --compiler-option=\"-interaction=nonstopmode\" --run 1 --watch %(t-filename-only)" TeX-run-command nil t))
-  (setq TeX-view-program-selection '((output-pdf "PDF Tools") (output-dvi "Llpp") (output-html "Firefox"))))
+  (setq TeX-view-predicate-list '((eaf-running (boundp 'eaf-mode-map))
+                                  (pdf-tools-running (boundp 'pdf-view-mode-map))))
+  (setq TeX-view-program-selection '(((output-pdf eaf-running) "eaf")
+                                     ((output-pdf pdf-tools-running) "PDF Tools")
+                                     (output-pdf "Llpp")
+                                     (output-dvi "Llpp")
+                                     (output-html "Firefox"))))
 ;; =====================auctex=====================
 ;;; preview
 ;; ====================preview=====================
