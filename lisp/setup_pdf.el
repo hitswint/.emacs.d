@@ -151,7 +151,8 @@ WHERE items.itemID = itemAttachments.itemID AND items.itemID in" "("
                (if (listp candidates) candidates (list candidates))))
         (-each it (if arg #'(lambda (pdffile)
                               (start-process "Shell" nil shell-file-name shell-command-switch
-                                             (concat "qpdfview --unique --search " helm-ag--last-query
+                                             (concat "qpdfview --unique --search"
+                                                     " \"" helm-ag--last-query "\""
                                                      " \"" pdffile "\"")))
                     'find-file))
       (message "No PDF(s) found.")))

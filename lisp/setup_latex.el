@@ -14,6 +14,7 @@
               (prettify-symbols-mode 1)
               (turn-on-orgtbl)
               (define-key LaTeX-mode-map (kbd "C-c C-x \\") 'prettify-symbols-mode)
+              (define-key LaTeX-mode-map (kbd "C-c e") 'TeX-engine-set)
               (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)
               (define-key LaTeX-mode-map (kbd "C-c l") #'(lambda () (interactive) (insert (swint-cursor-localtion))))))
   (setq LaTeX-math-abbrev-prefix "M-s `") ;LaTeX-math-mode与cdlatex的prefix冲突
@@ -59,6 +60,7 @@
   :after tex
   :config
   (auctex-latexmk-setup)
-  (advice-add 'TeX-engine-set :after #'(lambda (type) (auctex-latexmk-setup))))
+  (advice-add 'TeX-engine-set :after #'(lambda (type) (unless (equal (caar TeX-command-list) "LatexMk")
+                                                        (auctex-latexmk-setup)))))
 ;; =================auctex-latexmk=================
 (provide 'setup_latex)
