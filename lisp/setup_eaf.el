@@ -229,7 +229,25 @@
     (eaf-bind-key org-eaf-noter-sync "O" eaf-pdf-viewer-keybinding)
     (eaf-bind-key org-eaf-noter-new "I" eaf-pdf-viewer-keybinding)
     (eaf-bind-key jump_to_previous_saved_pos "<backspace>" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key jump_to_next_saved_pos "S-<backspace>" eaf-pdf-viewer-keybinding))
+    (eaf-bind-key jump_to_next_saved_pos "S-<backspace>" eaf-pdf-viewer-keybinding)
+    (defvar pdf-opened-file-path (concat eaf-config-location "pdf/history/log_opened.txt"))
+    (advice-add 'eaf--monitor-emacs-kill :before #'(lambda () (ignore-errors
+                                                                (let ((pdf-urls ""))
+                                                                  (write-region
+                                                                   (dolist (buffer (eaf--get-eaf-buffers) pdf-urls)
+                                                                     (with-current-buffer buffer
+                                                                       (when (and (equal eaf--buffer-app-name "pdf-viewer")
+                                                                                  (not (funcall projectile-ignored-project-function eaf--buffer-url)))
+                                                                         (setq pdf-urls (concat eaf--buffer-url "\n" pdf-urls)))))
+                                                                   nil pdf-opened-file-path)))))
+    (when (file-exists-p pdf-opened-file-path)
+      (let ((pdf-opened-files (with-temp-buffer (insert-file-contents pdf-opened-file-path)
+                                                (split-string (buffer-string) "\n" t))))
+        (cl-loop for pdf in pdf-opened-files
+                 when (file-exists-p pdf)
+                 do (progn
+                      (sit-for 0.2)
+                      (eaf-open pdf))))))
   (use-package eaf-image-viewer
     :config
     (eaf-bind-key load_prev_image "S-SPC" eaf-image-viewer-keybinding)

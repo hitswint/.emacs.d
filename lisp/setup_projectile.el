@@ -4,7 +4,13 @@
   :delight '(:eval (propertize (funcall projectile-mode-line-function) 'face (if (mode-line-window-selected-p) 'font-lock-keyword-face 'ml/inactive-foreground-bold)))
   :bind-keymap ("M-\"" . projectile-command-map)
   :init
-  (setq projectile-mode-line-prefix " ")
+  (setq projectile-mode-line-prefix " "
+        projectile-ignored-project-function (lambda (root)
+                                              (or (file-remote-p root)
+                                                  (string-prefix-p (expand-file-name trash-directory) root)
+                                                  (string-prefix-p "/mnt/share" root)
+                                                  (string-prefix-p "/mnt/sshfs" root)
+                                                  (string-prefix-p "/mnt/usb" root))))
   :config
   (projectile-mode t)
   (remove-hook 'buffer-list-update-hook #'projectile-track-known-projects-find-file-hook)
@@ -14,13 +20,7 @@
         projectile-auto-update-cache nil
         projectile-completion-system 'helm
         projectile-mode-line-function 'swint-projectile-default-mode-line
-        projectile-track-known-projects-automatically t
-        projectile-ignored-project-function (lambda (root)
-                                              (or (file-remote-p root)
-                                                  (string-prefix-p (expand-file-name trash-directory) root)
-                                                  (string-prefix-p "/mnt/share" root)
-                                                  (string-prefix-p "/mnt/sshfs" root)
-                                                  (string-prefix-p "/mnt/usb" root))))
+        projectile-track-known-projects-automatically t)
   (defun swint-projectile-default-mode-line ()
     "Report project name and type in the modeline."
     (or (unless (string= projectile--mode-line
