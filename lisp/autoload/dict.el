@@ -1,12 +1,12 @@
 ;;; sdcv
 ;; ==================sdcv====================
-;;;###autoload
 (defvar sdcv-dictionary-list '("懒虫简明英汉词典"
                                "懒虫简明汉英词典"
                                "新世纪英汉科技大词典"
                                "新世纪汉英科技大词典"
                                "21世纪英汉汉英双向词典"
                                "简明英汉字典增强版"))
+;;;###autoload
 (defun sdcv-search-with-dictionary (word dictionary-list &optional to-buffer)
   "Search some WORD with dictionary list."
   (mapconcat (lambda (dict)
