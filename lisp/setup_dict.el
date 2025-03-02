@@ -15,11 +15,11 @@
       ("w" . w3m-youdao-sample-sentences)
       ("e" . ellama-translate-at-point)))
   :config
-  (defun bing-dict-brief-cb-at-point (&optional _word)
+  (defun bing-dict-brief-cb-at-point (&optional _word sync-p)
     "Search word at point."
     (interactive)
     (let ((word (or _word (swint-get-words-at-point))))
-      (bing-dict-brief word))))
+      (bing-dict-brief word sync-p))))
 ;; ==================bing-dict===================
 ;;; google-translate
 ;; ===============google-translate===============
