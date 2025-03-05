@@ -9,15 +9,16 @@
           (let ((curr-event (read-event)))
             ;; 当鼠标位于posframe上时，M-p/M-n/M-e失效
             (setq switch-to-posframe-buffer (catch 'break
-                                              (while (member curr-event '(134217840 134217838 134217847 134217829))
+                                              (while (member curr-event '(134217838 134217840 134217847 25 134217829))
                                                 (cond ((eq curr-event 134217838) ;M-n
                                                        (posframe-funcall buffer #'(lambda () (ignore-errors (scroll-up-command)))))
                                                       ((eq curr-event 134217840) ;M-p
                                                        (posframe-funcall buffer #'(lambda () (ignore-errors (scroll-down-command)))))
-                                                      ((eq curr-event 134217847) ;M-w
+                                                      ((or (eq curr-event 134217847)  ;M-w
+                                                           (eq curr-event 25))  ;C-y
                                                        (posframe-funcall buffer #'(lambda () (kill-new (buffer-substring-no-properties
                                                                                                         (point-min) (point-max)))))
-                                                       (throw 'break 0))
+                                                       (throw 'break (when (eq curr-event 134217847) 0)))
                                                       ((eq curr-event 134217829) ;M-e
                                                        (throw 'break 1)))
                                                 (setq curr-event (read-event)))))

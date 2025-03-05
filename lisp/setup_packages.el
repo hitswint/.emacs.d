@@ -935,7 +935,12 @@
           insert-translated-name-ollama-model-name (llm-name ellama-provider)
           insert-translated-name-llm-provider ellama-provider))
   (insert-translated-name-setup)
-  (advice-add 'ellama-provider-select :after 'insert-translated-name-setup))
+  (advice-add 'ellama-provider-select :after 'insert-translated-name-setup)
+  ;; 弹出错误：org-element--cache: Unregistered buffer modifications detected
+  (advice-add 'insert-translated-name-query-translation :after #'(lambda (word style)
+                                                                   (when (and (eq major-mode 'org-mode)
+                                                                              org-appear-mode)
+                                                                     (org-element-cache-reset)))))
 ;; ============insert-translated-name==============
 ;;; idf-mode
 ;; ==================idf-mode======================
