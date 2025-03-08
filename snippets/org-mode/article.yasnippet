@@ -10,14 +10,14 @@
 #+OPTIONS: H:9
 #+LATEX_HEADER:
 # ===================PANDOC===================
-#+PANDOC_OPTIONS: toc:t toc-depth:3
+#+PANDOC_OPTIONS: reference-doc:${4:$$(unless yas-modified-p (expand-file-name "~/.pandoc/reference.docx"))} toc:t toc-depth:3
 # ==================citeproc==================
 #+PANDOC_OPTIONS: citeproc:t
-#+PANDOC_OPTIONS: bibliography:${4:$$(unless yas-modified-p (expand-file-name "~/.bib/Zotero.bib"))} csl:${5:$$(unless yas-modified-p (expand-file-name "~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl"))}
+#+PANDOC_OPTIONS: bibliography:${5:$$(unless yas-modified-p (expand-file-name "~/.bib/Zotero.bib"))} csl:${6:$$(unless yas-modified-p (expand-file-name "~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl"))}
 #+PANDOC_METADATA: reference-section-title:参考文献
 # ==================org-cite===================
-# #+BIBLIOGRAPHY: $4
-# #+CITE_EXPORT: csl $5
+# #+BIBLIOGRAPHY: $5
+# #+CITE_EXPORT: csl $6
 # * 参考文献
 #   #+PRINT_BIBLIOGRAPHY:
 # ===============pandoc-crossref==============

@@ -604,19 +604,20 @@
     (setq helm-last-buffer helm-org-ref-link-buffer)
     (let* ((helm-split-window-default-side 'below)
            (helm-always-two-windows t)
+           (export-to-oc (org-collect-keywords '("CITE_EXPORT")))
            (label-names (helm-comp-read "Label: " (org-ref-label-list)
                                         :marked-candidates t
                                         :buffer helm-org-ref-link-buffer
                                         :keymap helm-org-ref-link-map
                                         :persistent-action (lambda (candidate)
                                                              (with-helm-current-buffer
-                                                               (if (string-prefix-p "office" (cadr (split-string candidate ":")))
+                                                               (if export-to-oc
                                                                    (insert (format "[cite:@%s] " candidate))
                                                                  (insert (format "[[%s]] " candidate))))))))
       ;; 将插入引用定义为keymap中的命令的话，存在类似helm-insert-or-copy的Quit警告问题
       (when (sequencep label-names)
         ;; 根据#+NAME/#+LABEL的前缀是latex/office选择不同的引用方式
-        (if (string-prefix-p "office" (cadr (split-string (car label-names) ":")))
+        (if export-to-oc
             (insert (bibtex-completion-format-citation-org-cite label-names))
           ;; 若引用时无章节编号的需要，仍可采用latex格式；若采取office格式，则需外部调用pandoc
           (insert (s-join " " (--map (format "[[%s]]" it) label-names))))))))
@@ -859,7 +860,8 @@
 (use-package ox-pandoc
   :after ox
   :config
-  (setq org-pandoc-options '((standalone . t))
+  (setq org-pandoc-with-cite-processors nil  ;禁止oc对[cite:@xxx]处理，发送pandoc处理
+        org-pandoc-options '((standalone . t))
         org-pandoc-options-for-docx '((standalone . nil))
         org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex"))
         org-pandoc-options-for-latex-pdf '((pdf-engine . "xelatex")))

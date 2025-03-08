@@ -6,4 +6,4 @@
 # --
 \subfigure[${2:$$(unless yas-modified-p (replace-regexp-in-string "_" " " (file-name-base (yas-field-value 1))))}]{
 \label{fig:${3:$$(unless yas-modified-p (make-temp-name (concat (replace-regexp-in-string " " "_" (yas-field-value 2)) ":")))}}
-\includegraphics[width=0.45\linewidth]{${1:$$(unless yas-modified-p (or (yas-choose-value (directory-files-recursively "./" (image-file-name-regexp))) (swint-screenshot)))}}}$0
+\includegraphics[width=0.45\linewidth]{${1:$$(yas-choose-value (directory-files-recursively "./" (image-file-name-regexp)))}}}$0

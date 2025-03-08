@@ -3,5 +3,5 @@
 # key: eq
 # name: \begin{equation} ... \end{equation}
 # --
-#+NAME: eq:${1:$$(unless yas-modified-p (make-temp-name (concat (ivy-read "Export to: " '(latex office)) ":")))}
-${2:$$(unless yas-modified-p (if (string-prefix-p "latex" (yas-field-value 1)) "\\\\begin\{equation\}\n\n\\\\end\{equation\}" (format "\$\$ \$\$ \{#eq:%s\}" (yas-field-value 1))))}$0
+#+NAME: eq:${1:$$(unless yas-modified-p (make-temp-name ""))}
+${2:$$(unless yas-modified-p (if (org-collect-keywords '("CITE_EXPORT")) (format "\$\$ \$\$ \{#eq:%s\}" (yas-field-value 1)) "\\\\begin\{equation\}\n\n\\\\end\{equation\}"))}$0

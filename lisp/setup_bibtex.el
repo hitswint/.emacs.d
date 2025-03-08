@@ -100,7 +100,9 @@
   ;; 根据org中#+BIBLIOGRAPHY:和tex中\bibliography{}定义，查找本地bib文件
   (dolist (hook '(LaTeX-mode-hook org-mode-hook))
     (add-hook hook (lambda ()
-                     (local-set-key (kbd "C-c b") 'helm-bibtex-with-local-bibliography))))
+                     (local-set-key (kbd "C-c b") #'(lambda (&optional arg) (interactive "P")
+                                                      (let (helm-bibtex-full-frame)
+                                                        (call-interactively 'helm-bibtex-with-local-bibliography)))))))
   :config
   (defvar helm-bibtex-map
     (let ((map (make-sparse-keymap)))
@@ -122,11 +124,11 @@
   (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
         'org-cite-format-citation)
   (defun org-cite-format-citation (keys)
-    ;; 使用BIBLIOGRAPHY关键词判断引用格式：(org-cite-list-bibliography-files)
-    ;; 然而，BIBLIOGRAPHY也用于判断是否存在local bib文件，改用CITE_EXPORT关键词
+    ;; 使用BIBLIOGRAPHY关键词判断引用格式：(org-cite-list-bibliography-files)，但其也用于判断是否存在local bib文件
+    ;; 改用CITE_EXPORT关键词，org-cite与pandoc支持相同格式，CITE_EXPORT也用于判断后续输入引用和文献的格式
     (if (org-collect-keywords '("CITE_EXPORT"))
         (bibtex-completion-format-citation-org-cite keys)  ;使用org-cite格式
-      (concat "cite:" (s-join ","       ;使用citeproc格式
+      (concat "cite:" (s-join ","       ;使用org-ref格式
                               (--map (format "%s" it) keys))
               " ")))
   (defvar bibtex-completion-bibliography/curr nil)
