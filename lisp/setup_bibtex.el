@@ -101,7 +101,9 @@
   (dolist (hook '(LaTeX-mode-hook org-mode-hook))
     (add-hook hook (lambda ()
                      (local-set-key (kbd "C-c b") #'(lambda (&optional arg) (interactive "P")
-                                                      (let (helm-bibtex-full-frame)
+                                                      (let ((helm-split-window-default-side 'below)
+                                                            (helm-always-two-windows t)
+                                                            helm-bibtex-full-frame)
                                                         (call-interactively 'helm-bibtex-with-local-bibliography)))))))
   :config
   (defvar helm-bibtex-map
