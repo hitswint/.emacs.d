@@ -85,8 +85,6 @@
 (global-set-key (kbd "M-s M-.") 'split-window-horizontally)
 (global-set-key (kbd "M-s M-<") 'maximize-window-in-direction)
 (global-set-key (kbd "M-s M->") #'(lambda () (interactive) (maximize-window-in-direction t)))
-(global-set-key (kbd "M-o M-o") 'run-octave)
-(global-set-key (kbd "M-o M-O") 'matlab-shell)
 (global-set-key (kbd "M-o M-c") 'calendar)
 (global-set-key (kbd "C-x C-l") 'reposition-window)
 (global-set-key (kbd "C-;") 'set-mark-command)
