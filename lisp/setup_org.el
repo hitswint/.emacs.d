@@ -138,6 +138,7 @@
                                                            (insert (swint-cursor-localtion))))
                 (define-key org-mode-map (kbd "C-c w") 'org-clipboard-copy)
                 (define-key org-mode-map (kbd "C-c y") 'org-clipboard-paste)
+                (define-key org-mode-map (kbd "C-c r") 'helm-org-ref-link)
                 (define-key org-mode-map (kbd "C-c C-x C-\\") 'org-toggle-link-display)
                 (define-key org-mode-map (kbd "C-j") #'(lambda () (interactive)
                                                          (if (org-in-regexp org-link-any-re nil t)
@@ -561,67 +562,6 @@
   (define-key org-noter-notes-mode-map (kbd "C-M-o") 'org-noter-sync-current-note)
   (define-key org-noter-notes-mode-map (kbd "C-M-n") 'org-noter-sync-next-note))
 ;; =================org-noter===================
-;;; org-ref
-;; ==================org-ref====================
-(use-package org-ref-core
-  :commands (org-ref-insert-link
-             org-ref-insert-link-hydra/body
-             org-ref-bibtex-hydra/body
-             helm-org-ref-link)
-  :init
-  ;; org-ref-insert-link -> 文献引用(citation)
-  ;; C-u -> 交叉引用(reference)，默认ref:xxx，C-u 选择类型，C-u C-u 引用[[#xxx]]
-  ;; C-u C-u -> 跳转或新建label，若存在则跳转，否则新建
-  (add-hook 'org-mode-hook (lambda ()
-                             (bind-key "C-c r" 'helm-org-ref-link org-mode-map)
-                             (bind-key "C-c R" 'org-ref-insert-link-hydra/body org-mode-map)))
-  :config
-  (bind-key "C-c r" 'org-ref-bibtex-hydra/body bibtex-mode-map)
-  ;; org-ref-insert-link在org-ref-core中定义，若直接(use-package org-ref)提示函数未定义
-  (require 'org-ref)
-  (require 'helm)
-  ;; 在已有org-mode中更新链接高亮
-  (dolist (buf (cl-remove-if-not (lambda (x)
-                                   (equal (buffer-mode x) 'org-mode))
-                                 (buffer-list)))
-    (with-current-buffer buf
-      (org-restart-font-lock)))
-  (defvar helm-org-ref-link-buffer "*helm org ref link-swint*")
-  (defvar helm-org-ref-link-map
-    (let ((map (make-sparse-keymap)))
-      (set-keymap-parent map helm-map)
-      (define-key map (kbd "C-j") #'(lambda () (interactive)
-                                      (helm-run-after-exit #'(lambda (_candidates)
-                                                               (goto-char (point-min))
-                                                               (search-forward (format "#+NAME: %s" (car _candidates)) nil t))
-                                                           (helm-marked-candidates))))
-      map)
-    "Keymap for `helm-org-ref-link'.")
-  ;; RET 插入并退出 / C-l 连续插入 / C-j 跳转
-  (defun helm-org-ref-link ()
-    (interactive)
-    (helm--push-and-remove-dups helm-org-ref-link-buffer 'helm-buffers)
-    (setq helm-last-buffer helm-org-ref-link-buffer)
-    (let* ((helm-split-window-default-side 'below)
-           (helm-always-two-windows t)
-           (export-to-oc (org-collect-keywords '("CITE_EXPORT")))
-           (label-names (helm-comp-read "Label: " (org-ref-label-list)
-                                        :marked-candidates t
-                                        :buffer helm-org-ref-link-buffer
-                                        :keymap helm-org-ref-link-map
-                                        :persistent-action (lambda (candidate)
-                                                             (with-helm-current-buffer
-                                                               (if export-to-oc
-                                                                   (insert (format "[cite:@%s] " candidate))
-                                                                 (insert (format "[[%s]] " candidate))))))))
-      ;; 将插入引用定义为keymap中的命令的话，存在类似helm-insert-or-copy的Quit警告问题
-      (when (sequencep label-names)
-        ;; 根据#+NAME/#+LABEL的前缀是latex/office选择不同的引用方式
-        (if export-to-oc
-            (insert (bibtex-completion-format-citation-org-cite label-names))
-          ;; 若引用时无章节编号的需要，仍可采用latex格式；若采取office格式，则需外部调用pandoc
-          (insert (s-join " " (--map (format "[[%s]]" it) label-names))))))))
-;; ==================org-ref====================
 ;;; org-pdftools
 ;; ================org-pdftools=================
 (use-package org-pdftools
@@ -906,7 +846,8 @@
   (require 'oc-csl)
   (require 'oc-biblatex)
   (require 'oc-natbib)
-  (setq org-cite-global-bibliography nil)
+  (setq org-cite-global-bibliography (delete (expand-file-name "~/.bib/Zotero.bib")
+                                             (directory-files "~/.bib" t "\\.bib$")))
   ;; org-cite-activate-processor/org-cite-follow-processor/org-cite-insert-processor/org-cite-export-processors -> 高亮/打开/插入/导出
   (setq org-cite-csl-styles-dir "~/Zotero/styles/")
   ;; locale影响本地化日期等，默认使用en-US，可下载其他：https://github.com/citation-style-language/locales

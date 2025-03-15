@@ -147,7 +147,6 @@
                            djvu
                            nov
                            org-pdftools
-                           org-ref
                            outline-magic
                            outorg
                            outshine

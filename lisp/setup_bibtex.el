@@ -47,6 +47,12 @@
              bibtex-completion-pdf-viewer
              bibtex-completion-open-pdf-externally)
   :config
+  (bind-key "C-c o" #'(lambda () (interactive) (bibtex-completion-open-pdf
+                                                (list (bibtex-completion-get-key-bibtex))))
+            bibtex-mode-map)
+  (bind-key "C-c j" #'(lambda () (interactive) (bibtex-completion-open-pdf-externally
+                                                (list (bibtex-completion-get-key-bibtex))))
+            bibtex-mode-map)
   (setq bibtex-completion-cite-prompt-for-optional-arguments nil
         bibtex-completion-additional-search-fields '(keywords timestamp)
         bibtex-completion-pdf-field "file"
@@ -93,14 +99,16 @@
 ;;; helm-bibtex
 ;; ==================helm-bibtex===================
 (use-package helm-bibtex
-  :commands helm-bibtex-with-local-bibliography
+  :commands (helm-bibtex-with-local-bibliography helm-org-ref-link)
   :bind (("C-x b" . swint-helm-bibtex)
          ("C-x B" . helm-bibtex))
   :init
   ;; 根据org中#+BIBLIOGRAPHY:和tex中\bibliography{}定义，查找本地bib文件
   (dolist (hook '(LaTeX-mode-hook org-mode-hook))
     (add-hook hook (lambda ()
-                     (local-set-key (kbd "C-c b") 'helm-bibtex-with-local-bibliography))))
+                     (local-set-key (kbd "C-c b") #'(lambda (&optional arg) (interactive "P")
+                                                      (let ((org-cite-global-bibliography nil))
+                                                        (call-interactively 'helm-bibtex-with-local-bibliography)))))))
   :config
   (defvar helm-bibtex-map
     (let ((map (make-sparse-keymap)))
@@ -200,7 +208,42 @@
                             :marked-candidates t
                             :buffer "*helm bibtex select*")))
     (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr))
-      (helm-bibtex arg bibtex-completion-bibliography/curr))))
+      (helm-bibtex arg bibtex-completion-bibliography/curr)))
+  (defvar helm-org-ref-link-buffer "*helm org ref link-swint*")
+  (defvar helm-org-ref-link-map
+    (let ((map (make-sparse-keymap)))
+      (set-keymap-parent map helm-map)
+      (define-key map (kbd "C-j") #'(lambda () (interactive)
+                                      (helm-run-after-exit #'(lambda (_candidates)
+                                                               (goto-char (point-min))
+                                                               (search-forward (format "#+NAME: %s" (car _candidates)) nil t))
+                                                           (helm-marked-candidates))))
+      map)
+    "Keymap for `helm-org-ref-link'.")
+  ;; RET 插入并退出 / C-l 连续插入 / C-j 跳转
+  (defun helm-org-ref-link ()
+    (interactive)
+    (helm--push-and-remove-dups helm-org-ref-link-buffer 'helm-buffers)
+    (setq helm-last-buffer helm-org-ref-link-buffer)
+    (let* ((helm-split-window-default-side 'below)
+           (helm-always-two-windows t)
+           (export-to-oc (org-collect-keywords '("CITE_EXPORT")))
+           (label-names (helm-comp-read "Label: " (org-ref-label-list)
+                                        :marked-candidates t
+                                        :buffer helm-org-ref-link-buffer
+                                        :keymap helm-org-ref-link-map
+                                        :persistent-action (lambda (candidate)
+                                                             (with-helm-current-buffer
+                                                               (if export-to-oc
+                                                                   (insert (format "[cite:@%s] " candidate))
+                                                                 (insert (format "[[%s]] " candidate))))))))
+      ;; 将插入引用定义为keymap中的命令的话，存在类似helm-insert-or-copy的Quit警告问题
+      (when (sequencep label-names)
+        ;; 根据#+NAME/#+LABEL的前缀是latex/office选择不同的引用方式
+        (if export-to-oc
+            (insert (bibtex-completion-format-citation-org-cite label-names))
+          ;; 若引用时无章节编号的需要，仍可采用latex格式；若采取office格式，则需外部调用pandoc
+          (insert (s-join " " (--map (format "[[%s]]" it) label-names))))))))
 ;; ==================helm-bibtex===================
 ;;; ebib
 ;; =====================ebib=======================
