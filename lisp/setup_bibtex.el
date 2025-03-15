@@ -100,11 +100,7 @@
   ;; 根据org中#+BIBLIOGRAPHY:和tex中\bibliography{}定义，查找本地bib文件
   (dolist (hook '(LaTeX-mode-hook org-mode-hook))
     (add-hook hook (lambda ()
-                     (local-set-key (kbd "C-c b") #'(lambda (&optional arg) (interactive "P")
-                                                      (let ((helm-split-window-default-side 'below)
-                                                            (helm-always-two-windows t)
-                                                            helm-bibtex-full-frame)
-                                                        (call-interactively 'helm-bibtex-with-local-bibliography)))))))
+                     (local-set-key (kbd "C-c b") 'helm-bibtex-with-local-bibliography))))
   :config
   (defvar helm-bibtex-map
     (let ((map (make-sparse-keymap)))
@@ -133,6 +129,65 @@
       (concat "cite:" (s-join ","       ;使用org-ref格式
                               (--map (format "%s" it) keys))
               " ")))
+  (defvar helm-source-bibtex-swint
+    (helm-build-sync-source "BibTeX entries swint"
+      :header-name (lambda (name)
+                     (format "%s%s: " name (if helm-bibtex-local-bib " (local)" "")))
+      :candidates 'helm-bibtex-candidates
+      :filtered-candidate-transformer 'helm-bibtex-candidates-formatter
+      :action (helm-get-attr 'action helm-source-bibtex)
+      :keymap helm-bibtex-map
+      :persistent-action 'helm-bibtex-insert-citation)
+    "Source for searching in BibTeX files.")
+  (defvar helm-source-bibtex-local
+    (helm-build-sync-source "BibTeX entries local"
+      :header-name (lambda (name)
+                     (format "%s%s: " name (if helm-bibtex-local-bib " (local)" "")))
+      :candidates 'helm-bibtex-candidates
+      :filtered-candidate-transformer 'helm-bibtex-candidates-formatter
+      :action (helm-get-attr 'action helm-source-bibtex)
+      :keymap helm-bibtex-map
+      :persistent-action 'helm-bibtex-insert-citation)
+    "Source for searching in BibTeX files.")
+  (defun helm-bibtex (&optional arg local-bib input)
+    (interactive "P")
+    (let ((helm-split-window-default-side 'below)
+          (helm-always-two-windows t)
+          (helm-bibtex-full-frame nil)
+          helm-bibtex-buffer source-bibtex)
+      (cond ((null local-bib)
+             (setq helm-bibtex-buffer "*helm bibtex*"
+                   source-bibtex helm-source-bibtex))
+            ((file-in-directory-p (car local-bib) "~/.bib")
+             (setq helm-bibtex-buffer "*helm bibtex-swint*"
+                   source-bibtex helm-source-bibtex-swint))
+            (t
+             (setq helm-bibtex-buffer "*helm bibtex-local*"
+                   source-bibtex helm-source-bibtex-local)))
+      (if (and (buffer-live-p (get-buffer helm-bibtex-buffer)) (not arg))
+          (let ((helm-current-buffer (current-buffer)))
+            (helm-resume helm-bibtex-buffer))
+        (when arg
+          (bibtex-completion-clear-cache))
+        (bibtex-completion-init)
+        (let* ((candidates (bibtex-completion-candidates))
+               (key (bibtex-completion-key-at-point))
+               (preselect (and key
+                               (cl-position-if (lambda (cand)
+                                                 (member (cons "=key=" key)
+                                                         (cdr cand)))
+                                               candidates))))
+          (helm :sources (list source-bibtex helm-source-fallback-options)
+                :full-frame helm-bibtex-full-frame
+                :buffer helm-bibtex-buffer
+                :input input
+                :preselect (lambda ()
+                             (and preselect
+                                  (> preselect 0)
+                                  (helm-next-line preselect)))
+                :candidate-number-limit (max 500 (1+ (or preselect 0)))
+                :bibtex-candidates candidates
+                :bibtex-local-bib local-bib)))))
   (defvar bibtex-completion-bibliography/curr nil)
   (defun swint-helm-bibtex (&optional arg)
     "With a prefix ARG，choose bib file and execute bibtex-completion-clear-cache."
@@ -143,12 +198,9 @@
                             (append (directory-files (expand-file-name "~/.bib/") t "\\.bib$")
                                     (directory-files (helm-current-directory) t "\\.bib$"))
                             :marked-candidates t
-                            :buffer "*helm bibtex-swint*")))
-    (if (and (buffer-live-p (get-buffer "*helm bibtex*")) (not arg))
-        (let ((helm-current-buffer (current-buffer)))
-          (helm-resume "*helm bibtex*"))
-      (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr))
-        (helm-bibtex arg bibtex-completion-bibliography/curr)))))
+                            :buffer "*helm bibtex select*")))
+    (let ((bibtex-completion-bibliography bibtex-completion-bibliography/curr))
+      (helm-bibtex arg bibtex-completion-bibliography/curr))))
 ;; ==================helm-bibtex===================
 ;;; ebib
 ;; =====================ebib=======================
