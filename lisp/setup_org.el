@@ -363,39 +363,7 @@
       ("u" . outline-up-heading)
       ("b" . outline-backward-same-level)
       ("f" . outline-forward-same-level)))
-  (define-key outline-minor-mode-map (kbd "C-M-i") nil)
-  (add-hook 'LaTeX-mode-hook
-            (lambda ()
-              (define-key outline-minor-mode-map (kbd "\C-i") '(menu-item "maybe-latex/hide-show" nil :filter
-                                                                          (lambda (&rest _)
-                                                                            (when (latex//header-at-point)
-                                                                              #'outline-cycle))))))
-  ;; Copied from latex-extra.
-  (defcustom latex/section-hierarchy
-    '("\\\\headerbox\\_>"
-      "\\\\subparagraph\\*?\\_>"
-      "\\\\paragraph\\*?\\_>"
-      "\\\\subsubsection\\*?\\_>"
-      "\\\\subsection\\*?\\_>"
-      "\\\\section\\*?\\_>"
-      "\\\\chapter\\*?\\_>"
-      "\\\\part\\*?\\_>"
-      ;; "\\\\maketitle\\_>"
-      "\\\\appendix\\_>\\|\\\\\\(begin\\|end\\){document}"
-      "\\\\documentclass\\_>")
-    "List of regexps which define what a section can be.Ordered from deepest to highest level."
-    :group 'outlines
-    :type '(repeat (choice regexp function)))
-  (defun latex/section-regexp ()
-    "Return a regexp matching anything in `latex/section-hierarchy'."
-    (format "^\\(%s\\)" (mapconcat 'identity latex/section-hierarchy "\\|")))
-  (defun latex//header-at-point ()
-    "Return header under point or nil, as per `latex/section-hierarchy'."
-    (save-match-data
-      (save-excursion
-        (goto-char (line-beginning-position))
-        (when (looking-at (latex/section-regexp))
-          (match-string-no-properties 0))))))
+  (define-key outline-minor-mode-map (kbd "C-M-i") nil))
 ;; ==================outline====================
 ;;; outshine
 ;; ==================outshine===================

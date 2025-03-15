@@ -4,21 +4,20 @@
   :commands LaTeX-math-mode
   :mode ("\\.[tT][eE][xX]\\'" . LaTeX-mode)
   :init
-  (add-hook 'LaTeX-mode-hook
-            (lambda ()
-              (setq TeX-base-mode-name "TeX"
-                    TeX-engine 'xetex) ;对英文使用TeX-engine-set设置为default
-              (LaTeX-math-mode 1)
-              (TeX-fold-mode 1) ;C-c C-o C-b打开fold，C-c C-o b关闭fold
-              (TeX-PDF-mode 1)
-              (prettify-symbols-mode 1)
-              (turn-on-orgtbl)
-              (define-key LaTeX-mode-map (kbd "C-c C-x \\") 'prettify-symbols-mode)
-              (define-key LaTeX-mode-map (kbd "C-c e") 'TeX-engine-set)
-              (define-key LaTeX-mode-map (kbd "C-c m") 'helm-insert-latex-math)
-              (define-key LaTeX-mode-map (kbd "C-c l") #'(lambda () (interactive) (insert (swint-cursor-localtion))))))
+  (add-hook 'LaTeX-mode-hook (lambda ()
+                               (setq TeX-base-mode-name "TeX"
+                                     TeX-engine 'xetex) ;对英文使用TeX-engine-set设置为default
+                               (LaTeX-math-mode 1)
+                               (TeX-fold-mode 1) ;C-c C-o C-b打开fold，C-c C-o b关闭fold
+                               (TeX-PDF-mode 1)
+                               (prettify-symbols-mode 1)
+                               (turn-on-orgtbl)))
   (setq LaTeX-math-abbrev-prefix "M-s `") ;LaTeX-math-mode与cdlatex的prefix冲突
   :config
+  (bind-key "C-c C-x \\" 'prettify-symbols-mode LaTeX-mode-map)
+  (bind-key "C-c e" 'TeX-engine-set LaTeX-mode-map)
+  (bind-key "C-c m" 'helm-insert-latex-math LaTeX-mode-map)
+  (bind-key "C-c l" #'(lambda () (interactive) (insert (swint-cursor-localtion))) LaTeX-mode-map)
   (setq TeX-auto-save t
         TeX-parse-self t
         TeX-auto-untabify t
