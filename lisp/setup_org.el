@@ -819,7 +819,35 @@
   ;; org-cite-activate-processor/org-cite-follow-processor/org-cite-insert-processor/org-cite-export-processors -> 高亮/打开/插入/导出
   (setq org-cite-csl-styles-dir "~/Zotero/styles/")
   ;; locale影响本地化日期等，默认使用en-US，可下载其他：https://github.com/citation-style-language/locales
-  (setq org-cite-csl-locales-dir nil))
+  (setq org-cite-csl-locales-dir nil)
+  (org-cite-register-processor 'bibtex-actions :follow #'org-cite-bibtex-actions)
+  (defun org-cite-bibtex-actions (datum arg)
+    (interactive)
+    (let ((key (if (org-element-type-p datum 'citation-reference)
+                   (org-element-property :key datum)
+                 (pcase (org-cite-get-references datum t)
+                   (`(,key) key)
+                   (keys
+                    (or (completing-read "Select citation key: " keys nil t)
+                        (user-error "Aborted")))))))
+      (if (or (string-prefix-p "fig:" key)
+              (string-prefix-p "tbl:" key)
+              (string-prefix-p "eq:" key))
+          (when-let ((p (save-excursion (goto-char (point-min))
+                                        (search-forward (format "#+NAME: %s" key) nil t))))
+            (push-mark)
+            (goto-char p))
+        (when-let* ((warning-suppress-log-types '((:warning)))
+                    (bibtex-completion-find-pdf key))
+          (if arg
+              (org-cite-basic-goto datum arg)
+            (if (not (buffer-live-p (get-buffer "*eaf*")))
+                (bibtex-completion-open-pdf-externally (list key))
+              (if-let ((eaf-pdf-win (eaf-find-pdf-window)))
+                  (select-window eaf-pdf-win)
+                (switch-to-buffer-other-window (current-buffer)))
+              (bibtex-completion-open-pdf (list key))))))))
+  (setq org-cite-follow-processor 'bibtex-actions))
 ;; ====================oc=======================
 ;;; org-extra-emphasis
 ;; ============org-extra-emphasis===============
