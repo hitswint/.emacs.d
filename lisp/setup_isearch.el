@@ -12,7 +12,7 @@
   :diminish isearch-mode
   :custom
   (search-upper-case t)
-  (search-whitespace-regexp ".+?")
+  ;; (search-whitespace-regexp ".+?")
   (isearch-lax-whitespace t)
   (isearch-regexp-lax-whitespace nil)
   (isearch-lazy-highlight t)

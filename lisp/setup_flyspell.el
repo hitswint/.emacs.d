@@ -13,8 +13,8 @@
   (define-key flyspell-mode-map (kbd "C-.") nil)
   (define-key flyspell-mode-map (kbd "C-;") nil)
   (smartrep-define-key flyspell-mode-map "M-g"
-    '(("M-p" . flyspell-goto-previous-error)
-      ("M-n" . flyspell-goto-next-error)
+    '(("p" . flyspell-goto-previous-error)
+      ("n" . flyspell-goto-next-error)
       ("f" . flyspell-auto-correct-word)
       ("M-f" . helm-flyspell-correct)))
   (defun flyspell-goto-previous-error (arg)

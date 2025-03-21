@@ -302,6 +302,7 @@
   ;; =============org-latex-preview=============
   ;; 默认 -> 预览当前位置或当前节 / C-u -> 清除当前节预览 / C-u C-u -> 预览当前buffer / C-u C-u C-u 清除全部预览
   (define-key org-mode-map (kbd "C-c v") 'org-latex-preview)
+  (define-key org-mode-map (kbd "C-c V") #'(lambda () (interactive) (org-clear-latex-preview (point-min) (point-max))))
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
   ;; (setq org-highlight-latex-and-related '(latex))  ;高亮显示公式环境，会造成卡顿
   ;; =============org-latex-preview=============

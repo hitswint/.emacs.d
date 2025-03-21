@@ -261,6 +261,8 @@
   (define-key ebib-index-mode-map (kbd "C-M-p") 'ebib-prev-collection)
   (define-key ebib-index-mode-map (kbd "C-M-n") 'ebib-next-collection)
   (define-key ebib-index-mode-map (kbd "C-x b") nil)
+  (define-key ebib-index-mode-map (kbd "C-p") nil)
+  (define-key ebib-index-mode-map (kbd "C-n") nil)
   (define-key ebib-filters-map "F" 'ebib-filter-collection)
   (define-key ebib-strings-mode-map (kbd "C-x b") nil)
   (define-key ebib-entry-mode-map (kbd "C-x b") nil)

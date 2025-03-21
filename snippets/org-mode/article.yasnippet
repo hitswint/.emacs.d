@@ -13,7 +13,7 @@
 #+PANDOC_OPTIONS: reference-doc:${4:$$(unless yas-modified-p (expand-file-name "~/.pandoc/reference.docx"))} toc:t toc-depth:3
 # ==================citeproc==================
 #+PANDOC_OPTIONS: citeproc:t
-#+PANDOC_OPTIONS: bibliography:${5:$$(unless yas-modified-p (expand-file-name "~/.bib/Zotero.bib"))} csl:${6:$$(unless yas-modified-p (expand-file-name "~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl"))}
+#+PANDOC_OPTIONS: bibliography:${5:$$(unless yas-modified-p (expand-file-name "~/.bib/Zotero.bib"))} csl:${6:$$(unless yas-modified-p (expand-file-name "~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl"))} citation-abbreviations:nil
 #+PANDOC_METADATA: reference-section-title:参考文献
 # ==================org-cite===================
 # #+BIBLIOGRAPHY: $5
