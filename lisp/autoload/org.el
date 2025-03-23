@@ -40,6 +40,16 @@
         (car (bibtex-completion-find-pdf (org-entry-get nil "Custom_ID")))
         (org-entry-get nil "interleave_url"))))
 ;;;###autoload
+(defun eaf-find-file-other-window (filename)
+  (if (and (buffer-live-p (get-buffer "*eaf*"))
+           (member (ignore-errors (downcase (file-name-extension filename)))
+                   (cl-loop for extensions-pair in eaf-app-extensions-alist
+                            append (symbol-value (cdr extensions-pair)))))
+      (progn
+        (switch-to-buffer-other-window (current-buffer))
+        (find-file filename))
+    (find-file-other-window filename)))
+;;;###autoload
 (defun swint-org-open-at-point (&optional in-emacs)
   "Open annotated file if annotation storage file exists."
   (interactive)
@@ -50,16 +60,7 @@
              (org-open-at-point in-emacs))
     (let ((annotate-file (when (or (ignore-errors (org-at-top-heading-p)) (org-at-keyword-p)) (org-get-annotate-file)))
           (annotate-page (unless (org-in-regexp org-link-any-re) (org-get-annotate-page)))
-          (org-link-frame-setup (cl-acons 'file (lambda (filename)
-                                                  (if (and (buffer-live-p (get-buffer "*eaf*"))
-                                                           (member (ignore-errors (downcase (file-name-extension filename)))
-                                                                   (cl-loop for extensions-pair in eaf-app-extensions-alist
-                                                                            append (symbol-value (cdr extensions-pair)))))
-                                                      (progn
-                                                        (switch-to-buffer-other-window (current-buffer))
-                                                        (find-file filename))
-                                                    (find-file-other-window filename)))
-                                          org-link-frame-setup)))
+          (org-link-frame-setup (cl-acons 'file 'eaf-find-file-other-window org-link-frame-setup)))
       (cond (annotate-page
              (let ((file (expand-file-name (org-get-annotate-file))))
                (if (not in-emacs)

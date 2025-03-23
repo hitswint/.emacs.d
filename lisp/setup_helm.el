@@ -814,6 +814,7 @@
   ;; 默认忽略大小写，两种方式考虑大小写：
   ;; 1. 搜索-s pattern
   ;; 2. C--前缀并输入-s
+  ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果
   :commands (swint-helm-ag
              helm-do-ag
              helm-do-ag-this-file
@@ -822,6 +823,11 @@
              swint-helm-do-ag-buffers
              helm-ag-open-file-action)
   :init
+  ;; 搜索压缩文件需加--all-types/--search-zip，支持gz/xz两种格式
+  ;; bug：只显示部分结果，最后一行显示ag: truncated file: Success
+  ;; https://github.com/ggreer/the_silver_searcher/issues/1243
+  (setq helm-ag-base-command "ag --nocolor --nogroup")
+  (setq helm-ag-command-option "--hidden --follow")
   (bind-key "C-x g" 'swint-helm-ag)
   (bind-key "C-x G" #'(lambda () (interactive)
                         (let ((helm-ag-base-command (if (directory-files-recursively (helm-current-directory) "\\.gz$")
@@ -920,12 +926,6 @@
         (helm-do-ag default-directory (when-let* ((marked-files (dired-get-marked-files nil nil nil t))
                                                   (mark-existp (cdr marked-files)))
                                         (remove t marked-files))))))
-  ;; 搜索压缩文件需加--all-types/--search-zip，支持gz/xz两种格式
-  ;; bug：只显示部分结果，最后一行显示ag: truncated file: Success
-  ;; https://github.com/ggreer/the_silver_searcher/issues/1243
-  (setq helm-ag-base-command "ag --nocolor --nogroup")
-  (setq helm-ag-command-option "--hidden --follow")
-  ;; C-c C-e 进入编辑模式，C-x C-s 保存helm-ag结果
   (define-key helm-ag-map (kbd "C-M-p") 'helm-ag--previous-file)
   (define-key helm-ag-map (kbd "C-M-n") 'helm-ag--next-file)
   (define-key helm-ag-map (kbd "C-o") 'helm-ag--run-other-window-action)
