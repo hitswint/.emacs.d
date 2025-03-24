@@ -319,9 +319,9 @@
                                            (and fn (string-match-p image-dired-file-regexp-all fn)))
                                          ;; 只mark当前subdir的文件
                                          (equal default-directory (dired-current-directory))
-                                         ;; 当文件数量>100时，预览前100张文件
+                                         ;; 当文件数量>1000时，预览前100张文件
                                          ;; count为宏dired-mark-if内部变量
-                                         (not (and (> file-num 100) (> count 100))))
+                                         (not (and (> file-num 1000) (> count 1000))))
                                     "matching file")))
       (when (and mark-num (> mark-num 0))
         (image-dired-display-thumbs nil nil t)
@@ -511,6 +511,7 @@
   :bind (:map dired-mode-map
               ("/" . dired-narrow))
   :config
+  ;; 过滤mark文件：dired-mark (m) -> dired-toggle-marks (t) -> dired-do-kill-lines (k)
   (defun dired-narrow--string-filter/override (filter)
     (let ((words (split-string filter " ")))
       (--all? (save-excursion (or (search-forward it (line-end-position) t)
