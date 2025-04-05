@@ -909,6 +909,10 @@
     '(("p" . annot-goto-previous)
       ("n" . annot-goto-next)))
   :config
+  ;; Remove advice on kill-ring-save.
+  (ad-deactivate 'kill-ring-save)
+  (ad-remove-advice #'kill-ring-save 'before #'annot-kill-ring-save)
+  (ad-activate 'kill-ring-save)
   (setq annot-directory "~/org/.annot")
   ;; 与volatile-highlights-mode有冲突
   (vhl/unload-extension 'kill)

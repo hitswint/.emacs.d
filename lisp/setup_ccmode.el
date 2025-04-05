@@ -220,6 +220,7 @@
         helm-gtags-auto-update t
         helm-gtags-use-input-at-cursor t
         helm-gtags-pulse-at-cursor t
+        helm-gtags-path-style 'root
         helm-gtags-suggested-key-mapping nil)
   (smartrep-define-key helm-gtags-mode-map "C-c"
     '(("C-," . helm-gtags-dwim)

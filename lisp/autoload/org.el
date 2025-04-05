@@ -184,7 +184,7 @@
                           ;; 需在qpdfview设定中将Save database interval设置为0min，否则数据库无法及时更新
                           (shell-command-to-string
                            (format "sqlite3 %s \"select currentPage from tabs_v5 where filePath=\\\"%s\\\"\"" "~/.local/share/qpdfview/qpdfview/database" (expand-file-name annotate-file)))))
-         (eaf-pdf-page (when-let ((annotate-buffer (eaf-interleave--find-buffer annotate-file)))
+         (eaf-pdf-page (when-let ((annotate-buffer (eaf-interleave--find-buffer (expand-file-name annotate-file))))
                          (with-current-buffer annotate-buffer
                            (eaf-call-sync "execute_function" eaf--buffer-id "current_page"))))
          (current-page (or (s-presence eaf-pdf-page) (s-presence qpdfview-page))))

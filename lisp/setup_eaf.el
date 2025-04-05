@@ -235,6 +235,7 @@
     (eaf-bind-key org-eaf-noter-new "I" eaf-pdf-viewer-keybinding)
     (eaf-bind-key jump_to_previous_saved_pos "<backspace>" eaf-pdf-viewer-keybinding)
     (eaf-bind-key jump_to_next_saved_pos "S-<backspace>" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key eaf-pdf-narrow-search "/" eaf-pdf-viewer-keybinding)
     (defvar pdf-opened-file-path (concat eaf-config-location "pdf/history/log_opened.txt"))
     (advice-add 'eaf--monitor-emacs-kill :before #'(lambda () (ignore-errors
                                                                 (let ((pdf-urls ""))

@@ -35,6 +35,7 @@ To solve equation, solve([x+y=3, x-y=1], [x,y])."
                                   calc-prefer-frac t
                                   calc-angle-mode rad))
                    (calc-eval expr))))
+    (deactivate-mark)
     (if (null arg)
         (message "%s" result)
       (kill-region beg end)
