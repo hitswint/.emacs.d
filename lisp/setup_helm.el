@@ -831,8 +831,8 @@
   (bind-key "C-x g" 'swint-helm-ag)
   (bind-key "C-x G" #'(lambda () (interactive)
                         (let ((helm-ag-base-command (if (directory-files-recursively (helm-current-directory) "\\.gz$")
-                                                        "rg --color never --no-heading --search-zip"
-                                                      "rga --color never --no-heading --line-number")))
+                                                        "rg --smart-case --color never --no-heading --search-zip"
+                                                      "rga --smart-case --color never --no-heading --line-number")))
                           (call-interactively 'swint-helm-ag))))
   (bind-key "M-s g" 'swint-helm-do-ag-this-file)
   (bind-key "M-s G" 'swint-helm-do-ag-buffers)
@@ -915,10 +915,7 @@
     (interactive)
     (let ((default-directory (or dir (helm-current-directory))))
       (if (or current-prefix-arg helm-current-prefix-arg)
-          (let ((helm-ag-command-option (concat helm-ag-command-option " "
-                                                (if (string-prefix-p "ag" helm-ag-base-command)
-                                                    "-u"
-                                                  "--no-ignore")
+          (let ((helm-ag-command-option (concat helm-ag-command-option " -u"
                                                 (let ((lines (read-string "Print N lines before and after matches: ")))
                                                   (unless (string-empty-p lines)
                                                     (format " --context=%s" lines))))))
