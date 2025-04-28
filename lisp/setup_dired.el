@@ -26,7 +26,14 @@
   (advice-add 'dired-revert :around #'(lambda (fn &rest args)
                                         ;; dired-async-mode会刷新所有dired，包括不可见buffer，导致persp-switch切换时光标回到起始位置
                                         (unless (ignore-errors (not (memq (current-buffer) (persp-buffers (persp-curr)))))
-                                          (let ((subtree-mark-alist (cl-loop for ov in (dired-subtree--get-all-ovs)
+                                          (let ((curr-line (when (get-buffer-window)
+                                                             (let ((win-start-line (save-excursion
+                                                                                     (move-to-window-line 0)
+                                                                                     (line-number-at-pos))))
+                                                               ;; 当有dired-subtree时，计算错误
+                                                               ;; (count-screen-lines bow (point))
+                                                               (- (line-number-at-pos) win-start-line))))
+                                                (subtree-mark-alist (cl-loop for ov in (dired-subtree--get-all-ovs)
                                                                              append (dired-remember-marks (overlay-start ov) (overlay-end ov)))))
                                             (if (and (not (eq last-command 'revert-buffer))
                                                      (dired-subtree-in-subtree-p))
@@ -35,7 +42,9 @@
                                             (let ((inhibit-read-only t))
                                               (cl-loop for ov in (dired-subtree--get-all-ovs)
                                                        do (save-excursion (goto-char (overlay-start ov))
-                                                                          (dired-mark-remembered subtree-mark-alist))))))))
+                                                                          (dired-mark-remembered subtree-mark-alist))))
+                                            (when curr-line
+                                              (recenter curr-line))))))
   (advice-add 'dired-goto-file :around #'(lambda (fn &rest args)
                                            (let ((default-directory (dired-current-directory)))
                                              (apply fn args))))
