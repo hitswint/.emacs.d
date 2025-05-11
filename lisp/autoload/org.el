@@ -109,7 +109,8 @@
 ;;;###autoload
 (defun org-eaf-noter-sync (&optional operator new-note)
   (interactive)
-  (let ((current-page (string-to-number (eaf-call-sync "execute_function" eaf--buffer-id "current_page")))
+  (let ((eaf-pdf-win (selected-window))
+        (current-page (string-to-number (eaf-call-sync "execute_function" eaf--buffer-id "current_page")))
         (key-for-pdf (when (file-in-directory-p eaf--buffer-url "~/Zotero")
                        (bibtex-completion-get-value "=key=" (bibtex-completion-get-entry-for-pdf eaf--buffer-url))))
         (compare-operator (cond ((eq operator 'prev) #'<)
@@ -141,9 +142,7 @@
                        (org-back-to-heading t)
                        (org-cycle-hide-drawers t)
                        (setq note-page (org-entry-get-with-inheritance "NOTER_PAGE"))
-                       (if (and note-page (funcall compare-operator
-                                                   (string-to-number note-page)
-                                                   current-page))
+                       (if note-page
                            (unless new-note
                              (org-eaf-pdf-sync))
                          (message "No %s page found" (or operator 'current))
@@ -153,7 +152,8 @@
                         (widen)
                         (setq-local header-line-format nil))
               (t (goto-char orig-point)
-                 (message "Cannot find any note entry for current pdf")))))))
+                 (message "Cannot find any note entry for current pdf")
+                 (select-window eaf-pdf-win)))))))
 ;;;###autoload
 (defun org-eaf-noter-sync-prev ()
   (interactive)
