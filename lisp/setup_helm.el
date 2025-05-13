@@ -842,7 +842,7 @@
                                  (bind-key "M-s G" #'(lambda () (interactive) (helm-do-ag-buffers (isearch-current-thing)))
                                            isearch-mode-map)))
   :config
-  (advice-add 'helm-ag--action-find-file :after #'(lambda (candidate) (when vlf-mode
+  (advice-add 'helm-ag--action-find-file :after #'(lambda (candidate) (when (bound-and-true-p vlf-mode)
                                                                         (swint-vlf-goto-line (string-to-number (cl-first (split-string candidate ":")))))))
   (defun swint-helm-do-ag-this-file ()
     (interactive)
