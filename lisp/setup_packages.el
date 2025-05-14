@@ -400,7 +400,7 @@
   (bind-key "M->" 'swint-vlf-end-of-file vlf-prefix-map)
   (bind-key "M-g M-g" 'swint-vlf-goto-line vlf-prefix-map)
   (bind-key [remap query-replace] 'vlf-query-replace vlf-prefix-map)
-  (add-hook 'vlf-mode-hook #'(lambda () (setq-local isearch-wrap-function #'+vlf-isearch-wrap
+  (add-hook 'vlf-mode-hook #'(lambda () (setq-local isearch-wrap-function #'swint-vlf-isearch-wrap
                                                     isearch-wrap-pause 'no-ding
                                                     isearch-lazy-count nil
                                                     isearch-repeat-on-direction-change nil)))
@@ -417,11 +417,15 @@
                                       (match-beginning 0)))))))))
         (apply fn args))))
   (advice-add 'vlf-query-replace :around #'vlf-query-replace/around)
-  (defun +vlf-isearch-wrap ()
+  (defun swint-vlf-isearch-wrap ()
     (vlf-revert nil t)
     (let* ((filename (buffer-file-name))
-           (rg-result (shell-command-to-string (format "rg -n %s\"%s\" \"%s\"" (if isearch-regexp "" "-F ")
-                                                       isearch-string filename)))
+           (rg-result (shell-command-to-string (format "rg -n %s\"%s\" \"%s\""
+                                                       (if (or isearch-regexp pinyin-search-activated) "" "-F ")
+                                                       (if pinyin-search-activated
+                                                           (pinyin-search--pinyin-to-regexp isearch-string)
+                                                         isearch-string)
+                                                       filename)))
            (ln-list (cl-loop for x in (split-string rg-result "\n" t)
                              collect (string-to-number (cl-first (split-string x ":")))))
            (batch-line (swint-vlf-byte-to-line (if isearch-forward vlf-end-pos vlf-start-pos) filename))
