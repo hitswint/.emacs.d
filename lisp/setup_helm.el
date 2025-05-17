@@ -843,12 +843,17 @@
                                            isearch-mode-map)))
   :config
   (advice-add 'helm-ag--action-find-file :after #'(lambda (candidate) (when (bound-and-true-p vlf-mode)
-                                                                        (swint-vlf-goto-line (string-to-number (cl-first (split-string candidate ":")))))))
+                                                                        (let ((target-entry (split-string candidate ":")))
+                                                                          (swint-vlf-goto-line
+                                                                           nil (string-to-number (cl-first target-entry)))))))
   (defun swint-helm-do-ag-this-file ()
     (interactive)
     (let ((current-file (or (buffer-file-name)
                             (bound-and-true-p eaf--buffer-url)))
-          (helm-ag-base-command "rga --color never --no-heading --line-number")
+          (helm-ag-base-command (concat "rga --color never --no-heading "
+                                        (if (bound-and-true-p vlf-mode)
+                                            "--byte-offset"
+                                          "--line-number")))
           (ff-orig-fn (symbol-function 'find-file)))
       (cl-letf (((symbol-function 'find-file)
                  (lambda (filename &rest args)
