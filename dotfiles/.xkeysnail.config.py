@@ -180,7 +180,7 @@ define_keymap(
 
 # * Keybindings for pdfviewer
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("llpp", "pdf") and rofi_not_running(),
+    lambda wm_class: wm_class and wm_class[-1] in ("llpp", "Wpspdf") and rofi_not_running(),
     {
         K("k"): with_mark(K("up")),
         K("j"): with_mark(K("down"))
@@ -199,7 +199,7 @@ define_keymap(
 
 # * Keybindings for Tab switch
 define_keymap(
-    lambda wm_class: wm_class and wm_class[-1] in ("firefox", "Chromium", "qpdfview", "wps", "et", "wpp", "pdf", "Zotero") and rofi_not_running(),
+    lambda wm_class: wm_class and wm_class[-1] in ("firefox", "Chromium", "qpdfview", "Wps", "Et", "Wpp", "Wpspdf", "Wpsoffice", "Zotero") and rofi_not_running(),
     {
         K("C-grave"): K("C-Shift-TAB"),
     },

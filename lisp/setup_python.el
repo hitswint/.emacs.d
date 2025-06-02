@@ -236,7 +236,7 @@ names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', 
   (defun swint-python-fig-config ()
     (interactive)
     (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
-        (let* ((config-list (helm-comp-read "Configs: " (list "xlabel" "ylabel" "fonts" "sizes" "time_formatter" "legend_ncol" "text" "annotate" "axline" "patch" "remove")
+        (let* ((config-list (helm-comp-read "Configs: " (list "xlabel" "ylabel" "xticklabels" "yticklabels" "fonts" "sizes" "time_formatter" "legend_ncol" "text" "annotate" "axline" "patch" "remove")
                                             :marked-candidates t
                                             :buffer "*helm python fig config-swint*"))
                (args-list (cl-loop for x in config-list
