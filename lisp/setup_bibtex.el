@@ -1,7 +1,7 @@
 ;;; bibtex
 ;; ====================bibtex======================
 (use-package bibtex
-  :after (:any ebib helm-bibtex org-ref oc)
+  :after (:any ebib helm-bibtex oc)
   :config
   (setq bibtex-autokey-titleword-length nil
         bibtex-autokey-titlewords-stretch 0
