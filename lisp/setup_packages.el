@@ -1412,18 +1412,31 @@ ORIG is the advised function, which is called with its ARGS."
   (require 'llm-ollama)
   (require 'llm-openai)
   (setopt llm-warn-on-nonfree nil)
-  (setopt ellama-providers `(("Qwen-DS" . ,(make-llm-openai-compatible
-                                            :key (get-auth-pass "Qwen")
-                                            :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
-                                            :chat-model "deepseek-v3"))
-                             ("Qwen" . ,(make-llm-openai-compatible
-                                         :key (get-auth-pass "Qwen")
-                                         :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
-                                         :chat-model "qwen-max-latest"))
-                             ("DeepSeek" . ,(make-llm-openai-compatible
-                                             :key (get-auth-pass "DeepSeek")
-                                             :url "https://api.deepseek.com/v1"
-                                             :chat-model "deepseek-chat"))))
+  (setopt ellama-providers `(("Qwen-DS-v3" . ,(make-llm-openai-compatible
+                                               :key (get-auth-pass "Qwen")
+                                               :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
+                                               :chat-model "deepseek-v3"))
+                             ("Qwen-DS-r1" . ,(make-llm-openai-compatible
+                                               :key (get-auth-pass "Qwen")
+                                               :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
+                                               ;; :chat-model "deepseek-r1"
+                                               :chat-model "deepseek-r1-0528"))
+                             ("Qwen-Max" . ,(make-llm-openai-compatible
+                                             :key (get-auth-pass "Qwen")
+                                             :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
+                                             :chat-model "qwen-max-latest"))
+                             ("Qwen-Plus" . ,(make-llm-openai-compatible
+                                              :key (get-auth-pass "Qwen")
+                                              :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
+                                              :chat-model "qwen-plus-latest"))
+                             ("DeepSeek-v3" . ,(make-llm-openai-compatible
+                                                :key (get-auth-pass "DeepSeek")
+                                                :url "https://api.deepseek.com/v1"
+                                                :chat-model "deepseek-chat"))
+                             ("DeepSeek-r1" . ,(make-llm-openai-compatible
+                                                :key (get-auth-pass "DeepSeek")
+                                                :url "https://api.deepseek.com/v1"
+                                                :chat-model "deepseek-reasoner"))))
   (setopt ellama-provider (cdar ellama-providers))
   (defun ellama-generate-name-by-words/around (orig-fn provider action prompt)
     (concat (funcall orig-fn provider action prompt)
@@ -1434,7 +1447,8 @@ ORIG is the advised function, which is called with its ARGS."
     (interactive)
     (let* ((word (or _word (swint-get-words-at-point)))
            (ellama-language (if (string-match-p "\\cC" word) "English" "Chinese"))
-           (ellama-translation-template "Translation to %s: %s"))
+           (ellama-translation-template "Translation to %s: %s")
+           (ellama-provider (cdar ellama-providers)))
       (ellama-instant-to-posframe
        (format ellama-translation-template
                ellama-language word ellama-language)
