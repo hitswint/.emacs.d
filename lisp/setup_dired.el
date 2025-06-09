@@ -17,7 +17,7 @@
   (setq dired-mouse-drag-files t)
   (setq dired-auto-revert-buffer t) ;使用dired/dired-other-window/dired-other-frame时更新，与auto-revert-mode不同
   (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才启用auto-revert-mode更新
-                                                (when (and (get-buffer-window (current-buffer))
+                                                (when (and (get-buffer-window)
                                                            (not (region-active-p)))
                                                   (if-let ((current-ov (dired-subtree--get-ov)))
                                                       (dired-subtree-check-change (list current-ov))
@@ -25,25 +25,20 @@
                                                         (dired-subtree-check-change (dired-subtree--get-all-ovs)))))))
   (advice-add 'dired-revert :around #'(lambda (fn &rest args)
                                         ;; dired-async-mode会刷新所有dired，包括不可见buffer，导致persp-switch切换时光标回到起始位置
-                                        (unless (ignore-errors (not (memq (current-buffer) (persp-buffers (persp-curr)))))
-                                          (let ((curr-line (when (get-buffer-window)
-                                                             (let ((win-start-line (save-excursion
-                                                                                     (move-to-window-line 0)
-                                                                                     (line-number-at-pos))))
-                                                               ;; 当有dired-subtree时，计算错误
-                                                               ;; (count-screen-lines bow (point))
-                                                               (- (line-number-at-pos) win-start-line))))
-                                                (subtree-mark-alist (cl-loop for ov in (dired-subtree--get-all-ovs)
-                                                                             append (dired-remember-marks (overlay-start ov) (overlay-end ov)))))
-                                            (if (and (not (eq last-command 'revert-buffer))
-                                                     (dired-subtree-in-subtree-p))
-                                                (dired-subtree-revert)
-                                              (apply fn args))
-                                            (let ((inhibit-read-only t))
-                                              (cl-loop for ov in (dired-subtree--get-all-ovs)
-                                                       do (save-excursion (goto-char (overlay-start ov))
-                                                                          (dired-mark-remembered subtree-mark-alist))))
-                                            (when curr-line
+                                        (when-let ((win (get-buffer-window)))
+                                          (with-selected-window win
+                                            (let ((curr-line (- (line-number-at-pos) (save-excursion (move-to-window-line 0) (line-number-at-pos))))
+                                                  ;; (count-screen-lines bow (point))  ;当有dired-subtree时，计算错误
+                                                  (subtree-mark-alist (cl-loop for ov in (dired-subtree--get-all-ovs)
+                                                                               append (dired-remember-marks (overlay-start ov) (overlay-end ov)))))
+                                              (if (and (not (eq last-command 'revert-buffer))
+                                                       (dired-subtree-in-subtree-p))
+                                                  (dired-subtree-revert)
+                                                (apply fn args))
+                                              (let ((inhibit-read-only t))
+                                                (cl-loop for ov in (dired-subtree--get-all-ovs)
+                                                         do (save-excursion (goto-char (overlay-start ov))
+                                                                            (dired-mark-remembered subtree-mark-alist))))
                                               (recenter curr-line))))))
   (advice-add 'dired-goto-file :around #'(lambda (fn &rest args)
                                            (let ((default-directory (dired-current-directory)))

@@ -172,7 +172,9 @@
                 (define-key org-agenda-mode-map (kbd "C-c C-x C-q") 'org-agenda-clock-cancel)
                 (define-key org-agenda-mode-map (kbd "C-c C-x C-x") 'org-clock-in-last)
                 (define-key org-agenda-mode-map (kbd "Q") 'org-agenda-clock-cancel)
-                (define-key org-agenda-mode-map (kbd "X") 'org-clock-in-last)))
+                (define-key org-agenda-mode-map (kbd "X") 'org-clock-in-last)
+                (define-key org-agenda-mode-map (kbd "M-v") 'org-agenda-earlier)
+                (define-key org-agenda-mode-map (kbd "C-v") 'org-agenda-later)))
   (setq org-clock-clocked-in-display 'frame-title
         org-clock-frame-title-format (append '((t org-mode-line-string)) '(" ") frame-title-format)
         org-clock-in-switch-to-state "STARTED"
