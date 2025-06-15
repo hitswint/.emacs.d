@@ -13,10 +13,10 @@
 # code:
 
 
-$pdflatex = 'xelatex -interaction=nonstopmode %O %S';
+# $pdflatex = 'xelatex -interaction=nonstopmode %O %S';
 # $pdflatex = 'pdflatex -interaction=nonstopmode %O %S';
-$postscript_mode = $dvi_mode = 0;
-$preview_continuous_mode = 1;
+# $postscript_mode = $dvi_mode = 0;
+# $preview_continuous_mode = 1;
 $pdf_mode = 1;
 $pdf_update_method = 2;
 $pdf_previewer = "start llpp %O %S";

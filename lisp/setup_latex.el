@@ -22,7 +22,7 @@
         TeX-parse-self t
         TeX-auto-untabify t
         TeX-save-query nil
-        TeX-show-compilation t
+        TeX-show-compilation nil        ;C-c C-l显示编译窗口
         TeX-view-program-list '(("Llpp" "llpp %o") ("Firefox" "firefox %o") ("eaf" eaf-pdf-synctex-forward-view))
         TeX-source-correlate-mode t
         TeX-source-correlate-method 'synctex
@@ -41,7 +41,12 @@
                                      ((output-pdf pdf-tools-running) "PDF Tools")
                                      (output-pdf "Llpp")
                                      (output-dvi "Llpp")
-                                     (output-html "Firefox"))))
+                                     (output-html "Firefox")))
+  (add-hook 'TeX-after-compilation-finished-functions #'(lambda (file)
+                                                          (if-let ((buf (eaf-interleave--find-buffer file)))
+                                                              (with-current-buffer buf
+                                                                (eaf-call-sync "execute_function" eaf--buffer-id "reload_document"))
+                                                            (TeX-revert-document-buffer file)))))
 ;; =====================auctex=====================
 ;;; preview
 ;; ====================preview=====================
@@ -63,6 +68,13 @@
 ;; texlive默认包含latexmk，只需加入.latexmkrc配置文件
 (use-package auctex-latexmk
   :after tex
+  :init
+  (add-hook 'LaTeX-mode-hook (lambda () (add-hook 'after-save-hook
+                                                  (lambda ()
+                                                    (when (buffer-live-p (TeX-active-buffer))
+                                                      (TeX-command TeX-command-default #'TeX-master-file)))
+                                                  nil 'make-it-local)))
+  (setq auctex-latexmk-inherit-TeX-PDF-mode t)
   :config
   (auctex-latexmk-setup)
   (advice-add 'TeX-engine-set :after #'(lambda (type) (unless (equal (caar TeX-command-list) "LatexMk")
