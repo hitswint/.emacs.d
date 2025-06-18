@@ -65,7 +65,6 @@
 ;; ====================preview=====================
 ;;; auctex-latexmk
 ;; =================auctex-latexmk=================
-;; texlive默认包含latexmk，只需加入.latexmkrc配置文件
 (use-package auctex-latexmk
   :after tex
   :init
@@ -78,6 +77,7 @@
   :config
   (auctex-latexmk-setup)
   (advice-add 'TeX-engine-set :after #'(lambda (type) (unless (equal (caar TeX-command-list) "LatexMk")
-                                                        (auctex-latexmk-setup)))))
+                                                        (auctex-latexmk-setup))))
+  (advice-remove #'TeX-recenter-output-buffer #'ad-Advice-TeX-recenter-output-buffer))
 ;; =================auctex-latexmk=================
 (provide 'setup_latex)
