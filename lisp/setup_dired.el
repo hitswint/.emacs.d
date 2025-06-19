@@ -731,6 +731,20 @@
                        never (let ((cached-p (gethash (concat "nil@" fi) file-has-changed-p--hash-table))
                                    (changed-p (file-has-changed-p fi)))
                                (and cached-p changed-p))))))
+  (defun dired-subtree-toggle-marks ()
+    (interactive)
+    (cl-letf (((symbol-function 'dired-toggle-marks)
+               (advice--cd*r (symbol-function #'dired-toggle-marks))))
+      (unless (region-active-p)
+        (let ((beg (save-excursion
+                     (dired-subtree-beginning)
+                     (line-beginning-position)))
+              (end (save-excursion
+                     (dired-subtree-end)
+                     (line-end-position))))
+          (set-mark beg)
+          (goto-char end)))
+      (dired-toggle-marks)))
   ;; C-M-p/n/u/d
   (cl-loop for (key . value) in '((dired-prev-subdir . dired-subtree-previous-sibling)
                                   (dired-next-subdir . dired-subtree-next-sibling)
@@ -744,6 +758,7 @@
   ;; *s/U/M-</M->
   (cl-loop for (key . value) in '((dired-mark-subdir-files . dired-subtree-mark-subtree)
                                   (dired-unmark-all-marks . dired-subtree-unmark-subtree)
+                                  (dired-toggle-marks . dired-subtree-toggle-marks)
                                   (dired-beginning-of-buffer . dired-subtree-beginning)
                                   (dired-end-of-buffer . dired-subtree-end))
            do (lexical-let ((value value))

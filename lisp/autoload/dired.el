@@ -298,10 +298,12 @@
             ((string= engine "libreoffice")
              (let ((output-format (read-string "Output format: ")))
                (cl-loop for x in file-list
-                        do (let ((filename (escape-local (file-name-nondirectory x))))
+                        do (let* ((filename (escape-local (file-name-nondirectory x)))
+                                  (file-extension (ignore-errors (downcase (file-name-extension filename)))))
                              (shell-command (concat "libreoffice --headless --convert-to "
                                                     output-format
-                                                    (when (equal output-format "csv")
+                                                    (when (or (equal output-format "csv")
+                                                              (equal file-extension "csv"))
                                                       " --infilter=CSV:44,34,76,1")
                                                     " " filename))))))
             ((string= engine "pdftk")
