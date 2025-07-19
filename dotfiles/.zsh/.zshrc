@@ -112,6 +112,13 @@ if [[ -n $WM_PROJECT ]]; then
     autoload -U add-zsh-hook
     add-zsh-hook precmd _openfoam_compinit
 
+    save_tmux_path_on_exit() {
+        [[ -n "$TMUX" ]] && echo "$PWD" > ~/.tmux_last_path
+        # tmux display-message -p "#{pane_current_path}" > ~/.tmux_last_path
+    }
+    autoload -Uz add-zsh-hook
+    add-zsh-hook zshexit save_tmux_path_on_exit
+
     if [[ -z $TMUX ]] # && [[ -n $SSH_TTY ]]
        ; then
         exec tmux new-session -A -s of

@@ -29,7 +29,7 @@ if [[ ( x$flavour != x ) && ( x$version != x ) ]]; then
             if [ $? != 0 ]; then
                 source /usr/lib/openfoam/openfoam$version/etc/bashrc
             fi
-            tmux new-session -A -s of
+            tmux new-session -A -s of -c $(cat ~/.tmux_last_path)
             ;;
         org)
             # https://hub.docker.com/u/openfoam

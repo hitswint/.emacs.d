@@ -28,7 +28,7 @@ export QT_IM_MODULE=fcitx
 export XMODIFIERS="@im=fcitx"
 
 # matlab
-export MATLAB_JAVA=/usr/lib/jvm/java-8-openjdk-amd64/jre
+# export MATLAB_JAVA=/usr/lib/jvm/java-8-openjdk-amd64/jre
 export _JAVA_AWT_WM_NONREPARENTING=1
 
 # mu
@@ -43,7 +43,7 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 
 # User configuration
-export PATH="/opt/emacs29/bin:/usr/local/MATLAB/R2011b/bin:$HOME/bin:$HOME/.local/bin:$PATH"
+export PATH="/opt/emacs30/bin:$HOME/bin:$HOME/.local/bin:$PATH"
 export MANPATH="/usr/local/man:$MANPATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
@@ -62,4 +62,5 @@ export PATH=${GRADLE_HOME}/bin:${PATH}
 
 # snap
 export PATH=/snap/bin:${PATH}
-. "$HOME/.cargo/env"
+
+export EDITOR="emacs -q -nw --eval=\"(setq make-backup-files nil)\""

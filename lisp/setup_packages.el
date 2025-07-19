@@ -296,11 +296,13 @@
              (not (and
                    (boundp 'which-key--paging-functions)
                    (member this-command which-key--paging-functions)))
-             (not (or buffer-read-only transient--showp
+             (not (or buffer-read-only
+                      (bound-and-true-p transient--showp)
                       (derived-mode-p 'eaf-mode 'image-mode))))
         (fcitx--prefix-keys-maybe-activate)))
       (set-cursor-color (if (fcitx--active-p) "#f57900" "#fce94f"))))
-  (add-hook 'window-configuration-change-hook #'(lambda () (cond ((or buffer-read-only transient--showp
+  (add-hook 'window-configuration-change-hook #'(lambda () (cond ((or buffer-read-only
+                                                                      (bound-and-true-p transient--showp)
                                                                       (derived-mode-p 'eaf-mode 'image-mode))
                                                                   (fcitx--read-only-maybe-deactivate))
                                                                  ((not (window-minibuffer-p))
