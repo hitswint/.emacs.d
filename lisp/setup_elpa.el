@@ -190,7 +190,6 @@
                            volatile-highlights
                            w3m
                            web-mode
-                           which-key
                            window-numbering
                            with-editor
                            wrap-region
