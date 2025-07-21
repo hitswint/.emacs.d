@@ -33,9 +33,9 @@
   (set-face-attribute 'org-level-7 nil :weight 'normal :foreground "orange" :height 1.0)
   (set-face-attribute 'org-level-8 nil :weight 'normal :foreground "khaki" :height 1.0)
   (setq org-hide-emphasis-markers t)
-  (font-lock-add-keywords 'org-mode
-                          '(("^ +\\([-*]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  ;; (font-lock-add-keywords 'org-mode
+  ;;                         '(("^ +\\([-*]\\) "
+  ;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
   (setq org-use-sub-superscripts "{}")
   ;; 使用org-toggle-pretty-entities (C-c C-x \) 启闭
   (setq org-pretty-entities t
