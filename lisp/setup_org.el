@@ -157,7 +157,7 @@
   ;; ===============Keybindings=================
 ;;;; org-agenda
   ;; ===============org-agenda==================
-  (setq org-agenda-files (directory-files "~/webdav-sync/orgzly/" t ".+\\.org")
+  (setq org-agenda-files (ignore-errors (directory-files "~/webdav-sync/orgzly/" t ".+\\.org"))
         org-agenda-span 'month)
   ;; 设定todo的子项完成后主项自动完成
   (add-hook 'org-after-todo-statistics-hook #'(lambda (n-done n-not-done)
@@ -818,7 +818,7 @@
   (require 'oc-biblatex)
   (require 'oc-natbib)
   (setq org-cite-global-bibliography (delete (expand-file-name "~/.bib/Zotero.bib")
-                                             (directory-files "~/.bib" t "\\.bib$")))
+                                             (ignore-errors (directory-files "~/.bib" t "\\.bib$"))))
   ;; org-cite-activate-processor/org-cite-follow-processor/org-cite-insert-processor/org-cite-export-processors -> 高亮/打开/插入/导出
   (setq org-cite-csl-styles-dir "~/Zotero/styles/")
   ;; locale影响本地化日期等，默认使用en-US，可下载其他：https://github.com/citation-style-language/locales
