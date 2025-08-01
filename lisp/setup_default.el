@@ -60,7 +60,7 @@
       large-hscroll-threshold 1000
       syntax-wholeline-max 1000)
 (setq scroll-step 1
-      scroll-margin 2
+      scroll-margin 0
       scroll-conservatively 10000
       scroll-preserve-screen-position t)
 (setq auto-mode-case-fold nil)

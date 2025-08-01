@@ -10,7 +10,8 @@
   (define-key python-mode-map (kbd "C-c C-e") 'python-shell-send-string)
   (add-hook 'python-mode-hook #'(lambda ()  ;参考elpy-module-sane-defaults
                                   (setq forward-sexp-function nil)  ;默认python-nav-forward-sexp
-                                  (setq comment-inline-offset 2)))
+                                  (setq comment-inline-offset 2)
+                                  (setq python-eldoc-get-doc nil)))
   (add-hook 'inferior-python-mode-hook 'kill-shell-buffer-after-exit t)
   (defun python-shell-send-line-or-region ()
     (interactive)

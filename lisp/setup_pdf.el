@@ -105,7 +105,11 @@
                                             concat (concat " " (escape-local (shell-command-to-string
                                                                               (format "cat /proc/%s/cmdline | sed -e 's/.*\\x00\\([^\\x00].*\\)\\x00$/\\1/'" x)))))
                                    (cl-loop for x in (cl-remove-if-not (lambda (x) (equal (buffer-mode x) 'pdf-view-mode)) (buffer-list))
-                                            concat (concat " " (escape-local (buffer-file-name x))))))
+                                            concat (concat " " (escape-local (buffer-file-name x))))
+                                   (cl-loop for x in (cl-remove-if-not (lambda (buf)
+                                                                         (equal (buffer-local-value 'eaf--buffer-app-name buf) "pdf-viewer"))
+                                                                       (eaf--get-eaf-buffers))
+                                            concat (concat " " (escape-local (buffer-local-value 'eaf--buffer-url x))))))
                 (rg-run string-to-grep "pdf" (expand-file-name zotero-storage) nil nil (mapcar #'escape-local pdf-file-list))))
           (message "No pdf is opened.")))))
   (defun pdfgrep-zotero (&optional arg)
