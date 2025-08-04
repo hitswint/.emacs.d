@@ -1419,7 +1419,24 @@ ORIG is the advised function, which is called with its ARGS."
   (require 'llm-ollama)
   (require 'llm-openai)
   (setopt llm-warn-on-nonfree nil)
-  (setopt ellama-providers `(("DeepSeek-v3" . ,(make-llm-openai-compatible
+  (setopt ellama-providers `(("Qwen-DS-v3" . ,(make-llm-openai-compatible
+                                               :key (get-auth-pass "Qwen")
+                                               :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
+                                               :chat-model "deepseek-v3"))
+                             ("Qwen-DS-r1" . ,(make-llm-openai-compatible
+                                               :key (get-auth-pass "Qwen")
+                                               :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
+                                               ;; :chat-model "deepseek-r1"
+                                               :chat-model "deepseek-r1-0528"))
+                             ("Qwen-Max" . ,(make-llm-openai-compatible
+                                             :key (get-auth-pass "Qwen")
+                                             :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
+                                             :chat-model "qwen-max-latest"))
+                             ("Qwen-Plus" . ,(make-llm-openai-compatible
+                                              :key (get-auth-pass "Qwen")
+                                              :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
+                                              :chat-model "qwen-plus-latest"))
+                             ("DeepSeek-v3" . ,(make-llm-openai-compatible
                                                 :key (get-auth-pass "DeepSeek")
                                                 :url "https://api.deepseek.com/v1"
                                                 :chat-model "deepseek-chat"))
