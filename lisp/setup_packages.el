@@ -279,6 +279,8 @@
 (use-package fcitx
   :commands swint-fcitx-setup
   :init
+  (setq fcitx-remote-command "fcitx5-remote"
+        fcitx-prefix-keys-polling-time 0.2)
   (if (and (fboundp 'daemonp) (daemonp))
       (add-hook 'after-make-frame-functions 'swint-fcitx-setup)
     (add-hook 'after-init-hook 'swint-fcitx-setup))
