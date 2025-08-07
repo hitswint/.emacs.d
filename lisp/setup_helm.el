@@ -922,6 +922,14 @@
         (cl-loop for buf in bufs
                  when (helm-ag--search-buffer-p buf)
                  collect buf))))
+  ;; 修复加--context选项时的编辑错误
+  (defun helm-ag--match-line-regexp ()
+    (cond ((helm-ag--vimgrep-option)
+           "^\\(?4:\\(?1:[^:]+\\):\\(?2:[1-9][0-9]*\\):[^:]+:\\)\\(?3:.*\\)$")
+          (helm-ag--search-this-file-p
+           "^\\(?4:\\(?2:[1-9][0-9]*\\)[:-]\\)\\(?3:.*\\)$")
+          (t
+           "^\\(?4:\\(?1:[^\n:]+\\):\\(?2:[1-9][0-9]*\\)[:-]\\)\\(?3:.*\\)$")))
   (defun swint-helm-ag (&optional dir)
     (interactive)
     (let ((default-directory (or dir (helm-current-directory))))

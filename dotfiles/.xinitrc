@@ -5,7 +5,8 @@
 #Executed by startx(run your window manager from here)
 #
 
-fcitx &
+# fcitx &
+fcitx5 &
 
 conky | while true; read line; do xsetroot -name "$line"; done &
 
@@ -16,7 +17,8 @@ systemctl --user import-environment DISPLAY
 # wicd-client -t &
 nm-applet &
 # dbus-launch nm-applet &
-# blueman-applet &
+
+# pgrep blueman-applet || blueman-applet &
 
 # 使用systemctl --user的mpd.service
 # [ ! -s ~/.mpd/mpd.pid ] && mpd  # Fail to startup sometime
@@ -56,7 +58,7 @@ nm-applet &
 # xrandr --output VGA-1 --auto --right-of HDMI-1
 
 xrandr --output HDMI-0 --auto --primary
-xrandr --output VGA-0 --auto --right-of HDMI-1
+xrandr --output VGA-0 --auto --right-of VGA-0
 
 xkeysnail.sh &
 
