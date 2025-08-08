@@ -72,7 +72,7 @@
 (defun ml/generate-buffer-identification (orig)
   (let ((current-window-p (mode-line-window-selected-p)))
     (cons (concat (when-let ((curr (or (car-safe dired-directory) dired-directory (buffer-file-name) (bound-and-true-p eaf--buffer-url))))
-                    (concat (when (display-graphic-p)
+                    (concat (when (and (display-graphic-p) all-the-icons-active)
                               (ml/all-the-icons-dired--icon curr current-window-p))
                             " "
                             (ml/do-shorten-directory (cond ((file-name-absolute-p curr)

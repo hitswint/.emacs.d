@@ -774,6 +774,7 @@
   :diminish all-the-icons-dired-mode
   :commands swint-init-all-the-icons-dired
   :init
+  (defvar all-the-icons-active t)
   (if (and (fboundp 'daemonp) (daemonp))
       (add-hook 'after-make-frame-functions 'swint-init-all-the-icons-dired)
     (add-hook 'window-setup-hook 'swint-init-all-the-icons-dired))
@@ -791,7 +792,7 @@
     (let ((dired-buffer-list (cl-remove-if-not (lambda (x)
                                                  (equal (buffer-mode x) 'dired-mode))
                                                (buffer-list))))
-      (if (display-graphic-p frame)
+      (if (and (display-graphic-p frame) all-the-icons-active)
           (progn (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
                  (dolist (buf dired-buffer-list)
                    (with-current-buffer buf
