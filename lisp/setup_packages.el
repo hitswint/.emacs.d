@@ -1190,6 +1190,7 @@
 ;;; pixel-scroll
 ;; ================pixel-scroll====================
 (use-package pixel-scroll
+  :load-path "site-lisp/pixel-scroll/"
   :config
   (pixel-scroll-precision-mode 1)
   (setq pixel-scroll-precision-interpolate-page t)
@@ -1203,8 +1204,8 @@
   (defun +pixel-scroll-interpolate-up (&optional lines)
     (interactive "^P")
     (if lines
-        (pixel-scroll-precision-interpolate (* lines (pixel-line-height))))
-    (pixel-scroll-interpolate-up))
+        (pixel-scroll-precision-interpolate (* lines (pixel-line-height)))
+      (pixel-scroll-interpolate-up)))
   (defun pixel-scroll-window-move-up (&optional arg)
     (interactive "p")
     (if (display-graphic-p)
