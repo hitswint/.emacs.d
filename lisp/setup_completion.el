@@ -175,8 +175,10 @@
   :after (:any company-try-hard yasnippet company-english-helper)
   :config
   (global-company-mode 1)
-  (setq company-show-quick-access t)
-  (setq company-async-timeout 10)
+  (setq company-show-quick-access t
+        company-async-timeout 10
+        company-minimum-prefix-length 3
+        company-backends (delete 'company-semantic company-backends))
   (define-key company-active-map (kbd "<tab>") nil)
   (define-key company-active-map (kbd "TAB") nil)
   (define-key company-active-map (kbd "C-p") 'company-select-previous-or-abort)
@@ -186,7 +188,6 @@
   (dotimes (i 10)
     (define-key company-active-map (read-kbd-macro (format "C-%d" i)) 'company-complete-tooltip-row)
     (define-key company-search-map (read-kbd-macro (format "C-%d" i)) 'company-complete-tooltip-row))
-  (setq company-backends (delete 'company-semantic company-backends))
   (bind-key "M-U" 'swint-auto-complete-ispell company-active-map)
   ;; To complete for projects, you need to tell Clang your include paths.
   ;; Create a file named .dir-locals.el at your project root:
