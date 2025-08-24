@@ -19,6 +19,10 @@ URxvt*iso14755_52: False
 URxvt.searchable-scrollback: CM-s
 ! URxvt.keysym.CM-s: searchable-scrollback:start
 
+! 启动时命令行位于窗口中间位置
+! https://github.com/NixOS/nixpkgs/issues/241646
+URxvt*geometry: 80x240+0+0
+
 ! URxvt.iconFile:/usr/share/icons/Adwaita/scalable/legacy/utilities-terminal-symbolic.svg
 URxvt.iconFile:/usr/share/icons/Adwaita/48x48/legacy/utilities-terminal.png
 

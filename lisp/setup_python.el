@@ -237,7 +237,7 @@ names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', 
   (defun swint-python-fig-config ()
     (interactive)
     (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
-        (let* ((config-list (helm-comp-read "Configs: " (list "xlabel" "ylabel" "xticklabels" "yticklabels" "fonts" "sizes" "time_formatter" "legend_ncol" "text" "annotate" "axline" "patch" "remove")
+        (let* ((config-list (helm-comp-read "Configs: " (list "xlabel" "ylabel" "xticklabels" "yticklabels" "xlog" "ylog" "fonts" "sizes" "time_formatter" "legend_ncol" "text" "annotate" "axline" "patch" "remove")
                                             :marked-candidates t
                                             :buffer "*helm python fig config-swint*"))
                (args-list (cl-loop for x in config-list
@@ -275,6 +275,8 @@ names['df_'+re.sub('\\W','_','%s_')+re.sub('\\W','_','%s')] = pd.read_sql('%s', 
                                             ((equal x "time_formatter")
                                              (concat (format "time_locator='%s'" (read-string "time_locator(Second/Minute/Hour/Day/Weekday/Month/Year/Auto,rotation): " "Auto,0"))
                                                      (format ",time_formatter='%s'" (read-string "time_formatter: " "%Y/%m/%d %H:%M:%S"))))
+                                            ((equal x "xlog") "xlog=True")
+                                            ((equal x "ylog") "ylog=True")
                                             (t
                                              (format "%s='%s'" x (read-string (concat x ": ")))))))
                (args-string (mapconcat 'identity args-list ",")))
@@ -318,11 +320,11 @@ plot_data.fig_config(%s)" swint-python-plot-exec-path args-string))))
           (setq file-x-string (helm-comp-read "File as x: " (cons "None" (directory-files (helm-current-directory) nil directory-files-no-dot-files-regexp))
                                               :buffer "*helm python plot data-swint*"))
           (setq column-x-string (plot-file-setup (if (string= file-x-string "None") (car files-list) file-x-string) t)))
-        (let* ((config-list (helm-comp-read "Configs: " (list "None" "rows" "labels" "fonts" "sizes" "colors" "lines" "markers" "hatchs" "polyfit" "twinx" "save" "animate")
+        (let* ((config-list (helm-comp-read "Configs: " (list "None" "rows" "labels" "fonts" "sizes" "colors" "lines" "markers" "hatchs" "polyfit" "twinx" "xlog" "ylog" "save" "animate")
                                             :marked-candidates t
                                             :buffer "*helm python fig config-swint*"))
                ;; 从列表中除去多个元素，也可以用：(cl-set-difference config-list '("twinx" "save" "animate" "None") :test 'equal)
-               (args-alist (cl-loop for x in (seq-difference config-list '("twinx" "save" "animate" "None"))
+               (args-alist (cl-loop for x in (seq-difference config-list '("twinx" "xlog" "ylog" "save" "animate" "None"))
                                     collect (cons x (if (listp (gethash x swint-python-plot-hash))
                                                         (mapconcat 'identity (helm-comp-read (concat x ": ") (gethash x swint-python-plot-hash)
                                                                                              :marked-candidates t
@@ -333,6 +335,8 @@ plot_data.fig_config(%s)" swint-python-plot-exec-path args-string))))
                                                           (format "--%s \"%s\"" (car x) (cdr x)))
                                                       args-alist " ")
                                            (if (member "twinx" config-list) " --twinx ")
+                                           (if (member "xlog" config-list) " --xlog ")
+                                           (if (member "ylog" config-list) " --ylog ")
                                            (if (member "save" config-list) " --save ")
                                            (if (member "animate" config-list) " --animate ")))
           (setq send-string-args (concat (if args-alist
@@ -340,6 +344,8 @@ plot_data.fig_config(%s)" swint-python-plot-exec-path args-string))))
                                                                         (format "%s='%s'" (car x) (cdr x)))
                                                                     args-alist ",")))
                                          (if (member "twinx" config-list) ",twinx=True")
+                                         (if (member "xlog" config-list) ",xlog=True")
+                                         (if (member "ylog" config-list) ",ylog=True")
                                          (if (member "save" config-list) ",save=True")
                                          (if (member "animate" config-list) ",animate=True"))))
         (pyvenv-activate-py3)
@@ -389,7 +395,9 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
         elpy-shell-starting-directory 'current-directory)
   ;; 使用ipython作为交互环境
   (setq python-shell-interpreter "ipython"
-        python-shell-interpreter-args "-i --simple-prompt --pylab")
+        python-shell-interpreter-args "-i --simple-prompt --pylab"
+        ;; https://github.com/gregsexton/ob-ipython/issues/28
+        python-shell-completion-native-enable nil)
   ;; 使用jupyter作为交互环境
   ;; (setq python-shell-interpreter "jupyter"
   ;;       python-shell-interpreter-args "console --simple-prompt"

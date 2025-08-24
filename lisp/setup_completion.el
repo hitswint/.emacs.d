@@ -54,7 +54,8 @@
   (add-to-list 'ac-modes 'graphviz-dot-mode)
   (add-to-list 'ac-modes 'arduino-mode)
   (ac-config-default)
-  (setq-default ac-sources '(ac-source-abbrev
+  ;; https://github.com/auto-complete/auto-complete/issues/533
+  (setq-default ac-sources '(;; ac-source-abbrev
                              ac-source-dictionary
                              ac-source-words-in-same-mode-buffers
                              ac-source-files-in-current-dir)))

@@ -55,13 +55,12 @@
   (bind-key "C-x C-?" 'xref-find-apropos)
   (setq lsp-bridge-enable-mode-line nil)
   :config
-  (require 'yasnippet)
-  (yas-global-mode 1)
   (setq lsp-bridge-c-lsp-server "ccls")              ;clangd
   (setq lsp-bridge-python-lsp-server "basedpyright")  ;pyright
   (setq lsp-bridge-python-multi-lsp-server "basedpyright_ruff")
   (setq lsp-bridge-complete-manually nil) ;lsp-bridge-popup-complete-menu
   (setq acm-enable-quick-access nil)
+  (setq acm-enable-yas nil)
   (setq acm-quick-access-use-number-select nil)
   (setq acm-quick-access-modifier 'control)
   (defun swint-toggle-lsp-bridge ()

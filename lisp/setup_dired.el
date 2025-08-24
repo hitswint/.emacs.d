@@ -680,7 +680,8 @@
   :bind (:map dired-mode-map
               ("TAB" . dired-subtree-toggle)
               ("S-TAB" . dired-subtree-remove)
-              ("<tab>" . dired-subtree-cycle))
+              ("<tab>" . dired-subtree-cycle)
+              ("C-M-i" . dired-subtree-cycle))
   :config
   (defface dired-subtree-depth-7-face '((t :inherit dired-subtree-depth-1-face)) "" :group 'dired-subtree-faces)
   (defface dired-subtree-depth-8-face '((t :inherit dired-subtree-depth-2-face)) "" :group 'dired-subtree-faces)
