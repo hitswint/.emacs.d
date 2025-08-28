@@ -27,7 +27,12 @@ if [[ ( x$flavour != x ) && ( x$version != x ) ]]; then
             # of_cmd="openfoam-docker -$version -default -dir=$HOME/OpenFOAM/${USER}-com/"
             tmux has-session -t of 2>/dev/null
             if [ $? != 0 ]; then
-                source /usr/lib/openfoam/openfoam$version/etc/bashrc
+                configFile=/usr/lib/openfoam/openfoam$version/etc/bashrc
+                if [ -f "$configFile" ]; then
+                    source $configFile
+                else
+                    source ~/git-repo/OpenFOAM/OpenFOAM-v$version/etc/bashrc
+                fi
             fi
             tmux new-session -A -s of -c $(cat ~/.tmux_last_path)
             ;;
