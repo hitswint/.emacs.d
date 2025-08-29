@@ -34,7 +34,7 @@
   (let* ((PC-dir (concat "PC_" (replace-regexp-in-string
                                 "\n" "/"
                                 (shell-command-to-string "hostname"))))
-         (PC-path (expand-file-name PC-dir "~/org/logs/"))
+         (PC-path (expand-file-name PC-dir (expand-file-name "logs" user-emacs-directory)))
          (PC-tree-file (expand-file-name "fs-tree.txt" PC-path))
          (PC-apt-history-file (expand-file-name "history.log" PC-path)))
     (unless (file-exists-p PC-path)
