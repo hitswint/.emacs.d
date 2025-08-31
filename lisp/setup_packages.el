@@ -1517,4 +1517,9 @@ ORIG is the advised function, which is called with its ARGS."
       (funcall fn)))
   (advice-add 'ellama-ask-about :around #'ellama-ask-about/around))
 ;; ====================ellama======================
+;;; nov
+;; =====================nov========================
+(use-package nov
+  :mode ("\\.epub\\'" . nov-mode))
+;; =====================nov========================
 (provide 'setup_packages)
