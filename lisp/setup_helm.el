@@ -15,9 +15,7 @@
          ("C-x l" . swint-helm-locate)
          ("C-x y" . helm-resume))
   :init
-  (setq helm-minibuffer-history-key "M-i"
-        helm-action-at-nth-positive-prefix-key ""
-        helm-action-at-nth-negative-prefix-key "")
+  (setq helm-minibuffer-history-key "M-i")
   :config
   (use-package helm-for-files)
   (helm-mode 1)

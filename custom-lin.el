@@ -4,7 +4,50 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(ellama auctex-latexmk dogears disable-mouse dired-duplicates clipetty csv-mode youdao-dictionary gcmh mu4e-views benchmark-init outshine bbdb-vcard djvu nov diminish delight vundo lingva modelica-mode posframe all-the-icons-dired all-the-icons dired-subtree ivy-bibtex key-chord org-appear vcard semi ox-pandoc restclient dired-du yasnippet-snippets meghanada org-pdftools org-brain rg baidu-translate unicode-escape pdfgrep jedi find-file-in-project gnu-elpa-keyring-update jupyter ace-jump-helm-line ebib exec-path-from-shell dired-filetype-face matlab-mode academic-phrases auto-yasnippet org-noter yaml-mode term-keys sudo-edit pyim pyim-basedict helm-pass pass helm-mu mu4e-alert ztree wrap-region window-numbering web-mode w3m volatile-highlights vlf visual-regexp visible-mark vimish-fold tangotango-theme smartrep skewer-mode recentf-ext readline-complete rainbow-mode rainbow-delimiters quickrun pinyin-search peep-dired pdf-tools paredit-everywhere outline-magic operate-on-number neotree names multiple-cursors multifiles markdown-mode magit lacarte ivy-hydra imenu-anywhere hungry-delete highlight-symbol highlight-parentheses helm-unicode helm-swoop helm-projectile helm-gtags helm-flyspell helm-flycheck helm-firefox helm-descbinds helm-bm helm-bibtex helm-ag graphviz-dot-mode goto-chg google-translate god-mode gnuplot-mode git-timemachine function-args flycheck-pos-tip fcitx expand-region evil-nerd-commenter eshell-prompt-extras emms emmet-mode elpy elmacro elisp-slime-nav easy-kill dumb-jump drag-stuff disaster dired-ranger dired-narrow diff-hl counsel company-web company-try-hard company-quickhelp company-c-headers clipmon clean-aindent-mode cdlatex buttercup bing-dict backup-walker avy-zap auto-highlight-symbol auto-complete-clang auto-complete-c-headers auto-complete-auctex arduino-mode anchored-transpose aggressive-indent ace-pinyin ace-link ac-math ac-ispell ac-html-bootstrap)))
+ '(ac-html-bootstrap ac-ispell ac-math academic-phrases
+                     ace-jump-helm-line ace-link ace-pinyin
+                     aggressive-indent all-the-icons
+                     all-the-icons-dired anchored-transpose
+                     arduino-mode auctex-latexmk auto-complete-auctex
+                     auto-complete-c-headers auto-complete-clang
+                     auto-highlight-symbol auto-yasnippet avy-zap
+                     backup-walker baidu-translate bbdb-vcard
+                     benchmark-init bing-dict buttercup cdlatex
+                     clean-aindent-mode clipetty clipmon
+                     company-c-headers company-quickhelp
+                     company-try-hard company-web counsel csv-mode
+                     delight diff-hl diminish dired-du
+                     dired-duplicates dired-filetype-face dired-narrow
+                     dired-ranger dired-subtree disable-mouse disaster
+                     djvu dogears drag-stuff dumb-jump easy-kill ebib
+                     elisp-slime-nav ellama elmacro elpy emmet-mode
+                     emms eshell-prompt-extras evil-nerd-commenter
+                     exec-path-from-shell expand-region fcitx
+                     find-file-in-project flycheck-pos-tip
+                     function-args gcmh git-timemachine
+                     gnu-elpa-keyring-update gnuplot-mode god-mode
+                     google-translate goto-chg graphviz-dot-mode
+                     helm-ag helm-bibtex helm-bm helm-descbinds
+                     helm-firefox helm-flycheck helm-flyspell
+                     helm-gtags helm-mu helm-pass helm-projectile
+                     helm-swoop helm-unicode highlight-parentheses
+                     highlight-symbol hungry-delete imenu-anywhere
+                     ivy-bibtex ivy-hydra jedi jupyter key-chord
+                     lacarte lingva magit markdown-mode matlab-mode
+                     meghanada modelica-mode mu4e-alert mu4e-views
+                     multifiles multiple-cursors names neotree nov
+                     operate-on-number org-appear org-brain org-noter
+                     org-pdftools outline-magic outshine ox-pandoc
+                     paredit-everywhere pass pdf-tools pdfgrep
+                     peep-dired pinyin-search posframe pyim
+                     pyim-basedict quickrun rainbow-delimiters
+                     rainbow-mode readline-complete recentf-ext
+                     restclient rg skewer-mode smartrep sudo-edit
+                     tangotango-theme term-keys unicode-escape vcard
+                     vimish-fold visible-mark visual-regexp vlf
+                     volatile-highlights vundo w3m web-mode
+                     window-numbering wrap-region yaml-mode
+                     yasnippet-snippets youdao-dictionary ztree)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
