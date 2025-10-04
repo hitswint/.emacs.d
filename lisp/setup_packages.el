@@ -752,6 +752,7 @@
              dumb-jump-back
              dumb-jump-quick-look)
   :init
+  (setq dumb-jump-selector 'helm)
   (smartrep-define-key global-map "C-x"
     '(("," . dumb-jump-go)
       ("." . dumb-jump-back)

@@ -100,7 +100,7 @@ if [[ -n $WM_PROJECT ]]; then
             # 自带/usr/lib/openfoam/openfoam2306/etc/config.sh/bash_completion无效
             # 借鉴org版本foamGenerateBashCompletion工具生成bash_completion
             source $FOAM_USER_APPBIN/bash_completion
-            configFile=$HOME/git-repo/OpenFOAM/OpenFOAM-v2306/etc/bashrc
+            configFile=$HOME/git-repo/OpenFOAM/OpenFOAM-$WM_PROJECT_VERSION/etc/bashrc
             alias switchenv="echo \"Gcc Opt\nGcc Debug\nClang Opt\" | percol | awk '{print \$1,\$2}' | while read a b; do sed -i \"s/^export WM_COMPILER=.*$/export WM_COMPILER=\$a/g\" $configFile; sed -i \"s/^export WM_COMPILE_OPTION=.*$/export WM_COMPILE_OPTION=\$b/g\" $configFile; source $configFile; done"
         else
             source $WM_PROJECT_DIR/etc/config.sh/bash_completion

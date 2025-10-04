@@ -549,6 +549,7 @@
         (easy-kill)
       (dired-copy-filename-as-kill 0)
       (call-interactively 'dired-ranger-copy)))
+  (require 'helm)
   (defvar helm-dired-ranger-map
     (let ((map (make-sparse-keymap)))
       (set-keymap-parent map helm-map)
