@@ -65,7 +65,7 @@
   (setq acm-quick-access-modifier 'control)
   (defun swint-toggle-lsp-bridge ()
     (interactive)
-    (pyvenv-activate-py3)
+    (pyvenv-activate-py3 t)
     (dolist (buf (cl-remove-if-not (lambda (x)
                                      (equal (buffer-mode x) major-mode))
                                    (buffer-list)))

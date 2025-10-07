@@ -12,7 +12,7 @@
   (setq eaf-dired-advisor-enable nil)
   (add-hook 'eaf-mode-hook #'(lambda () (kill-local-variable 'frame-title-format)))
   :config
-  (pyvenv-activate-py3)
+  (pyvenv-activate-py3 t)
   (setq eaf-webengine-default-zoom "1.5"
         eaf-marker-letters "ASDFGQWERTZXCVB"
         eaf-goto-right-after-close-buffer t

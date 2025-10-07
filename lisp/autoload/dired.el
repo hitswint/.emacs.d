@@ -105,7 +105,7 @@
 (defun swint-bypy-sync (&optional arg)
   "Synchronization of bypy-sync."
   (interactive)
-  (pyvenv-activate-py3)
+  (pyvenv-activate-py3 t)
   (let* ((localdir (expand-file-name "~/Bypy"))
          (process
           (start-process-shell-command

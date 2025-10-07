@@ -36,9 +36,13 @@
   ;; 使用pyvenv-activate/deactivate启动/关闭虚拟环境，使用pyvenv-workon列出可用虚拟环境并切换
   (defalias 'workon 'pyvenv-workon)
   (require 'ht)
-  (defun pyvenv-activate-py3 ()
-    (unless (equal (bound-and-true-p pyvenv-virtual-env-name) "py3")
-      (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3"))))
+  (defun pyvenv-activate-py3 (&optional force)
+    (let ((current-env (bound-and-true-p pyvenv-virtual-env-name)))
+      (unless (equal current-env "py3")
+        (when (or force
+                  (not current-env)
+                  (y-or-n-p "Switch to py3?"))
+          (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3"))))))
   (defvar swint-python-plot-hash (ht ("data" "")
                                      ("rows" "::")
                                      ("labels" "x,y")
@@ -348,7 +352,7 @@ plot_data.fig_config(%s)" swint-python-plot-exec-path args-string))))
                                          (if (member "ylog" config-list) ",ylog=True")
                                          (if (member "save" config-list) ",save=True")
                                          (if (member "animate" config-list) ",animate=True"))))
-        (pyvenv-activate-py3)
+        (pyvenv-activate-py3 t)
         (let ((python-command-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
 plot_data.cli_plot([%s],'%s' %s)" swint-python-plot-exec-path data-string style-string (or send-string-args ""))))
           (cond ((equal major-mode 'inferior-python-mode)
@@ -423,7 +427,9 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
   (define-key inferior-python-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key inferior-python-mode-map (kbd "C-c C-.") 'pop-tag-mark)
   (define-key inferior-python-mode-map (kbd "C-c C-/") 'elpy-doc)
-  (advice-add 'elpy-shell-switch-to-shell :before #'pyvenv-activate-py3)
+  (advice-add 'elpy-shell-switch-to-shell :before #'(lambda ()
+                                                      (unless (python-shell-get-process)
+                                                        (pyvenv-activate-py3))))
   ;; 使用global-elpy-mode方式开启elpy-mode
   ;; (define-global-minor-mode global-elpy-mode elpy-mode
   ;;   (lambda () (when (eq major-mode 'python-mode) (elpy-mode 1))))
@@ -439,7 +445,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
                    (elpy-mode 'toggle)))
                (elpy-disable)
                (pyvenv-mode 1))
-      (pyvenv-activate-py3)
+      (pyvenv-activate-py3 t)
       (elpy-enable)
       (elpy-modules-remove-modeline-lighter 'flymake-mode))))
 ;; ====================elpy====================
@@ -493,7 +499,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
   (define-key jedi-mode-map (kbd "C-c .") nil)
   (define-key jedi-mode-map (kbd "C-c ,") nil)
   (advice-add 'jedi:get-in-function-call :before #'(lambda ()
-                                                     (pyvenv-activate-py3)
+                                                     (pyvenv-activate-py3 t)
                                                      (unless jedi-mode
                                                        (dolist (buf (cl-remove-if-not (lambda (x)
                                                                                         (equal (buffer-mode x) 'python-mode))
