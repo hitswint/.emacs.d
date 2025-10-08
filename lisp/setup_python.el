@@ -4,7 +4,6 @@
   :delight "Py"
   :mode ("\\.py\\'" . python-mode)
   :config
-  (bind-key "M-o M-P" 'run-python)
   (define-key python-mode-map (kbd "C-c C-c") 'python-shell-send-line-or-region)
   (define-key python-mode-map (kbd "C-c C-b") 'python-shell-send-buffer)
   (define-key python-mode-map (kbd "C-c C-e") 'python-shell-send-string)
@@ -38,11 +37,10 @@
   (require 'ht)
   (defun pyvenv-activate-py3 (&optional force)
     (let ((current-env (bound-and-true-p pyvenv-virtual-env-name)))
-      (unless (equal current-env "py3")
-        (when (or force
-                  (not current-env)
-                  (y-or-n-p "Switch to py3?"))
-          (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3"))))))
+      (unless (or (equal current-env "py3")
+                  (and (not force)
+                       current-env))
+        (pyvenv-activate (format "%s/%s" (pyvenv-workon-home) "py3")))))
   (defvar swint-python-plot-hash (ht ("data" "")
                                      ("rows" "::")
                                      ("labels" "x,y")
@@ -383,11 +381,16 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
   :delight '(:eval (propertize " E" 'face 'font-lock-function-name-face))
   :commands (elpy-shell-switch-to-shell toggle-elpy-mode-all-buffers)
   :init
-  (bind-key "M-o M-p" #'(lambda (&optional arg) (interactive "P") (let* ((dir (helm-current-directory))
-                                                                         (default-directory dir))
-                                                                    (elpy-shell-switch-to-shell)
-                                                                    (when arg
-                                                                      (python-shell-send-string (format "import os; os.chdir('%s')" dir))))))
+  (bind-key "M-o M-p" #'(lambda (&optional arg) (interactive "P") (let ((default-directory (helm-current-directory)))
+                                                                    (unless (python-shell-get-process)
+                                                                      (if arg
+                                                                          (call-interactively 'pyvenv-workon)
+                                                                        (pyvenv-activate-py3)))
+                                                                    (elpy-shell-switch-to-shell))))
+  (bind-key "M-o M-P" #'(lambda () (interactive) (when (python-shell-get-process)
+                                                   (python-shell-send-string (format "import os; os.chdir('%s')"
+                                                                                     (helm-current-directory)))
+                                                   (elpy-shell-switch-to-shell))))
   (add-hook 'python-mode-hook (lambda ()
                                 (bind-key "C-c e" 'toggle-elpy-mode-all-buffers python-mode-map)))
   (setq elpy-remove-modeline-lighter t)
@@ -427,9 +430,6 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
   (define-key inferior-python-mode-map (kbd "C-c C-,") 'elpy-goto-definition)
   (define-key inferior-python-mode-map (kbd "C-c C-.") 'pop-tag-mark)
   (define-key inferior-python-mode-map (kbd "C-c C-/") 'elpy-doc)
-  (advice-add 'elpy-shell-switch-to-shell :before #'(lambda ()
-                                                      (unless (python-shell-get-process)
-                                                        (pyvenv-activate-py3))))
   ;; 使用global-elpy-mode方式开启elpy-mode
   ;; (define-global-minor-mode global-elpy-mode elpy-mode
   ;;   (lambda () (when (eq major-mode 'python-mode) (elpy-mode 1))))
