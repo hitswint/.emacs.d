@@ -382,12 +382,12 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
   :commands (elpy-shell-switch-to-shell toggle-elpy-mode-all-buffers)
   :init
   (bind-key "M-o M-p" #'(lambda (&optional arg) (interactive "P") (let ((default-directory (helm-current-directory)))
-                                                                    (unless (python-shell-get-process)
+                                                                    (unless (and (fboundp 'python-shell-get-process) (python-shell-get-process))
                                                                       (if arg
                                                                           (call-interactively 'pyvenv-workon)
                                                                         (pyvenv-activate-py3)))
                                                                     (elpy-shell-switch-to-shell))))
-  (bind-key "M-o M-P" #'(lambda () (interactive) (when (python-shell-get-process)
+  (bind-key "M-o M-P" #'(lambda () (interactive) (when (and (fboundp 'python-shell-get-process) (python-shell-get-process))
                                                    (python-shell-send-string (format "import os; os.chdir('%s')"
                                                                                      (helm-current-directory)))
                                                    (elpy-shell-switch-to-shell))))
