@@ -844,6 +844,13 @@
                                                                         (let ((target-entry (split-string candidate ":")))
                                                                           (swint-vlf-goto-line
                                                                            nil (string-to-number (cl-first target-entry)))))))
+  (advice-add 'helm-ag--construct-extension-options :around #'(lambda (fn)
+                                                                (let ((file-extension-options (funcall fn)))
+                                                                  (if (string-prefix-p "ag" helm-ag-base-command)
+                                                                      file-extension-options
+                                                                    ;; rg -g与ag -G相同
+                                                                    (cl-loop for file-ext in file-extension-options
+                                                                             collect (replace-regexp-in-string "-G" "-g" file-ext))))))
   (defun swint-helm-do-ag-this-file ()
     (interactive)
     (let ((current-file (or (buffer-file-name)
