@@ -280,7 +280,7 @@
   :commands swint-fcitx-setup
   :init
   (setq fcitx-remote-command "fcitx5-remote"
-        fcitx-prefix-keys-polling-time 0.2)
+        fcitx-prefix-keys-polling-time 0.1)
   (if (and (fboundp 'daemonp) (daemonp))
       (add-hook 'after-make-frame-functions 'swint-fcitx-setup)
     (add-hook 'after-init-hook 'swint-fcitx-setup))
@@ -1417,6 +1417,11 @@ ORIG is the advised function, which is called with its ARGS."
 (use-package ellama
   :commands ellama-translate-at-point
   :bind-keymap ("M-E" . ellama-command-map)
+  :init
+  (add-hook 'ellama-session-mode-hook #'(lambda ()
+                                          (setq-local backup-inhibited 1)
+                                          (setq-local auto-save-default nil)
+                                          (auto-save-mode -1)))
   :config
   (define-key ellama-command-map (kbd "p") #'ellama-provider-select)
   (define-key ellama-command-map (kbd "d") #'ellama-define-word)
@@ -1451,11 +1456,20 @@ ORIG is the advised function, which is called with its ARGS."
                                                 :url "https://api.deepseek.com/v1"
                                                 :chat-model "deepseek-reasoner"))))
   (setopt ellama-provider (cdar ellama-providers))
-  (defun ellama-generate-name-by-words/around (orig-fn provider action prompt)
-    (concat (funcall orig-fn provider action prompt)
-            (when (llm-openai-p provider)
-              (llm-openai-chat-model provider))))
-  (advice-add 'ellama-generate-name-by-words :around #'ellama-generate-name-by-words/around)
+  (setq ellama-naming-scheme 'ellama-generate-name-by-bytes)
+  (defun ellama-generate-name-by-bytes (provider action prompt)
+    "Generate name for ACTION by PROVIDER by getting first N words from PROMPT."
+    (let* ((cleaned-prompt (replace-regexp-in-string "/" "_" prompt))
+           (max-bytes 220)
+           (prompt-words (if (multibyte-string-p cleaned-prompt)
+                             (substring (string-as-multibyte (s-left max-bytes (string-as-unibyte cleaned-prompt))) 0 -2)
+                           (s-left max-bytes cleaned-prompt))))
+      (string-join
+       (flatten-tree
+        (list (split-string (format "%s" action) "-")
+              prompt-words
+              (format "(%s)" (llm-name provider))))
+       " ")))
   (defun ellama-translate-at-point (&optional _word)
     (interactive)
     (let* ((word (or _word (swint-get-words-at-point)))
@@ -1507,7 +1521,7 @@ ORIG is the advised function, which is called with its ARGS."
           (ellama-instant (format ellama-summarize-prompt-template text)))
       (funcall fn)))
   (advice-add 'ellama-summarize :around #'ellama-summarize/around)
-  (defun ellama-ask-about/around (fn)
+  (defun ellama-ask-about/around (fn &rest args)
     (interactive)
     (if (derived-mode-p 'pdf-view-mode 'eaf-mode)
         (let ((input (read-string "Ask ellama about this text: "))
@@ -1515,7 +1529,7 @@ ORIG is the advised function, which is called with its ARGS."
                            (ellama-get-pdf-text))))
           (ellama-context-element-add (ellama-context-element-text :content content))
           (ellama-chat input))
-      (funcall fn)))
+      (apply fn args)))
   (advice-add 'ellama-ask-about :around #'ellama-ask-about/around))
 ;; ====================ellama======================
 ;;; nov
