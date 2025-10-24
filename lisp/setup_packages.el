@@ -1459,8 +1459,8 @@ ORIG is the advised function, which is called with its ARGS."
   (setq ellama-naming-scheme 'ellama-generate-name-by-bytes)
   (defun ellama-generate-name-by-bytes (provider action prompt)
     "Generate name for ACTION by PROVIDER by getting first N words from PROMPT."
-    (let* ((cleaned-prompt (replace-regexp-in-string "/" "_" prompt))
-           (max-bytes 220)
+    (let* ((cleaned-prompt (replace-regexp-in-string "\\(/\\|\n+[ \t]*\\)" "_" prompt))
+           (max-bytes 218)
            (prompt-words (if (multibyte-string-p cleaned-prompt)
                              (substring (string-as-multibyte (s-left max-bytes (string-as-unibyte cleaned-prompt))) 0 -2)
                            (s-left max-bytes cleaned-prompt))))
