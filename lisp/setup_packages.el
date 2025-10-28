@@ -1461,6 +1461,7 @@ ORIG is the advised function, which is called with its ARGS."
   (setq ellama-naming-scheme 'ellama-generate-name-by-bytes)
   (defun ellama-generate-name-by-bytes (provider action prompt)
     "Generate name for ACTION by PROVIDER by getting first N words from PROMPT."
+<<<<<<< HEAD
     (let* ((cleaned-prompt (replace-regexp-in-string "/" "_" prompt))
            (max-bytes 220)
            (prompt-words (if (> (string-bytes cleaned-prompt) max-bytes)
@@ -1468,6 +1469,13 @@ ORIG is the advised function, which is called with its ARGS."
                                  (substring (string-as-multibyte (s-left max-bytes (string-as-unibyte cleaned-prompt))) 0 -2)
                                (s-left max-bytes cleaned-prompt))
                            cleaned-prompt)))
+=======
+    (let* ((cleaned-prompt (replace-regexp-in-string "\\(/\\|\n+[ \t]*\\)" "_" prompt))
+           (max-bytes 218)
+           (prompt-words (if (multibyte-string-p cleaned-prompt)
+                             (substring (string-as-multibyte (s-left max-bytes (string-as-unibyte cleaned-prompt))) 0 -2)
+                           (s-left max-bytes cleaned-prompt))))
+>>>>>>> a0b56d68e3a7eb40879fd601185442c37be0ac1a
       (string-join
        (flatten-tree
         (list (split-string (format "%s" action) "-")
