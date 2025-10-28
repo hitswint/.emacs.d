@@ -81,12 +81,12 @@ def is_number(s):
         return False
     return True
 names=locals()
-names['dict_'+re.sub(r'\W','_','%s')]=pd.read_excel('%s', sheet_name=None, header=0, comment='#')
-for k,v in names['dict_'+re.sub(r'\W','_','%s')].items():
+names['dict_'+re.sub(r'\\W','_','%s')]=pd.read_excel('%s', sheet_name=None, header=0, comment='#')
+for k,v in names['dict_'+re.sub(r'\\W','_','%s')].items():
     if not v.empty:
         # 当第1行都是数字时，将原来读入的header变为第1行数据，使用0.1.2作为columns
         # 使用re.sub('\W|^(?=\d)', '_', filename)将文件名转为合法的变量名，缺点是首字母是数字时加下划线
-        names['df_'+re.sub(r'\W','_','%s_')+re.sub(r'\W','_',k)]=v.T.reset_index().T if builtins.any(is_number(ele) for ele in v.columns) else v
+        names['df_'+re.sub(r'\\W','_','%s_')+re.sub(r'\\W','_',k)]=v.T.reset_index().T if builtins.any(is_number(ele) for ele in v.columns) else v
         # 或使用：
         # df = df.columns.to_frame().T.append(df, ignore_index=True)
         # df.columns = range(len(df.columns))
@@ -106,7 +106,7 @@ if 'sql' not in dir():
     import sqlalchemy as sql
 conn = sql.create_engine('sqlite:///%s')
 names=locals()
-names['df_'+re.sub(r'\W','_','%s_')+re.sub(r'\W','_','%s')] = pd.read_sql('%s', conn)
+names['df_'+re.sub(r'\\W','_','%s_')+re.sub(r'\\W','_','%s')] = pd.read_sql('%s', conn)
 " (expand-file-name file-name) file-base-name table table))))
              ;; 需修改esoreader.py源文件，data = {v[1:]: self.data[self.dd.index[v]] for v in variables} -> data = {':'.join(filter(None, v[1:])): self.data[self.dd.index[v]] for v in variables}
              ((member (ignore-errors (downcase (file-name-extension file-name))) '("eso" "mtr"))
@@ -120,7 +120,7 @@ esofile=esoreader.read_from_path('%s')
 names=locals()
 for freq in ['TimeStep', 'Hourly', 'Daily', 'Monthly', 'Annual', 'RunPeriod']:
     if esofile.find_variable('', frequency=freq):
-        names['df_'+re.sub(r'\W','_','%s_')+freq] = esofile.to_frame('', frequency=freq)
+        names['df_'+re.sub(r'\\W','_','%s_')+freq] = esofile.to_frame('', frequency=freq)
 " (expand-file-name file-name) file-base-name)))
              ;; 导入epw文件
              ((member (ignore-errors (downcase (file-name-extension file-name))) '("epw"))
@@ -131,15 +131,15 @@ if 'pd' not in dir():
 if 'epw' not in dir():
     from epw import epw
 names=locals()
-names['epw_'+re.sub(r'\W','_','%1$s')] = epw()
-names['epw_'+re.sub(r'\W','_','%1$s')].read(r'%2$s')
-names['df_'+re.sub(r'\W','_','%1$s')] = names['epw_'+re.sub(r'\W','_','%1$s')].dataframe
-names['df_'+re.sub(r'\W','_','%1$s')]['Time'] = names['df_'+re.sub(r'\W','_','%1$s')]['Year'].map(str)
+names['epw_'+re.sub(r'\\W','_','%1$s')] = epw()
+names['epw_'+re.sub(r'\\W','_','%1$s')].read(r'%2$s')
+names['df_'+re.sub(r'\\W','_','%1$s')] = names['epw_'+re.sub(r'\\W','_','%1$s')].dataframe
+names['df_'+re.sub(r'\\W','_','%1$s')]['Time'] = names['df_'+re.sub(r'\\W','_','%1$s')]['Year'].map(str)
 for x in ['Month', 'Day']:
     # 增加Time列，将月/日补零
-    names['df_'+re.sub(r'\W','_','%1$s')]['Time'] += '-' + names['df_'+re.sub(r'\W','_','%1$s')][x].map(lambda x: str(x).zfill(2))
+    names['df_'+re.sub(r'\\W','_','%1$s')]['Time'] += '-' + names['df_'+re.sub(r'\\W','_','%1$s')][x].map(lambda x: str(x).zfill(2))
 # 处理24:00:00时间转换错误：ParserError: hour must be in 0..23
-names['df_'+re.sub(r'\W','_','%1$s')]['Time'] = pd.to_datetime(names['df_'+re.sub(r'\W','_','%1$s')]['Time']) + pd.to_timedelta(names['df_'+re.sub(r'\W','_','%1$s')]['Hour'].map(str) + ':' + names['df_'+re.sub(r'\W','_','%1$s')]['Minute'].map(str) + ':00')
+names['df_'+re.sub(r'\\W','_','%1$s')]['Time'] = pd.to_datetime(names['df_'+re.sub(r'\\W','_','%1$s')]['Time']) + pd.to_timedelta(names['df_'+re.sub(r'\\W','_','%1$s')]['Hour'].map(str) + ':' + names['df_'+re.sub(r'\\W','_','%1$s')]['Minute'].map(str) + ':00')
 " file-base-name (expand-file-name file-name))))
              ;; 导入py文件
              ((member (ignore-errors (downcase (file-name-extension file-name))) '("py" "pyc"))
@@ -151,8 +151,8 @@ names['df_'+re.sub(r'\W','_','%1$s')]['Time'] = pd.to_datetime(names['df_'+re.su
 if 'pd' not in dir():
     import pandas as pd
 names=locals()
-names['df_'+re.sub(r'\W','_','%s')]=pd.read_csv('%s', skipinitialspace=True, comment='#')
-names['df_'+re.sub(r'\W','_','%s')].columns = names['df_'+re.sub(r'\W','_','%s')].columns.str.strip()
+names['df_'+re.sub(r'\\W','_','%s')]=pd.read_csv('%s', skipinitialspace=True, comment='#')
+names['df_'+re.sub(r'\\W','_','%s')].columns = names['df_'+re.sub(r'\\W','_','%s')].columns.str.strip()
 " file-base-name (expand-file-name file-name) file-base-name file-base-name)))
              ;; 导入其他文件
              (t (let ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' '%s' | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
@@ -161,7 +161,7 @@ names['df_'+re.sub(r'\W','_','%s')].columns = names['df_'+re.sub(r'\W','_','%s')
 if not set(['pd', 'builtins']) < set(dir()):import pandas as pd;import builtins;
 exec(\"def is_number(s):\\n try:  float(s)\\n except:  return False\\n return True\")
 names=locals()
-names['df_'+re.sub(r'\W','_','%s')]=pd.read_csv('%s', header=None if builtins.any(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True, comment='#')
+names['df_'+re.sub(r'\\W','_','%s')]=pd.read_csv('%s', header=None if builtins.any(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True, comment='#')
 " file-base-name (expand-file-name file-name) header-line-string "\\\\s+"))))))
         (message "No python process found!" ))))
   (defun swint-python-load-mysql ()
@@ -185,7 +185,7 @@ if 'sql' not in dir():
     import sqlalchemy as sql
 conn = sql.create_engine('mysql+pymysql://%s:%s@localhost:3306/%s?charset=utf8')
 names=locals()
-names['df_'+re.sub(r'\W','_','%s_')+re.sub(r'\W','_','%s')] = pd.read_sql('%s', conn)
+names['df_'+re.sub(r'\\W','_','%s_')+re.sub(r'\\W','_','%s')] = pd.read_sql('%s', conn)
 " user pass database database table table)))
       (message "No python process found!")))
   (defun swint-python-insert-variables ()

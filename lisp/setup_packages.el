@@ -1425,8 +1425,10 @@ ORIG is the advised function, which is called with its ARGS."
   :config
   (define-key ellama-command-map (kbd "p") #'ellama-provider-select)
   (define-key ellama-command-map (kbd "d") #'ellama-define-word)
-  (setopt ellama-enable-keymap nil)
-  (setopt ellama-language "English")
+  (setopt ellama-enable-keymap nil
+          ellama-language "English"
+          ellama-major-mode 'org-mode
+          ellama-nick-prefix-depth 1)
   (require 'llm-ollama)
   (require 'llm-openai)
   (setopt llm-warn-on-nonfree nil)
@@ -1461,9 +1463,11 @@ ORIG is the advised function, which is called with its ARGS."
     "Generate name for ACTION by PROVIDER by getting first N words from PROMPT."
     (let* ((cleaned-prompt (replace-regexp-in-string "/" "_" prompt))
            (max-bytes 220)
-           (prompt-words (if (multibyte-string-p cleaned-prompt)
-                             (substring (string-as-multibyte (s-left max-bytes (string-as-unibyte cleaned-prompt))) 0 -2)
-                           (s-left max-bytes cleaned-prompt))))
+           (prompt-words (if (> (string-bytes cleaned-prompt) max-bytes)
+                             (if (multibyte-string-p cleaned-prompt)
+                                 (substring (string-as-multibyte (s-left max-bytes (string-as-unibyte cleaned-prompt))) 0 -2)
+                               (s-left max-bytes cleaned-prompt))
+                           cleaned-prompt)))
       (string-join
        (flatten-tree
         (list (split-string (format "%s" action) "-")
