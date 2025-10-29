@@ -551,7 +551,8 @@
       (call-interactively 'dired-ranger-copy)))
   (require 'helm)
   (advice-add 'dired-ranger--name-constructor :around #'(lambda (fn oldname) (if (equal current-prefix-arg '(16))
-                                                                                 (concat (dired-current-directory) (replace-regexp-in-string "/" "_" oldname))
+                                                                                 (concat (dired-current-directory)
+                                                                                         (replace-regexp-in-string "/" "_" (file-relative-name oldname (getenv "HOME"))))
                                                                                (funcall fn oldname))))
   (defvar helm-dired-ranger-map
     (let ((map (make-sparse-keymap)))
