@@ -494,30 +494,11 @@
 (use-package dired-async
   :diminish dired-async-mode
   :commands dired-async-mode
-  :init
-  (add-hook 'dired-mode-hook #'(lambda () (dired-async-mode 1)))
-  :config
-  (defun dired-do-copy/before (&optional arg)
-    "Redefine dired-do-copy to fix conflict between dired-async-mode and dired-sync-highlight."
-    (let* ((fn-list (dired-get-marked-files nil arg))
-           (fn-list-nodirectory (mapcar 'file-name-nondirectory fn-list))
-           (annotated-file-list (if (dired-k--parse-status t)
-                                    (hash-table-keys (dired-k--parse-status t))))
-           (fn-list-annotated (cl-remove-if-not (lambda (x)
-                                                  (member x annotated-file-list))
-                                                fn-list-nodirectory))
-           (annotation-storage-files
-            (remove nil (cl-loop for from in fn-list
-                                 collect (directory-files "~/org/annotated/" t
-                                                          (concat "annotated-("
-                                                                  (replace-regexp-in-string
-                                                                   "/" "_"
-                                                                   (substring-no-properties
-                                                                    (abbreviate-file-name from) 1))))))))
-      (when (or fn-list-annotated annotation-storage-files)
-        (dired-async-mode 0))))
-  (advice-add 'dired-do-copy :before #'dired-do-copy/before)
-  (advice-add 'dired-do-copy :after #'(lambda (&optional arg) (dired-async-mode 1))))
+  :bind (:map dired-mode-map
+              ("C" . dired-async-do-copy)
+              ("R" . dired-async-do-rename)
+              ("S" . dired-async-do-symlink)
+              ("H" . dired-async-do-hardlink)))
 ;; ================dired-async=================
 ;;; dired-narrow
 ;; ===============dired-narrow=================
@@ -550,7 +531,9 @@
       (dired-copy-filename-as-kill 0)
       (call-interactively 'dired-ranger-copy)))
   (require 'helm)
-  (advice-add 'dired-ranger--name-constructor :around #'(lambda (fn oldname) (if (equal current-prefix-arg '(16))
+  (advice-add 'dired-ranger--name-constructor :around #'(lambda (fn oldname) (if (or (equal (or current-prefix-arg
+                                                                                                helm-current-prefix-arg)
+                                                                                            '(16)))
                                                                                  (concat (dired-current-directory)
                                                                                          (replace-regexp-in-string "/" "_" (file-relative-name oldname (getenv "HOME"))))
                                                                                (funcall fn oldname))))
@@ -563,7 +546,7 @@
       (define-key map (kbd "M-S") #'(lambda () (interactive) (dired-ranger-operation 'dired-ranger-symlink)))
       map)
     "Keymap for `swint-dired-ranger'.")
-  ;; 由于dired-async对dired-create-files增加advice，导致复制多个文件时加C-u只保留第1个
+  ;; dired-async-mode对dired-create-files增加advice，导致复制多个文件时加C-u只保留第1个
   (defun swint-dired-ranger ()
     (interactive)
     (helm-comp-read "Ranger: " (dired-ranger-get-files)
