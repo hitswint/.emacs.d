@@ -582,6 +582,12 @@
       (dired-create-files #'make-symbolic-link "Symlink" files
                           #'dired-ranger--name-constructor ?C)
       (unless arg (ring-remove dired-ranger-copy-ring 0))))
+  ;; 在dired-subtree中操作时，不会自动更新
+  (dolist (func '(dired-ranger-paste
+                  dired-ranger-move
+                  dired-ranger-relsymlink
+                  dired-ranger-symlink))
+    (advice-add func :after #'(lambda (arg) (revert-buffer))))
   (defun swint-dired-clipboard-copy (&optional filetocopy) ;导致界面卡死，可粘贴图片；C-g杀死xclip进程，无法复制
     (interactive)
     (let ((filename (or filetocopy
