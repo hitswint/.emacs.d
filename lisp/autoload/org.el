@@ -186,7 +186,7 @@
                            (format "sqlite3 %s \"select currentPage from tabs_v5 where filePath=\\\"%s\\\"\"" "~/.local/share/qpdfview/qpdfview/database" (expand-file-name annotate-file)))))
          (eaf-pdf-page (when-let ((annotate-buffer (eaf-interleave--find-buffer (expand-file-name annotate-file))))
                          (with-current-buffer annotate-buffer
-                           (eaf-call-sync "execute_function" eaf--buffer-id "current_page"))))
+                           (eaf-call-sync "execute_function" eaf--buffer-id "get_current_page"))))
          (current-page (or (s-presence eaf-pdf-page) (s-presence qpdfview-page))))
     (if (or (string-empty-p current-page) (null current-page))
         (message "No file annotated or not opened in qpdfview.")

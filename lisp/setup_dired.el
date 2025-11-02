@@ -12,8 +12,8 @@
           dired-omit-extensions nil))
   (use-package dired-filetype-face)
   (add-hook 'dired-mode-hook 'dired-hide-details-mode)
-  (setq dired-recursive-copies 'top)
-  (setq dired-recursive-deletes 'always)
+  (setq dired-recursive-copies 'always
+        dired-recursive-deletes 'always)
   (setq dired-mouse-drag-files t)
   (setq dired-auto-revert-buffer t) ;使用dired/dired-other-window/dired-other-frame时更新，与auto-revert-mode不同
   (advice-add 'dired-buffer-stale-p :around #'(lambda (fn &rest args) ;只有dired可见时才启用auto-revert-mode更新
