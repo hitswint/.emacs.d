@@ -382,6 +382,14 @@
               (unless (derived-mode-p 'LaTeX-mode 'org-mode)
                 (outshine-mode))))
   :config
+  (set-face-attribute 'outshine-level-1 nil :inherit 'org-level-1)
+  (set-face-attribute 'outshine-level-2 nil :inherit 'org-level-2)
+  (set-face-attribute 'outshine-level-3 nil :inherit 'org-level-3)
+  (set-face-attribute 'outshine-level-4 nil :inherit 'org-level-4)
+  (set-face-attribute 'outshine-level-5 nil :inherit 'org-level-5)
+  (set-face-attribute 'outshine-level-6 nil :inherit 'org-level-6)
+  (set-face-attribute 'outshine-level-7 nil :inherit 'org-level-7)
+  (set-face-attribute 'outshine-level-8 nil :inherit 'org-level-8)
   ;; 与lsp-bridge冲突，acm-filter依赖self-insert-command，但outshine对其重新绑定
   (setq outshine-use-speed-commands nil)
   (define-key outshine-mode-map (vector 'remap 'self-insert-command) nil)
