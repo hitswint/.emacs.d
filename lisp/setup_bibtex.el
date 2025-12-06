@@ -303,7 +303,9 @@
         ebib-index-default-sort '("timestamp" . descend)
         ebib-index-window-size 30
         ebib-expand-strings t
-        ebib-filename-separator ";")
+        ebib-filename-separator ";"
+        ebib-index-mode-line nil
+        ebib-entry-mode-line nil)
   (defun ebib-create-org-identifier/override (key _)
     (format ":Custom_ID: %s" key))
   (advice-add 'ebib-create-org-identifier :override #'ebib-create-org-identifier/override)
@@ -313,7 +315,7 @@
                          (let* ((key (ebib--get-key-at-point))
                                 (file (ebib-get-field-value "file" key ebib--cur-db 'noerror 'unbraced 'xref))
                                 (num (if (numberp arg) arg nil))
-                                (file-full-path (ebib--expand-file-name (ebib--select-file file num key))))
+                                (file-full-path (ebib--expand-file-name (ebib--select-file file num key) ebib-file-search-dirs)))
                            (if (not (file-exists-p file-full-path))
                                (error "[Ebib] File not found: `%s'" (funcall ebib-file-name-mod-function file-full-path nil))
                              ;; (ebib-lower)
