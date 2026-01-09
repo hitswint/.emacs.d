@@ -153,7 +153,9 @@
                         (setq-local header-line-format nil))
               (t (goto-char orig-point)
                  (message "Cannot find any note entry for current pdf")
-                 (select-window eaf-pdf-win)))))))
+                 (select-window eaf-pdf-win))))
+      (when new-note
+        (swint-annotate-generic-new)))))
 ;;;###autoload
 (defun org-eaf-noter-sync-prev ()
   (interactive)
@@ -165,13 +167,8 @@
 ;;;###autoload
 (defun org-eaf-noter-new ()
   (interactive)
-  (org-eaf-noter-sync 'prev t)
-  (swint-annotate-generic-new))
+  (org-eaf-noter-sync 'prev t))
 ;; ==============org-eaf-pdf-sync=============
-;;; mobileorg
-;; =================mobileorg=================
-
-;; =================mobileorg=================
 ;;; swint-annotate-generic-new
 ;; ==========swint-annotate-generic-new=======
 ;;;###autoload
