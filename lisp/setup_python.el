@@ -154,6 +154,16 @@ names=locals()
 names['df_'+re.sub(r'\\W','_','%s')]=pd.read_csv('%s', skipinitialspace=True, comment='#')
 names['df_'+re.sub(r'\\W','_','%s')].columns = names['df_'+re.sub(r'\\W','_','%s')].columns.str.strip()
 " file-base-name (expand-file-name file-name) file-base-name file-base-name)))
+             ;; 导入geojson文件
+             ((member (ignore-errors (downcase (file-name-extension file-name))) '("geojson"))
+              (python-shell-send-string
+               (format "
+if 'gpd' not in dir():
+    import geopandas as gpd
+names=locals()
+names['gdf_'+re.sub(r'\\W','_','%s')]=gpd.read_file('%s')
+names['gdf_'+re.sub(r'\\W','_','%s')].columns = names['gdf_'+re.sub(r'\\W','_','%s')].columns.str.strip()
+" file-base-name (expand-file-name file-name) file-base-name file-base-name)))
              ;; 导入其他文件
              (t (let ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' '%s' | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
                   (python-shell-send-string
