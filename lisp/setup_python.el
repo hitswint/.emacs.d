@@ -155,7 +155,7 @@ names['df_'+re.sub(r'\\W','_','%s')]=pd.read_csv('%s', skipinitialspace=True, co
 names['df_'+re.sub(r'\\W','_','%s')].columns = names['df_'+re.sub(r'\\W','_','%s')].columns.str.strip()
 " file-base-name (expand-file-name file-name) file-base-name file-base-name)))
              ;; 导入geojson文件
-             ((member (ignore-errors (downcase (file-name-extension file-name))) '("geojson"))
+             ((member (ignore-errors (downcase (file-name-extension file-name))) '("geojson" "shp"))
               (python-shell-send-string
                (format "
 if 'gpd' not in dir():
