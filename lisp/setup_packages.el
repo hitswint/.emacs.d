@@ -353,7 +353,7 @@
 ;;; multifiles
 ;; ===================multifiles===================
 (use-package multifiles
-  :bind ("M-g m" . mf/mirror-region-in-multifile))
+  :bind ("M-g M-m" . mf/mirror-region-in-multifile))
 ;; ===================multifiles===================
 ;;; ztree
 ;; =====================ztree======================
@@ -1532,4 +1532,53 @@ ORIG is the advised function, which is called with its ARGS."
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode))
 ;; =====================nov========================
+;;; chunk-edit
+;; ==================chunk-edit====================
+(use-package chunk-edit
+  :load-path "repos/chunk-edit/"
+  :bind (("M-g m m" . chunk-edit)
+         ("M-g m f" . chunk-edit-insert-file)
+         ("M-g m r" . chunk-edit-insert-region)
+         ("M-g M" . chunk-edit-openfoam))
+  :config
+  (smartrep-define-key chunk-edit-mode-map "M-s"
+    '(("p" . chunk-edit-previous-chunk)
+      ("n" . chunk-edit-next-chunk)))
+  (setq chunk-edit-buffer-name "*chunk-edit*")
+  (defun chunk-edit-openfoam ()
+    (interactive)
+    (when (buffer-live-p (get-buffer chunk-edit-buffer-name))
+      (with-current-buffer chunk-edit-buffer-name
+        (chunk-edit-quit)))
+    (let ((default-directory (helm-current-directory)))
+      (chunk-edit)
+      (cl-loop for dir in '("0.orig" "constant" "system")
+               when (file-directory-p dir)
+               do (let ((file-list (directory-files dir t "^[^.]")))
+                    (cl-loop for file in file-list
+                             when (and (< (file-attribute-size (file-attributes file)) 1000000)
+                                       (not (file-directory-p file)))
+                             do (progn (chunk-edit-insert-file file)
+                                       (kill-buffer (get-file-buffer file))))))))
+  (defun chunk-edit-imenu-create-index-function ()
+    (interactive)
+    (setq imenu--index-alist
+          (let (chunk-list)
+            (save-excursion
+              (goto-char (point-min))
+              (chunk-edit-next-chunk)
+              (while-let ((overlay (chunk-edit--find-overlay-at-point)))
+                (let* ((chunk (overlay-get overlay 'chunk))
+                       (chunk-name (or (plist-get chunk :path)
+                                       (buffer-name (plist-get chunk :buffer)))))
+                  (push (list chunk-name (point) #'chunk-edit-imenu-go-to-index nil) chunk-list))
+                (chunk-edit-next-chunk))
+              (nreverse chunk-list)))))
+  (defun chunk-edit-imenu-go-to-index (_chunk-name point _arg)
+    (goto-char point))
+  (defun chunk-edit-imenu-setup ()
+    (make-local-variable 'imenu-create-index-function)
+    (setq imenu-create-index-function 'chunk-edit-imenu-create-index-function))
+  (add-hook 'chunk-edit-mode-hook 'chunk-edit-imenu-setup))
+;; ==================chunk-edit====================
 (provide 'setup_packages)
