@@ -1544,6 +1544,8 @@ ORIG is the advised function, which is called with its ARGS."
   (smartrep-define-key chunk-edit-mode-map "M-s"
     '(("p" . chunk-edit-previous-chunk)
       ("n" . chunk-edit-next-chunk)))
+  (define-key chunk-edit-mode-map (vector 'remap 'save-buffer) 'chunk-edit-save-chunk-at-point)
+  (define-key chunk-edit-mode-map (vector 'remap 'save-some-buffers) 'chunk-edit-save-all-chunks)
   (setq chunk-edit-buffer-name "*chunk-edit*")
   (defun chunk-edit-openfoam ()
     (interactive)
