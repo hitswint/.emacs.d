@@ -62,14 +62,15 @@
       (error nil)))
   (defun swint-python-load-file (&optional target-file)
     (interactive)
-    (let ((file-name (if (eq major-mode 'dired-mode) (dired-get-filename) (or target-file (buffer-file-name)))))
+    (let ((files-list (if (eq major-mode 'dired-mode) (dired-get-marked-files) (list (or target-file (buffer-file-name))))))
       (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
-          (let ((file-base-name (file-name-base file-name)))
-            (cond
-             ;; 导入Excel文件
-             ((member (ignore-errors (downcase (file-name-extension file-name))) (list "xls" "xlsx"))
-              (python-shell-send-string
-               (format "
+          (cl-loop for file-name in files-list
+                   do (let ((file-base-name (file-name-base file-name)))
+                        (cond
+                         ;; 导入Excel文件
+                         ((member (ignore-errors (downcase (file-name-extension file-name))) (list "xls" "xlsx"))
+                          (python-shell-send-string
+                           (format "
 if 'pd' not in dir():
     import pandas as pd
 if 'builtins' not in dir():
@@ -91,15 +92,15 @@ for k,v in names['dict_'+re.sub(r'\\W','_','%s')].items():
         # df = df.columns.to_frame().T.append(df, ignore_index=True)
         # df.columns = range(len(df.columns))
 " file-base-name (expand-file-name file-name) file-base-name file-base-name)))
-             ;; 导入sqlite文件
-             ;; sql-sqlite(进入命令行) / sqlite-mode-open-file(展示表格)
-             ((member (ignore-errors (downcase (file-name-extension file-name))) '("db" "sdb" "sqlite" "db3" "s3db" "sqlite3" "sl3" "db2" "s2db" "sqlite2" "sl2"))
-              (let ((table (helm-comp-read "Table to select: "
-                                           (split-string (shell-command-to-string (format "sqlite3 \"%s\" \".table\"" (expand-file-name file-name)))
-                                                         "[ \t\n]" t "[ \t\n]+")
-                                           :buffer "*helm python plot data-swint*")))
-                (python-shell-send-string
-                 (format "
+                         ;; 导入sqlite文件
+                         ;; sql-sqlite(进入命令行) / sqlite-mode-open-file(展示表格)
+                         ((member (ignore-errors (downcase (file-name-extension file-name))) '("db" "sdb" "sqlite" "db3" "s3db" "sqlite3" "sl3" "db2" "s2db" "sqlite2" "sl2"))
+                          (let ((table (helm-comp-read "Table to select: "
+                                                       (split-string (shell-command-to-string (format "sqlite3 \"%s\" \".table\"" (expand-file-name file-name)))
+                                                                     "[ \t\n]" t "[ \t\n]+")
+                                                       :buffer "*helm python plot data-swint*")))
+                            (python-shell-send-string
+                             (format "
 if 'pd' not in dir():
     import pandas as pd
 if 'sql' not in dir():
@@ -108,10 +109,10 @@ conn = sql.create_engine('sqlite:///%s')
 names=locals()
 names['df_'+re.sub(r'\\W','_','%s_')+re.sub(r'\\W','_','%s')] = pd.read_sql('%s', conn)
 " (expand-file-name file-name) file-base-name table table))))
-             ;; 需修改esoreader.py源文件，data = {v[1:]: self.data[self.dd.index[v]] for v in variables} -> data = {':'.join(filter(None, v[1:])): self.data[self.dd.index[v]] for v in variables}
-             ((member (ignore-errors (downcase (file-name-extension file-name))) '("eso" "mtr"))
-              (python-shell-send-string
-               (format "
+                         ;; 需修改esoreader.py源文件，data = {v[1:]: self.data[self.dd.index[v]] for v in variables} -> data = {':'.join(filter(None, v[1:])): self.data[self.dd.index[v]] for v in variables}
+                         ((member (ignore-errors (downcase (file-name-extension file-name))) '("eso" "mtr"))
+                          (python-shell-send-string
+                           (format "
 if 'pd' not in dir():
     import pandas as pd
 if 'esoreader' not in dir():
@@ -122,10 +123,10 @@ for freq in ['TimeStep', 'Hourly', 'Daily', 'Monthly', 'Annual', 'RunPeriod']:
     if esofile.find_variable('', frequency=freq):
         names['df_'+re.sub(r'\\W','_','%s_')+freq] = esofile.to_frame('', frequency=freq)
 " (expand-file-name file-name) file-base-name)))
-             ;; 导入epw文件
-             ((member (ignore-errors (downcase (file-name-extension file-name))) '("epw"))
-              (python-shell-send-string
-               (format "
+                         ;; 导入epw文件
+                         ((member (ignore-errors (downcase (file-name-extension file-name))) '("epw"))
+                          (python-shell-send-string
+                           (format "
 if 'pd' not in dir():
     import pandas as pd
 if 'epw' not in dir():
@@ -141,38 +142,38 @@ for x in ['Month', 'Day']:
 # 处理24:00:00时间转换错误：ParserError: hour must be in 0..23
 names['df_'+re.sub(r'\\W','_','%1$s')]['Time'] = pd.to_datetime(names['df_'+re.sub(r'\\W','_','%1$s')]['Time']) + pd.to_timedelta(names['df_'+re.sub(r'\\W','_','%1$s')]['Hour'].map(str) + ':' + names['df_'+re.sub(r'\\W','_','%1$s')]['Minute'].map(str) + ':00')
 " file-base-name (expand-file-name file-name))))
-             ;; 导入py文件
-             ((member (ignore-errors (downcase (file-name-extension file-name))) '("py" "pyc"))
-              (python-shell-send-file file-name))
-             ;; 导入csv文件
-             ((member (ignore-errors (downcase (file-name-extension file-name))) '("csv"))
-              (python-shell-send-string
-               (format "
+                         ;; 导入py文件
+                         ((member (ignore-errors (downcase (file-name-extension file-name))) '("py" "pyc"))
+                          (python-shell-send-file file-name))
+                         ;; 导入csv文件
+                         ((member (ignore-errors (downcase (file-name-extension file-name))) '("csv"))
+                          (python-shell-send-string
+                           (format "
 if 'pd' not in dir():
     import pandas as pd
 names=locals()
 names['df_'+re.sub(r'\\W','_','%s')]=pd.read_csv('%s', skipinitialspace=True, comment='#')
 names['df_'+re.sub(r'\\W','_','%s')].columns = names['df_'+re.sub(r'\\W','_','%s')].columns.str.strip()
 " file-base-name (expand-file-name file-name) file-base-name file-base-name)))
-             ;; 导入geojson文件
-             ((member (ignore-errors (downcase (file-name-extension file-name))) '("geojson" "shp"))
-              (python-shell-send-string
-               (format "
+                         ;; 导入geojson文件
+                         ((member (ignore-errors (downcase (file-name-extension file-name))) '("geojson" "shp"))
+                          (python-shell-send-string
+                           (format "
 if 'gpd' not in dir():
     import geopandas as gpd
 names=locals()
 names['gdf_'+re.sub(r'\\W','_','%s')]=gpd.read_file('%s')
 names['gdf_'+re.sub(r'\\W','_','%s')].columns = names['gdf_'+re.sub(r'\\W','_','%s')].columns.str.strip()
 " file-base-name (expand-file-name file-name) file-base-name file-base-name)))
-             ;; 导入其他文件
-             (t (let ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' '%s' | awk 'NR==1{printf $0}'" file-name)))) ;先排除#注释行再返回无回车的第1行
-                  (python-shell-send-string
-                   (format "
+                         ;; 导入其他文件
+                         (t (let ((header-line-string (shell-command-to-string (format "awk '!/^($|#)/' '%s' | awk 'NR==1{printf $0}'" file-name))))  ;先排除#注释行再返回无回车的第1行
+                              (python-shell-send-string
+                               (format "
 if not set(['pd', 'builtins']) < set(dir()):import pandas as pd;import builtins;
 exec(\"def is_number(s):\\n try:  float(s)\\n except:  return False\\n return True\")
 names=locals()
 names['df_'+re.sub(r'\\W','_','%s')]=pd.read_csv('%s', header=None if builtins.any(is_number(ele) for ele in '%s'.split()) else 'infer', sep='%s', skipinitialspace=True, comment='#')
-" file-base-name (expand-file-name file-name) header-line-string "\\\\s+"))))))
+" file-base-name (expand-file-name file-name) header-line-string "\\\\s+")))))))
         (message "No python process found!" ))))
   (defun swint-python-load-mysql ()
     (interactive)

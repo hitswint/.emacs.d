@@ -534,8 +534,13 @@
   (advice-add 'dired-ranger--name-constructor :around #'(lambda (fn oldname) (if (or (equal (or current-prefix-arg
                                                                                                 helm-current-prefix-arg)
                                                                                             '(16)))
-                                                                                 (concat (dired-current-directory)
-                                                                                         (replace-regexp-in-string "/" "_" (file-relative-name oldname (getenv "HOME"))))
+                                                                                 (let ((prefix (or (unless (funcall projectile-ignored-project-function oldname)
+                                                                                                     (ignore-errors (projectile-project-root oldname)))
+                                                                                                   (if (file-in-directory-p oldname (getenv "HOME"))
+                                                                                                       (getenv "HOME")
+                                                                                                     "/"))))
+                                                                                   (concat (dired-current-directory)
+                                                                                           (replace-regexp-in-string "/" "_" (file-relative-name (file-truename oldname) prefix))))
                                                                                (funcall fn oldname))))
   (defvar helm-dired-ranger-map
     (let ((map (make-sparse-keymap)))

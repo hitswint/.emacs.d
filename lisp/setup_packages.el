@@ -1573,7 +1573,7 @@ ORIG is the advised function, which is called with its ARGS."
                 (let* ((chunk (overlay-get overlay 'chunk))
                        (chunk-name (if-let ((file-path (plist-get chunk :path)))
                                        (if-let ((project-root (unless (funcall projectile-ignored-project-function default-directory)
-                                                                (projectile-project-root))))
+                                                                (ignore-errors (projectile-project-root)))))
                                            (file-relative-name file-path project-root)
                                          file-path)
                                      (buffer-name (plist-get chunk :buffer)))))

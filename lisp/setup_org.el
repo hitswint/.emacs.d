@@ -246,7 +246,8 @@
                                                  (swint-python-load-file (org-table-make-csv))))
     (defun org-table-make-csv ()
       (when (org-at-table-p)
-        (let ((export-file (expand-file-name "org_table.csv" temporary-file-directory)))
+        (let ((export-file (expand-file-name (concat (make-temp-name (concat (buffer-name) "_")) ".csv")
+                                             temporary-file-directory)))
           (org-table-export export-file "orgtbl-to-csv")
           export-file)))
     ;; S-<return> 拷贝当前列之上的行，并递增数字
