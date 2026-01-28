@@ -1594,4 +1594,25 @@ ORIG is the advised function, which is called with its ARGS."
     (setq imenu-create-index-function 'chunk-edit-imenu-create-index-function))
   (add-hook 'chunk-edit-mode-hook 'chunk-edit-imenu-setup))
 ;; ==================chunk-edit====================
+;;; imenu-list
+;; ==================imenu-list====================
+(use-package imenu-list
+  :bind (("M-s M-i" . imenu-list)
+         ("M-s M-I" . imenu-list-smart-toggle))
+  :config
+  (setq imenu-list-focus-after-activation t)
+  (defvar imenu-list-display-timer nil)
+  (defun imenu-list-display-with-idle ()
+    (unless (timerp imenu-list-display-timer)
+      (setq imenu-list-display-timer
+            (run-with-idle-timer
+             0.05 nil (lambda ()
+                        (unless (imenu--subalist-p (imenu-list--find-entry))
+                          (imenu-list-display-entry))
+                        (when (timerp imenu-list-display-timer)
+                          (cancel-timer imenu-list-display-timer)
+                          (setq imenu-list-display-timer nil)))))))
+  (bind-key "p" #'(lambda () (interactive) (previous-line) (imenu-list-display-with-idle)) imenu-list-major-mode-map)
+  (bind-key "n" #'(lambda () (interactive) (next-line) (imenu-list-display-with-idle)) imenu-list-major-mode-map))
+;; ==================imenu-list====================
 (provide 'setup_packages)
