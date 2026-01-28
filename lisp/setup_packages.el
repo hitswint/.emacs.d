@@ -1600,6 +1600,7 @@ ORIG is the advised function, which is called with its ARGS."
   :bind (("M-s M-i" . imenu-list)
          ("M-s M-I" . imenu-list-smart-toggle))
   :config
+  (add-hook 'imenu-list-major-mode-hook #'(lambda () (setq truncate-lines t)))
   (setq imenu-list-focus-after-activation t)
   (defvar imenu-list-display-timer nil)
   (defun imenu-list-display-with-idle ()
