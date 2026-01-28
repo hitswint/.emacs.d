@@ -1608,11 +1608,11 @@ ORIG is the advised function, which is called with its ARGS."
       (setq imenu-list-display-timer
             (run-with-idle-timer
              0.05 nil (lambda ()
-                        (unless (imenu--subalist-p (imenu-list--find-entry))
-                          (imenu-list-display-entry))
                         (when (timerp imenu-list-display-timer)
                           (cancel-timer imenu-list-display-timer)
-                          (setq imenu-list-display-timer nil)))))))
+                          (setq imenu-list-display-timer nil))
+                        (unless (or (not (buffer-live-p imenu-list--displayed-buffer)) (imenu--subalist-p (imenu-list--find-entry)))
+                          (imenu-list-display-entry)))))))
   (bind-key "p" #'(lambda () (interactive) (previous-line) (imenu-list-display-with-idle)) imenu-list-major-mode-map)
   (bind-key "n" #'(lambda () (interactive) (next-line) (imenu-list-display-with-idle)) imenu-list-major-mode-map))
 ;; ==================imenu-list====================
