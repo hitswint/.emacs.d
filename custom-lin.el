@@ -6,7 +6,7 @@
  '(package-selected-packages
    '(ac-html-bootstrap ac-ispell ac-math academic-phrases
                        ace-jump-helm-line ace-link ace-pinyin
-                       aggressive-indent all-the-icons
+                       agent-shell aggressive-indent all-the-icons
                        all-the-icons-dired anchored-transpose
                        arduino-mode auctex-latexmk auto-complete-auctex
                        auto-complete-c-headers auto-complete-clang
@@ -32,21 +32,22 @@
                        helm-gtags helm-mu helm-pass helm-projectile
                        helm-swoop helm-unicode highlight-parentheses
                        highlight-symbol hungry-delete imenu-anywhere
-                       imenu-list ivy-bibtex ivy-hydra jedi jupyter
-                       key-chord lacarte lingva magit markdown-mode
-                       matlab-mode meghanada modelica-mode mu4e-alert
-                       mu4e-views multifiles multiple-cursors names
-                       neotree nov operate-on-number org-appear
-                       org-brain org-noter org-pdftools outline-magic
-                       outshine ox-pandoc paredit-everywhere pass
-                       pdf-tools pdfgrep peep-dired pinyin-search
-                       posframe pyim pyim-basedict quickrun
-                       rainbow-delimiters rainbow-mode readline-complete
-                       recentf-ext restclient rg skewer-mode smartrep
-                       sudo-edit tangotango-theme term-keys
-                       unicode-escape vcard vimish-fold visible-mark
-                       visual-regexp vlf volatile-highlights vundo w3m
-                       web-mode window-numbering wrap-region yaml-mode
+                       imenu-list inheritenv ivy-bibtex ivy-hydra jedi
+                       jupyter key-chord lacarte lingva magit
+                       markdown-mode matlab-mode meghanada modelica-mode
+                       msgpack mu4e-alert mu4e-views multifiles
+                       multiple-cursors names neotree nov
+                       operate-on-number org-appear org-brain org-noter
+                       org-pdftools outline-magic outshine ox-pandoc
+                       paredit-everywhere pass pdf-tools pdfgrep
+                       peep-dired pinyin-search posframe pyim
+                       pyim-basedict quickrun rainbow-delimiters
+                       rainbow-mode readline-complete recentf-ext
+                       restclient rg skewer-mode smartrep sudo-edit
+                       tangotango-theme term-keys unicode-escape vcard
+                       vimish-fold visible-mark visual-regexp vlf
+                       volatile-highlights vterm vundo w3m web-mode
+                       window-numbering wrap-region yaml-mode
                        yasnippet-snippets youdao-dictionary ztree)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

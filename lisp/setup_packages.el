@@ -28,6 +28,7 @@
   :init
   (setq recentf-exclude (list "^/tmp/"
                               "^/ssh:"
+                              "^/rpc:"
                               "\\.?ido\\.last$"
                               "\\.revive$"
                               "/TAGS$"
@@ -1412,121 +1413,6 @@ ORIG is the advised function, which is called with its ARGS."
     (interactive)
     (dogears-move-active-buffer 'forward)))
 ;; ===================dogears======================
-;;; ellama
-;; ====================ellama======================
-(use-package ellama
-  :commands ellama-translate-at-point
-  :bind-keymap ("M-E" . ellama-command-map)
-  :init
-  (add-hook 'ellama-session-mode-hook #'(lambda ()
-                                          (setq-local backup-inhibited 1)
-                                          (setq-local auto-save-default nil)
-                                          (auto-save-mode -1)))
-  :config
-  (define-key ellama-command-map (kbd "p") #'ellama-provider-select)
-  (define-key ellama-command-map (kbd "d") #'ellama-define-word)
-  (setopt ellama-enable-keymap nil
-          ellama-language "English"
-          ellama-major-mode 'org-mode
-          ellama-nick-prefix-depth 1)
-  (require 'llm-ollama)
-  (require 'llm-openai)
-  (setopt llm-warn-on-nonfree nil)
-  (setopt ellama-providers `(("Qwen-DS-v3" . ,(make-llm-openai-compatible
-                                               :key (get-auth-pass "Qwen")
-                                               :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
-                                               :chat-model "deepseek-v3.1"))
-                             ("Qwen-Max" . ,(make-llm-openai-compatible
-                                             :key (get-auth-pass "Qwen")
-                                             :url "https://dashscope.aliyuncs.com/compatible-mode/v1"
-                                             :chat-model "qwen3-max"))
-                             ("DeepSeek-v3" . ,(make-llm-openai-compatible
-                                                :key (get-auth-pass "DeepSeek")
-                                                :url "https://api.deepseek.com/v1"
-                                                :chat-model "deepseek-chat"))
-                             ("DeepSeek-r1" . ,(make-llm-openai-compatible
-                                                :key (get-auth-pass "DeepSeek")
-                                                :url "https://api.deepseek.com/v1"
-                                                :chat-model "deepseek-reasoner"))))
-  (setopt ellama-provider (cdar ellama-providers))
-  (setq ellama-naming-scheme 'ellama-generate-name-by-bytes)
-  (defun ellama-generate-name-by-bytes (provider action prompt)
-    "Generate name for ACTION by PROVIDER by getting first N words from PROMPT."
-    (let* ((cleaned-prompt (replace-regexp-in-string "\\(/\\|\n+[ \t]*\\)" "_" prompt))
-           (max-bytes 218)
-           (prompt-words (if (> (string-bytes cleaned-prompt) max-bytes)
-                             (if (multibyte-string-p cleaned-prompt)
-                                 (substring (string-as-multibyte (s-left max-bytes (string-as-unibyte cleaned-prompt))) 0 -2)
-                               (s-left max-bytes cleaned-prompt))
-                           cleaned-prompt)))
-      (string-join
-       (flatten-tree
-        (list (split-string (format "%s" action) "-")
-              prompt-words
-              (format "(%s)" (llm-name provider))))
-       " ")))
-  (defun ellama-translate-at-point (&optional _word)
-    (interactive)
-    (let* ((word (or _word (swint-get-words-at-point)))
-           (ellama-language (if (string-match-p "\\cC" word) "English" "Chinese"))
-           (ellama-translation-template "Translation to %s: %s")
-           (ellama-provider (cdar ellama-providers)))
-      (ellama-instant-to-posframe
-       (format ellama-translation-template
-               ellama-language word ellama-language)
-       :provider ellama-translation-provider)))
-  (defun ellama-instant-to-posframe (prompt &rest args)
-    (let* ((provider (or (plist-get args :provider)
-                         ellama-provider))
-           (buffer-name (ellama-generate-name provider real-this-command prompt))
-           (buffer (get-buffer-create (if (get-buffer buffer-name)
-                                          (make-temp-name (concat buffer-name " "))
-                                        buffer-name)))
-           filter)
-      (with-current-buffer buffer
-        (funcall ellama-major-mode)
-        (when (derived-mode-p 'org-mode)
-          (setq filter 'ellama--translate-markdown-to-org-filter)))
-      (ellama-stream prompt
-                     :buffer buffer
-                     :filter filter
-                     :provider provider)
-      (if (not (posframe-workable-p))
-          (display-buffer buffer)
-        (posframe-show buffer
-                       :border-color "red"
-                       :border-width 2
-                       :background-color "black"
-                       :width (window-width)
-                       :height (/ (window-height) 2))
-        (posframe-scroll-or-switch buffer))))
-  (defun ellama-get-pdf-text ()
-    (shell-command-to-string (format "pdftotext -l %s -nopgbrk -q -- \"%s\" - | fmt -w %s"
-                                     (if (derived-mode-p 'pdf-view-mode)
-                                         (pdf-view-current-page)
-                                       (eaf-call-sync "execute_function" eaf--buffer-id "current_page"))
-                                     (or (buffer-file-name)
-                                         (bound-and-true-p eaf--buffer-url))
-                                     fill-column)))
-  (defun ellama-summarize/around (fn)
-    (interactive)
-    (if (derived-mode-p 'pdf-view-mode 'eaf-mode)
-        (let ((text (or (s-presence (swint-get-words-at-point))
-                        (ellama-get-pdf-text))))
-          (ellama-instant (format ellama-summarize-prompt-template text)))
-      (funcall fn)))
-  (advice-add 'ellama-summarize :around #'ellama-summarize/around)
-  (defun ellama-ask-about/around (fn &rest args)
-    (interactive)
-    (if (derived-mode-p 'pdf-view-mode 'eaf-mode)
-        (let ((input (read-string "Ask ellama about this text: "))
-              (content (or (s-presence (swint-get-words-at-point))
-                           (ellama-get-pdf-text))))
-          (ellama-context-element-add (ellama-context-element-text :content content))
-          (ellama-chat input))
-      (apply fn args)))
-  (advice-add 'ellama-ask-about :around #'ellama-ask-about/around))
-;; ====================ellama======================
 ;;; nov
 ;; =====================nov========================
 (use-package nov
@@ -1613,4 +1499,12 @@ ORIG is the advised function, which is called with its ARGS."
   (bind-key "p" #'(lambda () (interactive) (previous-line) (imenu-list-display-with-idle)) imenu-list-major-mode-map)
   (bind-key "n" #'(lambda () (interactive) (next-line) (imenu-list-display-with-idle)) imenu-list-major-mode-map))
 ;; ==================imenu-list====================
+;;; tramp-rpc
+;; ==================tramp-rpc=====================
+(use-package tramp-rpc
+  :load-path "repos/emacs-tramp-rpc/lisp/"
+  :after tramp
+  :config
+  (setq tramp-rpc-magit-optimize nil))
+;; ==================tramp-rpc=====================
 (provide 'setup_packages)

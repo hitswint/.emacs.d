@@ -50,3 +50,7 @@
 /ellama-sessions/
 /logs/
 /nov-places
+/ellama-providers.el
+/projects
+/.agent-shell/
+/tramp-rpc/

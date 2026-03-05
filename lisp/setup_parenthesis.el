@@ -169,6 +169,7 @@
   (add-hook 'text-mode-hook 'rainbow-delimiters-mode)
   ;; 在org-mode中打开rainbow会让org本身的highlight失效
   (add-hook 'org-mode-hook 'rainbow-delimiters-mode-disable)
+  (add-hook 'chunk-edit-mode-hook 'rainbow-delimiters-mode-disable)
   :config
   (set-face-attribute 'rainbow-delimiters-depth-1-face nil :foreground "yellow")
   (set-face-attribute 'rainbow-delimiters-depth-2-face nil :foreground "green")

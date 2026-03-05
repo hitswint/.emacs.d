@@ -66,6 +66,7 @@
   (require 'setup_windows)
   (require 'setup_completion)
   (require 'setup_shell)
+  (require 'setup_ai)
   (require 'setup_packages)
   (condition-case-unless-debug ex
       (if (file-exists-p doom-autoload-file)
