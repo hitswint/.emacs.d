@@ -394,6 +394,18 @@
          (ebib-db-set-filter `(contains collection-key regexp) ebib--cur-db)
          (ebib--update-buffers))
         (default
-         (beep))))))
+         (beep)))))
+  (defun ebib-copy-title-as-kill ()
+    "Copy the key of the current entry to the kill ring."
+    (interactive)
+    (kill-new (ebib-create-org-title (ebib--get-key-at-point) ebib--cur-db))
+    (message "Entry title copied to kill ring."))
+  (defun ebib-copy-doi-as-kill ()
+    "Copy the key of the current entry to the kill ring."
+    (interactive)
+    (kill-new (ebib-get-field-value "doi" (ebib--get-key-at-point) ebib--cur-db 'noerror 'unbraced 'xref))
+    (message "Entry doi copied to kill ring."))
+  (define-key ebib-copy-map "t" #'ebib-copy-title-as-kill)
+  (define-key ebib-copy-map "d" #'ebib-copy-doi-as-kill))
 ;; =====================ebib=======================
 (provide 'setup_bibtex)
