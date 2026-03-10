@@ -1,8 +1,7 @@
 ;;; shell
 ;; =====================shell======================
 (use-package shell
-  :bind (("M-o s" . shell)
-         ("M-o S" . term))
+  :bind ("M-o M-S" . shell)
   ;; :init
   ;; 使用zsh -ic无法加载alias，但bash可以，新建.bash_aliases
   ;; (setq shell-file-name "bash")

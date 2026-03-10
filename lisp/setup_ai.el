@@ -100,6 +100,12 @@
 ;; ====================ellama======================
 ;;; claude-code
 ;; =================claude-code====================
+(use-package vterm
+  :bind (("M-o s" . vterm)
+         ("M-o S" . term))
+  :config
+  (setq vterm-max-scrollback 100000)
+  (setopt vterm-min-window-width 40))
 (use-package claude-code
   :load-path "repos/claude-code.el/"
   :diminish claude-code-mode
@@ -112,12 +118,8 @@
     (define-prefix-command 'claude-code-command-map))
   (bind-key "M-C" 'code-switch-agent claude-code-command-map)
   ;; 使用~/.claude/settings.json设定大模型，也可(setenv "ANTHROPIC_AUTH_TOKEN" (get-auth-pass "DeepSeek"))
-  (use-package inheritenv)
-  (use-package vterm
-    :config
-    (setq vterm-max-scrollback 100000)
-    (setopt vterm-min-window-width 40))
   (setq claude-code-terminal-backend 'vterm)
+  (use-package inheritenv)
   (use-package monet
     :load-path "repos/monet/"
     :diminish monet-mode
