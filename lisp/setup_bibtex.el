@@ -203,7 +203,7 @@
     (when (or arg (not bibtex-completion-bibliography/curr))
       (setq bibtex-completion-bibliography/curr
             (helm-comp-read "Bibtex completion bibliography: "
-                            (append (directory-files (expand-file-name "~/.bib/") t "\\.bib$")
+                            (append (directory-files-recursively (expand-file-name "~/.bib/") "\\.bib$")
                                     (directory-files (helm-current-directory) t "\\.bib$"))
                             :marked-candidates t
                             :buffer "*helm bibtex select*")))
