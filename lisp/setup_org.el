@@ -315,7 +315,7 @@
     (interactive)
     (let* ((context (org-element-lineage (org-element-context) '(link) t))
            (filename (when (equal (org-element-property :type context) "file")
-                       (org-element-property :path context))))
+                       (file-truename (org-element-property :path context)))))
       (if (file-exists-p filename)
           (swint-dired-clipboard-copy filename)
         (message "No file at point"))))

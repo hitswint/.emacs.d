@@ -106,6 +106,28 @@
   (define-key helm-map (kbd "C-x y") 'helm-resume-list-buffers-after-quit)
   (define-key helm-map (kbd "C-c C-k") 'helm-kill-selection-and-quit)
   (define-key helm-map (kbd "C-c C-i") 'helm-insert-or-copy)
+  (define-key helm-map (kbd "M-<") #'(lambda () (interactive) (with-helm-alive-p
+                                                                (with-helm-window
+                                                                  (let ((orig-fun (symbol-function 'helm-move--beginning-of-buffer-fn)))
+                                                                    (cl-letf (((symbol-function 'helm-move--beginning-of-buffer-fn)
+                                                                               (if (and (not (eq last-command this-command))
+                                                                                        (> (length helm-sources) 1)
+                                                                                        (> (helm-get-candidate-number t) 1)
+                                                                                        (not (helm-pos-header-line-p)))
+                                                                                   'helm-move--beginning-of-source
+                                                                                 orig-fun)))
+                                                                      (helm-beginning-of-buffer)))))))
+  (define-key helm-map (kbd "M->") #'(lambda () (interactive) (with-helm-alive-p
+                                                                (with-helm-window
+                                                                  (let ((orig-fun (symbol-function 'helm-move--end-of-buffer-fn)))
+                                                                    (cl-letf (((symbol-function 'helm-move--end-of-buffer-fn)
+                                                                               (if (and (not (eq last-command this-command))
+                                                                                        (> (length helm-sources) 1)
+                                                                                        (> (helm-get-candidate-number t) 1)
+                                                                                        (not (helm-pos-header-line-p)))
+                                                                                   'helm-move--end-of-source
+                                                                                 orig-fun)))
+                                                                      (helm-end-of-buffer)))))))
   (helm-define-key-with-subkeys helm-map (kbd "C-x Y") ?Y 'helm-run-cycle-resume)
   (helm-define-key-with-subkeys global-map (kbd "C-x Y") ?Y 'helm-cycle-resume)
   (define-key helm-find-files-map (kbd "M-.") 'helm-toggle-truncate-line)
