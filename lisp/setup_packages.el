@@ -315,7 +315,7 @@
     (when (and (display-graphic-p frame)
                (not swint-fcitx-setup-done)
                (executable-find fcitx-remote-command))
-      (fcitx-prefix-keys-add "M-s" "M-g" "M-o" "M-O" "M-E")
+      (fcitx-prefix-keys-add "M-s" "M-g" "M-o" "M-O" "M-E" "M-C" "M-\"")
       (fcitx-aggressive-setup)
       (fcitx-isearch-turn-on)
       ;; dired-subtree更新时会启闭read-only-mode

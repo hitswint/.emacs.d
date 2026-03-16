@@ -104,6 +104,16 @@
   :bind (("M-o s" . vterm)
          ("M-o S" . term))
   :config
+  (bind-key "M-s" nil vterm-mode-map)
+  (bind-key "M-g" nil vterm-mode-map)
+  (bind-key "M-E" nil vterm-mode-map)
+  (bind-key "M-C" nil vterm-mode-map)
+  (bind-key "M-'" nil vterm-mode-map)
+  (bind-key "M-\"" nil vterm-mode-map)
+  (bind-key "M-," nil vterm-mode-map)
+  (bind-key "M-." nil vterm-mode-map)
+  (bind-key "M-/" nil vterm-mode-map)
+  (bind-key "C-\\" nil vterm-mode-map)
   (setq vterm-max-scrollback 100000)
   (setopt vterm-min-window-width 40))
 (use-package claude-code
