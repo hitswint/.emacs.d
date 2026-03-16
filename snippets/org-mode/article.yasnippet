@@ -11,17 +11,18 @@
 #+LATEX_HEADER:
 # ===================PANDOC===================
 #+PANDOC_OPTIONS: reference-doc:${4:$$(unless yas-modified-p (expand-file-name "~/.pandoc/reference.docx"))} toc:nil toc-depth:3
-# ==================citeproc==================
 #+PANDOC_OPTIONS: citeproc:t
 #+PANDOC_OPTIONS: bibliography:${5:$$(unless yas-modified-p (expand-file-name "~/.bib/Zotero.bib"))} csl:${6:$$(unless yas-modified-p (expand-file-name "~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl"))} citation-abbreviations:nil
+#+PANDOC_OPTIONS: filter:pandoc-crossref
 #+PANDOC_METADATA: reference-section-title:参考文献
-# ==================org-cite===================
-# #+BIBLIOGRAPHY: $5
+#+PANDOC_METADATA: figureTitle:图 figPrefix:图 tableTitle:表 tblPrefix:表 eqnPrefix:式 autoEqnLabels:true titleDelim: chapters:false chapDelim:-
+# ==================org-cite==================
+#+BIBLIOGRAPHY: $5
+# #+CITE_EXPORT: natbib gbt7714-numerical
 # #+CITE_EXPORT: csl $6
+# ==================参考文献==================
+# 手动指定参考文献位置，否则在末尾
 # * 参考文献
 #   #+PRINT_BIBLIOGRAPHY:
-# ===============pandoc-crossref==============
-#+PANDOC_OPTIONS: filter:pandoc-crossref
-#+PANDOC_METADATA: figureTitle:图 figPrefix:图 tableTitle:表 tblPrefix:表 eqnPrefix:式 autoEqnLabels:true titleDelim: chapters:false chapDelim:-
 
 $0

@@ -2,6 +2,7 @@
 ;; =================org-mode====================
 (use-package org
   :mode ("\\.[oO][rR][gG]\\'" . org-mode)
+  :commands turn-on-orgtbl
   :init
   (setq org-babel-key-prefix (kbd "C-c C-'"))
   :config

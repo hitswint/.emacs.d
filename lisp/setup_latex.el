@@ -70,8 +70,13 @@
   :init
   (add-hook 'LaTeX-mode-hook (lambda () (add-hook 'after-save-hook
                                                   (lambda ()
-                                                    (when (buffer-live-p (TeX-active-buffer))
-                                                      (TeX-command TeX-command-default #'TeX-master-file)))
+                                                    ;; 当$preview_continuous_mode = 0;时，单次编译，保存后重新编译，适用于手动修改tex文件，可触发eaf更新
+                                                    ;; 当$preview_continuous_mode = 1;时，latexmk进程始终存在，不重新编译，适用于org导出tex文件
+                                                    (when (and (buffer-live-p TeX-command-buffer) (TeX-active-buffer))
+                                                      (with-current-buffer TeX-command-buffer
+                                                        (unless (if-let ((process (TeX-active-process)))
+                                                                    (eq (process-status process) 'run))
+                                                          (TeX-command TeX-command-default #'TeX-master-file)))))
                                                   nil 'make-it-local)))
   (setq auctex-latexmk-inherit-TeX-PDF-mode t)
   :config

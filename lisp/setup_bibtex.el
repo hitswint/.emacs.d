@@ -128,10 +128,11 @@
   (helm-bibtex-helmify-action bibtex-completion-open-pdf-externally helm-bibtex-open-pdf-externally)
   ;; 改变helm-bibtex中Insert citation格式
   (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
-        'org-cite-format-citation)
+        'bibtex-completion-format-citation-org-cite)
   (defun org-cite-format-citation (keys)
     ;; 使用BIBLIOGRAPHY关键词判断引用格式：(org-cite-list-bibliography-files)，但其也用于判断是否存在local bib文件
     ;; 改用CITE_EXPORT关键词，org-cite与pandoc支持相同格式，CITE_EXPORT也用于判断后续输入引用和文献的格式
+    ;; 20260315：参考文献使用相同格式，不区分org-cite和pandoc
     (if (org-collect-keywords '("CITE_EXPORT"))
         (bibtex-completion-format-citation-org-cite keys)  ;使用org-cite格式
       (concat "cite:" (s-join ","       ;使用org-ref格式
@@ -239,11 +240,9 @@
                                                                  (insert (format "[[%s]] " candidate))))))))
       ;; 将插入引用定义为keymap中的命令的话，存在类似helm-insert-or-copy的Quit警告问题
       (when (sequencep label-names)
-        ;; 根据#+NAME/#+LABEL的前缀是latex/office选择不同的引用方式
         (if export-to-oc
-            (insert (bibtex-completion-format-citation-org-cite label-names))
-          ;; 若引用时无章节编号的需要，仍可采用latex格式；若采取office格式，则需外部调用pandoc
-          (insert (s-join " " (--map (format "[[%s]]" it) label-names))))))))
+            (insert (s-join " " (--map (format "[[%s]]" it) label-names)))
+          (insert (bibtex-completion-format-citation-org-cite label-names)))))))
 ;; ==================helm-bibtex===================
 ;;; ebib
 ;; =====================ebib=======================
