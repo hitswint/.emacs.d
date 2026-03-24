@@ -133,8 +133,12 @@
   (use-package monet
     :load-path "repos/monet/"
     :diminish monet-mode
+    :init
+    (setq monet-prefix-key "M-C")
     :config
-    (monet-mode 1))
+    (monet-mode 1)
+    (define-key monet-command-map "s" nil)
+    (define-key monet-command-map "g" #'monet-start-server))
   (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
   (claude-code-mode))
 ;; =================claude-code====================
