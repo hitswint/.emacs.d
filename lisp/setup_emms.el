@@ -40,6 +40,7 @@
     ;; 播放时遍历emms-player-list，使用第1个可播放的player
     (add-to-list 'emms-player-list 'emms-player-mpd)
     ;; 解决emms无法播放链接文件的问题
+    (require 'f)
     (advice-add 'emms-player-mpd-playable-p :around #'(lambda (fn &rest args)
                                                         (cl-letf (((symbol-function 'file-in-directory-p) 'f-descendant-of-p))
                                                           (apply fn args)))))
@@ -51,6 +52,8 @@
                 (not (buffer-live-p emms-playlist-buffer)))
         (emms-playlist-mode-go)
         (sit-for 1))
+      ;; 手动更新emms-cache-db
+      (emms-cache-sync nil)
       (let ((selected (helm-comp-read "Select track: " (cl-loop for v being the hash-values in emms-cache-db
                                                                 for name = (assoc-default 'name v)
                                                                 unless (string-match "^\\(http\\|mms\\):" name)
