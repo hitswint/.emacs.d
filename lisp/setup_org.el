@@ -599,6 +599,7 @@
 (use-package ox-latex
   :after ox
   :config
+  (advice-add 'org-latex-export-to-latex :after #'(lambda (&rest args) (swint-TeX-command)))
   (setq org-latex-compiler "xelatex")
   ;; 定义org markup(*_+/=~)等的转换
   (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
@@ -752,6 +753,7 @@
 (use-package ox-beamer
   :after ox
   :config
+  (advice-add 'org-beamer-export-to-latex :after #'(lambda (&rest args) (swint-TeX-command)))
   ;; beamer-preview编译beamer文件时，需当前frame以外的页面保持不变
   ;; 输出tex时默认自动生成随机label，导致每次导出的tex文件都不相同
   ;; 对headline，取:CUSTOM_ID:或BEAMER_opt属性，可使用C-c C-x p设置
