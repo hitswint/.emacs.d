@@ -121,6 +121,8 @@
                                                                  (helm-run-after-exit 'helm-bibtex-edit-notes (helm-marked-candidates)))))
       (define-key map (kbd "RET") #'(lambda () (interactive) (with-helm-alive-p
                                                                (helm-run-after-exit 'helm-bibtex-insert-citation (helm-marked-candidates)))))
+      (define-key map (kbd "C-x g") #'(lambda (&optional arg) (interactive "P") (with-helm-alive-p
+                                                                                  (helm-run-after-exit 'pdfgrep-default arg (helm-marked-candidates)))))
       map)
     "Keymap for `helm-bibtex'.")
   (helm-set-attr 'keymap helm-bibtex-map helm-source-bibtex)
@@ -262,6 +264,10 @@
   (define-key ebib-index-mode-map (kbd "C-x b") nil)
   (define-key ebib-index-mode-map (kbd "C-p") nil)
   (define-key ebib-index-mode-map (kbd "C-n") nil)
+  (define-key ebib-index-mode-map (kbd "t") 'ebib-mark-all-entries)
+  (define-key ebib-index-mode-map (kbd "C-x g") #'(lambda (&optional arg) (interactive "P")
+                                                    (pdfgrep-default arg (or (ebib-db-val 'marked-entries ebib--cur-db)
+                                                                             (ebib--list-keys)))))
   (define-key ebib-filters-map "F" 'ebib-filter-collection)
   (define-key ebib-strings-mode-map (kbd "C-x b") nil)
   (define-key ebib-entry-mode-map (kbd "C-x b") nil)
@@ -390,7 +396,7 @@
       (ebib--execute-when
         (entries
          (ebib-db-set-current-entry-key (ebib--get-key-at-point) ebib--cur-db)
-         (ebib-db-set-filter `(contains collection-key regexp) ebib--cur-db)
+         (ebib-db-set-filter `(contains ,collection-key ,regexp) ebib--cur-db)
          (ebib--update-buffers))
         (default
          (beep)))))

@@ -857,9 +857,8 @@
   (setq helm-ag-command-option "--hidden --follow")
   (bind-key "C-x g" 'swint-helm-ag)
   (bind-key "C-x G" #'(lambda () (interactive)
-                        (let ((helm-ag-base-command (if (directory-files-recursively (helm-current-directory) "\\.gz$")
-                                                        "rg --smart-case --color never --no-heading --search-zip"
-                                                      "rga --smart-case --color never --no-heading --line-number")))
+                        ;; rg --smart-case --color never --no-heading --search-zip
+                        (let ((helm-ag-base-command "rga --no-ignore --smart-case --color never --no-heading --line-number"))
                           (call-interactively 'swint-helm-ag))))
   (bind-key "M-s g" 'swint-helm-do-ag-this-file)
   (bind-key "M-s G" 'swint-helm-do-ag-buffers)
