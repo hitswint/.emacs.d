@@ -122,7 +122,7 @@
       (define-key map (kbd "RET") #'(lambda () (interactive) (with-helm-alive-p
                                                                (helm-run-after-exit 'helm-bibtex-insert-citation (helm-marked-candidates)))))
       (define-key map (kbd "C-x g") #'(lambda (&optional arg) (interactive "P") (with-helm-alive-p
-                                                                                  (helm-run-after-exit 'pdfgrep-default arg (helm-marked-candidates)))))
+                                                                                  (helm-run-after-exit 'pdfgrep-default arg (helm-marked-candidates-or-all)))))
       map)
     "Keymap for `helm-bibtex'.")
   (helm-set-attr 'keymap helm-bibtex-map helm-source-bibtex)

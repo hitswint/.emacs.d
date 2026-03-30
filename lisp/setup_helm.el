@@ -633,6 +633,19 @@
       (helm-execute-persistent-action 'peep-preview-action)))
   (put 'helm-peep-preview-persistent 'helm-only t)
   ;; ======helm-peep-preview-persistent=========
+;;;; helm-marked-candidates-or-all
+  ;; ======helm-marked-candidates-or-all========
+  (cl-defun helm-marked-candidates-or-all ()
+    (with-helm-buffer
+      (let ((marked (helm-marked-candidates)))
+        (if (and (>= (length marked) 1)
+                 (with-helm-window helm-visible-mark-overlays))
+            marked
+          (let ((all (progn (helm-mark-all)
+                            (helm-marked-candidates))))
+            (helm-unmark-all)
+            all)))))
+  ;; ======helm-marked-candidates-or-all========
   )
 ;; ====================helm=====================
 ;;; helm-command

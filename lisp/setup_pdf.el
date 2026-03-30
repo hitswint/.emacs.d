@@ -76,9 +76,6 @@
                             ((and (eq major-mode 'dired-mode)
                                   (cdr (dired-get-marked-files nil nil nil t)))
                              (dired-get-marked-files))
-                            ((and (eq major-mode 'eaf-mode)
-                                  (equal eaf--buffer-app-name "pdf-viewer"))
-                             (list eaf--buffer-url))
                             (t
                              (directory-files-recursively default-directory "\\.pdf$")))))
       (when pdf-files
