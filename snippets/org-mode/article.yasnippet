@@ -17,7 +17,7 @@
 #+PANDOC_METADATA: reference-section-title:参考文献
 #+PANDOC_METADATA: figureTitle:图 figPrefix:图 tableTitle:表 tblPrefix:表 eqnPrefix:式 autoEqnLabels:true titleDelim: chapters:false chapDelim:-
 # ==================org-cite==================
-#+BIBLIOGRAPHY: $5
+# #+BIBLIOGRAPHY: ${7:$$(unless yas-modified-p (or (car (directory-files default-directory nil "\\.bib$")) (yas-field-value 5)))}
 # #+CITE_EXPORT: natbib gbt7714-numerical
 # #+CITE_EXPORT: csl $6
 # ==================参考文献==================
