@@ -956,7 +956,8 @@
   (add-hook 'LaTeX-mode-hook #'reftex-mode)
   :config
   ;; 交叉引用(reference)：C-c ( 添加label，C-c ) 引用label
-  ;; 文献引用(citation)：C-c [ reftex-citation，C-c C-x [ org-reftex-citation
+  ;; 文献引用(citation)：C-c [ reftex-citation
+  ;; org中文献引用：C-c C-x [ org-reftex-citation，查找#+BIBLIOGRAPHY:Zotero(无bib后缀)，以\cite格式插入
   (define-key reftex-mode-map (kbd "C-c r") #'(lambda () (interactive)
                                                 (let ((reftex-refstyle "\\ref"))
                                                   (reftex-reference " "))))
@@ -1063,6 +1064,7 @@
   (define-key rg-mode-map (kbd "v") 'pdfgrep-default)
   (define-key rg-mode-map (kbd "o") 'pdfgrep-opened)
   (define-key rg-mode-map (kbd "z") 'pdfgrep-zotero)
+  (define-key rg-mode-map (kbd "C") 'rg-copy-things)
   (defun rg-current-search ()
     (if (rg-search-literal rg-cur-search)
         (rg-search-pattern rg-cur-search)
@@ -1074,17 +1076,39 @@
         (buffer-substring-no-properties beg end))))
   (defun rg-result-open-externally ()
     (interactive)
-    (let ((file-name (or (save-excursion
-                           (goto-char (line-beginning-position))
-                           (when (re-search-forward "File:\\ \\(.*\\)" (line-end-position) t)
-                             (match-string-no-properties 1)))
-                         (save-excursion (when (re-search-backward "File:\\ \\(.*\\)" nil t)
-                                           (match-string-no-properties 1)))))
+    (let ((file-name (rg-find-filename))
           (page (save-excursion
                   (goto-char (line-beginning-position))
                   (re-search-forward "Page\\ \\([[:digit:]]+\\):" nil t)
                   (match-string-no-properties 1))))
-      (helm-ag-open-file-action file-name page (rg-current-search)))))
+      (helm-ag-open-file-action file-name page (rg-current-search))))
+  (defun rg-find-filename ()
+    (or (save-excursion
+          (goto-char (line-beginning-position))
+          (when (re-search-forward "File:\\ \\(.*\\)" (line-end-position) t)
+            (match-string-no-properties 1)))
+        (save-excursion (when (re-search-backward "File:\\ \\(.*\\)" nil t)
+                          (match-string-no-properties 1)))))
+  (defun rg-copy-things ()
+    (interactive)
+    (let ((file-name (rg-find-filename)))
+      (if (file-in-directory-p file-name "~/Zotero")
+          (let ((input-char (read-char "char: "))
+                (entry (bibtex-completion-get-entry-for-pdf file-name)))
+            (cond
+             ((= input-char ?e)
+              (with-temp-buffer
+                (ebib--format-entry (bibtex-completion-get-value "=key=" entry) ebib--cur-db)
+                (kill-new (buffer-substring-no-properties (point-min) (point-max)))))
+             ((= input-char ?k)
+              (kill-new (bibtex-completion-get-value "=key=" entry)))
+             ((= input-char ?t)
+              (kill-new (ebib-unbrace (bibtex-completion-get-value "title" entry))))
+             ((= input-char ?d)
+              (kill-new (ebib-unbrace (bibtex-completion-get-value "doi" entry))))
+             (t (message "Invalid input characters.")))
+            (message "%s" (car kill-ring)))
+        (message "rg-copy-things is not available.")))))
 ;; ===================rg===========================
 ;;; awesome-tab
 ;; ===============awesome-tab======================
