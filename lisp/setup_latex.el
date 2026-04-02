@@ -5,8 +5,12 @@
   :mode ("\\.[tT][eE][xX]\\'" . LaTeX-mode)
   :init
   (add-hook 'LaTeX-mode-hook (lambda ()
-                               (setq TeX-base-mode-name "TeX"
-                                     TeX-engine 'xetex) ;对英文使用TeX-engine-set设置为default
+                               (setq TeX-base-mode-name "TeX")
+                               (save-excursion
+                                 (goto-char (point-min))
+                                 (when (and (re-search-forward "\\\\documentclass\\(\\[[^]\n\r]*\\]\\)?{\\([^}]+\\)}" nil t)
+                                            (equal (match-string-no-properties 2) "ctexart"))
+                                   (setq TeX-engine 'xetex)))  ;对英文可使用TeX-engine-set设置为default
                                (LaTeX-math-mode 1)
                                (TeX-fold-mode 1) ;C-c C-o C-b打开fold，C-c C-o b关闭fold
                                (TeX-PDF-mode 1)
@@ -73,10 +77,15 @@
     ;; 当$preview_continuous_mode = 0;时，单次编译，保存后重新编译，适用于手动修改tex文件，可触发eaf更新
     ;; 当$preview_continuous_mode = 1;时，latexmk进程始终存在，不重新编译，适用于org导出tex文件
     (when (and (buffer-live-p TeX-command-buffer) (TeX-active-buffer))
-      (with-current-buffer TeX-command-buffer
-        (unless (if-let ((process (TeX-active-process)))
-                    (eq (process-status process) 'run))
-          (TeX-command TeX-command-default #'TeX-master-file)))))
+      (let (run-command-p)
+        (with-current-buffer TeX-command-buffer
+          (unless (if-let ((process (TeX-active-process)))
+                      (eq (process-status process) 'run))
+            (TeX-command TeX-command-default #'TeX-master-file)
+            (setq run-command-p t)))
+        (when (and run-command-p
+                   (window-live-p (get-buffer-window (TeX-active-buffer))))
+          (TeX-recenter-output-buffer nil)))))
   (setq auctex-latexmk-inherit-TeX-PDF-mode t)
   :config
   (auctex-latexmk-setup)

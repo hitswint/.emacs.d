@@ -309,6 +309,7 @@
   (define-key org-mode-map (kbd "C-c V") #'(lambda () (interactive) (org-clear-latex-preview (point-min) (point-max))))
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
   ;; (setq org-highlight-latex-and-related '(latex))  ;高亮显示公式环境，会造成卡顿
+  (define-key org-mode-map (kbd "C-c C-x C-l") 'TeX-recenter-output-buffer)
   ;; =============org-latex-preview=============
 ;;;; org-clipboard-copy/paste
   ;; =========org-clipboard-copy/paste==========
@@ -616,6 +617,15 @@
                  "\\documentclass[11pt]{ctexart}
 \\usepackage[top=1in,bottom=1in,left=0.8in,right=0.8in]{geometry}
 \\usepackage{graphicx,amsmath,amssymb,subfigure,url,xspace,booktabs,tikz,float}
+% 取消图片压缩，也可使用draft模式
+\\ifx\\XeTeXversion\\undefined
+  % pdfTeX
+  \\pdfcompresslevel=0
+  \\pdfobjcompresslevel=0
+\\else
+  % XeTeX
+  \\special{dvipdfmx:config z 0}
+\\fi
 \\usepackage[autoplay,loop]{animate}
 \\usepackage[absolute,overlay]{textpos}
 \\usetikzlibrary{arrows,arrows.meta,shapes,chains,calc,positioning,decorations.markings}
@@ -662,6 +672,44 @@
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list 'org-latex-classes
+               '("en-article"
+                 "\\documentclass[11pt]{article}
+\\usepackage[top=1in,bottom=1in,left=0.8in,right=0.8in]{geometry}
+\\usepackage{graphicx,amsmath,amssymb,subfigure,url,xspace,booktabs,tikz,float}
+\\ifx\\XeTeXversion\\undefined
+  % pdfTeX
+  \\pdfcompresslevel=0
+  \\pdfobjcompresslevel=0
+\\else
+  % XeTeX
+  \\special{dvipdfmx:config z 0}
+\\fi
+\\usepackage[autoplay,loop]{animate}
+\\usepackage[absolute,overlay]{textpos}
+\\usetikzlibrary{arrows,arrows.meta,shapes,chains,calc,positioning,decorations.markings}
+\\newcommand{\\eg}{e.g.,\\xspace}
+\\newcommand{\\bigeg}{E.g.,\\xspace}
+\\newcommand{\\etal}{\\textit{et~al.\\xspace}}
+\\newcommand{\\etc}{etc.\@\\xspace}
+\\newcommand{\\ie}{i.e.,\\xspace}
+\\newcommand{\\bigie}{I.e.,\\xspace}
+\\usepackage[super,square,sort&compress]{natbib}
+\\usepackage{hyperref}
+\\usepackage{hypernat}
+% \\renewcommand{\\citet}[1]{\\textsuperscript{\\cite{#1}}}
+\\usepackage[]{caption}
+\\captionsetup{font={small,it}}
+\\usepackage{comment}
+% \\setmainfont{Times New Roman}
+% \\setsansfont{Times New Roman}
+[NO-DEFAULT-PACKAGES]
+[NO-PACKAGES]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
   ;; Beamer默认采用sansfont(无袖衬)，而不是mainfont(有袖衬)
   ;; 设定mainfont会导致公式环境中变量变成正体
   ;; 设定setsansfont使用Times New Roman无法使用英文斜体和粗体
@@ -671,6 +719,14 @@
                  "\\documentclass[11pt]{beamer}
 % [xcolor=dvipsnames]
 \\usepackage{graphicx,subfigure,url,booktabs,tikz,float,fontspec}
+\\ifx\\XeTeXversion\\undefined
+  % pdfTeX
+  \\pdfcompresslevel=0
+  \\pdfobjcompresslevel=0
+\\else
+  % XeTeX
+  \\special{dvipdfmx:config z 0}
+\\fi
 \\usepackage{amsmath,amssymb}
 \\DeclareGraphicsRule{*}{mps}{*}{}
 \\usepackage{xmpmulti}
