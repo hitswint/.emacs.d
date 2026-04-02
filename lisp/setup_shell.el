@@ -1,7 +1,7 @@
 ;;; shell
 ;; =====================shell======================
 (use-package shell
-  :bind ("M-o M-S" . shell)
+  :bind ("M-o M-T" . shell)
   ;; :init
   ;; 使用zsh -ic无法加载alias，但bash可以，新建.bash_aliases
   ;; (setq shell-file-name "bash")
@@ -22,7 +22,7 @@
 ;;; eshell
 ;; =====================eshell=====================
 (use-package eshell
-  :bind ("M-o M-s" . eshell)
+  :bind ("M-o M-t" . eshell)
   :init
   (add-hook 'eshell-mode-hook #'(lambda ()
                                   (define-key eshell-mode-map (kbd "M-s") nil)

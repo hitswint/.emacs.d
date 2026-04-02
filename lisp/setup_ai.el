@@ -101,8 +101,8 @@
 ;;; claude-code
 ;; =================claude-code====================
 (use-package vterm
-  :bind (("M-o s" . vterm)
-         ("M-o S" . term))
+  :bind (("M-o t" . vterm)
+         ("M-o T" . term))
   :config
   (bind-key "M-s" nil vterm-mode-map)
   (bind-key "M-g" nil vterm-mode-map)

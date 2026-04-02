@@ -45,6 +45,7 @@
              bibtex-completion-edit-notes
              bibtex-completion-get-entry-for-pdf
              bibtex-completion-pdf-viewer
+             bibtex-completion-open-pdf
              bibtex-completion-open-pdf-externally)
   :config
   (bind-key "C-c o" #'(lambda () (interactive) (bibtex-completion-open-pdf

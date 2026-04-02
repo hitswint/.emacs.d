@@ -47,9 +47,9 @@
                        sudo-edit tangotango-theme term-keys
                        unicode-escape vcard vimish-fold visible-mark
                        visual-regexp vlf volatile-highlights vterm vundo
-                       w3m web-mode window-numbering wrap-region
-                       yaml-mode yasnippet-snippets youdao-dictionary
-                       ztree)))
+                       w3m web-mode websearch window-numbering
+                       wrap-region yaml-mode yasnippet-snippets
+                       youdao-dictionary ztree)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

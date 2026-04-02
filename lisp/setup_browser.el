@@ -112,4 +112,27 @@
           :truncate-lines t
           :buffer "*Helm Firefox History*")))
 ;; ===============helm-firefox================
+;;; websearch
+;; ================websearch==================
+(use-package websearch
+  :bind ("M-o S" . websearch))
+(use-package websearch-mode
+  :bind-keymap ("M-o s" . websearch-mode-map)
+  :init
+  (setq websearch-custom-keymap-prefix "")
+  :config
+  ;; websearch-define启动时运行，导致map未定义错误
+  ;; (websearch-define "google" :keybinding "g")
+  (add-to-list 'websearch-custom-engines (list "bing" ?\s "bing.com/search?q=" '(text generic)))
+  (add-to-list 'websearch-custom-engines (list "baidu" ?\s "baidu.com/s?wd=" '(text generic)))
+  (bind-key "g" #'(lambda () (interactive) (websearch-words-at-point "google")) websearch-mode-map)
+  (bind-key "h" #'(lambda () (interactive) (websearch-words-at-point "github")) websearch-mode-map)
+  (bind-key "d" #'(lambda () (interactive) (websearch-words-at-point "duckduckgo")) websearch-mode-map)
+  (bind-key "y" #'(lambda () (interactive) (websearch-words-at-point "yandex")) websearch-mode-map)
+  (bind-key "w" #'(lambda () (interactive) (websearch-words-at-point "bing")) websearch-mode-map)
+  (bind-key "b" #'(lambda () (interactive) (websearch-words-at-point "baidu")) websearch-mode-map)
+  (defun websearch-words-at-point (engine-name &optional _word)
+    (let ((word (or _word (swint-get-words-at-point))))
+      (websearch--browse-url word engine-name))))
+;; ================websearch==================
 (provide 'setup_browser)
