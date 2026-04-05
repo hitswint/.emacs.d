@@ -127,8 +127,11 @@
       (fset 'claude-code-command-map claude-code-command-map)
     (define-prefix-command 'claude-code-command-map))
   (bind-key "M-C" 'code-switch-agent claude-code-command-map)
+  (bind-key "c" #'(lambda (&optional arg) (interactive "P") (claude-code--start arg nil nil t)) claude-code-command-map)
+  (bind-key "C" #'(lambda (&optional arg) (interactive "P") (claude-code--start arg '("--continue") nil t)) claude-code-command-map)
   ;; 使用~/.claude/settings.json设定大模型，也可(setenv "ANTHROPIC_AUTH_TOKEN" (get-auth-pass "DeepSeek"))
   (setq claude-code-terminal-backend 'vterm)
+  (setq claude-code-confirm-kill nil)
   (use-package inheritenv)
   (use-package monet
     :load-path "repos/monet/"
@@ -138,7 +141,19 @@
     :config
     (monet-mode 1)
     (define-key monet-command-map "s" nil)
-    (define-key monet-command-map "g" #'monet-start-server))
+    (define-key monet-command-map "g" #'monet-start-server)
+    (advice-add 'claude-code--kill-buffer :before #'monet-stop-current-server)
+    (defun monet-stop-current-server (buffer)
+      (when (buffer-live-p buffer)
+        (with-current-buffer buffer
+          (let* ((dir (expand-file-name (cdr (monet--get-session-context))))
+                 (key (cl-loop for key being the hash-keys of monet--sessions
+                               using (hash-values session)
+                               thereis (when (file-equal-p (monet--session-directory session) dir)
+                                         key))))
+            (when (monet--get-session key)
+              (monet-stop-server key)
+              (message "[monet] Stopped session for %s" key)))))))
   (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
   (claude-code-mode))
 ;; =================claude-code====================
