@@ -164,11 +164,13 @@
   :commands code-switch-agent
   :bind (:map agent-shell-prefix-map
               ("a" . agent-shell)
+              ("d" . agent-shell-send-dwim)
               ("t" . agent-shell-toggle)
               ("n" . agent-shell-new-shell)
               ("f" . agent-shell-send-file)
+              ("s" . agent-shell-send-screenshot)
+              ("y" . agent-shell-send-clipboard-image)
               ("r" . agent-shell-send-region)
-              ("d" . agent-shell-send-dwim)
               ("c" . agent-shell-prompt-compose)
               ("?" . agent-shell-help-menu)
               ("M-C" . code-switch-agent))
@@ -177,11 +179,13 @@
     "Keymap for agent-shell commands.")
   (define-prefix-command 'agent-shell-prefix-map)
   :config
+  (setq agent-shell-prefer-viewport-interaction nil)
   (defun code-switch-agent ()
     (interactive)
     (if (equal (lookup-key global-map (kbd "M-C")) 'agent-shell-prefix-map)
         (global-set-key (kbd "M-C") 'claude-code-command-map)
-      (global-set-key (kbd "M-C") 'agent-shell-prefix-map)))
+      (global-set-key (kbd "M-C") 'agent-shell-prefix-map))
+    (setq unread-command-events (listify-key-sequence (kbd "M-C"))))
   (bind-key "C-<tab>" nil agent-shell-mode-map)
   (bind-key "C-c C-<tab>" 'agent-shell-cycle-session-mode agent-shell-mode-map))
 ;; =================agent-shell====================
