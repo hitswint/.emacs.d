@@ -294,8 +294,10 @@ names['df_'+re.sub(r'\\W','_','%s_')+re.sub(r'\\W','_','%s')] = pd.read_sql('%s'
                                              (format "%s='%s'" x (read-string (concat x ": ")))))))
                (args-string (mapconcat 'identity args-list ",")))
           (when args-string
-            (python-shell-send-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
-plot_data.fig_config(%s)" swint-python-plot-exec-path args-string))))
+            (let ((python-command-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
+plot_data.fig_config(%s)" swint-python-plot-exec-path args-string)))
+              (message "Send: %s" (string-join (cdr (split-string python-command-string "\n")) "\n"))
+              (python-shell-send-string python-command-string))))
       (message "No python process found!")))
   (defun swint-python-plot-data (&optional target-file)
     (interactive)
@@ -365,12 +367,16 @@ plot_data.fig_config(%s)" swint-python-plot-exec-path args-string))))
         (let ((python-command-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
 plot_data.cli_plot([%s],'%s' %s)" swint-python-plot-exec-path data-string style-string (or send-string-args ""))))
           (cond ((equal major-mode 'inferior-python-mode)
+                 (message "Send: %s" (string-join (cdr (split-string python-command-string "\n")) "\n"))
                  (python-shell-send-string python-command-string))
                 ((equal major-mode 'jupyter-repl-mode)
+                 (message "Send: %s" (string-join (cdr (split-string python-command-string "\n")) "\n"))
                  (jupyter-eval-string-command python-command-string))
                 (t (if (and (fboundp 'python-shell-get-process) (python-shell-get-process))
-                       (python-shell-send-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
-plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path files-string columns-string file-x-string column-x-string style-string (or send-string-args "")))
+                       (let ((command-string (format "if 'plot_data' not in dir():from sys import path;path.append('%s');import plot_data
+plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path files-string columns-string file-x-string column-x-string style-string (or send-string-args ""))))
+                         (message "Send: %s" (string-join (cdr (split-string command-string "\n")) "\n"))
+                         (python-shell-send-string command-string))
                      (let* ((plot-data-command (concat "python " (expand-file-name "plot_data.py" swint-python-plot-exec-path)
                                                        " -i " "\"" files-string "\""
                                                        " -y " "\"" columns-string "\""
@@ -379,7 +385,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
                                                        " -s " "\"" style-string "\" "
                                                        shell-command-args))
                             (process (start-process-shell-command "plot-data" "*plot-data*" plot-data-command)))
-                       (message "Data plotting.")
+                       (message "Send: %s" plot-data-command)
                        (set-process-sentinel
                         process
                         (lambda (process signal)
