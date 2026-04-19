@@ -985,4 +985,15 @@
         (insert-bracket-pair-with-space wrapper wrapper)
         (backward-char 1)))))
 ;; ============org-extra-emphasis===============
+;;; markdown-to-org
+;; ==============markdown-to-org================
+(use-package markdown-to-org
+  :load-path "repos/markdown-to-org/"
+  :commands (org-yank-from-kill-ring-from-md-to-org
+             org-yank-from-clipboard-from-md-to-org)
+  :init
+  (add-hook 'org-mode-hook (lambda ()
+                             (bind-key "C-c C-x y" 'org-yank-from-kill-ring-from-md-to-org org-mode-map)
+                             (bind-key "C-c C-x Y" 'org-yank-from-clipboard-from-md-to-org org-mode-map))))
+;; ==============markdown-to-org================
 (provide 'setup_org)
