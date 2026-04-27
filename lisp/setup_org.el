@@ -137,8 +137,8 @@
                 (define-key org-mode-map (kbd "C-c m") 'helm-insert-latex-math)
                 (define-key org-mode-map (kbd "C-c l") #'(lambda () (interactive)
                                                            (insert (swint-cursor-localtion))))
-                (define-key org-mode-map (kbd "C-c w") 'org-clipboard-copy)
-                (define-key org-mode-map (kbd "C-c y") 'org-clipboard-paste)
+                (define-key org-mode-map (kbd "M-W") 'org-clipboard-copy)
+                (define-key org-mode-map (kbd "C-S-y") 'org-clipboard-paste)
                 (define-key org-mode-map (kbd "C-c r") 'helm-org-ref-link)
                 (define-key org-mode-map (kbd "C-c C-x C-\\") 'org-toggle-link-display)
                 (define-key org-mode-map (kbd "C-j") #'(lambda () (interactive)
@@ -993,7 +993,7 @@
              org-yank-from-clipboard-from-md-to-org)
   :init
   (add-hook 'org-mode-hook (lambda ()
-                             (bind-key "C-c C-x y" 'org-yank-from-kill-ring-from-md-to-org org-mode-map)
-                             (bind-key "C-c C-x Y" 'org-yank-from-clipboard-from-md-to-org org-mode-map))))
+                             (bind-key "C-c y" 'org-yank-from-clipboard-from-md-to-org org-mode-map)
+                             (bind-key "C-c Y" 'org-yank-from-kill-ring-from-md-to-org org-mode-map))))
 ;; ==============markdown-to-org================
 (provide 'setup_org)
