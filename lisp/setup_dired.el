@@ -604,9 +604,12 @@
   (defun swint-dired-clipboard-paste (&optional filetopaste) ;只可粘贴图片
     (interactive)
     (let ((filename (or filetopaste
-                        (format-time-string "%Y%m%d_%H%M%S.png"))))
-      (shell-command (format "xclip -selection clipboard -t image/png -o > \"%s\""
-                             filename))))
+                        (format-time-string "%Y%m%d_%H%M%S.png")))
+          (targets (shell-command-to-string
+                    "timeout 0.5 xclip -o -t TARGETS -selection clipboard 2>/dev/null")))
+      (if (string-match-p "image/" targets)
+          (shell-command (format "xclip -selection clipboard -t image/png -o > \"%s\"" filename))
+        (message "No image in clipboard"))))
   ;; 加C-u不清除clipboards
   (bind-key "C-y" 'dired-ranger-paste dired-mode-map)
   (bind-key "M-y" 'dired-ranger-move dired-mode-map)

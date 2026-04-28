@@ -318,16 +318,20 @@
     (let* ((context (org-element-lineage (org-element-context) '(link) t))
            (filename (when (equal (org-element-property :type context) "file")
                        (file-truename (org-element-property :path context)))))
-      (if (file-exists-p filename)
+      (if (and filename (file-exists-p filename))
           (swint-dired-clipboard-copy filename)
         (message "No file at point"))))
   (defun org-clipboard-paste ()
     (interactive)
-    (let ((filename (format-time-string "./pic/%Y%m%d_%H%M%S.png")))
-      (unless (file-exists-p "pic")
-        (dired-create-directory "pic"))
-      (swint-dired-clipboard-paste filename)
-      (insert "[[" filename "]]")))
+    (let ((filename (format-time-string "./pic/%Y%m%d_%H%M%S.png"))
+          (targets (shell-command-to-string
+                    "timeout 0.5 xclip -o -t TARGETS -selection clipboard 2>/dev/null")))
+      (if (string-match-p "image/" targets)
+          (progn (unless (file-exists-p "pic")
+                   (dired-create-directory "pic"))
+                 (swint-dired-clipboard-paste filename)
+                 (insert "[[" filename "]]"))
+        (message "No image in clipboard"))))
   ;; =========org-clipboard-copy/paste==========
 ;;;; swint-org-previous/next-item
   ;; =======swint-org-previous/next-item========
