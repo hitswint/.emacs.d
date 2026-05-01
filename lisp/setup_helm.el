@@ -1029,6 +1029,13 @@
   :config
   (setq imenu-max-item-length nil)
   (setq helm-imenu-delimiter " | ")
+  ;; Fixed the issue where imenu displayed the content of the previous buffer when switching buffers.
+  (defvar helm-imenu-current-buffer nil)
+  (advice-add 'helm-imenu :before #'(lambda () (setq helm-imenu-current-buffer (current-buffer))))
+  (advice-add 'helm-semantic-or-imenu :before #'(lambda (arg) (setq helm-imenu-current-buffer (current-buffer))))
+  (advice-add 'helm-imenu-candidates :around #'(lambda (fn &optional buffer) (funcall fn (or buffer helm-imenu-current-buffer))))
+  (advice-add 'helm-imenu-outshine :before #'(lambda () (setq helm-imenu-current-buffer (current-buffer))))
+  (advice-add 'helm-imenu-outshine-candidates :around #'(lambda (fn &optional buffer) (funcall fn (or buffer helm-imenu-current-buffer))))
   ;; helm-imenu-outshine.
   (defvar helm-source-imenu-outshine nil)
   (defvar helm-cached-imenu-outshine-tick nil)

@@ -133,7 +133,7 @@
 (global-set-key (kbd "M-s M-d") 'swint-sdcv-to-tip)
 (global-set-key (kbd "M-s M-D") 'swint-sdcv-to-buffer)
 (global-set-key (kbd "M-s D") 'swint-online-to-buffer)
-(global-set-key (kbd "M-s O") 'occur)
+(global-set-key (kbd "M-s M-o") 'occur)
 (global-set-key (kbd "M-s M-m") 'eval-math-with-calc)
 (global-set-key (kbd "M-s m") #'(lambda () (interactive) (eval-math-with-calc t)))
 (global-set-key (kbd "M-o RET") 'urxvt-default-directory)
