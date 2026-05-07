@@ -44,7 +44,7 @@
                        posframe pyim pyim-basedict quickrun
                        rainbow-delimiters rainbow-mode readline-complete
                        recentf-ext restclient rg skewer-mode smartrep
-                       sudo-edit tangotango-theme term-keys
+                       sudo-edit tangotango-theme term-keys tramp
                        unicode-escape vcard vimish-fold visible-mark
                        visual-regexp vlf volatile-highlights vterm vundo
                        w3m web-mode websearch window-numbering

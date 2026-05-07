@@ -1531,6 +1531,7 @@ ORIG is the advised function, which is called with its ARGS."
   :load-path "repos/emacs-tramp-rpc/lisp/"
   :after tramp
   :config
-  (setq tramp-rpc-magit-optimize nil))
+  (setq tramp-rpc-magit-optimize nil
+        tramp-rpc-deploy-git-build-policy 'release))
 ;; ==================tramp-rpc=====================
 (provide 'setup_packages)
