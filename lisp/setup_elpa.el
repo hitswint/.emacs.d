@@ -281,5 +281,6 @@ Missing packages are installed automatically."
 ;; =====================misc========================
 (require 'subr-x)
 (require 'bookmark)
+(require 's)
 ;; =====================misc========================
 (provide 'setup_elpa)
