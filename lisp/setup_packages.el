@@ -1529,9 +1529,22 @@ ORIG is the advised function, which is called with its ARGS."
 ;; ==================tramp-rpc=====================
 (use-package tramp-rpc
   :load-path "repos/emacs-tramp-rpc/lisp/"
-  :after tramp
+  :bind (("C-x M-f" . find-file-rpc)
+         ("C-x M-F" . helm-find-files-rpc))
   :config
   (setq tramp-rpc-magit-optimize nil
-        tramp-rpc-deploy-git-build-policy 'release))
+        tramp-rpc-deploy-git-build-policy 'release)
+  (defun find-file-rpc (&optional arg)
+    (interactive "P")
+    (let ((host (helm-select-host))
+          (method (if arg "ssh" "rpc"))
+          (curr (or buffer-file-name (helm-current-directory))))
+      (find-file (concat "/" method ":" host ":" (abbreviate-file-name curr)))))
+  (defun helm-find-files-rpc (&optional arg)
+    (interactive "P")
+    (let ((tramp-completion-use-auth-sources nil)
+          (host (helm-select-host))
+          (method (if arg "ssh" "rpc")))
+      (helm-find-files-1 (format "/%s:%s:%s/" method host (expand-file-name (getenv "HOME")))))))
 ;; ==================tramp-rpc=====================
 (provide 'setup_packages)
