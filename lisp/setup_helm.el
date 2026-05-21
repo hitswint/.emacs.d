@@ -223,8 +223,7 @@
                             (with-helm-alive-p
                               (helm-run-after-exit
                                (lambda (_candidates)
-                                 (let ((default-directory (helm-current-directory))
-                                       (dirs (append '("helm-fd-edit") _candidates)))
+                                 (let ((dirs (append '("helm-fd-edit") _candidates)))
                                    (dired dirs)))
                                (progn (helm-mark-all)
                                       (helm-marked-candidates)))))
