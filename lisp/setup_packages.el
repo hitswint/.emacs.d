@@ -1459,12 +1459,58 @@ ORIG is the advised function, which is called with its ARGS."
   (define-key chunk-edit-mode-map (vector 'remap 'save-buffer) 'chunk-edit-save-chunk-at-point)
   (define-key chunk-edit-mode-map (vector 'remap 'save-some-buffers) 'chunk-edit-save-all-chunks)
   (setq chunk-edit-buffer-name "*chunk-edit*")
+  ;; Borrowed from https://github.com/ralph-schleicher/emacs-openfoam.
+  (defmacro openfoam--directory-finder (file-name-or-directory test)
+    (declare (indent 1))
+    (let ((dir (gensym "dir"))
+          (up (gensym "up")))
+      (cl-labels ((tr (expr)
+                    "Transform TEST expression."
+                    (cl-etypecase expr
+                      (string
+                       (if (string-match "/\\'" expr)
+                           `(file-directory-p
+                             (expand-file-name ,(string-trim-right expr "/") ,dir))
+                         `(file-regular-p
+                           (expand-file-name ,expr ,dir))))
+                      (cons
+                       (let ((op (cl-first expr)))
+                         (cl-ecase op
+                           ((or and)
+                            (cons op (mapcar #'tr (cl-rest expr))))
+                           (not
+                            (cl-assert (= (length expr) 2))
+                            (list op (tr (cl-second expr))))))))))
+        `(let ((,dir (file-name-directory ,file-name-or-directory)))
+           (while (and ,dir (not ,(tr test)))
+             (let ((,up (file-name-directory (directory-file-name ,dir))))
+               (setq ,dir (if (string-equal ,up ,dir) nil ,up))))
+           ,dir))))
+  (defun openfoam-case-directory (file-name-or-directory)
+    "Return the OpenFOAM case directory of FILE-NAME-OR-DIRECTORY, or nil."
+    (openfoam--directory-finder file-name-or-directory
+      (or "system/controlDict"
+          "system/fvSchemes"
+          "system/fvSolution"
+          (and "constant/"
+               "system/"))))
+  (defun openfoam-app-directory (file-name-or-directory)
+    "Return the OpenFOAM application directory of FILE-NAME-OR-DIRECTORY, or nil."
+    (openfoam--directory-finder file-name-or-directory
+      (and "Make/files"
+           "Make/options")))
   (defun chunk-edit-openfoam ()
     (interactive)
-    (let* ((default-directory (helm-current-directory))
-           (targets (if (dired-remember-marks (point-min) (point-max))
-                        (dired-get-marked-files)
-                      (list "0.orig" "constant" "system")))
+    (let* ((curr-dir (helm-current-directory))
+           (case-dir (openfoam-case-directory curr-dir))
+           (default-directory (or case-dir curr-dir))
+           (targets (cond ((dired-remember-marks (point-min) (point-max))
+                           (dired-get-marked-files))
+                          (case-dir
+                           (mapcar #'(lambda (x)
+                                       (expand-file-name x case-dir))
+                                   (list "0.orig" "constant" "system")))
+                          (t (list default-directory))))
            (file-list (cl-loop for target in targets
                                if (file-directory-p target)
                                nconc (directory-files target t "^[^.]")
