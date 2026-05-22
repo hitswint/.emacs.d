@@ -1029,10 +1029,11 @@
                                                         helm-sources-using-default-as-input)
                                                     (cl-letf (((symbol-function 'thing-at-point)
                                                                (lambda (&rest args)
-                                                                 (helm-aif (which-function)
-                                                                     (concat "\\_<" (regexp-quote it) "\\_>")
-                                                                   (let ((str (apply orig-fun args)))
-                                                                     (and str (concat "\\_<" (regexp-quote str) "\\_>")))))))
+                                                                 (concat "\\_<" "\\("
+                                                                         (helm-aif (which-function) (regexp-quote it))
+                                                                         "\\|"
+                                                                         (helm-aif (apply orig-fun args) (regexp-quote it))
+                                                                         "\\)" "\\_>"))))
                                                       (funcall fn arg)))))
   (advice-add 'helm-imenu-candidates :around #'(lambda (fn &optional buffer) (funcall fn (or buffer helm-imenu-current-buffer))))
   (advice-add 'helm-imenu-outshine :before #'(lambda () (setq helm-imenu-current-buffer (current-buffer))))
