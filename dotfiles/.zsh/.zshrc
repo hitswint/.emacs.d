@@ -123,4 +123,5 @@ if [[ -n $WM_PROJECT ]]; then
        ; then
         exec tmux new-session -A -s of
     fi
+    export COLORTERM="tmux-256color"
 fi

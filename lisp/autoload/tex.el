@@ -37,7 +37,7 @@ To solve equation, solve([x+y=3, x-y=1], [x,y])."
                    (calc-eval expr))))
     (deactivate-mark)
     (if (null arg)
-        (message "%s" result)
+        (kill-new (message "%s" result))
       (kill-region beg end)
       (insert result))))
 ;; ============eval-math-with-calc============
