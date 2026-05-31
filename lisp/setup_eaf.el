@@ -270,7 +270,10 @@
     (advice-add 'eaf-open-pdf-from-history :around #'(lambda (fn) (if (file-exists-p pdf-opened-file-path)
                                                                       (progn (let ((pdf-opened-files (with-temp-buffer (insert-file-contents pdf-opened-file-path)
                                                                                                                        (split-string (buffer-string) "\n" t))))
-                                                                               (cl-loop for pdf in pdf-opened-files
+                                                                               (eaf-open (car pdf-opened-files))
+                                                                               (while (not (eaf-epc-live-p eaf-epc-process))
+                                                                                 (sleep-for 0.2))
+                                                                               (cl-loop for pdf in (cdr pdf-opened-files)
                                                                                         when (file-exists-p pdf)
                                                                                         do (progn
                                                                                              (sit-for 0.2)
