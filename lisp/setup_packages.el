@@ -1527,14 +1527,17 @@ ORIG is the advised function, which is called with its ARGS."
                                if (file-directory-p target)
                                nconc (directory-files target t "^[^.]")
                                else if (file-exists-p target)
-                               collect target)))
+                               collect target))
+           (files-opened (when (buffer-live-p (get-buffer chunk-edit-buffer-name))
+                           (with-current-buffer chunk-edit-buffer-name
+                             (cl-loop for overlay in (chunk-edit--find-overlays)
+                                      for path = (plist-get (overlay-get overlay 'chunk) :path)
+                                      when (file-exists-p path)
+                                      collect path)))))
       (if (<= (length file-list) 1)
           (message "No files to be edited!")
-        (when (buffer-live-p (get-buffer chunk-edit-buffer-name))
-          (with-current-buffer chunk-edit-buffer-name
-            (chunk-edit-quit)))
         (chunk-edit)
-        (cl-loop for file in file-list
+        (cl-loop for file in (seq-difference file-list files-opened)
                  when (and (< (file-attribute-size (file-attributes file)) 1000000)
                            (not (file-directory-p file)))
                  do (progn (chunk-edit-insert-file file)
