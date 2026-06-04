@@ -1458,6 +1458,18 @@ ORIG is the advised function, which is called with its ARGS."
       ("n" . chunk-edit-next-chunk)))
   (define-key chunk-edit-mode-map (vector 'remap 'save-buffer) 'chunk-edit-save-chunk-at-point)
   (define-key chunk-edit-mode-map (vector 'remap 'save-some-buffers) 'chunk-edit-save-all-chunks)
+  (defun chunk-edit--file-header (chunk)
+    "Generate header string for CHUNK."
+    (format "FILE PATH: %s" (file-relative-name (plist-get chunk :path) default-directory)))
+  (advice-add 'chunk-edit--create-or-update-overlay :around #'(lambda (fn &rest args)
+                                                                (let* ((ov (apply fn args))
+                                                                       (str (overlay-get ov 'before-string)))
+                                                                  (when (string-match "\\(?:PATH:\\|BUFFER REGION:\\)\\s-*\\(.*?\\)\\s-*MODE:" str)
+                                                                    (let ((start (match-beginning 1))
+                                                                          (end (match-end 1)))
+                                                                      (add-face-text-property start end 'org-link nil str)))
+                                                                  (overlay-put ov 'before-string str)
+                                                                  ov)))
   (setq chunk-edit-buffer-name "*chunk-edit*")
   ;; Borrowed from https://github.com/ralph-schleicher/emacs-openfoam.
   (defmacro openfoam--directory-finder (file-name-or-directory test)
