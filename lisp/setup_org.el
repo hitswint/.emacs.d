@@ -149,6 +149,7 @@
                                                          (if (org-in-regexp org-link-any-re nil t)
                                                              (swint-org-open-at-point t)
                                                            (call-interactively 'org-open-line))))
+                (define-key org-mode-map (kbd "C-c SPC") 'org-table-blank-field)
                 (define-key org-mode-map (kbd "RET") nil)
                 (define-key org-mode-map [(control \,)] nil)
                 (define-key org-mode-map [(control \.)] nil)
