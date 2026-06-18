@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# key: fd
+# name: fd
+# group: of
+# --
+foamDictionary ${1:$$(unless yas-modified-p (file-relative-name (ivy-completing-read "Select file: " 'read-file-name-internal)))} -entry $0

@@ -42,4 +42,44 @@
     (setq eshell-highlight-prompt nil
           eshell-prompt-function 'epe-theme-lambda)))
 ;; ==============eshell-prompt-extras==============
+;;; sh-script
+;; ==============eshell-prompt-extras==============
+(use-package sh-script
+  :mode ("\\.sh\\'" . sh-mode)
+  :init
+  (add-hook 'sh-mode-hook (lambda () (when (getenv "WM_PROJECT")
+                                       (require 'company)
+                                       (make-local-variable 'company-backends)
+                                       (add-to-list 'company-backends 'company-foamDictionary)
+                                       (set (make-local-variable 'company-minimum-prefix-length) 0))))
+  :config
+  (defun company-foamDictionary (command &optional arg &rest ignored)
+    (interactive (list 'interactive))
+    (cl-case command
+      (prefix
+       (save-excursion
+         (beginning-of-line)
+         (when (looking-at "foamDictionary\\s-+\\([^[:space:]]+\\)\\s-+-entry\\s-+\\([^[:space:]]*\\)") "")))
+      (candidates
+       (let* ((entry (or (string-trim (buffer-substring-no-properties (match-beginning 2) (match-end 2))) ""))
+              (dict-file (buffer-substring-no-properties (match-beginning 1) (match-end 1)))
+              (setting-value (save-excursion (beginning-of-line) (looking-at "foamDictionary.*-set\\s-+$")))
+              (params (cond ((string-empty-p entry)
+                             "-keywords")
+                            ((string-suffix-p "/" entry)
+                             (concat "-entry " (substring entry 0 -1) " -keywords"))
+                            (setting-value
+                             (concat "-entry " entry " -value"))
+                            (t nil)))
+              (cmd (format "foamDictionary %s %s 2>/dev/null" dict-file (or params (concat "-entry " entry))))
+              (cmd-output (shell-command-to-string cmd)))
+         (if params
+             (if setting-value
+                 (list (concat "\"" (string-trim cmd-output) "\""))
+               (split-string cmd-output "\n" t))
+           (prog1 '()
+             (message "%s" cmd-output)))))
+      (meta
+       (format "OpenFOAM key under '%s'" (or arg ""))))))
+;; ==============eshell-prompt-extras==============
 (provide 'setup_shell)
