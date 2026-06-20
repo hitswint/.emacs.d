@@ -652,6 +652,52 @@
     (proced-toggle-auto-update 1))
   (add-hook 'proced-mode-hook 'proced-settings))
 ;; =====================Proced=====================
+;;; hs-minor-mode
+;; ====================hs-minor-mode===============
+(use-package hideshow
+  :diminish hs-minor-mode
+  :hook
+  (prog-mode . hs-minor-mode)
+  :custom
+  (hs-allow-nesting t)
+  (hs-hide-comments-when-hiding-all nil)
+  :config
+  (define-key hs-minor-mode-map (kbd "S-TAB") 'hs-toggle-hiding)
+  (define-key hs-minor-mode-map (kbd "C-x S-TAB") 'hs-toggle-hiding-all)
+  (defvar nn-fold-string "…")
+  (defface nn-fold-face '((t :inherit font-lock-variable-name-face)) "hs fold string")
+  (defun my-hs-set-up-overlay-c-style (ov)
+    (goto-char (1+ (overlay-end ov)))
+    (move-overlay ov (overlay-start ov) (1- (line-beginning-position)))
+    (overlay-put ov 'display (propertize nn-fold-string 'face 'nn-fold-face)))
+  (defun my-hs-set-up-overlay (ov)
+    (when (eq 'code (overlay-get ov 'hs))
+      (if (derived-mode-p 'c-mode 'c-ts-mode 'c++-mode 'c++-ts-mode
+                          'simpc-mode 'typescript-ts-mode 'tsx-ts-mode)
+          (my-hs-set-up-overlay-c-style ov)
+        (overlay-put ov 'display (propertize nn-fold-string 'face 'nn-fold-face)))))
+  (setq hs-set-up-overlay #'my-hs-set-up-overlay
+        hs-special-modes-alist '((c++-ts-mode "\\s(" "\\s)" "/[*/]" nil nil)
+                                 (c-ts-mode "\\s(" "\\s)" "/[*/]" nil nil)
+                                 (c++-mode "\\s(" "\\s)" "/[*/]" nil nil)
+                                 (c-mode "\\s(" "\\s)" "/[*/]" nil nil)
+                                 (simpc-mode "\\s(" "\\s)" "/[*/]" nil nil)
+                                 (js-ts-mode "\\s(" "\\s)" "/[*/]" nil nil)
+                                 (js-mode "\\s(" "\\s)" "/[*/]" nil nil)
+                                 (typescript-ts-mode "\\s(" "\\s)" "/[*/]" nil nil)
+                                 (nxml-mode "<!--\\|<[^/>]*[^/]>"
+                                            "-->\\|</[^/>]*[^/]>"
+                                            "<!--" sgml-skip-tag-forward nil)
+                                 (t)))
+  (defvar my-hs-hide nil "Current state of hideshow for toggling all.")
+  (defun hs-toggle-hiding-all ()
+    "Toggle hideshow all."
+    (interactive)
+    (setq my-hs-hide (not my-hs-hide))
+    (if my-hs-hide
+        (hs-hide-all)
+      (hs-show-all))))
+;; ====================hs-minor-mode===============
 ;;; vimish-fold
 ;; ==================vimish-fold===================
 (use-package vimish-fold

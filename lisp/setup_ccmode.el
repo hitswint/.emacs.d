@@ -179,18 +179,6 @@
   ;; 默认semantic快捷键以C-c ,为前缀
   (define-key semantic-mode-map (kbd "C-c ,") nil))
 ;; ===================semantic==================
-;;; hs-minor-mode
-;; ==================hs-minor-mode==============
-(use-package hideshow
-  :diminish hs-minor-mode
-  :commands hs-toggle-hiding
-  :init
-  (dolist (hook '(c-mode-common-hook asm-mode-hook))
-    (add-hook hook (lambda ()
-                     (local-set-key (kbd "C-c C-`") 'hs-toggle-hiding))))
-  :config
-  (define-key hs-minor-mode-map (kbd "C-c C-`") 'hs-toggle-hiding))
-;; ==================hs-minor-mode==============
 ;;; helm-gtags
 ;; ==================helm-gtags=================
 (use-package helm-gtags
