@@ -883,6 +883,7 @@
                                                                     ;; rg -g与ag -G相同
                                                                     (cl-loop for file-ext in file-extension-options
                                                                              collect (replace-regexp-in-string "-G" "-g" file-ext))))))
+  (advice-add 'helm-ag--do-ag-propertize :around #'(lambda (orig-fun input) (let ((inhibit-read-only t)) (funcall orig-fun input))))
   (defun swint-helm-do-ag-this-file ()
     (interactive)
     (let ((current-file (or (buffer-file-name)
