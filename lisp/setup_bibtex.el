@@ -250,6 +250,7 @@
 ;;; ebib
 ;; =====================ebib=======================
 (use-package ebib
+  :commands ebib-unbrace
   :bind ("C-x C-b" . ebib)
   :config
   (define-key ebib-index-mode-map (kbd ",") 'ebib-prev-database)
