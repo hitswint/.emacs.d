@@ -27,7 +27,7 @@ URxvt*geometry: 80x240+0+0
 URxvt.iconFile:/usr/share/icons/Adwaita/48x48/legacy/utilities-terminal.png
 
 ! perl-ext-common.
-URxvt.perl-ext-common: default,tabbedalt,keyboard-select,selection-to-clipboard,52-osc
+URxvt.perl-ext-common: default,-confirm-paste,tabbedalt,keyboard-select,selection-to-clipboard,52-osc
 
 ! tabbed
 ! URxvt.tabbed.tabbar-fg: 5
