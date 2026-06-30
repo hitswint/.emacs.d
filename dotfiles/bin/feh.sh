@@ -40,7 +40,7 @@ else
 fi
 
 # 图片打开很快，如果在xdotool执行前关闭feh的话，--sync选项会导致xdotool一直等待
-exec feh -Z -. -q "$@" -- "${arr[@]:c}" "${arr[@]:0:c}" & PID=$! ; win_id=$(timeout 10 xdotool search --sync --onlyvisible --pid $PID) && xseticon -id $win_id /usr/share/icons/Adwaita/48x48/mimetypes/image-x-generic.png
+exec feh -Z -. -q "$@" -- "${arr[@]:c}" "${arr[@]:0:c}" & PID=$! ; win_id=$(timeout 10 xdotool search --sync --onlyvisible --pid $PID) && xseticon -id $win_id /usr/share/icons/AdwaitaLegacy/16x16/mimetypes/image-x-generic.png
 # /usr/share/icons/hicolor/scalable/apps/feh.svg
 
 # 上述命令执行完后会直接退出，需根据feh进程判断退出时机
