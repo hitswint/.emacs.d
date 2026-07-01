@@ -12,7 +12,7 @@
 # ===================PANDOC===================
 #+PANDOC_OPTIONS: reference-doc:${4:$$(unless yas-modified-p (expand-file-name "~/.pandoc/reference.docx"))} toc:nil toc-depth:3
 #+PANDOC_OPTIONS: citeproc:t
-#+PANDOC_OPTIONS: bibliography:${5:$$(unless yas-modified-p (expand-file-name "~/.bib/Zotero.bib"))} csl:${6:$$(unless yas-modified-p (expand-file-name "~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl"))} citation-abbreviations:nil
+#+PANDOC_OPTIONS: bibliography:${5:$$(unless yas-modified-p (let ((bib-file (expand-file-name "~/.bib/Zotero.bib"))) (if (file-exists-p bib-file) bib-file "nil")))} csl:${6:$$(unless yas-modified-p (let ((csl-file (expand-file-name "~/Zotero/styles/china-national-standard-gb-t-7714-2015-numeric.csl"))) (if (file-exists-p csl-file) csl-file "nil")))} citation-abbreviations:nil
 #+PANDOC_OPTIONS: filter:pandoc-crossref
 #+PANDOC_METADATA: reference-section-title:参考文献
 #+PANDOC_METADATA: figureTitle:图 figPrefix:图 tableTitle:表 tblPrefix:表 eqnPrefix:式 autoEqnLabels:true titleDelim: chapters:false chapDelim:-
