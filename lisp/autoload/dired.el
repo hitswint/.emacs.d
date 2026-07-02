@@ -437,7 +437,7 @@ Assuming .. and . is a current directory (like in FAR)"
 ;;; swint-dired-rsync/unison
 ;; =========swint-dired-rsync/unison=========
 ;;;###autoload
-(defun swint-dired-rsync/unison (action)
+(defun swint-dired-rsync/unison (action &optional remove-source-files)
   (interactive)
   (let ((remote (helm-select-host))
         (path (abbreviate-file-name (helm-current-directory)))
@@ -491,7 +491,8 @@ Assuming .. and . is a current directory (like in FAR)"
                                                                     'remote-files (format "/ssh:%s:~/" remote))
                                                                    "/ssh:" t)))
                                              (concat remote ":" path))))))))
-          (setq rsync/unison-command "rsync -arv --progress ")
+          (setq rsync/unison-command (concat "rsync -arv --progress "
+                                             (when remove-source-files "--remove-source-files ")))
           (dolist (file files)
             (setq rsync/unison-command
                   (concat rsync/unison-command file " ")))
