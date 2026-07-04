@@ -59,10 +59,14 @@
       (prefix
        (save-excursion
          (beginning-of-line)
-         (when (looking-at "foamDictionary\\s-+\\([^[:space:]]+\\)\\s-+-entry\\s-+\\([^[:space:]]*\\)") "")))
+         (when (looking-at "foamDictionary\\s-+\\([^[:space:]]+\\)\\s-+-entry\\s-+\\([^ \t\n]*\\)") "")))
       (candidates
-       (let* ((entry (or (string-trim (buffer-substring-no-properties (match-beginning 2) (match-end 2))) ""))
-              (dict-file (buffer-substring-no-properties (match-beginning 1) (match-end 1)))
+       (let* ((entry-beg (match-beginning 2))
+              (entry-end (match-end 2))
+              (dict-beg (match-beginning 1))
+              (dict-end (match-end 1))
+              (entry (or (string-trim (buffer-substring-no-properties entry-beg entry-end)) ""))
+              (dict-file (buffer-substring-no-properties dict-beg dict-end))
               (setting-value (save-excursion (beginning-of-line) (looking-at "foamDictionary.*-set\\s-+$")))
               (params (cond ((string-empty-p entry)
                              "-keywords")
@@ -75,10 +79,14 @@
               (cmd-output (shell-command-to-string cmd)))
          (if params
              (if setting-value
-                 (list (concat "\"" (string-trim cmd-output) "\""))
+                 (list (prin1-to-string (string-trim cmd-output)))
                (split-string cmd-output "\n" t))
-           (prog1 '()
+           (prog1 (if (save-excursion (beginning-of-line)
+                                      (looking-at "foamDictionary\\s-+[^[:space:]]+\\s-+-entry\\s-+[^ \t\n]+\\s-+$"))
+                      '("-set " "-remove")
+                    '(""))
              (message "%s" cmd-output)))))
+      (sorted t)
       (meta
        (format "OpenFOAM key under '%s'" (or arg ""))))))
 ;; ==============eshell-prompt-extras==============
