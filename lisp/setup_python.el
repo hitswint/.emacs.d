@@ -45,7 +45,7 @@
                                      ("rows" "::")
                                      ("labels" "x,y")
                                      ("fonts" "st,st,st")
-                                     ("sizes" "48,56,48")
+                                     ("sizes" "32,32,32")
                                      ;; 可直接输入用逗号分割的colors/lines/markers
                                      ("colors" (nconc (list "r" "g" "b" "y" "c" "m" "k" "C0" "C1" "C2" "C3" "C4" "C5" "C6" "C7" "C8" "C9")
                                                       (cl-remove-if (lambda (x)
@@ -258,12 +258,12 @@ names['df_'+re.sub(r'\\W','_','%s_')+re.sub(r'\\W','_','%s')] = pd.read_sql('%s'
                                             ((equal x "text")
                                              (concat (format "text='%s'" (read-string "text($\\\\alpha$): "))
                                                      (format ",text_config='%s'" (read-string "text_config(x,y): "))
-                                                     (format ",text_config_optional='%s'" (read-string "text_config_optional: " "56,s,k"))))
+                                                     (format ",text_config_optional='%s'" (read-string "text_config_optional: " "32,s,k"))))
                                             ((equal x "annotate")
                                              (concat (format "annotate='%s'" (read-string "annotate($\\\\alpha$): "))
                                                      (format ",annotate_config='%s'" (read-string "annotate_config(x,y,x[text],y[text]): "))
                                                      (format ",annotate_config_optional='%s'" (read-string "annotate_config_optional: "
-                                                                                                           "56,s,k,arrowstyle=\"simple\",connectionstyle=\"arc3\",edgecolor=\"k\",facecolor=\"w\",fill=False,linestyle=\"-\",linewidth=2"))))
+                                                                                                           "32,s,k,arrowstyle=\"simple\",connectionstyle=\"arc3\",edgecolor=\"k\",facecolor=\"w\",fill=False,linestyle=\"-\",linewidth=2"))))
                                             ((equal x "axline")
                                              (concat (format "axline='%s'" (read-string "axline(h/v): "))
                                                      (format ",axline_config='%s'" (read-string "axline_config(coordinate): "))
