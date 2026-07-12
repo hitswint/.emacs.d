@@ -13,12 +13,11 @@
                                                   (string-prefix-p "/mnt/usb" root))))
   :config
   (projectile-mode t)
-  (remove-hook 'buffer-list-update-hook #'projectile-track-known-projects-find-file-hook)
   ;; (bind-key "M-\"" 'projectile-command-map projectile-mode-map)
   (setq projectile-indexing-method 'alien
         projectile-enable-caching nil
         projectile-auto-update-cache nil
-        projectile-completion-system 'helm
+        projectile-completion-system 'default
         projectile-mode-line-function 'swint-projectile-default-mode-line
         projectile-track-known-projects-automatically t)
   (defun swint-projectile-default-mode-line ()
