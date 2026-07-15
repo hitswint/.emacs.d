@@ -74,7 +74,7 @@
                                              ("eso" . "w.xEsoView.sh") ("mtr" . "w.xEsoView.sh")
                                              ("idf" . "urxvt -e zsh -is eval ep.sh")
                                              ("osm" . "OpenStudioApp")
-                                             ("foam" . "paraview") ("openfoam" . "paraview") ("stl" . "paraview") ("vtk" . "paraview") ("vtp" . "paraview"))
+                                             ("foam" . "paraview") ("openfoam" . "paraview") ("stl" . "paraview") ("vtk" . "paraview") ("vtp" . "paraview") ("vtm" . "paraview"))
                                            (mapcar (lambda (x)
                                                      (cons x "mpv.sh"))
                                                    file_video_exts)
@@ -123,7 +123,8 @@
          (list "\\.openfoam$" "paraview -s localhost * >/dev/null 2>&1 &")
          (list "\\.stl$" "paraview -s localhost * >/dev/null 2>&1 &")
          (list "\\.vtk$" "paraview -s localhost * >/dev/null 2>&1 &")
-         (list "\\.vtp$" "paraview -s localhost * >/dev/null 2>&1 &")))
+         (list "\\.vtp$" "paraview -s localhost * >/dev/null 2>&1 &")
+         (list "\\.vtm$" "paraview -s localhost * >/dev/null 2>&1 &")))
 ;;;; keybindings
   ;; ===============keybindings================
   (add-hook 'dired-mode-hook
