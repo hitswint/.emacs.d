@@ -293,7 +293,11 @@
     (eaf-bind-key load_next_image "C-n" eaf-image-viewer-keybinding))
   (use-package eaf-pyqterminal
     :config
-    (advice-add 'eaf-open-pyqterminal :around #'(lambda (fn) (let ((default-directory (helm-current-directory))) (funcall fn))))
+    (advice-add 'eaf-open-pyqterminal :around #'(lambda (fn) (let ((default-directory (helm-current-directory)))
+                                                               (if (and (getenv "TMUX") (not (display-graphic-p)))
+                                                                   ;; (shell-command (format "tmux split-window -h 'cd \"%s\" && exec $SHELL'" default-directory))
+                                                                   (shell-command (format "tmux split-window -h 'cd \"%s\"; $SHELL -i'" default-directory))
+                                                                 (funcall fn)))))
     (cl-loop for key in '("M-p" "M-n" "C-x" "M-i" "M-m" "M-t" "M-z" "C-v" "M-v" "M-<" "M->")
              do (eaf-bind-key eaf-send-key-sequence key eaf-pyqterminal-keybinding))
     (cl-loop for key in '("(" "[" "{" "<" "《" "\"" "'" "“" "”" "‘" "’")
