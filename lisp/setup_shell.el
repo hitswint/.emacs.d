@@ -59,7 +59,7 @@
       (prefix
        (save-excursion
          (beginning-of-line)
-         (when (looking-at "foamDictionary\\s-+\\([^[:space:]]+\\)\\s-+-entry\\s-+\\([^ \t\n]*\\)") "")))
+         (when (looking-at "[ \t]*foamDictionary\\s-+\\([^[:space:]]+\\)\\s-+-entry\\s-+\\([^ \t\n]*\\)") "")))
       (candidates
        (let* ((entry-beg (match-beginning 2))
               (entry-end (match-end 2))
@@ -67,7 +67,7 @@
               (dict-end (match-end 1))
               (entry (or (string-trim (buffer-substring-no-properties entry-beg entry-end)) ""))
               (dict-file (buffer-substring-no-properties dict-beg dict-end))
-              (setting-value (save-excursion (beginning-of-line) (looking-at "foamDictionary.*-set\\s-+$")))
+              (setting-value (save-excursion (beginning-of-line) (looking-at "[ \t]*foamDictionary.*-set\\s-+$")))
               (params (cond ((string-empty-p entry)
                              "-keywords")
                             ((string-suffix-p "/" entry)
@@ -82,7 +82,7 @@
                  (list (prin1-to-string (string-trim cmd-output)))
                (split-string cmd-output "\n" t))
            (prog1 (if (save-excursion (beginning-of-line)
-                                      (looking-at "foamDictionary\\s-+[^[:space:]]+\\s-+-entry\\s-+[^ \t\n]+\\s-+$"))
+                                      (looking-at "[ \t]*foamDictionary\\s-+[^[:space:]]+\\s-+-entry\\s-+[^ \t\n]+\\s-+$"))
                       '("-set " "-remove")
                     '(""))
              (message "%s" cmd-output)))))
