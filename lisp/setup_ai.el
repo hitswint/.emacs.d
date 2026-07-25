@@ -14,7 +14,8 @@
   (setopt ellama-enable-keymap nil
           ellama-language "English"
           ellama-major-mode 'org-mode
-          ellama-nick-prefix-depth 1)
+          ellama-nick-prefix-depth 1
+          ellama-show-reasoning nil)
   (require 'llm-ollama)
   (require 'llm-openai)
   (setopt llm-warn-on-nonfree nil)

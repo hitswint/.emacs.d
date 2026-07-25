@@ -334,8 +334,11 @@ plot_data.fig_config(%s)" swint-python-plot-exec-path args-string)))
           (setq files-list (if (eq major-mode 'dired-mode) (dired-get-marked-files) (list (or target-file (buffer-file-name)))))
           (setq files-string (mapconcat 'identity files-list ","))
           (setq columns-string (plot-file-setup (car files-list)))
-          (setq file-x-string (helm-comp-read "File as x: " (cons "None" (directory-files (helm-current-directory) nil directory-files-no-dot-files-regexp))
-                                              :buffer "*helm python plot data-swint*"))
+          (setq file-x-string (let ((file-x-orig (helm-comp-read "File as x: " (cons "None" (directory-files (helm-current-directory) nil directory-files-no-dot-files-regexp))
+                                                                 :buffer "*helm python plot data-swint*")))
+                                (if (string= file-x-orig "None")
+                                    file-x-orig
+                                  (expand-file-name file-x-orig (helm-current-directory)))))
           (setq column-x-string (plot-file-setup (if (string= file-x-string "None") (car files-list) file-x-string) t)))
         (let* ((config-list (helm-comp-read "Configs: " (list "None" "rows" "labels" "fonts" "sizes" "colors" "markercolors" "lines" "markers" "hatchs" "polyfit" "twinx" "xlog" "ylog" "save" "half_width" "animate")
                                             :marked-candidates t

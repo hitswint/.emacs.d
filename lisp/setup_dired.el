@@ -752,6 +752,12 @@
           (set-mark beg)
           (goto-char end)))
       (dired-toggle-marks)))
+  (defun dired-subtree-mark-subtree-all ()
+    (interactive)
+    (dired-subtree-mark-subtree t))
+  (defun dired-subtree-unmark-subtree-all ()
+    (interactive)
+    (dired-subtree-unmark-subtree t))
   ;; C-M-p/n/u/d
   (cl-loop for (key . value) in '((dired-prev-subdir . dired-subtree-previous-sibling)
                                   (dired-next-subdir . dired-subtree-next-sibling)
@@ -763,8 +769,8 @@
                                                                       (call-interactively value)
                                                                     (apply fn args))))))
   ;; *s/U/M-</M->
-  (cl-loop for (key . value) in '((dired-mark-subdir-files . dired-subtree-mark-subtree)
-                                  (dired-unmark-all-marks . dired-subtree-unmark-subtree)
+  (cl-loop for (key . value) in '((dired-mark-subdir-files . dired-subtree-mark-subtree-all)
+                                  (dired-unmark-all-marks . dired-subtree-unmark-subtree-all)
                                   (dired-toggle-marks . dired-subtree-toggle-marks)
                                   (dired-beginning-of-buffer . dired-subtree-beginning)
                                   (dired-end-of-buffer . dired-subtree-end))
