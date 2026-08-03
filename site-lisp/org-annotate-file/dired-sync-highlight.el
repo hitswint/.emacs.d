@@ -13,19 +13,19 @@
 (defun dired-copy-file/after (from to ok-flag)
   "Sync dired annotated status when copy files."
   (cl-flet ((annotated-path (x)
-                            (concat "annotated-("
-                                    (replace-regexp-in-string
-                                     "/" "_"
-                                     (substring-no-properties
-                                      (abbreviate-file-name x) 1)))))
-
+              (concat "annotated-("
+                      (replace-regexp-in-string
+                       "/" "_"
+                       (substring-no-properties
+                        (abbreviate-file-name x) 1)))))
     (let* ((annotated-file-list (if (dired-k--parse-status t)
                                     (hash-table-keys (dired-k--parse-status t))))
            (dir-from-str (annotated-path (file-name-directory from)))
            (dir-to-str (annotated-path (file-name-directory to)))
            (tar-from-str (annotated-path from))
            (tar-to-str (annotated-path to))
-           (annotation-storage-files (directory-files "~/org/annotated/" t (regexp-quote tar-from-str))))
+           (annotation-storage-files (when (file-exists-p "~/org/annotated/")
+                                       (directory-files "~/org/annotated/" t (regexp-quote tar-from-str)))))
       (when (member (file-name-nondirectory from) annotated-file-list)
         (let* ((annotation-refile-from (concat "~/org/annotated/" dir-from-str ").org"))
                (annotation-refile-to (concat "~/org/annotated/" dir-to-str ").org"))
@@ -58,18 +58,19 @@
 (defun wdired-do-renames/before (files-renamed)
   "Sync dired annotated status in wdired-mode."
   (cl-flet ((annotated-path (x)
-                            (concat "annotated-("
-                                    (replace-regexp-in-string
-                                     "/" "_"
-                                     (substring-no-properties
-                                      (abbreviate-file-name x) 1)))))
+              (concat "annotated-("
+                      (replace-regexp-in-string
+                       "/" "_"
+                       (substring-no-properties
+                        (abbreviate-file-name x) 1)))))
     (let ((annotated-file-list (if (dired-k--parse-status t)
                                    (hash-table-keys (dired-k--parse-status t)))))
       (loop for file-renamed in files-renamed
             do (let* ((file-renamed-old (car file-renamed))
                       (file-renamed-new (cdr file-renamed))
-                      (annotation-storage-files (directory-files "~/org/annotated/" t
-                                                                 (regexp-quote (annotated-path file-renamed-old)))))
+                      (annotation-storage-files (when (file-exists-p "~/org/annotated/")
+                                                  (directory-files "~/org/annotated/" t
+                                                                   (regexp-quote (annotated-path file-renamed-old))))))
                  (when (member (file-name-nondirectory file-renamed-old) annotated-file-list)
                    (let* ((link-old (concat "file:" (file-name-nondirectory file-renamed-old)))
                           (link-new (concat "file:" (file-name-nondirectory file-renamed-new)))
@@ -107,11 +108,12 @@
                                  (hash-table-keys (dired-k--parse-status t)))))
     (loop for file-deleted in files-deleted
           do (let ((annotation-storage-files
-                    (directory-files "~/org/annotated/" t
-                                     (regexp-quote (concat "annotated-("
-                                                           (replace-regexp-in-string
-                                                            "/" "_"
-                                                            (substring-no-properties (abbreviate-file-name file-deleted) 1)))))))
+                    (when (file-exists-p "~/org/annotated/")
+                      (directory-files "~/org/annotated/" t
+                                       (regexp-quote (concat "annotated-("
+                                                             (replace-regexp-in-string
+                                                              "/" "_"
+                                                              (substring-no-properties (abbreviate-file-name file-deleted) 1))))))))
                (when (member (file-name-nondirectory file-deleted) annotated-file-list)
                  (let ((link-deleted (concat "file:" (file-name-nondirectory file-deleted))))
                    (with-current-buffer (find-file (swint-org-annotation-storage-file))
