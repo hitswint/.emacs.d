@@ -454,7 +454,7 @@
 (use-package org-annotate-file
   :load-path "site-lisp/org-annotate-file/"
   :commands org-annotate-file
-  :config
+  :init
   (setq org-annotate-file-storage-file "~/org/annotated/annotated.org"))
 ;; 新建swint-org-annotate-file.el用于局部注释
 (use-package swint-org-annotate-file

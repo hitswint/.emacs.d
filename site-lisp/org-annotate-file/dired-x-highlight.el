@@ -83,16 +83,17 @@
             (puthash (match-string-no-properties 1) status files-status)))))
     (unless only-annotated-locally
       ;; Parse status of files annotated globally.
-      (with-temp-buffer
-        (insert-file-contents "~/org/annotated/annotated.org")
-        (goto-char (point-min))
-        (let ((status 'annotated-globally))
-          (while (search-forward-regexp
-                  (concat "^* " "\\[\\[file:.+\\]\\[file:"
-                          (regexp-quote (abbreviate-file-name default-directory))
-                          "\\([^/]+\\)\\]\\]")
-                  nil t)
-            (puthash (match-string-no-properties 1) status files-status))))
+      (when (file-exists-p org-annotate-file-storage-file)
+        (with-temp-buffer
+          (insert-file-contents "~/org/annotated/annotated.org")
+          (goto-char (point-min))
+          (let ((status 'annotated-globally))
+            (while (search-forward-regexp
+                    (concat "^* " "\\[\\[file:.+\\]\\[file:"
+                            (regexp-quote (abbreviate-file-name default-directory))
+                            "\\([^/]+\\)\\]\\]")
+                    nil t)
+              (puthash (match-string-no-properties 1) status files-status)))))
       ;; Parse status of files interleaved.
       (let ((pdf-files-interleaved (swint-interleaved-files))
             (status 'interleaved))
