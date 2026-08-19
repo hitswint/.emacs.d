@@ -1066,7 +1066,7 @@
 (use-package idf-mode
   :load-path "site-lisp/idf-mode/"
   :delight "Idf"
-  :mode ("\\.[iI][dD][fF]\\'" . idf-mode)
+  :mode ("\\.\\([iI][dD][fF]\\|[oO][sS][mM]\\)\\'" . idf-mode)
   :config
   (smartrep-define-key idf-mode-map "C-c"
     '(("p" . idf-prev-object)
