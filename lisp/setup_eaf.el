@@ -363,5 +363,11 @@
 (use-package eaf-all-the-icons
   :load-path "repos/emacs-application-framework/extension/"
   :after eaf)
+(use-package eaf-org
+  :load-path "repos/emacs-application-framework/extension/"
+  :after eaf
+  :config
+  (setq eaf-org-override-pdf-links-open nil
+        eaf-org-override-pdf-links-store t))
 ;; =====================eaf=====================
 (provide 'setup_eaf)
