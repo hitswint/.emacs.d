@@ -489,7 +489,11 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
     (interactive)
     (unless (featurep 'ob-jupyter)
       (add-to-list 'org-babel-load-languages '(jupyter . t) t)
-      (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
+      (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
+      (dolist (buf (buffer-list))
+        (with-current-buffer buf
+          (when (eq major-mode 'org-mode)
+            (revert-buffer nil t)))))
     (pyvenv-activate-py3)
     (call-interactively 'jupyter-run-repl))
   (define-key jupyter-repl-interaction-mode-map (kbd "M-i") nil)
