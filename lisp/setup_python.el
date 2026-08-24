@@ -478,6 +478,7 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
 (use-package jupyter
   ;; 依赖emacs-zmq，自动安装失败时，可手动下载emacs-zmq.so并置于zmq.el同文件夹下
   ;; 开启jupyter后，需重新打开org文件，才能让ob-jupyter生效
+  ;; 在ob-jupyter中操作，会自动启动jupyter环境，而不利用已启动的环境
   :bind (("M-o j" . swint-jupyter-run-repl)
          ("M-o J" . jupyter-connect-repl))
   :init
@@ -494,7 +495,15 @@ plot_data.file_plot('%s','%s','%s','%s','%s' %s)" swint-python-plot-exec-path fi
   (define-key jupyter-repl-interaction-mode-map (kbd "M-i") nil)
   (define-key jupyter-repl-interaction-mode-map (kbd "C-x C-e") nil)
   (define-key jupyter-repl-interaction-mode-map (kbd "C-c C-/") #'jupyter-inspect-at-point)
-  (define-key jupyter-repl-interaction-mode-map (kbd "C-c C-e") #'jupyter-eval-string-command))
+  (define-key jupyter-repl-interaction-mode-map (kbd "C-c C-;") #'jupyter-eval-line-or-region)
+  (define-key jupyter-repl-interaction-mode-map (kbd "C-c C-:") #'jupyter-eval-string-command)
+  (use-package jupyter-org-client
+    :config
+    (define-key jupyter-org-interaction-mode-map (kbd "M-i") nil)
+    (define-key jupyter-org-interaction-mode-map (kbd "C-x C-e") nil)
+    (jupyter-org-define-key (kbd "C-c C-/") #'jupyter-inspect-at-point)
+    (jupyter-org-define-key (kbd "C-c C-;") #'jupyter-eval-line-or-region)
+    (jupyter-org-define-key (kbd "C-c C-:") #'jupyter-eval-string-command)))
 ;; ==================jupyter===================
 ;;; jedi
 ;; ===================jedi=====================
