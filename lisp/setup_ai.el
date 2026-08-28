@@ -120,13 +120,20 @@
 (use-package claude-code
   :load-path "repos/claude-code.el/"
   :diminish claude-code-mode
-  :bind-keymap ("M-C" . claude-code-command-map)
+  :commands code-switch-agent
+  ;; :bind-keymap ("M-C" . claude-code-command-map)
   :bind (:repeat-map my-claude-code-map ("M" . claude-code-cycle-mode))
   :config
   ;; 直接使用define-prefix-command会导致已有的按键绑定失效
   (if (boundp 'claude-code-command-map)
       (fset 'claude-code-command-map claude-code-command-map)
     (define-prefix-command 'claude-code-command-map))
+  (defun code-switch-agent ()
+    (interactive)
+    (if (equal (lookup-key global-map (kbd "M-C")) 'claude-code-command-map)
+        (global-set-key (kbd "M-C") 'agent-shell-prefix-map)
+      (global-set-key (kbd "M-C") 'claude-code-command-map))
+    (setq unread-command-events (listify-key-sequence (kbd "M-C"))))
   (bind-key "M-C" 'code-switch-agent claude-code-command-map)
   (bind-key "c" #'(lambda (&optional arg) (interactive "P") (claude-code--start arg nil nil t)) claude-code-command-map)
   (bind-key "C" #'(lambda (&optional arg) (interactive "P") (claude-code--start arg '("--continue") nil t)) claude-code-command-map)
@@ -161,8 +168,8 @@
 ;;; agent-shell
 ;; =================agent-shell====================
 (use-package agent-shell
-  ;; :bind-keymap ("M-C" . agent-shell-prefix-map)
-  :commands code-switch-agent
+  ;; :commands code-switch-agent
+  :bind-keymap ("M-C" . agent-shell-prefix-map)
   :bind (:map agent-shell-prefix-map
               ("a" . agent-shell)
               ("d" . agent-shell-send-dwim)
@@ -181,12 +188,6 @@
   (define-prefix-command 'agent-shell-prefix-map)
   :config
   (setq agent-shell-prefer-viewport-interaction nil)
-  (defun code-switch-agent ()
-    (interactive)
-    (if (equal (lookup-key global-map (kbd "M-C")) 'agent-shell-prefix-map)
-        (global-set-key (kbd "M-C") 'claude-code-command-map)
-      (global-set-key (kbd "M-C") 'agent-shell-prefix-map))
-    (setq unread-command-events (listify-key-sequence (kbd "M-C"))))
   (bind-key "C-<tab>" nil agent-shell-mode-map)
   (bind-key "C-c C-<tab>" 'agent-shell-cycle-session-mode agent-shell-mode-map))
 ;; =================agent-shell====================
