@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# key: info
+# name: info
+# group: of
+# expand-env: ((yas-indent-line 'fixed))
+# --
+Info<< "${1:xxx}: " << $1 << endl;$0
