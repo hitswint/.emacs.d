@@ -187,7 +187,8 @@
     "Keymap for agent-shell commands.")
   (define-prefix-command 'agent-shell-prefix-map)
   :config
-  (setq agent-shell-prefer-viewport-interaction nil)
+  (setq agent-shell-prefer-viewport-interaction nil
+        agent-shell-preferred-agent-config '(preselect . codex))
   (bind-key "C-<tab>" nil agent-shell-mode-map)
   (bind-key "C-c C-<tab>" 'agent-shell-cycle-session-mode agent-shell-mode-map))
 ;; =================agent-shell====================
