@@ -30,7 +30,11 @@
     (shell-command "git config diff.wordx.textconv pandoc\\ --to=plain")
     (with-temp-file ".gitignore"
       (insert (concat ".~*" "\n"))))
-  (define-key magit-status-mode-map (kbd "C-c d") 'swint-magit-diff-doc))
+  (define-key magit-status-mode-map (kbd "C-c d") 'swint-magit-diff-doc)
+  ;; <return>: magit-diff-visit-file
+  ;; C-<return>: magit-diff-visit-worktree-file
+  (define-key magit-diff-section-map (kbd "C-o") 'magit-diff-visit-file-other-window)
+  (define-key magit-diff-section-map (kbd "C-j") 'magit-diff-visit-worktree-file-other-window))
 ;; ====================magit=======================
 ;;; vc
 ;; ======================vc========================
