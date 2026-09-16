@@ -2,15 +2,21 @@
 ;; =====================eaf=====================
 (use-package eaf
   :load-path "repos/emacs-application-framework/"
+  :commands eaf-open-pyqterminal
   :bind (("M-o a a" . eaf-open)
          ("M-o a s" . eaf-stop-process)
          ("M-o a r" . eaf-restart-process)
          ("M-o M-a" . eaf-open-pdf-from-history)
-         ("M-o M-w" . eaf-open-browser-with-history)
-         ("M-o M-RET" . eaf-open-pyqterminal))
+         ("M-o M-w" . eaf-open-browser-with-history))
   :init
   (setq eaf-dired-advisor-enable nil)
   (add-hook 'eaf-mode-hook #'(lambda () (kill-local-variable 'frame-title-format)))
+  (bind-key "M-o M-RET" #'(lambda () (interactive)
+                            (let ((default-directory (helm-current-directory)))
+                              (if (and (getenv "TMUX") (not (display-graphic-p)))
+                                  ;; (shell-command (format "tmux split-window -h 'cd \"%s\" && exec $SHELL'" default-directory))
+                                  (shell-command (format "tmux split-window -h 'cd \"%s\"; $SHELL -i'" default-directory))
+                                (call-interactively 'eaf-open-pyqterminal)))))
   :config
   (pyvenv-activate-py3 t)
   (setq eaf-webengine-default-zoom "1.5"
@@ -293,11 +299,6 @@
     (eaf-bind-key load_next_image "C-n" eaf-image-viewer-keybinding))
   (use-package eaf-pyqterminal
     :config
-    (advice-add 'eaf-open-pyqterminal :around #'(lambda (fn) (let ((default-directory (helm-current-directory)))
-                                                               (if (and (getenv "TMUX") (not (display-graphic-p)))
-                                                                   ;; (shell-command (format "tmux split-window -h 'cd \"%s\" && exec $SHELL'" default-directory))
-                                                                   (shell-command (format "tmux split-window -h 'cd \"%s\"; $SHELL -i'" default-directory))
-                                                                 (funcall fn)))))
     (cl-loop for key in '("M-p" "M-n" "C-x" "M-i" "M-m" "M-t" "M-z" "C-v" "M-v" "M-<" "M->")
              do (eaf-bind-key eaf-send-key-sequence key eaf-pyqterminal-keybinding))
     (cl-loop for key in '("(" "[" "{" "<" "《" "\"" "'" "“" "”" "‘" "’")
