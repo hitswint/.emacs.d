@@ -6,7 +6,8 @@
  '(package-selected-packages
    '(ac-html-bootstrap ac-ispell ac-math academic-phrases
                        ace-jump-helm-line ace-link ace-pinyin
-                       agent-shell aggressive-indent all-the-icons
+                       agent-shell agent-shell-math-renderer
+                       aggressive-indent all-the-icons
                        all-the-icons-dired anchored-transpose
                        arduino-mode auctex-latexmk auto-complete-auctex
                        auto-complete-c-headers auto-complete-clang

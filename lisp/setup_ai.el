@@ -190,6 +190,19 @@
   (setq agent-shell-prefer-viewport-interaction nil
         agent-shell-preferred-agent-config '(preselect . codex))
   (bind-key "C-<tab>" nil agent-shell-mode-map)
-  (bind-key "C-c C-<tab>" 'agent-shell-cycle-session-mode agent-shell-mode-map))
+  (bind-key "C-c C-<tab>" 'agent-shell-cycle-session-mode agent-shell-mode-map)
+  (defun my/agent-shell-dot-subdir (subdir)
+    (let* ((cwd (string-remove-suffix "/" (agent-shell-cwd)))
+           (sanitized (replace-regexp-in-string "/" "-" (string-remove-prefix "/" cwd))))
+      (expand-file-name subdir (locate-user-emacs-file (concat "agent-shell/" sanitized)))))
+  (setopt agent-shell-dot-subdir-function #'my/agent-shell-dot-subdir))
+(use-package agent-shell-math-renderer
+  :after agent-shell
+  :hook (agent-shell-mode . agent-shell-math-renderer-mode)
+  :config
+  (add-hook 'enable-theme-functions
+            #'agent-shell-math-renderer-on-appearance-change)
+  (add-hook 'after-setting-font-hook
+            #'agent-shell-math-renderer-on-appearance-change))
 ;; =================agent-shell====================
 (provide 'setup_ai)
