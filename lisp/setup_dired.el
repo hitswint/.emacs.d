@@ -167,6 +167,8 @@
                                                        (let ((default-directory (dired-current-directory)))
                                                          (dired-create-empty-file (read-from-minibuffer "Create file: "))
                                                          (revert-buffer))))
+              (define-key dired-mode-map (kbd "C-<return>") #'(lambda () (interactive)
+                                                                (find-file (file-truename (dired-get-file-for-visit)))))
               (make-local-variable 'dired-sort-map)
               (setq dired-sort-map (make-sparse-keymap))
               (define-key dired-mode-map "s" dired-sort-map)
