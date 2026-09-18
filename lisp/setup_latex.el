@@ -93,4 +93,15 @@
                                                         (auctex-latexmk-setup))))
   (advice-remove #'TeX-recenter-output-buffer #'ad-Advice-TeX-recenter-output-buffer))
 ;; =================auctex-latexmk=================
+;;; ratex
+;; =====================ratex======================
+(use-package ratex
+  :load-path "repos/ratex.el/lisp/"
+  :delight '(:eval (propertize " R" 'face 'font-lock-function-name-face))
+  :bind ("M-g r" . ratex-mode)
+  :config
+  ;; (global-ratex-mode 1)
+  (setq ratex-edit-preview nil
+        ratex-font-size 20))
+;; =====================ratex======================
 (provide 'setup_latex)
