@@ -860,7 +860,8 @@
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init
-  (add-hook 'markdown-mode-hook 'markdown-display-inline-images)
+  (add-hook 'markdown-mode-hook #'(lambda () (when (display-graphic-p)
+                                               (markdown-display-inline-images))))
   :config
   (setq markdown-open-image-command "feh.sh"
         markdown-max-image-size '(640 . 480))
