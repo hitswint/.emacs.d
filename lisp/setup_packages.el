@@ -1550,16 +1550,16 @@ ORIG is the advised function, which is called with its ARGS."
   (defun openfoam-case-directory (file-name-or-directory)
     "Return the OpenFOAM case directory of FILE-NAME-OR-DIRECTORY, or nil."
     (openfoam--directory-finder file-name-or-directory
-      (or "system/controlDict"
-          "system/fvSchemes"
-          "system/fvSolution"
-          (and "constant/"
-               "system/"))))
+                                (or "system/controlDict"
+                                    "system/fvSchemes"
+                                    "system/fvSolution"
+                                    (and "constant/"
+                                         "system/"))))
   (defun openfoam-app-directory (file-name-or-directory)
     "Return the OpenFOAM application directory of FILE-NAME-OR-DIRECTORY, or nil."
     (openfoam--directory-finder file-name-or-directory
-      (and "Make/files"
-           "Make/options")))
+                                (and "Make/files"
+                                     "Make/options")))
   (defun chunk-edit-openfoam ()
     (interactive)
     (let* ((curr-dir (helm-current-directory))
@@ -1657,4 +1657,32 @@ ORIG is the advised function, which is called with its ARGS."
           (method (if arg "ssh" "rpc")))
       (helm-find-files-1 (format "/%s:%s:%s/" method host (expand-file-name (getenv "HOME")))))))
 ;; ==================tramp-rpc=====================
+;;; latex-to-svg
+;; ================latex-to-svg====================
+(use-package latex-to-svg-for-org
+  :commands latex-to-svg-for-org-mode
+  :init
+  (add-hook 'org-mode-hook #'(lambda () (when (and buffer-file-name
+                                                   (not (file-in-directory-p buffer-file-name "~/org")))
+                                          (latex-to-svg-for-org-mode))))
+  :config
+  (defun my-latex-to-svg-for-org--exclusions-add-links (orig-fun beg end)
+    "Add Org link regions ([[target]] / [[target][desc]]) to REGIONS."
+    (let ((regions (funcall orig-fun beg end))
+          (case-fold-search t))
+      (save-excursion
+        (save-restriction
+          (widen)
+          (goto-char beg)
+          (while (re-search-forward "\\[\\[" end t)
+            (let ((start (match-beginning 0))
+                  (line-end (line-end-position)))
+              (when (and (<= line-end end)
+                         (re-search-forward "\\]\\]" line-end t))
+                (push (cons start (match-end 0)) regions))))))
+      regions))
+  (advice-add 'latex-to-svg-for-org--exclusions :around #'my-latex-to-svg-for-org--exclusions-add-links))
+(use-package latex-to-svg-for-markdown
+  :hook (markdown-mode . latex-to-svg-for-markdown-mode))
+;; ================latex-to-svg====================
 (provide 'setup_packages)

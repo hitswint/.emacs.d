@@ -35,7 +35,8 @@
                        highlight-parentheses highlight-symbol
                        hungry-delete imenu-anywhere imenu-list
                        inheritenv ivy-bibtex ivy-hydra jedi jupyter
-                       key-chord lacarte lingva magit markdown-mode
+                       key-chord lacarte latex-to-svg-for-markdown
+                       latex-to-svg-for-org lingva magit markdown-mode
                        matlab-mode meghanada modelica-mode msgpack
                        mu4e-alert mu4e-views multifiles multiple-cursors
                        names neotree nov operate-on-number org-appear
