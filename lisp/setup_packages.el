@@ -1666,6 +1666,8 @@ ORIG is the advised function, which is called with its ARGS."
   (add-hook 'org-mode-hook #'(lambda () (when (and buffer-file-name
                                                    (not (file-in-directory-p buffer-file-name "~/org")))
                                           (latex-to-svg-for-org-mode))))
+  (setq latex-to-svg-frontend-rescale-inline 1.0
+        latex-to-svg-frontend-rescale-display 1.2)
   :config
   (defun my-latex-to-svg-for-org--exclusions-add-links (orig-fun beg end)
     "Add Org link regions ([[target]] / [[target][desc]]) to REGIONS."
