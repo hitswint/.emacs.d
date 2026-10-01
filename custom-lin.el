@@ -14,7 +14,7 @@
                        auto-highlight-symbol auto-yasnippet avy-zap
                        backup-walker baidu-translate bbdb-vcard
                        benchmark-init bing-dict buttercup cdlatex
-                       clean-aindent-mode clipetty clipmon
+                       clean-aindent-mode clipetty clipmon clutch
                        company-c-headers company-quickhelp
                        company-try-hard company-web counsel csv-mode
                        delight diff-hl diminish dired-du

@@ -1688,4 +1688,9 @@ ORIG is the advised function, which is called with its ARGS."
 (use-package latex-to-svg-for-markdown
   :hook (markdown-mode . latex-to-svg-for-markdown-mode))
 ;; ================latex-to-svg====================
+;;; clutch
+;; ================clutch====================
+(use-package clutch
+  :commands (clutch-query-console clutch-query-sqlite-file))
+;; ================clutch====================
 (provide 'setup_packages)
