@@ -1687,6 +1687,8 @@ ORIG is the advised function, which is called with its ARGS."
   (advice-add 'latex-to-svg-for-org--exclusions :around #'my-latex-to-svg-for-org--exclusions-add-links))
 (use-package latex-to-svg-for-markdown
   :hook (markdown-mode . latex-to-svg-for-markdown-mode))
+(use-package latex-to-svg-for-latex
+  :hook ((LaTeX-mode latex-mode) . latex-to-svg-for-latex-mode))
 ;; ================latex-to-svg====================
 ;;; clutch
 ;; ================clutch====================

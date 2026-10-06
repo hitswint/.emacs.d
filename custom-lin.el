@@ -35,23 +35,23 @@
                        highlight-parentheses highlight-symbol
                        hungry-delete imenu-anywhere imenu-list
                        inheritenv ivy-bibtex ivy-hydra jedi jupyter
-                       key-chord lacarte latex-to-svg-for-markdown
-                       latex-to-svg-for-org lingva magit markdown-mode
-                       matlab-mode meghanada modelica-mode msgpack
-                       mu4e-alert mu4e-views multifiles multiple-cursors
-                       names neotree nov operate-on-number org-appear
-                       org-brain org-noter org-pdftools outline-magic
-                       outshine ox-pandoc paredit-everywhere pass
-                       pdf-tools pdfgrep peep-dired pinyin-search
-                       posframe pyim pyim-basedict quickrun
-                       rainbow-delimiters rainbow-mode readline-complete
-                       recentf-ext restclient rg skewer-mode smartrep
-                       sudo-edit tangotango-theme term-keys tramp
-                       unicode-escape vcard vimish-fold visible-mark
-                       visual-regexp vlf volatile-highlights vterm vundo
-                       w3m web-mode websearch window-numbering
-                       wrap-region yaml-mode yasnippet-snippets
-                       youdao-dictionary ztree)))
+                       key-chord lacarte latex-to-svg-for-latex
+                       latex-to-svg-for-markdown latex-to-svg-for-org
+                       lingva magit markdown-mode matlab-mode meghanada
+                       modelica-mode msgpack mu4e-alert mu4e-views
+                       multifiles multiple-cursors names neotree nov
+                       operate-on-number org-appear org-brain org-noter
+                       org-pdftools outline-magic outshine ox-pandoc
+                       paredit-everywhere pass pdf-tools pdfgrep
+                       peep-dired pinyin-search posframe pyim
+                       pyim-basedict quickrun rainbow-delimiters
+                       rainbow-mode readline-complete recentf-ext
+                       restclient rg skewer-mode smartrep sudo-edit
+                       tangotango-theme term-keys tramp unicode-escape
+                       vcard vimish-fold visible-mark visual-regexp vlf
+                       volatile-highlights vterm vundo w3m web-mode
+                       websearch window-numbering wrap-region yaml-mode
+                       yasnippet-snippets youdao-dictionary ztree)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
