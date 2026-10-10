@@ -5,7 +5,9 @@
 (use-package magit
   :diminish magit-auto-revert-mode
   :commands magit-status
-  :bind ("C-x C-M-g" . magit-dispatch)
+  :bind (("C-x C-M-g" . magit-dispatch)
+         ("C-x d s" . magit-diff-staged-current)
+         ("C-x d u" . magit-diff-unstaged-current))
   :init
   (setq magit-auto-revert-mode nil
         magit-define-global-key-bindings nil)
@@ -34,7 +36,28 @@
   ;; <return>: magit-diff-visit-file
   ;; C-<return>: magit-diff-visit-worktree-file
   (define-key magit-diff-section-map (kbd "C-o") 'magit-diff-visit-file-other-window)
-  (define-key magit-diff-section-map (kbd "C-j") 'magit-diff-visit-worktree-file-other-window))
+  (define-key magit-diff-section-map (kbd "C-j") 'magit-diff-visit-worktree-file-other-window)
+  (defun magit-diff-staged-current (&optional rev args)
+    "Show staged changes limited to the current directory."
+    (interactive
+     (list (and current-prefix-arg
+                (magit-read-branch-or-commit "Diff index and commit"))
+           (car (magit-diff-arguments))))
+    (let* ((default-directory
+            (file-name-as-directory (helm-current-directory)))
+           (topdir (or (magit-toplevel)
+                       (user-error "Not inside a Git repository")))
+           (directory (file-relative-name default-directory topdir)))
+      (magit-diff-staged rev args (list directory))))
+  (defun magit-diff-unstaged-current (&optional args)
+    "Show unstaged changes limited to the current directory."
+    (interactive (list (car (magit-diff-arguments))))
+    (let* ((default-directory
+            (file-name-as-directory (helm-current-directory)))
+           (topdir (or (magit-toplevel)
+                       (user-error "Not inside a Git repository")))
+           (directory (file-relative-name default-directory topdir)))
+      (magit-diff-unstaged args (list directory)))))
 ;; ====================magit=======================
 ;;; vc
 ;; ======================vc========================

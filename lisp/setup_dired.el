@@ -141,7 +141,7 @@
               (define-key dired-mode-map (vector 'remap 'end-of-buffer) 'dired-end-of-buffer)
               (define-key dired-mode-map (kbd "C-c C-s") 'dired-do-isearch) ;对mark的多个文件内容进行查找
               (define-key dired-mode-map (kbd "C-c C-M-s") 'dired-do-isearch-regexp)
-              (smartrep-define-key dired-mode-map "M-g" '(("d" . dired-duplicate-file)))
+              (define-key dired-mode-map (kbd "C-c d") 'dired-duplicate-file)
               (define-key dired-mode-map (kbd "r") (lambda ()
                                                      (interactive)
                                                      (let ((current-directory default-directory))
@@ -876,6 +876,6 @@ The default command run is fd -X rg -l0 --regexp REGEXP | xargs -0 ls."
 (use-package dired-duplicates
   ;; M-RET确认选择文件夹，加C-u列出不重复文件
   :bind (:map dired-mode-map
-              ("C-c d" . dired-duplicates)))
+              ("C-c D" . dired-duplicates)))
 ;; ============dired-duplicates================
 (provide 'setup_dired)
