@@ -78,4 +78,8 @@ pgrep pasystray || (pgrep pulseaudio && pasystray -i 5 || sleep 10 ; pasystray -
 # greenclip daemon &
 copyq &
 
+# Fixed gnome-keyring.
+dbus-update-activation-environment --systemd DISPLAY
+# systemctl --user status gnome-keyring-daemon.service
+
 exec dwm

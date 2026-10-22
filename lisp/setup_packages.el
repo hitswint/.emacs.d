@@ -1100,6 +1100,7 @@
   (rg-enable-default-bindings (kbd "M-s M-g"))
   (setq rg-executable (executable-find "rga"))
   (setq rg-default-alias-fallback "everything")
+  (setq rg-use-json-output nil)
   (define-key rg-mode-map (kbd "C-p") 'compilation-previous-error)
   (define-key rg-mode-map (kbd "C-n") 'compilation-next-error)
   (define-key rg-mode-map (kbd "M-p") 'rg-prev-file)
