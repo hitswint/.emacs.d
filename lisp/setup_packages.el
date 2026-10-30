@@ -1139,27 +1139,7 @@
                           (match-string-no-properties 1)))))
   (defun rg-copy-things ()
     (interactive)
-    (let ((file-name (rg-find-filename)))
-      (if (file-in-directory-p file-name "~/Zotero")
-          (let* ((input-char (read-char "char [ektd]: "))
-                 (entry (bibtex-completion-get-entry-for-pdf file-name))
-                 (new (cond ((= input-char ?e)
-                             (with-temp-buffer
-                               (let ((key (bibtex-completion-get-value "=key=" entry)))
-                                 (if (not (bound-and-true-p ebib--databases))
-                                     (message "ebib needs to be opened.")
-                                   (ebib--format-entry key (ebib--find-db-for-key key ebib--cur-db))
-                                   (buffer-substring-no-properties (point-min) (point-max))))))
-                            ((= input-char ?k)
-                             (bibtex-completion-get-value "=key=" entry))
-                            ((= input-char ?t)
-                             (ebib-unbrace (bibtex-completion-get-value "title" entry)))
-                            ((= input-char ?d)
-                             (ebib-unbrace (bibtex-completion-get-value "doi" entry))))))
-            (if new
-                (kill-new (message "%s" new))
-              (message "Invalid input characters.")))
-        (message "rg-copy-things is not available.")))))
+    (eaf-pdf-copy-things (rg-find-filename))))
 ;; ===================rg===========================
 ;;; awesome-tab
 ;; ===============awesome-tab======================

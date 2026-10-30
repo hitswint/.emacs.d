@@ -405,14 +405,53 @@
   (defun ebib-copy-title-as-kill ()
     "Copy the key of the current entry to the kill ring."
     (interactive)
-    (kill-new (ebib-create-org-title (ebib--get-key-at-point) ebib--cur-db))
-    (message "Entry title copied to kill ring."))
+    (let* ((marked-entries (ebib-db-list-marked-entries ebib--cur-db))
+           (current-entry (ebib--get-key-at-point))
+           (target-entries (or marked-entries (list current-entry))))
+      (when marked-entries
+        (ebib-db-unmark-entry marked-entries ebib--cur-db)
+        (ebib--update-index-buffer))
+      (kill-new (mapconcat (lambda (key)
+                             (ebib-create-org-title key ebib--cur-db))
+                           target-entries "\n"))
+      (message "Entry titles copied to kill ring.")))
   (defun ebib-copy-doi-as-kill ()
     "Copy the key of the current entry to the kill ring."
     (interactive)
-    (kill-new (ebib-get-field-value "doi" (ebib--get-key-at-point) ebib--cur-db 'noerror 'unbraced 'xref))
-    (message "Entry doi copied to kill ring."))
+    (let* ((marked-entries (ebib-db-list-marked-entries ebib--cur-db))
+           (current-entry (ebib--get-key-at-point))
+           (target-entries (or marked-entries (list current-entry))))
+      (when marked-entries
+        (ebib-db-unmark-entry marked-entries ebib--cur-db)
+        (ebib--update-index-buffer))
+      (kill-new (mapconcat (lambda (key)
+                             (ebib-get-field-value "doi" key ebib--cur-db 'noerror 'unbraced 'xref))
+                           target-entries "\n"))
+      (message "Entry dois copied to kill ring.")))
+  (defun ebib-copy-files-as-kill ()
+    "Copy the key of the current entry to the kill ring."
+    (interactive)
+    (let* ((marked-entries (ebib-db-list-marked-entries ebib--cur-db))
+           (current-entry (ebib--get-key-at-point))
+           (target-entries (or marked-entries (list current-entry)))
+           (files (cl-loop for key in target-entries
+                           for file = (ebib-get-field-value "file" key ebib--cur-db
+                                                            'noerror 'unbraced 'xref)
+                           when file
+                           for path = (ignore-errors
+                                        (ebib--expand-file-name
+                                         (ebib--select-file file 1 key)
+                                         ebib-file-search-dirs))
+                           when (and path (file-exists-p path))
+                           collect path)))
+      (when marked-entries
+        (ebib-db-unmark-entry marked-entries ebib--cur-db)
+        (ebib--update-index-buffer))
+      (when files
+        (ring-insert dired-ranger-copy-ring (cons (list (current-buffer)) files))
+        (message (format "Copied %d files%s into copy ring." (length files) (if (> (length files) 1) "s" ""))))))
   (define-key ebib-copy-map "t" #'ebib-copy-title-as-kill)
-  (define-key ebib-copy-map "d" #'ebib-copy-doi-as-kill))
+  (define-key ebib-copy-map "d" #'ebib-copy-doi-as-kill)
+  (define-key ebib-copy-map "f" #'ebib-copy-files-as-kill))
 ;; =====================ebib=======================
 (provide 'setup_bibtex)
