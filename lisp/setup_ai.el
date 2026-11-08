@@ -180,6 +180,7 @@
               ("y" . agent-shell-send-clipboard-image)
               ("r" . agent-shell-send-region)
               ("c" . agent-shell-prompt-compose)
+              ("w" . agent-shell-web-toggle)
               ("?" . agent-shell-help-menu)
               ("M-C" . code-switch-agent))
   :init
@@ -188,14 +189,25 @@
   (define-prefix-command 'agent-shell-prefix-map)
   :config
   (setq agent-shell-prefer-viewport-interaction nil
-        agent-shell-preferred-agent-config '(preselect . codex))
+        agent-shell-preferred-agent-config '(preselect . codex)
+        agent-shell-agent-configs (list (agent-shell-openai-make-codex-config)))
   (bind-key "C-<tab>" nil agent-shell-mode-map)
-  (bind-key "C-c C-<tab>" 'agent-shell-cycle-session-mode agent-shell-mode-map))
+  (bind-key "C-c C-<tab>" 'agent-shell-cycle-session-mode agent-shell-mode-map)
+  (bind-key "C-c C-r" 'agent-shell-search-history agent-shell-mode-map))
 (use-package agent-shell-math-renderer
   :after agent-shell
   :hook (agent-shell-mode . agent-shell-math-renderer-mode)
   :config
   (add-hook 'enable-theme-functions #'agent-shell-math-renderer-on-appearance-change)
   (add-hook 'after-setting-font-hook #'agent-shell-math-renderer-on-appearance-change))
+(use-package agent-shell-web
+  :load-path "repos/agent-shell-web/"
+  :commands (agent-shell-web-start agent-shell-web-stop)
+  :init
+  (defun agent-shell-web-toggle ()
+    (interactive)
+    (if (bound-and-true-p agent-shell-web--server-process)
+        (agent-shell-web-stop)
+      (agent-shell-web-start))))
 ;; =================agent-shell====================
 (provide 'setup_ai)
